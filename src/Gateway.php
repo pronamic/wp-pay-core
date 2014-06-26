@@ -96,9 +96,9 @@ abstract class Pronamic_WP_Pay_Gateway {
 	/**
 	 * Constructs and initializes an gateway
 	 *
-	 * @param Pronamic_Pay_Config $config
+	 * @param Pronamic_WP_Pay_GatewayConfig $config
 	 */
-	public function __construct( Pronamic_Pay_Config $config ) {
+	public function __construct( Pronamic_WP_Pay_GatewayConfig $config ) {
 		$this->config = $config;
 	}
 
