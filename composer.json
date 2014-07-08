@@ -25,5 +25,8 @@
 	},
 	"autoload": {
 		"classmap": ["src/"]
+	},
+	"require": {
+		"php": ">=5.2.4"
 	}
 }
