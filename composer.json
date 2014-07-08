@@ -2,8 +2,21 @@
 	"name": "wp-pay/core",
 	"description": "Core components for the WordPress payment processing library.",
 	"keywords": ["wordpress", "wp", "pay", "core", "gateway", "pronamic"],
-	"homepage": "https://github.com/wp-pay/core",
+	"homepage": "https://www.wp-pay.org/",
 	"license": "GPL-3.0+",
+	"authors": [
+		{
+			"name": "Remco Tolsma",
+			"email": "info@remcotolsma.nl",
+			"homepage": "http://www.remcotolsma.nl/",
+			"role": "Developer"
+		}
+	],
+	"support": {
+		"email": "support@wp-pay.org",
+		"issues": "https://github.com/wp-pay/core/issues",
+		"source": "https://github.com/wp-pay/core"
+	},
 	"autoload": {
 		"classmap": ["src/"]
 	}
