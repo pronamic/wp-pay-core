@@ -6,6 +6,12 @@
 	"license": "GPL-3.0+",
 	"authors": [
 		{
+			"name": "Pronamic",
+			"email": "info@pronamic.eu",
+			"homepage": "http://www.pronamic.eu/",
+			"role": "Company"
+		},
+		{
 			"name": "Remco Tolsma",
 			"email": "info@remcotolsma.nl",
 			"homepage": "http://www.remcotolsma.nl/",
