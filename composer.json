@@ -3,7 +3,7 @@
 	"description": "Core components for the WordPress payment processing library.",
 	"keywords": ["wordpress", "wp", "pay", "core", "gateway", "pronamic"],
 	"homepage": "https://www.wp-pay.org/",
-	"license": "GPL-3.0+",
+	"license": "GPL",
 	"authors": [
 		{
 			"name": "Pronamic",
