@@ -1,0 +1,13 @@
+# Build
+/build/
+
+# Composer
+/vendor/
+
+# Eclipse
+/.buildpath
+/.project
+/.settings
+
+# Node.js
+/node_modules/

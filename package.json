@@ -1,0 +1,41 @@
+{
+  "name": "wp-pay/core",
+  "version": "1.0.0",
+  "description": "Core components for the WordPress payment processing library.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wp-pay/core"
+  },
+  "keywords": [
+    "wordpress",
+    "wp",
+    "pay",
+    "core",
+    "gateway",
+    "pronamic"
+  ],
+  "author": {
+    "name": "Pronamic",
+    "email": "info@pronamic.nl",
+    "url": "http://www.pronamic.nl/"
+  },
+  "contributors": [
+    {
+      "name": "Remco Tolsma",
+      "email": "info@remcotolsma.nl",
+      "url": "http://www.remcotolsma.nl/"
+    }
+  ],
+  "license": "GPL",
+  "bugs": {
+    "url": "https://github.com/wp-pay/core/issues"
+  },
+  "homepage": "http://www.wp-pay.org/",
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-phplint": "0.0.5",
+    "grunt-phpmd": "^0.1.0",
+    "grunt-phpcs": "^0.2.2",
+    "grunt-contrib-jshint": "^0.10.0"
+  }
+}

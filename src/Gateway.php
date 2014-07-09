@@ -302,7 +302,10 @@ abstract class Pronamic_WP_Pay_Gateway {
 
 	public function redirect_via_html( Pronamic_Pay_Payment $payment ) {
 		if ( headers_sent() ) {
+			// @codingStandardsIgnoreStart
+			// No need to escape this echo
 			echo $this->get_form_html( $payment, true );
+			// @codingStandardsIgnoreEnd
 		} else {
 			include Pronamic_WP_Pay_Plugin::$dirname . '/views/redirect-via-html.php';
 		}
