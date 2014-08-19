@@ -257,7 +257,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 *
 	 * @param Pronamic_Pay_PaymentDataInterface $data
 	 */
-	public function start( Pronamic_Pay_PaymentDataInterface $data, Pronamic_Pay_Payment $payment ) {
+	public function start( Pronamic_Pay_PaymentDataInterface $data, Pronamic_Pay_Payment $payment, $payment_method = null ) {
 
 	}
 
