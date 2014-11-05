@@ -17,16 +17,16 @@ class Pronamic_WP_Pay_PaymentMethods {
 	const IDEAL = 'ideal';
 
 	/**
-	 * Bancontact/Mister Cash
-	 *
-	 * @var string
-	 */
-	const MISTER_CASH = 'mister_cash';
-
-	/**
 	 * MiniTix
 	 *
 	 * @var string
 	 */
 	const MINITIX = 'minitix';
+
+	/**
+	 * Bancontact/Mister Cash
+	 *
+	 * @var string
+	 */
+	const MISTER_CASH = 'mister_cash';
 }
