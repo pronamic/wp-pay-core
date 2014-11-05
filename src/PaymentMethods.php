@@ -17,6 +17,13 @@ class Pronamic_WP_Pay_PaymentMethods {
 	const DIRECT_DEBIT = 'direct_debit';
 
 	/**
+	 * Credit Card
+	 *
+	 * @var string
+	 */
+	const CREDIT_CARD = 'credit_card';
+
+	/**
 	 * iDEAL
 	 *
 	 * @var string
