@@ -10,6 +10,13 @@
  */
 class Pronamic_WP_Pay_PaymentMethods {
 	/**
+	 * Direct Debit
+	 *
+	 * @var string
+	 */
+	const DIRECT_DEBIT = 'direct_debit';
+
+	/**
 	 * iDEAL
 	 *
 	 * @var string
