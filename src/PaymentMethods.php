@@ -43,4 +43,12 @@ class Pronamic_WP_Pay_PaymentMethods {
 	 * @var string
 	 */
 	const MISTER_CASH = 'mister_cash';
+
+	/**
+	 * SOFORT Banking
+	 *
+	 * @var string
+	 * @since 1.1.0
+	 */
+	const SOFORT = 'sofort';
 }
