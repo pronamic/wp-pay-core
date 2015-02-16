@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Title: Config provider
+ * Description:
+ * Copyright: Copyright (c) 2005 - 2015
+ * Company: Pronamic
+ * @author Remco Tolsma
+ * @version 1.0.0
+ */
 class Pronamic_WP_Pay_ConfigProvider {
 	private static $factories = array();
 
