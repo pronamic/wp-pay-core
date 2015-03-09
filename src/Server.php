@@ -20,7 +20,7 @@ class Pronamic_WP_Pay_Server {
 	 * @param int $filter
 	 * @return mixed
 	 */
-	public static function get( $key, $filter ) {
+	public static function get( $key, $filter = FILTER_DEFAULT ) {
 		$value = null;
 
 		if ( isset( $_SERVER[ $key ] ) ) {
