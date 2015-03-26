@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.0
+*	Added default filter to server variables get function.
+*	Allow gateways to return array with output fields in stead of HTML.
+
 ## 1.1.0
 *	Added helper class for retrieving $_SERVER values.
 *	Added helper class to check of class method exists.
