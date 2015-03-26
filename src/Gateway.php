@@ -426,11 +426,22 @@ abstract class Pronamic_WP_Pay_Gateway {
 	/////////////////////////////////////////////////
 
 	/**
+	 * Get output inputs
+	 *
+	 * @return array
+	 */
+	public function get_output_fields() {
+		return array();
+	}
+
+	/**
 	 * Get the output HTML
 	 *
 	 * @return string
 	 */
 	public function get_output_html() {
-		return '';
+		$fields = $this->get_output_fields();
+
+		return Pronamic_IDeal_IDeal::htmlHiddenFields( $fields );
 	}
 }
