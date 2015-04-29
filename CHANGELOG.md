@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.2.1
+*	Added XML utility class.
+
 ## 1.2.0
 *	Added default filter to server variables get function.
 *	Allow gateways to return array with output fields in stead of HTML.
