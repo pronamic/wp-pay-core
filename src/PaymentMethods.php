@@ -10,6 +10,13 @@
  */
 class Pronamic_WP_Pay_PaymentMethods {
 	/**
+	 * Bank transfer
+	 *
+	 * @var string
+	 */
+	const BANK_TRANSFER = 'bank_transfer';
+
+	/**
 	 * Direct Debit
 	 *
 	 * @var string
