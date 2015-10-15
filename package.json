@@ -1,6 +1,6 @@
 {
-  "name": "wp-pay/core",
-  "version": "1.2.1",
+  "name": "core",
+  "version": "1.2.2",
   "description": "Core components for the WordPress payment processing library.",
   "repository": {
     "type": "git",
@@ -26,16 +26,17 @@
       "url": "http://www.remcotolsma.nl/"
     }
   ],
-  "license": "GPL",
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/wp-pay/core/issues"
   },
   "homepage": "http://www.wp-pay.org/",
   "devDependencies": {
-    "grunt": "~0.4.2",
+    "grunt": "~0.4.5",
+    "grunt-contrib-jshint": "^0.11.3",
+    "grunt-phpcs": "^0.4.0",
     "grunt-phplint": "0.0.5",
-    "grunt-phpmd": "^0.1.0",
-    "grunt-phpcs": "^0.2.2",
-    "grunt-contrib-jshint": "^0.10.0"
+    "grunt-phpmd": "^0.1.1",
+    "load-grunt-tasks": "^3.3.0"
   }
 }

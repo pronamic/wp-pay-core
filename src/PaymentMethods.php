@@ -10,6 +10,13 @@
  */
 class Pronamic_WP_Pay_PaymentMethods {
 	/**
+	 * Bank transfer
+	 *
+	 * @var string
+	 */
+	const BANK_TRANSFER = 'bank_transfer';
+
+	/**
 	 * Direct Debit
 	 *
 	 * @var string
@@ -24,7 +31,7 @@ class Pronamic_WP_Pay_PaymentMethods {
 	const CREDIT_CARD = 'credit_card';
 
 	/**
-	 * iDEAL
+	 * Constant for the iDEAL payment method.
 	 *
 	 * @var string
 	 */

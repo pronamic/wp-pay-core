@@ -21,7 +21,7 @@ class Pronamic_WP_Pay_XML_Util {
 	public static function add_element( DOMDocument $document, DOMNode $parent, $name, $value = null ) {
 		$element = $document->createElement( $name );
 
-		if ( $value !== null ) {
+		if ( null !== $value ) {
 			$element->appendChild( new DOMText( $value ) );
 		}
 
@@ -41,7 +41,7 @@ class Pronamic_WP_Pay_XML_Util {
 		foreach ( $elements as $name => $value ) {
 			$element = $document->createElement( $name );
 
-			if ( $value !== null ) {
+			if ( null !== $value ) {
 				$element->appendChild( new DOMText( $value ) );
 			}
 
