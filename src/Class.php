@@ -13,7 +13,7 @@ class Pronamic_WP_Pay_Class {
 	/**
 	 * Method exists
 	 *
-	 * This helper function was created to fix an issue with `method_exists` calls 
+	 * This helper function was created to fix an issue with `method_exists` calls
 	 * and non existings classes.
 	 *
 	 * @param string $class

@@ -14,8 +14,8 @@ class Pronamic_WP_Pay_Server {
 	 * Get
 	 *
 	 * This helper function was created to bypass PHP bug 49184.
-	 * @see https://bugs.php.net/49184
 	 *
+	 * @see https://bugs.php.net/49184
 	 * @param string $key
 	 * @param int $filter
 	 * @return mixed
@@ -23,8 +23,8 @@ class Pronamic_WP_Pay_Server {
 	public static function get( $key, $filter = FILTER_DEFAULT ) {
 		$value = null;
 
-		if ( isset( $_SERVER[ $key ] ) ) {
-			$value = filter_var( $_SERVER[ $key ], $filter );
+		if ( isset( $_SERVER[ $key ] ) ) { // WPCS: input var okay
+			$value = filter_var( wp_unslash( $_SERVER[ $key ] ), $filter ); // WPCS: input var okay
 		}
 
 		return $value;

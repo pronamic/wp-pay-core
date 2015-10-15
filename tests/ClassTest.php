@@ -11,6 +11,8 @@
  */
 class Pronamic_WP_Pay_ClassTest extends PHPUnit_Framework_TestCase {
 	/**
+	 * Test method exists.
+	 *
 	 * @dataProvider status_matrix_provider
 	 */
 	public function test_method_exists( $class, $method, $expected ) {

@@ -140,7 +140,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 * @return boolean
 	 */
 	public function has_error() {
-		return $this->error != null;
+		return null !== $this->error;
 	}
 
 	/**
@@ -171,7 +171,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 * @return boolean true if an HTTP redirect is required, false otherwise
 	 */
 	public function is_http_redirect() {
-		return $this->method == self::METHOD_HTTP_REDIRECT;
+		return self::METHOD_HTTP_REDIRECT === $this->method;
 	}
 
 	/**
@@ -180,7 +180,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 * @return boolean true if an HTML form is required, false otherwise
 	 */
 	public function is_html_form() {
-		return $this->method == self::METHOD_HTML_FORM;
+		return self::METHOD_HTML_FORM === $this->method;
 	}
 
 	/////////////////////////////////////////////////
@@ -237,7 +237,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 		$result = get_transient( $transient );
 		// $result = false;
 
-		if ( is_wp_error( $result ) || $result === false ) {
+		if ( is_wp_error( $result ) || false === $result ) {
 			$issuers = $this->get_issuers();
 
 			if ( $issuers ) {

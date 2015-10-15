@@ -31,7 +31,7 @@ class Pronamic_WP_Pay_PaymentMethods {
 	const CREDIT_CARD = 'credit_card';
 
 	/**
-	 * iDEAL
+	 * Constant for the iDEAL payment method.
 	 *
 	 * @var string
 	 */
