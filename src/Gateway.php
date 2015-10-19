@@ -83,6 +83,14 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 */
 	private $action_url;
 
+	/**
+	 * Payment method to use on this gateway.
+	 *
+	 * @since 1.2.3
+	 * @var string
+	 */
+	private $payment_method;
+
 	/////////////////////////////////////////////////
 
 	/**
@@ -349,6 +357,28 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 */
 	public function get_issuer_field() {
 		return null;
+	}
+
+	/////////////////////////////////////////////////
+
+	/**
+	 * Get the payment method to use on this gateway.
+	 *
+	 * @since 1.2.3
+	 * @return string One of the PaymentMethods constants.
+	 */
+	public function get_payment_method() {
+		return $this->payment_method;
+	}
+
+	/**
+	 * Set the payment method to use on this gateway.
+	 *
+	 * @since 1.2.3
+	 * @param string $payment_method One of the PaymentMethods constants.
+	 */
+	public function set_payment_method( $payment_method ) {
+		$this->payment_method = $payment_method;
 	}
 
 	/////////////////////////////////////////////////
