@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
--
+- Added an gateway settings class.
 
 ## [1.2.3] - 2015-10-19
 - Added `get_payment_method()` and `set_payment_method()` function on gateway class.
