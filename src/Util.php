@@ -23,7 +23,14 @@ class Pronamic_WP_Pay_Util {
 		if ( is_wp_error( $result ) ) {
 			$return = $result;
 		} else {
-			if ( wp_remote_retrieve_response_code( $result ) === $required_response_code ) {
+			/*
+			 * The response code is cast to a integer since WordPress 4.1, therefor we can't use
+			 * strict comparison on the required response code.
+			 *
+			 * @see https://github.com/WordPress/WordPress/blob/4.1/wp-includes/class-http.php#L528-L529
+			 * @see https://github.com/WordPress/WordPress/blob/4.0/wp-includes/class-http.php#L527
+			 */
+			if ( wp_remote_retrieve_response_code( $result ) == $required_response_code ) { // WPCS: loose comparison ok.
 				$return = wp_remote_retrieve_body( $result );
 			} else {
 				$return = new WP_Error(
