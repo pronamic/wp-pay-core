@@ -286,10 +286,10 @@ abstract class Pronamic_WP_Pay_Gateway {
 	/////////////////////////////////////////////////
 
 	/**
-	 * Get the issuers transient
+	 * Get the payment methods transient
 	 */
 	public function get_transient_payment_methods() {
-		$issuers = null;
+		$methods = null;
 
 		// Transient name. Expected to not be SQL-escaped. Should be 45 characters or less in length.
 		$transient = 'pronamic_pay_payment_methods_' . $this->config->id;
@@ -298,17 +298,17 @@ abstract class Pronamic_WP_Pay_Gateway {
 		$result = false;
 
 		if ( is_wp_error( $result ) || false === $result ) {
-			$issuers = $this->get_payment_methods();
+			$methods = $this->get_payment_methods();
 
-			if ( $issuers ) {
+			if ( $methods ) {
 				// 60 * 60 * 24 = 24 hours = 1 day
-				set_transient( $transient, $issuers, 60 * 60 * 24 );
+				set_transient( $transient, $methods, 60 * 60 * 24 );
 			}
 		} elseif ( is_array( $result ) ) {
-			$issuers = $result;
+			$methods = $result;
 		}
 
-		return $issuers;
+		return $methods;
 	}
 
 	/////////////////////////////////////////////////
