@@ -106,6 +106,30 @@ class Pronamic_WP_Pay_Util {
 		return $cents / 100;
 	}
 
+	/**
+	 * String to amount (user input string)
+	 *
+	 * @param string $amount
+	 * @return float
+	 */
+	public static function string_to_amount( $amount ) {
+		// Remove thousands seperators
+		$thousands_sep = pronamic_pay_get_thousands_separator();
+		$decimal_sep   = pronamic_pay_get_decimal_separator();
+
+		if ( ',' === $thousands_sep || ( false !== strpos( $amount, $thousands_sep ) && false !== strpos( $amount, $decimal_sep ) ) ) {
+			$amount = str_replace( $thousands_sep, '', $amount );
+		}
+
+		// A comma that is still present, is a decimal seperator
+		$amount = str_replace( ',', '.', $amount );
+
+		// Filter amount to float
+		$amount = filter_var( $amount, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
+
+		return $amount;
+	}
+
 	//////////////////////////////////////////////////
 
 	/**
