@@ -3,10 +3,10 @@
 /**
  * Title: Gateway
  * Description:
- * Copyright: Copyright (c) 2005 - 2015
+ * Copyright: Copyright (c) 2005 - 2016
  * Company: Pronamic
  * @author Remco Tolsma
- * @version 1.2.0
+ * @version 1.3.0
  * @since 1.0.0
  */
 abstract class Pronamic_WP_Pay_Gateway {
@@ -233,6 +233,8 @@ abstract class Pronamic_WP_Pay_Gateway {
 		return null;
 	}
 
+	/////////////////////////////////////////////////
+
 	/**
 	 * Get the issuers transient
 	 */
@@ -243,7 +245,6 @@ abstract class Pronamic_WP_Pay_Gateway {
 		$transient = 'pronamic_pay_issuers_' . $this->config->id;
 
 		$result = get_transient( $transient );
-		// $result = false;
 
 		if ( is_wp_error( $result ) || false === $result ) {
 			$issuers = $this->get_issuers();
@@ -257,6 +258,133 @@ abstract class Pronamic_WP_Pay_Gateway {
 		}
 
 		return $issuers;
+	}
+
+	/////////////////////////////////////////////////
+
+	/**
+	 * Get payment methods
+	 *
+	 * @since 1.3.0
+	 * @return mixed an array or null
+	 */
+	public function get_payment_methods() {
+		$methodsClass = substr_replace( get_class( $this ), 'PaymentMethods', -7, 7 );
+
+		if ( class_exists( $methodsClass ) ) {
+			$payment_methods = new ReflectionClass( $methodsClass );
+
+			$groups = array(
+				array(
+					'options' => $payment_methods->getConstants(),
+				),
+			);
+
+			return $groups;
+		}
+
+		return null;
+	}
+
+	/////////////////////////////////////////////////
+
+	/**
+	 * Get the payment methods transient
+	 *
+	 * @since 1.3.0
+	 * @return mixed an array or null
+	 */
+	public function get_transient_payment_methods() {
+		$methods = null;
+
+		// Transient name. Expected to not be SQL-escaped. Should be 45 characters or less in length.
+		$transient = 'pronamic_pay_payment_methods_' . $this->config->id;
+
+		$result = get_transient( $transient );
+		$result = false;
+
+		if ( is_wp_error( $result ) || false === $result ) {
+			$methods = $this->get_payment_methods();
+
+			if ( $methods ) {
+				// 60 * 60 * 24 = 24 hours = 1 day
+				set_transient( $transient, $methods, 60 * 60 * 24 );
+			}
+		} elseif ( is_array( $result ) ) {
+			$methods = $result;
+		}
+
+		return $methods;
+	}
+
+	/////////////////////////////////////////////////
+
+	/**
+	 * Is payment method required to start transaction?
+	 *
+	 * @since 1.3.0
+	 * @return boolean true if payment method is required, false otherwise
+	 */
+	public function payment_method_is_required() {
+		return false;
+	}
+
+	/////////////////////////////////////////////////
+
+	/**
+	 * Get an payment method field
+	 *
+	 * @since 1.3.0
+	 * @return array
+	 */
+	public function get_payment_method_field() {
+		$choices = null;
+
+		if ( method_exists( $this, 'get_supported_payment_methods' ) ) {
+			$gateway_methods = $this->get_transient_payment_methods();
+
+			if ( is_array( $gateway_methods ) ) {
+				$supported_methods = $this->get_supported_payment_methods();
+				$choices           = array();
+
+				$supported_keys = array_keys( $supported_methods );
+
+				if ( ! $this->payment_method_is_required() ) {
+					$supported_keys[] = 'other';
+				}
+
+				$filtered_keys = apply_filters( 'pronamic_pay_payment_methods_' . $this->config->id, implode( ',', $supported_keys ) );
+
+				$filtered_keys = explode( ',', $filtered_keys );
+
+				foreach ( $supported_methods as $method_id => $gateway_method_id ) {
+					if ( false !== array_search( $method_id, $filtered_keys ) ) {
+						$choices[ $method_id ] = Pronamic_WP_Pay_PaymentMethods::get_name( $method_id );
+					}
+				}
+
+				if ( false !== array_search( 'other', $filtered_keys ) ) {
+					$choices[] = _x( 'Other', 'Payment method field', 'pronamic-ideal' );
+				}
+			} elseif ( Pronamic_WP_Pay_PaymentMethods::IDEAL === $gateway_methods ) {
+				$choices[] = __( 'iDEAL', 'pronamic-ideal' );
+			}
+		}
+
+		if ( null === $choices && ! $this->payment_method_is_required() ) {
+			$choices = array(
+				'' => _x( 'All available methods', 'Payment method field', 'pronamic-ideal' ),
+			);
+		}
+
+		return array(
+			'id'       => 'pronamic_pay_payment_method_id',
+			'name'     => 'pronamic_pay_payment_method_id',
+			'label'    => __( 'Choose a payment method', 'pronamic_ideal' ),
+			'required' => true,
+			'type'     => 'select',
+			'choices'  => array( array( 'options' => $choices ) ),
+		);
 	}
 
 	/////////////////////////////////////////////////
@@ -351,7 +479,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 	/////////////////////////////////////////////////
 
 	/**
-	 * Get an isser field
+	 * Get an issuer field
 	 *
 	 * @return mixed an array or null
 	 */
@@ -397,7 +525,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 		$issuer_field = $this->get_issuer_field();
 
 		if ( ! empty( $issuer_field ) ) {
-			$fields[] = $this->get_issuer_field();
+			$fields[] = $issuer_field;
 		}
 
 		return $fields;

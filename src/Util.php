@@ -3,10 +3,11 @@
 /**
  * Title: WordPress utility class
  * Description:
- * Copyright: Copyright (c) 2005 - 2015
+ * Copyright: Copyright (c) 2005 - 2016
  * Company: Pronamic
  * @author Remco Tolsma
- * @version 1.0
+ * @version 1.3.0
+ * @since 1.0.0
  */
 class Pronamic_WP_Pay_Util {
 	/**
@@ -23,7 +24,14 @@ class Pronamic_WP_Pay_Util {
 		if ( is_wp_error( $result ) ) {
 			$return = $result;
 		} else {
-			if ( wp_remote_retrieve_response_code( $result ) === $required_response_code ) {
+			/*
+			 * The response code is cast to a integer since WordPress 4.1, therefor we can't use
+			 * strict comparison on the required response code.
+			 *
+			 * @see https://github.com/WordPress/WordPress/blob/4.1/wp-includes/class-http.php#L528-L529
+			 * @see https://github.com/WordPress/WordPress/blob/4.0/wp-includes/class-http.php#L527
+			 */
+			if ( wp_remote_retrieve_response_code( $result ) == $required_response_code ) { // WPCS: loose comparison ok.
 				$return = wp_remote_retrieve_body( $result );
 			} else {
 				$return = new WP_Error(
@@ -97,6 +105,31 @@ class Pronamic_WP_Pay_Util {
 	 */
 	public static function cents_to_amount( $cents ) {
 		return $cents / 100;
+	}
+
+	/**
+	 * String to amount (user input string)
+	 *
+	 * @since 1.3.0
+	 * @param string $amount
+	 * @return float
+	 */
+	public static function string_to_amount( $amount ) {
+		// Remove thousands seperators
+		$thousands_sep = pronamic_pay_get_thousands_separator();
+		$decimal_sep   = pronamic_pay_get_decimal_separator();
+
+		if ( ',' === $thousands_sep || ( false !== strpos( $amount, $thousands_sep ) && false !== strpos( $amount, $decimal_sep ) ) ) {
+			$amount = str_replace( $thousands_sep, '', $amount );
+		}
+
+		// A comma that is still present, is a decimal seperator
+		$amount = str_replace( ',', '.', $amount );
+
+		// Filter amount to float
+		$amount = filter_var( $amount, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
+
+		return $amount;
 	}
 
 	//////////////////////////////////////////////////

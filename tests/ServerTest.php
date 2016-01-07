@@ -13,8 +13,6 @@ class Pronamic_WP_Pay_ServerTest extends PHPUnit_Framework_TestCase {
 	public function test_server_get() {
 		$value = Pronamic_WP_Pay_Server::get( 'REQUEST_METHOD', FILTER_SANITIZE_STRING );
 
-		$expected = null;
-
-		$this->assertEquals( $expected, $value );
+		$this->assertTrue( in_array( $value, array( null, 'GET' ) ) );
 	}
 }
