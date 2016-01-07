@@ -21,6 +21,7 @@ module.exports = function( grunt ) {
 				],
 			},
 			options: {
+				bin: 'vendor/bin/phpcs',
 				standard: 'phpcs.ruleset.xml',
 				showSniffCodes: true
 			}
@@ -33,20 +34,26 @@ module.exports = function( grunt ) {
 					'-lf': null
 				}
 			},
-			all: [ '**/*.php' ]
+			all: [ 'src/**/*.php' ]
 		},
 
 		// PHP Mess Detector
 		phpmd: {
 			application: {
-				dir: '.'
+				dir: 'src'
 			},
 			options: {
+				bin: 'vendor/bin/phpmd',
 				exclude: 'node_modules',
 				reportFormat: 'xml',
 				rulesets: 'phpmd.ruleset.xml'
 			}
 		},
+		
+		// PHPUnit
+		phpunit: {
+			application: {},
+		}
 	} );
 
 	// Default task(s).
