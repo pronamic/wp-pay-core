@@ -273,9 +273,11 @@ abstract class Pronamic_WP_Pay_Gateway {
 		if ( class_exists( $methodsClass ) ) {
 			$payment_methods = new ReflectionClass( $methodsClass );
 
-			$groups = array( array(
-				'options' => $payment_methods->getConstants(),
-			) );
+			$groups = array(
+				array(
+					'options' => $payment_methods->getConstants(),
+				),
+			);
 
 			return $groups;
 		}
@@ -361,7 +363,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 			}
 		}
 
-		if ( null == $choices && ! $this->payment_method_is_required() ) {
+		if ( null === $choices && ! $this->payment_method_is_required() ) {
 			$choices = array(
 				'' => _x( 'All available methods', 'Payment method field', 'pronamic-ideal' ),
 			);
