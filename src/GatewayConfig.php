@@ -3,7 +3,7 @@
 /**
  * Title: Gateway config
  * Description:
- * Copyright: Copyright (c) 2005 - 2015
+ * Copyright: Copyright (c) 2005 - 2016
  * Company: Pronamic
  * @author Remco Tolsma
  * @version 1.0.0
