@@ -65,7 +65,7 @@ class Pronamic_WP_Pay_PaymentMethods {
 	 * @var string
 	 */
 	public static function get_payment_methods() {
-		$payment_methods = array (
+		$payment_methods = array(
 			Pronamic_WP_Pay_PaymentMethods::BANK_TRANSFER => __( 'Bank Transfer', 'pronamic-ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT  => __( 'Direct Debit', 'pronamic-ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::CREDIT_CARD   => __( 'Credit Card', 'pronamic-ideal' ),
