@@ -5,7 +5,12 @@ All notable changes to this project will be documented in this file.
 This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
+
+
+## [1.3.0] - 2016-01-07
 - Added an gateway settings class.
+- Added support for payment methods.
+- Added utility to convert an amount from user input to float.
 
 ## [1.2.3] - 2015-10-19
 - Added `get_payment_method()` and `set_payment_method()` function on gateway class.
