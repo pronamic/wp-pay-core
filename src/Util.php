@@ -119,7 +119,7 @@ class Pronamic_WP_Pay_Util {
 		$thousands_sep = pronamic_pay_get_thousands_separator();
 		$decimal_sep   = pronamic_pay_get_decimal_separator();
 
-		if ( ',' === $thousands_sep || ( false !== strpos( $amount, $thousands_sep ) && false !== strpos( $amount, $decimal_sep ) ) ) {
+		if ( ! empty( $thousands_sep ) ) {
 			$amount = str_replace( $thousands_sep, '', $amount );
 		}
 
