@@ -9,7 +9,7 @@
  * @version 1.1.0
  * @since 1.1.0
  */
-class Pronamic_WP_Pay_UtilTest extends PHPUnit_Framework_TestCase {
+class Pronamic_WP_Pay_UtilTest extends WP_UnitTestCase {
 	/**
 	 * Test string to amount.
 	 *
