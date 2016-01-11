@@ -120,7 +120,7 @@ class Pronamic_WP_Pay_Util {
 		$decimal_sep   = get_option( 'pronamic_pay_decimal_sep' );
 
 		// Smart
-		$seperators = array( '.', ',', ' ', $decimal_sep );
+		$seperators = array( $decimal_sep, '.', ',' );
 		$seperators = array_unique( array_filter( $seperators ) );
 
 		foreach ( array( -3, -2 ) as $i ) {
