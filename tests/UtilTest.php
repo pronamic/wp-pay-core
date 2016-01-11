@@ -19,14 +19,14 @@ class Pronamic_WP_Pay_UtilTest extends WP_UnitTestCase {
 	public function test_string_to_amount( $thousands_sep, $decimal_sep, $string, $expected ) {
 		update_option( 'pronamic_pay_thousands_sep', $thousands_sep );
 		update_option( 'pronamic_pay_decimal_sep', $decimal_sep );
-		
+
 		$amount = Pronamic_WP_Pay_Util::string_to_amount( $string );
 
 		$this->assertEquals( $expected, $amount );
 	}
 
 	/**
-	 * String to amount provider
+	 * String to amount provider.
 	 *
 	 * @return array
 	 */
