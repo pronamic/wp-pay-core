@@ -119,15 +119,29 @@ class Pronamic_WP_Pay_Util {
 		$thousands_sep = get_option( 'pronamic_pay_thousands_sep' );
 		$decimal_sep   = get_option( 'pronamic_pay_decimal_sep' );
 
-		if ( ! empty( $thousands_sep ) ) {
-			$amount = str_replace( $thousands_sep, '', $amount );
+		// Smart
+		$seperators = array( '.', ',', ' ', $decimal_sep );
+		$seperators = array_unique( array_filter( $seperators ) );
+
+		foreach ( array( -3, -2 ) as $i ) {
+			$test = substr( $amount, $i, 1 );
+
+			if ( in_array( $test, $seperators ) ) {
+				$position = strrpos( $amount, $test );
+
+				$full = substr( $amount, 0, $position );
+				$half = substr( $amount, $position + 1 );
+
+				$full = filter_var( $full, FILTER_SANITIZE_NUMBER_INT );
+				$half = filter_var( $half, FILTER_SANITIZE_NUMBER_INT );
+
+				$amount = $full . '.' . $half;
+
+				break;
+			}
 		}
 
-		// A comma that is still present, is a decimal seperator
-		$amount = str_replace( ',', '.', $amount );
-
-		// Filter amount to float
-		$amount = filter_var( $amount, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
+		$amount = filter_var( $amount, FILTER_VALIDATE_FLOAT );
 
 		return $amount;
 	}
