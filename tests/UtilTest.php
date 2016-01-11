@@ -49,6 +49,7 @@ class Pronamic_WP_Pay_UtilTest extends WP_UnitTestCase {
 			array( '.', ',', '2500,75', 2500.75 ),
 			array( '.', ',', '1.250,00', 1250 ),
 			array( '.', ',', '2.500,75', 2500.75 ),
+			array( '.', ',', '2.500,750', 2500.75 ),
 			// ',', '.'
 			array( ',', '.', '1', 1 ),
 			array( ',', '.', '2.5', 2.5 ),
@@ -57,6 +58,7 @@ class Pronamic_WP_Pay_UtilTest extends WP_UnitTestCase {
 			array( ',', '.', '1250.75', 1250.75 ),
 			array( ',', '.', '1,250.00', 1250 ),
 			array( ',', '.', '2,500.75', 2500.75 ),
+			array( ',', '.', '2,500.', 2500 ),
 			// ' ', '.'
 			array( ' ', '.', '2 500.75', 2500.75 ),
 			// 't', '.'
