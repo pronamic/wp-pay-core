@@ -116,8 +116,8 @@ class Pronamic_WP_Pay_Util {
 	 */
 	public static function string_to_amount( $amount ) {
 		// Remove thousands seperators
-		$thousands_sep = pronamic_pay_get_thousands_separator();
-		$decimal_sep   = pronamic_pay_get_decimal_separator();
+		$thousands_sep = get_option( 'pronamic_pay_thousands_sep' );
+		$decimal_sep   = get_option( 'pronamic_pay_decimal_sep' );
 
 		if ( ! empty( $thousands_sep ) ) {
 			$amount = str_replace( $thousands_sep, '', $amount );

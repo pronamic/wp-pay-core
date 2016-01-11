@@ -1,0 +1,62 @@
+<?php
+
+/**
+ * Title: WordPress pay util test
+ * Description:
+ * Copyright: Copyright (c) 2005 - 2016
+ * Company: Pronamic
+ * @author Remco Tolsma
+ * @version 1.1.0
+ * @since 1.1.0
+ */
+class Pronamic_WP_Pay_UtilTest extends PHPUnit_Framework_TestCase {
+	/**
+	 * Test string to amount.
+	 *
+	 * @see https://github.com/pronamic/wp-pronamic-ideal/blob/3.7.3/classes/Pronamic/WP/Pay/Settings.php#L71-L91
+	 * @dataProvider string_to_amount_provider
+	 */
+	public function test_string_to_amount( $thousands_sep, $decimal_sep, $string, $expected ) {
+		update_option( 'pronamic_pay_thousands_sep', $thousands_sep );
+		update_option( 'pronamic_pay_decimal_sep', $decimal_sep );
+		
+		$amount = Pronamic_WP_Pay_Util::string_to_amount( $string );
+
+		$this->assertEquals( $expected, $amount );
+	}
+
+	/**
+	 * String to amount provider
+	 *
+	 * @return array
+	 */
+	public function string_to_amount_provider() {
+		return array(
+			// '', '.'
+			array( '', '.', '1', 1 ),
+			array( '', '.', '2,5', 2.5 ),
+			array( '', '.', '2,50', 2.5 ),
+			array( '', '.', '1250,00', 1250 ),
+			array( '', '.', '1250,75', 1250.75 ),
+			array( '', '.', '1250.75', 1250.75 ),
+			array( '', '.', '1.250,00', 1250 ),
+			array( '', '.', '2.500,75', 2500.75 ),
+			// '.', ','
+			array( '.', ',', '1', 1 ),
+			array( '.', ',', '2,5', 2.5 ),
+			array( '.', ',', '2,50', 2.5 ),
+			array( '.', ',', '1250,00', 1250 ),
+			array( '.', ',', '2500,75', 2500.75 ),
+			array( '.', ',', '1.250,00', 1250 ),
+			array( '.', ',', '2.500,75', 2500.75 ),
+			// ',', '.'
+			array( ',', '.', '1', 1 ),
+			array( ',', '.', '2.5', 2.5 ),
+			array( ',', '.', '2.50', 2.5 ),
+			array( ',', '.', '1250.00', 1250 ),
+			array( ',', '.', '1250.75', 1250.75 ),
+			array( ',', '.', '1,250.00', 1250 ),
+			array( ',', '.', '2,500.75', 2500.75 ),
+		);
+	}
+}
