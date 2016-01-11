@@ -145,6 +145,8 @@ class Pronamic_WP_Pay_Util {
 			$half = filter_var( $half, FILTER_SANITIZE_NUMBER_INT );
 
 			$amount = $full . '.' . $half;
+		} else {
+			$amount = filter_var( $amount, FILTER_SANITIZE_NUMBER_INT );
 		}
 
 		// Filter
