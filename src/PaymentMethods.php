@@ -39,13 +39,6 @@ class Pronamic_WP_Pay_PaymentMethods {
 	const IDEAL = 'ideal';
 
 	/**
-	 * MiniTix
-	 *
-	 * @var string
-	 */
-	const MINITIX = 'minitix';
-
-	/**
 	 * Bancontact/Mister Cash
 	 *
 	 * @var string
@@ -72,7 +65,6 @@ class Pronamic_WP_Pay_PaymentMethods {
 			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT  => __( 'Direct Debit', 'pronamic-ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::CREDIT_CARD   => __( 'Credit Card', 'pronamic-ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::IDEAL         => __( 'iDEAL', 'pronamic-ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::MINITIX       => __( 'MiniTix', 'pronamic-ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::MISTER_CASH   => __( 'Bancontact/Mister Cash', 'pronamic-ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::SOFORT        => __( 'SOFORT Banking', 'pronamic-ideal' ),
 		);
