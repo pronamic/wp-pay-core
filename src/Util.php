@@ -6,7 +6,7 @@
  * Copyright: Copyright (c) 2005 - 2016
  * Company: Pronamic
  * @author Remco Tolsma
- * @version 1.3.0
+ * @version 1.3.1
  * @since 1.0.0
  */
 class Pronamic_WP_Pay_Util {
@@ -110,24 +110,48 @@ class Pronamic_WP_Pay_Util {
 	/**
 	 * String to amount (user input string)
 	 *
+	 * @version 1.3.1
 	 * @since 1.3.0
 	 * @param string $amount
 	 * @return float
 	 */
 	public static function string_to_amount( $amount ) {
 		// Remove thousands seperators
-		$thousands_sep = pronamic_pay_get_thousands_separator();
-		$decimal_sep   = pronamic_pay_get_decimal_separator();
+		$thousands_sep = get_option( 'pronamic_pay_thousands_sep' );
+		$decimal_sep   = get_option( 'pronamic_pay_decimal_sep' );
 
-		if ( ',' === $thousands_sep || ( false !== strpos( $amount, $thousands_sep ) && false !== strpos( $amount, $decimal_sep ) ) ) {
-			$amount = str_replace( $thousands_sep, '', $amount );
+		// Seperators
+		$seperators = array( $decimal_sep, '.', ',' );
+		$seperators = array_unique( array_filter( $seperators ) );
+
+		// Check
+		foreach ( array( -3, -2 ) as $i ) {
+			$test = substr( $amount, $i, 1 );
+
+			if ( in_array( $test, $seperators ) ) {
+				$decimal_sep = $test;
+
+				break;
+			}
 		}
 
-		// A comma that is still present, is a decimal seperator
-		$amount = str_replace( ',', '.', $amount );
+		// Split
+		$position = strrpos( $amount, $decimal_sep );
 
-		// Filter amount to float
-		$amount = filter_var( $amount, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
+		if ( false !== $position ) {
+			$full = substr( $amount, 0, $position );
+			$half = substr( $amount, $position + 1 );
+
+			$full = filter_var( $full, FILTER_SANITIZE_NUMBER_INT );
+			$half = filter_var( $half, FILTER_SANITIZE_NUMBER_INT );
+
+			$amount = $full . '.' . $half;
+		} else {
+			$amount = filter_var( $amount, FILTER_SANITIZE_NUMBER_INT );
+		}
+
+		// Filter
+		$amount = filter_var( $amount, FILTER_VALIDATE_FLOAT );
 
 		return $amount;
 	}

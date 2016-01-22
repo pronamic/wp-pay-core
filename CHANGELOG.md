@@ -5,7 +5,12 @@ All notable changes to this project will be documented in this file.
 This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
+- 
 
+## [1.3.1] - 2016-01-22
+- Also try the parent class to fix issue with extended config.
+- Improved the Pronamic_WP_Pay_Util::string_to_amount() function.
+- Removed discontinued MiniTix gateway.
 
 ## [1.3.0] - 2016-01-07
 - Added an gateway settings class.
@@ -35,7 +40,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/1.3.0...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/1.3.1...HEAD
+[1.3.1]: https://github.com/wp-pay/core/compare/1.3.0...1.3.1
 [1.3.0]: https://github.com/wp-pay/core/compare/1.2.3...1.3.0
 [1.2.3]: https://github.com/wp-pay/core/compare/1.2.2...1.2.3
 [1.2.2]: https://github.com/wp-pay/core/compare/1.2.1...1.2.2
