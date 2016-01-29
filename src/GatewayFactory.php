@@ -27,6 +27,10 @@ class Pronamic_WP_Pay_GatewayFactory {
 				$config_class = get_parent_class( $config );
 			}
 
+			if ( ! isset( self::$gateways[ $config_class ] ) ) {
+				$config_class = get_parent_class( $config_class );
+			}
+
 			if ( isset( self::$gateways[ $config_class ] ) ) {
 				$gateway_class = self::$gateways[ $config_class ];
 
