@@ -6,7 +6,7 @@
  * Copyright: Copyright (c) 2005 - 2016
  * Company: Pronamic
  * @author Remco Tolsma
- * @version 1.3.1
+ * @version 1.3.2
  * @since 1.0.0
  */
 class Pronamic_WP_Pay_GatewayFactory {
@@ -24,7 +24,17 @@ class Pronamic_WP_Pay_GatewayFactory {
 
 			// @since 1.3.1
 			if ( ! isset( self::$gateways[ $config_class ] ) ) {
-				$config_class = get_parent_class( $config );
+				$config_class = get_parent_class( $config_class );
+			}
+
+			// @since 1.3.2
+			if ( ! isset( self::$gateways[ $config_class ] ) ) {
+				$config_class = get_parent_class( $config_class );
+			}
+
+			// @since 1.3.2
+			if ( ! isset( self::$gateways[ $config_class ] ) ) {
+				$config_class = get_parent_class( $config_class );
 			}
 
 			if ( isset( self::$gateways[ $config_class ] ) ) {

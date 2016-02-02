@@ -5,7 +5,10 @@ All notable changes to this project will be documented in this file.
 This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
-- 
+-
+
+## [1.3.2] - 2016-02-02
+- Make sure to look to parent config class in the gateway factory.
 
 ## [1.3.1] - 2016-01-22
 - Also try the parent class to fix issue with extended config.
