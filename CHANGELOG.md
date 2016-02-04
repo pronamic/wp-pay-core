@@ -7,6 +7,9 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [1.3.3] - 2016-02-04
+- Readded the MiniTix payment method constant for backwards compatibility.
+
 ## [1.3.2] - 2016-02-02
 - Make sure to look to parent config class in the gateway factory.
 
@@ -44,6 +47,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 - First release.
 
 [unreleased]: https://github.com/wp-pay/core/compare/1.3.1...HEAD
+[1.3.3]: https://github.com/wp-pay/core/compare/1.3.2...1.3.3
+[1.3.2]: https://github.com/wp-pay/core/compare/1.3.1...1.3.2
 [1.3.1]: https://github.com/wp-pay/core/compare/1.3.0...1.3.1
 [1.3.0]: https://github.com/wp-pay/core/compare/1.2.3...1.3.0
 [1.2.3]: https://github.com/wp-pay/core/compare/1.2.2...1.2.3
