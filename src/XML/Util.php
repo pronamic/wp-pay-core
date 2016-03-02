@@ -5,9 +5,10 @@
  * Description:
  * Copyright: Copyright (c) 2005 - 2016
  * Company: Pronamic
+ *
  * @author Remco Tolsma
- * @since 1.2.1
  * @version 1.2.1
+ * @since 1.2.1
  */
 class Pronamic_WP_Pay_XML_Util {
 	/**
