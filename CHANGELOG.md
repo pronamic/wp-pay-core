@@ -7,6 +7,9 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [1.3.4] - 2016-03-02
+- Use the new get_gateway_class() function which is new on the config objects.
+
 ## [1.3.3] - 2016-02-04
 - Readded the MiniTix payment method constant for backwards compatibility.
 
