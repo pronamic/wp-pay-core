@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
--
+- Add Pronamic_WP_Pay_GatewaySettings::save_post() to modify data when a gateway is saved.
 
 ## [1.3.4] - 2016-03-02
 - Use the new get_gateway_class() function which is new on the config objects.
