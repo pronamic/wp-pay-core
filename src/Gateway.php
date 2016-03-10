@@ -368,13 +368,13 @@ abstract class Pronamic_WP_Pay_Gateway {
 					$choices[] = _x( 'Other', 'Payment method field', 'pronamic-ideal' );
 				}
 			} elseif ( Pronamic_WP_Pay_PaymentMethods::IDEAL === $gateway_methods ) {
-				$choices[] = __( 'iDEAL', 'pronamic-ideal' );
+				$choices[] = __( 'iDEAL', 'pronamic_ideal' );
 			}
 		}
 
 		if ( null === $choices && ! $this->payment_method_is_required() ) {
 			$choices = array(
-				'' => _x( 'All available methods', 'Payment method field', 'pronamic-ideal' ),
+				'' => _x( 'All available methods', 'Payment method field', 'pronamic_ideal' ),
 			);
 		}
 
