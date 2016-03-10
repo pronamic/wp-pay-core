@@ -338,7 +338,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 * @since 1.3.0
 	 * @return array
 	 */
-	public function get_payment_method_field() {
+	public function get_payment_method_field( $other_first = false ) {
 		$choices = null;
 
 		if ( method_exists( $this, 'get_supported_payment_methods' ) ) {
@@ -365,7 +365,11 @@ abstract class Pronamic_WP_Pay_Gateway {
 				}
 
 				if ( false !== array_search( 'other', $filtered_keys ) ) {
-					$choices[] = _x( 'Other', 'Payment method field', 'pronamic-ideal' );
+					if ( $other_first ) {
+						$choices = array( _x( 'All available methods', 'Payment method field', 'pronamic_ideal' ) ) + $choices;
+					} else {
+						$choices[] = _x( 'Other', 'Payment method field', 'pronamic_ideal' );
+					}
 				}
 			} elseif ( Pronamic_WP_Pay_PaymentMethods::IDEAL === $gateway_methods ) {
 				$choices[] = __( 'iDEAL', 'pronamic_ideal' );
