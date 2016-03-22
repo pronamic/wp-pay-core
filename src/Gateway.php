@@ -270,10 +270,10 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 * @return mixed an array or null
 	 */
 	public function get_payment_methods() {
-		$methodsClass = substr_replace( get_class( $this ), 'PaymentMethods', -7, 7 );
+		$methods_class = substr_replace( get_class( $this ), 'PaymentMethods', -7, 7 );
 
-		if ( class_exists( $methodsClass ) ) {
-			$payment_methods = new ReflectionClass( $methodsClass );
+		if ( class_exists( $methods_class ) ) {
+			$payment_methods = new ReflectionClass( $methods_class );
 
 			$groups = array(
 				array(
