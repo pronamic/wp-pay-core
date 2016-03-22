@@ -5,6 +5,7 @@
  * Description:
  * Copyright: Copyright (c) 2005 - 2016
  * Company: Pronamic
+ *
  * @author Remco Tolsma
  * @version 1.3.0
  * @since 1.0.0
@@ -269,10 +270,10 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 * @return mixed an array or null
 	 */
 	public function get_payment_methods() {
-		$methodsClass = substr_replace( get_class( $this ), 'PaymentMethods', -7, 7 );
+		$methods_class = substr_replace( get_class( $this ), 'PaymentMethods', -7, 7 );
 
-		if ( class_exists( $methodsClass ) ) {
-			$payment_methods = new ReflectionClass( $methodsClass );
+		if ( class_exists( $methods_class ) ) {
+			$payment_methods = new ReflectionClass( $methods_class );
 
 			$groups = array(
 				array(
@@ -337,7 +338,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 * @since 1.3.0
 	 * @return array
 	 */
-	public function get_payment_method_field() {
+	public function get_payment_method_field( $other_first = false ) {
 		$choices = null;
 
 		if ( method_exists( $this, 'get_supported_payment_methods' ) ) {
@@ -364,16 +365,20 @@ abstract class Pronamic_WP_Pay_Gateway {
 				}
 
 				if ( false !== array_search( 'other', $filtered_keys ) ) {
-					$choices[] = _x( 'Other', 'Payment method field', 'pronamic-ideal' );
+					if ( $other_first ) {
+						$choices = array( _x( 'All available methods', 'Payment method field', 'pronamic_ideal' ) ) + $choices;
+					} else {
+						$choices[] = _x( 'Other', 'Payment method field', 'pronamic_ideal' );
+					}
 				}
 			} elseif ( Pronamic_WP_Pay_PaymentMethods::IDEAL === $gateway_methods ) {
-				$choices[] = __( 'iDEAL', 'pronamic-ideal' );
+				$choices[] = __( 'iDEAL', 'pronamic_ideal' );
 			}
 		}
 
 		if ( null === $choices && ! $this->payment_method_is_required() ) {
 			$choices = array(
-				'' => _x( 'All available methods', 'Payment method field', 'pronamic-ideal' ),
+				'' => _x( 'All available methods', 'Payment method field', 'pronamic_ideal' ),
 			);
 		}
 
@@ -609,7 +614,8 @@ abstract class Pronamic_WP_Pay_Gateway {
 	/////////////////////////////////////////////////
 
 	/**
-	 * Get output inputs
+	 * Get output inputs.
+	 *
 	 * @since 1.2.0
 	 * @return array
 	 */

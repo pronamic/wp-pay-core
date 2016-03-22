@@ -5,6 +5,7 @@
  * Description:
  * Copyright: Copyright (c) 2005 - 2016
  * Company: Pronamic
+ *
  * @author Remco Tolsma
  * @version 1.3.1
  * @since 1.0.0
@@ -117,7 +118,6 @@ class Pronamic_WP_Pay_Util {
 	 */
 	public static function string_to_amount( $amount ) {
 		// Remove thousands seperators
-		$thousands_sep = get_option( 'pronamic_pay_thousands_sep' );
 		$decimal_sep   = get_option( 'pronamic_pay_decimal_sep' );
 
 		// Seperators
@@ -128,7 +128,7 @@ class Pronamic_WP_Pay_Util {
 		foreach ( array( -3, -2 ) as $i ) {
 			$test = substr( $amount, $i, 1 );
 
-			if ( in_array( $test, $seperators ) ) {
+			if ( in_array( $test, $seperators, true ) ) {
 				$decimal_sep = $test;
 
 				break;
