@@ -372,7 +372,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 					}
 				}
 			} elseif ( Pronamic_WP_Pay_PaymentMethods::IDEAL === $gateway_methods ) {
-				$choices[] = __( 'iDEAL', 'pronamic_ideal' );
+				$choices[ Pronamic_WP_Pay_PaymentMethods::IDEAL ] = __( 'iDEAL', 'pronamic_ideal' );
 			}
 		}
 
