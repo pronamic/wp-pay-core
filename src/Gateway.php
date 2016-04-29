@@ -7,7 +7,7 @@
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 1.3.0
+ * @version 1.3.6
  * @since 1.0.0
  */
 abstract class Pronamic_WP_Pay_Gateway {
@@ -372,7 +372,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 					}
 				}
 			} elseif ( Pronamic_WP_Pay_PaymentMethods::IDEAL === $gateway_methods ) {
-				$choices[] = __( 'iDEAL', 'pronamic_ideal' );
+				$choices[ Pronamic_WP_Pay_PaymentMethods::IDEAL ] = __( 'iDEAL', 'pronamic_ideal' );
 			}
 		}
 

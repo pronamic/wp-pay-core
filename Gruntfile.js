@@ -45,7 +45,7 @@ module.exports = function( grunt ) {
 			options: {
 				bin: 'vendor/bin/phpmd',
 				exclude: 'node_modules',
-				reportFormat: 'xml',
+				reportFormat: 'text',
 				rulesets: 'phpmd.ruleset.xml'
 			}
 		},
