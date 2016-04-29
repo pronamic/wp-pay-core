@@ -6,6 +6,9 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [1.3.6] - 2016-04-29
+- Set payment method choice key for iDEAL only gateways.
+
 ## [1.3.5] - 2016-03-22
 - Add Pronamic_WP_Pay_GatewaySettings::save_post() to modify data when a gateway is saved.
 
@@ -51,7 +54,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/1.3.5...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/1.3.6...HEAD
+[1.3.6]: https://github.com/wp-pay/core/compare/1.3.5...1.3.6
 [1.3.5]: https://github.com/wp-pay/core/compare/1.3.4...1.3.5
 [1.3.4]: https://github.com/wp-pay/core/compare/1.3.3...1.3.4
 [1.3.3]: https://github.com/wp-pay/core/compare/1.3.2...1.3.3
