@@ -55,6 +55,14 @@ class Pronamic_WP_Pay_PaymentMethods {
 	const MISTER_CASH = 'mister_cash';
 
 	/**
+	 * PayPal
+	 *
+	 * @var string
+	 * @since unreleased
+	 */
+	const PAYPAL = 'paypal';
+
+	/**
 	 * SOFORT Banking
 	 *
 	 * @var string
