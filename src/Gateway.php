@@ -585,16 +585,12 @@ abstract class Pronamic_WP_Pay_Gateway {
 	public function get_form_html( Pronamic_Pay_Payment $payment, $auto_submit = false ) {
 		$html = '';
 
-		$fields = $payment->get_meta( 'output_fields' );
-
 		// Form
 		$form_inner  = '';
-		$form_inner .= $this->get_output_html( $fields );
+		$form_inner .= $this->get_output_html();
 		$form_inner .= sprintf(
-			'%s<input id="pronamic_pay_submit_button" class="btn btn-primary" type="submit" name="pay" value="%s" />%s',
-			( $auto_submit ? '<noscript>' : null ),
-			__( 'Pay', 'pronamic_ideal' ),
-			( $auto_submit ? '</noscript>' : null )
+			'<input class="btn btn-primary" type="submit" name="pay" value="%s" />',
+ 			__( 'Pay', 'pronamic_ideal' )
 		);
 
 		$form = sprintf(
@@ -607,25 +603,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 		$html .= $form;
 
 		if ( $auto_submit ) {
-			$html .= '<script type="text/javascript">
-			document.pronamic_ideal_form.submit();
-
-			setTimeout( function() {
-				var el = document.querySelector( "noscript" ),
-					parent = el.parentNode;
-
-				while ( el.firstChild ) {
-					var div = document.createElement( "div" );
- 					div.innerHTML = el.firstChild.nodeValue;
-
-					parent.insertBefore( div, el );
-
-					el.removeChild( el.firstChild );
-				}
-
-				parent.removeChild( el );
-			}, 2000 );
-			</script>';
+			$html .= '<script type="text/javascript">document.pronamic_ideal_form.submit();</script>';
 		}
 
 		return $html;
@@ -650,7 +628,9 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 *
 	 * @return string
 	 */
-	public function get_output_html( $fields ) {
+	public function get_output_html() {
+		$fields = $this->get_output_fields();
+
 		return Pronamic_IDeal_IDeal::htmlHiddenFields( $fields );
 	}
 }
