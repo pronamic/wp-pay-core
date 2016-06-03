@@ -50,9 +50,17 @@ class Pronamic_WP_Pay_PaymentMethods {
 	/**
 	 * Bancontact/Mister Cash
 	 *
+	 * @deprecated "Bancontact/Mister Cash" was renamed to just "Bancontact".
 	 * @var string
 	 */
 	const MISTER_CASH = 'mister_cash';
+
+	/**
+	 * Bancontact
+	 *
+	 * @var string
+	 */
+	const BANCONTACT = 'bancontact';
 
 	/**
 	 * PayPal
