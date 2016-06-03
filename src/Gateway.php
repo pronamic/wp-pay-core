@@ -590,7 +590,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 		$form_inner .= $this->get_output_html();
 		$form_inner .= sprintf(
 			'<input class="btn btn-primary" type="submit" name="pay" value="%s" />',
- 			__( 'Pay', 'pronamic_ideal' )
+			__( 'Pay', 'pronamic_ideal' )
 		);
 
 		$form = sprintf(
