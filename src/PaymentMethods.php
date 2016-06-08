@@ -7,7 +7,7 @@
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 1.3.3
+ * @version 1.3.7
  * @since 1.0.1
  */
 class Pronamic_WP_Pay_PaymentMethods {
@@ -59,6 +59,7 @@ class Pronamic_WP_Pay_PaymentMethods {
 	 * Bancontact
 	 *
 	 * @var string
+	 * @since 1.3.7
 	 */
 	const BANCONTACT = 'bancontact';
 
@@ -66,7 +67,7 @@ class Pronamic_WP_Pay_PaymentMethods {
 	 * PayPal
 	 *
 	 * @var string
-	 * @since unreleased
+	 * @since 1.3.7
 	 */
 	const PAYPAL = 'paypal';
 
