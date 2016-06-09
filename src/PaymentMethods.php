@@ -93,6 +93,7 @@ class Pronamic_WP_Pay_PaymentMethods {
 			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT  => __( 'Direct Debit', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::IDEAL         => __( 'iDEAL', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::MISTER_CASH   => __( 'Bancontact', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::PAYPAL        => __( 'PayPal', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::SOFORT        => __( 'SOFORT Banking', 'pronamic_ideal' ),
 		);
 
