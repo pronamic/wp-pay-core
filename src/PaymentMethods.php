@@ -7,7 +7,7 @@
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 1.3.7
+ * @version 1.3.8
  * @since 1.0.1
  */
 class Pronamic_WP_Pay_PaymentMethods {

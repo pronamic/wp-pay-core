@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
+- Changed order of payment methods (alphabetic).
+- Added Bancontact payment constant to payments methods getter function.
+- Added PayPal payment constant to payments methods getter function.
+- Renamed 'Bancontact/Mister Cash' to 'Bancontact'.
 
 ## [1.3.7] - 2016-06-08
 - Added PayPal payment method constant.
