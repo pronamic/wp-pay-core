@@ -425,7 +425,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 				return $this->redirect_via_http( $payment );
 			case self::METHOD_HTML_FORM :
 				return $this->redirect_via_html( $payment );
-			default:
+			default :
 				// No idea how to redirect to the gateway
 		}
 	}
