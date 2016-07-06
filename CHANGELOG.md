@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
+- 
+
+## [1.3.8]- 2016-07-06
 - Changed order of payment methods (alphabetic).
 - Added Bancontact payment constant to payments methods getter function.
 - Added PayPal payment constant to payments methods getter function.
@@ -64,7 +67,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/1.3.7...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/1.3.8...HEAD
+[1.3.8]: https://github.com/wp-pay/core/compare/1.3.7...1.3.8
 [1.3.7]: https://github.com/wp-pay/core/compare/1.3.6...1.3.7
 [1.3.6]: https://github.com/wp-pay/core/compare/1.3.5...1.3.6
 [1.3.5]: https://github.com/wp-pay/core/compare/1.3.4...1.3.5
