@@ -433,7 +433,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 *
 	 * @param Pronamic_Pay_Payment $payment
 	 */
-	public function cancel_subscription( Pronamic_Pay_Payment $payment ) {
+	public function cancel_subscription( Pronamic_Pay_Subscription $subscription ) {
 
 	}
 

@@ -45,4 +45,18 @@ class Pronamic_WP_Pay_Statuses {
 	 * @var string
 	 */
 	const OPEN = 'Open';
+
+	/**
+	 * Status indicator for active
+	 *
+	 * @var string
+	 */
+	const ACTIVE = 'Active';
+
+	/**
+	 * Status indicator for completed
+	 *
+	 * @var string
+	 */
+	const COMPLETED = 'Completed';
 }
