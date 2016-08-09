@@ -26,12 +26,12 @@ class Pronamic_WP_Pay_PaymentMethods {
 	const DIRECT_DEBIT = 'direct_debit';
 
 	/**
-	 * Constant for the iDEAL + Direct Debit payment method.
+	 * Constant for the Direct Debit mandate via iDEAL payment method.
 	 *
 	 * @var string
 	 * @since unreleased
 	 */
-	const IDEAL_DIRECTDEBIT = 'ideal_directdebit';
+	const DIRECT_DEBIT_IDEAL = 'direct_debit_ideal';
 
 	/**
 	 * Credit Card
@@ -96,15 +96,15 @@ class Pronamic_WP_Pay_PaymentMethods {
 	 */
 	public static function get_payment_methods() {
 		$payment_methods = array(
-			Pronamic_WP_Pay_PaymentMethods::BANCONTACT        => __( 'Bancontact', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::BANK_TRANSFER     => __( 'Bank Transfer', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::CREDIT_CARD       => __( 'Credit Card', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT      => __( 'Direct Debit', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::IDEAL             => __( 'iDEAL', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::IDEAL_DIRECTDEBIT => __( 'iDEAL + Direct Debit', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::MISTER_CASH       => __( 'Bancontact', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::PAYPAL            => __( 'PayPal', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::SOFORT            => __( 'SOFORT Banking', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::BANCONTACT         => __( 'Bancontact', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::BANK_TRANSFER      => __( 'Bank Transfer', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::CREDIT_CARD        => __( 'Credit Card', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT       => __( 'Direct Debit', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::IDEAL              => __( 'iDEAL', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT_IDEAL => __( 'Direct Debit mandate via iDEAL', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::MISTER_CASH        => __( 'Bancontact', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::PAYPAL             => __( 'PayPal', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::SOFORT             => __( 'SOFORT Banking', 'pronamic_ideal' ),
 		);
 
 		return $payment_methods;
