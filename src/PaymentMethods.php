@@ -19,6 +19,13 @@ class Pronamic_WP_Pay_PaymentMethods {
 	const BANK_TRANSFER = 'bank_transfer';
 
 	/**
+	 * Bitcoin
+	 *
+	 * @var string
+	 */
+	const BITCOIN = 'bitcoin';
+
+	/**
 	 * Direct Debit
 	 *
 	 * @var string
@@ -89,6 +96,7 @@ class Pronamic_WP_Pay_PaymentMethods {
 		$payment_methods = array(
 			Pronamic_WP_Pay_PaymentMethods::BANCONTACT    => __( 'Bancontact', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::BANK_TRANSFER => __( 'Bank Transfer', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::BITCOIN       => __( 'Bitcoin', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::CREDIT_CARD   => __( 'Credit Card', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT  => __( 'Direct Debit', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::IDEAL         => __( 'iDEAL', 'pronamic_ideal' ),
