@@ -345,26 +345,13 @@ abstract class Pronamic_WP_Pay_Gateway {
 			$gateway_methods = $this->get_transient_payment_methods();
 
 			if ( is_array( $gateway_methods ) ) {
-				$supported_methods = $this->get_supported_payment_methods();
-				$choices           = array();
+				$choices = array();
 
-				$supported_keys = $supported_methods;
+				foreach ( $this->get_supported_payment_methods() as $method_id ) {
+					$choices[ $method_id ] = Pronamic_WP_Pay_PaymentMethods::get_name( $method_id );
+				}
 
 				if ( ! $this->payment_method_is_required() ) {
-					$supported_keys[] = 'other';
-				}
-
-				$filtered_keys = apply_filters( 'pronamic_pay_payment_methods_' . $this->config->id, implode( ',', $supported_keys ) );
-
-				$filtered_keys = explode( ',', $filtered_keys );
-
-				foreach ( $supported_methods as $method_id ) {
-					if ( false !== array_search( $method_id, $filtered_keys ) ) {
-						$choices[ $method_id ] = Pronamic_WP_Pay_PaymentMethods::get_name( $method_id );
-					}
-				}
-
-				if ( false !== array_search( 'other', $filtered_keys ) ) {
 					if ( $other_first ) {
 						$choices = array( _x( 'All available methods', 'Payment method field', 'pronamic_ideal' ) ) + $choices;
 					} else {
