@@ -348,7 +348,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 				$supported_methods = $this->get_supported_payment_methods();
 				$choices           = array();
 
-				$supported_keys = array_keys( $supported_methods );
+				$supported_keys = $supported_methods;
 
 				if ( ! $this->payment_method_is_required() ) {
 					$supported_keys[] = 'other';
@@ -358,7 +358,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 
 				$filtered_keys = explode( ',', $filtered_keys );
 
-				foreach ( $supported_methods as $method_id => $gateway_method_id ) {
+				foreach ( $supported_methods as $method_id ) {
 					if ( false !== array_search( $method_id, $filtered_keys ) ) {
 						$choices[ $method_id ] = Pronamic_WP_Pay_PaymentMethods::get_name( $method_id );
 					}
