@@ -404,6 +404,29 @@ abstract class Pronamic_WP_Pay_Gateway {
 	/////////////////////////////////////////////////
 
 	/**
+	 * Handle subscription update.
+	 *
+	 * @param Pronamic_Pay_Payment $payment
+	 */
+	public function update_subscription( Pronamic_Pay_Payment $payment ) {
+
+	}
+
+	/////////////////////////////////////////////////
+
+
+	/**
+	 * Handle subscription cancellation.
+	 *
+	 * @param Pronamic_Pay_Payment $payment
+	 */
+	public function cancel_subscription( Pronamic_Pay_Subscription $subscription ) {
+
+	}
+
+	/////////////////////////////////////////////////
+
+	/**
 	 * Redirect to the gateway action URL
 	 */
 	public function redirect( Pronamic_Pay_Payment $payment ) {
