@@ -33,8 +33,8 @@
 	"require-dev": {
 		"phpmd/phpmd": "^2.4",
 		"satooshi/php-coveralls": "^1.0",
-		"squizlabs/php_codesniffer": "^2.6",
-		"wp-coding-standards/wpcs": "0.9.0"
+		"squizlabs/php_codesniffer": "^2.7",
+		"wp-coding-standards/wpcs": "0.10.0"
 	},
 	"scripts": {
 		"post-install-cmd": [
