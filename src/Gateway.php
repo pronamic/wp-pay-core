@@ -264,6 +264,26 @@ abstract class Pronamic_WP_Pay_Gateway {
 	/////////////////////////////////////////////////
 
 	/**
+	 * Has valid mandate?
+	 *
+	 * @return boolean
+	 */
+	public function has_valid_mandate() {
+		return null;
+	}
+
+	/**
+	 * Get formatted date and time of first valid mandate.
+	 *
+	 * @return string
+	 */
+	public function get_first_valid_mandate_datetime() {
+		return null;
+	}
+
+	/////////////////////////////////////////////////
+
+	/**
 	 * Get payment methods
 	 *
 	 * @since 1.3.0
@@ -413,7 +433,6 @@ abstract class Pronamic_WP_Pay_Gateway {
 	}
 
 	/////////////////////////////////////////////////
-
 
 	/**
 	 * Handle subscription cancellation.
