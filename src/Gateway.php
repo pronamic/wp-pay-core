@@ -574,10 +574,12 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 *
 	 * @return string
 	 */
-	public function get_input_html() {
+	public function get_input_html( $fields = null ) {
 		$html = '';
 
-		$fields = $this->get_input_fields();
+		if ( null === $fields ) {
+			$fields = $this->get_input_fields();
+		}
 
 		foreach ( $fields as $field ) {
 			if ( isset( $field['type'] ) ) {
