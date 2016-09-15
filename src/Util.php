@@ -206,4 +206,42 @@ class Pronamic_WP_Pay_Util {
 	public static function build_url( $url, array $parameters ) {
 		return $url . '?' . _http_build_query( $parameters, null, '&' );
 	}
+
+	//////////////////////////////////////////////////
+
+	/**
+	 * Convert input fields array to HTML.
+	 *
+	 * @param array $fields
+	 * @return string
+	 */
+	public function input_fields_html( array $fields ) {
+		$html = '';
+
+		foreach ( $fields as $field ) {
+			if ( ! isset( $field['type'] ) ) {
+				continue;
+			}
+
+			switch ( $field['type'] ) {
+				case 'select':
+					$html .= sprintf(
+						'<label for="%s">%s</label> ',
+						esc_attr( $field['id'] ),
+						$field['label']
+					);
+
+					$html .= sprintf(
+						'<select id="%s" name="%s">%s</select>',
+						esc_attr( $field['id'] ),
+						esc_attr( $field['name'] ),
+						Pronamic_WP_HTML_Helper::select_options_grouped( $field['choices'] )
+					);
+
+					break;
+			}
+		}
+
+		return $html;
+	}
 }

@@ -574,38 +574,10 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 *
 	 * @return string
 	 */
-	public function get_input_html( $fields = null ) {
-		$html = '';
+	public function get_input_html() {
+		$fields = $this->get_input_fields();
 
-		if ( null === $fields ) {
-			$fields = $this->get_input_fields();
-		}
-
-		foreach ( $fields as $field ) {
-			if ( isset( $field['type'] ) ) {
-				$type = $field['type'];
-
-				switch ( $type ) {
-					case 'select':
-						$html .= sprintf(
-							'<label for="%s">%s</label> ',
-							esc_attr( $field['id'] ),
-							$field['label']
-						);
-
-						$html .= sprintf(
-							'<select id="%s" name="%s">%s</select>',
-							esc_attr( $field['id'] ),
-							esc_attr( $field['name'] ),
-							Pronamic_WP_HTML_Helper::select_options_grouped( $field['choices'] )
-						);
-
-						break;
-				}
-			}
-		}
-
-		return $html;
+		return Pronamic_WP_Pay_Util::input_fields_html( $fields );
 	}
 
 	/**
