@@ -215,7 +215,7 @@ class Pronamic_WP_Pay_Util {
 	 * @param array $fields
 	 * @return string
 	 */
-	public function input_fields_html( array $fields ) {
+	public static function input_fields_html( array $fields ) {
 		$html = '';
 
 		foreach ( $fields as $field ) {
