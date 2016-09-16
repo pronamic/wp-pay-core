@@ -194,6 +194,26 @@ class Pronamic_WP_Pay_Util {
 		return $result;
 	}
 
+	public static function to_period( $period ) {
+		if ( false !== strpos( $period, 'day' ) ) {
+			return 'D';
+		}
+
+		if ( false !== strpos( $period, 'week' ) ) {
+			return 'W';
+		}
+
+		if ( false !== strpos( $period, 'month' ) ) {
+			return 'M';
+		}
+
+		if ( false !== strpos( $period, 'year' ) ) {
+			return 'Y';
+		}
+
+		return $period;
+	}
+
 	//////////////////////////////////////////////////
 
 	/**
