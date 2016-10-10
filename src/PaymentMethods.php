@@ -33,6 +33,14 @@ class Pronamic_WP_Pay_PaymentMethods {
 	const DIRECT_DEBIT = 'direct_debit';
 
 	/**
+	 * Constant for the Direct Debit mandate via Credit Card payment method.
+	 *
+	 * @var string
+	 * @since unreleased
+	 */
+	const DIRECT_DEBIT_CREDIT_CARD = 'direct_debit_credit_card';
+
+	/**
 	 * Constant for the Direct Debit mandate via iDEAL payment method.
 	 *
 	 * @var string
