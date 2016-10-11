@@ -95,6 +95,16 @@ abstract class Pronamic_WP_Pay_Gateway {
 	/////////////////////////////////////////////////
 
 	/**
+	 * Supported features on this gateway.
+	 *
+	 * @since unreleased
+	 * @var array
+	 */
+	protected $supports;
+
+	/////////////////////////////////////////////////
+
+	/**
 	 * Error
 	 *
 	 * @var WP_Error
@@ -110,6 +120,22 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 */
 	public function __construct( Pronamic_WP_Pay_GatewayConfig $config ) {
 		$this->config = $config;
+
+		$this->supports = array();
+	}
+
+	/////////////////////////////////////////////////
+
+	/**
+	 * Check if a gateway supports a given feature.
+	 *
+	 * @param string $feature
+	 *
+	 * @since unreleased
+	 * @return bool
+	 */
+	public function supports( $feature ) {
+		return in_array( $feature, $this->supports, true );
 	}
 
 	/////////////////////////////////////////////////
