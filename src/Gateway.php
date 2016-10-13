@@ -121,6 +121,14 @@ abstract class Pronamic_WP_Pay_Gateway {
 	public function __construct( Pronamic_WP_Pay_GatewayConfig $config ) {
 		$this->config = $config;
 
+		/**
+		 * Supported features.
+		 *
+		 * Possible values:
+		 *  - payment_status_request      Gateway can request current payment status.
+		 *  - recurring_credit_card       Recurring payments through credit card.
+		 *  - recurring_direct_debit      Recurring payments through direct debit.
+		 */
 		$this->supports = array();
 	}
 
