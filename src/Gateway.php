@@ -302,7 +302,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 *
 	 * @return boolean
 	 */
-	public function has_valid_mandate() {
+	public function has_valid_mandate( $payment_method = '' ) {
 		return null;
 	}
 
@@ -311,7 +311,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 *
 	 * @return string
 	 */
-	public function get_first_valid_mandate_datetime() {
+	public function get_first_valid_mandate_datetime( $payment_method = '' ) {
 		return null;
 	}
 
