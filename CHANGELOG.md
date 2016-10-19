@@ -7,7 +7,10 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 - 
 
-## [1.3.8]- 2016-07-06
+## [1.3.9] - 2016-10-19
+- Added some helper functions for mandates.
+
+## [1.3.8] - 2016-07-06
 - Changed order of payment methods (alphabetic).
 - Added Bancontact payment constant to payments methods getter function.
 - Added PayPal payment constant to payments methods getter function.

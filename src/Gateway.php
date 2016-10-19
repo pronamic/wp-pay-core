@@ -7,7 +7,7 @@
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 1.3.7
+ * @version 1.3.9
  * @since 1.0.0
  */
 abstract class Pronamic_WP_Pay_Gateway {
@@ -300,6 +300,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 	/**
 	 * Has valid mandate?
 	 *
+	 * @since 1.3.9
 	 * @return boolean
 	 */
 	public function has_valid_mandate( $payment_method = '' ) {
@@ -309,6 +310,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 	/**
 	 * Get formatted date and time of first valid mandate.
 	 *
+	 * @since 1.3.9
 	 * @return string
 	 */
 	public function get_first_valid_mandate_datetime( $payment_method = '' ) {

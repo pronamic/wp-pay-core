@@ -7,7 +7,7 @@
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 1.3.1
+ * @version 1.3.9
  * @since 1.0.0
  */
 class Pronamic_WP_Pay_Util {
@@ -194,6 +194,13 @@ class Pronamic_WP_Pay_Util {
 		return $result;
 	}
 
+	/**
+	 * Convert the specified period to a single char notation.
+	 *
+	 * @since 1.3.9
+	 * @param string $period
+	 * @return string
+	 */
 	public static function to_period( $period ) {
 		if ( false !== strpos( $period, 'day' ) ) {
 			return 'D';

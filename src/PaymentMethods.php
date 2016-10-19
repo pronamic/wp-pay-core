@@ -7,7 +7,7 @@
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 1.3.8
+ * @version 1.3.9
  * @since 1.0.1
  */
 class Pronamic_WP_Pay_PaymentMethods {
@@ -21,6 +21,7 @@ class Pronamic_WP_Pay_PaymentMethods {
 	/**
 	 * Bitcoin
 	 *
+	 * @since 1.3.9
 	 * @var string
 	 */
 	const BITCOIN = 'bitcoin';
