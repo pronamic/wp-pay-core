@@ -7,7 +7,7 @@
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 1.3.8
+ * @version 1.3.9
  * @since 1.0.1
  */
 class Pronamic_WP_Pay_PaymentMethods {
@@ -19,11 +19,35 @@ class Pronamic_WP_Pay_PaymentMethods {
 	const BANK_TRANSFER = 'bank_transfer';
 
 	/**
+	 * Bitcoin
+	 *
+	 * @since 1.3.9
+	 * @var string
+	 */
+	const BITCOIN = 'bitcoin';
+
+	/**
 	 * Direct Debit
 	 *
 	 * @var string
 	 */
 	const DIRECT_DEBIT = 'direct_debit';
+
+	/**
+	 * Constant for the Direct Debit mandate via Credit Card payment method.
+	 *
+	 * @var string
+	 * @since unreleased
+	 */
+	const DIRECT_DEBIT_CREDIT_CARD = 'direct_debit_credit_card';
+
+	/**
+	 * Constant for the Direct Debit mandate via iDEAL payment method.
+	 *
+	 * @var string
+	 * @since unreleased
+	 */
+	const DIRECT_DEBIT_IDEAL = 'direct_debit_ideal';
 
 	/**
 	 * Credit Card
@@ -84,17 +108,19 @@ class Pronamic_WP_Pay_PaymentMethods {
 	 *
 	 * @since 1.3.0
 	 * @var string
+	 * @return array
 	 */
 	public static function get_payment_methods() {
 		$payment_methods = array(
-			Pronamic_WP_Pay_PaymentMethods::BANCONTACT    => __( 'Bancontact', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::BANK_TRANSFER => __( 'Bank Transfer', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::CREDIT_CARD   => __( 'Credit Card', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT  => __( 'Direct Debit', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::IDEAL         => __( 'iDEAL', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::MISTER_CASH   => __( 'Bancontact', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::PAYPAL        => __( 'PayPal', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::SOFORT        => __( 'SOFORT Banking', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::BANCONTACT         => __( 'Bancontact', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::BANK_TRANSFER      => __( 'Bank Transfer', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::BITCOIN            => __( 'Bitcoin', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::CREDIT_CARD        => __( 'Credit Card', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT       => __( 'Direct Debit', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT_IDEAL => __( 'Direct Debit mandate via iDEAL', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::IDEAL              => __( 'iDEAL', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::PAYPAL             => __( 'PayPal', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::SOFORT             => __( 'SOFORT Banking', 'pronamic_ideal' ),
 		);
 
 		return $payment_methods;
@@ -105,6 +131,7 @@ class Pronamic_WP_Pay_PaymentMethods {
 	 *
 	 * @since 1.3.0
 	 * @var string
+	 * @return string
 	 */
 	public static function get_name( $method = null ) {
 		$payment_methods = self::get_payment_methods();

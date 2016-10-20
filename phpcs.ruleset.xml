@@ -8,6 +8,7 @@
 
 		<exclude name="WordPress.VIP.RestrictedFunctions.file_get_contents" />
 		<exclude name="WordPress.VIP.RestrictedFunctions.wp_remote_get" />
+		<exclude name="WordPress.VIP.RestrictedFunctions.wp_redirect" />
 	</rule>
 
 	<rule ref="Squiz.PHP.CommentedOutCode.Found">

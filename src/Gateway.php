@@ -7,7 +7,7 @@
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 1.3.7
+ * @version 1.3.9
  * @since 1.0.0
  */
 abstract class Pronamic_WP_Pay_Gateway {
@@ -95,6 +95,16 @@ abstract class Pronamic_WP_Pay_Gateway {
 	/////////////////////////////////////////////////
 
 	/**
+	 * Supported features on this gateway.
+	 *
+	 * @since unreleased
+	 * @var array
+	 */
+	protected $supports;
+
+	/////////////////////////////////////////////////
+
+	/**
 	 * Error
 	 *
 	 * @var WP_Error
@@ -110,6 +120,30 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 */
 	public function __construct( Pronamic_WP_Pay_GatewayConfig $config ) {
 		$this->config = $config;
+
+		/**
+		 * Supported features.
+		 *
+		 * Possible values:
+		 *  - payment_status_request      Gateway can request current payment status.
+		 *  - recurring_credit_card       Recurring payments through credit card.
+		 *  - recurring_direct_debit      Recurring payments through direct debit.
+		 */
+		$this->supports = array();
+	}
+
+	/////////////////////////////////////////////////
+
+	/**
+	 * Check if a gateway supports a given feature.
+	 *
+	 * @param string $feature
+	 *
+	 * @since unreleased
+	 * @return bool
+	 */
+	public function supports( $feature ) {
+		return in_array( $feature, $this->supports, true );
 	}
 
 	/////////////////////////////////////////////////
@@ -264,6 +298,28 @@ abstract class Pronamic_WP_Pay_Gateway {
 	/////////////////////////////////////////////////
 
 	/**
+	 * Has valid mandate?
+	 *
+	 * @since 1.3.9
+	 * @return boolean
+	 */
+	public function has_valid_mandate( $payment_method = '' ) {
+		return null;
+	}
+
+	/**
+	 * Get formatted date and time of first valid mandate.
+	 *
+	 * @since 1.3.9
+	 * @return string
+	 */
+	public function get_first_valid_mandate_datetime( $payment_method = '' ) {
+		return null;
+	}
+
+	/////////////////////////////////////////////////
+
+	/**
 	 * Get payment methods
 	 *
 	 * @since 1.3.0
@@ -345,26 +401,13 @@ abstract class Pronamic_WP_Pay_Gateway {
 			$gateway_methods = $this->get_transient_payment_methods();
 
 			if ( is_array( $gateway_methods ) ) {
-				$supported_methods = $this->get_supported_payment_methods();
-				$choices           = array();
+				$choices = array();
 
-				$supported_keys = array_keys( $supported_methods );
+				foreach ( $this->get_supported_payment_methods() as $method_id ) {
+					$choices[ $method_id ] = Pronamic_WP_Pay_PaymentMethods::get_name( $method_id );
+				}
 
 				if ( ! $this->payment_method_is_required() ) {
-					$supported_keys[] = 'other';
-				}
-
-				$filtered_keys = apply_filters( 'pronamic_pay_payment_methods_' . $this->config->id, implode( ',', $supported_keys ) );
-
-				$filtered_keys = explode( ',', $filtered_keys );
-
-				foreach ( $supported_methods as $method_id => $gateway_method_id ) {
-					if ( false !== array_search( $method_id, $filtered_keys ) ) {
-						$choices[ $method_id ] = Pronamic_WP_Pay_PaymentMethods::get_name( $method_id );
-					}
-				}
-
-				if ( false !== array_search( 'other', $filtered_keys ) ) {
 					if ( $other_first ) {
 						$choices = array( _x( 'All available methods', 'Payment method field', 'pronamic_ideal' ) ) + $choices;
 					} else {
@@ -411,6 +454,28 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 * @param Pronamic_Pay_Payment $payment
 	 */
 	public function payment( Pronamic_Pay_Payment $payment ) {
+
+	}
+
+	/////////////////////////////////////////////////
+
+	/**
+	 * Handle subscription update.
+	 *
+	 * @param Pronamic_Pay_Payment $payment
+	 */
+	public function update_subscription( Pronamic_Pay_Payment $payment ) {
+
+	}
+
+	/////////////////////////////////////////////////
+
+	/**
+	 * Handle subscription cancellation.
+	 *
+	 * @param Pronamic_Pay_Payment $payment
+	 */
+	public function cancel_subscription( Pronamic_Pay_Subscription $subscription ) {
 
 	}
 
@@ -546,35 +611,9 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 * @return string
 	 */
 	public function get_input_html() {
-		$html = '';
-
 		$fields = $this->get_input_fields();
 
-		foreach ( $fields as $field ) {
-			if ( isset( $field['type'] ) ) {
-				$type = $field['type'];
-
-				switch ( $type ) {
-					case 'select':
-						$html .= sprintf(
-							'<label for="%s">%s</label> ',
-							esc_attr( $field['id'] ),
-							$field['label']
-						);
-
-						$html .= sprintf(
-							'<select id="%s" name="%s">%s</select>',
-							esc_attr( $field['id'] ),
-							esc_attr( $field['name'] ),
-							Pronamic_WP_HTML_Helper::select_options_grouped( $field['choices'] )
-						);
-
-						break;
-				}
-			}
-		}
-
-		return $html;
+		return Pronamic_WP_Pay_Util::input_fields_html( $fields );
 	}
 
 	/**

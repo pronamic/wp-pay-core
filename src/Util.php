@@ -7,7 +7,7 @@
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 1.3.1
+ * @version 1.3.9
  * @since 1.0.0
  */
 class Pronamic_WP_Pay_Util {
@@ -38,7 +38,7 @@ class Pronamic_WP_Pay_Util {
 				$return = new WP_Error(
 					'wrong_response_code',
 					sprintf(
-						__( 'The response code (<code>%s<code>) was incorrect, required response code <code>%s</code>.', 'pronamic_ideal' ),
+						__( 'The response code (<code>%1$s<code>) was incorrect, required response code <code>%2$s</code>.', 'pronamic_ideal' ),
 						wp_remote_retrieve_response_code( $result ),
 						$required_response_code
 					)
@@ -194,6 +194,33 @@ class Pronamic_WP_Pay_Util {
 		return $result;
 	}
 
+	/**
+	 * Convert the specified period to a single char notation.
+	 *
+	 * @since 1.3.9
+	 * @param string $period
+	 * @return string
+	 */
+	public static function to_period( $period ) {
+		if ( false !== strpos( $period, 'day' ) ) {
+			return 'D';
+		}
+
+		if ( false !== strpos( $period, 'week' ) ) {
+			return 'W';
+		}
+
+		if ( false !== strpos( $period, 'month' ) ) {
+			return 'M';
+		}
+
+		if ( false !== strpos( $period, 'year' ) ) {
+			return 'Y';
+		}
+
+		return $period;
+	}
+
 	//////////////////////////////////////////////////
 
 	/**
@@ -205,5 +232,43 @@ class Pronamic_WP_Pay_Util {
 	 */
 	public static function build_url( $url, array $parameters ) {
 		return $url . '?' . _http_build_query( $parameters, null, '&' );
+	}
+
+	//////////////////////////////////////////////////
+
+	/**
+	 * Convert input fields array to HTML.
+	 *
+	 * @param array $fields
+	 * @return string
+	 */
+	public static function input_fields_html( array $fields ) {
+		$html = '';
+
+		foreach ( $fields as $field ) {
+			if ( ! isset( $field['type'] ) ) {
+				continue;
+			}
+
+			switch ( $field['type'] ) {
+				case 'select':
+					$html .= sprintf(
+						'<label for="%s">%s</label> ',
+						esc_attr( $field['id'] ),
+						$field['label']
+					);
+
+					$html .= sprintf(
+						'<select id="%s" name="%s">%s</select>',
+						esc_attr( $field['id'] ),
+						esc_attr( $field['name'] ),
+						Pronamic_WP_HTML_Helper::select_options_grouped( $field['choices'] )
+					);
+
+					break;
+			}
+		}
+
+		return $html;
 	}
 }
