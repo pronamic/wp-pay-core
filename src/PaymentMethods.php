@@ -64,6 +64,13 @@ class Pronamic_WP_Pay_PaymentMethods {
 	const IDEAL = 'ideal';
 
 	/**
+	 * Constant for the Maestro payment method.
+	 *
+	 * @var string
+	 */
+	const MAESTRO = 'MAESTRO';
+
+	/**
 	 * MiniTix
 	 *
 	 * @var string
