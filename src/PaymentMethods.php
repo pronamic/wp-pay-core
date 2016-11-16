@@ -7,7 +7,7 @@
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 1.3.9
+ * @version 1.3.10
  * @since 1.0.1
  */
 class Pronamic_WP_Pay_PaymentMethods {
@@ -37,7 +37,7 @@ class Pronamic_WP_Pay_PaymentMethods {
 	 * Constant for the Direct Debit mandate via Credit Card payment method.
 	 *
 	 * @var string
-	 * @since unreleased
+	 * @since 1.3.9
 	 */
 	const DIRECT_DEBIT_CREDIT_CARD = 'direct_debit_credit_card';
 
@@ -45,7 +45,7 @@ class Pronamic_WP_Pay_PaymentMethods {
 	 * Constant for the Direct Debit mandate via iDEAL payment method.
 	 *
 	 * @var string
-	 * @since unreleased
+	 * @since 1.3.9
 	 */
 	const DIRECT_DEBIT_IDEAL = 'direct_debit_ideal';
 
@@ -62,6 +62,14 @@ class Pronamic_WP_Pay_PaymentMethods {
 	 * @var string
 	 */
 	const IDEAL = 'ideal';
+
+	/**
+	 * Constant for the Maestro payment method.
+	 *
+	 * @var string
+	 * @since 1.3.10
+	 */
+	const MAESTRO = 'MAESTRO';
 
 	/**
 	 * MiniTix
