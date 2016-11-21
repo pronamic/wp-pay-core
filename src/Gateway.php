@@ -358,7 +358,6 @@ abstract class Pronamic_WP_Pay_Gateway {
 		$transient = 'pronamic_pay_payment_methods_' . $this->config->id;
 
 		$result = get_transient( $transient );
-		$result = false;
 
 		if ( is_wp_error( $result ) || false === $result ) {
 			$methods = $this->get_payment_methods();
