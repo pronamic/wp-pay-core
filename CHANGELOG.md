@@ -7,6 +7,10 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 - 
 
+## [1.3.11] - Unreleased
+- Added new constant for the KBC/CBC Payment Button payment method.
+- Added new constant for the Belfius Direct Net payment method.
+
 ## [1.3.10] - 2016-11-16
 - Added new constant for the Maestro payment method.
 
@@ -73,7 +77,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/1.3.10...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/1.3.11...HEAD
+[1.3.11]: https://github.com/wp-pay/core/compare/1.3.10...1.3.11
 [1.3.10]: https://github.com/wp-pay/core/compare/1.3.9...1.3.10
 [1.3.9]: https://github.com/wp-pay/core/compare/1.3.8...1.3.9
 [1.3.8]: https://github.com/wp-pay/core/compare/1.3.7...1.3.8
