@@ -3,7 +3,7 @@
 /**
  * Title: Gateway
  * Description:
- * Copyright: Copyright (c) 2005 - 2016
+ * Copyright: Copyright (c) 2005 - 2017
  * Company: Pronamic
  *
  * @author Remco Tolsma
@@ -139,7 +139,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 *
 	 * @param string $feature
 	 *
-	 * @since unreleased
+	 * @since 1.3.11
 	 * @return bool
 	 */
 	public function supports( $feature ) {
@@ -358,7 +358,6 @@ abstract class Pronamic_WP_Pay_Gateway {
 		$transient = 'pronamic_pay_payment_methods_' . $this->config->id;
 
 		$result = get_transient( $transient );
-		$result = false;
 
 		if ( is_wp_error( $result ) || false === $result ) {
 			$methods = $this->get_payment_methods();

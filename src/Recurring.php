@@ -3,12 +3,12 @@
 /**
  * Title: WordPress pay recurring
  * Description:
- * Copyright: Copyright (c) 2005 - 2016
+ * Copyright: Copyright (c) 2005 - 2017
  * Company: Pronamic
  *
  * @author Reüel van der Steege
- * @version 1.0.0
- * @since unreleased
+ * @version 1.3.11
+ * @since 1.3.11
  */
 class Pronamic_WP_Pay_Recurring {
 	/**

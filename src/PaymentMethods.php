@@ -3,11 +3,11 @@
 /**
  * Title: WordPress pay payment methods
  * Description:
- * Copyright: Copyright (c) 2005 - 2016
+ * Copyright: Copyright (c) 2005 - 2017
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 1.3.10
+ * @version 1.3.11
  * @since 1.0.1
  */
 class Pronamic_WP_Pay_PaymentMethods {
@@ -112,6 +112,22 @@ class Pronamic_WP_Pay_PaymentMethods {
 	const SOFORT = 'sofort';
 
 	/**
+	 * Constant for the KBC/CBC Payment Button method.
+	 *
+	 * @since 1.3.11
+	 * @var string
+	 */
+	const KBC = 'kbc';
+
+	/**
+	 * Constant for the Belfius Direct Net method.
+	 *
+	 * @since 1.3.11
+	 * @var string
+	 */
+	const BELFIUS = 'belfius';
+
+	/**
 	 * Get payment methods
 	 *
 	 * @since 1.3.0
@@ -122,11 +138,13 @@ class Pronamic_WP_Pay_PaymentMethods {
 		$payment_methods = array(
 			Pronamic_WP_Pay_PaymentMethods::BANCONTACT         => __( 'Bancontact', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::BANK_TRANSFER      => __( 'Bank Transfer', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::BELFIUS            => __( 'Belfius Direct Net', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::BITCOIN            => __( 'Bitcoin', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::CREDIT_CARD        => __( 'Credit Card', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT       => __( 'Direct Debit', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT_IDEAL => __( 'Direct Debit mandate via iDEAL', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::IDEAL              => __( 'iDEAL', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::KBC                => __( 'KBC/CBC Payment Button', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::PAYPAL             => __( 'PayPal', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::SOFORT             => __( 'SOFORT Banking', 'pronamic_ideal' ),
 		);

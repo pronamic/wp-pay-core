@@ -3,12 +3,12 @@
 /**
  * Title: Credit Card payment method
  * Description:
- * Copyright: Copyright (c) 2005 - 2016
+ * Copyright: Copyright (c) 2005 - 2017
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version unreleased
- * @since unreleased
+ * @version 1.3.11
+ * @since 1.3.11
  */
 class Pronamic_WP_Pay_CreditCardPaymentMethod extends Pronamic_WP_Pay_PaymentMethod {
 	/**
