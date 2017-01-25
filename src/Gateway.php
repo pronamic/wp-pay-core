@@ -139,7 +139,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 *
 	 * @param string $feature
 	 *
-	 * @since unreleased
+	 * @since 1.3.11
 	 * @return bool
 	 */
 	public function supports( $feature ) {

@@ -7,8 +7,8 @@
  * Company: Pronamic
  *
  * @author Reüel van der Steege
- * @version 1.0.0
- * @since unreleased
+ * @version 1.3.11
+ * @since 1.3.11
  */
 class Pronamic_WP_Pay_Recurring {
 	/**

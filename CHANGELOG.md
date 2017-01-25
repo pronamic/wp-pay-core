@@ -7,7 +7,7 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 - 
 
-## [1.3.11] - Unreleased
+## [1.3.11] - 2017-01-25
 - Added new constant for the KBC/CBC Payment Button payment method.
 - Added new constant for the Belfius Direct Net payment method.
 
