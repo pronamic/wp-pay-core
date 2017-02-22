@@ -363,6 +363,11 @@ abstract class Pronamic_WP_Pay_Gateway {
 			$methods = $this->get_payment_methods();
 
 			if ( $methods ) {
+				// Make sure methods are stored as array
+				if ( is_string( $methods ) ) {
+					$methods = array( $methods );
+				}
+
 				// 60 * 60 * 24 = 24 hours = 1 day
 				set_transient( $transient, $methods, 60 * 60 * 24 );
 			}
