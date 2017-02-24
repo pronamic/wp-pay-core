@@ -402,7 +402,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 		$choices = null;
 
 		if ( method_exists( $this, 'get_supported_payment_methods' ) ) {
-			$gateway_methods = $this->get_transient_payment_methods();
+			$gateway_methods = $this->get_supported_payment_methods();
 
 			if ( is_array( $gateway_methods ) ) {
 				$choices = array();
