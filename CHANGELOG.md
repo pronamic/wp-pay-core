@@ -7,6 +7,9 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 - 
 
+## [1.3.12] - 2017-03-15
+- Make sure payment methods are stored as array in transient.
+
 ## [1.3.11] - 2017-01-25
 - Added new constant for the KBC/CBC Payment Button payment method.
 - Added new constant for the Belfius Direct Net payment method.
@@ -77,7 +80,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/1.3.11...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/1.3.12...HEAD
+[1.3.12]: https://github.com/wp-pay/core/compare/1.3.11...1.3.12
 [1.3.11]: https://github.com/wp-pay/core/compare/1.3.10...1.3.11
 [1.3.10]: https://github.com/wp-pay/core/compare/1.3.9...1.3.10
 [1.3.9]: https://github.com/wp-pay/core/compare/1.3.8...1.3.9
