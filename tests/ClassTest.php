@@ -10,7 +10,7 @@
  * @version 1.1.0
  * @since 1.1.0
  */
-class Pronamic_WP_Pay_ClassTest extends PHPUnit_Framework_TestCase {
+class Pronamic_WP_Pay_ClassTest extends WP_UnitTestCase {
 	/**
 	 * Test method exists.
 	 *
