@@ -42,7 +42,7 @@ before_script:
   - phpenv rehash
 
 script:
-  - php vendor/bin/phpunit
+  - grunt phpunit
   - grunt phplint
   - if [[ "$GRUNT" == "1" ]]; then grunt; fi
 
