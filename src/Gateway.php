@@ -260,7 +260,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 	/////////////////////////////////////////////////
 
 	/**
-	 * Get issuers
+	 * Get iDEAL issuers
 	 *
 	 * @return mixed an array or null
 	 */
@@ -268,10 +268,19 @@ abstract class Pronamic_WP_Pay_Gateway {
 		return null;
 	}
 
+	/**
+	 * Get credit card issuers
+	 *
+	 * @return mixed an array or null
+	 */
+	public function get_credit_card_issuers() {
+		return null;
+	}
+
 	/////////////////////////////////////////////////
 
 	/**
-	 * Get the issuers transient
+	 * Get the iDEAL issuers transient
 	 */
 	public function get_transient_issuers() {
 		$issuers = null;
@@ -283,6 +292,31 @@ abstract class Pronamic_WP_Pay_Gateway {
 
 		if ( is_wp_error( $result ) || false === $result ) {
 			$issuers = $this->get_issuers();
+
+			if ( $issuers ) {
+				// 60 * 60 * 24 = 24 hours = 1 day
+				set_transient( $transient, $issuers, 60 * 60 * 24 );
+			}
+		} elseif ( is_array( $result ) ) {
+			$issuers = $result;
+		}
+
+		return $issuers;
+	}
+
+	/**
+	 * Get the credit card issuers transient
+	 */
+	public function get_transient_credit_card_issuers() {
+		$issuers = null;
+
+		// Transient name. Expected to not be SQL-escaped. Should be 45 characters or less in length.
+		$transient = 'pronamic_pay_credit_card_issuers_' . $this->config->id;
+
+		$result = get_transient( $transient );
+
+		if ( is_wp_error( $result ) || false === $result ) {
+			$issuers = $this->get_credit_card_issuers();
 
 			if ( $issuers ) {
 				// 60 * 60 * 24 = 24 hours = 1 day
