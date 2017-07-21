@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
-- 
+- Added bunq payment method constant.
 
 ## [1.3.12] - 2017-03-15
 - Make sure payment methods are stored as array in transient.

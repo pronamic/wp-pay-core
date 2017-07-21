@@ -27,6 +27,16 @@ class Pronamic_WP_Pay_PaymentMethods {
 	const BITCOIN = 'bitcoin';
 
 	/**
+	 * bunq
+	 *
+	 * @see https://www.sisow.nl/news
+	 * @see https://plugins.trac.wordpress.org/browser/sisow-for-woocommerce/tags/4.7.2/includes/classes/Sisow/Gateway/Bunq.php
+	 * @since unreleased
+	 * @var string
+	 */
+	const BUNQ = 'bunq';
+
+	/**
 	 * Direct Debit
 	 *
 	 * @var string
