@@ -29,7 +29,7 @@ class Pronamic_WP_Pay_PaymentMethods {
 	/**
 	 * bunq
 	 *
-	 * @see https://www.sisow.nl/news
+	 * @see https://www.sisow.nl/news/00009
 	 * @see https://plugins.trac.wordpress.org/browser/sisow-for-woocommerce/tags/4.7.2/includes/classes/Sisow/Gateway/Bunq.php
 	 * @since unreleased
 	 * @var string
@@ -158,6 +158,7 @@ class Pronamic_WP_Pay_PaymentMethods {
 			Pronamic_WP_Pay_PaymentMethods::BANK_TRANSFER           => __( 'Bank Transfer', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::BELFIUS                 => __( 'Belfius Direct Net', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::BITCOIN                 => __( 'Bitcoin', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::BUNQ                    => __( 'Bunq', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::CREDIT_CARD             => __( 'Credit Card', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT            => __( 'Direct Debit', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT_BANCONTACT => __( 'Direct Debit mandate via Bancontact', 'pronamic_ideal' ),
