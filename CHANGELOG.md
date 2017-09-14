@@ -5,7 +5,14 @@ All notable changes to this project will be documented in this file.
 This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
+-
+
+## [1.3.13] - 2017-09-14
+- Added support for credit card issuers.
 - Added bunq payment method constant.
+- Added `Direct Debit mandate via Bancontact` payment method constant and name.
+- Added Bunq payment method name and use permanent URL to news article.
+- Changed HTML/CSS class of pay button.
 
 ## [1.3.12] - 2017-03-15
 - Make sure payment methods are stored as array in transient.
@@ -80,7 +87,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/1.3.12...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/1.3.13...HEAD
+[1.3.13]: https://github.com/wp-pay/core/compare/1.3.12...1.3.13
 [1.3.12]: https://github.com/wp-pay/core/compare/1.3.11...1.3.12
 [1.3.11]: https://github.com/wp-pay/core/compare/1.3.10...1.3.11
 [1.3.10]: https://github.com/wp-pay/core/compare/1.3.9...1.3.10

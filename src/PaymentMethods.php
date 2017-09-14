@@ -7,7 +7,7 @@
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 1.3.11
+ * @version 1.3.13
  * @since 1.0.1
  */
 class Pronamic_WP_Pay_PaymentMethods {
@@ -27,11 +27,11 @@ class Pronamic_WP_Pay_PaymentMethods {
 	const BITCOIN = 'bitcoin';
 
 	/**
-	 * bunq
+	 * Bunq
 	 *
 	 * @see https://www.sisow.nl/news/00009
 	 * @see https://plugins.trac.wordpress.org/browser/sisow-for-woocommerce/tags/4.7.2/includes/classes/Sisow/Gateway/Bunq.php
-	 * @since unreleased
+	 * @since 1.3.13
 	 * @var string
 	 */
 	const BUNQ = 'bunq';

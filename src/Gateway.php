@@ -7,7 +7,7 @@
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 1.3.12
+ * @version 1.3.13
  * @since 1.0.0
  */
 abstract class Pronamic_WP_Pay_Gateway {
