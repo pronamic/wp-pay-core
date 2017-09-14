@@ -1,6 +1,6 @@
 {
   "name": "core",
-  "version": "1.3.12",
+  "version": "1.3.13",
   "description": "Core components for the WordPress payment processing library.",
   "repository": {
     "type": "git",

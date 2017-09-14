@@ -7,7 +7,7 @@
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 1.3.11
+ * @version 1.3.13
  * @since 1.0.1
  */
 class Pronamic_WP_Pay_PaymentMethods {
@@ -27,11 +27,29 @@ class Pronamic_WP_Pay_PaymentMethods {
 	const BITCOIN = 'bitcoin';
 
 	/**
+	 * Bunq
+	 *
+	 * @see https://www.sisow.nl/news/00009
+	 * @see https://plugins.trac.wordpress.org/browser/sisow-for-woocommerce/tags/4.7.2/includes/classes/Sisow/Gateway/Bunq.php
+	 * @since 1.3.13
+	 * @var string
+	 */
+	const BUNQ = 'bunq';
+
+	/**
 	 * Direct Debit
 	 *
 	 * @var string
 	 */
 	const DIRECT_DEBIT = 'direct_debit';
+
+	/**
+	 * Constant for the Direct Debit mandate via Bancontact payment method.
+	 *
+	 * @var string
+	 * @since unreleased
+	 */
+	const DIRECT_DEBIT_BANCONTACT = 'direct_debit_bancontact';
 
 	/**
 	 * Constant for the Direct Debit mandate via Credit Card payment method.
@@ -136,17 +154,19 @@ class Pronamic_WP_Pay_PaymentMethods {
 	 */
 	public static function get_payment_methods() {
 		$payment_methods = array(
-			Pronamic_WP_Pay_PaymentMethods::BANCONTACT         => __( 'Bancontact', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::BANK_TRANSFER      => __( 'Bank Transfer', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::BELFIUS            => __( 'Belfius Direct Net', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::BITCOIN            => __( 'Bitcoin', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::CREDIT_CARD        => __( 'Credit Card', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT       => __( 'Direct Debit', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT_IDEAL => __( 'Direct Debit mandate via iDEAL', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::IDEAL              => __( 'iDEAL', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::KBC                => __( 'KBC/CBC Payment Button', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::PAYPAL             => __( 'PayPal', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::SOFORT             => __( 'SOFORT Banking', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::BANCONTACT              => __( 'Bancontact', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::BANK_TRANSFER           => __( 'Bank Transfer', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::BELFIUS                 => __( 'Belfius Direct Net', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::BITCOIN                 => __( 'Bitcoin', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::BUNQ                    => __( 'Bunq', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::CREDIT_CARD             => __( 'Credit Card', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT            => __( 'Direct Debit', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT_BANCONTACT => __( 'Direct Debit mandate via Bancontact', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT_IDEAL      => __( 'Direct Debit mandate via iDEAL', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::IDEAL                   => __( 'iDEAL', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::KBC                     => __( 'KBC/CBC Payment Button', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::PAYPAL                  => __( 'PayPal', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::SOFORT                  => __( 'SOFORT Banking', 'pronamic_ideal' ),
 		);
 
 		return $payment_methods;
