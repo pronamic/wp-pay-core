@@ -145,6 +145,8 @@ class Pronamic_WP_Pay_PaymentMethods {
 	 */
 	const BELFIUS = 'belfius';
 
+	/////////////////////////////////////////////////
+
 	/**
 	 * Get payment methods
 	 *
@@ -187,5 +189,85 @@ class Pronamic_WP_Pay_PaymentMethods {
 		}
 
 		return '';
+	}
+
+	/////////////////////////////////////////////////
+
+	/**
+	 * Get direct debit methods.
+	 *
+	 * @since unreleased
+	 * @return array
+	 */
+	public static function get_direct_debit_methods() {
+		$payment_methods = array(
+			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT_BANCONTACT => Pronamic_WP_Pay_PaymentMethods::BANCONTACT,
+			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT_IDEAL      => Pronamic_WP_Pay_PaymentMethods::IDEAL,
+		);
+
+		return $payment_methods;
+	}
+
+	/**
+	 * Is direct debit method.
+	 *
+	 * @since unreleased
+	 *
+	 * @param $payment_method
+	 *
+	 * @return bool
+	 */
+	public static function is_direct_debit_method( $payment_method ) {
+		return array_key_exists( $payment_method, self::get_direct_debit_methods() );
+	}
+
+	/////////////////////////////////////////////////
+
+	/**
+	 * Get recurring methods.
+	 *
+	 * @since unreleased
+	 * @return array
+	 */
+	public static function get_recurring_methods() {
+		// Get the direct debit methods
+		$payment_methods = self::get_direct_debit_methods();
+
+		// Add additional methods suitable for recurring payments
+		$payment_methods[ Pronamic_WP_Pay_PaymentMethods::CREDIT_CARD ] = Pronamic_WP_Pay_PaymentMethods::CREDIT_CARD;
+
+		return $payment_methods;
+	}
+
+	/**
+	 * Is recurring method.
+	 *
+	 * @since unreleased
+	 *
+	 * @param $payment_method
+	 *
+	 * @return bool
+	 */
+	public static function is_recurring_method( $payment_method ) {
+		return array_key_exists( $payment_method, self::get_recurring_methods() );
+	}
+
+	/////////////////////////////////////////////////
+
+	/**
+	 * Get first method for payment method.
+	 *
+	 * @param $payment_method
+	 *
+	 * @return
+	 */
+	public static function get_first_payment_method( $payment_method ) {
+		if ( self::is_direct_debit_method( $payment_method ) ) {
+			$direct_debit_methods = self::get_direct_debit_methods();
+
+			return $direct_debit_methods[ $payment_method ];
+		}
+
+		return $payment_method;
 	}
 }

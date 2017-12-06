@@ -649,7 +649,15 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 * @return string
 	 */
 	public function get_input_html() {
+		$payment_method = $this->get_payment_method();
+
+		$first_payment_method = Pronamic_WP_Pay_PaymentMethods::get_first_payment_method( $payment_method );
+
+		$this->set_payment_method( $first_payment_method );
+
 		$fields = $this->get_input_fields();
+
+		$this->set_payment_method( $payment_method );
 
 		return Pronamic_WP_Pay_Util::input_fields_html( $fields );
 	}
