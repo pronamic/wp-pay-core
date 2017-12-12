@@ -1,14 +1,25 @@
 <?xml version="1.0"?>
 
 <ruleset name="WordPress Pay: Core rules">
+	<config name="installed_paths" value="vendor/wp-coding-standards/wpcs,vendor/wimg/php-compatibility" />
+
+	<config name="minimum_supported_wp_version" value="4.7" />
+
+	<config name="testVersion" value="5.3-99.0"/>
+
+	<rule ref="PHPCompatibility" />
+
 	<rule ref="WordPress">
 		<exclude name="Generic.Files.LowercasedFilename.NotFound" />
 
 		<exclude name="Squiz.Commenting" />
 
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName" />
+		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
+
 		<exclude name="WordPress.VIP.RestrictedFunctions.file_get_contents" />
 		<exclude name="WordPress.VIP.RestrictedFunctions.wp_remote_get" />
-		<exclude name="WordPress.VIP.RestrictedFunctions.wp_redirect" />
+		<exclude name="WordPress.VIP.RestrictedFunctions.wp_redirect_wp_redirect" />
 	</rule>
 
 	<rule ref="Squiz.PHP.CommentedOutCode.Found">

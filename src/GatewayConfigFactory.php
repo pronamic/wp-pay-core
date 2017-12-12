@@ -11,5 +11,5 @@
  * @since 1.0.0
  */
 abstract class Pronamic_WP_Pay_GatewayConfigFactory {
-	public abstract function get_config( $post_id );
+	abstract public function get_config( $post_id );
 }

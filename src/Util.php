@@ -38,6 +38,7 @@ class Pronamic_WP_Pay_Util {
 				$return = new WP_Error(
 					'wrong_response_code',
 					sprintf(
+						/* translators: 1: received responce code, 2: required response code */
 						__( 'The response code (<code>%1$s<code>) was incorrect, required response code <code>%2$s</code>.', 'pronamic_ideal' ),
 						wp_remote_retrieve_response_code( $result ),
 						$required_response_code
@@ -118,7 +119,7 @@ class Pronamic_WP_Pay_Util {
 	 */
 	public static function string_to_amount( $amount ) {
 		// Remove thousands seperators
-		$decimal_sep   = get_option( 'pronamic_pay_decimal_sep' );
+		$decimal_sep = get_option( 'pronamic_pay_decimal_sep' );
 
 		// Seperators
 		$seperators = array( $decimal_sep, '.', ',' );
