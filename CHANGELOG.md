@@ -7,6 +7,9 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [1.3.14] - 2017-12-12
+- Improved direct debit payment method support and add helper methods.
+
 ## [1.3.13] - 2017-09-14
 - Added support for credit card issuers.
 - Added bunq payment method constant.
@@ -87,7 +90,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/1.3.13...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/1.3.14...HEAD
+[1.3.14]: https://github.com/wp-pay/core/compare/1.3.13...1.3.14
 [1.3.13]: https://github.com/wp-pay/core/compare/1.3.12...1.3.13
 [1.3.12]: https://github.com/wp-pay/core/compare/1.3.11...1.3.12
 [1.3.11]: https://github.com/wp-pay/core/compare/1.3.10...1.3.11

@@ -7,7 +7,7 @@
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 1.3.13
+ * @version 1.3.14
  * @since 1.0.1
  */
 class Pronamic_WP_Pay_PaymentMethods {
@@ -87,7 +87,7 @@ class Pronamic_WP_Pay_PaymentMethods {
 	 * @var string
 	 * @since 1.3.10
 	 */
-	const MAESTRO = 'MAESTRO';
+	const MAESTRO = 'maestro';
 
 	/**
 	 * MiniTix
@@ -145,6 +145,8 @@ class Pronamic_WP_Pay_PaymentMethods {
 	 */
 	const BELFIUS = 'belfius';
 
+	/////////////////////////////////////////////////
+
 	/**
 	 * Get payment methods
 	 *
@@ -154,19 +156,19 @@ class Pronamic_WP_Pay_PaymentMethods {
 	 */
 	public static function get_payment_methods() {
 		$payment_methods = array(
-			Pronamic_WP_Pay_PaymentMethods::BANCONTACT              => __( 'Bancontact', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::BANK_TRANSFER           => __( 'Bank Transfer', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::BELFIUS                 => __( 'Belfius Direct Net', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::BITCOIN                 => __( 'Bitcoin', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::BUNQ                    => __( 'Bunq', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::CREDIT_CARD             => __( 'Credit Card', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT            => __( 'Direct Debit', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::BANCONTACT    => __( 'Bancontact', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::BANK_TRANSFER => __( 'Bank Transfer', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::BELFIUS       => __( 'Belfius Direct Net', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::BITCOIN       => __( 'Bitcoin', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::BUNQ          => __( 'Bunq', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::CREDIT_CARD   => __( 'Credit Card', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT  => __( 'Direct Debit', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT_BANCONTACT => __( 'Direct Debit mandate via Bancontact', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT_IDEAL      => __( 'Direct Debit mandate via iDEAL', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::IDEAL                   => __( 'iDEAL', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::KBC                     => __( 'KBC/CBC Payment Button', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::PAYPAL                  => __( 'PayPal', 'pronamic_ideal' ),
-			Pronamic_WP_Pay_PaymentMethods::SOFORT                  => __( 'SOFORT Banking', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT_IDEAL => __( 'Direct Debit mandate via iDEAL', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::IDEAL         => __( 'iDEAL', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::KBC           => __( 'KBC/CBC Payment Button', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::PAYPAL        => __( 'PayPal', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::SOFORT        => __( 'SOFORT Banking', 'pronamic_ideal' ),
 		);
 
 		return $payment_methods;
@@ -187,5 +189,85 @@ class Pronamic_WP_Pay_PaymentMethods {
 		}
 
 		return '';
+	}
+
+	/////////////////////////////////////////////////
+
+	/**
+	 * Get direct debit methods.
+	 *
+	 * @since unreleased
+	 * @return array
+	 */
+	public static function get_direct_debit_methods() {
+		$payment_methods = array(
+			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT_BANCONTACT => Pronamic_WP_Pay_PaymentMethods::BANCONTACT,
+			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT_IDEAL      => Pronamic_WP_Pay_PaymentMethods::IDEAL,
+		);
+
+		return $payment_methods;
+	}
+
+	/**
+	 * Is direct debit method.
+	 *
+	 * @since unreleased
+	 *
+	 * @param $payment_method
+	 *
+	 * @return bool
+	 */
+	public static function is_direct_debit_method( $payment_method ) {
+		return array_key_exists( $payment_method, self::get_direct_debit_methods() );
+	}
+
+	/////////////////////////////////////////////////
+
+	/**
+	 * Get recurring methods.
+	 *
+	 * @since unreleased
+	 * @return array
+	 */
+	public static function get_recurring_methods() {
+		// Get the direct debit methods
+		$payment_methods = self::get_direct_debit_methods();
+
+		// Add additional methods suitable for recurring payments
+		$payment_methods[ Pronamic_WP_Pay_PaymentMethods::CREDIT_CARD ] = Pronamic_WP_Pay_PaymentMethods::CREDIT_CARD;
+
+		return $payment_methods;
+	}
+
+	/**
+	 * Is recurring method.
+	 *
+	 * @since unreleased
+	 *
+	 * @param $payment_method
+	 *
+	 * @return bool
+	 */
+	public static function is_recurring_method( $payment_method ) {
+		return array_key_exists( $payment_method, self::get_recurring_methods() );
+	}
+
+	/////////////////////////////////////////////////
+
+	/**
+	 * Get first method for payment method.
+	 *
+	 * @param $payment_method
+	 *
+	 * @return
+	 */
+	public static function get_first_payment_method( $payment_method ) {
+		if ( self::is_direct_debit_method( $payment_method ) ) {
+			$direct_debit_methods = self::get_direct_debit_methods();
+
+			return $direct_debit_methods[ $payment_method ];
+		}
+
+		return $payment_method;
 	}
 }

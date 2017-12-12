@@ -7,7 +7,7 @@
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 1.3.13
+ * @version 1.3.14
  * @since 1.0.0
  */
 abstract class Pronamic_WP_Pay_Gateway {
@@ -524,11 +524,11 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 */
 	public function redirect( Pronamic_Pay_Payment $payment ) {
 		switch ( $this->method ) {
-			case self::METHOD_HTTP_REDIRECT :
+			case self::METHOD_HTTP_REDIRECT:
 				return $this->redirect_via_http( $payment );
-			case self::METHOD_HTML_FORM :
+			case self::METHOD_HTML_FORM:
 				return $this->redirect_via_html( $payment );
-			default :
+			default:
 				// No idea how to redirect to the gateway
 		}
 	}
@@ -649,7 +649,15 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 * @return string
 	 */
 	public function get_input_html() {
+		$payment_method = $this->get_payment_method();
+
+		$first_payment_method = Pronamic_WP_Pay_PaymentMethods::get_first_payment_method( $payment_method );
+
+		$this->set_payment_method( $first_payment_method );
+
 		$fields = $this->get_input_fields();
+
+		$this->set_payment_method( $payment_method );
 
 		return Pronamic_WP_Pay_Util::input_fields_html( $fields );
 	}
