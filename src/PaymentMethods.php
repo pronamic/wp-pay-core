@@ -278,4 +278,64 @@ class Pronamic_WP_Pay_PaymentMethods {
 
 		return $payment_method;
 	}
+
+	/////////////////////////////////////////////////
+
+	/**
+	 * Update active payment methods option.
+	 *
+	 * @since unreleased
+	 *
+	 * @return array
+	 */
+	public static function update_active_payment_methods() {
+		$active_payment_methods = array();
+
+		$query = new \WP_Query( array(
+			'post_type'      => 'pronamic_gateway',
+			'posts_per_page' => 30,
+			'fields'         => 'ids',
+		) );
+
+		foreach ( $query->posts as $config_id ) {
+			$gateway = \Pronamic_WP_Pay_Plugin::get_gateway( $config_id );
+
+			if ( ! $gateway ) {
+				continue;
+			}
+
+			$active_payment_methods = array_merge(
+				$active_payment_methods,
+				$gateway->get_supported_payment_methods()
+			);
+		}
+
+		$active_payment_methods = array_unique( $active_payment_methods );
+
+		update_option( 'pronamic_pay_active_payment_methods', $active_payment_methods );
+	}
+
+	/////////////////////////////////////////////////
+
+	/**
+	 * Check if payment method is active.
+	 *
+	 * @since unreleased
+	 *
+	 * @return bool
+	 */
+	public static function is_active( $payment_method = null ) {
+		$active_payment_methods = get_option( 'pronamic_pay_active_payment_methods' );
+
+		// Update active payment methods option if necessary.
+		if ( ! is_array( $active_payment_methods ) ) {
+			self::update_active_payment_methods();
+
+			$active_payment_methods = get_option( 'pronamic_pay_active_payment_methods' );
+		}
+
+		$is_active = in_array( $payment_method, $active_payment_methods, true );
+
+		return $is_active;
+	}
 }
