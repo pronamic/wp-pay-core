@@ -12,11 +12,27 @@
  */
 class Pronamic_WP_Pay_PaymentMethods {
 	/**
+	 * Bancontact
+	 *
+	 * @var string
+	 * @since 1.3.7
+	 */
+	const BANCONTACT = 'bancontact';
+
+	/**
 	 * Bank transfer
 	 *
 	 * @var string
 	 */
 	const BANK_TRANSFER = 'bank_transfer';
+
+	/**
+	 * Constant for the Belfius Direct Net method.
+	 *
+	 * @since 1.3.11
+	 * @var string
+	 */
+	const BELFIUS = 'belfius';
 
 	/**
 	 * Bitcoin
@@ -35,6 +51,13 @@ class Pronamic_WP_Pay_PaymentMethods {
 	 * @var string
 	 */
 	const BUNQ = 'bunq';
+
+	/**
+	 * Credit Card
+	 *
+	 * @var string
+	 */
+	const CREDIT_CARD = 'credit_card';
 
 	/**
 	 * Direct Debit
@@ -68,18 +91,19 @@ class Pronamic_WP_Pay_PaymentMethods {
 	const DIRECT_DEBIT_IDEAL = 'direct_debit_ideal';
 
 	/**
-	 * Credit Card
-	 *
-	 * @var string
-	 */
-	const CREDIT_CARD = 'credit_card';
-
-	/**
 	 * Constant for the iDEAL payment method.
 	 *
 	 * @var string
 	 */
 	const IDEAL = 'ideal';
+
+	/**
+	 * Constant for the KBC/CBC Payment Button method.
+	 *
+	 * @since 1.3.11
+	 * @var string
+	 */
+	const KBC = 'kbc';
 
 	/**
 	 * Constant for the Maestro payment method.
@@ -106,12 +130,12 @@ class Pronamic_WP_Pay_PaymentMethods {
 	const MISTER_CASH = 'mister_cash';
 
 	/**
-	 * Bancontact
+	 * Constant for the Payconiq method.
 	 *
+	 * @since unreleased
 	 * @var string
-	 * @since 1.3.7
 	 */
-	const BANCONTACT = 'bancontact';
+	const PAYCONIQ = 'payconiq';
 
 	/**
 	 * PayPal
@@ -128,22 +152,6 @@ class Pronamic_WP_Pay_PaymentMethods {
 	 * @since 1.0.1
 	 */
 	const SOFORT = 'sofort';
-
-	/**
-	 * Constant for the KBC/CBC Payment Button method.
-	 *
-	 * @since 1.3.11
-	 * @var string
-	 */
-	const KBC = 'kbc';
-
-	/**
-	 * Constant for the Belfius Direct Net method.
-	 *
-	 * @since 1.3.11
-	 * @var string
-	 */
-	const BELFIUS = 'belfius';
 
 	/////////////////////////////////////////////////
 
