@@ -175,6 +175,7 @@ class Pronamic_WP_Pay_PaymentMethods {
 			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT_IDEAL => __( 'Direct Debit mandate via iDEAL', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::IDEAL         => __( 'iDEAL', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::KBC           => __( 'KBC/CBC Payment Button', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::PAYCONIQ      => __( 'Payconiq', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::PAYPAL        => __( 'PayPal', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::SOFORT        => __( 'SOFORT Banking', 'pronamic_ideal' ),
 		);
