@@ -91,6 +91,14 @@ class Pronamic_WP_Pay_PaymentMethods {
 	const DIRECT_DEBIT_IDEAL = 'direct_debit_ideal';
 
 	/**
+	 * Constant for the Direct Debit mandate via SOFORT payment method.
+	 *
+	 * @var string
+	 * @since 1.3.15
+	 */
+	const DIRECT_DEBIT_SOFORT = 'direct_debit_sofort';
+
+	/**
 	 * Constant for the iDEAL payment method.
 	 *
 	 * @var string
@@ -173,6 +181,7 @@ class Pronamic_WP_Pay_PaymentMethods {
 			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT  => __( 'Direct Debit', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT_BANCONTACT => __( 'Direct Debit mandate via Bancontact', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT_IDEAL => __( 'Direct Debit mandate via iDEAL', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT_SOFORT => __( 'Direct Debit mandate via SOFORT', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::IDEAL         => __( 'iDEAL', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::KBC           => __( 'KBC/CBC Payment Button', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::PAYCONIQ      => __( 'Payconiq', 'pronamic_ideal' ),
@@ -212,6 +221,7 @@ class Pronamic_WP_Pay_PaymentMethods {
 		$payment_methods = array(
 			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT_BANCONTACT => Pronamic_WP_Pay_PaymentMethods::BANCONTACT,
 			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT_IDEAL      => Pronamic_WP_Pay_PaymentMethods::IDEAL,
+			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT_SOFORT     => Pronamic_WP_Pay_PaymentMethods::SOFORT,
 		);
 
 		return $payment_methods;
