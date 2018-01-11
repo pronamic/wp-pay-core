@@ -12,6 +12,14 @@
  */
 class Pronamic_WP_Pay_PaymentMethods {
 	/**
+	 * AliPay
+	 *
+	 * @var string
+	 * @since unreleased
+	 */
+	const ALIPAY = 'alipay';
+
+	/**
 	 * Bancontact
 	 *
 	 * @var string
@@ -106,6 +114,20 @@ class Pronamic_WP_Pay_PaymentMethods {
 	const IDEAL = 'ideal';
 
 	/**
+	 * Constant for the iDEAL payment method.
+	 *
+	 * @var string
+	 */
+	const IDEALQR = 'idealqr';
+
+	/**
+	 * Constant for the Giropay payment method.
+	 *
+	 * @var string
+	 */
+	const GIROPAY = 'giropay';
+
+	/**
 	 * Constant for the KBC/CBC Payment Button method.
 	 *
 	 * @since 1.3.11
@@ -182,7 +204,9 @@ class Pronamic_WP_Pay_PaymentMethods {
 			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT_BANCONTACT => __( 'Direct Debit mandate via Bancontact', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT_IDEAL => __( 'Direct Debit mandate via iDEAL', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::DIRECT_DEBIT_SOFORT => __( 'Direct Debit mandate via SOFORT', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::GIROPAY       => __( 'Giropay', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::IDEAL         => __( 'iDEAL', 'pronamic_ideal' ),
+			Pronamic_WP_Pay_PaymentMethods::IDEALQR       => __( 'iDEAL QR', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::KBC           => __( 'KBC/CBC Payment Button', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::PAYCONIQ      => __( 'Payconiq', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::PAYPAL        => __( 'PayPal', 'pronamic_ideal' ),
