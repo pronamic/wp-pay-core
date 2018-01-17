@@ -12,7 +12,7 @@
  */
 class Pronamic_WP_Pay_PaymentMethods {
 	/**
-	 * AliPay
+	 * Alipay
 	 *
 	 * @var string
 	 * @since unreleased
@@ -194,6 +194,7 @@ class Pronamic_WP_Pay_PaymentMethods {
 	 */
 	public static function get_payment_methods() {
 		$payment_methods = array(
+			Pronamic_WP_Pay_PaymentMethods::ALIPAY        => __( 'Alipay', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::BANCONTACT    => __( 'Bancontact', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::BANK_TRANSFER => __( 'Bank Transfer', 'pronamic_ideal' ),
 			Pronamic_WP_Pay_PaymentMethods::BELFIUS       => __( 'Belfius Direct Net', 'pronamic_ideal' ),
