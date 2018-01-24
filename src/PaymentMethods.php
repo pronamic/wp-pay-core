@@ -334,7 +334,7 @@ class Pronamic_WP_Pay_PaymentMethods {
 		) );
 
 		foreach ( $query->posts as $config_id ) {
-			$gateway = \Pronamic_WP_Pay_Plugin::get_gateway( $config_id );
+			$gateway = \Pronamic\WordPress\Pay\Plugin::get_gateway( $config_id );
 
 			if ( ! $gateway ) {
 				continue;

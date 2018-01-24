@@ -1,5 +1,7 @@
 <?php
 
+use Pronamic\WordPress\Pay\Plugin;
+
 /**
  * Title: Gateway
  * Description:
@@ -576,7 +578,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 
 			nocache_headers();
 
-			include Pronamic_WP_Pay_Plugin::$dirname . '/views/redirect-via-html.php';
+			include Plugin::$dirname . '/views/redirect-via-html.php';
 		}
 
 		exit;
