@@ -1,5 +1,7 @@
 <?php
 
+namespace Pronamic\WordPress\Pay\Core;
+
 /**
  * Title: Credit Card payment method
  * Description:
@@ -10,12 +12,12 @@
  * @version 1.3.11
  * @since 1.3.11
  */
-class Pronamic_WP_Pay_CreditCardPaymentMethod extends Pronamic_WP_Pay_PaymentMethod {
+class CreditCardPaymentMethod extends PaymentMethod {
 	/**
 	 * Constructs and intialize iDEAL payment method.
 	 */
 	public function __construct() {
-		$this->id   = Pronamic_WP_Pay_PaymentMethods::CREDIT_CARD;
+		$this->id   = PaymentMethods::CREDIT_CARD;
 		$this->name = __( 'Credit Card', 'pronamic_ideal' );
 	}
 }

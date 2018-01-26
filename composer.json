@@ -24,7 +24,9 @@
 		"source": "https://github.com/wp-pay/core"
 	},
 	"autoload": {
-		"classmap": ["src/"]
+		"psr-4": {
+			"Pronamic\\WordPress\\Pay\\Core\\": "src/"
+		}
 	},
 	"config": {
 		"platform": {

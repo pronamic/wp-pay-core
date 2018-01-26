@@ -1,5 +1,7 @@
 <?php
 
+namespace Pronamic\WordPress\Pay\Core;
+
 /**
  * Title: Gateway settings
  * Description:
@@ -10,11 +12,12 @@
  * @version 1.3.5
  * @since 1.3.0
  */
-abstract class Pronamic_WP_Pay_GatewaySettings {
+abstract class GatewaySettings {
 	/**
 	 * Return data for Pronamic_WP_Pay_Admin_GatewayPostType::save_post().
 	 *
 	 * @param array $data
+	 *
 	 * @return array
 	 */
 	public function save_post( $data ) {

@@ -1,5 +1,11 @@
 <?php
 
+namespace Pronamic\WordPress\Pay\Core\XML;
+
+use DOMDocument;
+use DOMNode;
+use DOMText;
+
 /**
  * Title: XML utility class
  * Description:
@@ -10,7 +16,7 @@
  * @version 1.2.1
  * @since 1.2.1
  */
-class Pronamic_WP_Pay_XML_Util {
+class Util {
 	/**
 	 * Create and add an element with the specified name and value to the specified parent
 	 *

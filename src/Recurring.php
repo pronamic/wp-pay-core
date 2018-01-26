@@ -1,5 +1,7 @@
 <?php
 
+namespace Pronamic\WordPress\Pay\Core;
+
 /**
  * Title: WordPress pay recurring
  * Description:
@@ -10,7 +12,7 @@
  * @version 1.3.11
  * @since 1.3.11
  */
-class Pronamic_WP_Pay_Recurring {
+class Recurring {
 	/**
 	 * Constant for the first payment.
 	 *

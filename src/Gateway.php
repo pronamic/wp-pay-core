@@ -1,6 +1,13 @@
 <?php
 
+namespace Pronamic\WordPress\Pay\Core;
+
+use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
+use Pronamic\WordPress\Pay\Subscriptions\Subscription;
+use Pronamic\WordPress\Pay\Util;
+use ReflectionClass;
+use WP_Error;
 
 /**
  * Title: Gateway
@@ -12,7 +19,7 @@ use Pronamic\WordPress\Pay\Plugin;
  * @version 1.3.14
  * @since 1.0.0
  */
-abstract class Pronamic_WP_Pay_Gateway {
+abstract class Gateway {
 	/**
 	 * Method indicator for an gateway wich works through an HTML form
 	 *
@@ -30,11 +37,33 @@ abstract class Pronamic_WP_Pay_Gateway {
 	/////////////////////////////////////////////////
 
 	/**
+	 * Indicator for test mode
+	 *
+	 * @var int
+	 */
+	const MODE_TEST = 'test';
+	/**
+	 * Indicator for live mode
+	 *
+	 * @var int
+	 */
+	const MODE_LIVE = 'live';
+
+	/////////////////////////////////////////////////
+
+	/**
 	 * Pronamic_Pay_Config
 	 *
 	 * @var int
 	 */
 	protected $config;
+
+	/**
+	 * Client
+	 *
+	 * @var Client
+	 */
+	protected $client;
 
 	/////////////////////////////////////////////////
 
@@ -118,9 +147,9 @@ abstract class Pronamic_WP_Pay_Gateway {
 	/**
 	 * Constructs and initializes an gateway
 	 *
-	 * @param Pronamic_WP_Pay_GatewayConfig $config
+	 * @param GatewayConfig $config
 	 */
-	public function __construct( Pronamic_WP_Pay_GatewayConfig $config ) {
+	public function __construct( GatewayConfig $config ) {
 		$this->config = $config;
 
 		/**
@@ -362,7 +391,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 * @return mixed an array or null
 	 */
 	public function get_payment_methods() {
-		$methods_class = substr_replace( get_class( $this ), 'PaymentMethods', -7, 7 );
+		$methods_class = substr_replace( get_class( $this ), 'PaymentMethods', - 7, 7 );
 
 		if ( class_exists( $methods_class ) ) {
 			$payment_methods = new ReflectionClass( $methods_class );
@@ -444,7 +473,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 				$choices = array();
 
 				foreach ( $this->get_supported_payment_methods() as $method_id ) {
-					$choices[ $method_id ] = Pronamic_WP_Pay_PaymentMethods::get_name( $method_id );
+					$choices[ $method_id ] = PaymentMethods::get_name( $method_id );
 				}
 
 				if ( ! $this->payment_method_is_required() ) {
@@ -454,8 +483,8 @@ abstract class Pronamic_WP_Pay_Gateway {
 						$choices[] = _x( 'Other', 'Payment method field', 'pronamic_ideal' );
 					}
 				}
-			} elseif ( Pronamic_WP_Pay_PaymentMethods::IDEAL === $gateway_methods ) {
-				$choices[ Pronamic_WP_Pay_PaymentMethods::IDEAL ] = __( 'iDEAL', 'pronamic_ideal' );
+			} elseif ( PaymentMethods::IDEAL === $gateway_methods ) {
+				$choices[ PaymentMethods::IDEAL ] = __( 'iDEAL', 'pronamic_ideal' );
 			}
 		}
 
@@ -480,9 +509,9 @@ abstract class Pronamic_WP_Pay_Gateway {
 	/**
 	 * Start transaction/payment
 	 *
-	 * @param Pronamic_Pay_Payment $payment
+	 * @param Payment $payment
 	 */
-	public function start( Pronamic_Pay_Payment $payment ) {
+	public function start( Payment $payment ) {
 
 	}
 
@@ -491,9 +520,9 @@ abstract class Pronamic_WP_Pay_Gateway {
 	/**
 	 * Handle payment
 	 *
-	 * @param Pronamic_Pay_Payment $payment
+	 * @param Payment $payment
 	 */
-	public function payment( Pronamic_Pay_Payment $payment ) {
+	public function payment( Payment $payment ) {
 
 	}
 
@@ -502,9 +531,9 @@ abstract class Pronamic_WP_Pay_Gateway {
 	/**
 	 * Handle subscription update.
 	 *
-	 * @param Pronamic_Pay_Payment $payment
+	 * @param Payment $payment
 	 */
-	public function update_subscription( Pronamic_Pay_Payment $payment ) {
+	public function update_subscription( Payment $payment ) {
 
 	}
 
@@ -513,9 +542,9 @@ abstract class Pronamic_WP_Pay_Gateway {
 	/**
 	 * Handle subscription cancellation.
 	 *
-	 * @param Pronamic_Pay_Payment $payment
+	 * @param Subscription $subscription
 	 */
-	public function cancel_subscription( Pronamic_Pay_Subscription $subscription ) {
+	public function cancel_subscription( Subscription $subscription ) {
 
 	}
 
@@ -524,7 +553,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 	/**
 	 * Redirect to the gateway action URL
 	 */
-	public function redirect( Pronamic_Pay_Payment $payment ) {
+	public function redirect( Payment $payment ) {
 		switch ( $this->method ) {
 			case self::METHOD_HTTP_REDIRECT:
 				return $this->redirect_via_http( $payment );
@@ -535,19 +564,19 @@ abstract class Pronamic_WP_Pay_Gateway {
 		}
 	}
 
-	public function redirect_via_http( Pronamic_Pay_Payment $payment ) {
+	public function redirect_via_http( Payment $payment ) {
 		if ( headers_sent() ) {
 			$this->redirect_via_html( $payment );
-		} else {
-			// Redirect, See Other
-			// http://en.wikipedia.org/wiki/HTTP_303
-			wp_redirect( $payment->get_action_url(), 303 );
 		}
+
+		// Redirect, See Other
+		// http://en.wikipedia.org/wiki/HTTP_303
+		wp_redirect( $payment->get_action_url(), 303 );
 
 		exit;
 	}
 
-	public function redirect_via_html( Pronamic_Pay_Payment $payment ) {
+	public function redirect_via_html( Payment $payment ) {
 		if ( headers_sent() ) {
 			// @codingStandardsIgnoreStart
 			// No need to escape this echo
@@ -613,6 +642,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 * Set the payment method to use on this gateway.
 	 *
 	 * @since 1.2.3
+	 *
 	 * @param string $payment_method One of the PaymentMethods constants.
 	 */
 	public function set_payment_method( $payment_method ) {
@@ -653,7 +683,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 	public function get_input_html() {
 		$payment_method = $this->get_payment_method();
 
-		$first_payment_method = Pronamic_WP_Pay_PaymentMethods::get_first_payment_method( $payment_method );
+		$first_payment_method = PaymentMethods::get_first_payment_method( $payment_method );
 
 		$this->set_payment_method( $first_payment_method );
 
@@ -661,7 +691,7 @@ abstract class Pronamic_WP_Pay_Gateway {
 
 		$this->set_payment_method( $payment_method );
 
-		return Pronamic_WP_Pay_Util::input_fields_html( $fields );
+		return Util::input_fields_html( $fields );
 	}
 
 	/**
@@ -669,25 +699,19 @@ abstract class Pronamic_WP_Pay_Gateway {
 	 *
 	 * @return string
 	 */
-	public function get_form_html( Pronamic_Pay_Payment $payment, $auto_submit = false ) {
-		$html = '';
+	public function get_form_html( Payment $payment, $auto_submit = false ) {
+		$form_inner = $this->get_output_html();
 
-		// Form
-		$form_inner  = '';
-		$form_inner .= $this->get_output_html();
 		$form_inner .= sprintf(
 			'<input class="pronamic-pay-btn" type="submit" name="pay" value="%s" />',
 			__( 'Pay', 'pronamic_ideal' )
 		);
 
-		$form = sprintf(
+		$html = sprintf(
 			'<form id="pronamic_ideal_form" name="pronamic_ideal_form" method="post" action="%s">%s</form>',
 			esc_attr( $payment->get_action_url() ),
 			$form_inner
 		);
-
-		// HTML
-		$html .= $form;
 
 		if ( $auto_submit ) {
 			$html .= '<script type="text/javascript">document.pronamic_ideal_form.submit();</script>';
@@ -718,6 +742,6 @@ abstract class Pronamic_WP_Pay_Gateway {
 	public function get_output_html() {
 		$fields = $this->get_output_fields();
 
-		return Pronamic_IDeal_IDeal::htmlHiddenFields( $fields );
+		return Util::html_hidden_fields( $fields );
 	}
 }

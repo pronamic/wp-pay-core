@@ -1,5 +1,9 @@
 <?php
 
+namespace Pronamic\WordPress\Pay\Core;
+
+use Pronamic\WordPress\Pay\Core\GatewayConfigFactory;
+
 /**
  * Title: Config provider
  * Description:
@@ -10,7 +14,7 @@
  * @version 1.0.0
  * @since 1.0.0
  */
-class Pronamic_WP_Pay_ConfigProvider {
+class ConfigProvider {
 	private static $factories = array();
 
 	public static function register( $name, $class_name ) {
@@ -26,7 +30,7 @@ class Pronamic_WP_Pay_ConfigProvider {
 			if ( class_exists( $class_name ) ) {
 				$factory = new $class_name();
 
-				if ( $factory instanceof Pronamic_WP_Pay_GatewayConfigFactory ) {
+				if ( $factory instanceof GatewayConfigFactory ) {
 					$config = $factory->get_config( $post_id );
 
 					$config->id = $post_id;

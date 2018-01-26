@@ -1,5 +1,7 @@
 <?php
 
+use Pronamic\WordPress\Pay\Core\Util;
+
 /**
  * Title: WordPress pay util test
  * Description:
@@ -21,7 +23,7 @@ class Pronamic_WP_Pay_UtilTest extends WP_UnitTestCase {
 		update_option( 'pronamic_pay_thousands_sep', $thousands_sep );
 		update_option( 'pronamic_pay_decimal_sep', $decimal_sep );
 
-		$amount = Pronamic_WP_Pay_Util::string_to_amount( $string );
+		$amount = Util::string_to_amount( $string );
 
 		$this->assertEquals( $expected, $amount );
 	}
@@ -80,6 +82,27 @@ class Pronamic_WP_Pay_UtilTest extends WP_UnitTestCase {
 			array( ' ', 'd', '-2 500d7', -2500.7 ),
 			array( '', '', '123456789', 123456789 ),
 			array( false, false, '123 456 789', 123456789 ),
+		);
+	}
+
+	/**
+	 * Test method exists.
+	 *
+	 * @dataProvider status_matrix_provider
+	 */
+	public function test_class_method_exists( $class, $method, $expected ) {
+		$exists = Util::class_method_exists( $class, $method );
+
+		$this->assertEquals( $expected, $exists );
+	}
+
+	public function status_matrix_provider() {
+		return array(
+			array( 'Pronamic\WordPress\Pay\Core\Util', 'class_method_exists', true ),
+			array( 'Pronamic\WordPress\Pay\Core\Server', 'get', true ),
+			array( 'ClassDoesNotExist', 'method_does_not_exist', false ),
+			array( '', '', false ),
+			array( null, null, false ),
 		);
 	}
 }

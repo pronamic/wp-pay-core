@@ -1,5 +1,7 @@
 <?php
 
+namespace Pronamic\WordPress\Pay\Core;
+
 /**
  * Title: Payment method
  * Description:
@@ -10,7 +12,7 @@
  * @version 1.3.11
  * @since 1.3.11
  */
-abstract class Pronamic_WP_Pay_PaymentMethod {
+abstract class PaymentMethod {
 	/**
 	 * The ID of this payment method.
 	 *

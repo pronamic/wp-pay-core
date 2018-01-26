@@ -1,5 +1,7 @@
 <?php
 
+namespace Pronamic\WordPress\Pay\Core;
+
 /**
  * Title: Gateway config factory
  * Description:
@@ -10,6 +12,6 @@
  * @version 1.0.0
  * @since 1.0.0
  */
-abstract class Pronamic_WP_Pay_GatewayConfigFactory {
+abstract class GatewayConfigFactory {
 	abstract public function get_config( $post_id );
 }

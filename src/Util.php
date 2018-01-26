@@ -1,5 +1,12 @@
 <?php
 
+namespace Pronamic\WordPress\Pay\Core;
+
+use DateTime;
+use Pronamic\WordPress\Pay\Util as PayUtil;
+use SimpleXMLElement;
+use WP_Error;
+
 /**
  * Title: WordPress utility class
  * Description:
@@ -10,7 +17,7 @@
  * @version 1.3.9
  * @since 1.0.0
  */
-class Pronamic_WP_Pay_Util {
+class Util {
 	/**
 	 * Remote get body
 	 *
@@ -38,7 +45,7 @@ class Pronamic_WP_Pay_Util {
 				$return = new WP_Error(
 					'wrong_response_code',
 					sprintf(
-						/* translators: 1: received responce code, 2: required response code */
+					/* translators: 1: received responce code, 2: required response code */
 						__( 'The response code (<code>%1$s<code>) was incorrect, required response code <code>%2$s</code>.', 'pronamic_ideal' ),
 						wp_remote_retrieve_response_code( $result ),
 						$required_response_code
@@ -56,6 +63,7 @@ class Pronamic_WP_Pay_Util {
 	 * SimpleXML load string
 	 *
 	 * @param string $string
+	 *
 	 * @return SimpleXMLElement || WP_Error
 	 */
 	public static function simplexml_load_string( $string ) {
@@ -93,6 +101,7 @@ class Pronamic_WP_Pay_Util {
 	 * Amount to cents
 	 *
 	 * @param float $price
+	 *
 	 * @return int
 	 */
 	public static function amount_to_cents( $price ) {
@@ -103,6 +112,7 @@ class Pronamic_WP_Pay_Util {
 	 * Cents to amount
 	 *
 	 * @param int $cents
+	 *
 	 * @return float
 	 */
 	public static function cents_to_amount( $cents ) {
@@ -114,7 +124,9 @@ class Pronamic_WP_Pay_Util {
 	 *
 	 * @version 1.3.1
 	 * @since 1.3.0
+	 *
 	 * @param string $amount
+	 *
 	 * @return float
 	 */
 	public static function string_to_amount( $amount ) {
@@ -126,7 +138,7 @@ class Pronamic_WP_Pay_Util {
 		$seperators = array_unique( array_filter( $seperators ) );
 
 		// Check
-		foreach ( array( -3, -2 ) as $i ) {
+		foreach ( array( - 3, - 2 ) as $i ) {
 			$test = substr( $amount, $i, 1 );
 
 			if ( in_array( $test, $seperators, true ) ) {
@@ -163,7 +175,9 @@ class Pronamic_WP_Pay_Util {
 	 * Convert boolean to an numceric boolean
 	 *
 	 * @see https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
+	 *
 	 * @param boolean $boolean
+	 *
 	 * @return int
 	 */
 	public static function to_numeric_boolean( $boolean ) {
@@ -176,7 +190,9 @@ class Pronamic_WP_Pay_Util {
 	 * Convert boolean to an string boolean
 	 *
 	 * @see https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
+	 *
 	 * @param boolean $boolean
+	 *
 	 * @return int
 	 */
 	public static function to_string_boolean( $boolean ) {
@@ -199,7 +215,9 @@ class Pronamic_WP_Pay_Util {
 	 * Convert the specified period to a single char notation.
 	 *
 	 * @since 1.3.9
+	 *
 	 * @param string $period
+	 *
 	 * @return string
 	 */
 	public static function to_period( $period ) {
@@ -229,6 +247,7 @@ class Pronamic_WP_Pay_Util {
 	 *
 	 * @param string $url
 	 * @param array $parameters
+	 *
 	 * @return string
 	 */
 	public static function build_url( $url, array $parameters ) {
@@ -241,6 +260,7 @@ class Pronamic_WP_Pay_Util {
 	 * Convert input fields array to HTML.
 	 *
 	 * @param array $fields
+	 *
 	 * @return string
 	 */
 	public static function input_fields_html( array $fields ) {
@@ -263,7 +283,7 @@ class Pronamic_WP_Pay_Util {
 						'<select id="%s" name="%s">%s</select>',
 						esc_attr( $field['id'] ),
 						esc_attr( $field['name'] ),
-						Pronamic_WP_HTML_Helper::select_options_grouped( $field['choices'] )
+						PayUtil::select_options_grouped( $field['choices'] )
 					);
 
 					break;
@@ -271,5 +291,20 @@ class Pronamic_WP_Pay_Util {
 		}
 
 		return $html;
+	}
+
+	/**
+	 * Method exists
+	 *
+	 * This helper function was created to fix an issue with `method_exists` calls
+	 * and non existings classes.
+	 *
+	 * @param string $class
+	 * @param string $method
+	 *
+	 * @return boolean
+	 */
+	public static function class_method_exists( $class, $method ) {
+		return class_exists( $class ) && method_exists( $class, $method );
 	}
 }

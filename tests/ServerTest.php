@@ -1,5 +1,7 @@
 <?php
 
+use Pronamic\WordPress\Pay\Core\Server;
+
 /**
  * Title: WordPress pay server test
  * Description:
@@ -12,7 +14,7 @@
  */
 class Pronamic_WP_Pay_ServerTest extends WP_UnitTestCase {
 	public function test_server_get() {
-		$value = Pronamic_WP_Pay_Server::get( 'REQUEST_METHOD', FILTER_SANITIZE_STRING );
+		$value = Server::get( 'REQUEST_METHOD', FILTER_SANITIZE_STRING );
 
 		$this->assertTrue( in_array( $value, array( null, 'GET' ), true ) );
 	}

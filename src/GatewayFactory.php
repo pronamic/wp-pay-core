@@ -1,5 +1,7 @@
 <?php
 
+namespace Pronamic\WordPress\Pay\Core;
+
 /**
  * Title: Gateway factory
  * Description:
@@ -10,14 +12,14 @@
  * @version 1.3.4
  * @since 1.0.0
  */
-class Pronamic_WP_Pay_GatewayFactory {
-	public static function create( Pronamic_WP_Pay_GatewayConfig $config = null ) {
+class GatewayFactory {
+	public static function create( GatewayConfig $config = null ) {
 		$gateway = null;
 
 		if ( isset( $config ) ) {
 			$gateway_class = $config->get_gateway_class();
 
-			if ( class_exists( $gateway_class ) ) {
+			if ( class_exists( $gateway_class, false ) ) {
 				$gateway = new $gateway_class( $config );
 			}
 		}

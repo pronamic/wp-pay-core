@@ -1,5 +1,7 @@
 <?php
 
+namespace Pronamic\WordPress\Pay\Core;
+
 /**
  * Title: SOFORT Banking payment method
  * Description:
@@ -10,12 +12,12 @@
  * @version 1.3.11
  * @since 1.3.11
  */
-class Pronamic_WP_Pay_SofortPaymentMethod extends Pronamic_WP_Pay_PaymentMethod {
+class SofortPaymentMethod extends PaymentMethod {
 	/**
 	 * Constructs and intialize SOFORT Banking payment method.
 	 */
 	public function __construct() {
-		$this->id   = Pronamic_WP_Pay_PaymentMethods::SOFORT;
+		$this->id   = PaymentMethods::SOFORT;
 		$this->name = __( 'SOFORT Banking', 'pronamic_ideal' );
 	}
 }

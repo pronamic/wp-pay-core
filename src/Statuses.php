@@ -1,5 +1,7 @@
 <?php
 
+namespace Pronamic\WordPress\Pay\Core;
+
 /**
  * Title: WordPress pay statuses constants
  * Description:
@@ -10,7 +12,7 @@
  * @version 1.0.0
  * @since 1.0.0
  */
-class Pronamic_WP_Pay_Statuses {
+class Statuses {
 	/**
 	 * Status indicator for success
 	 *

@@ -1,5 +1,7 @@
 <?php
 
+namespace Pronamic\WordPress\Pay\Core;
+
 /**
  * Title: Gateway config
  * Description:
@@ -10,7 +12,7 @@
  * @version 1.0.0
  * @since 1.0.0
  */
-abstract class Pronamic_WP_Pay_GatewayConfig {
+abstract class GatewayConfig {
 	public $id;
 
 	public $mode;
