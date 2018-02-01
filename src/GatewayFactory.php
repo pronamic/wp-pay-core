@@ -19,7 +19,7 @@ class GatewayFactory {
 		if ( isset( $config ) ) {
 			$gateway_class = $config->get_gateway_class();
 
-			if ( class_exists( $gateway_class, false ) ) {
+			if ( class_exists( $gateway_class, true ) ) {
 				$gateway = new $gateway_class( $config );
 			}
 		}
