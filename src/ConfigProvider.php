@@ -2,8 +2,6 @@
 
 namespace Pronamic\WordPress\Pay\Core;
 
-use Pronamic\WordPress\Pay\Core\GatewayConfigFactory;
-
 /**
  * Title: Config provider
  * Description:
