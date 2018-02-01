@@ -5,7 +5,7 @@ namespace Pronamic\WordPress\Pay\Core;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
-use Pronamic\WordPress\Pay\Util;
+use Pronamic\WordPress\Pay\Util as PayUtil;
 use ReflectionClass;
 use WP_Error;
 
@@ -742,6 +742,6 @@ abstract class Gateway {
 	public function get_output_html() {
 		$fields = $this->get_output_fields();
 
-		return Util::html_hidden_fields( $fields );
+		return PayUtil::html_hidden_fields( $fields );
 	}
 }
