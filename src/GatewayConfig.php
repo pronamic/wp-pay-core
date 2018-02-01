@@ -16,4 +16,12 @@ abstract class GatewayConfig {
 	public $id;
 
 	public $mode;
+
+	public function get_gateway_class() {
+		$class = get_class( $this );
+
+		$namespace = substr( $class, 0, strrpos( $class, '\\' ) );
+
+		return $namespace . '\Gateway';
+	}
 }
