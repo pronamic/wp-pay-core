@@ -42,6 +42,7 @@ abstract class Gateway {
 	 * @var int
 	 */
 	const MODE_TEST = 'test';
+
 	/**
 	 * Indicator for live mode
 	 *
@@ -52,9 +53,9 @@ abstract class Gateway {
 	/////////////////////////////////////////////////
 
 	/**
-	 * Pronamic_Pay_Config
+	 * Config
 	 *
-	 * @var int
+	 * @var GatewayConfig
 	 */
 	protected $config;
 
@@ -191,7 +192,7 @@ abstract class Gateway {
 	/**
 	 * Set the slug of this gateway
 	 *
-	 * @param unknown_type $slug
+	 * @param string $slug
 	 */
 	public function set_slug( $slug ) {
 		$this->slug = $slug;
