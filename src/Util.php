@@ -100,12 +100,12 @@ class Util {
 	/**
 	 * Amount to cents
 	 *
-	 * @param float $price
+	 * @param float $amount
 	 *
 	 * @return int
 	 */
-	public static function amount_to_cents( $price ) {
-		return round( $price * 100 );
+	public static function amount_to_cents( $amount ) {
+		return round( $amount * 100 );
 	}
 
 	/**
@@ -180,7 +180,7 @@ class Util {
 	 *
 	 * @return int
 	 */
-	public static function to_numeric_boolean( $boolean ) {
+	public static function boolean_to_numeric( $boolean ) {
 		return $boolean ? 1 : 0;
 	}
 
@@ -195,7 +195,7 @@ class Util {
 	 *
 	 * @return int
 	 */
-	public static function to_string_boolean( $boolean ) {
+	public static function boolean_to_string( $boolean ) {
 		return $boolean ? 'true' : 'false';
 	}
 
