@@ -132,6 +132,13 @@ class PaymentMethods {
 	const GIROPAY = 'giropay';
 
 	/**
+	 * Constant for the Gulden payment method.
+	 *
+	 * @var string
+	 */
+	const GULDEN = 'gulden';
+
+	/**
 	 * Constant for the KBC/CBC Payment Button method.
 	 *
 	 * @since 1.3.11
