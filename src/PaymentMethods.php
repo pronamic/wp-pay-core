@@ -3,6 +3,7 @@
 namespace Pronamic\WordPress\Pay\Core;
 
 use Pronamic\WordPress\Pay\Plugin;
+use WP_Query;
 
 /**
  * Title: WordPress pay payment methods
@@ -314,7 +315,7 @@ class PaymentMethods {
 	 *
 	 * @param $payment_method
 	 *
-	 * @return
+	 * @return string
 	 */
 	public static function get_first_payment_method( $payment_method ) {
 		if ( self::is_direct_debit_method( $payment_method ) ) {
@@ -332,13 +333,11 @@ class PaymentMethods {
 	 * Update active payment methods option.
 	 *
 	 * @since unreleased
-	 *
-	 * @return array
 	 */
 	public static function update_active_payment_methods() {
 		$active_payment_methods = array();
 
-		$query = new \WP_Query( array(
+		$query = new WP_Query( array(
 			'post_type'      => 'pronamic_gateway',
 			'posts_per_page' => 30,
 			'fields'         => 'ids',
@@ -348,6 +347,10 @@ class PaymentMethods {
 			$gateway = Plugin::get_gateway( $config_id );
 
 			if ( ! $gateway ) {
+				continue;
+			}
+
+			if ( ! method_exists( $gateway, 'get_supported_payment_methods' ) ) {
 				continue;
 			}
 
