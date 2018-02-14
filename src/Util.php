@@ -3,7 +3,7 @@
 namespace Pronamic\WordPress\Pay\Core;
 
 use DateTime;
-use Pronamic\WordPress\Pay\Util as PayUtil;
+use Pronamic\WordPress\Pay\Util as Pay_Util;
 use SimpleXMLElement;
 use WP_Error;
 
@@ -22,7 +22,9 @@ class Util {
 	 * Remote get body
 	 *
 	 * @param string $url
-	 * @param int $required_response_code
+	 * @param int    $required_response_code
+	 *
+	 * @return array|bool|string|WP_Error
 	 */
 	public static function remote_get_body( $url, $required_response_code = 200, array $args = array() ) {
 		$return = false;
@@ -45,7 +47,7 @@ class Util {
 				$return = new WP_Error(
 					'wrong_response_code',
 					sprintf(
-					/* translators: 1: received responce code, 2: required response code */
+						/* translators: 1: received responce code, 2: required response code */
 						__( 'The response code (<code>%1$s<code>) was incorrect, required response code <code>%2$s</code>.', 'pronamic_ideal' ),
 						wp_remote_retrieve_response_code( $result ),
 						$required_response_code
@@ -283,7 +285,7 @@ class Util {
 						'<select id="%s" name="%s">%s</select>',
 						esc_attr( $field['id'] ),
 						esc_attr( $field['name'] ),
-						PayUtil::select_options_grouped( $field['choices'] )
+						Pay_Util::select_options_grouped( $field['choices'] )
 					);
 
 					break;
