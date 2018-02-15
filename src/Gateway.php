@@ -519,17 +519,6 @@ abstract class Gateway {
 	/////////////////////////////////////////////////
 
 	/**
-	 * Handle payment
-	 *
-	 * @param Payment $payment
-	 */
-	public function payment( Payment $payment ) {
-
-	}
-
-	/////////////////////////////////////////////////
-
-	/**
 	 * Handle subscription update.
 	 *
 	 * @param Payment $payment
