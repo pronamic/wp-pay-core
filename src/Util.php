@@ -223,7 +223,7 @@ class Util {
 	 * @return string
 	 */
 	public static function to_period( $period ) {
-		if ( false !== strpos( $period, 'day' ) ) {
+		if ( false !== strpos( $period, 'day' ) || false !== strpos( $period, 'daily' ) ) {
 			return 'D';
 		}
 
