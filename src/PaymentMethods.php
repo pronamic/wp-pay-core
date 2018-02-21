@@ -233,17 +233,24 @@ class PaymentMethods {
 	 * Get payment method name
 	 *
 	 * @since 1.3.0
-	 * @var string
+	 *
+	 * @param null   $method
+	 * @param string $default
+	 *
 	 * @return string
 	 */
-	public static function get_name( $method = null ) {
+	public static function get_name( $method = null, $default = null ) {
 		$payment_methods = self::get_payment_methods();
 
 		if ( null !== $method && array_key_exists( $method, $payment_methods ) ) {
 			return $payment_methods[ $method ];
 		}
 
-		return '';
+		if ( null === $default ) {
+			return $method;
+		}
+
+		return $default;
 	}
 
 	/////////////////////////////////////////////////
