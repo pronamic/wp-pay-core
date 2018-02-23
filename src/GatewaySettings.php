@@ -14,7 +14,7 @@ namespace Pronamic\WordPress\Pay\Core;
  */
 abstract class GatewaySettings {
 	/**
-	 * Return data for Pronamic_WP_Pay_Admin_GatewayPostType::save_post().
+	 * Return data for Pronamic\WordPress\Pay\Admin\GatewayPostType::save_post().
 	 *
 	 * @param array $data
 	 *
