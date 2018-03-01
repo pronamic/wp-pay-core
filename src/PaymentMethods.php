@@ -195,8 +195,6 @@ class PaymentMethods {
 	 */
 	const SOFORT = 'sofort';
 
-	/////////////////////////////////////////////////
-
 	/**
 	 * Get payment methods
 	 *
@@ -253,8 +251,6 @@ class PaymentMethods {
 		return $default;
 	}
 
-	/////////////////////////////////////////////////
-
 	/**
 	 * Get direct debit methods.
 	 *
@@ -283,8 +279,6 @@ class PaymentMethods {
 	public static function is_direct_debit_method( $payment_method ) {
 		return array_key_exists( $payment_method, self::get_direct_debit_methods() );
 	}
-
-	/////////////////////////////////////////////////
 
 	/**
 	 * Get recurring methods.
@@ -315,8 +309,6 @@ class PaymentMethods {
 		return array_key_exists( $payment_method, self::get_recurring_methods() );
 	}
 
-	/////////////////////////////////////////////////
-
 	/**
 	 * Get first method for payment method.
 	 *
@@ -333,8 +325,6 @@ class PaymentMethods {
 
 		return $payment_method;
 	}
-
-	/////////////////////////////////////////////////
 
 	/**
 	 * Update active payment methods option.
@@ -371,8 +361,6 @@ class PaymentMethods {
 
 		update_option( 'pronamic_pay_active_payment_methods', $active_payment_methods );
 	}
-
-	/////////////////////////////////////////////////
 
 	/**
 	 * Check if payment method is active.

@@ -59,8 +59,6 @@ class Util {
 		return $return;
 	}
 
-	//////////////////////////////////////////////////
-
 	/**
 	 * SimpleXML load string
 	 *
@@ -96,8 +94,6 @@ class Util {
 
 		return $result;
 	}
-
-	//////////////////////////////////////////////////
 
 	/**
 	 * Amount to cents
@@ -171,8 +167,6 @@ class Util {
 		return $amount;
 	}
 
-	//////////////////////////////////////////////////
-
 	/**
 	 * Convert boolean to an numceric boolean
 	 *
@@ -186,8 +180,6 @@ class Util {
 		return $boolean ? 1 : 0;
 	}
 
-	//////////////////////////////////////////////////
-
 	/**
 	 * Convert boolean to an string boolean
 	 *
@@ -200,8 +192,6 @@ class Util {
 	public static function boolean_to_string( $boolean ) {
 		return $boolean ? 'true' : 'false';
 	}
-
-	//////////////////////////////////////////////////
 
 	public static function format_date( $format, DateTime $date = null ) {
 		$result = null;
@@ -242,8 +232,6 @@ class Util {
 		return $period;
 	}
 
-	//////////////////////////////////////////////////
-
 	/**
 	 * Build URL with the specified parameters
 	 *
@@ -255,8 +243,6 @@ class Util {
 	public static function build_url( $url, array $parameters ) {
 		return $url . '?' . _http_build_query( $parameters, null, '&' );
 	}
-
-	//////////////////////////////////////////////////
 
 	/**
 	 * Convert input fields array to HTML.

@@ -34,8 +34,6 @@ abstract class PaymentMethod {
 	 */
 	protected $is_active = true;
 
-	/////////////////////////////////////////////////
-
 	public function get_id() {
 		return $this->id;
 	}

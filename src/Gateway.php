@@ -34,8 +34,6 @@ abstract class Gateway {
 	 */
 	const METHOD_HTTP_REDIRECT = 2;
 
-	/////////////////////////////////////////////////
-
 	/**
 	 * Indicator for test mode
 	 *
@@ -49,8 +47,6 @@ abstract class Gateway {
 	 * @var int
 	 */
 	const MODE_LIVE = 'live';
-
-	/////////////////////////////////////////////////
 
 	/**
 	 * Config
@@ -66,16 +62,12 @@ abstract class Gateway {
 	 */
 	protected $client;
 
-	/////////////////////////////////////////////////
-
 	/**
 	 * The slug of this gateway
 	 *
 	 * @var string
 	 */
 	private $slug;
-
-	/////////////////////////////////////////////////
 
 	/**
 	 * The method of this gateway
@@ -98,16 +90,12 @@ abstract class Gateway {
 	 */
 	private $amount_minimum;
 
-	/////////////////////////////////////////////////
-
 	/**
 	 * The transaction ID
 	 *
 	 * @var string
 	 */
 	private $transaction_id;
-
-	/////////////////////////////////////////////////
 
 	/**
 	 * Action URL
@@ -124,8 +112,6 @@ abstract class Gateway {
 	 */
 	private $payment_method;
 
-	/////////////////////////////////////////////////
-
 	/**
 	 * Supported features on this gateway.
 	 *
@@ -134,16 +120,12 @@ abstract class Gateway {
 	 */
 	protected $supports;
 
-	/////////////////////////////////////////////////
-
 	/**
 	 * Error
 	 *
 	 * @var WP_Error
 	 */
 	public $error;
-
-	/////////////////////////////////////////////////
 
 	/**
 	 * Constructs and initializes an gateway
@@ -164,8 +146,6 @@ abstract class Gateway {
 		$this->supports = array();
 	}
 
-	/////////////////////////////////////////////////
-
 	/**
 	 * Check if a gateway supports a given feature.
 	 *
@@ -177,8 +157,6 @@ abstract class Gateway {
 	public function supports( $feature ) {
 		return in_array( $feature, $this->supports, true );
 	}
-
-	/////////////////////////////////////////////////
 
 	/**
 	 * Get the slug of this gateway
@@ -197,8 +175,6 @@ abstract class Gateway {
 	public function set_slug( $slug ) {
 		$this->slug = $slug;
 	}
-
-	/////////////////////////////////////////////////
 
 	/**
 	 * Get the error
@@ -227,8 +203,6 @@ abstract class Gateway {
 		$this->error = $error;
 	}
 
-	/////////////////////////////////////////////////
-
 	/**
 	 * Set the method
 	 *
@@ -237,8 +211,6 @@ abstract class Gateway {
 	public function set_method( $method ) {
 		$this->method = $method;
 	}
-
-	/////////////////////////////////////////////////
 
 	/**
 	 * Check if this gateway works trhough an HTTP redirect
@@ -258,8 +230,6 @@ abstract class Gateway {
 		return self::METHOD_HTML_FORM === $this->method;
 	}
 
-	/////////////////////////////////////////////////
-
 	/**
 	 * Check if this gateway supports feedback
 	 *
@@ -278,8 +248,6 @@ abstract class Gateway {
 		$this->has_feedback = $has_feedback;
 	}
 
-	/////////////////////////////////////////////////
-
 	/**
 	 * Set the minimum amount required
 	 *
@@ -288,8 +256,6 @@ abstract class Gateway {
 	public function set_amount_minimum( $amount ) {
 		$this->amount_minimum = $amount;
 	}
-
-	/////////////////////////////////////////////////
 
 	/**
 	 * Get iDEAL issuers
@@ -308,8 +274,6 @@ abstract class Gateway {
 	public function get_credit_card_issuers() {
 		return null;
 	}
-
-	/////////////////////////////////////////////////
 
 	/**
 	 * Get the iDEAL issuers transient
@@ -361,8 +325,6 @@ abstract class Gateway {
 		return $issuers;
 	}
 
-	/////////////////////////////////////////////////
-
 	/**
 	 * Has valid mandate?
 	 *
@@ -382,8 +344,6 @@ abstract class Gateway {
 	public function get_first_valid_mandate_datetime( $payment_method = '' ) {
 		return null;
 	}
-
-	/////////////////////////////////////////////////
 
 	/**
 	 * Get payment methods
@@ -408,8 +368,6 @@ abstract class Gateway {
 
 		return null;
 	}
-
-	/////////////////////////////////////////////////
 
 	/**
 	 * Get the payment methods transient
@@ -444,8 +402,6 @@ abstract class Gateway {
 		return $methods;
 	}
 
-	/////////////////////////////////////////////////
-
 	/**
 	 * Is payment method required to start transaction?
 	 *
@@ -455,8 +411,6 @@ abstract class Gateway {
 	public function payment_method_is_required() {
 		return false;
 	}
-
-	/////////////////////////////////////////////////
 
 	/**
 	 * Get an payment method field
@@ -505,8 +459,6 @@ abstract class Gateway {
 		);
 	}
 
-	/////////////////////////////////////////////////
-
 	/**
 	 * Start transaction/payment
 	 *
@@ -515,8 +467,6 @@ abstract class Gateway {
 	public function start( Payment $payment ) {
 
 	}
-
-	/////////////////////////////////////////////////
 
 	/**
 	 * Handle subscription update.
@@ -527,8 +477,6 @@ abstract class Gateway {
 
 	}
 
-	/////////////////////////////////////////////////
-
 	/**
 	 * Handle subscription cancellation.
 	 *
@@ -537,8 +485,6 @@ abstract class Gateway {
 	public function cancel_subscription( Subscription $subscription ) {
 
 	}
-
-	/////////////////////////////////////////////////
 
 	/**
 	 * Redirect to the gateway action URL
@@ -605,8 +551,6 @@ abstract class Gateway {
 
 	/////////////////////////////////////////////////
 	// Input fields
-	/////////////////////////////////////////////////
-
 	/**
 	 * Get an issuer field
 	 *
@@ -615,8 +559,6 @@ abstract class Gateway {
 	public function get_issuer_field() {
 		return null;
 	}
-
-	/////////////////////////////////////////////////
 
 	/**
 	 * Get the payment method to use on this gateway.
@@ -639,8 +581,6 @@ abstract class Gateway {
 		$this->payment_method = $payment_method;
 	}
 
-	/////////////////////////////////////////////////
-
 	/**
 	 * Get the input fields for this gateway
 	 *
@@ -660,8 +600,6 @@ abstract class Gateway {
 
 		return $fields;
 	}
-
-	/////////////////////////////////////////////////
 
 	/**
 	 * Get the input HTML
@@ -712,8 +650,6 @@ abstract class Gateway {
 
 	/////////////////////////////////////////////////
 	// Output fields
-	/////////////////////////////////////////////////
-
 	/**
 	 * Get output inputs.
 	 *
