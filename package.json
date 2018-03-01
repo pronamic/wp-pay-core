@@ -32,7 +32,7 @@
   },
   "homepage": "http://www.wp-pay.org/",
   "devDependencies": {
-    "grunt": "~1.0.1",
+    "grunt": "~1.0.2",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-phpcs": "^0.4.0",
     "grunt-phplint": "0.1.0",

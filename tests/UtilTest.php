@@ -1,6 +1,6 @@
 <?php
 
-use Pronamic\WordPress\Pay\Core\Util;
+namespace Pronamic\WordPress\Pay\Core;
 
 /**
  * Title: WordPress pay util test
@@ -12,7 +12,7 @@ use Pronamic\WordPress\Pay\Core\Util;
  * @version 1.3.1
  * @since 1.1.0
  */
-class Pronamic_WP_Pay_UtilTest extends WP_UnitTestCase {
+class UtilTest extends \WP_UnitTestCase {
 	/**
 	 * Test string to amount.
 	 *
@@ -98,8 +98,8 @@ class Pronamic_WP_Pay_UtilTest extends WP_UnitTestCase {
 
 	public function status_matrix_provider() {
 		return array(
-			array( 'Pronamic\WordPress\Pay\Core\Util', 'class_method_exists', true ),
-			array( 'Pronamic\WordPress\Pay\Core\Server', 'get', true ),
+			array( __NAMESPACE__ . '\Util', 'class_method_exists', true ),
+			array( __NAMESPACE__ . '\Server', 'get', true ),
 			array( 'ClassDoesNotExist', 'method_does_not_exist', false ),
 			array( '', '', false ),
 			array( null, null, false ),
