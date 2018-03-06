@@ -352,18 +352,26 @@ abstract class Gateway {
 	 * @return mixed an array or null
 	 */
 	public function get_payment_methods() {
-		$methods_class = substr_replace( get_class( $this ), 'PaymentMethods', - 7, 7 );
+		$options = array();
+
+		$class_name = get_class( $this );
+
+		$methods_class = substr_replace( $class_name, 'PaymentMethods', - 7, 7 );
 
 		if ( class_exists( $methods_class ) ) {
 			$payment_methods = new ReflectionClass( $methods_class );
 
-			$groups = array(
+			$options = $payment_methods->getConstants();
+		} elseif ( Util::class_method_exists( $class_name, 'get_supported_payment_methods' ) ) {
+			$options = $this->get_supported_payment_methods();
+		}
+
+		if ( ! empty( $options ) ) {
+			return array(
 				array(
-					'options' => $payment_methods->getConstants(),
+					'options' => $options,
 				),
 			);
-
-			return $groups;
 		}
 
 		return null;
