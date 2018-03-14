@@ -557,8 +557,6 @@ abstract class Gateway {
 		exit;
 	}
 
-	/////////////////////////////////////////////////
-	// Input fields
 	/**
 	 * Get an issuer field
 	 *
@@ -656,8 +654,6 @@ abstract class Gateway {
 		return $html;
 	}
 
-	/////////////////////////////////////////////////
-	// Output fields
 	/**
 	 * Get output inputs.
 	 *
