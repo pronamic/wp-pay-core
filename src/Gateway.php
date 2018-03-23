@@ -421,14 +421,7 @@ abstract class Gateway {
 		}
 
 		// Sort options by name.
-		$sort_flags = SORT_STRING;
-
-		if ( version_compare( PHP_VERSION, '5.4', '>=' ) ) {
-			// SORT_FLAG_CASE is available since PHP 5.4.
-			$sort_flags = SORT_STRING | SORT_FLAG_CASE;
-		}
-
-		asort( $options, $sort_flags );
+		natcasesort( $options );
 
 		// Add option to use all available payment methods.
 		if ( ! $this->payment_method_is_required() ) {
