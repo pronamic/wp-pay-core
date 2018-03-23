@@ -16,7 +16,7 @@ abstract class GatewaySettings {
 	/**
 	 * Return data for Pronamic\WordPress\Pay\Admin\GatewayPostType::save_post().
 	 *
-	 * @param array $data
+	 * @param array $data Data.
 	 *
 	 * @return array
 	 */

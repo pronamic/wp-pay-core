@@ -346,35 +346,22 @@ abstract class Gateway {
 	}
 
 	/**
-	 * Get payment methods
+	 * Get supported payment providers for gateway.
+	 * Intended to be overridden by gateway.
+	 */
+	public function get_supported_payment_methods() {
+		return array();
+	}
+
+	/**
+	 * Get available payment methods.
+	 * Intended to be overridden by gateway if active payment methods for account can be determined.
 	 *
 	 * @since 1.3.0
-	 * @return mixed an array or null
+	 * @return array
 	 */
-	public function get_payment_methods() {
-		$options = array();
-
-		$class_name = get_class( $this );
-
-		$methods_class = substr_replace( $class_name, 'PaymentMethods', - 7, 7 );
-
-		if ( class_exists( $methods_class ) ) {
-			$payment_methods = new ReflectionClass( $methods_class );
-
-			$options = $payment_methods->getConstants();
-		} elseif ( Util::class_method_exists( $class_name, 'get_supported_payment_methods' ) ) {
-			$options = $this->get_supported_payment_methods();
-		}
-
-		if ( ! empty( $options ) ) {
-			return array(
-				array(
-					'options' => $options,
-				),
-			);
-		}
-
-		return null;
+	public function get_available_payment_methods() {
+		return $this->get_supported_payment_methods();
 	}
 
 	/**
@@ -383,28 +370,18 @@ abstract class Gateway {
 	 * @since 1.3.0
 	 * @return mixed an array or null
 	 */
-	public function get_transient_payment_methods() {
-		$methods = null;
-
+	public function get_transient_available_payment_methods() {
 		// Transient name. Expected to not be SQL-escaped. Should be 45 characters or less in length.
-		$transient = 'pronamic_pay_payment_methods_' . $this->config->id;
+		$transient = 'pronamic_gateway_payment_methods_' . $this->config->id;
 
-		$result = get_transient( $transient );
+		$methods = get_transient( $transient );
 
-		if ( is_wp_error( $result ) || false === $result ) {
-			$methods = $this->get_payment_methods();
+		if ( is_wp_error( $methods ) || false === $methods ) {
+			$methods = $this->get_available_payment_methods();
 
-			if ( $methods ) {
-				// Make sure methods are stored as array
-				if ( is_string( $methods ) ) {
-					$methods = array( $methods );
-				}
-
-				// 60 * 60 * 24 = 24 hours = 1 day
-				set_transient( $transient, $methods, 60 * 60 * 24 );
+			if ( is_array( $methods ) ) {
+				set_transient( $transient, $methods, DAY_IN_SECONDS );
 			}
-		} elseif ( is_array( $result ) ) {
-			$methods = $result;
 		}
 
 		return $methods;
@@ -421,50 +398,48 @@ abstract class Gateway {
 	}
 
 	/**
-	 * Get an payment method field
+	 * Get payment method field options.
 	 *
-	 * @since 1.3.0
+	 * @param $other_first
+	 * @param $choices
+	 *
 	 * @return array
 	 */
-	public function get_payment_method_field( $other_first = false ) {
-		$choices = null;
+	public function get_payment_method_field_options( $other_first = false ) {
+		$options = array();
 
-		if ( method_exists( $this, 'get_supported_payment_methods' ) ) {
-			$gateway_methods = $this->get_transient_payment_methods();
+		$payment_methods = $this->get_transient_available_payment_methods();
 
-			if ( is_array( $gateway_methods ) ) {
-				$choices = array();
+		// Use all supported payment methods as fallback.
+		if ( empty( $payment_methods ) ) {
+			$payment_methods = $this->get_supported_payment_methods();
+		}
 
-				foreach ( $this->get_supported_payment_methods() as $method_id ) {
-					$choices[ $method_id ] = PaymentMethods::get_name( $method_id );
-				}
+		// Set payment methods as options with name.
+		foreach ( $payment_methods as $payment_method ) {
+			$options[ $payment_method ] = PaymentMethods::get_name( $payment_method );
+		}
 
-				if ( ! $this->payment_method_is_required() ) {
-					if ( $other_first ) {
-						$choices = array( _x( 'All available methods', 'Payment method field', 'pronamic_ideal' ) ) + $choices;
-					} else {
-						$choices[] = _x( 'Other', 'Payment method field', 'pronamic_ideal' );
-					}
-				}
-			} elseif ( PaymentMethods::IDEAL === $gateway_methods ) {
-				$choices[ PaymentMethods::IDEAL ] = __( 'iDEAL', 'pronamic_ideal' );
+		// Sort options by name.
+		$sort_flags = SORT_STRING;
+
+		if ( version_compare( PHP_VERSION, '5.4', '>=' ) ) {
+			// SORT_FLAG_CASE is available since PHP 5.4.
+			$sort_flags = SORT_STRING | SORT_FLAG_CASE;
+		}
+
+		asort( $options, $sort_flags );
+
+		// Add option to use all available payment methods.
+		if ( ! $this->payment_method_is_required() ) {
+			if ( $other_first ) {
+				$options = array( _x( 'All available methods', 'Payment method field', 'pronamic_ideal' ) ) + $options;
+			} else {
+				$options[] = _x( 'Other', 'Payment method field', 'pronamic_ideal' );
 			}
 		}
 
-		if ( null === $choices && ! $this->payment_method_is_required() ) {
-			$choices = array(
-				'' => _x( 'All available methods', 'Payment method field', 'pronamic_ideal' ),
-			);
-		}
-
-		return array(
-			'id'       => 'pronamic_pay_payment_method_id',
-			'name'     => 'pronamic_pay_payment_method_id',
-			'label'    => __( 'Choose a payment method', 'pronamic_ideal' ),
-			'required' => true,
-			'type'     => 'select',
-			'choices'  => array( array( 'options' => $choices ) ),
-		);
+		return $options;
 	}
 
 	/**

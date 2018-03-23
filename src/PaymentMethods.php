@@ -363,24 +363,35 @@ class PaymentMethods {
 	}
 
 	/**
+	 * Get active payment methods.
+	 *
+	 * @since unreleased
+	 *
+	 * @return array
+	 */
+	public static function get_active_payment_methods() {
+		$payment_methods = get_option( 'pronamic_pay_active_payment_methods' );
+
+		// Update active payment methods option if necessary.
+		if ( ! is_array( $payment_methods ) ) {
+			self::update_active_payment_methods();
+
+			$payment_methods = get_option( 'pronamic_pay_active_payment_methods' );
+		}
+
+		return $payment_methods;
+	}
+
+	/**
 	 * Check if payment method is active.
+	 *
+	 * @param string $payment_method Payment method.
 	 *
 	 * @since unreleased
 	 *
 	 * @return bool
 	 */
 	public static function is_active( $payment_method = null ) {
-		$active_payment_methods = get_option( 'pronamic_pay_active_payment_methods' );
-
-		// Update active payment methods option if necessary.
-		if ( ! is_array( $active_payment_methods ) ) {
-			self::update_active_payment_methods();
-
-			$active_payment_methods = get_option( 'pronamic_pay_active_payment_methods' );
-		}
-
-		$is_active = in_array( $payment_method, $active_payment_methods, true );
-
-		return $is_active;
+		return in_array( $payment_method, self::get_active_payment_methods(), true );
 	}
 }
