@@ -327,6 +327,20 @@ class PaymentMethods {
 	}
 
 	/**
+	 * Maybe update active payment methods.
+	 *
+	 * @return void
+	 */
+	private static function maybe_update_active_payment_methods() {
+		$payment_methods = get_option( 'pronamic_pay_active_payment_methods' );
+
+		// Update active payment methods option if necessary.
+		if ( ! is_array( $payment_methods ) ) {
+			self::update_active_payment_methods();
+		}
+	}
+
+	/**
 	 * Update active payment methods option.
 	 *
 	 * @since unreleased
@@ -335,9 +349,9 @@ class PaymentMethods {
 		$active_payment_methods = array();
 
 		$query = new WP_Query( array(
-			'post_type'      => 'pronamic_gateway',
-			'posts_per_page' => 30,
-			'fields'         => 'ids',
+			'post_type' => 'pronamic_gateway',
+			'nopaging'  => true,
+			'fields'    => 'ids',
 		) );
 
 		foreach ( $query->posts as $config_id ) {
@@ -351,13 +365,16 @@ class PaymentMethods {
 				continue;
 			}
 
-			$active_payment_methods = array_merge(
-				$active_payment_methods,
-				$gateway->get_supported_payment_methods()
-			);
-		}
+			$payment_methods = $gateway->get_transient_available_payment_methods();
 
-		$active_payment_methods = array_unique( $active_payment_methods );
+			foreach ( $payment_methods as $payment_method ) {
+				if ( ! isset( $active_payment_methods[ $payment_method ] ) ) {
+					$active_payment_methods[ $payment_method ] = array();
+				}
+
+				$active_payment_methods[ $payment_method ][] = $config_id;
+			}
+		}
 
 		update_option( 'pronamic_pay_active_payment_methods', $active_payment_methods );
 	}
@@ -365,21 +382,56 @@ class PaymentMethods {
 	/**
 	 * Get active payment methods.
 	 *
-	 * @since unreleased
-	 *
 	 * @return array
 	 */
 	public static function get_active_payment_methods() {
-		$payment_methods = get_option( 'pronamic_pay_active_payment_methods' );
+		self::maybe_update_active_payment_methods();
 
-		// Update active payment methods option if necessary.
-		if ( ! is_array( $payment_methods ) ) {
-			self::update_active_payment_methods();
+		$payment_methods = array();
 
-			$payment_methods = get_option( 'pronamic_pay_active_payment_methods' );
+		$active_methods = get_option( 'pronamic_pay_active_payment_methods' );
+
+		if ( is_array( $active_methods ) ) {
+			$payment_methods = array_keys( $active_methods );
 		}
 
 		return $payment_methods;
+	}
+
+	/**
+	 * Get config IDs for payment method.
+	 *
+	 * @param string $payment_method Payment method.
+	 *
+	 * @return array
+	 */
+	public static function get_config_ids( $payment_method = null ) {
+		self::maybe_update_active_payment_methods();
+
+		$config_ids = array();
+
+		$active_methods = get_option( 'pronamic_pay_active_payment_methods' );
+
+		// Make sure active payments methods is an array.
+		if ( ! is_array( $active_methods ) ) {
+			return $config_ids;
+		}
+
+		// Get config IDs for payment method.
+		if ( isset( $active_methods[ $payment_method ] ) ) {
+			$config_ids = $active_methods[ $payment_method ];
+		}
+
+		// Get all config IDs if payment method is empty.
+		if ( empty( $payment_method ) ) {
+			foreach ( $active_methods as $method_config_ids ) {
+				$config_ids = array_merge( $config_ids, $method_config_ids );
+			}
+
+			$config_ids = array_unique( $config_ids );
+		}
+
+		return $config_ids;
 	}
 
 	/**
