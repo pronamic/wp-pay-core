@@ -2,7 +2,6 @@
 
 namespace Pronamic\WordPress\Pay\Core;
 
-use DateTime;
 use Pronamic\WordPress\Pay\Util as Pay_Util;
 use SimpleXMLElement;
 use WP_Error;
