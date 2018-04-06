@@ -193,16 +193,6 @@ class Util {
 		return $boolean ? 'true' : 'false';
 	}
 
-	public static function format_date( $format, DateTime $date = null ) {
-		$result = null;
-
-		if ( null !== $date ) {
-			$result = $date->format( $format );
-		}
-
-		return $result;
-	}
-
 	/**
 	 * Convert the specified period to a single char notation.
 	 *
