@@ -216,6 +216,7 @@ class PaymentMethods {
 			PaymentMethods::DIRECT_DEBIT_IDEAL      => __( 'Direct Debit mandate via iDEAL', 'pronamic_ideal' ),
 			PaymentMethods::DIRECT_DEBIT_SOFORT     => __( 'Direct Debit mandate via SOFORT', 'pronamic_ideal' ),
 			PaymentMethods::GIROPAY                 => __( 'Giropay', 'pronamic_ideal' ),
+			PaymentMethods::GULDEN                  => __( 'Gulden', 'pronamic_ideal' ),
 			PaymentMethods::IDEAL                   => __( 'iDEAL', 'pronamic_ideal' ),
 			PaymentMethods::IDEALQR                 => __( 'iDEAL QR', 'pronamic_ideal' ),
 			PaymentMethods::KBC                     => __( 'KBC/CBC Payment Button', 'pronamic_ideal' ),
