@@ -326,26 +326,6 @@ abstract class Gateway {
 	}
 
 	/**
-	 * Has valid mandate?
-	 *
-	 * @since 1.3.9
-	 * @return boolean
-	 */
-	public function has_valid_mandate( $payment_method = '' ) {
-		return null;
-	}
-
-	/**
-	 * Get formatted date and time of first valid mandate.
-	 *
-	 * @since 1.3.9
-	 * @return string
-	 */
-	public function get_first_valid_mandate_datetime( $payment_method = '' ) {
-		return null;
-	}
-
-	/**
 	 * Get supported payment providers for gateway.
 	 * Intended to be overridden by gateway.
 	 */
