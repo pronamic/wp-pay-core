@@ -9,7 +9,7 @@ namespace Pronamic\WordPress\Pay\Core;
  * Company: Pronamic
  *
  * @author Reüel van der Steege
- * @version 1.3.11
+ * @version 2.0.0
  * @since 1.3.11
  */
 class Recurring {

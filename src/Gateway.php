@@ -16,7 +16,7 @@ use WP_Error;
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 1.3.14
+ * @version 2.0.0
  * @since 1.0.0
  */
 abstract class Gateway {
@@ -115,7 +115,7 @@ abstract class Gateway {
 	/**
 	 * Supported features on this gateway.
 	 *
-	 * @since unreleased
+	 * @since 1.3.9
 	 * @var array
 	 */
 	protected $supports;

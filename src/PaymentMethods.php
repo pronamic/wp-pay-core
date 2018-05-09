@@ -12,7 +12,7 @@ use WP_Query;
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 1.3.14
+ * @version 2.0.0
  * @since 1.0.1
  */
 class PaymentMethods {
@@ -20,7 +20,7 @@ class PaymentMethods {
 	 * Alipay
 	 *
 	 * @var string
-	 * @since unreleased
+	 * @since 2.0.0
 	 */
 	const ALIPAY = 'alipay';
 
@@ -83,7 +83,7 @@ class PaymentMethods {
 	 * Constant for the Direct Debit mandate via Bancontact payment method.
 	 *
 	 * @var string
-	 * @since unreleased
+	 * @since 1.3.13
 	 */
 	const DIRECT_DEBIT_BANCONTACT = 'direct_debit_bancontact';
 
@@ -174,7 +174,7 @@ class PaymentMethods {
 	/**
 	 * Constant for the Payconiq method.
 	 *
-	 * @since unreleased
+	 * @since 2.0.0
 	 * @var string
 	 */
 	const PAYCONIQ = 'payconiq';
@@ -255,7 +255,7 @@ class PaymentMethods {
 	/**
 	 * Get direct debit methods.
 	 *
-	 * @since unreleased
+	 * @since 1.3.14
 	 * @return array
 	 */
 	public static function get_direct_debit_methods() {
@@ -271,7 +271,7 @@ class PaymentMethods {
 	/**
 	 * Is direct debit method.
 	 *
-	 * @since unreleased
+	 * @since 1.3.14
 	 *
 	 * @param $payment_method
 	 *
@@ -284,7 +284,7 @@ class PaymentMethods {
 	/**
 	 * Get recurring methods.
 	 *
-	 * @since unreleased
+	 * @since 1.3.14
 	 * @return array
 	 */
 	public static function get_recurring_methods() {
@@ -300,7 +300,7 @@ class PaymentMethods {
 	/**
 	 * Is recurring method.
 	 *
-	 * @since unreleased
+	 * @since 1.3.14
 	 *
 	 * @param $payment_method
 	 *
@@ -344,7 +344,7 @@ class PaymentMethods {
 	/**
 	 * Update active payment methods option.
 	 *
-	 * @since unreleased
+	 * @since 2.0.0
 	 */
 	public static function update_active_payment_methods() {
 		$active_payment_methods = array();
@@ -440,7 +440,7 @@ class PaymentMethods {
 	 *
 	 * @param string $payment_method Payment method.
 	 *
-	 * @since unreleased
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */

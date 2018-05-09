@@ -9,7 +9,7 @@ namespace Pronamic\WordPress\Pay\Core;
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 1.3.4
+ * @version 2.0.0
  * @since 1.0.0
  */
 class GatewayFactory {
