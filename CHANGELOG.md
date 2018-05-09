@@ -93,7 +93,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/1.3.14...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.0.0...HEAD
+[2.0.0]: https://github.com/wp-pay/core/compare/1.3.14...2.0.0
 [1.3.14]: https://github.com/wp-pay/core/compare/1.3.13...1.3.14
 [1.3.13]: https://github.com/wp-pay/core/compare/1.3.12...1.3.13
 [1.3.12]: https://github.com/wp-pay/core/compare/1.3.11...1.3.12
