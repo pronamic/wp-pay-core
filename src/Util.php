@@ -1,21 +1,29 @@
 <?php
 
+namespace Pronamic\WordPress\Pay\Core;
+
+use Pronamic\WordPress\Pay\Util as Pay_Util;
+use SimpleXMLElement;
+use WP_Error;
+
 /**
  * Title: WordPress utility class
  * Description:
- * Copyright: Copyright (c) 2005 - 2017
+ * Copyright: Copyright (c) 2005 - 2018
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 1.3.9
+ * @version 2.0.0
  * @since 1.0.0
  */
-class Pronamic_WP_Pay_Util {
+class Util {
 	/**
 	 * Remote get body
 	 *
 	 * @param string $url
-	 * @param int $required_response_code
+	 * @param int    $required_response_code
+	 *
+	 * @return array|bool|string|WP_Error
 	 */
 	public static function remote_get_body( $url, $required_response_code = 200, array $args = array() ) {
 		$return = false;
@@ -50,12 +58,11 @@ class Pronamic_WP_Pay_Util {
 		return $return;
 	}
 
-	//////////////////////////////////////////////////
-
 	/**
 	 * SimpleXML load string
 	 *
 	 * @param string $string
+	 *
 	 * @return SimpleXMLElement || WP_Error
 	 */
 	public static function simplexml_load_string( $string ) {
@@ -87,22 +94,22 @@ class Pronamic_WP_Pay_Util {
 		return $result;
 	}
 
-	//////////////////////////////////////////////////
-
 	/**
 	 * Amount to cents
 	 *
-	 * @param float $price
+	 * @param float $amount
+	 *
 	 * @return int
 	 */
-	public static function amount_to_cents( $price ) {
-		return round( $price * 100 );
+	public static function amount_to_cents( $amount ) {
+		return round( $amount * 100 );
 	}
 
 	/**
 	 * Cents to amount
 	 *
 	 * @param int $cents
+	 *
 	 * @return float
 	 */
 	public static function cents_to_amount( $cents ) {
@@ -114,7 +121,9 @@ class Pronamic_WP_Pay_Util {
 	 *
 	 * @version 1.3.1
 	 * @since 1.3.0
+	 *
 	 * @param string $amount
+	 *
 	 * @return float
 	 */
 	public static function string_to_amount( $amount ) {
@@ -126,7 +135,7 @@ class Pronamic_WP_Pay_Util {
 		$seperators = array_unique( array_filter( $seperators ) );
 
 		// Check
-		foreach ( array( -3, -2 ) as $i ) {
+		foreach ( array( - 3, - 2 ) as $i ) {
 			$test = substr( $amount, $i, 1 );
 
 			if ( in_array( $test, $seperators, true ) ) {
@@ -157,53 +166,43 @@ class Pronamic_WP_Pay_Util {
 		return $amount;
 	}
 
-	//////////////////////////////////////////////////
-
 	/**
 	 * Convert boolean to an numceric boolean
 	 *
 	 * @see https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
+	 *
 	 * @param boolean $boolean
+	 *
 	 * @return int
 	 */
-	public static function to_numeric_boolean( $boolean ) {
+	public static function boolean_to_numeric( $boolean ) {
 		return $boolean ? 1 : 0;
 	}
-
-	//////////////////////////////////////////////////
 
 	/**
 	 * Convert boolean to an string boolean
 	 *
 	 * @see https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
+	 *
 	 * @param boolean $boolean
+	 *
 	 * @return int
 	 */
-	public static function to_string_boolean( $boolean ) {
+	public static function boolean_to_string( $boolean ) {
 		return $boolean ? 'true' : 'false';
-	}
-
-	//////////////////////////////////////////////////
-
-	public static function format_date( $format, DateTime $date = null ) {
-		$result = null;
-
-		if ( null !== $date ) {
-			$result = $date->format( $format );
-		}
-
-		return $result;
 	}
 
 	/**
 	 * Convert the specified period to a single char notation.
 	 *
 	 * @since 1.3.9
+	 *
 	 * @param string $period
+	 *
 	 * @return string
 	 */
 	public static function to_period( $period ) {
-		if ( false !== strpos( $period, 'day' ) ) {
+		if ( false !== strpos( $period, 'day' ) || false !== strpos( $period, 'daily' ) ) {
 			return 'D';
 		}
 
@@ -222,25 +221,23 @@ class Pronamic_WP_Pay_Util {
 		return $period;
 	}
 
-	//////////////////////////////////////////////////
-
 	/**
 	 * Build URL with the specified parameters
 	 *
 	 * @param string $url
 	 * @param array $parameters
+	 *
 	 * @return string
 	 */
 	public static function build_url( $url, array $parameters ) {
 		return $url . '?' . _http_build_query( $parameters, null, '&' );
 	}
 
-	//////////////////////////////////////////////////
-
 	/**
 	 * Convert input fields array to HTML.
 	 *
 	 * @param array $fields
+	 *
 	 * @return string
 	 */
 	public static function input_fields_html( array $fields ) {
@@ -263,7 +260,7 @@ class Pronamic_WP_Pay_Util {
 						'<select id="%s" name="%s">%s</select>',
 						esc_attr( $field['id'] ),
 						esc_attr( $field['name'] ),
-						Pronamic_WP_HTML_Helper::select_options_grouped( $field['choices'] )
+						Pay_Util::select_options_grouped( $field['choices'] )
 					);
 
 					break;
@@ -271,5 +268,20 @@ class Pronamic_WP_Pay_Util {
 		}
 
 		return $html;
+	}
+
+	/**
+	 * Method exists
+	 *
+	 * This helper function was created to fix an issue with `method_exists` calls
+	 * and non existings classes.
+	 *
+	 * @param string $class
+	 * @param string $method
+	 *
+	 * @return boolean
+	 */
+	public static function class_method_exists( $class, $method ) {
+		return class_exists( $class ) && method_exists( $class, $method );
 	}
 }

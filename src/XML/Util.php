@@ -1,16 +1,22 @@
 <?php
 
+namespace Pronamic\WordPress\Pay\Core\XML;
+
+use DOMDocument;
+use DOMNode;
+use DOMText;
+
 /**
  * Title: XML utility class
  * Description:
- * Copyright: Copyright (c) 2005 - 2017
+ * Copyright: Copyright (c) 2005 - 2018
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 1.2.1
+ * @version 2.0.0
  * @since 1.2.1
  */
-class Pronamic_WP_Pay_XML_Util {
+class Util {
 	/**
 	 * Create and add an element with the specified name and value to the specified parent
 	 *

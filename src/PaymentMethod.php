@@ -1,16 +1,18 @@
 <?php
 
+namespace Pronamic\WordPress\Pay\Core;
+
 /**
  * Title: Payment method
  * Description:
- * Copyright: Copyright (c) 2005 - 2017
+ * Copyright: Copyright (c) 2005 - 2018
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 1.3.11
+ * @version 2.0.0
  * @since 1.3.11
  */
-abstract class Pronamic_WP_Pay_PaymentMethod {
+abstract class PaymentMethod {
 	/**
 	 * The ID of this payment method.
 	 *
@@ -31,8 +33,6 @@ abstract class Pronamic_WP_Pay_PaymentMethod {
 	 * @var boolean
 	 */
 	protected $is_active = true;
-
-	/////////////////////////////////////////////////
 
 	public function get_id() {
 		return $this->id;

@@ -1,16 +1,18 @@
 <?php
 
+namespace Pronamic\WordPress\Pay\Core;
+
 /**
  * Title: WordPress pay recurring
  * Description:
- * Copyright: Copyright (c) 2005 - 2017
+ * Copyright: Copyright (c) 2005 - 2018
  * Company: Pronamic
  *
  * @author Reüel van der Steege
- * @version 1.3.11
+ * @version 2.0.0
  * @since 1.3.11
  */
-class Pronamic_WP_Pay_Recurring {
+class Recurring {
 	/**
 	 * Constant for the first payment.
 	 *

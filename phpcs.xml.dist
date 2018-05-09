@@ -17,6 +17,7 @@
 		<exclude name="WordPress.Files.FileName.InvalidClassFileName" />
 		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
 
+		<exclude name="WordPress.VIP.PostsPerPage.posts_per_page_nopaging" />
 		<exclude name="WordPress.VIP.RestrictedFunctions.file_get_contents" />
 		<exclude name="WordPress.VIP.RestrictedFunctions.wp_remote_get" />
 		<exclude name="WordPress.VIP.RestrictedFunctions.wp_redirect_wp_redirect" />

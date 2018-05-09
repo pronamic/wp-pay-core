@@ -7,6 +7,9 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.0.0] - 2018-05-09
+- Switched to PHP namespaces.
+
 ## [1.3.14] - 2017-12-12
 - Improved direct debit payment method support and add helper methods.
 
