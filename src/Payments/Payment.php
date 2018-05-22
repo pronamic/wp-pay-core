@@ -985,7 +985,7 @@ class Payment {
 	/**
 	 * Get reucrring.
 	 *
-	 * @return TODO
+	 * @return bool
 	 */
 	public function get_recurring() {
 		return $this->recurring;
