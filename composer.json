@@ -25,8 +25,12 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"Pronamic\\WordPress\\Pay\\Core\\": "src/"
-		}
+			"Pronamic\\WordPress\\Pay\\": "src/"
+		},
+		"files": [
+			"includes/functions.php",
+			"includes/xmlseclibs/xmlseclibs-ing.php"
+		]
 	},
 	"config": {
 		"platform": {
