@@ -95,7 +95,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Get items.
 	 *
-	 * @return array
+	 * @return Items
 	 */
 	abstract public function get_items();
 
