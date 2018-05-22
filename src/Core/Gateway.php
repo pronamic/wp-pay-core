@@ -597,8 +597,10 @@ abstract class Gateway {
 	}
 
 	/**
-	 * Get form HTML
+	 * Get form HTML.
 	 *
+	 * @param Payment $payment     Payment to get form HTML for.
+	 * @param bool    $auto_submit Flag to auto submit.
 	 * @return string
 	 */
 	public function get_form_html( Payment $payment, $auto_submit = false ) {

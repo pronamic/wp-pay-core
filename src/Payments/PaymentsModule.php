@@ -150,6 +150,7 @@ class PaymentsModule {
 	 */
 	public function log_payment_status_update( $payment, $can_redirect, $old_status, $new_status ) {
 		$note = sprintf(
+			/* translators: 1: old status, 2: new status */
 			__( 'Payment status changed from "%1$s" to "%2$s".', 'pronamic_ideal' ),
 			esc_html( $this->plugin->payments_data_store->get_meta_status_label( $old_status ) ),
 			esc_html( $this->plugin->payments_data_store->get_meta_status_label( $new_status ) )
@@ -157,6 +158,7 @@ class PaymentsModule {
 
 		if ( null === $old_status ) {
 			$note = sprintf(
+				/* translators: 1: new status */
 				__( 'Payment created with status "%1$s".', 'pronamic_ideal' ),
 				esc_html( $this->plugin->payments_data_store->get_meta_status_label( $new_status ) )
 			);

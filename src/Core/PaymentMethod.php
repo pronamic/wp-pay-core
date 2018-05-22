@@ -42,14 +42,29 @@ abstract class PaymentMethod {
 	 */
 	protected $is_active = true;
 
+	/**
+	 * Get the ID of this payment method.
+	 *
+	 * @return string
+	 */
 	public function get_id() {
 		return $this->id;
 	}
 
+	/**
+	 * Get the name of this payment method.
+	 *
+	 * @return string
+	 */
 	public function get_name() {
 		return $this->name;
 	}
 
+	/**
+	 * Is active.
+	 *
+	 * @return bool True if payment method is active, false otherwise.
+	 */
 	public function is_active() {
 		return $this->is_active;
 	}

@@ -1,4 +1,12 @@
 <?php
+/**
+ * Util test
+ *
+ * @author    Pronamic <info@pronamic.eu>
+ * @copyright 2005-2018 Pronamic
+ * @license   GPL-3.0-or-later
+ * @package   Pronamic\WordPress\Pay\Payments
+ */
 
 namespace Pronamic\WordPress\Pay\Core;
 
@@ -16,8 +24,14 @@ class UtilTest extends \WP_UnitTestCase {
 	/**
 	 * Test string to amount.
 	 *
-	 * @see https://github.com/pronamic/wp-pronamic-ideal/blob/3.7.3/classes/Pronamic/WP/Pay/Settings.php#L71-L91
+	 * @link https://github.com/pronamic/wp-pronamic-ideal/blob/3.7.3/classes/Pronamic/WP/Pay/Settings.php#L71-L91
+	 *
 	 * @dataProvider string_to_amount_provider
+	 *
+	 * @param string $thousands_sep Thousands seperator.
+	 * @param string $decimal_sep   Decimal seperator.
+	 * @param string $string        String value to convert.
+	 * @param float  $expected      Expected float value.
 	 */
 	public function test_string_to_amount( $thousands_sep, $decimal_sep, $string, $expected ) {
 		update_option( 'pronamic_pay_thousands_sep', $thousands_sep );
@@ -35,7 +49,7 @@ class UtilTest extends \WP_UnitTestCase {
 	 */
 	public function string_to_amount_provider() {
 		return array(
-			// '', '.'
+			// Thousands seperator is '' and decimal seperator is '.'.
 			array( '', '.', '1', 1 ),
 			array( '', '.', '2,5', 2.5 ),
 			array( '', '.', '2,50', 2.5 ),
@@ -44,7 +58,7 @@ class UtilTest extends \WP_UnitTestCase {
 			array( '', '.', '1250.75', 1250.75 ),
 			array( '', '.', '1.250,00', 1250 ),
 			array( '', '.', '2.500,75', 2500.75 ),
-			// '.', ','
+			// Thousands seperator is '.' and decimal seperator is ','.
 			array( '.', ',', '1', 1 ),
 			array( '.', ',', '2,5', 2.5 ),
 			array( '.', ',', '2,50', 2.5 ),
@@ -54,7 +68,7 @@ class UtilTest extends \WP_UnitTestCase {
 			array( '.', ',', '2.500,75', 2500.75 ),
 			array( '.', ',', '2.500,750', 2500.75 ),
 			array( '.', ',', '1.234.567.890', 1234567890 ),
-			// ',', '.'
+			// Thousands seperator is ',' and decimal seperator is '.'.
 			array( ',', '.', '1', 1 ),
 			array( ',', '.', '2.5', 2.5 ),
 			array( ',', '.', '2.50', 2.5 ),
@@ -63,23 +77,23 @@ class UtilTest extends \WP_UnitTestCase {
 			array( ',', '.', '1,250.00', 1250 ),
 			array( ',', '.', '2,500.75', 2500.75 ),
 			array( ',', '.', '2,500.', 2500 ),
-			// ' ', '.'
+			// Thousands seperator is ' ' and decimal seperator is '.'.
 			array( ' ', '.', '2 500.75', 2500.75 ),
-			// 't', '.'
+			// Thousands seperator is 't' and decimal seperator is '.'.
 			array( 't', '.', '2t500.75', 2500.75 ),
 			array( 't', '.', '2t500.7', 2500.7 ),
-			// 't', '-'
+			// Thousands seperator is 't' and decimal seperator is '-'.
 			array( 't', '-', '2t500-75', 2500.75 ),
 			array( 't', '-', '2t500-7', 2500.7 ),
-			// 't', ' '
+			// Thousands seperator is 't' and decimal seperator is ' '.
 			array( 't', ' ', '2t500 75', 2500.75 ),
 			array( 't', ' ', '2t500 7', 2500.7 ),
-			// ' ', 'd'
+			// Thousands seperator is ' ' and decimal seperator is 'd'.
 			array( ' ', 'd', '2 500d75', 2500.75 ),
 			array( ' ', 'd', '2 500d7', 2500.7 ),
-			// ' ', 'd'
 			array( ' ', 'd', '-2 500d75', -2500.75 ),
 			array( ' ', 'd', '-2 500d7', -2500.7 ),
+			// Other.
 			array( '', '', '123456789', 123456789 ),
 			array( false, false, '123 456 789', 123456789 ),
 		);
@@ -89,6 +103,10 @@ class UtilTest extends \WP_UnitTestCase {
 	 * Test method exists.
 	 *
 	 * @dataProvider status_matrix_provider
+	 *
+	 * @param string $class    Class name to check.
+	 * @param string $method   Method name to check.
+	 * @param bool   $expected Expected result.
 	 */
 	public function test_class_method_exists( $class, $method, $expected ) {
 		$exists = Util::class_method_exists( $class, $method );
@@ -96,6 +114,11 @@ class UtilTest extends \WP_UnitTestCase {
 		$this->assertEquals( $expected, $exists );
 	}
 
+	/**
+	 * Status matrix provider.
+	 *
+	 * @return array
+	 */
 	public function status_matrix_provider() {
 		return array(
 			array( __NAMESPACE__ . '\Util', 'class_method_exists', true ),

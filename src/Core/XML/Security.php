@@ -27,7 +27,7 @@ class Security {
 	 * Filter XML variable.
 	 *
 	 * @param string|SimpleXMLElement $variable Variable to filter.
-	 * @param int                     $filter   PHP filter flag constant. 
+	 * @param int                     $filter   PHP filter flag constant.
 	 */
 	public static function filter( $variable, $filter = FILTER_SANITIZE_STRING ) {
 		if ( ! $variable ) {

@@ -49,6 +49,7 @@ class PaymentFormData extends PaymentData {
 	 * @return string
 	 */
 	public function get_description() {
+		/* translators: %s: order id */
 		return sprintf( __( 'Payment Form %s', 'pronamic_ideal' ), $this->get_order_id() );
 	}
 
@@ -87,6 +88,7 @@ class PaymentFormData extends PaymentData {
 		// Item.
 		$item = new Item();
 		$item->setNumber( $this->get_order_id() );
+		/* translators: %s: order id */
 		$item->setDescription( sprintf( __( 'Payment %s', 'pronamic_ideal' ), $this->get_order_id() ) );
 		$item->setPrice( $amount );
 		$item->setQuantity( 1 );

@@ -33,6 +33,10 @@ class SubscriptionTest extends WP_UnitTestCase {
 	 * Test set and get.
 	 *
 	 * @dataProvider get_and_set_provider
+	 *
+	 * @param string $set_function Setter function name.
+	 * @param string $get_function Getter function name.
+	 * @param string $value        Expected value.
 	 */
 	public function test_set_and_get( $set_function, $get_function, $value ) {
 		$subscription = new Subscription();
@@ -42,6 +46,11 @@ class SubscriptionTest extends WP_UnitTestCase {
 		$this->assertEquals( $value, $subscription->$get_function() );
 	}
 
+	/**
+	 * Get and set provider.
+	 *
+	 * @return array
+	 */
 	public function get_and_set_provider() {
 		return array(
 			array( 'set_amount', 'get_amount', new Money( 89.95, 'EUR' ) ),
@@ -55,6 +64,10 @@ class SubscriptionTest extends WP_UnitTestCase {
 	 * Test set.
 	 *
 	 * @dataProvider set_provider
+	 *
+	 * @param string $set_function Setter function name.
+	 * @param string $property     Property name.
+	 * @param string $value        Expected value.
 	 */
 	public function test_set( $set_function, $property, $value ) {
 		$subscription = new Subscription();
@@ -81,6 +94,10 @@ class SubscriptionTest extends WP_UnitTestCase {
 	 * Test get.
 	 *
 	 * @dataProvider get_provider
+	 *
+	 * @param string $property     Property name.
+	 * @param string $get_function Getter function name.
+	 * @param string $value        Expected value.
 	 */
 	public function test_get( $property, $get_function, $value ) {
 		$subscription = new Subscription();

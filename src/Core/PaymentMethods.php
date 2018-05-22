@@ -281,7 +281,7 @@ class PaymentMethods {
 	 *
 	 * @since 1.3.14
 	 *
-	 * @param $payment_method Payment method to check for direct debit.
+	 * @param string $payment_method Payment method to check for direct debit.
 	 *
 	 * @return bool True if the specified payment method is direct debit, false otherwise.
 	 */
@@ -296,10 +296,10 @@ class PaymentMethods {
 	 * @return array
 	 */
 	public static function get_recurring_methods() {
-		// Get the direct debit methods
+		// Get the direct debit methods.
 		$payment_methods = self::get_direct_debit_methods();
 
-		// Add additional methods suitable for recurring payments
+		// Add additional methods suitable for recurring payments.
 		$payment_methods[ PaymentMethods::CREDIT_CARD ] = PaymentMethods::CREDIT_CARD;
 
 		return $payment_methods;
@@ -310,7 +310,7 @@ class PaymentMethods {
 	 *
 	 * @since 1.3.14
 	 *
-	 * @param $payment_method The payment method to check for recurring.
+	 * @param string $payment_method The payment method to check for recurring.
 	 *
 	 * @return bool True if the specified payment method supports recurring, false otherwise.
 	 */
@@ -321,7 +321,7 @@ class PaymentMethods {
 	/**
 	 * Get first method for payment method.
 	 *
-	 * @param $payment_method The payment method to get the first payment method for.
+	 * @param string $payment_method The payment method to get the first payment method for.
 	 *
 	 * @return string
 	 */

@@ -71,6 +71,10 @@ class CreditCardTest extends WP_UnitTestCase {
 	 * Test getting the expiration date.
 	 *
 	 * @dataProvider expiration_dates_provider
+	 *
+	 * @param string|int|null $year          Year value.
+	 * @param string|int|null $month         Month value.
+	 * @param \DateTime|null  $expected_date Expected date.
 	 */
 	public function test_get_expiration_date( $year, $month, $expected_date ) {
 		$credit_card = new CreditCard();
@@ -85,6 +89,8 @@ class CreditCardTest extends WP_UnitTestCase {
 
 	/**
 	 * Expiration dates provider.
+	 *
+	 * @return array
 	 */
 	public function expiration_dates_provider() {
 		return array(

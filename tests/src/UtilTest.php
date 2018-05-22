@@ -1,4 +1,12 @@
 <?php
+/**
+ * Util test
+ *
+ * @author    Pronamic <info@pronamic.eu>
+ * @copyright 2005-2018 Pronamic
+ * @license   GPL-3.0-or-later
+ * @package   Pronamic\WordPress\Pay\Payments
+ */
 
 namespace Pronamic\WordPress\Pay;
 
@@ -15,6 +23,9 @@ use WP_UnitTestCase;
  * @version 1.0
  */
 class UtilTest extends WP_UnitTestCase {
+	/**
+	 * Test to string boolean.
+	 */
 	public function test_to_string_boolean() {
 		$boolean = false;
 

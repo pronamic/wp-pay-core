@@ -69,6 +69,7 @@ class PaymentTestData extends PaymentData {
 	 * @return string
 	 */
 	public function get_description() {
+		/* translators: %s: order id */
 		return sprintf( __( 'Test %s', 'pronamic_ideal' ), $this->get_order_id() );
 	}
 
@@ -95,6 +96,7 @@ class PaymentTestData extends PaymentData {
 		// Item.
 		$item = new Item();
 		$item->setNumber( $this->get_order_id() );
+		/* translators: %s: order id */
 		$item->setDescription( sprintf( __( 'Test %s', 'pronamic_ideal' ), $this->get_order_id() ) );
 		$item->setPrice( $this->amount );
 		$item->setQuantity( 1 );
@@ -223,9 +225,6 @@ class PaymentTestData extends PaymentData {
 
 		// @see http://www.paypalobjects.com/en_US/vhelp/paypalmanager_help/credit_card_numbers.htm
 		// Test card to simulate a 3-D Secure registered card.
-		// $credit_card->set_number( '5555555555554444' );
-		// $credit_card->set_number( '4111111111111111' );
-		// $credit_card->set_number( '4000000000000002' );
 		$credit_card->set_number( '5300000000000006' );
 
 		$credit_card->set_expiration_month( 12 );
