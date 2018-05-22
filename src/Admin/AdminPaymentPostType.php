@@ -291,6 +291,7 @@ class AdminPaymentPostType {
 
 				echo wp_kses(
 					sprintf(
+						/* translators: 1: Payment edit post link with post ID, 2: Payment source description, 3: Payment source ID text */
 						__( '%1$s for %2$s %3$s', 'pronamic_ideal' ),
 						sprintf(
 							'<a href="%s" class="row-title"><strong>#%s</strong></a>',
@@ -563,6 +564,7 @@ class AdminPaymentPostType {
 			// @see https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352804&filters[translation_id]=37949303.
 			8  => __( 'Payment submitted.', 'pronamic_ideal' ),
 			// @see https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352805&filters[translation_id]=37949302.
+			/* translators: %s: scheduled date */
 			9  => sprintf( __( 'Payment scheduled for: %s.', 'pronamic_ideal' ), '<strong>' . $scheduled_date . '</strong>' ),
 			// @https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352806&filters[translation_id]=37949301.
 			10 => __( 'Payment draft updated.', 'pronamic_ideal' ),

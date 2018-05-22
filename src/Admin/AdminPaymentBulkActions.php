@@ -138,6 +138,7 @@ class AdminPaymentBulkActions {
 			$updated = filter_input( INPUT_GET, 'status_updated', FILTER_VALIDATE_INT );
 
 			if ( $updated > 0 ) {
+				/* translators: %s: number updated payments */
 				$message = sprintf( _n( '%s payment updated.', '%s payments updated.', $updated, 'pronamic_ideal' ), number_format_i18n( $updated ) );
 
 				printf(
@@ -148,12 +149,13 @@ class AdminPaymentBulkActions {
 		}
 
 		if ( filter_has_var( INPUT_GET, 'skipped_check' ) ) {
-			$updated = filter_input( INPUT_GET, 'skipped_check', FILTER_VALIDATE_INT );
+			$skipped = filter_input( INPUT_GET, 'skipped_check', FILTER_VALIDATE_INT );
 
-			if ( $updated > 0 ) {
+			if ( $skipped > 0 ) {
 				$message = sprintf(
-					_n( '%s payment is not updated because it already has a final payment status.', '%s payments are not updated because they already have a final payment status.', $updated, 'pronamic_ideal' ),
-					number_format_i18n( $updated )
+					/* translators: %s: number skipped payments */
+					_n( '%s payment is not updated because it already has a final payment status.', '%s payments are not updated because they already have a final payment status.', $skipped, 'pronamic_ideal' ),
+					number_format_i18n( $skipped )
 				);
 
 				printf(
@@ -173,6 +175,7 @@ class AdminPaymentBulkActions {
 					$gateways[ $index ] = get_the_title( $config_id );
 				}
 
+				/* translators: %s: gateways lists */
 				$message = sprintf( __( 'Requesting the current payment status is unsupported by %s.', 'pronamic_ideal' ), implode( ', ', $gateways ) );
 
 				printf(

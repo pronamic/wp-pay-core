@@ -171,6 +171,7 @@ class AdminSubscriptionPostType {
 
 				echo wp_kses(
 					sprintf(
+						/* translators: 1: Subscription edit post link with post ID, 2: Subscription source description, 3: Subscription source ID text */
 						__( '%1$s for %2$s %3$s', 'pronamic_ideal' ),
 						sprintf(
 							'<a href="%s" class="row-title"><strong>#%s</strong></a>',

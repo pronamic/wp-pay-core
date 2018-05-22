@@ -44,10 +44,10 @@ class SubscriptionTest extends WP_UnitTestCase {
 
 	public function get_and_set_provider() {
 		return array(
-			array( 'set_amount',         'get_amount',         new Money( 89.95, 'EUR' ) ),
-			array( 'set_id',             'get_id',             uniqid()    ),
-			array( 'set_status',         'get_status',         'completed' ),
-			array( 'set_transaction_id', 'get_transaction_id', uniqid()    ),
+			array( 'set_amount', 'get_amount', new Money( 89.95, 'EUR' ) ),
+			array( 'set_id', 'get_id', uniqid() ),
+			array( 'set_status', 'get_status', 'completed' ),
+			array( 'set_transaction_id', 'get_transaction_id', uniqid() ),
 		);
 	}
 
@@ -73,7 +73,7 @@ class SubscriptionTest extends WP_UnitTestCase {
 		return array(
 			array( 'set_consumer_name', 'consumer_name', 'John Doe' ),
 			array( 'set_consumer_iban', 'consumer_iban', 'NL56 RABO 0108 6347 79' ),
-			array( 'set_consumer_bic',  'consumer_bic',  'RABONL2U' ),
+			array( 'set_consumer_bic', 'consumer_bic', 'RABONL2U' ),
 		);
 	}
 
@@ -97,13 +97,13 @@ class SubscriptionTest extends WP_UnitTestCase {
 	 */
 	public function get_provider() {
 		return array(
-			array( 'key',                 'get_key',             uniqid() ),
-			array( 'source',              'get_source',          'woocommerce' ),
-			array( 'source_id',           'get_source_id',       '1234' ),
-			array( 'frequency',           'get_frequency',       'daily' ),
-			array( 'interval',            'get_interval',        '1' ),
-			array( 'interval_period',     'get_interval_period', 'Y' ),
-			array( 'description',         'get_description',     'Lorem ipsum dolor sit amet, consectetur.' ),
+			array( 'key', 'get_key', uniqid() ),
+			array( 'source', 'get_source', 'woocommerce' ),
+			array( 'source_id', 'get_source_id', '1234' ),
+			array( 'frequency', 'get_frequency', 'daily' ),
+			array( 'interval', 'get_interval', '1' ),
+			array( 'interval_period', 'get_interval_period', 'Y' ),
+			array( 'description', 'get_description', 'Lorem ipsum dolor sit amet, consectetur.' ),
 		);
 	}
 

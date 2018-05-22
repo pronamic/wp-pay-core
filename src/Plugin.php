@@ -723,6 +723,7 @@ class Plugin {
 	public static function start( $config_id, Gateway $gateway, PaymentDataInterface $data, $payment_method = null ) {
 		$payment = new Payments\Payment();
 
+		/* translators: %s: payment data title */
 		$payment->title               = sprintf( __( 'Payment for %s', 'pronamic_ideal' ), $data->get_title() );
 		$payment->user_id             = $data->get_user_id();
 		$payment->config_id           = $config_id;

@@ -1,4 +1,12 @@
 <?php
+/**
+ * Gateway
+ *
+ * @author    Pronamic <info@pronamic.eu>
+ * @copyright 2005-2018 Pronamic
+ * @license   GPL-3.0-or-later
+ * @package   Pronamic\WordPress\Pay\Core
+ */
 
 namespace Pronamic\WordPress\Pay\Core;
 
@@ -130,7 +138,7 @@ abstract class Gateway {
 	/**
 	 * Constructs and initializes an gateway
 	 *
-	 * @param GatewayConfig $config
+	 * @param GatewayConfig $config Gateway configuration object.
 	 */
 	public function __construct( GatewayConfig $config ) {
 		$this->config = $config;
@@ -149,10 +157,9 @@ abstract class Gateway {
 	/**
 	 * Check if a gateway supports a given feature.
 	 *
-	 * @param string $feature
-	 *
 	 * @since 1.3.11
-	 * @return bool
+	 * @param string $feature The feature to check.
+	 * @return bool True if supported, false otherwise.
 	 */
 	public function supports( $feature ) {
 		return in_array( $feature, $this->supports, true );
@@ -170,7 +177,7 @@ abstract class Gateway {
 	/**
 	 * Set the slug of this gateway
 	 *
-	 * @param string $slug
+	 * @param string $slug Unique gateway slug.
 	 */
 	public function set_slug( $slug ) {
 		$this->slug = $slug;
@@ -179,7 +186,7 @@ abstract class Gateway {
 	/**
 	 * Get the error
 	 *
-	 * @return WP_Error or null
+	 * @return WP_Error|null
 	 */
 	public function get_error() {
 		return $this->error;
@@ -197,16 +204,16 @@ abstract class Gateway {
 	/**
 	 * Set error
 	 *
-	 * @param WP_Error $error
+	 * @param WP_Error|null $error WordPress error object or null.
 	 */
 	public function set_error( WP_Error $error = null ) {
 		$this->error = $error;
 	}
 
 	/**
-	 * Set the method
+	 * Set the method.
 	 *
-	 * @param int $method
+	 * @param int $method HTML form or HTTP redirect method.
 	 */
 	public function set_method( $method ) {
 		$this->method = $method;
@@ -242,7 +249,7 @@ abstract class Gateway {
 	/**
 	 * Set has feedback
 	 *
-	 * @param boolean $has_feedback
+	 * @param boolean $has_feedback Feedback from gateway indicator.
 	 */
 	public function set_has_feedback( $has_feedback ) {
 		$this->has_feedback = $has_feedback;
@@ -251,32 +258,34 @@ abstract class Gateway {
 	/**
 	 * Set the minimum amount required
 	 *
-	 * @param float $amount
+	 * @param float $amount Minimum payment amount.
 	 */
 	public function set_amount_minimum( $amount ) {
 		$this->amount_minimum = $amount;
 	}
 
 	/**
-	 * Get iDEAL issuers
+	 * Get iDEAL issuers.
 	 *
-	 * @return mixed an array or null
+	 * @return array|null
 	 */
 	public function get_issuers() {
 		return null;
 	}
 
 	/**
-	 * Get credit card issuers
+	 * Get credit card issuers.
 	 *
-	 * @return mixed an array or null
+	 * @return array|null
 	 */
 	public function get_credit_card_issuers() {
 		return null;
 	}
 
 	/**
-	 * Get the iDEAL issuers transient
+	 * Get the iDEAL issuers transient.
+	 *
+	 * @return array|null
 	 */
 	public function get_transient_issuers() {
 		$issuers = null;
@@ -301,7 +310,9 @@ abstract class Gateway {
 	}
 
 	/**
-	 * Get the credit card issuers transient
+	 * Get the credit card issuers transient.
+	 *
+	 * @return array|null
 	 */
 	public function get_transient_credit_card_issuers() {
 		$issuers = null;
@@ -328,6 +339,8 @@ abstract class Gateway {
 	/**
 	 * Get supported payment providers for gateway.
 	 * Intended to be overridden by gateway.
+	 *
+	 * @return array
 	 */
 	public function get_supported_payment_methods() {
 		return array();
@@ -348,7 +361,7 @@ abstract class Gateway {
 	 * Get the payment methods transient
 	 *
 	 * @since 1.3.0
-	 * @return mixed an array or null
+	 * @return array|null
 	 */
 	public function get_transient_available_payment_methods() {
 		// Transient name. Expected to not be SQL-escaped. Should be 45 characters or less in length.
@@ -371,7 +384,7 @@ abstract class Gateway {
 	 * Is payment method required to start transaction?
 	 *
 	 * @since 1.3.0
-	 * @return boolean true if payment method is required, false otherwise
+	 * @return boolean True if payment method is required, false otherwise.
 	 */
 	public function payment_method_is_required() {
 		return false;
@@ -380,9 +393,7 @@ abstract class Gateway {
 	/**
 	 * Get payment method field options.
 	 *
-	 * @param $other_first
-	 * @param $choices
-	 *
+	 * @param bool $other_first Flag to prepend the 'Other' / 'All available methods' option.
 	 * @return array
 	 */
 	public function get_payment_method_field_options( $other_first = false ) {
@@ -418,7 +429,7 @@ abstract class Gateway {
 	/**
 	 * Start transaction/payment
 	 *
-	 * @param Payment $payment
+	 * @param Payment $payment The payment to start up at this gateway.
 	 */
 	public function start( Payment $payment ) {
 
@@ -427,7 +438,7 @@ abstract class Gateway {
 	/**
 	 * Handle subscription update.
 	 *
-	 * @param Payment $payment
+	 * @param Payment $payment The payment to handle subscription update for.
 	 */
 	public function update_subscription( Payment $payment ) {
 
@@ -436,14 +447,16 @@ abstract class Gateway {
 	/**
 	 * Handle subscription cancellation.
 	 *
-	 * @param Subscription $subscription
+	 * @param Subscription $subscription The subscipriont to handle cancellation for.
 	 */
 	public function cancel_subscription( Subscription $subscription ) {
 
 	}
 
 	/**
-	 * Redirect to the gateway action URL
+	 * Redirect to the gateway action URL.
+	 *
+	 * @param Payment $payment The payment to redirect for.
 	 */
 	public function redirect( Payment $payment ) {
 		switch ( $this->method ) {
@@ -452,17 +465,22 @@ abstract class Gateway {
 			case self::METHOD_HTML_FORM:
 				return $this->redirect_via_html( $payment );
 			default:
-				// No idea how to redirect to the gateway
+				// No idea how to redirect to the gateway.
 		}
 	}
 
+	/**
+	 * Redirect via HTTP.
+	 *
+	 * @param Payment $payment The payment to redirect for.
+	 */
 	public function redirect_via_http( Payment $payment ) {
 		if ( headers_sent() ) {
 			$this->redirect_via_html( $payment );
 		}
 
-		// Redirect, See Other
-		// http://en.wikipedia.org/wiki/HTTP_303
+		// Redirect, See Other.
+		// http://en.wikipedia.org/wiki/HTTP_303.
 		wp_redirect( $payment->get_action_url(), 303 );
 
 		exit;
@@ -470,13 +488,10 @@ abstract class Gateway {
 
 	public function redirect_via_html( Payment $payment ) {
 		if ( headers_sent() ) {
-			// @codingStandardsIgnoreStart
-			// No need to escape this echo
-			echo $this->get_form_html( $payment, true );
-			// @codingStandardsIgnoreEnd
+			echo $this->get_form_html( $payment, true ); // WPCS: XSS ok.
 		} else {
-			// @see https://github.com/woothemes/woocommerce/blob/2.3.11/includes/class-wc-cache-helper.php
-			// @see https://www.w3-edge.com/products/w3-total-cache/
+			// @link https://github.com/woothemes/woocommerce/blob/2.3.11/includes/class-wc-cache-helper.php.
+			// @link https://www.w3-edge.com/products/w3-total-cache/.
 			if ( ! defined( 'DONOTCACHEPAGE' ) ) {
 				define( 'DONOTCACHEPAGE', true );
 			}
@@ -508,7 +523,7 @@ abstract class Gateway {
 	/**
 	 * Get an issuer field
 	 *
-	 * @return mixed an array or null
+	 * @return array|null
 	 */
 	public function get_issuer_field() {
 		return null;

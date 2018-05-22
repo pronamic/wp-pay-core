@@ -28,7 +28,7 @@ class CreditCardTest extends WP_UnitTestCase {
 		$this->assertInstanceOf( __NAMESPACE__ . '\CreditCard', $credit_card );
 	}
 
-	/** 
+	/**
 	 * Test setting and getting the credit card number.
 	 */
 	public function test_set_and_get_number() {
@@ -41,7 +41,7 @@ class CreditCardTest extends WP_UnitTestCase {
 		$this->assertEquals( $number, $credit_card->get_number() );
 	}
 
-	/** 
+	/**
 	 * Test setting and getting the credit card expiration month.
 	 */
 	public function test_set_and_get_expiration_month() {
@@ -54,7 +54,7 @@ class CreditCardTest extends WP_UnitTestCase {
 		$this->assertEquals( $month, $credit_card->get_expiration_month() );
 	}
 
-	/** 
+	/**
 	 * Test setting and getting the credit card expiration year.
 	 */
 	public function test_set_and_get_expiration_year() {
@@ -67,7 +67,7 @@ class CreditCardTest extends WP_UnitTestCase {
 		$this->assertEquals( $year, $credit_card->get_expiration_year() );
 	}
 
-	/** 
+	/**
 	 * Test getting the expiration date.
 	 *
 	 * @dataProvider expiration_dates_provider
@@ -96,7 +96,7 @@ class CreditCardTest extends WP_UnitTestCase {
 		);
 	}
 
-	/** 
+	/**
 	 * Test setting and getting the credit card security code.
 	 */
 	public function test_set_and_get_security_code() {
@@ -109,7 +109,7 @@ class CreditCardTest extends WP_UnitTestCase {
 		$this->assertEquals( $code, $credit_card->get_security_code() );
 	}
 
-	/** 
+	/**
 	 * Test setting and getting the credit card name.
 	 */
 	public function test_set_and_get_name() {

@@ -43,6 +43,7 @@ class Util {
 		return new WP_Error(
 			'wrong_response_code',
 			sprintf(
+				/* translators: 1: response code, 2: required response code */
 				__( 'The response code (<code>%1$s<code>) was incorrect, required response code <code>%2$s</code>.', 'pronamic_ideal' ),
 				$response_code,
 				$required_response_code
@@ -147,18 +148,22 @@ class Util {
 			case 'D':
 			case 'day':
 			case 'days':
+				/* translators: %s: interval */
 				return sprintf( _n( 'Every %s day', 'Every %s days', $interval, 'pronamic_ideal' ), $interval );
 			case 'W':
 			case 'week':
 			case 'weeks':
+				/* translators: %s: interval */
 				return sprintf( _n( 'Every %s week', 'Every %s weeks', $interval, 'pronamic_ideal' ), $interval );
 			case 'M':
 			case 'month':
 			case 'months':
+				/* translators: %s: interval */
 				return sprintf( _n( 'Every %s month', 'Every %s months', $interval, 'pronamic_ideal' ), $interval );
 			case 'Y':
 			case 'year':
 			case 'years':
+				/* translators: %s: interval */
 				return sprintf( _n( 'Every %s year', 'Every %s years', $interval, 'pronamic_ideal' ), $interval );
 		}
 	}
@@ -197,6 +202,7 @@ class Util {
 			return _x( 'Unlimited', 'Recurring payment', 'pronamic_ideal' );
 		}
 
+		/* translators: %s: frequency */
 		return sprintf( _n( '%s time', '%s times', $frequency, 'pronamic_ideal' ), $frequency );
 	}
 

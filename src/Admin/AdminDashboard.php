@@ -63,10 +63,15 @@ class AdminDashboard {
 		$counts = wp_count_posts( 'pronamic_payment' );
 
 		$states = array(
+			/* translators: %s: posts count value */
 			'payment_completed' => __( '%s completed', 'pronamic_ideal' ),
+			/* translators: %s: posts count value */
 			'payment_pending'   => __( '%s pending', 'pronamic_ideal' ),
+			/* translators: %s: posts count value */
 			'payment_cancelled' => __( '%s cancelled', 'pronamic_ideal' ),
+			/* translators: %s: posts count value */
 			'payment_failed'    => __( '%s failed', 'pronamic_ideal' ),
+			/* translators: %s: posts count value */
 			'payment_expired'   => __( '%s expired', 'pronamic_ideal' ),
 		);
 

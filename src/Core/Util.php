@@ -1,4 +1,12 @@
 <?php
+/**
+ * Util
+ *
+ * @author    Pronamic <info@pronamic.eu>
+ * @copyright 2005-2018 Pronamic
+ * @license   GPL-3.0-or-later
+ * @package   Pronamic\WordPress\Pay\Core
+ */
 
 namespace Pronamic\WordPress\Pay\Core;
 
@@ -18,10 +26,11 @@ use WP_Error;
  */
 class Util {
 	/**
-	 * Remote get body
+	 * Remote get body.
 	 *
-	 * @param string $url
-	 * @param int    $required_response_code
+	 * @param string $url                    URL to request.
+	 * @param int    $required_response_code Required response code.
+	 * @param array  $args                   Remote request arguments.
 	 *
 	 * @return array|bool|string|WP_Error
 	 */
@@ -59,19 +68,19 @@ class Util {
 	}
 
 	/**
-	 * SimpleXML load string
+	 * SimpleXML load string.
 	 *
-	 * @param string $string
+	 * @param string $string The XML string to load.
 	 *
-	 * @return SimpleXMLElement || WP_Error
+	 * @return SimpleXMLElement|WP_Error
 	 */
 	public static function simplexml_load_string( $string ) {
 		$result = false;
 
-		// Suppress all XML errors
+		// Suppress all XML errors.
 		$use_errors = libxml_use_internal_errors( true );
 
-		// Load
+		// Load.
 		$xml = simplexml_load_string( $string );
 
 		if ( false !== $xml ) {
@@ -88,16 +97,16 @@ class Util {
 			$result = $error;
 		}
 
-		// Set back to previous value
+		// Set back to previous value.
 		libxml_use_internal_errors( $use_errors );
 
 		return $result;
 	}
 
 	/**
-	 * Amount to cents
+	 * Amount to cents.
 	 *
-	 * @param float $amount
+	 * @param float $amount The amount to conver to cents.
 	 *
 	 * @return int
 	 */
@@ -106,9 +115,9 @@ class Util {
 	}
 
 	/**
-	 * Cents to amount
+	 * Cents to amount.
 	 *
-	 * @param int $cents
+	 * @param int $cents The cents to convert to float value.
 	 *
 	 * @return float
 	 */
@@ -117,24 +126,24 @@ class Util {
 	}
 
 	/**
-	 * String to amount (user input string)
+	 * String to amount (user input string).
 	 *
 	 * @version 1.3.1
 	 * @since 1.3.0
 	 *
-	 * @param string $amount
+	 * @param string $amount The string value to convert to a float value.
 	 *
 	 * @return float
 	 */
 	public static function string_to_amount( $amount ) {
-		// Remove thousands seperators
+		// Remove thousands seperators.
 		$decimal_sep = get_option( 'pronamic_pay_decimal_sep' );
 
-		// Seperators
+		// Seperators.
 		$seperators = array( $decimal_sep, '.', ',' );
 		$seperators = array_unique( array_filter( $seperators ) );
 
-		// Check
+		// Check.
 		foreach ( array( - 3, - 2 ) as $i ) {
 			$test = substr( $amount, $i, 1 );
 
@@ -145,7 +154,7 @@ class Util {
 			}
 		}
 
-		// Split
+		// Split.
 		$position = strrpos( $amount, $decimal_sep );
 
 		if ( false !== $position ) {
@@ -160,18 +169,18 @@ class Util {
 			$amount = filter_var( $amount, FILTER_SANITIZE_NUMBER_INT );
 		}
 
-		// Filter
+		// Filter.
 		$amount = filter_var( $amount, FILTER_VALIDATE_FLOAT );
 
 		return $amount;
 	}
 
 	/**
-	 * Convert boolean to an numceric boolean
+	 * Convert boolean to an numceric boolean.
 	 *
 	 * @see https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
 	 *
-	 * @param boolean $boolean
+	 * @param boolean $boolean The boolean value to convert to an integer value.
 	 *
 	 * @return int
 	 */
@@ -184,7 +193,7 @@ class Util {
 	 *
 	 * @see https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
 	 *
-	 * @param boolean $boolean
+	 * @param boolean $boolean The boolean value to convert to a string value.
 	 *
 	 * @return int
 	 */
@@ -197,7 +206,7 @@ class Util {
 	 *
 	 * @since 1.3.9
 	 *
-	 * @param string $period
+	 * @param string $period The period value to convert to a single character/string value.
 	 *
 	 * @return string
 	 */
@@ -224,8 +233,8 @@ class Util {
 	/**
 	 * Build URL with the specified parameters
 	 *
-	 * @param string $url
-	 * @param array $parameters
+	 * @param string $url        URL to extend with the specified parameters.
+	 * @param array  $parameters URL parameters.
 	 *
 	 * @return string
 	 */
@@ -236,7 +245,7 @@ class Util {
 	/**
 	 * Convert input fields array to HTML.
 	 *
-	 * @param array $fields
+	 * @param array $fields Array with fields data to convert to HTML.
 	 *
 	 * @return string
 	 */
@@ -276,8 +285,8 @@ class Util {
 	 * This helper function was created to fix an issue with `method_exists` calls
 	 * and non existings classes.
 	 *
-	 * @param string $class
-	 * @param string $method
+	 * @param string $class  Class name to check for the specifiekd method.
+	 * @param string $method Method name to check for existance.
 	 *
 	 * @return boolean
 	 */

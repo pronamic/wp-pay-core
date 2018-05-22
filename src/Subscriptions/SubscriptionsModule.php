@@ -213,6 +213,7 @@ class SubscriptionsModule {
 						'<h1>%14s</h1> <p>%2$s</p> <hr /> <p><strong>%3$s:</strong> %4$s</p> <p><strong>%5$s:</strong> %6$s</p>',
 						esc_html__( 'Subscription Renewal', 'pronamic_ideal' ),
 						sprintf(
+							/* translators: %s: expiry date */
 							__( 'The subscription epxires at %s.', 'pronamic_ideal' ),
 							$subscription->get_expiry_date()->format_i18n()
 						),
@@ -411,8 +412,9 @@ class SubscriptionsModule {
 		// New subscription.
 		$subscription = new Subscription();
 
-		$subscription->config_id       = $payment->config_id;
-		$subscription->user_id         = $payment->user_id;
+		$subscription->config_id = $payment->config_id;
+		$subscription->user_id   = $payment->user_id;
+		/* translators: %s: payment title */
 		$subscription->title           = sprintf( __( 'Subscription for %s', 'pronamic_ideal' ), $payment->title );
 		$subscription->frequency       = $subscription_data->get_frequency();
 		$subscription->interval        = $subscription_data->get_interval();
@@ -568,6 +570,7 @@ class SubscriptionsModule {
 	 */
 	public function log_subscription_status_update( $subscription, $can_redirect, $old_status, $new_status ) {
 		$note = sprintf(
+			/* translators: 1: old status, 2: new status */
 			__( 'Subscription status changed from "%1$s" to "%2$s".', 'pronamic_ideal' ),
 			esc_html( $this->plugin->subscriptions_data_store->get_meta_status_label( $old_status ) ),
 			esc_html( $this->plugin->subscriptions_data_store->get_meta_status_label( $new_status ) )
@@ -575,6 +578,7 @@ class SubscriptionsModule {
 
 		if ( null === $old_status ) {
 			$note = sprintf(
+				/* translators: 1: new status */
 				__( 'Subscription created with status "%1$s".', 'pronamic_ideal' ),
 				esc_html( $this->plugin->subscriptions_data_store->get_meta_status_label( $new_status ) )
 			);
@@ -700,6 +704,7 @@ class SubscriptionsModule {
 
 			// Add renewal notice payment note.
 			$note = sprintf(
+				/* translators: %s: expiry date */
 				__( 'Subscription renewal due on %s.', 'pronamic_ideal' ),
 				$expiry_date->format_i18n()
 			);

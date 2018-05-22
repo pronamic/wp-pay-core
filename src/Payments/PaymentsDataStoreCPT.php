@@ -210,10 +210,12 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$payment->user_ip             = $this->get_meta( $id, 'user_ip' );
 
 		// Amount.
-		$payment->set_amount( new Money(
-			$this->get_meta( $id, 'amount' ),
-			$this->get_meta( $id, 'currency' )
-		) );
+		$payment->set_amount(
+			new Money(
+				$this->get_meta( $id, 'amount' ),
+				$this->get_meta( $id, 'currency' )
+			)
+		);
 	}
 
 	/**

@@ -1,4 +1,12 @@
 <?php
+/**
+ * Data helper class
+ *
+ * @author    Pronamic <info@pronamic.eu>
+ * @copyright 2005-2018 Pronamic
+ * @license   GPL-3.0-or-later
+ * @package   Pronamic\WordPress\Pay\Core
+ */
 
 namespace Pronamic\WordPress\Pay\Core;
 
@@ -16,9 +24,9 @@ class DataHelper {
 	/**
 	 * Filter the specified characters from the string
 	 *
-	 * @param array $characters
-	 * @param string $string
-	 * @param int $max
+	 * @param array    $characters Array with characters that are allowed.
+	 * @param string   $string     String to filter.
+	 * @param int|null $max        Maximum length of the string.
 	 *
 	 * @return string
 	 */

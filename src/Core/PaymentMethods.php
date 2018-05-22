@@ -1,4 +1,12 @@
 <?php
+/**
+ * Payment methods
+ *
+ * @author    Pronamic <info@pronamic.eu>
+ * @copyright 2005-2018 Pronamic
+ * @license   GPL-3.0-or-later
+ * @package   Pronamic\WordPress\Pay\Core
+ */
 
 namespace Pronamic\WordPress\Pay\Core;
 
@@ -233,10 +241,10 @@ class PaymentMethods {
 	 *
 	 * @since 1.3.0
 	 *
-	 * @param null   $method
-	 * @param string $default
+	 * @param null        $method  Method to get the name for.
+	 * @param string|null $default Default name to return if method was not found.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public static function get_name( $method = null, $default = null ) {
 		$payment_methods = self::get_payment_methods();
@@ -273,9 +281,9 @@ class PaymentMethods {
 	 *
 	 * @since 1.3.14
 	 *
-	 * @param $payment_method
+	 * @param $payment_method Payment method to check for direct debit.
 	 *
-	 * @return bool
+	 * @return bool True if the specified payment method is direct debit, false otherwise.
 	 */
 	public static function is_direct_debit_method( $payment_method ) {
 		return array_key_exists( $payment_method, self::get_direct_debit_methods() );
@@ -302,9 +310,9 @@ class PaymentMethods {
 	 *
 	 * @since 1.3.14
 	 *
-	 * @param $payment_method
+	 * @param $payment_method The payment method to check for recurring.
 	 *
-	 * @return bool
+	 * @return bool True if the specified payment method supports recurring, false otherwise.
 	 */
 	public static function is_recurring_method( $payment_method ) {
 		return array_key_exists( $payment_method, self::get_recurring_methods() );
@@ -313,7 +321,7 @@ class PaymentMethods {
 	/**
 	 * Get first method for payment method.
 	 *
-	 * @param $payment_method
+	 * @param $payment_method The payment method to get the first payment method for.
 	 *
 	 * @return string
 	 */
@@ -349,11 +357,13 @@ class PaymentMethods {
 	public static function update_active_payment_methods() {
 		$active_payment_methods = array();
 
-		$query = new WP_Query( array(
-			'post_type' => 'pronamic_gateway',
-			'nopaging'  => true,
-			'fields'    => 'ids',
-		) );
+		$query = new WP_Query(
+			array(
+				'post_type' => 'pronamic_gateway',
+				'nopaging'  => true,
+				'fields'    => 'ids',
+			)
+		);
 
 		foreach ( $query->posts as $config_id ) {
 			$gateway = Plugin::get_gateway( $config_id );
