@@ -13,6 +13,7 @@ namespace Pronamic\WordPress\Pay\Payments;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\CreditCard;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
+use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 
 /**
  * Abstract payment data class
@@ -308,7 +309,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Subscription.
 	 *
-	 * @return false|\Pronamic\WordPress\Pay\Subscriptions\Subscription
+	 * @return Subscription|false
 	 */
 	public function get_subscription() {
 		return false;
