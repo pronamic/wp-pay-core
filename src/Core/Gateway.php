@@ -486,6 +486,11 @@ abstract class Gateway {
 		exit;
 	}
 
+	/**
+	 * Redirect via HTML.
+	 *
+	 * @param Payment $payment The payment to redirect for.
+	 */
 	public function redirect_via_html( Payment $payment ) {
 		if ( headers_sent() ) {
 			echo $this->get_form_html( $payment, true ); // WPCS: XSS ok.
