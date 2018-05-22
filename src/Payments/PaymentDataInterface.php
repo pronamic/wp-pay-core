@@ -69,7 +69,7 @@ interface PaymentDataInterface {
 	/**
 	 * Get subscription.
 	 *
-	 * @return Subscription
+	 * @return Subscription|false
 	 */
 	public function get_subscription();
 }
