@@ -1,0 +1,11 @@
+filter:
+  excluded_paths:
+    # Exclude the external `xmlseclibs.php` library.
+    - 'includes/xmlseclibs/*'
+
+checks:
+  php:
+    coding_standard:
+      name: WordPress
+    code_rating: true
+    duplication: true
