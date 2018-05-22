@@ -4,20 +4,27 @@
     bootstrap="tests/bootstrap.php"
     backupGlobals="false"
     colors="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
 >
     <testsuites>
         <testsuite name="WordPress Pay Test Suite">
-            <directory>./tests/</directory>
+            <directory>tests/src</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory>./src</directory>
+            <directory>src</directory>
         </whitelist>
     </filter>
 
     <logging>
         <log type="coverage-clover" target="build/logs/clover.xml"/>
     </logging>
+
+    <php>
+        <env name="WP_PHPUNIT__TESTS_CONFIG" value="tests/wp-config.php" />
+    </php>
 </phpunit>
