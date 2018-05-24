@@ -213,14 +213,6 @@ class AdminSubscriptionPostType {
 				echo esc_html( $subscription->get_amount()->format_i18n() );
 
 				break;
-			case 'pronamic_subscription_interval':
-				echo esc_html( \Pronamic\WordPress\Pay\Util::format_interval( $subscription->get_interval(), $subscription->get_interval_period() ) );
-
-				break;
-			case 'pronamic_subscription_frequency':
-				echo esc_html( \Pronamic\WordPress\Pay\Util::format_frequency( $subscription->get_frequency() ) );
-
-				break;
 			case 'pronamic_subscription_recurring':
 				echo esc_html( \Pronamic\WordPress\Pay\Util::format_interval( $subscription->get_interval(), $subscription->get_interval_period() ) );
 				echo '<br />';
@@ -229,31 +221,6 @@ class AdminSubscriptionPostType {
 				break;
 			case 'pronamic_subscription_date':
 				echo esc_html( $subscription->date->format_i18n() );
-
-				break;
-			case 'pronamic_subscription_source':
-				$payment = get_pronamic_payment_by_meta( '_pronamic_payment_subscription_id', $post_id );
-
-				if ( $payment ) {
-					echo $payment->get_source_text(); // WPCS: XSS ok.
-				} else {
-					$source    = get_post_meta( $post_id, '_pronamic_subscription_source', true );
-					$source_id = get_post_meta( $post_id, '_pronamic_subscription_source_id', true );
-
-					printf(
-						'%s<br />%s', // WPCS: XSS ok.
-						esc_html( $source ),
-						esc_html( $source_id )
-					);
-				}
-
-				break;
-			case 'pronamic_subscription_consumer':
-				echo esc_html( get_post_meta( $post_id, '_pronamic_subscription_consumer_name', true ) );
-				echo '<br />';
-				echo esc_html( get_post_meta( $post_id, '_pronamic_subscription_consumer_iban', true ) );
-				echo '<br />';
-				echo esc_html( get_post_meta( $post_id, '_pronamic_subscription_consumer_bic', true ) );
 
 				break;
 			case 'pronamic_subscription_customer':

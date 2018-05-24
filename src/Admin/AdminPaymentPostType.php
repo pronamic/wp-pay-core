@@ -349,22 +349,8 @@ class AdminPaymentPostType {
 				echo esc_html( $payment->date->format_i18n() );
 
 				break;
-			case 'pronamic_payment_consumer':
-				echo esc_html( get_post_meta( $post_id, '_pronamic_payment_consumer_name', true ) );
-				echo '<br />';
-				echo esc_html( get_post_meta( $post_id, '_pronamic_payment_consumer_account_number', true ) );
-				echo esc_html( get_post_meta( $post_id, '_pronamic_payment_consumer_iban', true ) );
-				echo esc_html( get_post_meta( $post_id, '_pronamic_payment_consumer_bic', true ) );
-				echo '<br />';
-				echo esc_html( get_post_meta( $post_id, '_pronamic_payment_consumer_city', true ) );
-
-				break;
 			case 'pronamic_payment_customer':
 				echo esc_html( get_post_meta( $post_id, '_pronamic_payment_customer_name', true ) );
-
-				break;
-			case 'pronamic_payment_source':
-				echo $payment->get_source_text(); // WPCS: XSS ok.
 
 				break;
 		}
