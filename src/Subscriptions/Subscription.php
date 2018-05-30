@@ -540,12 +540,18 @@ class Subscription {
 	 * @return string
 	 */
 	public function get_source_text() {
-		$text = $this->get_source() . '<br />' . $this->get_source_id();
+		$default_text = $this->get_source() . '<br />' . $this->get_source_id();
 
-		$payment = $this->get_first_payment();
+		$text = apply_filters( 'pronamic_subscription_source_text_' . $this->get_source(), $default_text, $this );
+		$text = apply_filters( 'pronamic_subscription_source_text', $text, $this );
 
-		if ( null !== $payment ) {
-			$text = $payment->get_source_text();
+		// Fallback to first payment source text.
+		if ( $default_text === $text ) {
+			$payment = $this->get_first_payment();
+
+			if ( null !== $payment ) {
+				$text = $payment->get_source_text();
+			}
 		}
 
 		return $text;
@@ -557,12 +563,18 @@ class Subscription {
 	 * @return string
 	 */
 	public function get_source_description() {
-		$text = $this->get_source();
+		$default_text = $this->get_source();
 
-		$payment = $this->get_first_payment();
+		$text = apply_filters( 'pronamic_subscription_source_description_' . $this->get_source(), $default_text, $this );
+		$text = apply_filters( 'pronamic_subscription_source_description', $text, $this );
 
-		if ( $payment ) {
-			$text = $payment->get_source_description();
+		// Fallback to first payment source description.
+		if ( $default_text === $text ) {
+			$payment = $this->get_first_payment();
+
+			if ( $payment ) {
+				$text = $payment->get_source_description();
+			}
 		}
 
 		return $text;
