@@ -271,7 +271,10 @@ class AdminSettings {
 		$name = $args['label_for'];
 
 		$selected = get_option( $name, '' );
-		$selected = ( false === $option ) ? '' : $selected;
+
+		if ( false === $selected ) {
+			$selected = '';
+		}
 
 		wp_dropdown_pages( array(
 			'name'             => esc_attr( $name ),
