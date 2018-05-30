@@ -421,7 +421,7 @@ class SubscriptionsModule {
 		$subscription->interval_period = $subscription_data->get_interval_period();
 		$subscription->key             = uniqid( 'subscr_' );
 		$subscription->source          = $payment->source;
-		$subscription->source_id       = $payment->source_id;
+		$subscription->source_id       = $payment->subscription_source_id;
 		$subscription->description     = $payment->description;
 		$subscription->email           = $payment->email;
 		$subscription->customer_name   = $payment->customer_name;
