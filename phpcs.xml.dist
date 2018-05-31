@@ -37,4 +37,8 @@
 	<rule ref="Squiz.PHP.CommentedOutCode.Found">
 		<exclude-pattern>/tests/UtilTest.php</exclude-pattern>
 	</rule>
+
+	<rule ref="PHPCompatibility.PHP.NewConstants.sort_flag_caseFound">
+		<exclude-pattern>/src/Admin/GatewaySettings.php</exclude-pattern>
+	</rule>
 </ruleset>
