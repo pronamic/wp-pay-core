@@ -588,11 +588,16 @@ class Subscription {
 	public function get_source_link() {
 		$url = null;
 
-		$payment = $this->get_first_payment();
+		$url = apply_filters( 'pronamic_subscription_source_url', $url, $this );
+		$url = apply_filters( 'pronamic_subscription_source_url_' . $this->source, $url, $this );
 
-		if ( $payment ) {
-			$url = apply_filters( 'pronamic_payment_source_url', $url, $payment );
-			$url = apply_filters( 'pronamic_payment_source_url_' . $this->source, $url, $payment );
+		if ( null === $url ) {
+			$payment = $this->get_first_payment();
+
+			if ( $payment ) {
+				$url = apply_filters( 'pronamic_payment_source_url', $url, $payment );
+				$url = apply_filters( 'pronamic_payment_source_url_' . $this->source, $url, $payment );
+			}
 		}
 
 		return $url;
