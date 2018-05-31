@@ -80,12 +80,12 @@ class AdminSettings {
 		// Google Analytics property UA code.
 		add_settings_field(
 			'pronamic_pay_google_analytics_property',
-			__( 'Google Analytics Property ID', 'pronamic_ideal' ),
+			__( 'Google Analytics tracking ID', 'pronamic_ideal' ),
 			array( $this, 'input_element' ),
 			'pronamic_pay',
 			'pronamic_pay_general',
 			array(
-				'description' => __( 'Set a Google Analytics Property UA code to track ecommerce revenue.', 'pronamic_ideal' ),
+				'description' => __( 'Set a Google Analytics tracking UA code to track ecommerce revenue.', 'pronamic_ideal' ),
 				'label_for'   => 'pronamic_pay_google_analytics_property',
 				'classes'     => 'regular-text code',
 			)
