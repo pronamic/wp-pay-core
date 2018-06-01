@@ -193,9 +193,8 @@ class Util {
 	 *
 	 * @see https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
 	 *
-	 * @param boolean $boolean The boolean value to convert to a string value.
-	 *
-	 * @return int
+	 * @param bool $boolean The boolean value to convert to a string value.
+	 * @return string
 	 */
 	public static function boolean_to_string( $boolean ) {
 		return $boolean ? 'true' : 'false';

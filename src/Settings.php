@@ -87,7 +87,7 @@ class Settings {
 	 * Sanitize published post ID.
 	 *
 	 * @param integer $value Check if the value is published post ID.
-	 * @return boolean True if post status is publish, false otherwise.
+	 * @return int|null Post ID if value is published post ID, null otherwise.
 	 */
 	public function sanitize_published_post_id( $value ) {
 		if ( 'publish' === get_post_status( $value ) ) {

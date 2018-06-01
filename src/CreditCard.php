@@ -136,7 +136,7 @@ class CreditCard {
 	/**
 	 * Get security code.
 	 *
-	 * @return int
+	 * @return string
 	 */
 	public function get_security_code() {
 		return $this->security_code;
@@ -145,7 +145,7 @@ class CreditCard {
 	/**
 	 * Set security code.
 	 *
-	 * @param int $security_code Security code.
+	 * @param string $security_code Security code.
 	 */
 	public function set_security_code( $security_code ) {
 		$this->security_code = $security_code;
