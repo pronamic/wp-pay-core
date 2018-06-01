@@ -85,7 +85,7 @@ class AdminGatewayPostType {
 	 * Custom columns.
 	 *
 	 * @param string $column  Column.
-	 * @param string $post_id Post ID.
+	 * @param int    $post_id Post ID.
 	 */
 	public function custom_columns( $column, $post_id ) {
 		$id = get_post_meta( $post_id, '_pronamic_gateway_id', true );
