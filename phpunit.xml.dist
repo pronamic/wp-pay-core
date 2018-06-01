@@ -25,6 +25,8 @@
     </logging>
 
     <php>
+        <includePath>.</includePath>
+
         <env name="WP_PHPUNIT__TESTS_CONFIG" value="tests/wp-config.php" />
     </php>
 </phpunit>
