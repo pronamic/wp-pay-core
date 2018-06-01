@@ -284,7 +284,9 @@ class AdminReports {
 		);
 
 		foreach ( $data as $serie ) {
+			// @codingStandardsIgnoreStart
 			$serie->legendValue = array_sum( wp_list_pluck( $serie->data, 1 ) );
+			// @codingStandardsIgnoreEnd
 		}
 
 		return $data;
@@ -337,7 +339,7 @@ class AdminReports {
 		);
 		// @codingStandardsIgnoreEnd
 
-		$data = $wpdb->get_results( $query, OBJECT_K ); // WPCS: unprepared SQL ok.
+		$data = $wpdb->get_results( $query, OBJECT_K ); // WPCS: unprepared SQL ok, db call ok, cache ok.
 
 		$report = array();
 

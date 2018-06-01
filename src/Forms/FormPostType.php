@@ -206,7 +206,7 @@ class FormPostType {
 					$post_id
 				);
 
-				$value = $wpdb->get_var( $query ); // WPCS: unprepared SQL ok.
+				$value = $wpdb->get_var( $query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
 
 				echo esc_html( number_format_i18n( $value ) );
 
@@ -243,7 +243,7 @@ class FormPostType {
 					$post_id
 				);
 
-				$value = $wpdb->get_var( $query ); // WPCS: unprepared SQL ok.
+				$value = $wpdb->get_var( $query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
 
 				$money = new Money( $value, 'EUR' );
 

@@ -56,11 +56,43 @@ class Item {
 	}
 
 	/**
+	 * Call.
+	 *
+	 * @link http://php.net/manual/de/language.oop5.magic.php
+	 *
+	 * @param string $name      Method name.
+	 * @param array  $arguments Method arguments.
+	 * @return string|int|float
+	 */
+	public function __call( $name, $arguments ) {
+		$map = array(
+			'getNumber'      => 'get_number',
+			'setNumber'      => 'set_number',
+			'setDescription' => 'set_description',
+			'getQuantity'    => 'get_quantity',
+			'setQuantity'    => 'set_quantity',
+			'getPrice'       => 'get_price',
+			'setPrice'       => 'set_price',
+		);
+
+		if ( isset( $map[ $name ] ) ) {
+			$old_method = $name;
+			$new_method = $map[ $name ];
+
+			_deprecated_function( esc_html( __CLASS__ . '::' . $old_method ), '2.0.1', esc_html( __CLASS__ . '::' . $new_method ) );
+
+			return call_user_func_array( array( $this, $new_method ), $arguments );
+		}
+
+		trigger_error( esc_html( 'Call to undefined method ' . __CLASS__ . '::' . $name . '()' ), E_USER_ERROR );
+	}
+
+	/**
 	 * Get the number / identifier of this item.
 	 *
 	 * @return string
 	 */
-	public function getNumber() {
+	public function get_number() {
 		return $this->number;
 	}
 
@@ -69,7 +101,7 @@ class Item {
 	 *
 	 * @param string $number Number.
 	 */
-	public function setNumber( $number ) {
+	public function set_number( $number ) {
 		$this->number = $number;
 	}
 
@@ -88,7 +120,7 @@ class Item {
 	 *
 	 * @param string $description Description.
 	 */
-	public function setDescription( $description ) {
+	public function set_description( $description ) {
 		$this->description = substr( $description, 0, 32 );
 	}
 
@@ -97,7 +129,7 @@ class Item {
 	 *
 	 * @return int
 	 */
-	public function getQuantity() {
+	public function get_quantity() {
 		return $this->quantity;
 	}
 
@@ -106,7 +138,7 @@ class Item {
 	 *
 	 * @param int $quantity Quantity.
 	 */
-	public function setQuantity( $quantity ) {
+	public function set_quantity( $quantity ) {
 		$this->quantity = $quantity;
 	}
 
@@ -115,7 +147,7 @@ class Item {
 	 *
 	 * @return float
 	 */
-	public function getPrice() {
+	public function get_price() {
 		return $this->price;
 	}
 
@@ -124,7 +156,7 @@ class Item {
 	 *
 	 * @param float $price Price.
 	 */
-	public function setPrice( $price ) {
+	public function set_price( $price ) {
 		$this->price = $price;
 	}
 
