@@ -64,13 +64,6 @@ abstract class Gateway {
 	protected $config;
 
 	/**
-	 * Client
-	 *
-	 * @var Client
-	 */
-	protected $client;
-
-	/**
 	 * The slug of this gateway
 	 *
 	 * @var string
