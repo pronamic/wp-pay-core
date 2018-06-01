@@ -1,17 +1,26 @@
+/**
+ * Grunt tasks.
+ *
+ * @author    Pronamic <info@pronamic.eu>
+ * @copyright 2005-2018 Pronamic
+ * @license   GPL-3.0-or-later
+ * @package   Pronamic\WordPress\Pay
+ */
+
 module.exports = function( grunt ) {
 	require( 'load-grunt-tasks' )( grunt );
 
 	// Project configuration.
 	grunt.initConfig( {
-		// Package
+		// Package.
 		pkg: grunt.file.readJSON( 'package.json' ),
 
-		// JSHint
+		// JSHint.
 		jshint: {
 			all: [ 'Gruntfile.js', 'composer.json', 'package.json' ]
 		},
 
-		// PHP Code Sniffer
+		// PHP Code Sniffer.
 		phpcs: {
 			application: {
 				src: [
@@ -27,12 +36,12 @@ module.exports = function( grunt ) {
 			}
 		},
 
-		// PHPLint
+		// PHPLint.
 		phplint: {
 			all: [ 'src/**/*.php' ]
 		},
 
-		// PHP Mess Detector
+		// PHP Mess Detector.
 		phpmd: {
 			application: {
 				dir: 'src'
@@ -44,14 +53,14 @@ module.exports = function( grunt ) {
 				rulesets: 'phpmd.ruleset.xml'
 			}
 		},
-		
-		// PHPUnit
+
+		// PHPUnit.
 		phpunit: {
 			options: {
 				bin: 'vendor/bin/phpunit'
 			},
 			classes: {
-				
+
 			}
 		}
 	} );

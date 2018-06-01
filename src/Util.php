@@ -1,77 +1,70 @@
 <?php
+/**
+ * Util
+ *
+ * @author    Pronamic <info@pronamic.eu>
+ * @copyright 2005-2018 Pronamic
+ * @license   GPL-3.0-or-later
+ * @package   Pronamic\WordPress\Pay
+ */
 
-namespace Pronamic\WordPress\Pay\Core;
+namespace Pronamic\WordPress\Pay;
 
-use Pronamic\WordPress\Pay\Util as Pay_Util;
 use SimpleXMLElement;
 use WP_Error;
 
 /**
  * Title: WordPress utility class
- * Description:
- * Copyright: Copyright (c) 2005 - 2018
- * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 2.0.0
- * @since 1.0.0
+ * @version 1.0
  */
 class Util {
 	/**
-	 * Remote get body
+	 * Remote get body.
 	 *
-	 * @param string $url
-	 * @param int    $required_response_code
+	 * @see https://developer.wordpress.org/reference/functions/wp_remote_request/
 	 *
-	 * @return array|bool|string|WP_Error
+	 * @param string $url                    The URL to use for the remote request.
+	 * @param int    $required_response_code The required response code.
+	 * @param array  $args                   The WordPress HTTP API request arguments.
+	 *
+	 * @return string|WP_Error
 	 */
 	public static function remote_get_body( $url, $required_response_code = 200, array $args = array() ) {
-		$return = false;
-
 		$result = wp_remote_request( $url, $args );
 
-		if ( is_wp_error( $result ) ) {
-			$return = $result;
-		} else {
-			/*
-			 * The response code is cast to a integer since WordPress 4.1, therefor we can't use
-			 * strict comparison on the required response code.
-			 *
-			 * @see https://github.com/WordPress/WordPress/blob/4.1/wp-includes/class-http.php#L528-L529
-			 * @see https://github.com/WordPress/WordPress/blob/4.0/wp-includes/class-http.php#L527
-			 */
-			if ( wp_remote_retrieve_response_code( $result ) == $required_response_code ) { // WPCS: loose comparison ok.
-				$return = wp_remote_retrieve_body( $result );
-			} else {
-				$return = new WP_Error(
-					'wrong_response_code',
-					sprintf(
-						/* translators: 1: received responce code, 2: required response code */
-						__( 'The response code (<code>%1$s<code>) was incorrect, required response code <code>%2$s</code>.', 'pronamic_ideal' ),
-						wp_remote_retrieve_response_code( $result ),
-						$required_response_code
-					)
-				);
-			}
+		$response_code = wp_remote_retrieve_response_code( $result );
+
+		if ( $response_code === $required_response_code ) {
+			return wp_remote_retrieve_body( $result );
 		}
 
-		return $return;
+		return new WP_Error(
+			'wrong_response_code',
+			sprintf(
+				/* translators: 1: response code, 2: required response code */
+				__( 'The response code (<code>%1$s<code>) was incorrect, required response code <code>%2$s</code>.', 'pronamic_ideal' ),
+				$response_code,
+				$required_response_code
+			)
+		);
 	}
 
 	/**
-	 * SimpleXML load string
+	 * SimpleXML load string.
 	 *
-	 * @param string $string
+	 * @param string $string The XML string to convert to a SimpleXMLElement object.
 	 *
-	 * @return SimpleXMLElement || WP_Error
+	 * @return SimpleXMLElement|WP_Error
 	 */
 	public static function simplexml_load_string( $string ) {
 		$result = false;
 
-		// Suppress all XML errors
+		// Suppress all XML errors.
 		$use_errors = libxml_use_internal_errors( true );
 
-		// Load
+		// Load.
 		$xml = simplexml_load_string( $string );
 
 		if ( false !== $xml ) {
@@ -88,27 +81,27 @@ class Util {
 			$result = $error;
 		}
 
-		// Set back to previous value
+		// Set back to previous value.
 		libxml_use_internal_errors( $use_errors );
 
 		return $result;
 	}
 
 	/**
-	 * Amount to cents
+	 * Amount to cents.
 	 *
-	 * @param float $amount
+	 * @param float $price The amount to convert to cents.
 	 *
 	 * @return int
 	 */
-	public static function amount_to_cents( $amount ) {
-		return round( $amount * 100 );
+	public static function amount_to_cents( $price ) {
+		return round( $price * 100 );
 	}
 
 	/**
-	 * Cents to amount
+	 * Cents to amount.
 	 *
-	 * @param int $cents
+	 * @param int $cents The numberof cents to convert to an amount.
 	 *
 	 * @return float
 	 */
@@ -117,61 +110,11 @@ class Util {
 	}
 
 	/**
-	 * String to amount (user input string)
-	 *
-	 * @version 1.3.1
-	 * @since 1.3.0
-	 *
-	 * @param string $amount
-	 *
-	 * @return float
-	 */
-	public static function string_to_amount( $amount ) {
-		// Remove thousands seperators
-		$decimal_sep = get_option( 'pronamic_pay_decimal_sep' );
-
-		// Seperators
-		$seperators = array( $decimal_sep, '.', ',' );
-		$seperators = array_unique( array_filter( $seperators ) );
-
-		// Check
-		foreach ( array( - 3, - 2 ) as $i ) {
-			$test = substr( $amount, $i, 1 );
-
-			if ( in_array( $test, $seperators, true ) ) {
-				$decimal_sep = $test;
-
-				break;
-			}
-		}
-
-		// Split
-		$position = strrpos( $amount, $decimal_sep );
-
-		if ( false !== $position ) {
-			$full = substr( $amount, 0, $position );
-			$half = substr( $amount, $position + 1 );
-
-			$full = filter_var( $full, FILTER_SANITIZE_NUMBER_INT );
-			$half = filter_var( $half, FILTER_SANITIZE_NUMBER_INT );
-
-			$amount = $full . '.' . $half;
-		} else {
-			$amount = filter_var( $amount, FILTER_SANITIZE_NUMBER_INT );
-		}
-
-		// Filter
-		$amount = filter_var( $amount, FILTER_VALIDATE_FLOAT );
-
-		return $amount;
-	}
-
-	/**
-	 * Convert boolean to an numceric boolean
+	 * Convert boolean to an numceric boolean.
 	 *
 	 * @see https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
 	 *
-	 * @param boolean $boolean
+	 * @param boolean $boolean The boolean to convert to 1 or 0.
 	 *
 	 * @return int
 	 */
@@ -180,11 +123,11 @@ class Util {
 	}
 
 	/**
-	 * Convert boolean to an string boolean
+	 * Convert boolean to an string boolean.
 	 *
 	 * @see https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
 	 *
-	 * @param boolean $boolean
+	 * @param boolean $boolean The boolean to convert to the string 'true' or 'false'.
 	 *
 	 * @return int
 	 */
@@ -193,39 +136,81 @@ class Util {
 	}
 
 	/**
-	 * Convert the specified period to a single char notation.
+	 * Format interval.
 	 *
-	 * @since 1.3.9
-	 *
-	 * @param string $period
+	 * @param int    $interval The interval number.
+	 * @param string $period   The period indicator.
 	 *
 	 * @return string
 	 */
-	public static function to_period( $period ) {
-		if ( false !== strpos( $period, 'day' ) || false !== strpos( $period, 'daily' ) ) {
-			return 'D';
+	public static function format_interval( $interval, $period ) {
+		switch ( $period ) {
+			case 'D':
+			case 'day':
+			case 'days':
+				/* translators: %s: interval */
+				return sprintf( _n( 'Every %s day', 'Every %s days', $interval, 'pronamic_ideal' ), $interval );
+			case 'W':
+			case 'week':
+			case 'weeks':
+				/* translators: %s: interval */
+				return sprintf( _n( 'Every %s week', 'Every %s weeks', $interval, 'pronamic_ideal' ), $interval );
+			case 'M':
+			case 'month':
+			case 'months':
+				/* translators: %s: interval */
+				return sprintf( _n( 'Every %s month', 'Every %s months', $interval, 'pronamic_ideal' ), $interval );
+			case 'Y':
+			case 'year':
+			case 'years':
+				/* translators: %s: interval */
+				return sprintf( _n( 'Every %s year', 'Every %s years', $interval, 'pronamic_ideal' ), $interval );
+		}
+	}
+
+	/**
+	 * Convert single interval period character to full name.
+	 *
+	 * @param string $interval_period string Short interval period (D, W, M or Y).
+	 *
+	 * @return string
+	 */
+	public static function to_interval_name( $interval_period ) {
+		switch ( $interval_period ) {
+			case 'D':
+				return 'days';
+			case 'W':
+				return 'weeks';
+			case 'M':
+				return 'months';
+			case 'Y':
+				return 'years';
 		}
 
-		if ( false !== strpos( $period, 'week' ) ) {
-			return 'W';
+		return $interval_period;
+	}
+
+	/**
+	 * Format frequency.
+	 *
+	 * @param int $frequency The number of times.
+	 *
+	 * @return string
+	 */
+	public static function format_frequency( $frequency ) {
+		if ( empty( $frequency ) ) {
+			return _x( 'Unlimited', 'Recurring payment', 'pronamic_ideal' );
 		}
 
-		if ( false !== strpos( $period, 'month' ) ) {
-			return 'M';
-		}
-
-		if ( false !== strpos( $period, 'year' ) ) {
-			return 'Y';
-		}
-
-		return $period;
+		/* translators: %s: frequency */
+		return sprintf( _n( '%s time', '%s times', $frequency, 'pronamic_ideal' ), $frequency );
 	}
 
 	/**
 	 * Build URL with the specified parameters
 	 *
-	 * @param string $url
-	 * @param array $parameters
+	 * @param string $url        The URL to extend with specified parameters.
+	 * @param array  $parameters The parameters to add to the specified URL.
 	 *
 	 * @return string
 	 */
@@ -234,54 +219,70 @@ class Util {
 	}
 
 	/**
-	 * Convert input fields array to HTML.
+	 * Get hidden inputs HTML for data.
 	 *
-	 * @param array $fields
+	 * @param array $data Array with name and value pairs to convert to hidden HTML input eleemnts.
 	 *
 	 * @return string
 	 */
-	public static function input_fields_html( array $fields ) {
+	public static function html_hidden_fields( $data ) {
 		$html = '';
 
-		foreach ( $fields as $field ) {
-			if ( ! isset( $field['type'] ) ) {
-				continue;
-			}
-
-			switch ( $field['type'] ) {
-				case 'select':
-					$html .= sprintf(
-						'<label for="%s">%s</label> ',
-						esc_attr( $field['id'] ),
-						$field['label']
-					);
-
-					$html .= sprintf(
-						'<select id="%s" name="%s">%s</select>',
-						esc_attr( $field['id'] ),
-						esc_attr( $field['name'] ),
-						Pay_Util::select_options_grouped( $field['choices'] )
-					);
-
-					break;
-			}
+		foreach ( $data as $name => $value ) {
+			$html .= sprintf( '<input type="hidden" name="%s" value="%s" />', esc_attr( $name ), esc_attr( $value ) );
 		}
 
 		return $html;
 	}
 
 	/**
-	 * Method exists
+	 * Array to HTML attributes.
 	 *
-	 * This helper function was created to fix an issue with `method_exists` calls
-	 * and non existings classes.
+	 * @param array $attributes The key and value pairs to convert to HTML attributes.
 	 *
-	 * @param string $class
-	 * @param string $method
-	 *
-	 * @return boolean
+	 * @return string
 	 */
-	public static function class_method_exists( $class, $method ) {
-		return class_exists( $class ) && method_exists( $class, $method );
+	public static function array_to_html_attributes( array $attributes ) {
+		$html = '';
+
+		foreach ( $attributes as $key => $value ) {
+			$html .= sprintf( '%s="%s"', $key, esc_attr( $value ) );
+		}
+
+		$html = trim( $html );
+
+		return $html;
+	}
+
+	/**
+	 * Select options grouped.
+	 *
+	 * @param array  $groups         The grouped select options.
+	 * @param string $selected_value The selected value.
+	 *
+	 * @return string
+	 */
+	public static function select_options_grouped( $groups, $selected_value = null ) {
+		$html = '';
+
+		if ( is_array( $groups ) ) {
+			foreach ( $groups as $group ) {
+				$optgroup = isset( $group['name'] ) && ! empty( $group['name'] );
+
+				if ( $optgroup ) {
+					$html .= '<optgroup label="' . $group['name'] . '">';
+				}
+
+				foreach ( $group['options'] as $value => $label ) {
+					$html .= '<option value="' . $value . '" ' . selected( $selected_value, $value, false ) . '>' . $label . '</option>';
+				}
+
+				if ( $optgroup ) {
+					$html .= '</optgroup>';
+				}
+			}
+		}
+
+		return $html;
 	}
 }

@@ -20,7 +20,7 @@ matrix:
       dist: precise
       env: TRAVIS_DIST_PRECISE=1
     - php: 5.6
-      env: WP_VERSION=latest WP_MULTISITE=1
+      env: WP_MULTISITE=1
     - php: 5.6
       env: WP_VERSION=4.8
     - php: 5.6
@@ -36,13 +36,10 @@ matrix:
     - php: 5.6
       env: WP_VERSION=4.2
     - php: 5.6
-      env: WP_VERSION=4.1
-    - php: 5.6
-      env: WP_VERSION=4.0
-    - php: 5.6
-      env: WP_VERSION=4.0 COVERAGE=1 GRUNT=1
+      env: WP_VERSION=4.2 COVERAGE=1 GRUNT=1
   fast_finish: true
   allow_failures:
+    - php: hhvm
     - php: nightly
 
 cache:
@@ -57,6 +54,7 @@ before_install:
   - if [ "${TRAVIS_DIST_PRECISE}" == "1" ]; then nvm install node; fi
   - if [ "${TRAVIS_DIST_PRECISE}" == "1" ]; then curl -o- -L https://yarnpkg.com/install.sh | bash; fi
   - if [ "${TRAVIS_DIST_PRECISE}" == "1" ]; then export PATH=$HOME/.yarn/bin:$PATH; fi
+  - mysql -e 'CREATE DATABASE wp_phpunit_tests;'
 
 install:
   # Install Grunt command line interface (https://github.com/gruntjs/grunt-cli).
@@ -67,10 +65,9 @@ install:
   - composer self-update
   # Install Composer packages.
   - composer install
-
-before_script:
-  - wget https://raw.githubusercontent.com/wp-cli/sample-plugin/master/bin/install-wp-tests.sh
-  - bash install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
+  # Test on specific WordPress version.
+  - if [ "$WP_VERSION" ]; then composer require wp-phpunit/wp-phpunit:$WP_VERSION --dev; fi
+  - if [ "$WP_VERSION" ]; then composer require johnpbloch/wordpress:$WP_VERSION --dev --update-with-dependencies; fi
 
 script:
   - if [[ -z "$GRUNT" ]]; then grunt phpunit; fi

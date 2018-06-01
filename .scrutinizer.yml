@@ -1,0 +1,22 @@
+build:
+  environment:
+    variables:
+      WP_TESTS_DB_NAME: 'wp_phpunit_tests'
+      WP_TESTS_DB_USER: 'root'
+      WP_TESTS_DB_PASS: ''
+      WP_TESTS_DB_HOST: 'localhost'
+  project_setup:
+    before:
+      - mysql -e "CREATE DATABASE wp_phpunit_tests"
+
+filter:
+  excluded_paths:
+    # Exclude the external `xmlseclibs.php` library.
+    - 'includes/xmlseclibs/*'
+
+checks:
+  php:
+    coding_standard:
+      name: WordPress
+    code_rating: true
+    duplication: true

@@ -7,23 +7,50 @@
 
 	<config name="testVersion" value="5.3-99.0"/>
 
+	<exclude-pattern>includes/xmlseclibs/*</exclude-pattern>
+	<exclude-pattern>node_modules/*</exclude-pattern>
+	<exclude-pattern>tests/bootstrap.php</exclude-pattern>
+	<exclude-pattern>tests/wp-config.php</exclude-pattern>
+	<exclude-pattern>vendor/*</exclude-pattern>
+	<exclude-pattern>wordpress/*</exclude-pattern>
+
 	<rule ref="PHPCompatibility" />
 
 	<rule ref="WordPress">
 		<exclude name="Generic.Files.LowercasedFilename.NotFound" />
 
-		<exclude name="Squiz.Commenting" />
-
 		<exclude name="WordPress.Files.FileName.InvalidClassFileName" />
 		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
 
 		<exclude name="WordPress.VIP.PostsPerPage.posts_per_page_nopaging" />
-		<exclude name="WordPress.VIP.RestrictedFunctions.file_get_contents" />
-		<exclude name="WordPress.VIP.RestrictedFunctions.wp_remote_get" />
-		<exclude name="WordPress.VIP.RestrictedFunctions.wp_redirect_wp_redirect" />
+		
+		<exclude name="WordPress.VIP.RestrictedFunctions.custom_role_add_role" />
+		<exclude name="WordPress.VIP.RestrictedFunctions.user_meta_get_user_meta" />
+		<exclude name="WordPress.VIP.RestrictedFunctions.user_meta_update_user_meta" />
+		<exclude name="WordPress.VIP.RestrictedFunctions.wp_remote_get_wp_remote_get" />
+		<exclude name="WordPress.VIP.RestrictedFunctions.wp_redirect_wp_redirect" />/>
+
+		<exclude name="WordPress.VIP.SlowDBQuery.slow_db_query_meta_key" />
+		<exclude name="WordPress.VIP.SlowDBQuery.slow_db_query_meta_query" />
 	</rule>
 
 	<rule ref="Squiz.PHP.CommentedOutCode.Found">
 		<exclude-pattern>/tests/UtilTest.php</exclude-pattern>
+	</rule>
+
+	<rule ref="PHPCompatibility.PHP.NewConstants.sort_flag_caseFound">
+		<exclude-pattern>/src/Admin/GatewaySettings.php</exclude-pattern>
+	</rule>
+
+	<rule ref="WordPress.VIP.RestrictedVariables.cache_constraints___SERVER__REMOTE_ADDR__">
+		<exclude-pattern>/src/Plugin.php</exclude-pattern>
+	</rule>
+
+	<rule ref="WordPress.VIP.RestrictedVariables.cache_constraints___SERVER__HTTP_USER_AGENT__">
+		<exclude-pattern>/src/Plugin.php</exclude-pattern>
+	</rule>
+
+	<rule ref="WordPress.PHP.DevelopmentFunctions.error_log_trigger_error">
+		<exclude-pattern>/src/Payments/Item.php</exclude-pattern>
 	</rule>
 </ruleset>
