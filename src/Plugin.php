@@ -37,7 +37,7 @@ class Plugin {
 	 *
 	 * @var string
 	 */
-	private $version = '5.0.1';
+	private $version = '5.1.0';
 
 	/**
 	 * The root file of this WordPress plugin
@@ -756,10 +756,10 @@ class Plugin {
 		$payment->set_credit_card( $data->get_credit_card() );
 
 		// User Agent (@see https://github.com/WordPress/WordPress/blob/4.9.4/wp-includes/comment.php#L1962-L1965).
-		$payment->user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : null;
+		$payment->user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : null; // WPCS: input var ok.
 
 		// IP (@see https://github.com/WordPress/WordPress/blob/4.9.4/wp-includes/comment.php#L1957-L1960).
-		$payment->user_ip = isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : null;
+		$payment->user_ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : null; // WPCS: input var ok.
 
 		return self::start_payment( $payment, $gateway );
 	}

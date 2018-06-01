@@ -47,7 +47,7 @@ function get_pronamic_payment_by_meta( $meta_key, $meta_value ) {
 			;
 	", $meta_key, $meta_value );
 
-	$post_id = $wpdb->get_var( $db_query ); // WPCS: unprepared SQL ok.
+	$post_id = $wpdb->get_var( $db_query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
 
 	if ( $post_id ) {
 		$payment = new Payment( $post_id );
@@ -82,7 +82,7 @@ function get_pronamic_payments_by_meta( $meta_key, $meta_value ) {
 			;
 	", $meta_key, $meta_value );
 
-	$results = $wpdb->get_results( $db_query ); // WPCS: unprepared SQL ok.
+	$results = $wpdb->get_results( $db_query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
 
 	foreach ( $results as $result ) {
 		$payments[] = new Payment( $result->post_id );
@@ -156,7 +156,7 @@ function get_pronamic_subscription_by_meta( $meta_key, $meta_value ) {
 			;
 	", $meta_key, $meta_value );
 
-	$post_id = $wpdb->get_var( $db_query ); // WPCS: unprepared SQL ok.
+	$post_id = $wpdb->get_var( $db_query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
 
 	if ( $post_id ) {
 		$subscription = new Subscription( $post_id );
@@ -191,7 +191,7 @@ function get_pronamic_subscriptions_by_meta( $meta_key, $meta_value ) {
 			;
 	", $meta_key, $meta_value );
 
-	$results = $wpdb->get_results( $db_query ); // WPCS: unprepared SQL ok.
+	$results = $wpdb->get_results( $db_query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
 
 	foreach ( $results as $result ) {
 		$subscriptions[] = new Subscription( $result->post_id );

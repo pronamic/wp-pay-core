@@ -41,4 +41,16 @@
 	<rule ref="PHPCompatibility.PHP.NewConstants.sort_flag_caseFound">
 		<exclude-pattern>/src/Admin/GatewaySettings.php</exclude-pattern>
 	</rule>
+
+	<rule ref="WordPress.VIP.RestrictedVariables.cache_constraints___SERVER__REMOTE_ADDR__">
+		<exclude-pattern>/src/Plugin.php</exclude-pattern>
+	</rule>
+
+	<rule ref="WordPress.VIP.RestrictedVariables.cache_constraints___SERVER__HTTP_USER_AGENT__">
+		<exclude-pattern>/src/Plugin.php</exclude-pattern>
+	</rule>
+
+	<rule ref="WordPress.PHP.DevelopmentFunctions.error_log_trigger_error">
+		<exclude-pattern>/src/Payments/Item.php</exclude-pattern>
+	</rule>
 </ruleset>

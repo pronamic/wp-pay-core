@@ -8,6 +8,8 @@
  * @package   Pronamic\WordPress\Pay\Extensions\MemberPress
  */
 
+putenv( 'WP_PHPUNIT__TESTS_CONFIG=' . __DIR__ . '/wp-config.php' );
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 define( 'WP_PHPUNIT__TESTS_CONFIG', dirname( __FILE__ ) . '/wp-config.php' );
