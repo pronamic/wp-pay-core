@@ -43,9 +43,8 @@ matrix:
       env: WP_VERSION=4.0 COVERAGE=1 GRUNT=1
   fast_finish: true
   allow_failures:
-    - php:
-        - hhvm
-        - nightly
+    - php: hhvm
+    - php: nightly
 
 cache:
   yarn: true
