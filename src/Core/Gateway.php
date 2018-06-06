@@ -531,7 +531,55 @@ abstract class Gateway {
 	 * @return array|null
 	 */
 	public function get_issuer_field() {
-		return null;
+		$field = null;
+
+		$payment_method = $this->get_payment_method();
+
+		// Set default payment method if needed.
+		if ( null === $payment_method && $this->payment_method_is_required() ) {
+			$payment_method = PaymentMethods::IDEAL;
+		}
+
+		// No issuers without payment method.
+		if ( empty( $payment_method ) ) {
+			return $field;
+		}
+
+		// Set issuer field for payment method.
+		switch ( $payment_method ) {
+			case PaymentMethods::IDEAL:
+				$issuers = $this->get_transient_issuers();
+
+				if ( ! empty( $issuers ) ) {
+					$field = array(
+						'id'       => 'pronamic_ideal_issuer_id',
+						'name'     => 'pronamic_ideal_issuer_id',
+						'label'    => __( 'Choose your bank', 'pronamic_ideal' ),
+						'required' => true,
+						'type'     => 'select',
+						'choices'  => $issuers,
+					);
+				}
+
+				break;
+			case PaymentMethods::CREDIT_CARD:
+				$issuers = $this->get_credit_card_issuers();
+
+				if ( ! empty( $issuers ) ) {
+					$field = array(
+						'id'       => 'pronamic_credit_card_issuer_id',
+						'name'     => 'pronamic_credit_card_issuer_id',
+						'label'    => __( 'Choose your credit card issuer', 'pronamic_ideal' ),
+						'required' => true,
+						'type'     => 'select',
+						'choices'  => $issuers,
+					);
+				}
+
+				break;
+		}
+
+		return $field;
 	}
 
 	/**
