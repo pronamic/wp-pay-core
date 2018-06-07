@@ -44,12 +44,22 @@ class SubscriptionsModule {
 	public $plugin;
 
 	/**
+	 * Privacy.
+	 *
+	 * @var SubscriptionsPrivacy
+	 */
+	public $privacy;
+
+	/**
 	 * Construct and initialize a subscriptions module object.
 	 *
 	 * @param Plugin $plugin The plugin.
 	 */
 	public function __construct( Plugin $plugin ) {
 		$this->plugin = $plugin;
+
+		// Subscriptions privacy exporters and erasers.
+		$this->privacy = new SubscriptionsPrivacy();
 
 		// Actions.
 		add_action( 'wp_loaded', array( $this, 'handle_subscription' ) );
@@ -69,9 +79,6 @@ class SubscriptionsModule {
 
 		// Listen to subscription status changes so we can log these in a note.
 		add_action( 'pronamic_subscription_status_update', array( $this, 'log_subscription_status_update' ), 10, 4 );
-
-		// Privacy personal data exporter.
-		add_filter( 'wp_privacy_personal_data_exporters', array( $this, 'register_privacy_exporter' ), 10 );
 
 		// WordPress CLI.
 		// @see https://github.com/woocommerce/woocommerce/blob/3.3.1/includes/class-woocommerce.php#L365-L369.
@@ -585,83 +592,6 @@ class SubscriptionsModule {
 		}
 
 		$subscription->add_note( $note );
-	}
-
-	/**
-	 * Register privacy personal data exporter.
-	 *
-	 * @param array $exporters Personal data exporters.
-	 *
-	 * @return array
-	 */
-	public function register_privacy_exporter( $exporters ) {
-		$exporters['pronamic-pay-subscriptions'] = array(
-			'exporter_friendly_name' => __( 'Pronamic Pay Subscriptions', 'pronamic_ideal' ),
-			'callback'               => array( $this, 'privacy_export' ),
-		);
-
-		return $exporters;
-	}
-
-	/**
-	 * Privacy personal data exporter.
-	 *
-	 * @param string $email_address Email address.
-	 * @param int    $page          Page.
-	 *
-	 * @return array
-	 */
-	public function privacy_export( $email_address, $page = 1 ) {
-		$items = array();
-
-		$meta_key_email = pronamic_pay_plugin()->subscriptions_data_store->meta_key_prefix . 'email';
-
-		// Get subscriptions.
-		$subscriptions = get_pronamic_subscriptions_by_meta( $meta_key_email, $email_address );
-
-		foreach ( $subscriptions as $subscription ) {
-			$data = array();
-
-			// Get subscription meta.
-			$subscription_meta = get_post_meta( $subscription->get_id() );
-
-			foreach ( $subscription_meta as $meta_key => $meta_value ) {
-				if ( '_pronamic_' !== substr( $meta_key, 0, 10 ) ) {
-					continue;
-				}
-
-				// Format value.
-				if ( 1 === count( $meta_value ) ) {
-					$meta_value = array_shift( $meta_value );
-				} else {
-					$meta_value = wp_json_encode( $meta_value );
-				}
-
-				// Add meta to export data.
-				$data[] = array(
-					'name'  => $meta_key,
-					'value' => $meta_value,
-				);
-			}
-
-			// Add item to export data.
-			if ( ! empty( $data ) ) {
-				$items[] = array(
-					'group_id'    => 'pronamic-subscriptions',
-					'group_label' => __( 'Subscriptions', 'pronamic_ideal' ),
-					'item_id'     => 'pronamic-subscription-' . $subscription->get_id(),
-					'data'        => $data,
-				);
-			}
-		}
-
-		$done = true;
-
-		// Return export data.
-		return array(
-			'data' => $items,
-			'done' => $done,
-		);
 	}
 
 	/**
