@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
+use Pronamic\WordPress\Pay\Core\Statuses;
+
 /**
  * Subscriptions Privacy class.
  *
@@ -74,10 +76,11 @@ class SubscriptionsPrivacy {
 		// Subscriptions data store.
 		$data_store = pronamic_pay_plugin()->subscriptions_data_store;
 
-		$items = array();
+		// Privacy manager.
+		$privacy_manager = pronamic_pay_plugin()->privacy_manager;
 
 		// Get subscriptions.
-		// @todo use paging
+		// @todo use paging.
 		$subscriptions = get_pronamic_subscriptions_by_meta(
 			$data_store->meta_key_prefix . 'email',
 			$email_address
@@ -91,6 +94,9 @@ class SubscriptionsPrivacy {
 			)
 		);
 
+		$items = array();
+
+		// Loop subscriptions.
 		foreach ( $subscriptions as $subscription ) {
 			$export_data = array();
 
@@ -104,35 +110,16 @@ class SubscriptionsPrivacy {
 					continue;
 				}
 
-				// Label.
-				$label = $meta_key;
-
-				if ( isset( $meta_options['label'] ) ) {
-					$label = $meta_options['label'];
-				}
-
-				// Meta value.
-				$meta_value = $subscription_meta[ $meta_key ];
-
-				if ( 1 === count( $meta_value ) ) {
-					$meta_value = array_shift( $meta_value );
-				} else {
-					$meta_value = wp_json_encode( $meta_value );
-				}
-
-				// Add to export data.
-				$export_data[] = array(
-					'name'  => $label,
-					'value' => $meta_value,
-				);
+				// Add export value.
+				$export_data[] = $privacy_manager->export_meta( $meta_key, $meta_options, $subscription_meta );
 			}
 
 			// Add item to export data.
 			if ( ! empty( $export_data ) ) {
 				$items[] = array(
-					'group_id'    => 'pronamic-subscriptions',
+					'group_id'    => 'pronamic-pay-subscriptions',
 					'group_label' => __( 'Subscriptions', 'pronamic_ideal' ),
-					'item_id'     => 'pronamic-subscription-' . $subscription->get_id(),
+					'item_id'     => 'pronamic-pay-subscription-' . $subscription->get_id(),
 					'data'        => $export_data,
 				);
 			}
@@ -147,7 +134,89 @@ class SubscriptionsPrivacy {
 		);
 	}
 
+	/**
+	 * Subscriptions anonymizer.
+	 *
+	 * @param string $email_address Email address.
+	 * @param int    $page          Page.
+	 *
+	 * @return array
+	 */
 	public function subscriptions_anonymizer( $email_address, $page = 1 ) {
-		// @todo implement subscriptions anonymizer
+		// Subscriptions data store.
+		$data_store = pronamic_pay_plugin()->subscriptions_data_store;
+
+		// Privacy manager.
+		$privacy_manager = pronamic_pay_plugin()->privacy_manager;
+
+		// Return values.
+		$items_removed  = false;
+		$items_retained = false;
+		$messages       = array();
+		$done           = false;
+
+		// Get subscriptions.
+		// @todo use paging.
+		$subscriptions = get_pronamic_subscriptions_by_meta(
+			$data_store->meta_key_prefix . 'email',
+			$email_address
+		);
+
+		// Get registered meta keys for erasure.
+		$meta_keys = wp_list_filter(
+			$data_store->get_registered_meta(),
+			array(
+				'privacy_erasure' => null,
+			),
+			'NOT'
+		);
+
+		// Loop subscriptions.
+		foreach ( $subscriptions as $subscription ) {
+			$subscription_id = $subscription->get_id();
+
+			$subscription_meta = get_post_meta( $subscription_id );
+
+			$subscription_status = null;
+
+			// Get subscription meta.
+			foreach ( $meta_keys as $meta_key => $meta_options ) {
+				if ( 'status' === $meta_key ) {
+					$subscription_status = $subscription_meta[ $data_store->meta_key_prefix . $meta_key ];
+				}
+
+				$meta_key = $data_store->meta_key_prefix . $meta_key;
+
+				if ( ! array_key_exists( $meta_key, $subscription_meta ) ) {
+					continue;
+				}
+
+				$privacy_manager->erase_meta( $subscription_id, $meta_key, $meta_options['privacy_erasure'] );
+			}
+
+			// Add subscription note.
+			$subscription->add_note( __( 'Subscription anonymized for personal data erasure request.', 'pronamic_ideal' ) );
+
+			// Add message.
+			$messages[] = sprintf( __( 'Subscription ID %s anonymized.', 'pronamic_ideal' ), $subscription_id );
+
+			// Cancel subscription if neccesary.
+			if ( isset( $subscription_status ) && ! in_array( $subscription_status, array( Statuses::COMPLETED, Statuses::CANCELLED ), true ) ) {
+				$subscription->set_status( Statuses::CANCELLED );
+				$subscription->save();
+			}
+
+			$items_removed = true;
+		}
+
+		$done = true;
+
+		// Return results.
+		return array(
+			'items_removed'  => $items_removed,
+			'items_retained' => $items_retained,
+			'messages'       => $messages,
+			'done'           => $done,
+		);
 	}
 }

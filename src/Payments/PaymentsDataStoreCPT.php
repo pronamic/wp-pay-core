@@ -187,8 +187,9 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		) );
 
 		$this->register_meta_key( 'method', array(
-			'label'          => __( 'Method', 'pronamic_ideal' ),
-			'privacy_export' => true,
+			'label'           => __( 'Method', 'pronamic_ideal' ),
+			'privacy_export'  => true,
+			'privacy_erasure' => 'erase',
 		) );
 
 		$this->register_meta_key( 'currency', array(
@@ -202,8 +203,9 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		) );
 
 		$this->register_meta_key( 'issuer', array(
-			'label'          => __( 'Issuer', 'pronamic_ideal' ),
-			'privacy_export' => true,
+			'label'           => __( 'Issuer', 'pronamic_ideal' ),
+			'privacy_export'  => true,
+			'privacy_erasure' => 'erase',
 		) );
 
 		$this->register_meta_key( 'order_id', array(
@@ -216,11 +218,13 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		) );
 
 		$this->register_meta_key( 'entrance_code', array(
-			'label' => __( 'Entrance Code', 'pronamic_ideal' ),
+			'label'           => __( 'Entrance Code', 'pronamic_ideal' ),
+			'privacy_erasure' => 'erase',
 		) );
 
 		$this->register_meta_key( 'action_url', array(
-			'label' => __( 'Action URL', 'pronamic_ideal' ),
+			'label'           => __( 'Action URL', 'pronamic_ideal' ),
+			'privacy_erasure' => 'erase',
 		) );
 
 		$this->register_meta_key( 'source', array(
@@ -232,22 +236,26 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		) );
 
 		$this->register_meta_key( 'description', array(
-			'label'          => __( 'Description', 'pronamic_ideal' ),
-			'privacy_export' => true,
+			'label'           => __( 'Description', 'pronamic_ideal' ),
+			'privacy_export'  => true,
+			'privacy_erasure' => 'erase',
 		) );
 
 		$this->register_meta_key( 'language', array(
-			'label' => __( 'Language', 'pronamic_ideal' ),
+			'label'           => __( 'Language', 'pronamic_ideal' ),
+			'privacy_erasure' => 'erase',
 		) );
 
 		$this->register_meta_key( 'locale', array(
-			'label'          => __( 'Locale', 'pronamic_ideal' ),
-			'privacy_export' => true,
+			'label'           => __( 'Locale', 'pronamic_ideal' ),
+			'privacy_export'  => true,
+			'privacy_erasure' => 'erase',
 		) );
 
 		$this->register_meta_key( 'email', array(
-			'label'          => __( 'Email', 'pronamic_ideal' ),
-			'privacy_export' => true,
+			'label'           => __( 'Email', 'pronamic_ideal' ),
+			'privacy_export'  => true,
+			'privacy_erasure' => 'anonymize',
 		) );
 
 		$this->register_meta_key( 'status', array(
@@ -256,37 +264,74 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		) );
 
 		$this->register_meta_key( 'customer_name', array(
-			'label'          => __( 'Customer Name', 'pronamic_ideal' ),
-			'privacy_export' => true,
+			'label'           => __( 'Customer Name', 'pronamic_ideal' ),
+			'privacy_export'  => true,
+			'privacy_erasure' => 'erase',
 		) );
 
 		$this->register_meta_key( 'address', array(
-			'label'          => __( 'Address', 'pronamic_ideal' ),
-			'privacy_export' => true,
+			'label'           => __( 'Address', 'pronamic_ideal' ),
+			'privacy_export'  => true,
+			'privacy_erasure' => 'erase',
 		) );
 
 		$this->register_meta_key( 'zip', array(
-			'label'          => __( 'Zip', 'pronamic_ideal' ),
-			'privacy_export' => true,
+			'label'           => __( 'Zip', 'pronamic_ideal' ),
+			'privacy_export'  => true,
+			'privacy_erasure' => 'erase',
 		) );
 
 		$this->register_meta_key( 'city', array(
-			'label'          => __( 'City', 'pronamic_ideal' ),
-			'privacy_export' => true,
+			'label'           => __( 'City', 'pronamic_ideal' ),
+			'privacy_export'  => true,
+			'privacy_erasure' => 'erase',
 		) );
 
 		$this->register_meta_key( 'country', array(
-			'label'          => __( 'Country', 'pronamic_ideal' ),
-			'privacy_export' => true,
+			'label'           => __( 'Country', 'pronamic_ideal' ),
+			'privacy_export'  => true,
+			'privacy_erasure' => 'erase',
 		) );
 
 		$this->register_meta_key( 'telephone_number', array(
-			'label'          => __( 'Telephone Number', 'pronamic_ideal' ),
-			'privacy_export' => true,
+			'label'           => __( 'Telephone Number', 'pronamic_ideal' ),
+			'privacy_export'  => true,
+			'privacy_erasure' => 'erase',
+		) );
+
+		$this->register_meta_key( 'consumer_name', array(
+			'label'           => __( 'Consumer Name', 'pronamic_ideal' ),
+			'privacy_export'  => true,
+			'privacy_erasure' => 'erase',
+		) );
+
+		$this->register_meta_key( 'consumer_account_number', array(
+			'label'           => __( 'Consumer Account Number', 'pronamic_ideal' ),
+			'privacy_export'  => true,
+			'privacy_erasure' => 'erase',
+		) );
+
+		$this->register_meta_key( 'consumer_iban', array(
+			'label'           => __( 'Consumer IBAN', 'pronamic_ideal' ),
+			'privacy_export'  => true,
+			'privacy_erasure' => 'erase',
+		) );
+
+		$this->register_meta_key( 'consumer_bic', array(
+			'label'           => __( 'Consumer BIC', 'pronamic_ideal' ),
+			'privacy_export'  => true,
+			'privacy_erasure' => 'erase',
+		) );
+
+		$this->register_meta_key( 'consumer_city', array(
+			'label'           => __( 'Consumer City', 'pronamic_ideal' ),
+			'privacy_export'  => true,
+			'privacy_erasure' => 'erase',
 		) );
 
 		$this->register_meta_key( 'analytics_client_id', array(
-			'label' => __( 'Analytics Client ID', 'pronamic_ideal' ),
+			'label'           => __( 'Analytics Client ID', 'pronamic_ideal' ),
+			'privacy_erasure' => 'erase',
 		) );
 
 		$this->register_meta_key( 'subscription_id', array(
@@ -314,13 +359,15 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		) );
 
 		$this->register_meta_key( 'user_agent', array(
-			'label'          => __( 'User Agent', 'pronamic_ideal' ),
-			'privacy_export' => true,
+			'label'           => __( 'User Agent', 'pronamic_ideal' ),
+			'privacy_export'  => true,
+			'privacy_erasure' => 'erase',
 		) );
 
 		$this->register_meta_key( 'user_ip', array(
-			'label'          => __( 'User IP', 'pronamic_ideal' ),
-			'privacy_export' => true,
+			'label'           => __( 'User IP', 'pronamic_ideal' ),
+			'privacy_export'  => true,
+			'privacy_erasure' => 'erase',
 		) );
 	}
 

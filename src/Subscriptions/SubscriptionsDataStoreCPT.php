@@ -199,8 +199,9 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		) );
 
 		$this->register_meta_key( 'transaction_id', array(
-			'label'          => __( 'Transaction ID', 'pronamic_ideal' ),
-			'privacy_export' => true,
+			'label'           => __( 'Transaction ID', 'pronamic_ideal' ),
+			'privacy_export'  => true,
+			'privacy_erasure' => 'erase',
 		) );
 
 		$this->register_meta_key( 'status', array(
@@ -208,23 +209,27 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		) );
 
 		$this->register_meta_key( 'description', array(
-			'label'          => __( 'Description', 'pronamic_ideal' ),
-			'privacy_export' => true,
+			'label'           => __( 'Description', 'pronamic_ideal' ),
+			'privacy_export'  => true,
+			'privacy_erasure' => 'erase',
 		) );
 
 		$this->register_meta_key( 'email', array(
-			'label'          => __( 'Email', 'pronamic_ideal' ),
-			'privacy_export' => true,
+			'label'           => __( 'Email', 'pronamic_ideal' ),
+			'privacy_export'  => true,
+			'privacy_erasure' => 'anonymize',
 		) );
 
 		$this->register_meta_key( 'customer_name', array(
-			'label'          => __( 'Customer Name', 'pronamic_ideal' ),
-			'privacy_export' => true,
+			'label'           => __( 'Customer Name', 'pronamic_ideal' ),
+			'privacy_export'  => true,
+			'privacy_erasure' => 'erase',
 		) );
 
 		$this->register_meta_key( 'payment_method', array(
-			'label'          => __( 'Payment Method', 'pronamic_ideal' ),
-			'privacy_export' => true,
+			'label'           => __( 'Payment Method', 'pronamic_ideal' ),
+			'privacy_export'  => true,
+			'privacy_erasure' => 'erase',
 		) );
 	}
 

@@ -66,7 +66,7 @@ class PrivacyManager {
 	public function register_erasers( $erasers ) {
 		do_action( 'pronamic_pay_privacy_register_erasers', $this );
 
-		foreach ( $this->exporters as $id => $eraser ) {
+		foreach ( $this->erasers as $id => $eraser ) {
 			$erasers[ $id ] = $eraser;
 		}
 
@@ -103,5 +103,120 @@ class PrivacyManager {
 			'eraser_friendly_name' => $name,
 			'callback'             => $callback,
 		);
+	}
+
+	/**
+	 * Export meta.
+	 *
+	 * @param string $meta_key     Meta key.
+	 * @param array  $meta_options Registered meta options.
+	 * @param array  $meta_values  Array with all post meta for item.
+	 *
+	 * @return array
+	 */
+	public function export_meta( $meta_key, $meta_options, $meta_values ) {
+		// Label.
+		$label = $meta_key;
+
+		if ( isset( $meta_options['label'] ) ) {
+			$label = $meta_options['label'];
+		}
+
+		// Meta value.
+		$meta_value = $meta_values[ $meta_key ];
+
+		if ( 1 === count( $meta_value ) ) {
+			$meta_value = array_shift( $meta_value );
+		} else {
+			$meta_value = wp_json_encode( $meta_value );
+		}
+
+		// Return export data.
+		return array(
+			'name'  => $label,
+			'value' => $meta_value,
+		);
+	}
+
+	/**
+	 * Erase meta.
+	 *
+	 * @param int    $post_id  ID of the post.
+	 * @param string $meta_key Meta key to erase.
+	 * @param string $action   Action 'erase' or 'anonymize'.
+	 */
+	public function erase_meta( $post_id, $meta_key, $action = 'erase' ) {
+		switch ( $action ) {
+			case 'erase':
+				delete_post_meta( $post_id, $meta_key );
+
+				break;
+			case 'anonymize':
+				$meta_value = get_post_meta( $post_id, $meta_key, true );
+
+				// Mask email addresses.
+				if ( false !== strpos( $meta_value, '@' ) ) {
+					$meta_value = $this->mask_email( $meta_value );
+				}
+
+				update_post_meta( $post_id, $meta_key, $meta_value );
+
+				break;
+		}
+	}
+
+	/**
+	 * Mask email address.
+	 *
+	 * @param string $email Email address.
+	 *
+	 * @return string
+	 */
+	public function mask_email( $email ) {
+		// Is this an email address?
+		if ( false === strpos( $email, '@' ) ) {
+			return $email;
+		}
+
+		$parts = explode( '@', $email );
+
+		// Local part.
+		$local = $parts[0];
+
+		if ( strlen( $local ) > 2 ) {
+			$local = sprintf( '%1$s%2$s%3$s',
+				substr( $local, 0, 1 ),
+				str_repeat( '*', ( strlen( $local ) - 2 ) ),
+				substr( $local, - 1 )
+			);
+		}
+
+		// Domain part.
+		$domain_parts = explode( '.', $parts[1] );
+
+		$domain = array();
+
+		foreach ( $domain_parts as $part ) {
+			if ( strlen( $part ) <= 2 ) {
+				$domain[] = $part;
+
+				continue;
+			}
+
+			$domain[] = sprintf( '%1$s%2$s%3$s',
+				substr( $part, 0, 1 ),
+				str_repeat( '*', ( strlen( $part ) - 2 ) ),
+				substr( $part, - 1 )
+			);
+		}
+
+		// Combine local and domain part.
+		$email = sprintf(
+			'%1$s@%2$s',
+			$local,
+			implode( '.', $domain )
+		);
+
+		return $email;
 	}
 }
