@@ -95,11 +95,11 @@ class PaymentTestData extends PaymentData {
 
 		// Item.
 		$item = new Item();
-		$item->setNumber( $this->get_order_id() );
+		$item->set_number( $this->get_order_id() );
 		/* translators: %s: order id */
-		$item->setDescription( sprintf( __( 'Test %s', 'pronamic_ideal' ), $this->get_order_id() ) );
-		$item->setPrice( $this->amount );
-		$item->setQuantity( 1 );
+		$item->set_description( sprintf( __( 'Test %s', 'pronamic_ideal' ), $this->get_order_id() ) );
+		$item->set_price( $this->amount );
+		$item->set_quantity( 1 );
 
 		$items->addItem( $item );
 
