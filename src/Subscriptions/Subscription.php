@@ -67,6 +67,27 @@ class Subscription {
 	public $interval_period;
 
 	/**
+	 * The interval date of this subscription.
+	 *
+	 * @var  int|null
+	 */
+	public $interval_date;
+
+	/**
+	 * The interval date day of this subscription.
+	 *
+	 * @var  int|null
+	 */
+	public $interval_date_day;
+
+	/**
+	 * The interval date month of this subscription.
+	 *
+	 * @var  int|null
+	 */
+	public $interval_date_month;
+
+	/**
 	 * The transaction ID of this subscription.
 	 *
 	 * @todo Is this required within a transaction?
@@ -361,6 +382,33 @@ class Subscription {
 	 */
 	public function get_interval_period() {
 		return $this->interval_period;
+	}
+
+	/**
+	 * Get the interval period date (1-31).
+	 *
+	 * @return string|null
+	 */
+	public function get_interval_date() {
+		return $this->interval_date;
+	}
+
+	/**
+	 * Get the interval period day (Monday-Sunday).
+	 *
+	 * @return string|null
+	 */
+	public function get_interval_date_day() {
+		return $this->interval_date_day;
+	}
+
+	/**
+	 * Get the interval period month (1-12).
+	 *
+	 * @return string|null
+	 */
+	public function get_interval_date_month() {
+		return $this->interval_date_month;
 	}
 
 	/**
