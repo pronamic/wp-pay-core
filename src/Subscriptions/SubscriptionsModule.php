@@ -293,6 +293,10 @@ class SubscriptionsModule {
 		$end_date = clone $start_date;
 		$end_date->add( $subscription->get_date_interval() );
 
+		if ( 'last' === $subscription->get_interval_date() ) {
+			$end_date->modify( 'last day of ' . $end_date->format( 'F Y' ) );
+		}
+
 		$subscription->next_payment = $end_date;
 
 		// Create follow up payment.
@@ -463,6 +467,11 @@ class SubscriptionsModule {
 			$next_date->setTime( 0, 0 );
 		}
 
+		if ( 'M' === $subscription->interval_period && 'last' === $interval_date ) {
+			$next_date->modify( 'last day of ' . $next_date->format( 'F Y' ) );
+			$next_date->setTime( 0, 0 );
+		}
+
 		if ( 'Y' === $subscription->interval_period && is_numeric( $interval_date_month ) ) {
 			$next_date->setDate( $next_date->format( 'Y' ), $interval_date_month, $next_date->format( 'd' ) );
 			$next_date->setTime( 0, 0 );
@@ -477,6 +486,10 @@ class SubscriptionsModule {
 			$dates = iterator_to_array( $period );
 
 			$end_date = end( $dates );
+
+			if ( 'last' === $subscription_data->get_interval_date() ) {
+				$end_date->modify( 'last day of ' . $end_date->format( 'F Y' ) );
+			}
 		}
 
 		$subscription->start_date   = $start_date;
