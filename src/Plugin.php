@@ -37,7 +37,7 @@ class Plugin {
 	 *
 	 * @var string
 	 */
-	private $version = '5.1.0';
+	private $version;
 
 	/**
 	 * The root file of this WordPress plugin
@@ -70,15 +70,11 @@ class Plugin {
 	/**
 	 * Instance.
 	 *
-	 * @param string $file The plugin file.
+	 * @param string|array|object $args The plugin arguments.
 	 */
-	public static function instance( $file = null ) {
+	public static function instance( $args = array() ) {
 		if ( is_null( self::$instance ) ) {
-			self::$instance = new self();
-
-			// Backward compatibility.
-			self::$file    = $file;
-			self::$dirname = dirname( $file );
+			self::$instance = new self( $args );
 		}
 
 		return self::$instance;
@@ -162,28 +158,31 @@ class Plugin {
 	public $google_analytics_ecommerce;
 
 	/**
-	 * Construct and initialize an Pronamic Pay plugin object
+	 * Construct and initialize an Pronamic Pay plugin object.
+	 *
+	 * @param string|array|object $args The plugin arguments.
 	 */
-	public function __construct() {
+	public function __construct( $args = array() ) {
+		$args = wp_parse_args( $args, array(
+			'file'       => null,
+			'version'    => null,
+			'extensions' => array(),
+		) );
+
+		$this->version = $args['version'];
+
+		// Backward compatibility.
+		self::$file    = $args['file'];
+		self::$dirname = dirname( self::$file );
+
 		// Bootstrap the add-ons.
-		Extensions\Charitable\Extension::bootstrap();
-		Extensions\Give\Extension::bootstrap();
-		Extensions\WooCommerce\Extension::bootstrap();
-		Extensions\GravityForms\Extension::bootstrap();
-		Extensions\Shopp\Extension::bootstrap();
-		Extensions\Jigoshop\Extension::bootstrap();
-		Extensions\WPeCommerce\Extension::bootstrap();
-		Extensions\ClassiPress\Extension::bootstrap();
-		Extensions\EventEspressoLegacy\Extension::bootstrap();
-		Extensions\EventEspresso\Extension::bootstrap();
-		Extensions\AppThemes\Extension::bootstrap();
-		Extensions\S2Member\Extension::bootstrap();
-		Extensions\Membership\Extension::bootstrap();
-		Extensions\EasyDigitalDownloads\Extension::bootstrap();
-		Extensions\IThemesExchange\Extension::bootstrap();
-		Extensions\MemberPress\Extension::bootstrap();
-		Extensions\FormidableForms\Extension::bootstrap();
-		Extensions\RestrictContentPro\Extension::bootstrap();
+		$extensions = $args['extensions'];
+
+		if ( is_array( $extensions ) ) {
+			foreach ( $extensions as $extension ) {
+				call_user_func( $extension );
+			}
+		}
 
 		// Settings.
 		$this->settings = new Settings( $this );
