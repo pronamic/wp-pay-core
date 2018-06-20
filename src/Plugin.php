@@ -130,6 +130,13 @@ class Plugin {
 	public $license_manager;
 
 	/**
+	 * Privacy manager.
+	 *
+	 * @var PrivacyManager
+	 */
+	public $privacy_manager;
+
+	/**
 	 * Forms module.
 	 *
 	 * @var Forms\FormsModule
@@ -182,34 +189,6 @@ class Plugin {
 			foreach ( $extensions as $extension ) {
 				call_user_func( $extension );
 			}
-		}
-
-		// Settings.
-		$this->settings = new Settings( $this );
-
-		// Data Stores.
-		$this->payments_data_store      = new Payments\PaymentsDataStoreCPT();
-		$this->subscriptions_data_store = new Subscriptions\SubscriptionsDataStoreCPT();
-
-		// Post Types.
-		$this->gateway_post_type      = new GatewayPostType();
-		$this->payment_post_type      = new PaymentPostType();
-		$this->subscription_post_type = new SubscriptionPostType();
-
-		// License Manager.
-		$this->license_manager = new LicenseManager( $this );
-
-		// Modules.
-		$this->forms_module         = new Forms\FormsModule( $this );
-		$this->payments_module      = new Payments\PaymentsModule( $this );
-		$this->subscriptions_module = new Subscriptions\SubscriptionsModule( $this );
-
-		// Google Analytics Ecommerce.
-		$this->google_analytics_ecommerce = new GoogleAnalyticsEcommerce();
-
-		// Admin.
-		if ( is_admin() ) {
-			$this->admin = new Admin\AdminModule( $this );
 		}
 
 		/*
@@ -471,6 +450,37 @@ class Plugin {
 		load_plugin_textdomain( 'pronamic_ideal', false, $rel_path . '/languages' );
 
 		load_plugin_textdomain( 'pronamic-money', false, $rel_path . '/vendor/pronamic/wp-money/languages' );
+
+		// Settings.
+		$this->settings = new Settings( $this );
+
+		// Data Stores.
+		$this->payments_data_store      = new Payments\PaymentsDataStoreCPT();
+		$this->subscriptions_data_store = new Subscriptions\SubscriptionsDataStoreCPT();
+
+		// Post Types.
+		$this->gateway_post_type      = new GatewayPostType();
+		$this->payment_post_type      = new PaymentPostType();
+		$this->subscription_post_type = new SubscriptionPostType();
+
+		// License Manager.
+		$this->license_manager = new LicenseManager( $this );
+
+		// Privacy Manager.
+		$this->privacy_manager = new PrivacyManager();
+
+		// Modules.
+		$this->forms_module         = new Forms\FormsModule( $this );
+		$this->payments_module      = new Payments\PaymentsModule( $this );
+		$this->subscriptions_module = new Subscriptions\SubscriptionsModule( $this );
+
+		// Google Analytics Ecommerce.
+		$this->google_analytics_ecommerce = new GoogleAnalyticsEcommerce();
+
+		// Admin.
+		if ( is_admin() ) {
+			$this->admin = new Admin\AdminModule( $this );
+		}
 
 		// Gateway Integrations.
 		$integrations = new GatewayIntegrations();
