@@ -148,10 +148,10 @@ class PaymentsModule {
 	/**
 	 * Payment status update.
 	 *
-	 * @param Payment $payment      The status updated payment.
-	 * @param bool    $can_redirect Whether or not redirects should be performed.
-	 * @param string  $old_status   Old meta status.
-	 * @param string  $new_status   New meta status.
+	 * @param Payment     $payment      The status updated payment.
+	 * @param bool        $can_redirect Whether or not redirects should be performed.
+	 * @param string|null $old_status   Old meta status.
+	 * @param string      $new_status   New meta status.
 	 *
 	 * @return void
 	 */
