@@ -87,7 +87,7 @@ abstract class AbstractDataStoreCPT {
 	 *
 	 * @param int    $id  Post ID.
 	 * @param string $key Key.
-	 * @return unknown|false|string|mixed
+	 * @return string|null
 	 */
 	public function get_meta( $id, $key ) {
 		$meta_key = $this->get_meta_key( $key );
