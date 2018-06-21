@@ -475,6 +475,10 @@ class SubscriptionsModule {
 		if ( 'Y' === $subscription->interval_period && is_numeric( $interval_date_month ) ) {
 			$next_date->setDate( $next_date->format( 'Y' ), $interval_date_month, $next_date->format( 'd' ) );
 			$next_date->setTime( 0, 0 );
+
+			if ( 'last' === $interval_date ) {
+				$next_date->modify( 'last day of ' . $next_date->format( 'F Y' ) );
+			}
 		}
 
 		$end_date = null;
