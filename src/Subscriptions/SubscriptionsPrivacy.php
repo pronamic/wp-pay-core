@@ -178,35 +178,40 @@ class SubscriptionsPrivacy {
 
 			$subscription_status = null;
 
-			// Get subscription meta.
-			foreach ( $meta_keys as $meta_key => $meta_options ) {
-				if ( 'status' === $meta_key ) {
-					$subscription_status = $subscription_meta[ $data_store->meta_key_prefix . $meta_key ];
-				}
-
-				$meta_key = $data_store->meta_key_prefix . $meta_key;
-
-				if ( ! array_key_exists( $meta_key, $subscription_meta ) ) {
-					continue;
-				}
-
-				$privacy_manager->erase_meta( $subscription_id, $meta_key, $meta_options['privacy_erasure'] );
+			if ( isset( $subscription_meta[ $data_store->meta_key_prefix . 'status' ] ) ) {
+				$subscription_status = $subscription_meta[ $data_store->meta_key_prefix . 'status' ];
 			}
 
-			// Add subscription note.
-			$subscription->add_note( __( 'Subscription anonymized for personal data erasure request.', 'pronamic_ideal' ) );
+			// Subscription note and erasure return message.
+			$note = __( 'Subscription anonymized for personal data erasure request.', 'pronamic_ideal' );
+			/* translators: %s = subscription id */
+			$message = __( 'Subscription ID %s anonymized.', 'pronamic_ideal' );
 
-			// Add message.
-			/* translators: %s: Subscription ID */
-			$messages[] = sprintf( __( 'Subscription ID %s anonymized.', 'pronamic_ideal' ), $subscription_id );
+			// Anonymize completed and cancelled subscriptions.
+			if ( isset( $subscription_status ) && in_array( $subscription_status, array( Statuses::COMPLETED, Statuses::CANCELLED ), true ) ) {
+				// Erase subscription meta.
+				foreach ( $meta_keys as $meta_key => $meta_options ) {
+					$meta_key = $data_store->meta_key_prefix . $meta_key;
 
-			// Cancel subscription if neccesary.
-			if ( isset( $subscription_status ) && ! in_array( $subscription_status, array( Statuses::COMPLETED, Statuses::CANCELLED ), true ) ) {
-				$subscription->set_status( Statuses::CANCELLED );
-				$subscription->save();
+					if ( ! array_key_exists( $meta_key, $subscription_meta ) ) {
+						continue;
+					}
+
+					$privacy_manager->erase_meta( $subscription_id, $meta_key, $meta_options['privacy_erasure'] );
+				}
+
+				$items_removed = true;
+			} else {
+				$note    = __( 'Subscription not anonymized for personal data erasure request because of active status.', 'pronamic_ideal' );
+				$message = __( 'Subscription ID %s not anonymized because of active status.', 'pronamic_ideal' );
+
+				$items_retained = true;
 			}
 
-			$items_removed = true;
+			// Add subscription note and erasure return message.
+			$subscription->add_note( $note );
+
+			$messages[] = sprintf( $message, $subscription_id );
 		}
 
 		$done = true;
