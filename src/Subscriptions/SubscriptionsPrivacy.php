@@ -202,7 +202,9 @@ class SubscriptionsPrivacy {
 
 				$items_removed = true;
 			} else {
-				$note    = __( 'Subscription not anonymized for personal data erasure request because of active status.', 'pronamic_ideal' );
+				$note = __( 'Subscription not anonymized for personal data erasure request because of active status.', 'pronamic_ideal' );
+
+				/* translators: %s: Subscription ID */
 				$message = __( 'Subscription ID %s not anonymized because of active status.', 'pronamic_ideal' );
 
 				$items_retained = true;
