@@ -14,10 +14,11 @@ use SimpleXMLElement;
 use WP_Error;
 
 /**
- * Title: WordPress utility class
+ * WordPress utility class
  *
- * @author Remco Tolsma
- * @version 1.0
+ * @author  Remco Tolsma
+ * @version 2.0.2
+ * @since   2.0.1
  */
 class Util {
 	/**
@@ -128,8 +129,7 @@ class Util {
 	 * @see https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
 	 *
 	 * @param boolean $boolean The boolean to convert to the string 'true' or 'false'.
-	 *
-	 * @return int
+	 * @return string
 	 */
 	public static function boolean_to_string( $boolean ) {
 		return $boolean ? 'true' : 'false';

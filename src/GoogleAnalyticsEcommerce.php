@@ -17,9 +17,9 @@ use Pronamic\WordPress\Pay\Payments\Payment;
 /**
  * Pronamic Pay Google Analytics e-commerce
  *
- * @author Reüel van der Steege
- * @version unreleased
- * @since unreleased
+ * @author  Reüel van der Steege
+ * @version 2.0.2
+ * @since   2.0.1
  */
 class GoogleAnalyticsEcommerce {
 	/**
@@ -204,11 +204,15 @@ class GoogleAnalyticsEcommerce {
 	/**
 	 * Check if the specified UUID is valid.
 	 *
+	 * @link http://php.net/preg_match
+	 *
 	 * @param string $uuid String.
 	 * @return boolean True if value is a valid UUID, false otherwise.
 	 */
 	public static function is_uuid( $uuid ) {
-		return preg_match( '#^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$#i', $uuid );
+		$result = preg_match( '#^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$#i', $uuid );
+
+		return 1 === $result;
 	}
 
 	/**

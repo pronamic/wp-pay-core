@@ -13,8 +13,9 @@ namespace Pronamic\WordPress\Pay;
 /**
  * License Manager
  *
- * @author Remco Tolsma
- * @version 1.0
+ * @author  Remco Tolsma
+ * @version 2.0.2
+ * @since   2.0.1
  */
 class LicenseManager {
 	/**
@@ -104,43 +105,54 @@ class LicenseManager {
 	}
 
 	/**
+	 * Request license status.
+	 *
+	 * @param string $license License.
+	 * @return string
+	 */
+	private function request_license_status( $license ) {
+		if ( empty( $license ) ) {
+			return 'invalid';
+		}
+
+		// Request.
+		$args = array(
+			'license' => $license,
+			'name'    => 'Pronamic iDEAL',
+			'url'     => home_url(),
+		);
+
+		$args = urlencode_deep( $args );
+
+		$response = wp_remote_get(
+			add_query_arg( $args, 'https://api.pronamic.eu/licenses/check/1.0/' ),
+			array(
+				'timeout' => 20,
+			)
+		);
+
+		// On errors we give benefit of the doubt.
+		if ( $response instanceof WP_Error ) {
+			return 'valid';
+		}
+
+		$data = json_decode( wp_remote_retrieve_body( $response ) );
+
+		if ( is_object( $data ) && isset( $data->license ) ) {
+			return $data->license;
+		}
+
+		return 'valid';
+	}
+
+	/**
 	 * Check license.
 	 *
 	 * @param string|boolean $license License.
 	 */
 	public function check_license( $license ) {
-		$status = null;
+		$status = $this->request_license_status( $license );
 
-		if ( empty( $license ) ) {
-			$status = 'invalid';
-		} else {
-			// Request.
-			$args = array(
-				'license' => $license,
-				'name'    => 'Pronamic iDEAL',
-				'url'     => home_url(),
-			);
-
-			$args = urlencode_deep( $args );
-
-			$response = wp_remote_get(
-				add_query_arg( $args, 'https://api.pronamic.eu/licenses/check/1.0/' ),
-				array(
-					'timeout' => 20,
-				)
-			);
-
-			// On errors we give benefit of the doubt.
-			$status = 'valid';
-
-			$data = json_decode( wp_remote_retrieve_body( $response ) );
-
-			if ( $data ) {
-				$status = $data->license;
-			}
-		}
-
-		// Update.
 		update_option( 'pronamic_pay_license_status', $status );
 	}
 

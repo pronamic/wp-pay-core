@@ -28,8 +28,8 @@ use WP_Query;
  * Title: WordPress iDEAL plugin
  *
  * @author Remco Tolsma
- * @version 4.5.3
- * @since 1.0.0
+ * @version 2.0.2
+ * @since 2.0.1
  */
 class Plugin {
 	/**
@@ -37,7 +37,7 @@ class Plugin {
 	 *
 	 * @var string
 	 */
-	private $version = '5.1.0';
+	private $version;
 
 	/**
 	 * The root file of this WordPress plugin
@@ -70,15 +70,11 @@ class Plugin {
 	/**
 	 * Instance.
 	 *
-	 * @param string $file The plugin file.
+	 * @param string|array|object $args The plugin arguments.
 	 */
-	public static function instance( $file = null ) {
+	public static function instance( $args = array() ) {
 		if ( is_null( self::$instance ) ) {
-			self::$instance = new self();
-
-			// Backward compatibility.
-			self::$file    = $file;
-			self::$dirname = dirname( $file );
+			self::$instance = new self( $args );
 		}
 
 		return self::$instance;
@@ -134,6 +130,13 @@ class Plugin {
 	public $license_manager;
 
 	/**
+	 * Privacy manager.
+	 *
+	 * @var PrivacyManager
+	 */
+	public $privacy_manager;
+
+	/**
 	 * Forms module.
 	 *
 	 * @var Forms\FormsModule
@@ -162,55 +165,30 @@ class Plugin {
 	public $google_analytics_ecommerce;
 
 	/**
-	 * Construct and initialize an Pronamic Pay plugin object
+	 * Construct and initialize an Pronamic Pay plugin object.
+	 *
+	 * @param string|array|object $args The plugin arguments.
 	 */
-	public function __construct() {
+	public function __construct( $args = array() ) {
+		$args = wp_parse_args( $args, array(
+			'file'       => null,
+			'version'    => null,
+			'extensions' => array(),
+		) );
+
+		$this->version = $args['version'];
+
+		// Backward compatibility.
+		self::$file    = $args['file'];
+		self::$dirname = dirname( self::$file );
+
 		// Bootstrap the add-ons.
-		Extensions\Charitable\Extension::bootstrap();
-		Extensions\Give\Extension::bootstrap();
-		Extensions\WooCommerce\Extension::bootstrap();
-		Extensions\GravityForms\Extension::bootstrap();
-		Extensions\Shopp\Extension::bootstrap();
-		Extensions\Jigoshop\Extension::bootstrap();
-		Extensions\WPeCommerce\Extension::bootstrap();
-		Extensions\ClassiPress\Extension::bootstrap();
-		Extensions\EventEspressoLegacy\Extension::bootstrap();
-		Extensions\EventEspresso\Extension::bootstrap();
-		Extensions\AppThemes\Extension::bootstrap();
-		Extensions\S2Member\Extension::bootstrap();
-		Extensions\Membership\Extension::bootstrap();
-		Extensions\EasyDigitalDownloads\Extension::bootstrap();
-		Extensions\IThemesExchange\Extension::bootstrap();
-		Extensions\MemberPress\Extension::bootstrap();
-		Extensions\FormidableForms\Extension::bootstrap();
-		Extensions\RestrictContentPro\Extension::bootstrap();
+		$extensions = $args['extensions'];
 
-		// Settings.
-		$this->settings = new Settings( $this );
-
-		// Data Stores.
-		$this->payments_data_store      = new Payments\PaymentsDataStoreCPT();
-		$this->subscriptions_data_store = new Subscriptions\SubscriptionsDataStoreCPT();
-
-		// Post Types.
-		$this->gateway_post_type      = new GatewayPostType();
-		$this->payment_post_type      = new PaymentPostType();
-		$this->subscription_post_type = new SubscriptionPostType();
-
-		// License Manager.
-		$this->license_manager = new LicenseManager( $this );
-
-		// Modules.
-		$this->forms_module         = new Forms\FormsModule( $this );
-		$this->payments_module      = new Payments\PaymentsModule( $this );
-		$this->subscriptions_module = new Subscriptions\SubscriptionsModule( $this );
-
-		// Google Analytics Ecommerce.
-		$this->google_analytics_ecommerce = new GoogleAnalyticsEcommerce();
-
-		// Admin.
-		if ( is_admin() ) {
-			$this->admin = new Admin\AdminModule( $this );
+		if ( is_array( $extensions ) ) {
+			foreach ( $extensions as $extension ) {
+				call_user_func( $extension );
+			}
 		}
 
 		/*
@@ -472,6 +450,37 @@ class Plugin {
 		load_plugin_textdomain( 'pronamic_ideal', false, $rel_path . '/languages' );
 
 		load_plugin_textdomain( 'pronamic-money', false, $rel_path . '/vendor/pronamic/wp-money/languages' );
+
+		// Settings.
+		$this->settings = new Settings( $this );
+
+		// Data Stores.
+		$this->payments_data_store      = new Payments\PaymentsDataStoreCPT();
+		$this->subscriptions_data_store = new Subscriptions\SubscriptionsDataStoreCPT();
+
+		// Post Types.
+		$this->gateway_post_type      = new GatewayPostType();
+		$this->payment_post_type      = new PaymentPostType();
+		$this->subscription_post_type = new SubscriptionPostType();
+
+		// License Manager.
+		$this->license_manager = new LicenseManager( $this );
+
+		// Privacy Manager.
+		$this->privacy_manager = new PrivacyManager();
+
+		// Modules.
+		$this->forms_module         = new Forms\FormsModule( $this );
+		$this->payments_module      = new Payments\PaymentsModule( $this );
+		$this->subscriptions_module = new Subscriptions\SubscriptionsModule( $this );
+
+		// Google Analytics Ecommerce.
+		$this->google_analytics_ecommerce = new GoogleAnalyticsEcommerce();
+
+		// Admin.
+		if ( is_admin() ) {
+			$this->admin = new Admin\AdminModule( $this );
+		}
 
 		// Gateway Integrations.
 		$integrations = new GatewayIntegrations();
