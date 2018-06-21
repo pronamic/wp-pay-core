@@ -16,9 +16,8 @@ use Pronamic\WordPress\Pay\Core\Statuses;
  * Subscriptions Privacy class.
  *
  * @author  Reüel van der Steege
- * @version 5.2.0
- * @since   5.2.0
- * @package Pronamic\WordPress\Pay\Subscriptions
+ * @version 2.0.2
+ * @since   2.0.2
  */
 class SubscriptionsPrivacy {
 	/**
@@ -198,6 +197,7 @@ class SubscriptionsPrivacy {
 			$subscription->add_note( __( 'Subscription anonymized for personal data erasure request.', 'pronamic_ideal' ) );
 
 			// Add message.
+			/* translators: %s: Subscription ID */
 			$messages[] = sprintf( __( 'Subscription ID %s anonymized.', 'pronamic_ideal' ), $subscription_id );
 
 			// Cancel subscription if neccesary.

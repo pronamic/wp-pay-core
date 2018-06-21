@@ -17,9 +17,9 @@ use Pronamic\WordPress\Pay\Payments\Payment;
 /**
  * Pronamic Pay Google Analytics e-commerce
  *
- * @author Reüel van der Steege
- * @version unreleased
- * @since unreleased
+ * @author  Reüel van der Steege
+ * @version 2.0.2
+ * @since   2.0.1
  */
 class GoogleAnalyticsEcommerce {
 	/**

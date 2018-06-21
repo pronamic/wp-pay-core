@@ -14,16 +14,13 @@ use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Core\Statuses;
 
 /**
- * Title: Payments module
- * Description:
- * Copyright: Copyright (c) 2005 - 2018
- * Company: Pronamic
+ * Payments Module
  *
- * @see https://woocommerce.com/2017/04/woocommerce-3-0-release/
- * @see https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
+ * @link https://woocommerce.com/2017/04/woocommerce-3-0-release/
+ * @link https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
  * @author Remco Tolsma
- * @version 3.7.0
- * @since 3.7.0
+ * @version 2.0.2
+ * @since 2.0.1
  */
 class PaymentsModule {
 	/**

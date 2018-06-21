@@ -22,7 +22,8 @@ use WP_User;
  * WordPress payment test data
  *
  * @author Remco Tolsma
- * @version 1.0
+ * @version 2.0.2
+ * @since 2.0.1
  */
 class PaymentTestData extends PaymentData {
 	/**

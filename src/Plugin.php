@@ -28,8 +28,8 @@ use WP_Query;
  * Title: WordPress iDEAL plugin
  *
  * @author Remco Tolsma
- * @version 4.5.3
- * @since 1.0.0
+ * @version 2.0.2
+ * @since 2.0.1
  */
 class Plugin {
 	/**

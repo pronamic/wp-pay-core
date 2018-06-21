@@ -14,9 +14,8 @@ namespace Pronamic\WordPress\Pay\Payments;
  * Payments Privacy class.
  *
  * @author  Reüel van der Steege
- * @version 5.2.0
- * @since   5.2.0
- * @package Pronamic\WordPress\Pay\Payments
+ * @version 2.0.2
+ * @since   2.0.2
  */
 class PaymentsPrivacy {
 	/**
@@ -190,6 +189,7 @@ class PaymentsPrivacy {
 			$payment->add_note( __( 'Payment anonymized for personal data erasure request.', 'pronamic_ideal' ) );
 
 			// Add message.
+			/* translators: %s: Payment ID */
 			$messages[] = sprintf( __( 'Payment ID %s anonymized.', 'pronamic_ideal' ), $payment_id );
 
 			$items_removed = true;

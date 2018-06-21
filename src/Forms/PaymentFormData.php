@@ -19,8 +19,8 @@ use \Pronamic\WordPress\Pay\Payments\PaymentData;
  * Payment Form Data
  *
  * @author Remco Tolsma
- * @version 4.5.3
- * @since 3.7.0
+ * @version 2.0.2
+ * @since 2.0.1
  */
 class PaymentFormData extends PaymentData {
 	/**
