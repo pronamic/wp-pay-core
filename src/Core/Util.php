@@ -176,6 +176,48 @@ class Util {
 	}
 
 	/**
+	 * String to interval period (user input string).
+	 *
+	 * @param string $interval Interval user input string.
+	 *
+	 * @return string|null
+	 */
+	public static function string_to_interval_period( $interval ) {
+		if ( ! is_string( $interval ) ) {
+			return null;
+		}
+
+		$interval = trim( $interval );
+
+		// Check last character for period.
+		$interval_char = strtoupper( substr( $interval, - 1, 1 ) );
+
+		if ( in_array( $interval_char, array( 'D', 'W', 'M', 'Y' ), true ) ) {
+			return $interval_char;
+		}
+
+		// Find interval period by counting string replacements.
+		$periods = array(
+			'D' => array( 'D', 'day' ),
+			'W' => array( 'W', 'week' ),
+			'M' => array( 'M', 'month' ),
+			'Y' => array( 'Y', 'year' ),
+		);
+
+		foreach ( $periods as $interval_period => $search ) {
+			$count = 0;
+
+			str_ireplace( $search, '', $interval, $count );
+
+			if ( $count > 0 ) {
+				return $interval_period;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Convert boolean to an numceric boolean.
 	 *
 	 * @see https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
