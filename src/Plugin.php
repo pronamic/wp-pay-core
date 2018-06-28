@@ -61,6 +61,13 @@ class Plugin {
 	const TIMEZONE = 'UTC';
 
 	/**
+	 * Gateway integrations.
+	 *
+	 * @var array
+	 */
+	public static $gateways;
+
+	/**
 	 * Instance.
 	 *
 	 * @var Plugin
@@ -174,13 +181,15 @@ class Plugin {
 			'file'       => null,
 			'version'    => null,
 			'extensions' => array(),
+			'gateways'   => array(),
 		) );
 
 		$this->version = $args['version'];
 
 		// Backward compatibility.
-		self::$file    = $args['file'];
-		self::$dirname = dirname( self::$file );
+		self::$file     = $args['file'];
+		self::$dirname  = dirname( self::$file );
+		self::$gateways = $args['gateways'];
 
 		// Bootstrap the add-ons.
 		$extensions = $args['extensions'];
