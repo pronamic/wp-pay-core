@@ -4,39 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8c4a6201f665d895c3397da2439f1077",
+    "content-hash": "4aab3691280516d6f2383e21d179a634",
     "packages": [
-        {
-            "name": "npm-asset/popper.js",
-            "version": "1.14.3",
-            "dist": {
-                "type": "tar",
-                "url": "https://registry.npmjs.org/popper.js/-/popper.js-1.14.3.tgz",
-                "reference": null,
-                "shasum": null
-            },
-            "type": "npm-asset",
-            "license": [
-                "MIT"
-            ]
-        },
-        {
-            "name": "npm-asset/tippy.js",
-            "version": "2.5.3",
-            "dist": {
-                "type": "tar",
-                "url": "https://registry.npmjs.org/tippy.js/-/tippy.js-2.5.3.tgz",
-                "reference": null,
-                "shasum": null
-            },
-            "require": {
-                "npm-asset/popper.js": ">=1.14.3,<2.0.0"
-            },
-            "type": "npm-asset",
-            "license": [
-                "MIT"
-            ]
-        },
         {
             "name": "pronamic/wp-datetime",
             "version": "1.0.0",
