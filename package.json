@@ -31,6 +31,9 @@
     "url": "https://github.com/wp-pay/core/issues"
   },
   "homepage": "http://www.wp-pay.org/",
+  "dependencies": {
+    "tippy.js": "^2.5.3"
+  },
   "devDependencies": {
     "grunt": "~1.0.3",
     "grunt-contrib-jshint": "^1.1.0",

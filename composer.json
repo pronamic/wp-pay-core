@@ -37,10 +37,17 @@
 			"php": "5.3.3"
 		}
 	},
+	"repositories": [
+		{
+			"type": "composer",
+			"url": "https://asset-packagist.org"
+		}
+	],
 	"require": {
 		"php": "^5.3",
 		"pronamic/wp-datetime": "^1.0",
-		"pronamic/wp-money": "^1.0"
+		"pronamic/wp-money": "^1.0",
+		"npm-asset/tippy.js": "^2.5"
 	},
 	"require-dev": {
 		"php-coveralls/php-coveralls": "^1.0",
