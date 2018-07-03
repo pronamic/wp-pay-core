@@ -15,6 +15,7 @@ use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Money\Currency;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use WP_Post;
 
@@ -799,7 +800,22 @@ class Subscription {
 
 		$note .= '<dl>';
 
+		$add_note = false;
+
 		foreach ( $meta as $key => $value ) {
+			$current_value = $this->get_meta( $key );
+
+			// Convert string to amount for comparison.
+			if ( 'amount' === $key ) {
+				$current_value = Util::string_to_amount( $current_value );
+			}
+
+			if ( $current_value === $value ) {
+				continue;
+			}
+
+			$add_note = true;
+
 			$this->set_meta( $key, $value );
 
 			if ( $value instanceof DateTime ) {
@@ -811,6 +827,10 @@ class Subscription {
 		}
 
 		$note .= '</dl>';
+
+		if ( ! $add_note ) {
+			return;
+		}
 
 		$this->add_note( $note );
 	}
