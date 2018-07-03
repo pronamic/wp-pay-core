@@ -18,34 +18,59 @@ namespace Pronamic\WordPress\Pay;
  */
 class GatewayIntegrations {
 	/**
+	 * Integrations.
+	 *
+	 * @var array
+	 */
+	private $integrations = array();
+
+	/**
+	 * Construct gateway integrations.
+	 *
+	 * @param array $gateways Gateways.
+	 */
+	public function __construct( $gateways ) {
+		if ( ! is_array( $gateways ) ) {
+			return;
+		}
+
+		foreach ( $gateways as $gateway ) {
+			$integration = null;
+
+			if ( is_string( $gateway ) ) {
+				$integration = new $gateway();
+			} elseif ( is_array( $gateway ) ) {
+				if ( ! isset( $gateway['class'] ) ) {
+					continue;
+				}
+
+				$integration = new $gateway['class']();
+
+				// Call callback.
+				if ( isset( $gateway['callback'] ) ) {
+					call_user_func( $gateway['callback'], $integration );
+				}
+			}
+
+			if ( ! isset( $integration ) ) {
+				continue;
+			}
+
+			$this->integrations[ $integration->get_id() ] = $integration;
+		}
+	}
+
+	/**
 	 * Register gateway integrations.
 	 *
 	 * @return array
 	 */
 	public function register_integrations() {
-		$integrations = $this->get_integrations();
-
 		// Register config providers.
-		foreach ( $integrations as $integration ) {
+		foreach ( $this->integrations as $integration ) {
 			Core\ConfigProvider::register( $integration->get_id(), $integration->get_config_factory_class() );
 		}
 
-		return $integrations;
-	}
-
-	/**
-	 * Get gateway integrations.
-	 *
-	 * @return array
-	 */
-	private function get_integrations() {
-		$integrations = array();
-
-		// Set integrations.
-		foreach ( Plugin::$gateways as $integration ) {
-			$integrations[ $integration->get_id() ] = $integration;
-		}
-
-		return $integrations;
+		return $this->integrations;
 	}
 }

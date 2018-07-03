@@ -492,7 +492,7 @@ class Plugin {
 		}
 
 		// Gateway Integrations.
-		$integrations = new GatewayIntegrations();
+		$integrations = new GatewayIntegrations( self::$gateways );
 
 		$this->gateway_integrations = $integrations->register_integrations();
 
