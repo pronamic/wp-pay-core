@@ -128,6 +128,8 @@ class Util {
 	/**
 	 * String to amount (user input string).
 	 *
+	 * @link https://github.com/WordPress/WordPress/blob/4.9.6/wp-includes/functions.php#L206-L237
+	 *
 	 * @version 1.3.1
 	 * @since 1.3.0
 	 *
@@ -136,8 +138,10 @@ class Util {
 	 * @return float
 	 */
 	public static function string_to_amount( $amount ) {
+		global $wp_locale;
+
 		// Remove thousands seperators.
-		$decimal_sep = get_option( 'pronamic_pay_decimal_sep' );
+		$decimal_sep = $wp_locale->number_format['decimal_point'];
 
 		// Seperators.
 		$seperators = array( $decimal_sep, '.', ',' );

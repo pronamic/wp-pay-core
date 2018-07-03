@@ -25,6 +25,8 @@ class UtilTest extends \WP_UnitTestCase {
 	 * Test string to amount.
 	 *
 	 * @link https://github.com/pronamic/wp-pronamic-ideal/blob/3.7.3/classes/Pronamic/WP/Pay/Settings.php#L71-L91
+	 * @link https://github.com/WordPress/WordPress/blob/4.9.6/wp-includes/class-wp-locale.php
+	 * @link https://github.com/WordPress/WordPress/blob/4.9.6/wp-includes/functions.php#L206-L237
 	 *
 	 * @dataProvider string_to_amount_provider
 	 *
@@ -34,8 +36,10 @@ class UtilTest extends \WP_UnitTestCase {
 	 * @param float  $expected      Expected float value.
 	 */
 	public function test_string_to_amount( $thousands_sep, $decimal_sep, $string, $expected ) {
-		update_option( 'pronamic_pay_thousands_sep', $thousands_sep );
-		update_option( 'pronamic_pay_decimal_sep', $decimal_sep );
+		global $wp_locale;
+
+		$wp_locale->number_format['thousands_sep'] = $thousands_sep;
+		$wp_locale->number_format['decimal_point'] = $decimal_sep;
 
 		$amount = Util::string_to_amount( $string );
 
