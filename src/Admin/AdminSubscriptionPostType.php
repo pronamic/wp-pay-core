@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
+use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
@@ -350,17 +351,17 @@ class AdminSubscriptionPostType {
 	private function translate_post_status_to_meta_status( $post_status ) {
 		switch ( $post_status ) {
 			case 'subscr_pending':
-				return \Pronamic\WordPress\Pay\Core\Statuses::OPEN;
+				return Statuses::OPEN;
 			case 'subscr_cancelled':
-				return \Pronamic\WordPress\Pay\Core\Statuses::CANCELLED;
+				return Statuses::CANCELLED;
 			case 'subscr_expired':
-				return \Pronamic\WordPress\Pay\Core\Statuses::EXPIRED;
+				return Statuses::EXPIRED;
 			case 'subscr_failed':
-				return \Pronamic\WordPress\Pay\Core\Statuses::FAILURE;
+				return Statuses::FAILURE;
 			case 'subscr_active':
-				return \Pronamic\WordPress\Pay\Core\Statuses::ACTIVE;
+				return Statuses::ACTIVE;
 			case 'subscr_completed':
-				return \Pronamic\WordPress\Pay\Core\Statuses::COMPLETED;
+				return Statuses::COMPLETED;
 		}
 	}
 
