@@ -51,6 +51,10 @@ function get_pronamic_payment_by_meta( $meta_key, $meta_value ) {
 
 	if ( $post_id ) {
 		$payment = new Payment( $post_id );
+
+		if ( null === $payment->post ) {
+			$payment = null;
+		}
 	}
 
 	return $payment;
@@ -85,7 +89,11 @@ function get_pronamic_payments_by_meta( $meta_key, $meta_value ) {
 	$results = $wpdb->get_results( $db_query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
 
 	foreach ( $results as $result ) {
-		$payments[] = new Payment( $result->post_id );
+		$payment = new Payment( $result->post_id );
+
+		if ( null !== $payment->post ) {
+			$payments[] = new Payment( $result->post_id );
+		}
 	}
 
 	return $payments;
