@@ -220,6 +220,7 @@ class PaymentMethods {
 			PaymentMethods::IDEAL                   => __( 'iDEAL', 'pronamic_ideal' ),
 			PaymentMethods::IDEALQR                 => __( 'iDEAL QR', 'pronamic_ideal' ),
 			PaymentMethods::KBC                     => __( 'KBC/CBC Payment Button', 'pronamic_ideal' ),
+			PaymentMethods::MAESTRO                 => __( 'Maestro', 'pronamic_ideal' ),
 			PaymentMethods::PAYCONIQ                => __( 'Payconiq', 'pronamic_ideal' ),
 			PaymentMethods::PAYPAL                  => __( 'PayPal', 'pronamic_ideal' ),
 			PaymentMethods::SOFORT                  => __( 'SOFORT Banking', 'pronamic_ideal' ),
