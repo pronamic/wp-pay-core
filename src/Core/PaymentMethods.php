@@ -96,14 +96,6 @@ class PaymentMethods {
 	const DIRECT_DEBIT_BANCONTACT = 'direct_debit_bancontact';
 
 	/**
-	 * Constant for the Direct Debit mandate via Credit Card payment method.
-	 *
-	 * @var string
-	 * @since 1.3.9
-	 */
-	const DIRECT_DEBIT_CREDIT_CARD = 'direct_debit_credit_card';
-
-	/**
 	 * Constant for the Direct Debit mandate via iDEAL payment method.
 	 *
 	 * @var string
