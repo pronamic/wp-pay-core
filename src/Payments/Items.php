@@ -61,8 +61,14 @@ class Items implements IteratorAggregate {
 	public function get_amount() {
 		$amount = 0;
 
+		$use_bcmath = extension_loaded( 'bcmath' );
+
 		foreach ( $this->items as $item ) {
-			$amount += $item->get_amount();
+			if ( $use_bcmath ) {
+				$amount = bcadd( $amount, $item->get_amount() );
+			} else {
+				$amount += $item->get_amount();
+			}
 		}
 
 		return new Money( $amount );
