@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Forms;
 
 use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Plugin;
 use WP_Post;
 
@@ -325,8 +326,10 @@ class FormPostType {
 
 		// Convert amount choices to cents.
 		if ( isset( $data['_pronamic_payment_form_amount_choices'] ) ) {
+			$money_parser = new MoneyParser();
+
 			foreach ( $data['_pronamic_payment_form_amount_choices'] as $i => $amount ) {
-				$amount = \Pronamic\WordPress\Pay\Core\Util::string_to_amount( $amount );
+				$amount = $money_parser->parse( $amount )->get_amount();
 
 				$data['_pronamic_payment_form_amount_choices'][ $i ] = \Pronamic\WordPress\Pay\Core\Util::amount_to_cents( $amount );
 			}

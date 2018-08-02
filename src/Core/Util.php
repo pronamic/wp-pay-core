@@ -138,6 +138,8 @@ class Util {
 	 * @return float
 	 */
 	public static function string_to_amount( $amount ) {
+		_deprecated_function( __FUNCTION__, '5.3', 'Pronamic\WordPress\Money\Parser::parse()->get_amount()' );
+
 		global $wp_locale;
 
 		// Remove thousands seperators.

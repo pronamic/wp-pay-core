@@ -10,8 +10,8 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
+use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Core\Statuses;
-use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
@@ -455,7 +455,9 @@ class AdminSubscriptionPostType {
 
 			// Convert user input amount to float.
 			if ( 'amount' === $meta ) {
-				$meta_value = Util::string_to_amount( $meta_value );
+				$money_parser = new MoneyParser();
+
+				$meta_value = $money_parser->parse( $meta_value )->get_amount();
 			}
 
 			$update_meta[ $meta ] = $meta_value;

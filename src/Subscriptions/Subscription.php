@@ -14,8 +14,8 @@ use DateInterval;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Money\Currency;
 use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Core\Statuses;
-use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use WP_Post;
 
@@ -807,7 +807,9 @@ class Subscription {
 
 			// Convert string to amount for comparison.
 			if ( 'amount' === $key ) {
-				$current_value = Util::string_to_amount( $current_value );
+				$money_parser = new MoneyParser();
+
+				$current_value = $money_parser->parse( $current_value )->get_amount();
 			}
 
 			if ( $current_value === $value ) {
