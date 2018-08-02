@@ -132,6 +132,7 @@ class Util {
 	 *
 	 * @version 1.3.1
 	 * @since 1.3.0
+	 * @deprecated 2.0.3 Use Pronamic\WordPress\Money\Parser::parse( $amount )->get_amount() instead.
 	 *
 	 * @param string $amount The string value to convert to a float value.
 	 *
