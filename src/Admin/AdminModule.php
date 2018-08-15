@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
+use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Plugin;
 
 /**
@@ -477,14 +478,11 @@ class AdminModule {
 			$gateway = \Pronamic\WordPress\Pay\Plugin::get_gateway( $id );
 
 			if ( $gateway ) {
-				$amount = filter_input(
-					INPUT_POST, 'test_amount', FILTER_VALIDATE_FLOAT, array(
-						'flags'   => FILTER_FLAG_ALLOW_THOUSAND,
-						'options' => array(
-							'decimal' => pronamic_pay_get_decimal_separator(),
-						),
-					)
-				);
+				$string = filter_input( INPUT_POST, 'test_amount', FILTER_SANITIZE_STRING );
+
+				$money_parser = new MoneyParser();
+
+				$amount = $money_parser->parse( $string )->get_amount();
 
 				$data = new \Pronamic\WordPress\Pay\Payments\PaymentTestData( wp_get_current_user(), $amount );
 
