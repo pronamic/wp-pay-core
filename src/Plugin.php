@@ -266,7 +266,7 @@ class Plugin {
 			return;
 		}
 
-		$gateway = Plugin::get_gateway( $payment->config_id );
+		$gateway = self::get_gateway( $payment->config_id );
 
 		if ( empty( $gateway ) ) {
 			return;
@@ -406,12 +406,12 @@ class Plugin {
 
 			nocache_headers();
 
-			include Plugin::$dirname . '/views/redirect-message.php';
+			include self::$dirname . '/views/redirect-message.php';
 
 			exit;
 		}
 
-		$gateway = Plugin::get_gateway( $payment->config_id );
+		$gateway = self::get_gateway( $payment->config_id );
 
 		if ( $gateway && $gateway->is_html_form() ) {
 			$gateway->start( $payment );
@@ -419,7 +419,7 @@ class Plugin {
 			$error = $gateway->get_error();
 
 			if ( is_wp_error( $error ) ) {
-				Plugin::render_errors( $error );
+				self::render_errors( $error );
 			} else {
 				$gateway->redirect( $payment );
 			}
@@ -608,7 +608,7 @@ class Plugin {
 		}
 
 		foreach ( $errors as $error ) {
-			include Plugin::$dirname . '/views/error.php';
+			include self::$dirname . '/views/error.php';
 		}
 	}
 

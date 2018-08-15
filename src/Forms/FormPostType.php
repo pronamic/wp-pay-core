@@ -129,7 +129,7 @@ class FormPostType {
 					'slug' => _x( 'payment-forms', 'slug', 'pronamic_ideal' ),
 				),
 				'query_var'          => false,
-				'capabilities'       => FormPostType::get_capabilities(),
+				'capabilities'       => self::get_capabilities(),
 				'map_meta_cap'       => true,
 			)
 		);

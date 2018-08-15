@@ -72,7 +72,7 @@ class PaymentPostType {
 				'supports'           => false,
 				'rewrite'            => false,
 				'query_var'          => false,
-				'capabilities'       => PaymentPostType::get_capabilities(),
+				'capabilities'       => self::get_capabilities(),
 				'map_meta_cap'       => true,
 			)
 		);

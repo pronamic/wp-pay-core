@@ -204,26 +204,26 @@ class PaymentMethods {
 	 */
 	public static function get_payment_methods() {
 		$payment_methods = array(
-			PaymentMethods::ALIPAY                  => __( 'Alipay', 'pronamic_ideal' ),
-			PaymentMethods::BANCONTACT              => __( 'Bancontact', 'pronamic_ideal' ),
-			PaymentMethods::BANK_TRANSFER           => __( 'Bank Transfer', 'pronamic_ideal' ),
-			PaymentMethods::BELFIUS                 => __( 'Belfius Direct Net', 'pronamic_ideal' ),
-			PaymentMethods::BITCOIN                 => __( 'Bitcoin', 'pronamic_ideal' ),
-			PaymentMethods::BUNQ                    => __( 'Bunq', 'pronamic_ideal' ),
-			PaymentMethods::CREDIT_CARD             => __( 'Credit Card', 'pronamic_ideal' ),
-			PaymentMethods::DIRECT_DEBIT            => __( 'Direct Debit', 'pronamic_ideal' ),
-			PaymentMethods::DIRECT_DEBIT_BANCONTACT => __( 'Direct Debit mandate via Bancontact', 'pronamic_ideal' ),
-			PaymentMethods::DIRECT_DEBIT_IDEAL      => __( 'Direct Debit mandate via iDEAL', 'pronamic_ideal' ),
-			PaymentMethods::DIRECT_DEBIT_SOFORT     => __( 'Direct Debit mandate via SOFORT', 'pronamic_ideal' ),
-			PaymentMethods::GIROPAY                 => __( 'Giropay', 'pronamic_ideal' ),
-			PaymentMethods::GULDEN                  => __( 'Gulden', 'pronamic_ideal' ),
-			PaymentMethods::IDEAL                   => __( 'iDEAL', 'pronamic_ideal' ),
-			PaymentMethods::IDEALQR                 => __( 'iDEAL QR', 'pronamic_ideal' ),
-			PaymentMethods::KBC                     => __( 'KBC/CBC Payment Button', 'pronamic_ideal' ),
-			PaymentMethods::MAESTRO                 => __( 'Maestro', 'pronamic_ideal' ),
-			PaymentMethods::PAYCONIQ                => __( 'Payconiq', 'pronamic_ideal' ),
-			PaymentMethods::PAYPAL                  => __( 'PayPal', 'pronamic_ideal' ),
-			PaymentMethods::SOFORT                  => __( 'SOFORT Banking', 'pronamic_ideal' ),
+			self::ALIPAY                  => __( 'Alipay', 'pronamic_ideal' ),
+			self::BANCONTACT              => __( 'Bancontact', 'pronamic_ideal' ),
+			self::BANK_TRANSFER           => __( 'Bank Transfer', 'pronamic_ideal' ),
+			self::BELFIUS                 => __( 'Belfius Direct Net', 'pronamic_ideal' ),
+			self::BITCOIN                 => __( 'Bitcoin', 'pronamic_ideal' ),
+			self::BUNQ                    => __( 'Bunq', 'pronamic_ideal' ),
+			self::CREDIT_CARD             => __( 'Credit Card', 'pronamic_ideal' ),
+			self::DIRECT_DEBIT            => __( 'Direct Debit', 'pronamic_ideal' ),
+			self::DIRECT_DEBIT_BANCONTACT => __( 'Direct Debit mandate via Bancontact', 'pronamic_ideal' ),
+			self::DIRECT_DEBIT_IDEAL      => __( 'Direct Debit mandate via iDEAL', 'pronamic_ideal' ),
+			self::DIRECT_DEBIT_SOFORT     => __( 'Direct Debit mandate via SOFORT', 'pronamic_ideal' ),
+			self::GIROPAY                 => __( 'Giropay', 'pronamic_ideal' ),
+			self::GULDEN                  => __( 'Gulden', 'pronamic_ideal' ),
+			self::IDEAL                   => __( 'iDEAL', 'pronamic_ideal' ),
+			self::IDEALQR                 => __( 'iDEAL QR', 'pronamic_ideal' ),
+			self::KBC                     => __( 'KBC/CBC Payment Button', 'pronamic_ideal' ),
+			self::MAESTRO                 => __( 'Maestro', 'pronamic_ideal' ),
+			self::PAYCONIQ                => __( 'Payconiq', 'pronamic_ideal' ),
+			self::PAYPAL                  => __( 'PayPal', 'pronamic_ideal' ),
+			self::SOFORT                  => __( 'SOFORT Banking', 'pronamic_ideal' ),
 		);
 
 		return $payment_methods;
@@ -261,9 +261,9 @@ class PaymentMethods {
 	 */
 	public static function get_direct_debit_methods() {
 		$payment_methods = array(
-			PaymentMethods::DIRECT_DEBIT_BANCONTACT => PaymentMethods::BANCONTACT,
-			PaymentMethods::DIRECT_DEBIT_IDEAL      => PaymentMethods::IDEAL,
-			PaymentMethods::DIRECT_DEBIT_SOFORT     => PaymentMethods::SOFORT,
+			self::DIRECT_DEBIT_BANCONTACT => self::BANCONTACT,
+			self::DIRECT_DEBIT_IDEAL      => self::IDEAL,
+			self::DIRECT_DEBIT_SOFORT     => self::SOFORT,
 		);
 
 		return $payment_methods;
@@ -293,7 +293,7 @@ class PaymentMethods {
 		$payment_methods = self::get_direct_debit_methods();
 
 		// Add additional methods suitable for recurring payments.
-		$payment_methods[ PaymentMethods::CREDIT_CARD ] = PaymentMethods::CREDIT_CARD;
+		$payment_methods[ self::CREDIT_CARD ] = self::CREDIT_CARD;
 
 		return $payment_methods;
 	}
