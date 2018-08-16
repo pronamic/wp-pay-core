@@ -273,17 +273,11 @@ class Plugin {
 			return;
 		}
 
-		$amount = $payment->get_amount()->get_amount();
+		$gateway->update_status( $payment );
 
-		if ( empty( $amount ) ) {
-			$payment->set_status( Core\Statuses::SUCCESS );
-		} else {
-			$gateway->update_status( $payment );
-
-			if ( $gateway->has_error() ) {
-				foreach ( $gateway->error->get_error_codes() as $code ) {
-					$payment->add_note( sprintf( '%s: %s', $code, $gateway->error->get_error_message( $code ) ) );
-				}
+		if ( $gateway->has_error() ) {
+			foreach ( $gateway->error->get_error_codes() as $code ) {
+				$payment->add_note( sprintf( '%s: %s', $code, $gateway->error->get_error_message( $code ) ) );
 			}
 		}
 
@@ -813,8 +807,9 @@ class Plugin {
 		$amount = $payment->get_amount()->get_amount();
 
 		if ( empty( $amount ) ) {
-			// Keep track of free payments to update during shutdown.
-			pronamic_pay_plugin()->payments_module->free[] = $payment->get_id();
+			$payment->set_status( Statuses::SUCCESS );
+
+			$payment->save();
 
 			return $payment;
 		}

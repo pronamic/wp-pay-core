@@ -64,9 +64,6 @@ class PaymentsModule {
 		// Listen to payment status changes so we can log these in a note.
 		add_action( 'pronamic_payment_status_update', array( $this, 'log_payment_status_update' ), 10, 4 );
 
-		// Shutdown.
-		add_action( 'shutdown', array( $this, 'update_free_payments' ) );
-
 		// Payment Status Checker.
 		$status_checker = new StatusChecker();
 
@@ -169,18 +166,5 @@ class PaymentsModule {
 		}
 
 		$payment->add_note( $note );
-	}
-
-	/**
-	 * Update free payments.
-	 */
-	public function update_free_payments() {
-		$can_redirect = false;
-
-		foreach ( $this->free as $payment_id ) {
-			$payment = get_pronamic_payment( $payment_id );
-
-			Plugin::update_payment( $payment, $can_redirect );
-		}
 	}
 }
