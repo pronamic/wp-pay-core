@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "pronamic/wp-datetime",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pronamic/wp-datetime.git",
-                "reference": "807265df543b60079377d5c0ff5ed10564f73914"
+                "reference": "747d9dde227acd4fce8cbb318aa5832f055c2206"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pronamic/wp-datetime/zipball/807265df543b60079377d5c0ff5ed10564f73914",
-                "reference": "807265df543b60079377d5c0ff5ed10564f73914",
+                "url": "https://api.github.com/repos/pronamic/wp-datetime/zipball/747d9dde227acd4fce8cbb318aa5832f055c2206",
+                "reference": "747d9dde227acd4fce8cbb318aa5832f055c2206",
                 "shasum": ""
             },
             "require": {
@@ -25,12 +25,15 @@
             },
             "require-dev": {
                 "johnpbloch/wordpress": "^4.9",
+                "koodimonni-language/de_de": "*",
+                "koodimonni-language/fr_fr": "*",
+                "koodimonni-language/nl_nl": "*",
                 "php-coveralls/php-coveralls": "^1.1",
                 "phpmd/phpmd": "^2.4",
                 "phpunit/phpunit": "^4.8",
                 "vlucas/phpdotenv": "^2.0",
                 "wimg/php-compatibility": "^8.1",
-                "wp-coding-standards/wpcs": "^0.14.1",
+                "wp-coding-standards/wpcs": "^1.0",
                 "wp-phpunit/wp-phpunit": "^4.9"
             },
             "type": "library",
@@ -43,7 +46,7 @@
             "license": [
                 "GPL-3.0-or-later"
             ],
-            "time": "2018-05-11T12:27:26+00:00"
+            "time": "2018-08-16T09:54:42+00:00"
         },
         {
             "name": "pronamic/wp-money",
