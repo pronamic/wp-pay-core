@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Core;
 
+use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Util as Pay_Util;
 use SimpleXMLElement;
 use WP_Error;
@@ -134,50 +135,16 @@ class Util {
 	 * @since 1.3.0
 	 * @deprecated 2.0.3 Use Pronamic\WordPress\Money\Parser::parse( $amount )->get_amount() instead.
 	 *
-	 * @param string $amount The string value to convert to a float value.
+	 * @param string $value The string value to convert to a float value.
 	 *
 	 * @return float
 	 */
-	public static function string_to_amount( $amount ) {
+	public static function string_to_amount( $value ) {
 		_deprecated_function( __FUNCTION__, '5.3', 'Pronamic\WordPress\Money\Parser::parse()->get_amount()' );
 
-		global $wp_locale;
+		$money_parser = new MoneyParser();
 
-		// Remove thousands seperators.
-		$decimal_sep = $wp_locale->number_format['decimal_point'];
-
-		// Seperators.
-		$seperators = array( $decimal_sep, '.', ',' );
-		$seperators = array_unique( array_filter( $seperators ) );
-
-		// Check.
-		foreach ( array( - 3, - 2 ) as $i ) {
-			$test = substr( $amount, $i, 1 );
-
-			if ( in_array( $test, $seperators, true ) ) {
-				$decimal_sep = $test;
-
-				break;
-			}
-		}
-
-		// Split.
-		$position = strrpos( $amount, $decimal_sep );
-
-		if ( false !== $position ) {
-			$full = substr( $amount, 0, $position );
-			$half = substr( $amount, $position + 1 );
-
-			$full = filter_var( $full, FILTER_SANITIZE_NUMBER_INT );
-			$half = filter_var( $half, FILTER_SANITIZE_NUMBER_INT );
-
-			$amount = $full . '.' . $half;
-		} else {
-			$amount = filter_var( $amount, FILTER_SANITIZE_NUMBER_INT );
-		}
-
-		// Filter.
-		$amount = filter_var( $amount, FILTER_VALIDATE_FLOAT );
+		$amount = $money_parser->parse( $value )->get_amount();
 
 		return $amount;
 	}
