@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "11b3ea90f18c1910b0af92922cc130bb",
+    "content-hash": "05b471f1ce6b5f83cef15040b621f44c",
     "packages": [
         {
             "name": "pronamic/wp-datetime",
@@ -47,16 +47,16 @@
         },
         {
             "name": "pronamic/wp-money",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pronamic/wp-money.git",
-                "reference": "d4e4a10885ffb4b9ca715a6a9c54f344c93c756c"
+                "reference": "92b9ebd3bbed47aaa59b73fdf13f1c23a1684479"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pronamic/wp-money/zipball/d4e4a10885ffb4b9ca715a6a9c54f344c93c756c",
-                "reference": "d4e4a10885ffb4b9ca715a6a9c54f344c93c756c",
+                "url": "https://api.github.com/repos/pronamic/wp-money/zipball/92b9ebd3bbed47aaa59b73fdf13f1c23a1684479",
+                "reference": "92b9ebd3bbed47aaa59b73fdf13f1c23a1684479",
                 "shasum": ""
             },
             "require": {
@@ -72,23 +72,10 @@
                 "phpunit/phpunit": "^4.8",
                 "vlucas/phpdotenv": "^2.0",
                 "wimg/php-compatibility": "^8.1",
-                "wp-coding-standards/wpcs": "^0.14.1",
+                "wp-coding-standards/wpcs": "^1.0",
                 "wp-phpunit/wp-phpunit": "^4.9"
             },
             "type": "library",
-            "extra": {
-                "dropin-paths": {
-                    "vendor/wp-phpunit/wp-phpunit/data/languages/": [
-                        "vendor:koodimonni-language"
-                    ],
-                    "vendor/wp-phpunit/wp-phpunit/data/languages/plugins/": [
-                        "vendor:koodimonni-plugin-language"
-                    ],
-                    "vendor/wp-phpunit/wp-phpunit/data/languages/themes/": [
-                        "vendor:koodimonni-theme-language"
-                    ]
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "Pronamic\\WordPress\\Money\\": "src"
@@ -98,7 +85,7 @@
             "license": [
                 "GPL-3.0-or-later"
             ],
-            "time": "2018-05-11T12:44:22+00:00"
+            "time": "2018-08-16T09:03:49+00:00"
         }
     ],
     "packages-dev": [
