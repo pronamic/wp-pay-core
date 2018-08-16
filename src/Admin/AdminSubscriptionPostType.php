@@ -20,9 +20,9 @@ use WP_Post;
 /**
  * WordPress admin subscription post type
  *
- * @author Reüel van der Steege
- * @version 1.0.0
- * @since unreleased
+ * @author  Reüel van der Steege
+ * @version 2.0.3
+ * @since   1.0.0
  */
 class AdminSubscriptionPostType {
 	/**
