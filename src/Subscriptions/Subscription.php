@@ -14,6 +14,7 @@ use DateInterval;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Money\Currency;
 use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use WP_Post;
@@ -65,6 +66,27 @@ class Subscription {
 	 * @var  int
 	 */
 	public $interval_period;
+
+	/**
+	 * The interval date of this subscription.
+	 *
+	 * @var  int|null
+	 */
+	public $interval_date;
+
+	/**
+	 * The interval date day of this subscription.
+	 *
+	 * @var  int|null
+	 */
+	public $interval_date_day;
+
+	/**
+	 * The interval date month of this subscription.
+	 *
+	 * @var  int|null
+	 */
+	public $interval_date_month;
 
 	/**
 	 * The transaction ID of this subscription.
@@ -361,6 +383,33 @@ class Subscription {
 	 */
 	public function get_interval_period() {
 		return $this->interval_period;
+	}
+
+	/**
+	 * Get the interval period date (1-31).
+	 *
+	 * @return string|null
+	 */
+	public function get_interval_date() {
+		return $this->interval_date;
+	}
+
+	/**
+	 * Get the interval period day (Monday-Sunday).
+	 *
+	 * @return string|null
+	 */
+	public function get_interval_date_day() {
+		return $this->interval_date_day;
+	}
+
+	/**
+	 * Get the interval period month (1-12).
+	 *
+	 * @return string|null
+	 */
+	public function get_interval_date_month() {
+		return $this->interval_date_month;
 	}
 
 	/**
@@ -751,7 +800,24 @@ class Subscription {
 
 		$note .= '<dl>';
 
+		$add_note = false;
+
 		foreach ( $meta as $key => $value ) {
+			$current_value = $this->get_meta( $key );
+
+			// Convert string to amount for comparison.
+			if ( 'amount' === $key ) {
+				$money_parser = new MoneyParser();
+
+				$current_value = $money_parser->parse( $current_value )->get_amount();
+			}
+
+			if ( $current_value === $value ) {
+				continue;
+			}
+
+			$add_note = true;
+
 			$this->set_meta( $key, $value );
 
 			if ( $value instanceof DateTime ) {
@@ -763,6 +829,10 @@ class Subscription {
 		}
 
 		$note .= '</dl>';
+
+		if ( ! $add_note ) {
+			return;
+		}
 
 		$this->add_note( $note );
 	}

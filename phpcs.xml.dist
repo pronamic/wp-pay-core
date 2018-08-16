@@ -19,19 +19,13 @@
 	<rule ref="WordPress">
 		<exclude name="Generic.Files.LowercasedFilename.NotFound" />
 
+		<exclude name="WordPress.DB.SlowDBQuery.slow_db_query_meta_key" />
+		<exclude name="WordPress.DB.SlowDBQuery.slow_db_query_meta_query" />
+
 		<exclude name="WordPress.Files.FileName.InvalidClassFileName" />
 		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
 
-		<exclude name="WordPress.VIP.PostsPerPage.posts_per_page_nopaging" />
-		
-		<exclude name="WordPress.VIP.RestrictedFunctions.custom_role_add_role" />
-		<exclude name="WordPress.VIP.RestrictedFunctions.user_meta_get_user_meta" />
-		<exclude name="WordPress.VIP.RestrictedFunctions.user_meta_update_user_meta" />
-		<exclude name="WordPress.VIP.RestrictedFunctions.wp_remote_get_wp_remote_get" />
-		<exclude name="WordPress.VIP.RestrictedFunctions.wp_redirect_wp_redirect" />/>
-
-		<exclude name="WordPress.VIP.SlowDBQuery.slow_db_query_meta_key" />
-		<exclude name="WordPress.VIP.SlowDBQuery.slow_db_query_meta_query" />
+		<exclude name="WordPress.Security.SafeRedirect.wp_redirect_wp_redirect" />
 	</rule>
 
 	<rule ref="Squiz.PHP.CommentedOutCode.Found">
@@ -40,14 +34,6 @@
 
 	<rule ref="PHPCompatibility.PHP.NewConstants.sort_flag_caseFound">
 		<exclude-pattern>/src/Admin/GatewaySettings.php</exclude-pattern>
-	</rule>
-
-	<rule ref="WordPress.VIP.RestrictedVariables.cache_constraints___SERVER__REMOTE_ADDR__">
-		<exclude-pattern>/src/Plugin.php</exclude-pattern>
-	</rule>
-
-	<rule ref="WordPress.VIP.RestrictedVariables.cache_constraints___SERVER__HTTP_USER_AGENT__">
-		<exclude-pattern>/src/Plugin.php</exclude-pattern>
 	</rule>
 
 	<rule ref="WordPress.PHP.DevelopmentFunctions.error_log_trigger_error">

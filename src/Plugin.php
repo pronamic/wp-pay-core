@@ -27,9 +27,9 @@ use WP_Query;
 /**
  * Title: WordPress iDEAL plugin
  *
- * @author Remco Tolsma
- * @version 2.0.2
- * @since 2.0.1
+ * @author  Remco Tolsma
+ * @version 2.0.3
+ * @since   2.0.1
  */
 class Plugin {
 	/**
@@ -59,6 +59,14 @@ class Plugin {
 	 * @var string
 	 */
 	const TIMEZONE = 'UTC';
+
+	/**
+	 * Gateway integrations.
+	 *
+	 * @since 2.0.3
+	 * @var array
+	 */
+	public static $gateways;
 
 	/**
 	 * Instance.
@@ -174,13 +182,15 @@ class Plugin {
 			'file'       => null,
 			'version'    => null,
 			'extensions' => array(),
+			'gateways'   => array(),
 		) );
 
 		$this->version = $args['version'];
 
 		// Backward compatibility.
-		self::$file    = $args['file'];
-		self::$dirname = dirname( self::$file );
+		self::$file     = $args['file'];
+		self::$dirname  = dirname( self::$file );
+		self::$gateways = $args['gateways'];
 
 		// Bootstrap the add-ons.
 		$extensions = $args['extensions'];
@@ -257,7 +267,7 @@ class Plugin {
 			return;
 		}
 
-		$gateway = Plugin::get_gateway( $payment->config_id );
+		$gateway = self::get_gateway( $payment->config_id );
 
 		if ( empty( $gateway ) ) {
 			return;
@@ -397,12 +407,12 @@ class Plugin {
 
 			nocache_headers();
 
-			include Plugin::$dirname . '/views/redirect-message.php';
+			include self::$dirname . '/views/redirect-message.php';
 
 			exit;
 		}
 
-		$gateway = Plugin::get_gateway( $payment->config_id );
+		$gateway = self::get_gateway( $payment->config_id );
 
 		if ( $gateway && $gateway->is_html_form() ) {
 			$gateway->start( $payment );
@@ -410,7 +420,7 @@ class Plugin {
 			$error = $gateway->get_error();
 
 			if ( is_wp_error( $error ) ) {
-				Plugin::render_errors( $error );
+				self::render_errors( $error );
 			} else {
 				$gateway->redirect( $payment );
 			}
@@ -483,7 +493,7 @@ class Plugin {
 		}
 
 		// Gateway Integrations.
-		$integrations = new GatewayIntegrations();
+		$integrations = new GatewayIntegrations( self::$gateways );
 
 		$this->gateway_integrations = $integrations->register_integrations();
 
@@ -599,7 +609,7 @@ class Plugin {
 		}
 
 		foreach ( $errors as $error ) {
-			include Plugin::$dirname . '/views/error.php';
+			include self::$dirname . '/views/error.php';
 		}
 	}
 

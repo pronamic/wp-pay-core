@@ -7,6 +7,10 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.0.3] - 2018-08-16
+- Use pronamic/wp-money library to parse money strings.
+- Added Maestro to list of payment methods.
+
 ## [2.0.2] - 2018-06-21
 - Removed version and extensions from the plugin class, is now part of the arguments array.
 - Added support for WordPress core privacy export and erasure feature.
@@ -100,7 +104,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.0.2...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.0.3...HEAD
+[2.0.3]: https://github.com/wp-pay/core/compare/2.0.1...2.0.3
 [2.0.2]: https://github.com/wp-pay/core/compare/2.0.1...2.0.2
 [2.0.1]: https://github.com/wp-pay/core/compare/2.0.0...2.0.1
 [2.0.0]: https://github.com/wp-pay/core/compare/1.3.14...2.0.0

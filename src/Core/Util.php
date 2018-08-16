@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Core;
 
+use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Util as Pay_Util;
 use SimpleXMLElement;
 use WP_Error;
@@ -128,51 +129,66 @@ class Util {
 	/**
 	 * String to amount (user input string).
 	 *
+	 * @link https://github.com/WordPress/WordPress/blob/4.9.6/wp-includes/functions.php#L206-L237
+	 *
 	 * @version 1.3.1
 	 * @since 1.3.0
+	 * @deprecated 2.0.3 Use Pronamic\WordPress\Money\Parser::parse( $amount )->get_amount() instead.
 	 *
-	 * @param string $amount The string value to convert to a float value.
+	 * @param string $value The string value to convert to a float value.
 	 *
 	 * @return float
 	 */
-	public static function string_to_amount( $amount ) {
-		// Remove thousands seperators.
-		$decimal_sep = get_option( 'pronamic_pay_decimal_sep' );
+	public static function string_to_amount( $value ) {
+		_deprecated_function( __FUNCTION__, '5.3', 'Pronamic\WordPress\Money\Parser::parse()->get_amount()' );
 
-		// Seperators.
-		$seperators = array( $decimal_sep, '.', ',' );
-		$seperators = array_unique( array_filter( $seperators ) );
+		$money_parser = new MoneyParser();
 
-		// Check.
-		foreach ( array( - 3, - 2 ) as $i ) {
-			$test = substr( $amount, $i, 1 );
+		$amount = $money_parser->parse( $value )->get_amount();
 
-			if ( in_array( $test, $seperators, true ) ) {
-				$decimal_sep = $test;
+		return $amount;
+	}
 
-				break;
+	/**
+	 * String to interval period (user input string).
+	 *
+	 * @since 2.0.3
+	 * @param string $interval Interval user input string.
+	 * @return string|null
+	 */
+	public static function string_to_interval_period( $interval ) {
+		if ( ! is_string( $interval ) ) {
+			return null;
+		}
+
+		$interval = trim( $interval );
+
+		// Check last character for period.
+		$interval_char = strtoupper( substr( $interval, - 1, 1 ) );
+
+		if ( in_array( $interval_char, array( 'D', 'W', 'M', 'Y' ), true ) ) {
+			return $interval_char;
+		}
+
+		// Find interval period by counting string replacements.
+		$periods = array(
+			'D' => array( 'D', 'day' ),
+			'W' => array( 'W', 'week' ),
+			'M' => array( 'M', 'month' ),
+			'Y' => array( 'Y', 'year' ),
+		);
+
+		foreach ( $periods as $interval_period => $search ) {
+			$count = 0;
+
+			str_ireplace( $search, '', $interval, $count );
+
+			if ( $count > 0 ) {
+				return $interval_period;
 			}
 		}
 
-		// Split.
-		$position = strrpos( $amount, $decimal_sep );
-
-		if ( false !== $position ) {
-			$full = substr( $amount, 0, $position );
-			$half = substr( $amount, $position + 1 );
-
-			$full = filter_var( $full, FILTER_SANITIZE_NUMBER_INT );
-			$half = filter_var( $half, FILTER_SANITIZE_NUMBER_INT );
-
-			$amount = $full . '.' . $half;
-		} else {
-			$amount = filter_var( $amount, FILTER_SANITIZE_NUMBER_INT );
-		}
-
-		// Filter.
-		$amount = filter_var( $amount, FILTER_VALIDATE_FLOAT );
-
-		return $amount;
+		return null;
 	}
 
 	/**

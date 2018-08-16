@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
+use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Plugin;
@@ -19,9 +20,9 @@ use WP_Query;
 /**
  * WordPress admin payment post type
  *
- * @author Remco Tolsma
- * @version 4.4.2
- * @since 3.7.0
+ * @author  Remco Tolsma
+ * @version 2.0.3
+ * @since   1.0.0
  */
 class AdminPaymentPostType {
 	/**
@@ -474,21 +475,21 @@ class AdminPaymentPostType {
 	private function translate_post_status_to_meta_status( $post_status ) {
 		switch ( $post_status ) {
 			case 'payment_pending':
-				return \Pronamic\WordPress\Pay\Core\Statuses::OPEN;
+				return Statuses::OPEN;
 			case 'payment_processing':
-				return \Pronamic\WordPress\Pay\Core\Statuses::OPEN;
+				return Statuses::OPEN;
 			case 'payment_on_hold':
 				return null;
 			case 'payment_completed':
-				return \Pronamic\WordPress\Pay\Core\Statuses::SUCCESS;
+				return Statuses::SUCCESS;
 			case 'payment_cancelled':
-				return \Pronamic\WordPress\Pay\Core\Statuses::CANCELLED;
+				return Statuses::CANCELLED;
 			case 'payment_refunded':
 				return null;
 			case 'payment_failed':
-				return \Pronamic\WordPress\Pay\Core\Statuses::FAILURE;
+				return Statuses::FAILURE;
 			case 'payment_expired':
-				return \Pronamic\WordPress\Pay\Core\Statuses::EXPIRED;
+				return Statuses::EXPIRED;
 		}
 	}
 

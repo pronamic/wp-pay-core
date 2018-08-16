@@ -10,7 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Forms;
 
-use Pronamic\WordPress\Pay\Core\Util as Core_util;
+use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Payments\Item;
 use Pronamic\WordPress\Pay\Payments\Items;
 use \Pronamic\WordPress\Pay\Payments\PaymentData;
@@ -80,7 +80,9 @@ class PaymentFormData extends PaymentData {
 		if ( 'other' === $amount ) {
 			$amount = filter_input( INPUT_POST, 'pronamic_pay_amount_other', FILTER_SANITIZE_STRING );
 
-			$amount = Core_util::string_to_amount( $amount );
+			$money_parser = new MoneyParser();
+
+			$amount = $money_parser->parse( $amount )->get_amount();
 		} elseif ( in_array( $amount_method, array( FormPostType::AMOUNT_METHOD_CHOICES_ONLY, FormPostType::AMOUNT_METHOD_CHOICES_AND_INPUT ), true ) ) {
 			$amount /= 100;
 		}
