@@ -7,6 +7,10 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.0.4] - 2018-08-28
+- New payments with amount equal to 0 (or empty) will now directly get the completed status.
+- Use PHP BCMath library for money calculations when available.
+
 ## [2.0.3] - 2018-08-16
 - Use pronamic/wp-money library to parse money strings.
 - Added Maestro to list of payment methods.
@@ -104,8 +108,9 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.0.3...HEAD
-[2.0.3]: https://github.com/wp-pay/core/compare/2.0.1...2.0.3
+[unreleased]: https://github.com/wp-pay/core/compare/2.0.4...HEAD
+[2.0.4]: https://github.com/wp-pay/core/compare/2.0.3...2.0.4
+[2.0.3]: https://github.com/wp-pay/core/compare/2.0.2...2.0.3
 [2.0.2]: https://github.com/wp-pay/core/compare/2.0.1...2.0.2
 [2.0.1]: https://github.com/wp-pay/core/compare/2.0.0...2.0.1
 [2.0.0]: https://github.com/wp-pay/core/compare/1.3.14...2.0.0

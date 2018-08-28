@@ -16,11 +16,11 @@ use Pronamic\WordPress\Pay\Core\Statuses;
 /**
  * Payments Module
  *
- * @link https://woocommerce.com/2017/04/woocommerce-3-0-release/
- * @link https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
- * @author Remco Tolsma
- * @version 2.0.2
- * @since 2.0.1
+ * @link    https://woocommerce.com/2017/04/woocommerce-3-0-release/
+ * @link    https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
+ * @author  Remco Tolsma
+ * @version 2.0.4
+ * @since   2.0.1
  */
 class PaymentsModule {
 	/**
@@ -63,9 +63,6 @@ class PaymentsModule {
 
 		// Listen to payment status changes so we can log these in a note.
 		add_action( 'pronamic_payment_status_update', array( $this, 'log_payment_status_update' ), 10, 4 );
-
-		// Shutdown.
-		add_action( 'shutdown', array( $this, 'update_free_payments' ) );
 
 		// Payment Status Checker.
 		$status_checker = new StatusChecker();
@@ -169,18 +166,5 @@ class PaymentsModule {
 		}
 
 		$payment->add_note( $note );
-	}
-
-	/**
-	 * Update free payments.
-	 */
-	public function update_free_payments() {
-		$can_redirect = false;
-
-		foreach ( $this->free as $payment_id ) {
-			$payment = get_pronamic_payment( $payment_id );
-
-			Plugin::update_payment( $payment, $can_redirect );
-		}
 	}
 }
