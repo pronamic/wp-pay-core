@@ -382,6 +382,7 @@ class Payment {
 		$this->meta = array();
 
 		$this->set_amount( new Money() );
+		$this->set_status( Statuses::OPEN );
 
 		if ( null !== $post_id ) {
 			pronamic_pay_plugin()->payments_data_store->read( $this );
