@@ -827,8 +827,6 @@ class Plugin {
 		// Set payment status.
 		if ( false === $result ) {
 			$payment->set_status( Statuses::FAILURE );
-		} else {
-			$payment->set_status( Statuses::OPEN );
 		}
 
 		// Save payment.
