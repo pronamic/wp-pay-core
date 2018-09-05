@@ -798,6 +798,11 @@ class Plugin {
 			$payment->user_id = get_current_user_id();
 		}
 
+		// Locale.
+		if ( null === $payment->locale && is_user_logged_in() ) {
+			$payment->locale = get_user_locale();
+		}
+
 		// User Agent.
 		if ( null === $payment->user_agent ) {
 			// User Agent (@see https://github.com/WordPress/WordPress/blob/4.9.4/wp-includes/comment.php#L1962-L1965).
