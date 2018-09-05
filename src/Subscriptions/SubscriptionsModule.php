@@ -70,7 +70,6 @@ class SubscriptionsModule {
 		add_filter( 'comments_clauses', array( $this, 'exclude_subscription_comment_notes' ), 10, 2 );
 
 		add_action( 'pronamic_pay_new_payment', array( $this, 'maybe_create_subscription' ) );
-		add_action( 'pronamic_pay_new_payment', array( $this, 'maybe_update_subscription' ) );
 
 		// The 'pronamic_pay_update_subscription_payments' hook adds subscription payments and sends renewal notices.
 		add_action( 'pronamic_pay_update_subscription_payments', array( $this, 'update_subscription_payments' ) );
@@ -515,23 +514,6 @@ class SubscriptionsModule {
 
 			$payment->save();
 		}
-	}
-
-	/**
-	 * Maybe update subscription for the specified payment.
-	 *
-	 * @param Payment $payment The new payment.
-	 */
-	public function maybe_update_subscription( $payment ) {
-		// Check if there is already subscription attached to the payment.
-		$subscription_id = $payment->get_subscription_id();
-
-		if ( empty( $subscription_id ) ) {
-			// Subscription already created.
-			return;
-		}
-
-
 	}
 
 	/**
