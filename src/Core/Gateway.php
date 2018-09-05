@@ -260,10 +260,10 @@ abstract class Gateway {
 	/**
 	 * Get iDEAL issuers.
 	 *
-	 * @return array|null
+	 * @return array
 	 */
 	public function get_issuers() {
-		return null;
+		return array();
 	}
 
 	/**
