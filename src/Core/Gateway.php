@@ -78,20 +78,6 @@ abstract class Gateway {
 	private $method;
 
 	/**
-	 * Indiactor if this gateway supports feedback
-	 *
-	 * @var boolean
-	 */
-	private $has_feedback;
-
-	/**
-	 * The mimimum amount this gateway can handle
-	 *
-	 * @var float
-	 */
-	private $amount_minimum;
-
-	/**
 	 * The transaction ID
 	 *
 	 * @var string
@@ -231,30 +217,23 @@ abstract class Gateway {
 	}
 
 	/**
-	 * Check if this gateway supports feedback
-	 *
-	 * @return boolean true if gateway supports feedback, false otherwise
-	 */
-	public function has_feedback() {
-		return $this->has_feedback;
-	}
-
-	/**
-	 * Set has feedback
+	 * Set has feedback.
 	 *
 	 * @param boolean $has_feedback Feedback from gateway indicator.
+	 *
+	 * @deprecated 2.0.5 Not in use anymore.
 	 */
 	public function set_has_feedback( $has_feedback ) {
-		$this->has_feedback = $has_feedback;
 	}
 
 	/**
 	 * Set the minimum amount required
 	 *
 	 * @param float $amount Minimum payment amount.
+	 *
+	 * @deprecated 2.0.5 Not in use anymore.
 	 */
 	public function set_amount_minimum( $amount ) {
-		$this->amount_minimum = $amount;
 	}
 
 	/**
