@@ -307,6 +307,13 @@ class Payment {
 	public $subscription_id;
 
 	/**
+	 * Subscription source ID.
+	 *
+	 * @var int
+	 */
+	public $subscription_source_id;
+
+	/**
 	 * Flag to indicate a recurring payment
 	 *
 	 * @todo Is this required?
