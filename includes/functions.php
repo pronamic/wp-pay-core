@@ -12,6 +12,15 @@ use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 
 /**
+ * Pronamic Pay plugin.
+ *
+ * @return \Pronamic\WordPress\Pay\Plugin
+ */
+function pronamic_pay_plugin() {
+	return \Pronamic\WordPress\Pay\Plugin::instance();
+}
+
+/**
  * Get payment by specified post ID.
  *
  * @param int|string $post_id A payment post ID.
