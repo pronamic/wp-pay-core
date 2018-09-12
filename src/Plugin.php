@@ -28,7 +28,7 @@ use WP_Query;
  * Plugin
  *
  * @author  Remco Tolsma
- * @version 2.0.4
+ * @version 2.0.5
  * @since   2.0.1
  */
 class Plugin {
@@ -178,12 +178,15 @@ class Plugin {
 	 * @param string|array|object $args The plugin arguments.
 	 */
 	public function __construct( $args = array() ) {
-		$args = wp_parse_args( $args, array(
-			'file'       => null,
-			'version'    => null,
-			'extensions' => array(),
-			'gateways'   => array(),
-		) );
+		$args = wp_parse_args(
+			$args,
+			array(
+				'file'       => null,
+				'version'    => null,
+				'extensions' => array(),
+				'gateways'   => array(),
+			)
+		);
 
 		$this->version = $args['version'];
 
@@ -740,7 +743,6 @@ class Plugin {
 		$payment->title                  = sprintf( __( 'Payment for %s', 'pronamic_ideal' ), $data->get_title() );
 		$payment->user_id                = $data->get_user_id();
 		$payment->config_id              = $config_id;
-		$payment->key                    = uniqid( 'pay_' );
 		$payment->order_id               = $data->get_order_id();
 		$payment->language               = $data->get_language();
 		$payment->locale                 = $data->get_language_and_country();
@@ -749,7 +751,6 @@ class Plugin {
 		$payment->source                 = $data->get_source();
 		$payment->source_id              = $data->get_source_id();
 		$payment->email                  = $data->get_email();
-		$payment->status                 = null;
 		$payment->method                 = $payment_method;
 		$payment->issuer                 = $data->get_issuer( $payment_method );
 		$payment->first_name             = $data->get_first_name();
@@ -768,12 +769,6 @@ class Plugin {
 		$payment->set_amount( $data->get_amount() );
 		$payment->set_credit_card( $data->get_credit_card() );
 
-		// User Agent (@see https://github.com/WordPress/WordPress/blob/4.9.4/wp-includes/comment.php#L1962-L1965).
-		$payment->user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : null; // WPCS: input var ok.
-
-		// IP (@see https://github.com/WordPress/WordPress/blob/4.9.4/wp-includes/comment.php#L1957-L1960).
-		$payment->user_ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : null; // WPCS: input var ok.
-
 		return self::start_payment( $payment, $gateway );
 	}
 
@@ -791,6 +786,40 @@ class Plugin {
 	}
 
 	/**
+	 * Complement payment.
+	 *
+	 * @param Payment $payment Payment.
+	 */
+	private static function complement_payment( Payment $payment ) {
+		// Key.
+		if ( null === $payment->key ) {
+			$payment->key = uniqid( 'pay_' );
+		}
+
+		// User ID.
+		if ( null === $payment->user_id && is_user_logged_in() ) {
+			$payment->user_id = get_current_user_id();
+		}
+
+		// Locale.
+		if ( null === $payment->locale && is_user_logged_in() ) {
+			$payment->locale = get_user_locale();
+		}
+
+		// User Agent.
+		if ( null === $payment->user_agent ) {
+			// User Agent (@see https://github.com/WordPress/WordPress/blob/4.9.4/wp-includes/comment.php#L1962-L1965).
+			$payment->user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : null; // WPCS: input var ok.
+		}
+
+		// User IP.
+		if ( null === $payment->user_ip ) {
+			// IP (@see https://github.com/WordPress/WordPress/blob/4.9.4/wp-includes/comment.php#L1957-L1960).
+			$payment->user_ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : null; // WPCS: input var ok.
+		}
+	}
+
+	/**
 	 * Start payment.
 	 *
 	 * @param Payment $payment The payment to start at the specified gateway.
@@ -800,6 +829,8 @@ class Plugin {
 	 */
 	public static function start_payment( Payment $payment, Gateway $gateway ) {
 		global $pronamic_ideal;
+
+		self::complement_payment( $payment );
 
 		$pronamic_ideal->payments_data_store->create( $payment );
 
@@ -827,8 +858,6 @@ class Plugin {
 		// Set payment status.
 		if ( false === $result ) {
 			$payment->set_status( Statuses::FAILURE );
-		} else {
-			$payment->set_status( Statuses::OPEN );
 		}
 
 		// Save payment.

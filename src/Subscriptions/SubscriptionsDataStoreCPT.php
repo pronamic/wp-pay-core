@@ -23,7 +23,7 @@ use Pronamic\WordPress\Pay\Core\Statuses;
  * @see https://woocommerce.com/2017/04/woocommerce-3-0-release/
  * @see https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
  * @author  Remco Tolsma
- * @version 2.0.2
+ * @version 2.0.5
  * @since   2.0.1
  */
 class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
@@ -55,7 +55,8 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 				),
 				'post_status'   => empty( $post_status ) ? 'subscr_pending' : $post_status,
 				'post_author'   => $subscription->user_id,
-			), true
+			),
+			true
 		);
 
 		if ( is_wp_error( $result ) ) {
@@ -166,71 +167,113 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 	 * @return void
 	 */
 	private function register_meta() {
-		$this->register_meta_key( 'config_id', array(
-			'label' => __( 'Config ID', 'pronamic_ideal' ),
-		) );
+		$this->register_meta_key(
+			'config_id',
+			array(
+				'label' => __( 'Config ID', 'pronamic_ideal' ),
+			)
+		);
 
-		$this->register_meta_key( 'source', array(
-			'label' => __( 'Source', 'pronamic_ideal' ),
-		) );
+		$this->register_meta_key(
+			'source',
+			array(
+				'label' => __( 'Source', 'pronamic_ideal' ),
+			)
+		);
 
-		$this->register_meta_key( 'source_id', array(
-			'label' => __( 'Source ID', 'pronamic_ideal' ),
-		) );
+		$this->register_meta_key(
+			'source_id',
+			array(
+				'label' => __( 'Source ID', 'pronamic_ideal' ),
+			)
+		);
 
-		$this->register_meta_key( 'currency', array(
-			'label' => __( 'Currency', 'pronamic_ideal' ),
-		) );
+		$this->register_meta_key(
+			'currency',
+			array(
+				'label' => __( 'Currency', 'pronamic_ideal' ),
+			)
+		);
 
-		$this->register_meta_key( 'amount', array(
-			'label' => __( 'Amount', 'pronamic_ideal' ),
-		) );
+		$this->register_meta_key(
+			'amount',
+			array(
+				'label' => __( 'Amount', 'pronamic_ideal' ),
+			)
+		);
 
-		$this->register_meta_key( 'frequency', array(
-			'label' => __( 'Frequency', 'pronamic_ideal' ),
-		) );
+		$this->register_meta_key(
+			'frequency',
+			array(
+				'label' => __( 'Frequency', 'pronamic_ideal' ),
+			)
+		);
 
-		$this->register_meta_key( 'interval', array(
-			'label' => __( 'Interval', 'pronamic_ideal' ),
-		) );
+		$this->register_meta_key(
+			'interval',
+			array(
+				'label' => __( 'Interval', 'pronamic_ideal' ),
+			)
+		);
 
-		$this->register_meta_key( 'interval_period', array(
-			'label' => __( 'Interval Period', 'pronamic_ideal' ),
-		) );
+		$this->register_meta_key(
+			'interval_period',
+			array(
+				'label' => __( 'Interval Period', 'pronamic_ideal' ),
+			)
+		);
 
-		$this->register_meta_key( 'transaction_id', array(
-			'label'           => __( 'Transaction ID', 'pronamic_ideal' ),
-			'privacy_export'  => true,
-			'privacy_erasure' => 'erase',
-		) );
+		$this->register_meta_key(
+			'transaction_id',
+			array(
+				'label'           => __( 'Transaction ID', 'pronamic_ideal' ),
+				'privacy_export'  => true,
+				'privacy_erasure' => 'erase',
+			)
+		);
 
-		$this->register_meta_key( 'status', array(
-			'label' => __( 'Status', 'pronamic_ideal' ),
-		) );
+		$this->register_meta_key(
+			'status',
+			array(
+				'label' => __( 'Status', 'pronamic_ideal' ),
+			)
+		);
 
-		$this->register_meta_key( 'description', array(
-			'label'           => __( 'Description', 'pronamic_ideal' ),
-			'privacy_export'  => true,
-			'privacy_erasure' => 'erase',
-		) );
+		$this->register_meta_key(
+			'description',
+			array(
+				'label'           => __( 'Description', 'pronamic_ideal' ),
+				'privacy_export'  => true,
+				'privacy_erasure' => 'erase',
+			)
+		);
 
-		$this->register_meta_key( 'email', array(
-			'label'           => __( 'Email', 'pronamic_ideal' ),
-			'privacy_export'  => true,
-			'privacy_erasure' => 'anonymize',
-		) );
+		$this->register_meta_key(
+			'email',
+			array(
+				'label'           => __( 'Email', 'pronamic_ideal' ),
+				'privacy_export'  => true,
+				'privacy_erasure' => 'anonymize',
+			)
+		);
 
-		$this->register_meta_key( 'customer_name', array(
-			'label'           => __( 'Customer Name', 'pronamic_ideal' ),
-			'privacy_export'  => true,
-			'privacy_erasure' => 'erase',
-		) );
+		$this->register_meta_key(
+			'customer_name',
+			array(
+				'label'           => __( 'Customer Name', 'pronamic_ideal' ),
+				'privacy_export'  => true,
+				'privacy_erasure' => 'erase',
+			)
+		);
 
-		$this->register_meta_key( 'payment_method', array(
-			'label'           => __( 'Payment Method', 'pronamic_ideal' ),
-			'privacy_export'  => true,
-			'privacy_erasure' => 'erase',
-		) );
+		$this->register_meta_key(
+			'payment_method',
+			array(
+				'label'           => __( 'Payment Method', 'pronamic_ideal' ),
+				'privacy_export'  => true,
+				'privacy_erasure' => 'erase',
+			)
+		);
 	}
 
 	/**

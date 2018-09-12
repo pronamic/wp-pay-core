@@ -18,7 +18,7 @@ use Pronamic\WordPress\Pay\Payments\Payment;
  * Pronamic Pay Google Analytics e-commerce
  *
  * @author  Reüel van der Steege
- * @version 2.0.2
+ * @version 2.0.5
  * @since   2.0.1
  */
 class GoogleAnalyticsEcommerce {
@@ -120,11 +120,13 @@ class GoogleAnalyticsEcommerce {
 			array(
 				't'  => 'transaction',
 				'tr' => $payment->get_amount()->get_amount(),
-			), $defaults
+			),
+			$defaults
 		);
 
 		wp_remote_post(
-			self::API_URL, array(
+			self::API_URL,
+			array(
 				'user-agent' => filter_input( INPUT_SERVER, 'HTTP_USER_AGENT' ),
 				'body'       => http_build_query( $transaction ),
 				'blocking'   => false,
@@ -142,11 +144,13 @@ class GoogleAnalyticsEcommerce {
 				),
 				'ip' => $payment->get_amount()->get_amount(),
 				'iq' => 1,
-			), $defaults
+			),
+			$defaults
 		);
 
 		wp_remote_post(
-			self::API_URL, array(
+			self::API_URL,
+			array(
 				'user-agent' => filter_input( INPUT_SERVER, 'HTTP_USER_AGENT' ),
 				'body'       => http_build_query( $item ),
 				'blocking'   => false,

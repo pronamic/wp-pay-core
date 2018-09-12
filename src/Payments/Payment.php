@@ -22,7 +22,7 @@ use WP_Post;
  * Payment
  *
  * @author Remco Tolsma
- * @version 4.4.3
+ * @version 2.0.5
  * @since 1.0.0
  */
 class Payment {
@@ -307,6 +307,13 @@ class Payment {
 	public $subscription_id;
 
 	/**
+	 * Subscription source ID.
+	 *
+	 * @var int
+	 */
+	public $subscription_source_id;
+
+	/**
 	 * Flag to indicate a recurring payment
 	 *
 	 * @todo Is this required?
@@ -382,6 +389,7 @@ class Payment {
 		$this->meta = array();
 
 		$this->set_amount( new Money() );
+		$this->set_status( Statuses::OPEN );
 
 		if ( null !== $post_id ) {
 			pronamic_pay_plugin()->payments_data_store->read( $this );

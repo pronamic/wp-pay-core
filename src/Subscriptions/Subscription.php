@@ -663,7 +663,8 @@ class Subscription {
 				'subscription' => $this->get_id(),
 				'key'          => $this->get_key(),
 				'action'       => 'cancel',
-			), home_url()
+			),
+			home_url()
 		);
 
 		return $cancel_url;
@@ -680,7 +681,8 @@ class Subscription {
 				'subscription' => $this->get_id(),
 				'key'          => $this->get_key(),
 				'action'       => 'renew',
-			), home_url()
+			),
+			home_url()
 		);
 
 		return $renewal_url;

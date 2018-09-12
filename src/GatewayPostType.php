@@ -13,9 +13,9 @@ namespace Pronamic\WordPress\Pay;
 /**
  * Title: WordPress gateway post type
  *
- * @author Remco Tolsma
- * @version 3.8.0
- * @since ?
+ * @author  Remco Tolsma
+ * @version 2.0.5
+ * @since   ?
  */
 class GatewayPostType {
 	/**
@@ -49,7 +49,8 @@ class GatewayPostType {
 	 */
 	public function register_gateway_post_type() {
 		register_post_type(
-			'pronamic_gateway', array(
+			'pronamic_gateway',
+			array(
 				'label'              => __( 'Payment Gateway Configurations', 'pronamic_ideal' ),
 				'labels'             => array(
 					'name'                  => __( 'Payment Gateway Configurations', 'pronamic_ideal' ),

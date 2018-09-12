@@ -15,9 +15,9 @@ use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 /**
  * Title: WordPress iDEAL post types
  *
- * @author Remco Tolsma
- * @version 3.7.0
- * @since 3.7.0
+ * @author  Remco Tolsma
+ * @version 2.0.5
+ * @since   3.7.0
  */
 class SubscriptionPostType {
 	/**
@@ -43,7 +43,8 @@ class SubscriptionPostType {
 	 */
 	public function register_subscription_post_type() {
 		register_post_type(
-			'pronamic_pay_subscr', array(
+			'pronamic_pay_subscr',
+			array(
 				'label'              => __( 'Subscriptions', 'pronamic_ideal' ),
 				'labels'             => array(
 					'name'                  => __( 'Subscriptions', 'pronamic_ideal' ),
@@ -101,7 +102,8 @@ class SubscriptionPostType {
 		 * Subscription post statuses.
 		 */
 		register_post_status(
-			'subscr_pending', array(
+			'subscr_pending',
+			array(
 				'label'                     => _x( 'Pending', 'Subscription status', 'pronamic_ideal' ),
 				'public'                    => false,
 				'exclude_from_search'       => false,
@@ -113,7 +115,8 @@ class SubscriptionPostType {
 		);
 
 		register_post_status(
-			'subscr_cancelled', array(
+			'subscr_cancelled',
+			array(
 				'label'                     => _x( 'Cancelled', 'Subscription status', 'pronamic_ideal' ),
 				'public'                    => false,
 				'exclude_from_search'       => false,
@@ -125,7 +128,8 @@ class SubscriptionPostType {
 		);
 
 		register_post_status(
-			'subscr_expired', array(
+			'subscr_expired',
+			array(
 				'label'                     => _x( 'Expired', 'Subscription status', 'pronamic_ideal' ),
 				'public'                    => false,
 				'exclude_from_search'       => false,
@@ -137,7 +141,8 @@ class SubscriptionPostType {
 		);
 
 		register_post_status(
-			'subscr_failed', array(
+			'subscr_failed',
+			array(
 				'label'                     => _x( 'Failed', 'Subscription status', 'pronamic_ideal' ),
 				'public'                    => false,
 				'exclude_from_search'       => false,
@@ -149,7 +154,8 @@ class SubscriptionPostType {
 		);
 
 		register_post_status(
-			'subscr_active', array(
+			'subscr_active',
+			array(
 				'label'                     => _x( 'Active', 'Subscription status', 'pronamic_ideal' ),
 				'public'                    => false,
 				'exclude_from_search'       => false,
@@ -161,7 +167,8 @@ class SubscriptionPostType {
 		);
 
 		register_post_status(
-			'subscr_completed', array(
+			'subscr_completed',
+			array(
 				'label'                     => _x( 'Completed', 'Subscription status', 'pronamic_ideal' ),
 				'public'                    => false,
 				'exclude_from_search'       => false,

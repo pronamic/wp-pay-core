@@ -78,7 +78,8 @@ class AdminDashboard {
 		$url = add_query_arg(
 			array(
 				'post_type' => 'pronamic_payment',
-			), admin_url( 'edit.php' )
+			),
+			admin_url( 'edit.php' )
 		);
 
 		include \Pronamic\WordPress\Pay\Plugin::$dirname . '/admin/widget-payments-status-list.php';

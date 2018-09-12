@@ -124,7 +124,8 @@ class AdminPaymentBulkActions {
 				'status_updated'       => $status_updated,
 				'skipped_check'        => $skipped_check,
 				'unsupported_gateways' => implode( ',', $unsupported_gateways ),
-			), $sendback
+			),
+			$sendback
 		);
 
 		return $sendback;

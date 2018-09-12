@@ -271,7 +271,7 @@ class AdminModule {
 
 		$output .= sprintf( '</select>' );
 
-		// Return or echo.
+		// Output.
 		if ( $args['echo'] ) {
 			echo $output; // WPCS: XSS ok.
 		} else {
@@ -396,7 +396,8 @@ class AdminModule {
 			array(
 				'page'    => 'pronamic_pay_settings',
 				'message' => 'pages-generated',
-			), admin_url( 'admin.php' )
+			),
+			admin_url( 'admin.php' )
 		);
 
 		wp_redirect( $url );
@@ -414,13 +415,15 @@ class AdminModule {
 
 		$enqueue  = false;
 		$enqueue |= in_array(
-			$screen->post_type, array(
+			$screen->post_type,
+			array(
 				'pronamic_gateway',
 				'pronamic_payment',
 				'pronamic_pay_form',
 				'pronamic_pay_gf',
 				'pronamic_pay_subscr',
-			), true
+			),
+			true
 		);
 		$enqueue |= 'dashboard' === $screen->id;
 		$enqueue |= strpos( $hook, 'pronamic_pay' ) !== false;

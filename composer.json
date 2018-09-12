@@ -47,7 +47,7 @@
 		"phpmd/phpmd": "^2.4",
 		"phpunit/phpunit": "^4.5",
 		"squizlabs/php_codesniffer": "^2.7",
-		"wp-coding-standards/wpcs": "^1.0",
+		"wp-coding-standards/wpcs": "^1.1",
 		"wimg/php-compatibility": "^8.0",
 		"wp-phpunit/wp-phpunit": "^4.9",
 		"johnpbloch/wordpress": "^4.9"

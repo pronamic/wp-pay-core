@@ -281,7 +281,9 @@ class AdminTour {
 				array(
 					'pronamic_pay_ignore_tour' => true,
 				)
-			), 'pronamic_pay_ignore_tour', 'pronamic_pay_nonce'
+			),
+			'pronamic_pay_ignore_tour',
+			'pronamic_pay_nonce'
 		);
 	}
 }

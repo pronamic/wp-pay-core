@@ -24,43 +24,29 @@ matrix:
     - php: 5.6
       env: WP_VERSION=4.8
     - php: 5.6
-      env: WP_VERSION=4.7
-    - php: 5.6
-      env: WP_VERSION=4.6
-    - php: 5.6
-      env: WP_VERSION=4.5
-    - php: 5.6
-      env: WP_VERSION=4.4
-    - php: 5.6
-      env: WP_VERSION=4.3
-    - php: 5.6
-      env: WP_VERSION=4.2
-    - php: 5.6
-      env: WP_VERSION=4.2 COVERAGE=1 GRUNT=1
+      env: WP_VERSION=4.7 COVERAGE=1 GRUNT=1
   fast_finish: true
   allow_failures:
     - php: hhvm
     - php: nightly
 
 cache:
-  yarn: true
   directories:
     - node_modules
     - vendor
     - $HOME/.composer/cache
 
 before_install:
-  # Install Yarn (https://yarnpkg.com/lang/en/docs/install-ci/#travis-tab)
+  # Install latest version of Node.js (https://github.com/creationix/nvm).
   - if [ "${TRAVIS_DIST_PRECISE}" == "1" ]; then nvm install node; fi
-  - if [ "${TRAVIS_DIST_PRECISE}" == "1" ]; then curl -o- -L https://yarnpkg.com/install.sh | bash; fi
-  - if [ "${TRAVIS_DIST_PRECISE}" == "1" ]; then export PATH=$HOME/.yarn/bin:$PATH; fi
+  # Create database for PHPUnit tests.
   - mysql -e 'CREATE DATABASE wp_phpunit_tests;'
 
 install:
   # Install Grunt command line interface (https://github.com/gruntjs/grunt-cli).
-  - yarn global add grunt-cli
+  - npm install -g grunt-cli
   # Install Node.js packages.
-  - yarn install
+  - npm install
   # Update Composer itself to the latest version (https://getcomposer.org/doc/03-cli.md#self-update-selfupdate-).
   - composer self-update
   # Install Composer packages.
@@ -75,4 +61,5 @@ script:
   - if [[ "$GRUNT" == "1" ]]; then grunt; fi
 
 after_success:
-  - if [[ '1' == $COVERAGE ]]; then php vendor/bin/coveralls fi
+  - if [ $COVERAGE == "1" ]; then php vendor/bin/coveralls -v; fi
+  - if [ $COVERAGE == "1" ]; then bash <(curl -s https://codecov.io/bash); fi

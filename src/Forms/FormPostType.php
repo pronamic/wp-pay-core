@@ -18,9 +18,9 @@ use WP_Post;
 /**
  * Form Post Type
  *
- * @author Remco Tolsma
- * @version 3.7.0
- * @since 3.7.0
+ * @author  Remco Tolsma
+ * @version 2.0.5
+ * @since   3.7.0
  */
 class FormPostType {
 	/**
@@ -96,7 +96,8 @@ class FormPostType {
 	 */
 	public function register_post_type() {
 		register_post_type(
-			self::POST_TYPE, array(
+			self::POST_TYPE,
+			array(
 				'label'              => __( 'Payment Forms', 'pronamic_ideal' ),
 				'labels'             => array(
 					'name'                  => __( 'Payment Forms', 'pronamic_ideal' ),

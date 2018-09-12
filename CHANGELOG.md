@@ -7,6 +7,14 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.0.5] - 2018-09-12
+- Set default status of new payments to 'Open'.
+- Added a personal name class.
+- Use empty issuers array by default, instead of null.
+- Introduced a private `complement_payment` function in preparation for removal of the payment data interface constructions.
+- Deprecated unused `has_feedback` and `amount_minimum`.
+- Moved `pronamic_pay_plugin()` to core functions.
+
 ## [2.0.4] - 2018-08-28
 - New payments with amount equal to 0 (or empty) will now directly get the completed status.
 - Use PHP BCMath library for money calculations when available.
@@ -108,7 +116,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.0.4...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.0.5...HEAD
+[2.0.5]: https://github.com/wp-pay/core/compare/2.0.4...2.0.5
 [2.0.4]: https://github.com/wp-pay/core/compare/2.0.3...2.0.4
 [2.0.3]: https://github.com/wp-pay/core/compare/2.0.2...2.0.3
 [2.0.2]: https://github.com/wp-pay/core/compare/2.0.1...2.0.2
