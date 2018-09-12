@@ -22,7 +22,7 @@ use WP_Post;
  * Payment
  *
  * @author Remco Tolsma
- * @version 4.4.3
+ * @version 2.0.5
  * @since 1.0.0
  */
 class Payment {
