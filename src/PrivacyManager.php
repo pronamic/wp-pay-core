@@ -13,7 +13,7 @@ namespace Pronamic\WordPress\Pay;
 /**
  * Class PrivacyManager
  *
- * @package Pronamic\WordPress\Pay
+ * @version 2.0.5
  */
 class PrivacyManager {
 	/**
@@ -184,7 +184,8 @@ class PrivacyManager {
 		$local = $parts[0];
 
 		if ( strlen( $local ) > 2 ) {
-			$local = sprintf( '%1$s%2$s%3$s',
+			$local = sprintf(
+				'%1$s%2$s%3$s',
 				substr( $local, 0, 1 ),
 				str_repeat( '*', ( strlen( $local ) - 2 ) ),
 				substr( $local, - 1 )
@@ -203,7 +204,8 @@ class PrivacyManager {
 				continue;
 			}
 
-			$domain[] = sprintf( '%1$s%2$s%3$s',
+			$domain[] = sprintf(
+				'%1$s%2$s%3$s',
 				substr( $part, 0, 1 ),
 				str_repeat( '*', ( strlen( $part ) - 2 ) ),
 				substr( $part, - 1 )

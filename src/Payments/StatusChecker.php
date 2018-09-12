@@ -19,9 +19,9 @@ use Pronamic\WordPress\Pay\Plugin;
  * Copyright: Copyright (c) 2005 - 2018
  * Company: Pronamic
  *
- * @author Remco Tolsma
- * @version 4.5.3
- * @since 1.0.0
+ * @author  Remco Tolsma
+ * @version 2.0.5
+ * @since   1.0.0
  */
 class StatusChecker {
 	/**
@@ -55,7 +55,9 @@ class StatusChecker {
 		$delay = 15 * MINUTE_IN_SECONDS;
 
 		wp_schedule_single_event(
-			$time + $delay, 'pronamic_ideal_check_transaction_status', array(
+			$time + $delay,
+			'pronamic_ideal_check_transaction_status',
+			array(
 				'payment_id' => $payment->get_id(),
 				'seconds'    => $delay,
 			)
@@ -131,7 +133,9 @@ class StatusChecker {
 				$seconds = $this->get_delay_seconds( $number_tries );
 
 				wp_schedule_single_event(
-					$time + $seconds, 'pronamic_ideal_check_transaction_status', array(
+					$time + $seconds,
+					'pronamic_ideal_check_transaction_status',
+					array(
 						'payment_id'   => $payment->get_id(),
 						'seconds'      => $seconds,
 						'number_tries' => ++$number_tries,

@@ -16,9 +16,9 @@ namespace Pronamic\WordPress\Pay\Payments;
  * Copyright: Copyright (c) 2005 - 2018
  * Company: Pronamic
  *
- * @author Remco Tolsma
- * @version 3.7.0
- * @since 3.7.0
+ * @author  Remco Tolsma
+ * @version 2.0.5
+ * @since   3.7.0
  */
 class PaymentPostType {
 	/**
@@ -44,7 +44,8 @@ class PaymentPostType {
 	 */
 	public function register_payment_post_type() {
 		register_post_type(
-			'pronamic_payment', array(
+			'pronamic_payment',
+			array(
 				'label'              => __( 'Payments', 'pronamic_ideal' ),
 				'labels'             => array(
 					'name'                  => __( 'Payments', 'pronamic_ideal' ),
@@ -104,7 +105,8 @@ class PaymentPostType {
 		 * Payment post statuses
 		 */
 		register_post_status(
-			'payment_pending', array(
+			'payment_pending',
+			array(
 				'label'                     => _x( 'Pending', 'Payment status', 'pronamic_ideal' ),
 				'public'                    => false,
 				'exclude_from_search'       => false,
@@ -116,7 +118,8 @@ class PaymentPostType {
 		);
 
 		register_post_status(
-			'payment_processing', array(
+			'payment_processing',
+			array(
 				'label'                     => _x( 'Processing', 'Payment status', 'pronamic_ideal' ),
 				'public'                    => false,
 				'exclude_from_search'       => false,
@@ -128,7 +131,8 @@ class PaymentPostType {
 		);
 
 		register_post_status(
-			'payment_on_hold', array(
+			'payment_on_hold',
+			array(
 				'label'                     => _x( 'On Hold', 'Payment status', 'pronamic_ideal' ),
 				'public'                    => false,
 				'exclude_from_search'       => false,
@@ -140,7 +144,8 @@ class PaymentPostType {
 		);
 
 		register_post_status(
-			'payment_completed', array(
+			'payment_completed',
+			array(
 				'label'                     => _x( 'Completed', 'Payment status', 'pronamic_ideal' ),
 				'public'                    => false,
 				'exclude_from_search'       => false,
@@ -152,7 +157,8 @@ class PaymentPostType {
 		);
 
 		register_post_status(
-			'payment_cancelled', array(
+			'payment_cancelled',
+			array(
 				'label'                     => _x( 'Cancelled', 'Payment status', 'pronamic_ideal' ),
 				'public'                    => false,
 				'exclude_from_search'       => false,
@@ -164,7 +170,8 @@ class PaymentPostType {
 		);
 
 		register_post_status(
-			'payment_refunded', array(
+			'payment_refunded',
+			array(
 				'label'                     => _x( 'Refunded', 'Payment status', 'pronamic_ideal' ),
 				'public'                    => false,
 				'exclude_from_search'       => false,
@@ -176,7 +183,8 @@ class PaymentPostType {
 		);
 
 		register_post_status(
-			'payment_failed', array(
+			'payment_failed',
+			array(
 				'label'                     => _x( 'Failed', 'Payment status', 'pronamic_ideal' ),
 				'public'                    => false,
 				'exclude_from_search'       => false,
@@ -188,7 +196,8 @@ class PaymentPostType {
 		);
 
 		register_post_status(
-			'payment_expired', array(
+			'payment_expired',
+			array(
 				'label'                     => _x( 'Expired', 'Payment status', 'pronamic_ideal' ),
 				'public'                    => false,
 				'exclude_from_search'       => false,

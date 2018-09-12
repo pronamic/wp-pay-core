@@ -118,7 +118,8 @@ class Install {
 				array(
 					'page' => 'pronamic-pay-about',
 					'tab'  => 'getting-started',
-				), admin_url( 'index.php' )
+				),
+				admin_url( 'index.php' )
 			);
 
 			set_transient( 'pronamic_pay_admin_redirect', $url, 3600 );
@@ -128,7 +129,8 @@ class Install {
 				array(
 					'page' => 'pronamic-pay-about',
 					'tab'  => 'new',
-				), admin_url( 'index.php' )
+				),
+				admin_url( 'index.php' )
 			);
 
 			set_transient( 'pronamic_pay_admin_redirect', $url, 3600 );
@@ -148,7 +150,9 @@ class Install {
 	private function create_roles() {
 		// Payer role.
 		add_role(
-			'payer', __( 'Payer', 'pronamic_ideal' ), array(
+			'payer',
+			__( 'Payer', 'pronamic_ideal' ),
+			array(
 				'read' => true,
 			)
 		);

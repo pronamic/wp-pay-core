@@ -44,7 +44,8 @@ function get_pronamic_payment_by_meta( $meta_key, $meta_value ) {
 
 	$payment = null;
 
-	$db_query = $wpdb->prepare( "
+	$db_query = $wpdb->prepare(
+		"
 		SELECT
 			post_id
 		FROM
@@ -54,7 +55,10 @@ function get_pronamic_payment_by_meta( $meta_key, $meta_value ) {
 				AND
 			meta_value = %s
 			;
-	", $meta_key, $meta_value );
+	",
+		$meta_key,
+		$meta_value
+	);
 
 	$post_id = $wpdb->get_var( $db_query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
 
@@ -81,7 +85,8 @@ function get_pronamic_payments_by_meta( $meta_key, $meta_value ) {
 
 	$payments = array();
 
-	$db_query = $wpdb->prepare( "
+	$db_query = $wpdb->prepare(
+		"
 		SELECT
 			post_id
 		FROM
@@ -93,7 +98,10 @@ function get_pronamic_payments_by_meta( $meta_key, $meta_value ) {
 		ORDER BY
 			meta_id ASC
 			;
-	", $meta_key, $meta_value );
+	",
+		$meta_key,
+		$meta_value
+	);
 
 	$results = $wpdb->get_results( $db_query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
 
@@ -161,7 +169,8 @@ function get_pronamic_subscription_by_meta( $meta_key, $meta_value ) {
 
 	$subscription = null;
 
-	$db_query = $wpdb->prepare( "
+	$db_query = $wpdb->prepare(
+		"
 		SELECT
 			post_id
 		FROM
@@ -171,7 +180,10 @@ function get_pronamic_subscription_by_meta( $meta_key, $meta_value ) {
 				AND
 			meta_value = %s
 			;
-	", $meta_key, $meta_value );
+	",
+		$meta_key,
+		$meta_value
+	);
 
 	$post_id = $wpdb->get_var( $db_query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
 
@@ -194,7 +206,8 @@ function get_pronamic_subscriptions_by_meta( $meta_key, $meta_value ) {
 
 	$subscriptions = array();
 
-	$db_query = $wpdb->prepare( "
+	$db_query = $wpdb->prepare(
+		"
 		SELECT
 			post_id
 		FROM
@@ -206,7 +219,10 @@ function get_pronamic_subscriptions_by_meta( $meta_key, $meta_value ) {
 		ORDER BY
 			meta_id ASC
 			;
-	", $meta_key, $meta_value );
+	",
+		$meta_key,
+		$meta_value
+	);
 
 	$results = $wpdb->get_results( $db_query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
 

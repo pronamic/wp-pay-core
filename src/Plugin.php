@@ -178,12 +178,15 @@ class Plugin {
 	 * @param string|array|object $args The plugin arguments.
 	 */
 	public function __construct( $args = array() ) {
-		$args = wp_parse_args( $args, array(
-			'file'       => null,
-			'version'    => null,
-			'extensions' => array(),
-			'gateways'   => array(),
-		) );
+		$args = wp_parse_args(
+			$args,
+			array(
+				'file'       => null,
+				'version'    => null,
+				'extensions' => array(),
+				'gateways'   => array(),
+			)
+		);
 
 		$this->version = $args['version'];
 

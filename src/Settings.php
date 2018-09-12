@@ -13,8 +13,8 @@ namespace Pronamic\WordPress\Pay;
 /**
  * Title: WordPress iDEAL admin
  *
- * @author Remco Tolsma
- * @version 1.0.0
+ * @author  Remco Tolsma
+ * @version 2.0.5
  */
 class Settings {
 	/**
@@ -46,28 +46,36 @@ class Settings {
 	 */
 	public function init() {
 		register_setting(
-			'pronamic_pay', 'pronamic_pay_license_key', array(
+			'pronamic_pay',
+			'pronamic_pay_license_key',
+			array(
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 			)
 		);
 
 		register_setting(
-			'pronamic_pay', 'pronamic_pay_config_id', array(
+			'pronamic_pay',
+			'pronamic_pay_config_id',
+			array(
 				'type'              => 'integer',
 				'sanitize_callback' => array( $this, 'sanitize_published_post_id' ),
 			)
 		);
 
 		register_setting(
-			'pronamic_pay', 'pronamic_pay_uninstall_clear_data', array(
+			'pronamic_pay',
+			'pronamic_pay_uninstall_clear_data',
+			array(
 				'type'    => 'boolean',
 				'default' => false,
 			)
 		);
 
 		register_setting(
-			'pronamic_pay', 'pronamic_pay_google_analytics_property', array(
+			'pronamic_pay',
+			'pronamic_pay_google_analytics_property',
+			array(
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 			)
@@ -75,7 +83,9 @@ class Settings {
 
 		foreach ( $this->plugin->get_pages() as $id => $label ) {
 			register_setting(
-				'pronamic_pay', $id, array(
+				'pronamic_pay',
+				$id,
+				array(
 					'type'              => 'integer',
 					'sanitize_callback' => array( $this, 'sanitize_published_post_id' ),
 				)
