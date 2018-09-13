@@ -65,7 +65,10 @@ class Items implements IteratorAggregate {
 
 		foreach ( $this->items as $item ) {
 			if ( $use_bcmath ) {
-				$amount = bcadd( $amount, $item->get_amount(), 8 );
+				// Replace comma float separator (for locales such as `nl_NL`) to dot.
+				$item_amount = str_replace( ',', '.', (string) $item->get_amount() );
+
+				$amount = bcadd( $amount, $item_amount, 8 );
 			} else {
 				$amount += $item->get_amount();
 			}
