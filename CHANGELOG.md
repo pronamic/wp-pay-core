@@ -7,6 +7,9 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.0.7] - 2018-09-14
+- Fixed issue with Flot dependency.
+
 ## [2.0.6] - 2018-09-14
 - Use non-locale aware float values in data stores and Items amount calculation.
 - Updated Tippy.js from version 2.5.4 to 2.6.0.
@@ -120,7 +123,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.0.6...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.0.7...HEAD
+[2.0.7]: https://github.com/wp-pay/core/compare/2.0.6...2.0.7
 [2.0.6]: https://github.com/wp-pay/core/compare/2.0.5...2.0.6
 [2.0.5]: https://github.com/wp-pay/core/compare/2.0.4...2.0.5
 [2.0.4]: https://github.com/wp-pay/core/compare/2.0.3...2.0.4
