@@ -17,8 +17,8 @@ use Pronamic\WordPress\Money\Money;
 /**
  * Items
  *
- * @author Remco Tolsma
- * @version 1.0
+ * @author  Remco Tolsma
+ * @version 2.0.6
  */
 class Items implements IteratorAggregate {
 	/**
@@ -65,7 +65,11 @@ class Items implements IteratorAggregate {
 
 		foreach ( $this->items as $item ) {
 			if ( $use_bcmath ) {
-				$amount = bcadd( $amount, $item->get_amount(), 8 );
+				// Use non-locale aware float value.
+				// @link http://php.net/sprintf.
+				$item_amount = sprintf( '%F', $item->get_amount() );
+
+				$amount = bcadd( $amount, $item_amount, 8 );
 			} else {
 				$amount += $item->get_amount();
 			}

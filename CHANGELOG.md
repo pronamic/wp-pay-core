@@ -7,6 +7,10 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.0.6] - 2018-09-14
+- Use non-locale aware float values in data stores and Items amount calculation.
+- Updated Tippy.js from version 2.5.4 to 2.6.0.
+
 ## [2.0.5] - 2018-09-12
 - Set default status of new payments to 'Open'.
 - Added a personal name class.
@@ -116,7 +120,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.0.5...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.0.6...HEAD
+[2.0.6]: https://github.com/wp-pay/core/compare/2.0.5...2.0.6
 [2.0.5]: https://github.com/wp-pay/core/compare/2.0.4...2.0.5
 [2.0.4]: https://github.com/wp-pay/core/compare/2.0.3...2.0.4
 [2.0.3]: https://github.com/wp-pay/core/compare/2.0.2...2.0.3
