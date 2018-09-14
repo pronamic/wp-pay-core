@@ -17,8 +17,8 @@ use Pronamic\WordPress\Money\Money;
 /**
  * Items
  *
- * @author Remco Tolsma
- * @version 1.0
+ * @author  Remco Tolsma
+ * @version 2.0.6
  */
 class Items implements IteratorAggregate {
 	/**
