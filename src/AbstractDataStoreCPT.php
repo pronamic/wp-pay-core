@@ -139,6 +139,12 @@ abstract class AbstractDataStoreCPT {
 			$value = $this->get_mysql_utc_date( $value );
 		}
 
+		// Use non-locale aware float value.
+		// @link http://php.net/sprintf.
+		if ( is_float( $value ) ) {
+			$value = sprintf( '%F', $value );
+		}
+
 		$meta_key = $this->get_meta_key( $key );
 
 		$result = update_post_meta( $id, $meta_key, $value );

@@ -65,8 +65,9 @@ class Items implements IteratorAggregate {
 
 		foreach ( $this->items as $item ) {
 			if ( $use_bcmath ) {
-				// Replace comma float separator (for locales such as `nl_NL`) to dot.
-				$item_amount = str_replace( ',', '.', (string) $item->get_amount() );
+				// Use non-locale aware float value.
+				// @link http://php.net/sprintf.
+				$item_amount = sprintf( '%F', $item->get_amount() );
 
 				$amount = bcadd( $amount, $item_amount, 8 );
 			} else {
