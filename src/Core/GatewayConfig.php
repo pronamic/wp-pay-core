@@ -29,6 +29,13 @@ abstract class GatewayConfig {
 	public $id;
 
 	/**
+	 * Post ID.
+	 *
+	 * @var int
+	 */
+	public $post_id;
+
+	/**
 	 * Mode
 	 *
 	 * @var string
