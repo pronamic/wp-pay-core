@@ -59,7 +59,7 @@ abstract class Gateway {
 	/**
 	 * Config
 	 *
-	 * @var GatewayConfig
+	 * @var mixed
 	 */
 	protected $config;
 
