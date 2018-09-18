@@ -25,6 +25,14 @@ use WP_Query;
  */
 class PaymentMethods {
 	/**
+	 * AfterPay.
+	 *
+	 * @var string
+	 * @since 2.1.0
+	 */
+	const AFTERPAY = 'afterpay';
+
+	/**
 	 * Alipay
 	 *
 	 * @var string
@@ -74,6 +82,14 @@ class PaymentMethods {
 	const BUNQ = 'bunq';
 
 	/**
+	 * Constant for the Capayable payment method.
+	 *
+	 * @var string
+	 * @since 2.1.0
+	 */
+	const CAPAYABLE = 'capayable';
+
+	/**
 	 * Credit Card
 	 *
 	 * @var string
@@ -112,6 +128,14 @@ class PaymentMethods {
 	const DIRECT_DEBIT_SOFORT = 'direct_debit_sofort';
 
 	/**
+	 * Constant for the Focum payment method.
+	 *
+	 * @var string
+	 * @since 2.1.0
+	 */
+	const FOCUM = 'focum';
+
+	/**
 	 * Constant for the iDEAL payment method.
 	 *
 	 * @var string
@@ -146,6 +170,14 @@ class PaymentMethods {
 	 * @var string
 	 */
 	const KBC = 'kbc';
+
+	/**
+	 * Constant for the Klarna Pay Later payment method.
+	 *
+	 * @var string
+	 * @since 2.1.0
+	 */
+	const KLARNA_PAY_LATER = 'klarna_pay_later';
 
 	/**
 	 * Constant for the Maestro payment method.
@@ -204,22 +236,26 @@ class PaymentMethods {
 	 */
 	public static function get_payment_methods() {
 		$payment_methods = array(
+			self::AFTERPAY                => __( 'AfterPay', 'pronamic_ideal' ),
 			self::ALIPAY                  => __( 'Alipay', 'pronamic_ideal' ),
 			self::BANCONTACT              => __( 'Bancontact', 'pronamic_ideal' ),
 			self::BANK_TRANSFER           => __( 'Bank Transfer', 'pronamic_ideal' ),
 			self::BELFIUS                 => __( 'Belfius Direct Net', 'pronamic_ideal' ),
 			self::BITCOIN                 => __( 'Bitcoin', 'pronamic_ideal' ),
 			self::BUNQ                    => __( 'Bunq', 'pronamic_ideal' ),
+			self::CAPAYABLE               => __( 'Capayable', 'pronamic_ideal' ),
 			self::CREDIT_CARD             => __( 'Credit Card', 'pronamic_ideal' ),
 			self::DIRECT_DEBIT            => __( 'Direct Debit', 'pronamic_ideal' ),
 			self::DIRECT_DEBIT_BANCONTACT => __( 'Direct Debit mandate via Bancontact', 'pronamic_ideal' ),
 			self::DIRECT_DEBIT_IDEAL      => __( 'Direct Debit mandate via iDEAL', 'pronamic_ideal' ),
 			self::DIRECT_DEBIT_SOFORT     => __( 'Direct Debit mandate via SOFORT', 'pronamic_ideal' ),
+			self::FOCUM                   => __( 'Focum', 'pronamic_ideal' ),
 			self::GIROPAY                 => __( 'Giropay', 'pronamic_ideal' ),
 			self::GULDEN                  => __( 'Gulden', 'pronamic_ideal' ),
 			self::IDEAL                   => __( 'iDEAL', 'pronamic_ideal' ),
 			self::IDEALQR                 => __( 'iDEAL QR', 'pronamic_ideal' ),
 			self::KBC                     => __( 'KBC/CBC Payment Button', 'pronamic_ideal' ),
+			self::KLARNA_PAY_LATER        => __( 'Klarna Pay Later', 'pronamic_ideal' ),
 			self::MAESTRO                 => __( 'Maestro', 'pronamic_ideal' ),
 			self::PAYCONIQ                => __( 'Payconiq', 'pronamic_ideal' ),
 			self::PAYPAL                  => __( 'PayPal', 'pronamic_ideal' ),
