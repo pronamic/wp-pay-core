@@ -615,7 +615,7 @@ class Plugin {
 	 *
 	 * @param string|integer|boolean $config_id A gateway configuration ID.
 	 *
-	 * @return Gateway|null
+	 * @return mixed
 	 */
 	public static function get_gateway( $config_id ) {
 		if ( empty( $config_id ) ) {
