@@ -79,6 +79,8 @@ class Plugin {
 	 * Instance.
 	 *
 	 * @param string|array|object $args The plugin arguments.
+	 *
+	 * @return Plugin
 	 */
 	public static function instance( $args = array() ) {
 		if ( is_null( self::$instance ) ) {
