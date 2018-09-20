@@ -82,12 +82,12 @@ class PaymentMethods {
 	const BUNQ = 'bunq';
 
 	/**
-	 * Constant for the Capayable payment method.
+	 * Constant for the In3 payment method.
 	 *
 	 * @var string
 	 * @since 2.1.0
 	 */
-	const CAPAYABLE = 'capayable';
+	const IN3 = 'in3';
 
 	/**
 	 * Credit Card
@@ -243,7 +243,7 @@ class PaymentMethods {
 			self::BELFIUS                 => __( 'Belfius Direct Net', 'pronamic_ideal' ),
 			self::BITCOIN                 => __( 'Bitcoin', 'pronamic_ideal' ),
 			self::BUNQ                    => __( 'Bunq', 'pronamic_ideal' ),
-			self::CAPAYABLE               => __( 'Capayable', 'pronamic_ideal' ),
+			self::IN3                     => __( 'In3', 'pronamic_ideal' ),
 			self::CREDIT_CARD             => __( 'Credit Card', 'pronamic_ideal' ),
 			self::DIRECT_DEBIT            => __( 'Direct Debit', 'pronamic_ideal' ),
 			self::DIRECT_DEBIT_BANCONTACT => __( 'Direct Debit mandate via Bancontact', 'pronamic_ideal' ),
