@@ -30,34 +30,60 @@ namespace Pronamic\WordPress\Pay;
  */
 class Address {
 	/**
-	 * Street.
+	 * Line 1.
 	 *
-	 * @todo Var `street`, `street_name` or `line_1`, should we add `line_2`?
-	 * @var  string
+	 * PayPal: The first line of the address. For example, number, street, and so on.
+	 *
+	 * @link https://developer.paypal.com/docs/api/payments/v1/#definitions
+	 *
+	 * @var string|null
 	 */
-	private $street;
+	private $line_1;
 
 	/**
-	 * Street number.
+	 * Line 2.
 	 *
-	 * @link https://www.pay.nl/docs/developers.php#transactions-info
-	 * @todo Var `street_number`, `houseNumber` or `houseNumberOrName`?
-	 * @var  string
+	 * PayPal: The second line of the address. For example, suite or apartment number.
+	 *
+	 * @link https://developer.paypal.com/docs/api/payments/v1/#definitions
+	 *
+	 * @var string|null
 	 */
-	private $street_number;
+	private $line_2;
 
 	/**
-	 * Street number extension.
+	 * Street name (exclusive house number).
 	 *
-	 * @link https://www.pay.nl/docs/developers.php#transactions-info
-	 * @var  string
+	 * @var string|null
 	 */
-	private $street_number_extension;
+	private $street_name;
+
+	/**
+	 * House number (including addition/extension).
+	 *
+	 * @var string|null
+	 */
+	private $house_number;
+
+	/**
+	 * House number base (exclusive addition/extension).
+	 *
+	 * @var string|null
+	 */
+	private $house_number_base;
+
+	/**
+	 * House number addition/extension.
+	 *
+	 * @var string|null
+	 */
+	private $house_number_addition;
 
 	/**
 	 * Postal code.
 	 *
-	 * @todo Var `postal_code`, `post_code`, `zip` or `zip_code`?
+	 * Alias: `postal_code`, `post_code`, `zip` or `zip_code`.
+	 *
 	 * @var string
 	 */
 	private $postal_code;
@@ -72,18 +98,200 @@ class Address {
 	/**
 	 * Region.
 	 *
-	 * @todo Var `region`, `county`, `state`, `province`, `stateOrProvince`, `stateCode?
+	 * Alias: `region`, `county`, `state`, `province`, `stateOrProvince`, `stateCode`.
+	 *
 	 * @var string
 	 */
 	private $region;
 
 	/**
-	 * Country.
+	 * Country code.
 	 *
-	 * @todo Var `country` or `country_code`?
-	 * @var  string
+	 * Alias: `country` or `country_code`.
+	 *
+	 * @var string
 	 */
 	private $country_code;
+
+	/**
+	 * Get line 1.
+	 *
+	 * @return string|null
+	 */
+	public function get_line_1() {
+		return $this->line_1;
+	}
+
+	/**
+	 * Set line 1.
+	 *
+	 * @param string|null $line_1 Line 1.
+	 */
+	public function set_line_1( $line_1 ) {
+		$this->line_1 = $line_1;
+	}
+
+	/**
+	 * Get line 2.
+	 *
+	 * @return string|null
+	 */
+	public function get_line_2() {
+		return $this->line_2;
+	}
+
+	/**
+	 * Set line 2.
+	 *
+	 * @param string|null $line_2 Line 2.
+	 */
+	public function set_line_2( $line_2 ) {
+		$this->line_2 = $line_2;
+	}
+
+	/**
+	 * Get street name.
+	 *
+	 * @return string|null
+	 */
+	public function get_street_name() {
+		return $this->street_name;
+	}
+
+	/**
+	 * Set street name.
+	 *
+	 * @param string|null $street_name Street name.
+	 */
+	public function set_street_name( $street_name ) {
+		$this->street_name = $street_name;
+	}
+
+	/**
+	 * Get house number.
+	 *
+	 * @return string|null
+	 */
+	public function get_house_number() {
+		return $this->house_number;
+	}
+
+	/**
+	 * Set house number.
+	 *
+	 * @param string|null $house_number House number.
+	 */
+	public function set_house_number( $house_number ) {
+		$this->house_number = $house_number;
+	}
+
+	/**
+	 * Get house number base.
+	 *
+	 * @return string|null
+	 */
+	public function get_house_number_base() {
+		return $this->house_number_base;
+	}
+
+	/**
+	 * Set house number base.
+	 *
+	 * @param string|null $house_number_base House number base.
+	 */
+	public function set_house_number_base( $house_number_base ) {
+		$this->house_number_base = $house_number_base;
+	}
+
+	/**
+	 * Get house number addition.
+	 *
+	 * @return string|null
+	 */
+	public function get_house_number_addition() {
+		return $this->house_number_addition;
+	}
+
+	/**
+	 * Set house number addition.
+	 *
+	 * @param string|null $house_number_addition House number addition.
+	 */
+	public function set_house_number_addition( $house_number_addition ) {
+		$this->house_number_addition = $house_number_addition;
+	}
+
+	/**
+	 * Get postal code.
+	 *
+	 * @return string|null
+	 */
+	public function get_postal_code() {
+		return $this->postal_code;
+	}
+
+	/**
+	 * Set postal code.
+	 *
+	 * @param string|null $postal_code Postal code.
+	 */
+	public function set_postal_code( $postal_code ) {
+		$this->postal_code = $postal_code;
+	}
+
+	/**
+	 * Get city.
+	 *
+	 * @return string|null
+	 */
+	public function get_city() {
+		return $this->city;
+	}
+
+	/**
+	 * Set city.
+	 *
+	 * @param string|null $city City.
+	 */
+	public function set_city( $city ) {
+		$this->city = $city;
+	}
+
+	/**
+	 * Get region.
+	 *
+	 * @return string|null
+	 */
+	public function get_region() {
+		return $this->region;
+	}
+
+	/**
+	 * Set region.
+	 *
+	 * @param string|null $region Region.
+	 */
+	public function set_region( $region ) {
+		$this->region = $region;
+	}
+
+	/**
+	 * Get country code.
+	 *
+	 * @return string|null
+	 */
+	public function get_country_code() {
+		return $this->country_code;
+	}
+
+	/**
+	 * Set country code.
+	 *
+	 * @param string|null $country_code Country code.
+	 */
+	public function set_country_code( $country_code ) {
+		$this->country_code = $country_code;
+	}
 
 	/**
 	 * Create string representation of address.
@@ -91,6 +299,19 @@ class Address {
 	 * @return string
 	 */
 	public function __toString() {
-		
+		$parts = array(
+			$this->get_line_1(),
+			$this->get_line_2(),
+			$this->get_postal_code() . ' ' . $this->get_city(),
+			$this->get_country_code(),
+		);
+
+		$parts = array_map( 'trim', $parts );
+
+		$parts = array_filter( $parts );
+
+		$string = implode( PHP_EOL, $parts );
+
+		return $string;
 	}
 }
