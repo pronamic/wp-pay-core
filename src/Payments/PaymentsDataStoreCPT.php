@@ -520,6 +520,11 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$payment->user_agent          = $this->get_meta( $id, 'user_agent' );
 		$payment->user_ip             = $this->get_meta( $id, 'user_ip' );
 
+		// Gravity Forms country fix.
+		if ( ! empty( $payment->country ) && 'gravityformsideal' === $payment->source && method_exists( 'GFCommon', 'get_country_code' ) ) {
+			$payment->country = \GFCommon::get_country_code( $payment->country );
+		}
+
 		// Address.
 		$parts = array(
 			$payment->address,
@@ -547,7 +552,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 				$address->set_city( $payment->city );
 			}
 
-			if ( ! empty( $payment->country ) ) {
+			if ( 2 === strlen( $payment->country ) ) {
 				$address->set_country_code( $payment->country );
 			}
 

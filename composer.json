@@ -40,7 +40,8 @@
 	"require": {
 		"php": "^5.3",
 		"pronamic/wp-datetime": "^1.0",
-		"pronamic/wp-money": "^1.1"
+		"pronamic/wp-money": "^1.1",
+		"viison/address-splitter": "^0.3.2"
 	},
 	"require-dev": {
 		"php-coveralls/php-coveralls": "^1.0",

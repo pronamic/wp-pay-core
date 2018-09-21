@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use InvalidArgumentException;
+
 /**
  * Address
  *
@@ -287,9 +289,19 @@ class Address {
 	/**
 	 * Set country code.
 	 *
+	 * @throws InvalidArgumentException Thrown when country code length is not equal to 2.
 	 * @param string|null $country_code Country code.
 	 */
 	public function set_country_code( $country_code ) {
+		if ( 2 !== strlen( $country_code ) ) {
+			throw new InvalidArgumentException(
+				sprintf(
+					'Given country code `%s` not ISO 3166-1 alpha-2 value.',
+					$country_code
+				)
+			);
+		}
+
 		$this->country_code = $country_code;
 	}
 
