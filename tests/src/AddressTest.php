@@ -35,6 +35,7 @@ class AddressTest extends WP_UnitTestCase {
 		$address->set_house_number_addition( 'b' );
 		$address->set_postal_code( '9203 KA' );
 		$address->set_city( 'Drachten' );
+		$address->set_region( 'Friesland' );
 		$address->set_country_code( 'NL' );
 
 		$this->assertEquals( 'Burgemeester Wuiteweg 39b', $address->get_line_1() );
@@ -45,6 +46,7 @@ class AddressTest extends WP_UnitTestCase {
 		$this->assertEquals( 'b', $address->get_house_number_addition() );
 		$this->assertEquals( '9203 KA', $address->get_postal_code() );
 		$this->assertEquals( 'Drachten', $address->get_city() );
+		$this->assertEquals( 'Friesland', $address->get_region() );
 		$this->assertEquals( 'NL', $address->get_country_code() );
 
 		$string = '';
