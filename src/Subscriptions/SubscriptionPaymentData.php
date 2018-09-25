@@ -110,7 +110,7 @@ class SubscriptionPaymentData extends PaymentData {
 		$item->set_price( $this->subscription->get_amount()->get_amount() );
 		$item->set_quantity( 1 );
 
-		$items->addItem( $item );
+		$items->add_item( $item );
 
 		return $items;
 	}

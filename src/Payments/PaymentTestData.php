@@ -102,7 +102,7 @@ class PaymentTestData extends PaymentData {
 		$item->set_price( $this->amount );
 		$item->set_quantity( 1 );
 
-		$items->addItem( $item );
+		$items->add_item( $item );
 
 		return $items;
 	}
