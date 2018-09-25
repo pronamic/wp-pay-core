@@ -771,7 +771,7 @@ class Plugin {
 		// Billing address.
 		$payment->get_billing_address()->set_name( $payment->get_contact()->get_name() );
 		$payment->get_billing_address()->set_line_1( $data->get_address() );
-		$payment->get_billing_address()->set_zip( $data->get_zip() );
+		$payment->get_billing_address()->set_postal_code( $data->get_zip() );
 		$payment->get_billing_address()->set_city( $data->get_city() );
 		$payment->get_billing_address()->set_country( $data->get_country() );
 		$payment->get_billing_address()->set_email( $data->get_email() );

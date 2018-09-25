@@ -337,9 +337,9 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		);
 
 		$this->register_meta_key(
-			'zip',
+			'postal_code',
 			array(
-				'label'           => __( 'Zip', 'pronamic_ideal' ),
+				'label'           => __( 'Postal Code', 'pronamic_ideal' ),
 				'privacy_export'  => true,
 				'privacy_erasure' => 'erase',
 			)
@@ -533,7 +533,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 					$address->set_email( $this->get_meta( $id, 'email' ) );
 					$address->set_phone( $this->get_meta( $id, 'telephone_number' ) );
 					$address->set_address_1( $this->get_meta( $id, 'address' ) );
-					$address->set_zip( $this->get_meta( $id, 'zip' ) );
+					$address->set_postal_code( $this->get_meta( $id, 'zip' ) );
 					$address->set_city( $this->get_meta( $id, 'city' ) );
 					$address->set_country( $this->get_meta( $id, 'country' ) );
 
@@ -619,7 +619,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$payment->first_name       = $payment->get_contact()->get_name()->get_first_name();
 		$payment->last_name        = $payment->get_contact()->get_name()->get_last_name();
 		$payment->address          = $payment->get_billing_address()->get_line_1();
-		$payment->zip              = $payment->get_billing_address()->get_zip();
+		$payment->zip              = $payment->get_billing_address()->get_postal_code();
 		$payment->city             = $payment->get_billing_address()->get_city();
 		$payment->country          = $payment->get_billing_address()->get_country();
 		$payment->telephone_number = $payment->get_billing_address()->get_phone();
@@ -720,7 +720,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			'first_name'              => $payment->get_contact()->get_name()->get_first_name(),
 			'last_name'               => $payment->get_contact()->get_name()->get_last_name(),
 			'address'                 => $payment->get_billing_address()->get_line_1(),
-			'zip'                     => $payment->get_billing_address()->get_zip(),
+			'zip'                     => $payment->get_billing_address()->get_postal_code(),
 			'city'                    => $payment->get_billing_address()->get_city(),
 			'country'                 => $payment->get_billing_address()->get_country(),
 			'telephone_number'        => $payment->get_billing_address()->get_phone(),

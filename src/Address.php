@@ -103,11 +103,11 @@ class Address {
 	private $house_number_addition;
 
 	/**
-	 * ZIP code.
+	 * Postal Code.
 	 *
 	 * @var string
 	 */
-	private $zip;
+	private $postal_code;
 
 	/**
 	 * City.
@@ -344,21 +344,21 @@ class Address {
 	}
 
 	/**
-	 * Get zip.
+	 * Get postal code.
 	 *
 	 * @return string
 	 */
-	public function get_zip() {
-		return $this->zip;
+	public function get_postal_code() {
+		return $this->postal_code;
 	}
 
 	/**
-	 * Set zip.
+	 * Set postal code.
 	 *
-	 * @param string $zip Zip.
+	 * @param string $postal_code Postal Code.
 	 */
-	public function set_zip( $zip ) {
-		$this->zip = $zip;
+	public function set_postal_code( $postal_code ) {
+		$this->postal_code = $postal_code;
 	}
 
 	/**
@@ -478,7 +478,7 @@ class Address {
 			'street_name'           => $this->get_street_name(),
 			'house_number'          => $this->get_house_number(),
 			'house_number_addition' => $this->get_house_number_addition(),
-			'zip'                   => $this->get_zip(),
+			'postal_code'           => $this->get_postal_code(),
 			'city'                  => $this->get_city(),
 			'region'                => $this->get_region(),
 			'country'               => $this->get_country(),
@@ -532,7 +532,7 @@ class Address {
 			$this->get_line_2(),
 			$this->get_street_name(),
 			$this->get_house_number(),
-			$this->get_zip() . ' ' . $this->get_city(),
+			$this->get_postal_code() . ' ' . $this->get_city(),
 			$this->get_region(),
 			$this->get_country_code(),
 			$this->get_phone(),
