@@ -712,7 +712,7 @@ class Payment {
 	 * @return string
 	 */
 	public function get_language() {
-		return $this->language;
+		return $this->get_contact()->get_language();
 	}
 
 	/**
@@ -721,7 +721,7 @@ class Payment {
 	 * @return string
 	 */
 	public function get_locale() {
-		return $this->locale;
+		return $this->get_contact()->get_locale();
 	}
 
 	/**
