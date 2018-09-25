@@ -503,12 +503,48 @@ class Payment {
 	}
 
 	/**
+	 * Set the source of this payment.
+	 *
+	 * @param string $source Source.
+	 */
+	public function set_source( $source ) {
+		$this->source = $source;
+	}
+
+	/**
 	 * Get the source ID of this payment.
 	 *
 	 * @return string
 	 */
 	public function get_source_id() {
 		return $this->source_id;
+	}
+
+	/**
+	 * Set the source ID of this payment.
+	 *
+	 * @param string|int $source_id Source ID.
+	 */
+	public function set_source_id( $source_id ) {
+		$this->source_id = $source_id;
+	}
+
+	/**
+	 * Get the config ID of this payment.
+	 *
+	 * @return string
+	 */
+	public function get_config_id() {
+		return $this->config_id;
+	}
+
+	/**
+	 * Set the config ID of this payment.
+	 *
+	 * @param string|int $config_id Config ID.
+	 */
+	public function set_config_id( $config_id ) {
+		$this->config_id = $config_id;
 	}
 
 	/**
