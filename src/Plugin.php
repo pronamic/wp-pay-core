@@ -746,23 +746,12 @@ class Plugin {
 		$payment->user_id                = $data->get_user_id();
 		$payment->config_id              = $config_id;
 		$payment->order_id               = $data->get_order_id();
-		$payment->language               = $data->get_language();
-		$payment->locale                 = $data->get_language_and_country();
-		$payment->entrance_code          = $data->get_entrance_code();
 		$payment->description            = $data->get_description();
 		$payment->source                 = $data->get_source();
 		$payment->source_id              = $data->get_source_id();
 		$payment->email                  = $data->get_email();
 		$payment->method                 = $payment_method;
 		$payment->issuer                 = $data->get_issuer( $payment_method );
-		$payment->first_name             = $data->get_first_name();
-		$payment->last_name              = $data->get_last_name();
-		$payment->customer_name          = $data->get_customer_name();
-		$payment->address                = $data->get_address();
-		$payment->zip                    = $data->get_zip();
-		$payment->city                   = $data->get_city();
-		$payment->country                = $data->get_country();
-		$payment->telephone_number       = $data->get_telephone_number();
 		$payment->analytics_client_id    = $data->get_analytics_client_id();
 		$payment->recurring              = $data->get_recurring();
 		$payment->subscription           = $data->get_subscription();
@@ -771,6 +760,36 @@ class Plugin {
 		$payment->set_amount( $data->get_amount() );
 		$payment->set_credit_card( $data->get_credit_card() );
 
+		// Contact.
+		$payment->get_contact()->get_name()->set_first_name( $data->get_first_name() );
+		$payment->get_contact()->get_name()->set_last_name( $data->get_last_name() );
+		$payment->get_contact()->set_email( $data->get_email() );
+		$payment->get_contact()->set_phone( $data->get_telephone_number() );
+
+		// Billing address.
+		$payment->get_billing_address()->set_name( $payment->get_contact()->get_name() );
+		$payment->get_billing_address()->set_address_1( $data->get_address() );
+		$payment->get_billing_address()->set_zip( $data->get_zip() );
+		$payment->get_billing_address()->set_city( $data->get_city() );
+		$payment->get_billing_address()->set_country( $data->get_country() );
+		$payment->get_billing_address()->set_email( $data->get_email() );
+		$payment->get_billing_address()->set_phone( $data->get_telephone_number() );
+
+		// Items.
+		$item = new Item();
+
+		$item->set_id( $payment->get_order_id() );
+		$item->set_description( $data->get_description() );
+		$item->set_price( $payment->get_amount()->get_amount() );
+		$item->set_quantity( 1 );
+
+		$items = new Items();
+
+		$items->add_item( $item );
+
+		$payment->set_order_items( $items );
+
+		// Start payment.
 		return self::start_payment( $payment, $gateway );
 	}
 
@@ -793,6 +812,11 @@ class Plugin {
 	 * @param Payment $payment Payment.
 	 */
 	private static function complement_payment( Payment $payment ) {
+		// Entrance Code.
+		if ( null === $payment->entrance_code ) {
+			$payment->entrance_code = uniqid();
+		}
+
 		// Key.
 		if ( null === $payment->key ) {
 			$payment->key = uniqid( 'pay_' );
@@ -803,22 +827,10 @@ class Plugin {
 			$payment->user_id = get_current_user_id();
 		}
 
-		// Locale.
-		if ( null === $payment->locale && is_user_logged_in() ) {
-			$payment->locale = get_user_locale();
-		}
-
-		// User Agent.
-		if ( null === $payment->user_agent ) {
-			// User Agent (@see https://github.com/WordPress/WordPress/blob/4.9.4/wp-includes/comment.php#L1962-L1965).
-			$payment->user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : null; // WPCS: input var ok.
-		}
-
-		// User IP.
-		if ( null === $payment->user_ip ) {
-			// IP (@see https://github.com/WordPress/WordPress/blob/4.9.4/wp-includes/comment.php#L1957-L1960).
-			$payment->user_ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : null; // WPCS: input var ok.
-		}
+		// Complements.
+		$payment->contact->complement();
+		$payment->billing_address->complement();
+		$payment->shipping_address->complement();
 	}
 
 	/**

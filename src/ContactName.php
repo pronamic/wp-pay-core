@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use stdClass;
+
 /**
  * Personal Name
  *
@@ -17,7 +19,7 @@ namespace Pronamic\WordPress\Pay;
  * @author Remco Tolsma
  * @since  1.4.0
  */
-class PersonalName {
+class ContactName {
 	/**
 	 * Prefix.
 	 *
@@ -155,6 +157,53 @@ class PersonalName {
 	 */
 	public function set_suffix( $suffix ) {
 		$this->suffix = $suffix;
+	}
+
+	/**
+	 * Get JSON.
+	 *
+	 * @return object|null
+	 */
+	public function get_json() {
+		$data = array(
+			'prefix'     => $this->get_prefix(),
+			'first_name' => $this->get_first_name(),
+			'midle_name' => $this->get_middle_name(),
+			'last_name'  => $this->get_last_name(),
+			'suffix'     => $this->get_suffix(),
+		);
+
+		$data = array_filter( $data );
+
+		if ( empty( $data ) ) {
+			return null;
+		}
+
+		return (object) $data;
+	}
+
+	/**
+	 * Create contact name from object.
+	 *
+	 * @param stdClass $object Object.
+	 * @return ContactName
+	 */
+	public static function from_object( stdClass $object ) {
+		$contact_name = new self();
+
+		$properties = get_class_vars( get_class( $contact_name ) );
+
+		foreach ( $properties as $property => $default_value ) {
+			$method = sprintf( 'set_%s', $property );
+
+			if ( isset( $object->{$property} ) && is_callable( array( $contact_name, $method ) ) ) {
+				$value = $object->{$property};
+
+				call_user_func( array( $contact_name, $method ), $value );
+			}
+		}
+
+		return $contact_name;
 	}
 
 	/**

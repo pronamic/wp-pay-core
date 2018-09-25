@@ -13,6 +13,8 @@ namespace Pronamic\WordPress\Pay\Payments;
 use Pronamic\WordPress\Money\Currency;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\Pay\Address;
+use Pronamic\WordPress\Pay\Contact;
 use Pronamic\WordPress\Pay\CreditCard;
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
@@ -141,12 +143,16 @@ class Payment {
 	/**
 	 * The language of the user who started this payment.
 	 *
+	 * @deprecated 2.0.8
+	 *
 	 * @var string
 	 */
 	public $language;
 
 	/**
 	 * The locale of the user who started this payment.
+	 *
+	 * @deprecated 2.0.8
 	 *
 	 * @var string
 	 */
@@ -210,7 +216,8 @@ class Payment {
 	/**
 	 * The customer name of the consumer of this payment.
 	 *
-	 * @todo Is this required?
+	 * @deprecated 2.0.8
+	 *
 	 * @var  string
 	 */
 	public $customer_name;
@@ -218,7 +225,8 @@ class Payment {
 	/**
 	 * The address of the consumer of this payment.
 	 *
-	 * @todo Is this required?
+	 * @deprecated 2.0.8
+	 *
 	 * @var  string
 	 */
 	public $address;
@@ -226,7 +234,8 @@ class Payment {
 	/**
 	 * The city of the consumer of this payment.
 	 *
-	 * @todo Is this required?
+	 * @deprecated 2.0.8
+	 *
 	 * @var  string
 	 */
 	public $city;
@@ -234,7 +243,8 @@ class Payment {
 	/**
 	 * The ZIP of the consumer of this payment.
 	 *
-	 * @todo Is this required?
+	 * @deprecated 2.0.8
+	 *
 	 * @var  string
 	 */
 	public $zip;
@@ -242,7 +252,8 @@ class Payment {
 	/**
 	 * The country of the consumer of this payment.
 	 *
-	 * @todo Is this required?
+	 * @deprecated 2.0.8
+	 *
 	 * @var  string
 	 */
 	public $country;
@@ -250,7 +261,8 @@ class Payment {
 	/**
 	 * The telephone number of the consumer of this payment.
 	 *
-	 * @todo Is this required?
+	 * @deprecated 2.0.8
+	 *
 	 * @var  string
 	 */
 	public $telephone_number;
@@ -324,12 +336,16 @@ class Payment {
 	/**
 	 * The first name of the user who started this payment.
 	 *
+	 * @deprecated 2.0.8
+	 *
 	 * @var string
 	 */
 	public $first_name;
 
 	/**
 	 * The last name of the user who started this payment.
+	 *
+	 * @deprecated 2.0.8
 	 *
 	 * @var string
 	 */
@@ -367,6 +383,8 @@ class Payment {
 	/**
 	 * User agent.
 	 *
+	 * @deprecated 2.0.8
+	 *
 	 * @var string
 	 */
 	public $user_agent;
@@ -374,9 +392,39 @@ class Payment {
 	/**
 	 * User IP address.
 	 *
+	 * @deprecated 2.0.8
+	 *
 	 * @var string
 	 */
 	public $user_ip;
+
+	/**
+	 * Contact.
+	 *
+	 * @var Contact
+	 */
+	public $contact;
+
+	/**
+	 * Billing address.
+	 *
+	 * @var Address
+	 */
+	public $billing_address;
+
+	/**
+	 * Shipping address.
+	 *
+	 * @var Address
+	 */
+	public $shipping_address;
+
+	/**
+	 * Order items.
+	 *
+	 * @var Items
+	 */
+	public $order_items;
 
 	/**
 	 * Construct and initialize payment object.
@@ -384,9 +432,13 @@ class Payment {
 	 * @param integer $post_id A payment post ID or null.
 	 */
 	public function __construct( $post_id = null ) {
-		$this->id   = $post_id;
-		$this->date = new DateTime();
-		$this->meta = array();
+		$this->id               = $post_id;
+		$this->date             = new DateTime();
+		$this->meta             = array();
+		$this->order_items      = new Items();
+		$this->contact          = new Contact();
+		$this->billing_address  = new Address();
+		$this->shipping_address = new Address();
 
 		$this->set_amount( new Money() );
 		$this->set_status( Statuses::OPEN );
@@ -472,6 +524,87 @@ class Payment {
 		$text = apply_filters( 'pronamic_payment_source_text', $text, $this );
 
 		return $text;
+	}
+
+	/**
+	 * Get contact.
+	 *
+	 * @return Contact
+	 */
+	public function get_contact() {
+		return $this->contact;
+	}
+
+	/**
+	 * Set contact.
+	 *
+	 * @param Contact $contact Contact.
+	 */
+	public function set_contact( $contact ) {
+		$this->contact = $contact;
+	}
+
+	/**
+	 * Get billing address.
+	 *
+	 * @return Address
+	 */
+	public function get_billing_address() {
+		return $this->billing_address;
+	}
+
+	/**
+	 * Set billing address.
+	 *
+	 * @param Address $billing_address Billing address.
+	 */
+	public function set_billing_address( $billing_address ) {
+		$this->billing_address = $billing_address;
+	}
+
+	/**
+	 * Get shipping address.
+	 *
+	 * @return Address
+	 */
+	public function get_shipping_address() {
+		return $this->shipping_address;
+	}
+
+	/**
+	 * Set shipping address.
+	 *
+	 * @param Address $shipping_address Shipping address.
+	 */
+	public function set_shipping_address( $shipping_address ) {
+		$this->shipping_address = $shipping_address;
+	}
+
+	/**
+	 * Get items.
+	 *
+	 * @return Items
+	 */
+	public function get_order_items() {
+		return $this->order_items;
+	}
+
+	/**
+	 * Set items.
+	 *
+	 * @param Items $order_items Items.
+	 */
+	public function set_order_items( $order_items ) {
+		$this->order_items = $order_items;
+	}
+
+	/**
+	 * Add order item.
+	 *
+	 * @param Item $item Order item.
+	 */
+	public function add_order_item( Item $item ) {
+		$this->get_order_items()->add_item( $item );
 	}
 
 	/**

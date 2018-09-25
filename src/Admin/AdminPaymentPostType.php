@@ -351,7 +351,7 @@ class AdminPaymentPostType {
 
 				break;
 			case 'pronamic_payment_customer':
-				echo esc_html( get_post_meta( $post_id, '_pronamic_payment_customer_name', true ) );
+				echo esc_html( $payment->get_contact()->get_name() );
 
 				break;
 		}

@@ -14,6 +14,9 @@ use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\AbstractDataStoreCPT;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
+use Pronamic\WordPress\Pay\Address;
+use Pronamic\WordPress\Pay\Contact;
+use Pronamic\WordPress\Pay\ContactName;
 use Pronamic\WordPress\Pay\Core\Statuses;
 
 /**
@@ -154,7 +157,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	/**
 	 * Get meta status label.
 	 *
-	 * @param string $meta_status The subscription meta status to get the status label for.
+	 * @param string $meta_status The payment meta status to get the status label for.
 	 * @return string|boolean
 	 */
 	public function get_meta_status_label( $meta_status ) {
@@ -481,6 +484,99 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	}
 
 	/**
+	 * Get meta for the specified post ID and key.
+	 *
+	 * @param int    $id  Post ID.
+	 * @param string $key Key.
+	 * @return string|null
+	 */
+	public function get_meta( $id, $key ) {
+		$value = parent::get_meta( $id, $key );
+
+		switch ( $key ) {
+			case 'contact':
+				if ( null === $value ) {
+					// Build contact from legacy meta data.
+					$contact = new Contact();
+
+					$contact_name = new ContactName();
+					$contact_name->set_first_name( $this->get_meta( $id, 'first_name' ) );
+					$contact_name->set_last_name( $this->get_meta( $id, 'last_name' ) );
+
+					$contact->set_name( $contact_name );
+					$contact->set_email( $this->get_meta( $id, 'email' ) );
+					$contact->set_phone( $this->get_meta( $id, 'telephone_number' ) );
+					$contact->set_ip_address( $this->get_meta( $id, 'user_ip' ) );
+					$contact->set_user_agent( $this->get_meta( $id, 'user_agent' ) );
+					$contact->set_language( $this->get_meta( $id, 'language' ) );
+					$contact->set_locale( $this->get_meta( $id, 'locale' ) );
+
+					return $contact;
+				}
+
+				$object = json_decode( $value );
+
+				if ( is_object( $object ) ) {
+					$value = Contact::from_object( $object );
+				}
+
+				break;
+			case 'billing_address':
+				if ( null === $value ) {
+					// Build address from legacy meta data.
+					$contact_name = new ContactName();
+					$contact_name->set_first_name( $this->get_meta( $id, 'first_name' ) );
+					$contact_name->set_last_name( $this->get_meta( $id, 'last_name' ) );
+
+					$address = new Address();
+					$address->set_name( $contact_name );
+					$address->set_email( $this->get_meta( $id, 'email' ) );
+					$address->set_phone( $this->get_meta( $id, 'telephone_number' ) );
+					$address->set_address_1( $this->get_meta( $id, 'address' ) );
+					$address->set_zip( $this->get_meta( $id, 'zip' ) );
+					$address->set_city( $this->get_meta( $id, 'city' ) );
+					$address->set_country( $this->get_meta( $id, 'country' ) );
+
+					return $address;
+				}
+
+				$object = json_decode( $value );
+
+				if ( is_object( $object ) ) {
+					$value = Address::from_object( $object );
+				}
+
+				break;
+			case 'shipping_address':
+				if ( null === $value ) {
+					return new Address();
+				}
+
+				$object = json_decode( $value );
+
+				if ( is_object( $object ) ) {
+					$value = Address::from_object( $object );
+				}
+
+				break;
+			case 'order_items':
+				if ( null === $value ) {
+					return new Items();
+				}
+
+				$object = json_decode( $value );
+
+				if ( is_object( $object ) ) {
+					$value = Items::from_object( $object );
+				}
+
+				break;
+		}
+
+		return $value;
+	}
+
+	/**
 	 * Read post meta.
 	 *
 	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-data.php#L462-L507
@@ -500,24 +596,33 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$payment->source              = $this->get_meta( $id, 'source' );
 		$payment->source_id           = $this->get_meta( $id, 'source_id' );
 		$payment->description         = $this->get_meta( $id, 'description' );
-		$payment->language            = $this->get_meta( $id, 'language' );
-		$payment->locale              = $this->get_meta( $id, 'locale' );
 		$payment->email               = $this->get_meta( $id, 'email' );
 		$payment->status              = $this->get_meta( $id, 'status' );
-		$payment->customer_name       = $this->get_meta( $id, 'customer_name' );
-		$payment->address             = $this->get_meta( $id, 'address' );
-		$payment->zip                 = $this->get_meta( $id, 'zip' );
-		$payment->city                = $this->get_meta( $id, 'city' );
-		$payment->country             = $this->get_meta( $id, 'country' );
-		$payment->telephone_number    = $this->get_meta( $id, 'telephone_number' );
 		$payment->analytics_client_id = $this->get_meta( $id, 'analytics_client_id' );
 		$payment->subscription_id     = $this->get_meta( $id, 'subscription_id' );
 		$payment->recurring_type      = $this->get_meta( $id, 'recurring_type' );
 		$payment->recurring           = $this->get_meta( $id, 'recurring' );
 		$payment->start_date          = $this->get_meta_date( $id, 'start_date' );
 		$payment->end_date            = $this->get_meta_date( $id, 'end_date' );
-		$payment->user_agent          = $this->get_meta( $id, 'user_agent' );
-		$payment->user_ip             = $this->get_meta( $id, 'user_ip' );
+		$payment->contact             = $this->get_meta( $id, 'contact' );
+		$payment->billing_address     = $this->get_meta( $id, 'billing_address' );
+		$payment->shipping_address    = $this->get_meta( $id, 'shipping_address' );
+		$payment->order_items         = $this->get_meta( $id, 'order_items' );
+
+		// Deprecated properties, use `get_contact()` or `get_billing_address()` instead.
+		// @todo remove?
+		$payment->language         = $payment->get_contact()->get_language();
+		$payment->locale           = $payment->get_contact()->get_locale();
+		$payment->user_agent       = $payment->get_contact()->get_user_agent();
+		$payment->user_ip          = $payment->get_contact()->get_ip_address();
+		$payment->customer_name    = $payment->get_contact()->get_name();
+		$payment->first_name       = $payment->get_contact()->get_name()->get_first_name();
+		$payment->last_name        = $payment->get_contact()->get_name()->get_last_name();
+		$payment->address          = $payment->get_billing_address()->get_address_1();
+		$payment->zip              = $payment->get_billing_address()->get_zip();
+		$payment->city             = $payment->get_billing_address()->get_city();
+		$payment->country          = $payment->get_billing_address()->get_country();
+		$payment->telephone_number = $payment->get_billing_address()->get_phone();
 
 		// Amount.
 		$payment->set_amount(
@@ -535,46 +640,76 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	 * @param Payment $payment The payment to update.
 	 */
 	private function update_post_meta( $payment ) {
-		$id = $payment->get_id();
+		$meta = array(
+			'config_id'               => $payment->config_id,
+			'key'                     => $payment->key,
+			'order_id'                => $payment->order_id,
+			'currency'                => $payment->get_currency(),
+			'amount'                  => $payment->get_amount()->get_amount(),
+			'method'                  => $payment->method,
+			'issuer'                  => $payment->issuer,
+			'expiration_period'       => null,
+			'entrance_code'           => $payment->entrance_code,
+			'description'             => $payment->description,
+			'consumer_name'           => $payment->consumer_name,
+			'consumer_account_number' => $payment->consumer_account_number,
+			'consumer_iban'           => $payment->consumer_iban,
+			'consumer_bic'            => $payment->consumer_bic,
+			'consumer_city'           => $payment->consumer_city,
+			'source'                  => $payment->source,
+			'source_id'               => $payment->source_id,
+			'email'                   => $payment->get_contact()->get_email(),
+			'analytics_client_id'     => $payment->analytics_client_id,
+			'subscription_id'         => $payment->subscription_id,
+			'recurring_type'          => $payment->recurring_type,
+			'recurring'               => $payment->recurring,
+			'transaction_id'          => $payment->get_transaction_id(),
+			'action_url'              => $payment->get_action_url(),
+			'start_date'              => $payment->start_date,
+			'end_date'                => $payment->end_date,
 
-		$this->update_meta( $id, 'config_id', $payment->config_id );
-		$this->update_meta( $id, 'key', $payment->key );
-		$this->update_meta( $id, 'order_id', $payment->order_id );
-		$this->update_meta( $id, 'currency', $payment->get_currency() );
-		$this->update_meta( $id, 'amount', $payment->get_amount()->get_amount() );
-		$this->update_meta( $id, 'method', $payment->method );
-		$this->update_meta( $id, 'issuer', $payment->issuer );
-		$this->update_meta( $id, 'expiration_period', null );
-		$this->update_meta( $id, 'language', $payment->language );
-		$this->update_meta( $id, 'locale', $payment->locale );
-		$this->update_meta( $id, 'entrance_code', $payment->entrance_code );
-		$this->update_meta( $id, 'description', $payment->description );
-		$this->update_meta( $id, 'first_name', $payment->first_name );
-		$this->update_meta( $id, 'last_name', $payment->last_name );
-		$this->update_meta( $id, 'consumer_name', $payment->consumer_name );
-		$this->update_meta( $id, 'consumer_account_number', $payment->consumer_account_number );
-		$this->update_meta( $id, 'consumer_iban', $payment->consumer_iban );
-		$this->update_meta( $id, 'consumer_bic', $payment->consumer_bic );
-		$this->update_meta( $id, 'consumer_city', $payment->consumer_city );
-		$this->update_meta( $id, 'source', $payment->source );
-		$this->update_meta( $id, 'source_id', $payment->source_id );
-		$this->update_meta( $id, 'email', $payment->email );
-		$this->update_meta( $id, 'customer_name', $payment->customer_name );
-		$this->update_meta( $id, 'address', $payment->address );
-		$this->update_meta( $id, 'zip', $payment->zip );
-		$this->update_meta( $id, 'city', $payment->city );
-		$this->update_meta( $id, 'country', $payment->country );
-		$this->update_meta( $id, 'telephone_number', $payment->telephone_number );
-		$this->update_meta( $id, 'analytics_client_id', $payment->analytics_client_id );
-		$this->update_meta( $id, 'subscription_id', $payment->subscription_id );
-		$this->update_meta( $id, 'recurring_type', $payment->recurring_type );
-		$this->update_meta( $id, 'recurring', $payment->recurring );
-		$this->update_meta( $id, 'transaction_id', $payment->get_transaction_id() );
-		$this->update_meta( $id, 'action_url', $payment->get_action_url() );
-		$this->update_meta( $id, 'start_date', $payment->start_date );
-		$this->update_meta( $id, 'end_date', $payment->end_date );
-		$this->update_meta( $id, 'user_agent', $payment->user_agent );
-		$this->update_meta( $id, 'user_ip', $payment->user_ip );
+			// Deprecated properties, use `get_contact()` or `get_billing_address()` instead.
+			// @todo remove?
+
+			/*
+			'language'                => $payment->get_contact()->get_language(),
+			'locale'                  => $payment->get_contact()->get_locale(),
+			'user_agent'              => $payment->get_contact()->get_user_agent(),
+			'user_ip'                 => $payment->get_contact()->get_ip_address(),
+			'customer_name'           => $payment->get_contact()->get_name(),
+			'first_name'              => $payment->get_contact()->get_name()->get_first_name(),
+			'last_name'               => $payment->get_contact()->get_name()->get_last_name(),
+			'address'                 => $payment->get_billing_address()->get_address_1(),
+			'zip'                     => $payment->get_billing_address()->get_zip(),
+			'city'                    => $payment->get_billing_address()->get_city(),
+			'country'                 => $payment->get_billing_address()->get_country(),
+			'telephone_number'        => $payment->get_billing_address()->get_phone(),
+			*/
+		);
+
+		// Update meta.
+		foreach ( $meta as $meta_key => $meta_value ) {
+			$this->update_meta( $payment->get_id(), $meta_key, $meta_value );
+		}
+
+		// JSON meta.
+		$meta = array(
+			'contact'          => $payment->get_contact()->get_json(),
+			'billing_address'  => $payment->get_billing_address()->get_json(),
+			'shipping_address' => $payment->get_shipping_address()->get_json(),
+			'order_items'      => $payment->get_order_items()->get_json(),
+		);
+
+		// Update JSON meta.
+		foreach ( $meta as $meta_key => $meta_value ) {
+			if ( null === $meta_value ) {
+				continue;
+			}
+
+			$meta_value = wp_json_encode( $meta_value );
+
+			$this->update_meta( $payment->get_id(), $meta_key, $meta_value );
+		}
 
 		$this->update_meta_status( $payment );
 	}

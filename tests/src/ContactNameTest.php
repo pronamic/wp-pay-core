@@ -18,12 +18,12 @@ use WP_UnitTestCase;
  * @author  Remco Tolsma
  * @version 1.0
  */
-class PersonalNameTest extends WP_UnitTestCase {
+class ContactNameTest extends WP_UnitTestCase {
 	/**
 	 * Test personal name.
 	 */
-	public function test_personal_name() {
-		$name = new PersonalName();
+	public function test_contact_name() {
+		$name = new ContactName();
 
 		$name->set_prefix( 'Dr.' );
 		$name->set_first_name( 'John' );
