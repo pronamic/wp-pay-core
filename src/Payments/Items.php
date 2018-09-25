@@ -67,6 +67,15 @@ class Items implements IteratorAggregate {
 	}
 
 	/**
+	 * Count items.
+	 *
+	 * @return int
+	 */
+	public function count() {
+		return $this->getIterator()->count();
+	}
+
+	/**
 	 * Calculate the total amount of all items.
 	 *
 	 * @return Money
