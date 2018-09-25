@@ -10,6 +10,9 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
+use Pronamic\WordPress\Money\Money;
+use stdClass;
+
 /**
  * Item.
  *
@@ -167,9 +170,13 @@ class Item {
 	/**
 	 * Set the price of this item.
 	 *
-	 * @param float $price Price.
+	 * @param float|Money $price Price.
 	 */
 	public function set_price( $price ) {
+		if ( $price instanceof Money ) {
+			$price = $price->get_amount();
+		}
+
 		$this->price = $price;
 	}
 
