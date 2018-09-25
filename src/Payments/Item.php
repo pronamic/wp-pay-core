@@ -18,11 +18,11 @@ namespace Pronamic\WordPress\Pay\Payments;
  */
 class Item {
 	/**
-	 * The number.
+	 * The ID.
 	 *
 	 * @var string
 	 */
-	private $number;
+	private $id;
 
 	/**
 	 * The description.
@@ -49,7 +49,7 @@ class Item {
 	 * Constructs and initialize a iDEAL basic item.
 	 */
 	public function __construct() {
-		$this->number      = '';
+		$this->id          = '';
 		$this->description = '';
 		$this->quantity    = 1;
 		$this->price       = 0;
@@ -66,8 +66,8 @@ class Item {
 	 */
 	public function __call( $name, $arguments ) {
 		$map = array(
-			'getNumber'      => 'get_number',
-			'setNumber'      => 'set_number',
+			'getNumber'      => 'get_id',
+			'setNumber'      => 'set_id',
 			'setDescription' => 'set_description',
 			'getQuantity'    => 'get_quantity',
 			'setQuantity'    => 'set_quantity',
@@ -88,21 +88,34 @@ class Item {
 	}
 
 	/**
-	 * Get the number / identifier of this item.
+	 * Get the id / identifier of this item.
 	 *
 	 * @return string
 	 */
-	public function get_number() {
-		return $this->number;
+	public function get_id() {
+		return $this->id;
 	}
 
 	/**
-	 * Set the number / identifier of this item.
+	 * Set the id / identifier of this item.
 	 *
-	 * @param string $number Number.
+	 * @param string $id Number.
 	 */
-	public function set_number( $number ) {
-		$this->number = $number;
+	public function set_id( $id ) {
+		$this->id = strval( $id );
+	}
+
+	/**
+	 * Set the id / identifier of this item.
+	 *
+	 * @param string $id Number.
+	 *
+	 * @deprecated 2.0.8
+	 */
+	public function set_number( $id ) {
+		_deprecated_function( __FUNCTION__, '2.0.8', 'Pronamic\WordPress\Pay\Payments\Item::set_id()' );
+
+		$this->set_id( $id );
 	}
 
 	/**

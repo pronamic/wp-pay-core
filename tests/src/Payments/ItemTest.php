@@ -25,12 +25,12 @@ class ItemTest extends WP_UnitTestCase {
 	public function test_setters_and_getters() {
 		$item = new Item();
 
-		$item->set_number( '1234' );
+		$item->set_id( '1234' );
 		$item->set_description( 'Lorem ipsum dolor sit amet.' );
 		$item->set_quantity( 50 );
 		$item->set_price( 39.99 );
 
-		$this->assertEquals( '1234', $item->get_number() );
+		$this->assertEquals( '1234', $item->get_id() );
 		$this->assertEquals( 'Lorem ipsum dolor sit amet.', $item->get_description() );
 		$this->assertEquals( 50, $item->get_quantity() );
 		$this->assertEquals( 39.99, $item->get_price() );
