@@ -12,6 +12,7 @@ namespace Pronamic\WordPress\Pay\Payments;
 
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\AbstractDataStoreCPT;
+use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Pay\Address;
@@ -623,6 +624,46 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$payment->city             = $payment->get_billing_address()->get_city();
 		$payment->country          = $payment->get_billing_address()->get_country();
 		$payment->telephone_number = $payment->get_billing_address()->get_phone();
+
+		// Gravity Forms country fix.
+		if ( ! empty( $payment->country ) && 'gravityformsideal' === $payment->source && method_exists( 'GFCommon', 'get_country_code' ) ) {
+			$payment->country = \GFCommon::get_country_code( $payment->country );
+		}
+
+		// Address.
+		$parts = array(
+			$payment->address,
+			$payment->zip,
+			$payment->city,
+			$payment->country,
+		);
+
+		$parts = array_map( 'trim', $parts );
+
+		$parts = array_filter( $parts );
+
+		if ( ! empty( $parts ) ) {
+			$address = new Address();
+
+			if ( ! empty( $payment->address ) ) {
+				$address->set_line_1( $payment->address );
+			}
+
+			if ( ! empty( $payment->zip ) ) {
+				$address->set_postal_code( $payment->zip );
+			}
+
+			if ( ! empty( $payment->city ) ) {
+				$address->set_city( $payment->city );
+			}
+
+			if ( 2 === strlen( $payment->country ) ) {
+				$address->set_country_code( $payment->country );
+			}
+
+			$payment->set_billing_address( $address );
+			$payment->set_shipping_address( $address );
+		}
 
 		// Amount.
 		$payment->set_amount(

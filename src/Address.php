@@ -1,6 +1,6 @@
 <?php
 /**
- * Address.php.
+ * Address.
  *
  * @author    Pronamic <info@pronamic.eu>
  * @copyright 2005-2018 Pronamic
@@ -10,14 +10,26 @@
 
 namespace Pronamic\WordPress\Pay;
 
-use \stdClass;
+use InvalidArgumentException;
+use stdClass;
 
 /**
- * Address.php
+ * Address
  *
- * @author  Reüel van der Steege
- * @since   x.x.x
- * @version x.x.x
+ * @link   https://en.wikipedia.org/wiki/HTML_element#address
+ * @link   https://en.wikipedia.org/wiki/Address_(geography)
+ * @link   https://tools.ietf.org/html/rfc6350#section-6.3.1
+ * @link   https://schema.org/PostalAddress
+ * @link   https://github.com/wp-premium/gravityforms/blob/2.3.2/includes/fields/class-gf-field-address.php
+ * @link   https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_address.htm
+ * @link   https://c3.twinfield.com/webservices/documentation/#/ApiReference/Masters/Suppliers#Create-Update-Delete
+ * @link   https://github.com/wp-pay-gateways/omnikassa-2/blob/develop/src/Address.php
+ * @link   https://docs.adyen.com/developers/api-reference/common-api#address
+ * @link   https://developer.paypal.com/docs/api/payments/v1/#definition-address
+ * @link   https://docs.mollie.com/reference/v2/payments-api/create-payment
+ * @link   https://epayments-api.developer-ingenico.com/s2sapi/v1/en_US/java/payments/create.html#payments-create-payload
+ * @author Remco Tolsma
+ * @since  1.4.0
  */
 class Address {
 	/**
@@ -77,6 +89,13 @@ class Address {
 	private $house_number;
 
 	/**
+	 * House number base (exclusive addition/extension).
+	 *
+	 * @var string|null
+	 */
+	private $house_number_base;
+
+	/**
 	 * House number addition.
 	 *
 	 * @var string
@@ -100,6 +119,8 @@ class Address {
 	/**
 	 * Region.
 	 *
+	 * Alias: `region`, `county`, `state`, `province`, `stateOrProvince`, `stateCode`.
+	 *
 	 * @var string
 	 */
 	private $region;
@@ -107,12 +128,16 @@ class Address {
 	/**
 	 * Country.
 	 *
+	 * @todo use country code to get country name?
+	 *
 	 * @var string
 	 */
 	private $country;
 
 	/**
 	 * Country code.
+	 *
+	 * Alias: `country` or `country_code`.
 	 *
 	 * @var string
 	 */
@@ -159,7 +184,7 @@ class Address {
 	/**
 	 * Get email.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_email() {
 		return $this->email;
@@ -168,7 +193,7 @@ class Address {
 	/**
 	 * Set email.
 	 *
-	 * @param string $email Email.
+	 * @param string|null $email Email.
 	 */
 	public function set_email( $email ) {
 		$this->email = $email;
@@ -177,7 +202,7 @@ class Address {
 	/**
 	 * Get company name.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_company_name() {
 		return $this->company_name;
@@ -186,7 +211,7 @@ class Address {
 	/**
 	 * Set company name.
 	 *
-	 * @param string $company_name Company name.
+	 * @param string|null $company_name Company name.
 	 */
 	public function set_company_name( $company_name ) {
 		$this->company_name = $company_name;
@@ -195,7 +220,7 @@ class Address {
 	/**
 	 * Get company registration number.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_company_coc() {
 		return $this->company_coc;
@@ -204,7 +229,7 @@ class Address {
 	/**
 	 * Set company registration number.
 	 *
-	 * @param string $company_coc Company registration number.
+	 * @param string|null $company_coc Company registration number.
 	 */
 	public function set_company_coc( $company_coc ) {
 		$this->company_coc = $company_coc;
@@ -213,7 +238,7 @@ class Address {
 	/**
 	 * Get address 1.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_address_1() {
 		return $this->address_1;
@@ -222,7 +247,7 @@ class Address {
 	/**
 	 * Set address 1.
 	 *
-	 * @param string $address_1 Address 1.
+	 * @param string|null $address_1 Address 1.
 	 */
 	public function set_address_1( $address_1 ) {
 		$this->address_1 = $address_1;
@@ -231,7 +256,7 @@ class Address {
 	/**
 	 * Get address 2.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_address_2() {
 		return $this->address_2;
@@ -240,7 +265,7 @@ class Address {
 	/**
 	 * Set address 2.
 	 *
-	 * @param string $address_2 Address 2.
+	 * @param string|null $address_2 Address 2.
 	 */
 	public function set_address_2( $address_2 ) {
 		$this->address_2 = $address_2;
@@ -249,7 +274,7 @@ class Address {
 	/**
 	 * Get street name.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_street_name() {
 		return $this->street_name;
@@ -258,7 +283,7 @@ class Address {
 	/**
 	 * Set street name.
 	 *
-	 * @param string $street_name Street name.
+	 * @param string|null $street_name Street name.
 	 */
 	public function set_street_name( $street_name ) {
 		$this->street_name = $street_name;
@@ -267,7 +292,7 @@ class Address {
 	/**
 	 * Get house number.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_house_number() {
 		return $this->house_number;
@@ -276,16 +301,34 @@ class Address {
 	/**
 	 * Set house number.
 	 *
-	 * @param string $house_number House number.
+	 * @param string|null $house_number House number.
 	 */
 	public function set_house_number( $house_number ) {
 		$this->house_number = $house_number;
 	}
 
 	/**
+	 * Get house number base.
+	 *
+	 * @return string|null
+	 */
+	public function get_house_number_base() {
+		return $this->house_number_base;
+	}
+
+	/**
+	 * Set house number base.
+	 *
+	 * @param string|null $house_number_base House number base.
+	 */
+	public function set_house_number_base( $house_number_base ) {
+		$this->house_number_base = $house_number_base;
+	}
+
+	/**
 	 * Get house number addition.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_house_number_addition() {
 		return $this->house_number_addition;
@@ -294,7 +337,7 @@ class Address {
 	/**
 	 * Set house number addition.
 	 *
-	 * @param string $house_number_addition House number addition.
+	 * @param string|null $house_number_addition House number addition.
 	 */
 	public function set_house_number_addition( $house_number_addition ) {
 		$this->house_number_addition = $house_number_addition;
@@ -321,7 +364,7 @@ class Address {
 	/**
 	 * Get city.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_city() {
 		return $this->city;
@@ -330,7 +373,7 @@ class Address {
 	/**
 	 * Set city.
 	 *
-	 * @param string $city City.
+	 * @param string|null $city City.
 	 */
 	public function set_city( $city ) {
 		$this->city = $city;
@@ -339,7 +382,7 @@ class Address {
 	/**
 	 * Get region.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_region() {
 		return $this->region;
@@ -348,7 +391,7 @@ class Address {
 	/**
 	 * Set region.
 	 *
-	 * @param string $region Region.
+	 * @param string|null $region Region.
 	 */
 	public function set_region( $region ) {
 		$this->region = $region;
@@ -375,7 +418,7 @@ class Address {
 	/**
 	 * Get country code.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_country_code() {
 		return $this->country_code;
@@ -384,9 +427,20 @@ class Address {
 	/**
 	 * Set country code.
 	 *
+	 * @throws InvalidArgumentException Thrown when country code length is not equal to 2.
+	 *
 	 * @param string $country_code Country code.
 	 */
 	public function set_country_code( $country_code ) {
+		if ( 2 !== strlen( $country_code ) ) {
+			throw new InvalidArgumentException(
+				sprintf(
+					'Given country code `%s` not ISO 3166-1 alpha-2 value.',
+					$country_code
+				)
+			);
+		}
+
 		$this->country_code = $country_code;
 	}
 
@@ -471,27 +525,26 @@ class Address {
 	 * @return string
 	 */
 	public function __toString() {
-		$pieces = array(
+		$parts = array(
 			$this->get_name(),
-			$this->get_email(),
 			$this->get_company_name(),
-			$this->get_company_coc(),
 			$this->get_address_1(),
 			$this->get_address_2(),
 			$this->get_street_name(),
 			$this->get_house_number(),
-			$this->get_house_number_addition(),
-			$this->get_zip(),
-			$this->get_city(),
+			$this->get_zip() . ' ' . $this->get_city(),
 			$this->get_region(),
-			$this->get_country(),
 			$this->get_country_code(),
 			$this->get_phone(),
+			$this->get_email(),
+			$this->get_company_coc(),
 		);
 
-		$pieces = array_filter( $pieces );
+		$parts = array_map( 'trim', $parts );
 
-		$string = implode( PHP_EOL, $pieces );
+		$parts = array_filter( $parts );
+
+		$string = implode( PHP_EOL, $parts );
 
 		return $string;
 	}
