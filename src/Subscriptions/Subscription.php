@@ -171,46 +171,6 @@ class Subscription {
 	public $order_id;
 
 	/**
-	 * The address of the consumer of this subscription.
-	 *
-	 * @todo Is this required?
-	 * @var  string
-	 */
-	public $address;
-
-	/**
-	 * The city of the consumer of this subscription.
-	 *
-	 * @todo Is this required?
-	 * @var  string
-	 */
-	public $city;
-
-	/**
-	 * The ZIP of the consumer of this subscription.
-	 *
-	 * @todo Is this required?
-	 * @var  string
-	 */
-	public $zip;
-
-	/**
-	 * The country of the consumer of this subscription.
-	 *
-	 * @todo Is this required?
-	 * @var  string
-	 */
-	public $country;
-
-	/**
-	 * The telephone number of the consumer of this subscription.
-	 *
-	 * @todo Is this required?
-	 * @var  string
-	 */
-	public $telephone_number;
-
-	/**
 	 * The gateway configuration ID to use with this subscription.
 	 *
 	 * @todo Should we improve the name of this var?
