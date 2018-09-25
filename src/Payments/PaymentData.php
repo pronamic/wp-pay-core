@@ -123,13 +123,6 @@ abstract class PaymentData extends AbstractPaymentData {
 	 * @return string
 	 */
 	public function get_analytics_client_id() {
-		$property_id = get_option( 'pronamic_pay_google_analytics_property' );
-
-		// Only use Client ID if Analytics property has been set.
-		if ( empty( $property_id ) ) {
-			return;
-		}
-
 		return GoogleAnalyticsEcommerce::get_cookie_client_id();
 	}
 

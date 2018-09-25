@@ -222,10 +222,17 @@ class GoogleAnalyticsEcommerce {
 	/**
 	 * Get cookie client ID.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public static function get_cookie_client_id() {
 		$client_id = null;
+
+		$property_id = get_option( 'pronamic_pay_google_analytics_property' );
+
+		// Only get Client ID if Analytics property has been set.
+		if ( empty( $property_id ) ) {
+			return $client_id;
+		}
 
 		$ga_cookie = filter_input( INPUT_COOKIE, '_ga', FILTER_SANITIZE_STRING );
 
