@@ -10,11 +10,10 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
-use Pronamic\WordPress\Money\Money;
-use Pronamic\WordPress\Pay\AbstractDataStoreCPT;
-use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
+use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Pay\AbstractDataStoreCPT;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\Contact;
 use Pronamic\WordPress\Pay\ContactName;
