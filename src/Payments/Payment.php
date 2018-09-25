@@ -10,7 +10,6 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
-use Pronamic\WordPress\Money\Currency;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Pay\Address;
