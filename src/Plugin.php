@@ -829,6 +829,11 @@ class Plugin {
 			$payment->user_id = get_current_user_id();
 		}
 
+		// Google Analytics client ID.
+		if ( null === $payment->analytics_client_id ) {
+			$payment->analytics_client_id = GoogleAnalyticsEcommerce::get_cookie_client_id();
+		}
+
 		// Complements.
 		$payment->contact->complement();
 		$payment->billing_address->complement();
