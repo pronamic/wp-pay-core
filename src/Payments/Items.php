@@ -13,6 +13,7 @@ namespace Pronamic\WordPress\Pay\Payments;
 use ArrayIterator;
 use IteratorAggregate;
 use Pronamic\WordPress\Money\Money;
+use stdClass;
 
 /**
  * Items
@@ -98,5 +99,77 @@ class Items implements IteratorAggregate {
 		}
 
 		return new Money( $amount );
+	}
+
+	/**
+	 * Get JSON.
+	 *
+	 * @return object|null
+	 */
+	public function get_json() {
+		$data = array();
+
+		$items = $this->getIterator();
+
+		while ( $items->valid() ) {
+			$item = $items->current();
+
+			$data[] = $item->get_json();
+
+			$items->next();
+		}
+
+		$data = array_filter( $data );
+
+		if ( empty( $data ) ) {
+			return null;
+		}
+
+		return (object) $data;
+	}
+
+	/**
+	 * Create items from object.
+	 *
+	 * @param stdClass $object Object.
+	 * @return Items
+	 */
+	public static function from_object( stdClass $object ) {
+		$items = new self();
+
+		foreach ( $object as $item_object ) {
+			$item = Item::from_object( $item_object );
+
+			if ( null !== $item->get_json() ) {
+				$items->add_item( $item );
+			}
+		}
+
+		return $items;
+	}
+
+	/**
+	 * Create string representation of order items.
+	 *
+	 * @return string
+	 */
+	public function __toString() {
+		$pieces = array();
+
+		$items = $this->getIterator();
+
+		while ( $items->valid() ) {
+			$item = $items->current();
+
+			$pieces[] = $item;
+
+			$items->next();
+		}
+
+		$pieces = array_filter( $pieces );
+
+		$string = implode( PHP_EOL, $pieces );
+
+		return $string;
 	}
 }

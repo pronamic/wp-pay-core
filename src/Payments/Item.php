@@ -188,4 +188,64 @@ class Item {
 	public function get_amount() {
 		return $this->price * $this->quantity;
 	}
+
+	/**
+	 * Create item from object.
+	 *
+	 * @param stdClass $object Object.
+	 *
+	 * @return Item
+	 */
+	public static function from_object( stdClass $object ) {
+		$item = new self();
+
+		foreach ( $object as $key => $value ) {
+			$method = sprintf( 'set_%s', $key );
+
+			if ( method_exists( $item, $method ) && is_callable( array( $item, $method ) ) ) {
+				call_user_func( array( $item, $method ), $value );
+			}
+		}
+
+		return $item;
+	}
+
+	/**
+	 * Get JSON.
+	 *
+	 * @return object|null
+	 */
+	public function get_json() {
+		$data = array(
+			'id'          => $this->get_id(),
+			'description' => $this->get_description(),
+			'quantity'    => $this->get_quantity(),
+			'price'       => $this->get_price(),
+		);
+
+		$data = array_filter( $data );
+
+		if ( empty( $data ) ) {
+			return null;
+		}
+
+		return (object) $data;
+	}
+
+	/**
+	 * Create string representation of order item.
+	 *
+	 * @return string
+	 */
+	public function __toString() {
+		return sprintf(
+			/* translators: 1: id, 2: description, 3: quantity, 4: price, 5: amount */
+			'%1$s %2$s %3$d %4$01.2F %5$0.2F',
+			$this->get_id(),
+			$this->get_description(),
+			$this->get_quantity(),
+			$this->get_price(),
+			$this->get_amount()
+		);
+	}
 }
