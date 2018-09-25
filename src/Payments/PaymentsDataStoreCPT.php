@@ -619,7 +619,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$payment->customer_name    = $payment->get_contact()->get_name();
 		$payment->first_name       = $payment->get_contact()->get_name()->get_first_name();
 		$payment->last_name        = $payment->get_contact()->get_name()->get_last_name();
-		$payment->address          = $payment->get_billing_address()->get_address_1();
+		$payment->address          = $payment->get_billing_address()->get_line_1();
 		$payment->zip              = $payment->get_billing_address()->get_zip();
 		$payment->city             = $payment->get_billing_address()->get_city();
 		$payment->country          = $payment->get_billing_address()->get_country();
@@ -720,7 +720,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			'customer_name'           => $payment->get_contact()->get_name(),
 			'first_name'              => $payment->get_contact()->get_name()->get_first_name(),
 			'last_name'               => $payment->get_contact()->get_name()->get_last_name(),
-			'address'                 => $payment->get_billing_address()->get_address_1(),
+			'address'                 => $payment->get_billing_address()->get_line_1(),
 			'zip'                     => $payment->get_billing_address()->get_zip(),
 			'city'                    => $payment->get_billing_address()->get_city(),
 			'country'                 => $payment->get_billing_address()->get_country(),

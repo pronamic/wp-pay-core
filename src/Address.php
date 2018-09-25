@@ -65,14 +65,14 @@ class Address {
 	 *
 	 * @var string
 	 */
-	private $address_1;
+	private $line_1;
 
 	/**
 	 * Address line 2.
 	 *
 	 * @var string
 	 */
-	private $address_2;
+	private $line_2;
 
 	/**
 	 * Street name.
@@ -236,39 +236,39 @@ class Address {
 	}
 
 	/**
-	 * Get address 1.
+	 * Get address line 1.
 	 *
 	 * @return string|null
 	 */
-	public function get_address_1() {
-		return $this->address_1;
+	public function get_line_1() {
+		return $this->line_1;
 	}
 
 	/**
-	 * Set address 1.
+	 * Set address line 1.
 	 *
-	 * @param string|null $address_1 Address 1.
+	 * @param string|null $line_1 Address 1.
 	 */
-	public function set_address_1( $address_1 ) {
-		$this->address_1 = $address_1;
+	public function set_line_1( $line_1 ) {
+		$this->line_1 = $line_1;
 	}
 
 	/**
-	 * Get address 2.
+	 * Get address line 2.
 	 *
 	 * @return string|null
 	 */
-	public function get_address_2() {
-		return $this->address_2;
+	public function get_line_2() {
+		return $this->line_2;
 	}
 
 	/**
-	 * Set address 2.
+	 * Set address line 2.
 	 *
-	 * @param string|null $address_2 Address 2.
+	 * @param string|null $line_2 Address 2.
 	 */
-	public function set_address_2( $address_2 ) {
-		$this->address_2 = $address_2;
+	public function set_line_2( $line_2 ) {
+		$this->line_2 = $line_2;
 	}
 
 	/**
@@ -473,8 +473,8 @@ class Address {
 			'email'                 => $this->get_email(),
 			'company_name'          => $this->get_company_name(),
 			'company_coc'           => $this->get_company_coc(),
-			'address_1'             => $this->get_address_1(),
-			'address_2'             => $this->get_address_2(),
+			'line_1'                => $this->get_line_1(),
+			'line_2'                => $this->get_line_2(),
 			'street_name'           => $this->get_street_name(),
 			'house_number'          => $this->get_house_number(),
 			'house_number_addition' => $this->get_house_number_addition(),
@@ -528,8 +528,8 @@ class Address {
 		$parts = array(
 			$this->get_name(),
 			$this->get_company_name(),
-			$this->get_address_1(),
-			$this->get_address_2(),
+			$this->get_line_1(),
+			$this->get_line_2(),
 			$this->get_street_name(),
 			$this->get_house_number(),
 			$this->get_zip() . ' ' . $this->get_city(),
