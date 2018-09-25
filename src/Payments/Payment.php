@@ -296,14 +296,14 @@ class Payment {
 	public $action_url;
 
 	/**
-	 * The payment method chosen by to user who started this payment.
+	 * The payment method chosen by the user who started this payment.
 	 *
 	 * @var string
 	 */
 	public $method;
 
 	/**
-	 * The issuer chosen by to user who started this payment.
+	 * The issuer chosen by the user who started this payment.
 	 *
 	 * @var string
 	 */
