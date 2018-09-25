@@ -841,7 +841,7 @@ class Plugin {
 	 *
 	 * @return Payment
 	 */
-	public static function start_payment( Payment $payment, Gateway $gateway ) {
+	public static function start_payment( Payment $payment, $gateway = null ) {
 		global $pronamic_ideal;
 
 		self::complement_payment( $payment );
@@ -857,6 +857,19 @@ class Plugin {
 			$payment->save();
 
 			return $payment;
+		}
+
+		// Gateway.
+		if ( null === $gateway ) {
+			$gateway = self::get_gateway( $payment->get_config_id() );
+
+			if ( ! $gateway ) {
+				$payment->set_status( Statuses::FAILURE );
+
+				$payment->save();
+
+				return $payment;
+			}
 		}
 
 		// Start payment at the gateway.
