@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use Exception;
 use VIISON\AddressSplitter\AddressSplitter;
 
 /**
