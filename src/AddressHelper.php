@@ -16,8 +16,9 @@ use VIISON\AddressSplitter\AddressSplitter;
 /**
  * Address helper
  *
- * @author Remco Tolsma
- * @since  1.4.0
+ * @author  Remco Tolsma
+ * @version 2.0.8
+ * @since   2.0.8
  */
 class AddressHelper {
 	/**
