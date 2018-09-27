@@ -50,7 +50,8 @@ class AddressHelper {
 				}
 			}
 		} catch ( Exception $e ) {
-
+			// On exceptions the address wil not be complemented, no problem.
+			return;
 		}
 	}
 }
