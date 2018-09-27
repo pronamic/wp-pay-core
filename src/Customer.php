@@ -20,7 +20,7 @@ use \stdClass;
  * @since   2.0.8
  * @version 2.0.8
  */
-class Contact {
+class Customer {
 	/**
 	 * Contact name.
 	 *
@@ -92,7 +92,7 @@ class Contact {
 	}
 
 	/**
-	 * Complement contact.
+	 * Complement customer.
 	 */
 	public function complement() {
 		// Locale.
@@ -315,7 +315,8 @@ class Contact {
 	 * Create address from object.
 	 *
 	 * @param stdClass $object Object.
-	 * @return Contact
+	 *
+	 * @return Customer
 	 */
 	public static function from_object( stdClass $object ) {
 		$contact = new self();
@@ -336,7 +337,7 @@ class Contact {
 	}
 
 	/**
-	 * Create string representation of contact.
+	 * Create string representation of customer.
 	 *
 	 * @return string
 	 */

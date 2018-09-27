@@ -15,7 +15,7 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\AbstractDataStoreCPT;
 use Pronamic\WordPress\Pay\Address;
-use Pronamic\WordPress\Pay\Contact;
+use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\ContactName;
 use Pronamic\WordPress\Pay\Core\Statuses;
 
@@ -494,30 +494,30 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$value = parent::get_meta( $id, $key );
 
 		switch ( $key ) {
-			case 'contact':
+			case 'customer':
 				if ( null === $value ) {
-					// Build contact from legacy meta data.
-					$contact = new Contact();
+					// Build customer from legacy meta data.
+					$customer = new Customer();
 
 					$contact_name = new ContactName();
 					$contact_name->set_first_name( $this->get_meta( $id, 'first_name' ) );
 					$contact_name->set_last_name( $this->get_meta( $id, 'last_name' ) );
 
-					$contact->set_name( $contact_name );
-					$contact->set_email( $this->get_meta( $id, 'email' ) );
-					$contact->set_phone( $this->get_meta( $id, 'telephone_number' ) );
-					$contact->set_ip_address( $this->get_meta( $id, 'user_ip' ) );
-					$contact->set_user_agent( $this->get_meta( $id, 'user_agent' ) );
-					$contact->set_language( $this->get_meta( $id, 'language' ) );
-					$contact->set_locale( $this->get_meta( $id, 'locale' ) );
+					$customer->set_name( $contact_name );
+					$customer->set_email( $this->get_meta( $id, 'email' ) );
+					$customer->set_phone( $this->get_meta( $id, 'telephone_number' ) );
+					$customer->set_ip_address( $this->get_meta( $id, 'user_ip' ) );
+					$customer->set_user_agent( $this->get_meta( $id, 'user_agent' ) );
+					$customer->set_language( $this->get_meta( $id, 'language' ) );
+					$customer->set_locale( $this->get_meta( $id, 'locale' ) );
 
-					return $contact;
+					return $customer;
 				}
 
 				$object = json_decode( $value );
 
 				if ( is_object( $object ) ) {
-					$value = Contact::from_object( $object );
+					$value = Customer::from_object( $object );
 				}
 
 				break;
@@ -604,20 +604,20 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$payment->recurring           = $this->get_meta( $id, 'recurring' );
 		$payment->start_date          = $this->get_meta_date( $id, 'start_date' );
 		$payment->end_date            = $this->get_meta_date( $id, 'end_date' );
-		$payment->contact             = $this->get_meta( $id, 'contact' );
+		$payment->customer            = $this->get_meta( $id, 'customer' );
 		$payment->billing_address     = $this->get_meta( $id, 'billing_address' );
 		$payment->shipping_address    = $this->get_meta( $id, 'shipping_address' );
 		$payment->order_items         = $this->get_meta( $id, 'order_items' );
 
-		// Deprecated properties, use `get_contact()` or `get_billing_address()` instead.
+		// Deprecated properties, use `get_customer()` or `get_billing_address()` instead.
 		// @todo remove?
-		$payment->language         = $payment->get_contact()->get_language();
-		$payment->locale           = $payment->get_contact()->get_locale();
-		$payment->user_agent       = $payment->get_contact()->get_user_agent();
-		$payment->user_ip          = $payment->get_contact()->get_ip_address();
-		$payment->customer_name    = $payment->get_contact()->get_name();
-		$payment->first_name       = $payment->get_contact()->get_name()->get_first_name();
-		$payment->last_name        = $payment->get_contact()->get_name()->get_last_name();
+		$payment->language         = $payment->get_customer()->get_language();
+		$payment->locale           = $payment->get_customer()->get_locale();
+		$payment->user_agent       = $payment->get_customer()->get_user_agent();
+		$payment->user_ip          = $payment->get_customer()->get_ip_address();
+		$payment->customer_name    = $payment->get_customer()->get_name();
+		$payment->first_name       = $payment->get_customer()->get_name()->get_first_name();
+		$payment->last_name        = $payment->get_customer()->get_name()->get_last_name();
 		$payment->address          = $payment->get_billing_address()->get_line_1();
 		$payment->zip              = $payment->get_billing_address()->get_postal_code();
 		$payment->city             = $payment->get_billing_address()->get_city();
@@ -698,7 +698,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			'consumer_city'           => $payment->consumer_city,
 			'source'                  => $payment->source,
 			'source_id'               => $payment->source_id,
-			'email'                   => $payment->get_contact()->get_email(),
+			'email'                   => $payment->get_customer()->get_email(),
 			'analytics_client_id'     => $payment->analytics_client_id,
 			'subscription_id'         => $payment->subscription_id,
 			'recurring_type'          => $payment->recurring_type,
@@ -708,17 +708,17 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			'start_date'              => $payment->start_date,
 			'end_date'                => $payment->end_date,
 
-			// Deprecated properties, use `get_contact()` or `get_billing_address()` instead.
+			// Deprecated properties, use `get_customer()` or `get_billing_address()` instead.
 			// @todo remove?
 
 			/*
-			'language'                => $payment->get_contact()->get_language(),
-			'locale'                  => $payment->get_contact()->get_locale(),
-			'user_agent'              => $payment->get_contact()->get_user_agent(),
-			'user_ip'                 => $payment->get_contact()->get_ip_address(),
-			'customer_name'           => $payment->get_contact()->get_name(),
-			'first_name'              => $payment->get_contact()->get_name()->get_first_name(),
-			'last_name'               => $payment->get_contact()->get_name()->get_last_name(),
+			'language'                => $payment->get_customer()->get_language(),
+			'locale'                  => $payment->get_customer()->get_locale(),
+			'user_agent'              => $payment->get_customer()->get_user_agent(),
+			'user_ip'                 => $payment->get_customer()->get_ip_address(),
+			'customer_name'           => $payment->get_customer()->get_name(),
+			'first_name'              => $payment->get_customer()->get_name()->get_first_name(),
+			'last_name'               => $payment->get_customer()->get_name()->get_last_name(),
 			'address'                 => $payment->get_billing_address()->get_line_1(),
 			'zip'                     => $payment->get_billing_address()->get_postal_code(),
 			'city'                    => $payment->get_billing_address()->get_city(),
@@ -734,7 +734,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 
 		// JSON meta.
 		$meta = array(
-			'contact'          => $payment->get_contact()->get_json(),
+			'customer'         => $payment->get_customer()->get_json(),
 			'billing_address'  => $payment->get_billing_address()->get_json(),
 			'shipping_address' => $payment->get_shipping_address()->get_json(),
 			'order_items'      => $payment->get_order_items()->get_json(),
