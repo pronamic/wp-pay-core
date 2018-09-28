@@ -171,6 +171,8 @@ class PersonalName {
 			$this->get_suffix(),
 		);
 
+		$pieces = array_map( 'trim', $pieces );
+
 		$pieces = array_filter( $pieces );
 
 		$string = implode( ' ', $pieces );

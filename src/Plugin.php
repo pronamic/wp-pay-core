@@ -28,7 +28,7 @@ use WP_Query;
  * Plugin
  *
  * @author  Remco Tolsma
- * @version 2.0.5
+ * @version 2.0.8
  * @since   2.0.1
  */
 class Plugin {
@@ -79,6 +79,8 @@ class Plugin {
 	 * Instance.
 	 *
 	 * @param string|array|object $args The plugin arguments.
+	 *
+	 * @return Plugin
 	 */
 	public static function instance( $args = array() ) {
 		if ( is_null( self::$instance ) ) {
@@ -615,7 +617,7 @@ class Plugin {
 	 *
 	 * @param string|integer|boolean $config_id A gateway configuration ID.
 	 *
-	 * @return Gateway|null
+	 * @return mixed
 	 */
 	public static function get_gateway( $config_id ) {
 		if ( empty( $config_id ) ) {

@@ -16,9 +16,9 @@ namespace Pronamic\WordPress\Pay\Core;
  * Copyright: Copyright (c) 2005 - 2018
  * Company: Pronamic
  *
- * @author Remco Tolsma
- * @version 2.0.0
- * @since 1.0.0
+ * @author  Remco Tolsma
+ * @version 2.0.8
+ * @since   1.0.0
  */
 abstract class GatewayConfigFactory {
 	/**
@@ -28,4 +28,33 @@ abstract class GatewayConfigFactory {
 	 * @return GatewayConfig|null
 	 */
 	abstract public function get_config( $post_id );
+
+	/**
+	 * Get meta value.
+	 *
+	 * @since 2.0.8
+	 *
+	 * @param string|int $post_id Post ID.
+	 * @param string     $key     Shortened meta key.
+	 *
+	 * @return string
+	 */
+	protected function get_meta( $post_id, $key ) {
+		if ( empty( $post_id ) || empty( $key ) ) {
+			return '';
+		}
+
+		$post_id = intval( $post_id );
+
+		$meta_key = sprintf( '_pronamic_gateway_%s', $key );
+
+		// Get post meta.
+		$meta_value = get_post_meta( $post_id, $meta_key, true );
+
+		if ( false === $meta_value ) {
+			$meta_value = '';
+		}
+
+		return $meta_value;
+	}
 }

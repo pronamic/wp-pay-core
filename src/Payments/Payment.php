@@ -13,6 +13,7 @@ namespace Pronamic\WordPress\Pay\Payments;
 use Pronamic\WordPress\Money\Currency;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\CreditCard;
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
@@ -21,9 +22,9 @@ use WP_Post;
 /**
  * Payment
  *
- * @author Remco Tolsma
- * @version 2.0.5
- * @since 1.0.0
+ * @author  Remco Tolsma
+ * @version 2.0.8
+ * @since   1.0.0
  */
 class Payment {
 	/**
@@ -379,6 +380,20 @@ class Payment {
 	public $user_ip;
 
 	/**
+	 * Billing address.
+	 *
+	 * @var Address|null
+	 */
+	private $billing_address;
+
+	/**
+	 * Shiping address.
+	 *
+	 * @var Address|null
+	 */
+	private $shipping_address;
+
+	/**
 	 * Construct and initialize payment object.
 	 *
 	 * @param integer $post_id A payment post ID or null.
@@ -504,7 +519,7 @@ class Payment {
 	/**
 	 * Get the payment currency.
 	 *
-	 * @return Currency
+	 * @return string
 	 */
 	public function get_currency() {
 		return $this->get_amount()->get_currency()->get_alphabetic_code();
@@ -997,5 +1012,41 @@ class Payment {
 	 */
 	public function get_recurring() {
 		return $this->recurring;
+	}
+
+	/**
+	 * Get billing address.
+	 *
+	 * @return Address|null
+	 */
+	public function get_billing_address() {
+		return $this->billing_address;
+	}
+
+	/**
+	 * Set billing address.
+	 *
+	 * @param Address|null $address Address.
+	 */
+	public function set_billing_address( $address ) {
+		$this->billing_address = $address;
+	}
+
+	/**
+	 * Get shipping address.
+	 *
+	 * @return Address|null
+	 */
+	public function get_shipping_address() {
+		return $this->shipping_address;
+	}
+
+	/**
+	 * Set shipping address.
+	 *
+	 * @param Address|null $address Address.
+	 */
+	public function set_shipping_address( $address ) {
+		$this->shipping_address = $address;
 	}
 }
