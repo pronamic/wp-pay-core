@@ -7,7 +7,7 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
-## [2.0.8] - 2018-09-27
+## [2.0.8] - 2018-09-28
 - Added `get_meta()` method to core gateway config factory.
 - Updated Tippy.js from 2.6.0 to 3.0.2.
 
