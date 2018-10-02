@@ -10,13 +10,15 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use Exception;
 use VIISON\AddressSplitter\AddressSplitter;
 
 /**
  * Address helper
  *
- * @author Remco Tolsma
- * @since  1.4.0
+ * @author  Remco Tolsma
+ * @version 2.0.8
+ * @since   2.0.8
  */
 class AddressHelper {
 	/**
@@ -50,7 +52,8 @@ class AddressHelper {
 				}
 			}
 		} catch ( Exception $e ) {
-
+			// On exceptions the address wil not be complemented, no problem.
+			return;
 		}
 	}
 }
