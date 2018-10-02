@@ -344,7 +344,10 @@ class AdminModule {
 					'completed' => array(
 						'post_title'   => __( 'Payment completed', 'pronamic_ideal' ),
 						'post_name'    => __( 'completed', 'pronamic_ideal' ),
-						'post_content' => __( '<p>The payment has been successfully completed.</p>', 'pronamic_ideal' ),
+						'post_content' => sprintf(
+							'<p>%s</p>',
+							__( 'The payment has been successfully completed.', 'pronamic_ideal' )
+						),
 						'post_meta'    => array(
 							'_yoast_wpseo_meta-robots-noindex' => true,
 						),
@@ -353,7 +356,10 @@ class AdminModule {
 					'cancel'    => array(
 						'post_title'   => __( 'Payment cancelled', 'pronamic_ideal' ),
 						'post_name'    => __( 'cancelled', 'pronamic_ideal' ),
-						'post_content' => __( '<p>You have cancelled the payment.</p>', 'pronamic_ideal' ),
+						'post_content' => sprintf(
+							'<p>%s</p>',
+							__( 'You have cancelled the payment.', 'pronamic_ideal' )
+						),
 						'post_meta'    => array(
 							'_yoast_wpseo_meta-robots-noindex' => true,
 						),
@@ -362,7 +368,10 @@ class AdminModule {
 					'expired'   => array(
 						'post_title'   => __( 'Payment expired', 'pronamic_ideal' ),
 						'post_name'    => __( 'expired', 'pronamic_ideal' ),
-						'post_content' => __( '<p>Your payment session has expired.</p>', 'pronamic_ideal' ),
+						'post_content' => sprintf(
+							'<p>%s</p>',
+							__( 'Your payment session has expired.', 'pronamic_ideal' )
+						),
 						'post_meta'    => array(
 							'_yoast_wpseo_meta-robots-noindex' => true,
 						),
@@ -371,7 +380,10 @@ class AdminModule {
 					'error'     => array(
 						'post_title'   => __( 'Payment error', 'pronamic_ideal' ),
 						'post_name'    => __( 'error', 'pronamic_ideal' ),
-						'post_content' => __( '<p>An error has occurred during payment.</p>', 'pronamic_ideal' ),
+						'post_content' => sprintf(
+							'<p>%s</p>',
+							__( 'An error has occurred during payment.', 'pronamic_ideal' )
+						),
 						'post_meta'    => array(
 							'_yoast_wpseo_meta-robots-noindex' => true,
 						),
@@ -380,7 +392,10 @@ class AdminModule {
 					'unknown'   => array(
 						'post_title'   => __( 'Payment status unknown', 'pronamic_ideal' ),
 						'post_name'    => __( 'unknown', 'pronamic_ideal' ),
-						'post_content' => __( '<p>The payment status is unknown.</p>', 'pronamic_ideal' ),
+						'post_content' => sprintf(
+							'<p>%s</p>',
+							__( 'The payment status is unknown.', 'pronamic_ideal' )
+						),
 						'post_meta'    => array(
 							'_yoast_wpseo_meta-robots-noindex' => true,
 						),
