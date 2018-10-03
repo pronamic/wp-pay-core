@@ -762,14 +762,14 @@ class Plugin {
 		$payment->set_amount( $data->get_amount() );
 		$payment->set_credit_card( $data->get_credit_card() );
 
-		// Contact.
-		$payment->get_contact()->get_name()->set_first_name( $data->get_first_name() );
-		$payment->get_contact()->get_name()->set_last_name( $data->get_last_name() );
-		$payment->get_contact()->set_email( $data->get_email() );
-		$payment->get_contact()->set_phone( $data->get_telephone_number() );
+		// Customer.
+		$payment->get_customer()->get_name()->set_first_name( $data->get_first_name() );
+		$payment->get_customer()->get_name()->set_last_name( $data->get_last_name() );
+		$payment->get_customer()->set_email( $data->get_email() );
+		$payment->get_customer()->set_phone( $data->get_telephone_number() );
 
 		// Billing address.
-		$payment->get_billing_address()->set_name( $payment->get_contact()->get_name() );
+		$payment->get_billing_address()->set_name( $payment->get_customer()->get_name() );
 		$payment->get_billing_address()->set_line_1( $data->get_address() );
 		$payment->get_billing_address()->set_postal_code( $data->get_zip() );
 		$payment->get_billing_address()->set_city( $data->get_city() );
@@ -835,7 +835,7 @@ class Plugin {
 		}
 
 		// Complements.
-		$payment->contact->complement();
+		$payment->customer->complement();
 		$payment->billing_address->complement();
 		$payment->shipping_address->complement();
 	}

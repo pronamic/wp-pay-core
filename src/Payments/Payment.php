@@ -13,7 +13,7 @@ namespace Pronamic\WordPress\Pay\Payments;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Pay\Address;
-use Pronamic\WordPress\Pay\Contact;
+use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\CreditCard;
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
@@ -398,11 +398,11 @@ class Payment {
 	public $user_ip;
 
 	/**
-	 * Contact.
+	 * Customer.
 	 *
-	 * @var Contact
+	 * @var Customer
 	 */
-	public $contact;
+	public $customer;
 
 	/**
 	 * Billing address.
@@ -435,7 +435,7 @@ class Payment {
 		$this->date             = new DateTime();
 		$this->meta             = array();
 		$this->order_items      = new Items();
-		$this->contact          = new Contact();
+		$this->customer         = new Customer();
 		$this->billing_address  = new Address();
 		$this->shipping_address = new Address();
 
@@ -491,6 +491,60 @@ class Payment {
 		$comment_id = wp_insert_comment( $commentdata );
 
 		return $comment_id;
+	}
+
+	/**
+	 * Get payment date.
+	 *
+	 * @return DateTime
+	 */
+	public function get_date() {
+		return $this->date;
+	}
+
+	/**
+	 * Set payment date.
+	 *
+	 * @param DateTime $date Date.
+	 */
+	public function set_date( $date ) {
+		$this->date = $date;
+	}
+
+	/**
+	 * Get start date.
+	 *
+	 * @return DateTime
+	 */
+	public function get_start_date() {
+		return $this->start_date;
+	}
+
+	/**
+	 * Set start date.
+	 *
+	 * @param DateTime $start_date Start date.
+	 */
+	public function set_start_date( $start_date ) {
+		$this->start_date = $start_date;
+	}
+
+	/**
+	 * Get end date.
+	 *
+	 * @return DateTime
+	 */
+	public function get_end_date() {
+		return $this->end_date;
+	}
+
+	/**
+	 * Set end date.
+	 *
+	 * @param DateTime $end_date End date.
+	 */
+	public function set_end_date( $end_date ) {
+		$this->end_date = $end_date;
 	}
 
 	/**
@@ -562,21 +616,21 @@ class Payment {
 	}
 
 	/**
-	 * Get contact.
+	 * Get customer.
 	 *
-	 * @return Contact
+	 * @return Customer
 	 */
-	public function get_contact() {
-		return $this->contact;
+	public function get_customer() {
+		return $this->customer;
 	}
 
 	/**
-	 * Set contact.
+	 * Set customer.
 	 *
-	 * @param Contact $contact Contact.
+	 * @param Customer $customer Contact.
 	 */
-	public function set_contact( $contact ) {
-		$this->contact = $contact;
+	public function set_customer( $customer ) {
+		$this->customer = $customer;
 	}
 
 	/**
@@ -712,7 +766,7 @@ class Payment {
 	 * @return string
 	 */
 	public function get_language() {
-		return $this->get_contact()->get_language();
+		return $this->get_customer()->get_language();
 	}
 
 	/**
@@ -721,7 +775,7 @@ class Payment {
 	 * @return string
 	 */
 	public function get_locale() {
-		return $this->get_contact()->get_locale();
+		return $this->get_customer()->get_locale();
 	}
 
 	/**
@@ -827,6 +881,8 @@ class Payment {
 			),
 			home_url( '/' )
 		);
+
+		$url = str_replace( '.test', '.dev', $url );
 
 		return $url;
 	}
