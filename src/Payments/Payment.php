@@ -494,6 +494,60 @@ class Payment {
 	}
 
 	/**
+	 * Get payment date.
+	 *
+	 * @return DateTime
+	 */
+	public function get_date() {
+		return $this->date;
+	}
+
+	/**
+	 * Set payment date.
+	 *
+	 * @param DateTime $date Date.
+	 */
+	public function set_date( $date ) {
+		$this->date = $date;
+	}
+
+	/**
+	 * Get start date.
+	 *
+	 * @return DateTime
+	 */
+	public function get_start_date() {
+		return $this->start_date;
+	}
+
+	/**
+	 * Set start date.
+	 *
+	 * @param DateTime $start_date Start date.
+	 */
+	public function set_start_date( $start_date ) {
+		$this->start_date = $start_date;
+	}
+
+	/**
+	 * Get end date.
+	 *
+	 * @return DateTime
+	 */
+	public function get_end_date() {
+		return $this->end_date;
+	}
+
+	/**
+	 * Set end date.
+	 *
+	 * @param DateTime $end_date End date.
+	 */
+	public function set_end_date( $end_date ) {
+		$this->end_date = $end_date;
+	}
+
+	/**
 	 * Get the source identifier of this payment.
 	 *
 	 * @return string
@@ -827,6 +881,8 @@ class Payment {
 			),
 			home_url( '/' )
 		);
+
+		$url = str_replace( '.test', '.dev', $url );
 
 		return $url;
 	}
