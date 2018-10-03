@@ -97,12 +97,16 @@ class Contact {
 	public function complement() {
 		// Locale.
 		if ( null === $this->get_locale() && is_user_logged_in() ) {
-			$this->set_locale( get_user_locale() );
+			$locale = get_user_locale();
+
+			$this->set_locale( $locale );
 		}
 
 		// Language.
-		if ( null === $this->get_language() && is_user_logged_in() ) {
-			$this->set_language( substr( $this->get_locale(), 0, 2 ) );
+		if ( null === $this->get_language() && null !== $this->get_locale() ) {
+			$language = substr( $this->get_locale(), 0, 2 );
+
+			$this->set_language( $language );
 		}
 
 		// User Agent.
