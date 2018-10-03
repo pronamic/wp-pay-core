@@ -532,7 +532,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 					$address->set_name( $contact_name );
 					$address->set_email( $this->get_meta( $id, 'email' ) );
 					$address->set_phone( $this->get_meta( $id, 'telephone_number' ) );
-					$address->set_address_1( $this->get_meta( $id, 'address' ) );
+					$address->set_line_1( $this->get_meta( $id, 'address' ) );
 					$address->set_postal_code( $this->get_meta( $id, 'zip' ) );
 					$address->set_city( $this->get_meta( $id, 'city' ) );
 					$address->set_country( $this->get_meta( $id, 'country' ) );
