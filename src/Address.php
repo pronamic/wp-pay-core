@@ -28,8 +28,10 @@ use stdClass;
  * @link   https://developer.paypal.com/docs/api/payments/v1/#definition-address
  * @link   https://docs.mollie.com/reference/v2/payments-api/create-payment
  * @link   https://epayments-api.developer-ingenico.com/s2sapi/v1/en_US/java/payments/create.html#payments-create-payload
- * @author Remco Tolsma
- * @since  1.4.0
+ *
+ * @author  Remco Tolsma
+ * @version 2.0.8
+ * @since   2.0.8
  */
 class Address {
 	/**

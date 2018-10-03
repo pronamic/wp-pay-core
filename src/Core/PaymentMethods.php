@@ -246,9 +246,21 @@ class PaymentMethods {
 			self::IN3                     => __( 'In3', 'pronamic_ideal' ),
 			self::CREDIT_CARD             => __( 'Credit Card', 'pronamic_ideal' ),
 			self::DIRECT_DEBIT            => __( 'Direct Debit', 'pronamic_ideal' ),
-			self::DIRECT_DEBIT_BANCONTACT => __( 'Direct Debit mandate via Bancontact', 'pronamic_ideal' ),
-			self::DIRECT_DEBIT_IDEAL      => __( 'Direct Debit mandate via iDEAL', 'pronamic_ideal' ),
-			self::DIRECT_DEBIT_SOFORT     => __( 'Direct Debit mandate via SOFORT', 'pronamic_ideal' ),
+			self::DIRECT_DEBIT_BANCONTACT => sprintf(
+				/* translators: %s: payment method */
+				__( 'Direct Debit mandate via %s', 'pronamic_ideal' ),
+				__( 'Bancontact', 'pronamic_ideal' )
+			),
+			self::DIRECT_DEBIT_IDEAL      => sprintf(
+				/* translators: %s: payment method */
+				__( 'Direct Debit mandate via %s', 'pronamic_ideal' ),
+				__( 'iDEAL', 'pronamic_ideal' )
+			),
+			self::DIRECT_DEBIT_SOFORT     => sprintf(
+				/* translators: %s: payment method */
+				__( 'Direct Debit mandate via %s', 'pronamic_ideal' ),
+				__( 'SOFORT', 'pronamic_ideal' )
+			),
 			self::FOCUM                   => __( 'Focum', 'pronamic_ideal' ),
 			self::GIROPAY                 => __( 'Giropay', 'pronamic_ideal' ),
 			self::GULDEN                  => __( 'Gulden', 'pronamic_ideal' ),
