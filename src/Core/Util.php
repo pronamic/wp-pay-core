@@ -258,6 +258,23 @@ class Util {
 	}
 
 	/**
+	 * Get remote address.
+	 *
+	 * @return mixed|null
+	 */
+	public static function get_remote_address() {
+		if ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+			return Server::get( 'HTTP_X_FORWARDED_FOR', FILTER_VALIDATE_IP );
+		}
+
+		if ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
+			return Server::get( 'REMOTE_ADDR', FILTER_VALIDATE_IP );
+		}
+
+		return null;
+	}
+
+	/**
 	 * Convert input fields array to HTML.
 	 *
 	 * @param array $fields Array with fields data to convert to HTML.
