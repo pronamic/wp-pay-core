@@ -346,7 +346,7 @@ class FormPostType {
 	/**
 	 * Get shortcode of the specified form post ID.
 	 *
-	 * @param string $post_id Post ID.
+	 * @param int|null $post_id Post ID.
 	 * @return string
 	 */
 	private function get_shortcode( $post_id = null ) {
