@@ -155,7 +155,7 @@ class Address {
 	/**
 	 * Get contact name.
 	 *
-	 * @return ContactName
+	 * @return ContactName|null
 	 */
 	public function get_name() {
 		return $this->name;
@@ -436,7 +436,7 @@ class Address {
 	/**
 	 * Get phone.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_phone() {
 		return $this->phone;
