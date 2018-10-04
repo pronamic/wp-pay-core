@@ -30,7 +30,7 @@ class Item {
 	/**
 	 * The description.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $description;
 
@@ -53,7 +53,7 @@ class Item {
 	 */
 	public function __construct() {
 		$this->id          = null;
-		$this->description = '';
+		$this->description = null;
 		$this->quantity    = 1;
 		$this->price       = 0;
 	}
@@ -124,7 +124,7 @@ class Item {
 	/**
 	 * Get the description of this item.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_description() {
 		return $this->description;
@@ -134,7 +134,7 @@ class Item {
 	 * Set the description of this item.
 	 * AN..max32 (AN = Alphanumeric, free text).
 	 *
-	 * @param string $description Description.
+	 * @param string|null $description Description.
 	 */
 	public function set_description( $description ) {
 		$this->description = substr( $description, 0, 32 );
