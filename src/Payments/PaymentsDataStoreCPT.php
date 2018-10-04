@@ -484,94 +484,117 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	}
 
 	/**
-	 * Get meta for the specified post ID and key.
+	 * Get payment customer.
 	 *
-	 * @param int    $id  Post ID.
-	 * @param string $key Key.
-	 * @return string|null
+	 * @param int $id Post ID.
+	 * @return Customer|null
 	 */
-	public function get_meta( $id, $key ) {
-		$value = parent::get_meta( $id, $key );
+	private function get_customer( $id ) {
+		$value = $this->get_meta( $id, 'customer' );
 
-		switch ( $key ) {
-			case 'customer':
-				if ( null === $value ) {
-					// Build customer from legacy meta data.
-					$customer = new Customer();
+		if ( empty( $value ) ) {
+			// Build customer from legacy meta data.
+			$customer = new Customer();
 
-					$contact_name = new ContactName();
-					$contact_name->set_first_name( $this->get_meta( $id, 'first_name' ) );
-					$contact_name->set_last_name( $this->get_meta( $id, 'last_name' ) );
+			$contact_name = new ContactName();
+			$contact_name->set_first_name( $this->get_meta( $id, 'first_name' ) );
+			$contact_name->set_last_name( $this->get_meta( $id, 'last_name' ) );
 
-					$customer->set_name( $contact_name );
-					$customer->set_email( $this->get_meta( $id, 'email' ) );
-					$customer->set_phone( $this->get_meta( $id, 'telephone_number' ) );
-					$customer->set_ip_address( $this->get_meta( $id, 'user_ip' ) );
-					$customer->set_user_agent( $this->get_meta( $id, 'user_agent' ) );
-					$customer->set_language( $this->get_meta( $id, 'language' ) );
-					$customer->set_locale( $this->get_meta( $id, 'locale' ) );
+			$customer->set_name( $contact_name );
+			$customer->set_email( $this->get_meta( $id, 'email' ) );
+			$customer->set_phone( $this->get_meta( $id, 'telephone_number' ) );
+			$customer->set_ip_address( $this->get_meta( $id, 'user_ip' ) );
+			$customer->set_user_agent( $this->get_meta( $id, 'user_agent' ) );
+			$customer->set_language( $this->get_meta( $id, 'language' ) );
+			$customer->set_locale( $this->get_meta( $id, 'locale' ) );
 
-					return $customer;
-				}
-
-				$object = json_decode( $value );
-
-				if ( is_object( $object ) ) {
-					$value = Customer::from_object( $object );
-				}
-
-				break;
-			case 'billing_address':
-				if ( null === $value ) {
-					// Build address from legacy meta data.
-					$contact_name = new ContactName();
-					$contact_name->set_first_name( $this->get_meta( $id, 'first_name' ) );
-					$contact_name->set_last_name( $this->get_meta( $id, 'last_name' ) );
-
-					$address = new Address();
-					$address->set_name( $contact_name );
-					$address->set_email( $this->get_meta( $id, 'email' ) );
-					$address->set_phone( $this->get_meta( $id, 'telephone_number' ) );
-					$address->set_line_1( $this->get_meta( $id, 'address' ) );
-					$address->set_postal_code( $this->get_meta( $id, 'zip' ) );
-					$address->set_city( $this->get_meta( $id, 'city' ) );
-					$address->set_country( $this->get_meta( $id, 'country' ) );
-
-					return $address;
-				}
-
-				$object = json_decode( $value );
-
-				if ( is_object( $object ) ) {
-					$value = Address::from_object( $object );
-				}
-
-				break;
-			case 'shipping_address':
-				if ( null === $value ) {
-					return new Address();
-				}
-
-				$object = json_decode( $value );
-
-				if ( is_object( $object ) ) {
-					$value = Address::from_object( $object );
-				}
-
-				break;
-			case 'order_items':
-				if ( null === $value ) {
-					return new Items();
-				}
-
-				$object = json_decode( $value );
-
-				if ( is_object( $object ) ) {
-					$value = Items::from_object( $object );
-				}
-
-				break;
+			return $customer;
 		}
+
+		$object = json_decode( $value );
+
+		if ( is_object( $object ) ) {
+			return Customer::from_object( $object );
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get payment billing address.
+	 *
+	 * @param int $id Post ID.
+	 * @return Address|null
+	 */
+	private function get_billing_address( $id ) {
+		$value = $this->get_meta( $id, 'billing_address' );
+
+		if ( empty( $value ) ) {
+			// Build address from legacy meta data.
+			$contact_name = new ContactName();
+			$contact_name->set_first_name( $this->get_meta( $id, 'first_name' ) );
+			$contact_name->set_last_name( $this->get_meta( $id, 'last_name' ) );
+
+			$address = new Address();
+			$address->set_name( $contact_name );
+			$address->set_email( $this->get_meta( $id, 'email' ) );
+			$address->set_phone( $this->get_meta( $id, 'telephone_number' ) );
+			$address->set_line_1( $this->get_meta( $id, 'address' ) );
+			$address->set_postal_code( $this->get_meta( $id, 'zip' ) );
+			$address->set_city( $this->get_meta( $id, 'city' ) );
+			$address->set_country( $this->get_meta( $id, 'country' ) );
+
+			return $address;
+		}
+
+		$object = json_decode( $value );
+
+		if ( is_object( $object ) ) {
+			$value = Address::from_object( $object );
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get payment billing address.
+	 *
+	 * @param int $id Post ID.
+	 * @return Address|null
+	 */
+	private function get_billing_address( $id ) {
+		$value = $this->get_meta( $id, 'billing_address' );
+
+		if ( empty( $value ) ) {
+			return null;
+		}
+
+		$object = json_decode( $value );
+
+		if ( is_object( $object ) ) {
+			$value = Address::from_object( $object );
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get items.
+	 *
+	 * @param int $id Post ID.
+	 * @return Items|null
+	 */
+	private function get_items( $id ) {
+		$value = $this->get_meta( $id, 'order_items' );
+
+		if ( empty( $value ) ) {
+			return null;
+		}
+
+		$json = json_decode( $value );
+
+		// @todo what if this fails? try catch or throw exception?
+		$value = Items::from_json( $json );
 
 		return $value;
 	}
@@ -604,10 +627,10 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$payment->recurring           = $this->get_meta( $id, 'recurring' );
 		$payment->start_date          = $this->get_meta_date( $id, 'start_date' );
 		$payment->end_date            = $this->get_meta_date( $id, 'end_date' );
-		$payment->customer            = $this->get_meta( $id, 'customer' );
-		$payment->billing_address     = $this->get_meta( $id, 'billing_address' );
-		$payment->shipping_address    = $this->get_meta( $id, 'shipping_address' );
-		$payment->order_items         = $this->get_meta( $id, 'order_items' );
+		$payment->customer            = $this->get_customer( $id );
+		$payment->billing_address     = $this->get_billing_address( $id );
+		$payment->shipping_address    = $this->get_shipping_address( $id );
+		$payment->order_items         = $this->get_items( $id );
 
 		// Deprecated properties, use `get_customer()` or `get_billing_address()` instead.
 		// @todo remove?
