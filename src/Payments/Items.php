@@ -21,7 +21,7 @@ use stdClass;
  * @author  Remco Tolsma
  * @version 2.0.6
  */
-class Items implements IteratorAggregate {
+class Items implements Countable, IteratorAggregate {
 	/**
 	 * The items.
 	 *
@@ -73,7 +73,7 @@ class Items implements IteratorAggregate {
 	 * @return int
 	 */
 	public function count() {
-		return $this->getIterator()->count();
+		return count( $this->items );
 	}
 
 	/**
