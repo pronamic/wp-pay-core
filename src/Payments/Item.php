@@ -132,12 +132,11 @@ class Item {
 
 	/**
 	 * Set the description of this item.
-	 * AN..max32 (AN = Alphanumeric, free text).
 	 *
 	 * @param string|null $description Description.
 	 */
 	public function set_description( $description ) {
-		$this->description = substr( $description, 0, 32 );
+		$this->description = $description;
 	}
 
 	/**
