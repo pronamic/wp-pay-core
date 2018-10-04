@@ -14,7 +14,10 @@
 	<exclude-pattern>vendor/*</exclude-pattern>
 	<exclude-pattern>wordpress/*</exclude-pattern>
 
-	<rule ref="PHPCompatibility" />
+	<rule ref="PHPCompatibility">
+		<!-- https://github.com/WordPress/WordPress/blob/4.9.8/wp-includes/compat.php#L355-L359 -->
+		<exclude name="PHPCompatibility.PHP.NewConstants.json_pretty_printFound" />
+	</rule>
 
 	<rule ref="WordPress">
 		<exclude name="Generic.Files.LowercasedFilename.NotFound" />
@@ -38,5 +41,9 @@
 
 	<rule ref="WordPress.PHP.DevelopmentFunctions.error_log_trigger_error">
 		<exclude-pattern>/src/Payments/Item.php</exclude-pattern>
+	</rule>
+
+	<rule ref="WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_putenv">
+		<exclude-pattern>/tests/phpstan-bootstrap.php</exclude-pattern>
 	</rule>
 </ruleset>
