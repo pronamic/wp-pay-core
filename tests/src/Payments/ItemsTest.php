@@ -41,13 +41,17 @@ class ItemsTest extends WP_UnitTestCase {
 		$item_b->set_price( 25 );
 
 		$this->items->add_item( $item_b );
+
+		$item_c = new Item();
+
+		$this->items->add_item( $item_c );
 	}
 
 	/**
 	 * Test count.
 	 */
 	public function test_count() {
-		$this->assertCount( 2, $this->items );
+		$this->assertCount( 3, $this->items );
 	}
 
 	/**
@@ -59,7 +63,8 @@ class ItemsTest extends WP_UnitTestCase {
 		$expected = '';
 
 		$expected .= '1234 Lorem ipsum dolor sit amet. 50 39.99 1999.50' . PHP_EOL;
-		$expected .= '5678 Lorem ipsum dolor sit amet. 10 25.00 250.00';
+		$expected .= '5678 Lorem ipsum dolor sit amet. 10 25.00 250.00' . PHP_EOL;
+		$expected .= '  1 0.00 0.00';
 
 		$this->assertEquals( $expected, $string );
 	}
@@ -74,5 +79,19 @@ class ItemsTest extends WP_UnitTestCase {
 		$expected = file_get_contents( __DIR__ . '/../../json/items.json' );
 
 		$this->assertEquals( $expected, $json_string );
+	}
+
+	/**
+	 * Test from object.
+	 */
+	public function test_from_object() {
+		$json_string = file_get_contents( __DIR__ . '/../../json/items.json' );
+
+		$object = json_decode( $json_string );
+
+		$items = Items::from_object( $object );
+
+		$this->assertCount( 3, $items );
+		$this->assertEquals( $json_string, wp_json_encode( $items->get_json(), JSON_PRETTY_PRINT ) );
 	}
 }

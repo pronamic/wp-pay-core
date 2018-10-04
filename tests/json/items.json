@@ -10,5 +10,8 @@
         "description": "Lorem ipsum dolor sit amet.",
         "quantity": 10,
         "price": 25
+    },
+    "2": {
+        "quantity": 1
     }
 }
