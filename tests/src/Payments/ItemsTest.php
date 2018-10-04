@@ -92,11 +92,9 @@ class ItemsTest extends WP_UnitTestCase {
 	 */
 	public function test_json() {
 		$json_data   = $this->items->get_json();
-		$json_string = wp_json_encode( $json_data, JSON_PRETTY_PRINT );
+		$json_string = wp_json_encode( $json_data );
 
-		$expected = file_get_contents( __DIR__ . '/../../json/items.json', true );
-
-		$this->assertEquals( $expected, $json_string );
+		$this->assertJsonStringEqualsJsonFile( __DIR__ . '/../../json/items.json', $json_string );
 	}
 
 	/**
@@ -110,6 +108,7 @@ class ItemsTest extends WP_UnitTestCase {
 		$items = Items::from_json( $json );
 
 		$this->assertCount( 4, $items );
-		$this->assertEquals( $json_string, wp_json_encode( $items->get_json(), JSON_PRETTY_PRINT ) );
+
+		$this->assertJsonStringEqualsJsonFile( __DIR__ . '/../../json/items.json', wp_json_encode( $items->get_json() ) );
 	}
 }

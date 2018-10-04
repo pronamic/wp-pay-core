@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
+use Pronamic\WordPress\Money\Money;
 use WP_UnitTestCase;
 
 /**
@@ -28,12 +29,16 @@ class ItemTest extends WP_UnitTestCase {
 		$item->set_id( '1234' );
 		$item->set_description( 'Lorem ipsum dolor sit amet.' );
 		$item->set_quantity( 50 );
+
+		$this->setExpectedDeprecated( __NAMESPACE__ . '\Item::set_price' );
 		$item->set_price( 39.99 );
 
 		$this->assertEquals( '1234', $item->get_id() );
 		$this->assertEquals( 'Lorem ipsum dolor sit amet.', $item->get_description() );
 		$this->assertEquals( 50, $item->get_quantity() );
+		$this->setExpectedDeprecated( __NAMESPACE__ . '\Item::get_price' );
 		$this->assertEquals( 39.99, $item->get_price() );
+		$this->setExpectedDeprecated( __NAMESPACE__ . '\Item::get_amount' );
 		$this->assertEquals( 1999.5, $item->get_amount() );
 	}
 
@@ -54,6 +59,7 @@ class ItemTest extends WP_UnitTestCase {
 		$this->setExpectedDeprecated( __NAMESPACE__ . '\Item::setQuantity' );
 		$item->setQuantity( 50 );
 
+		$this->setExpectedDeprecated( __NAMESPACE__ . '\Item::set_price' );
 		$this->setExpectedDeprecated( __NAMESPACE__ . '\Item::setPrice' );
 		$item->setPrice( 39.99 );
 
@@ -65,9 +71,26 @@ class ItemTest extends WP_UnitTestCase {
 		$this->setExpectedDeprecated( __NAMESPACE__ . '\Item::getQuantity' );
 		$this->assertEquals( 50, $item->getQuantity() );
 
+		$this->setExpectedDeprecated( __NAMESPACE__ . '\Item::get_price' );
 		$this->setExpectedDeprecated( __NAMESPACE__ . '\Item::getPrice' );
 		$this->assertEquals( 39.99, $item->getPrice() );
 
+		$this->setExpectedDeprecated( __NAMESPACE__ . '\Item::get_amount' );
 		$this->assertEquals( 1999.5, $item->get_amount() );
+	}
+
+	/**
+	 * Test new functions.
+	 */
+	public function test_json() {
+		$item = new Item();
+
+		$item->set_quantity( 2 );
+		$item->set_unit_price( new Money( 121, 'EUR' ) );
+		$item->set_unit_tax( new Money( 21, 'EUR' ) );
+		$item->set_total_amount( new Money( 242, 'EUR' ) );
+
+		$this->setExpectedDeprecated( __NAMESPACE__ . '\Item::get_price' );
+		$this->assertJsonStringEqualsJsonFile( __DIR__ . '/../../json/item.json', wp_json_encode( $item->get_json() ) );
 	}
 }

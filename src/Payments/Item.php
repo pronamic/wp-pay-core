@@ -12,6 +12,7 @@ namespace Pronamic\WordPress\Pay\Payments;
 
 use InvalidArgumentException;
 use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 use stdClass;
 
 /**
@@ -45,9 +46,31 @@ class Item {
 	/**
 	 * The price.
 	 *
+	 * @deprecated
 	 * @var float
 	 */
 	private $price;
+
+	/**
+	 * The unit price of this item.
+	 *
+	 * @var Money|null
+	 */
+	private $unit_price;
+
+	/**
+	 * The unit tax of this item.
+	 *
+	 * @var Money|null
+	 */
+	private $unit_tax;
+
+	/**
+	 * Total amount of this item including tax.
+	 *
+	 * @var Money|null
+	 */
+	private $total_amount;
 
 	/**
 	 * Constructs and initialize a iDEAL basic item.
@@ -117,7 +140,7 @@ class Item {
 	 * @deprecated 2.0.8
 	 */
 	public function set_number( $id ) {
-		_deprecated_function( __FUNCTION__, '2.0.8', 'Pronamic\WordPress\Pay\Payments\Item::set_id()' );
+		_deprecated_function( esc_html( __METHOD__ ), '2.0.8', esc_html( __CLASS__ . '::set_id()' ) );
 
 		$this->set_id( $id );
 	}
@@ -164,6 +187,8 @@ class Item {
 	 * @return float
 	 */
 	public function get_price() {
+		_deprecated_function( esc_html( __METHOD__ ), '2.1.0', esc_html( __CLASS__ . '::get_unit_price' ) );
+
 		return $this->price;
 	}
 
@@ -173,6 +198,8 @@ class Item {
 	 * @param float|Money $price Price.
 	 */
 	public function set_price( $price ) {
+		_deprecated_function( esc_html( __METHOD__ ), '2.1.0', esc_html( __CLASS__ . '::set_unit_price' ) );
+
 		if ( $price instanceof Money ) {
 			$price = $price->get_amount();
 		}
@@ -183,10 +210,67 @@ class Item {
 	/**
 	 * Get the amount.
 	 *
+	 * @deprecated
 	 * @return float
 	 */
 	public function get_amount() {
+		_deprecated_function( esc_html( __METHOD__ ), '2.1.0', esc_html( __CLASS__ . '::get_total_amount' ) );
+
 		return $this->price * $this->quantity;
+	}
+
+	/**
+	 * Get unit price.
+	 *
+	 * @return Money|null
+	 */
+	public function get_unit_price() {
+		return $this->unit_price;
+	}
+
+	/**
+	 * Set unit price.
+	 *
+	 * @return Money|null
+	 */
+	public function set_unit_price( Money $unit_price = null ) {
+		$this->unit_price = $unit_price;
+	}
+
+	/**
+	 * Get unit tax.
+	 *
+	 * @return Money|null
+	 */
+	public function get_unit_tax() {
+		return $this->unit_tax;
+	}
+
+	/**
+	 * Set unit tax.
+	 *
+	 * @return Money|null
+	 */
+	public function set_unit_tax( Money $unit_tax = null ) {
+		$this->unit_tax = $unit_tax;
+	}
+
+	/**
+	 * Get total amount.
+	 *
+	 * @return Money|null
+	 */
+	public function get_total_amount() {
+		return $this->total_amount;
+	}
+
+	/**
+	 * Set total amount.
+	 *
+	 * @return Money|null
+	 */
+	public function set_total_amount( Money $total_amount = null ) {
+		$this->total_amount = $total_amount;
 	}
 
 	/**
@@ -219,6 +303,18 @@ class Item {
 			$item->set_price( $json->price );
 		}
 
+		if ( property_exists( $json, 'unit_price' ) ) {
+			$item->set_unit_price( MoneyJsonTransformer::from_json( $json->unit_price ) );
+		}
+
+		if ( property_exists( $json, 'unit_tax' ) ) {
+			$item->set_unit_tax( MoneyJsonTransformer::from_json( $json->unit_tax ) );
+		}
+
+		if ( property_exists( $json, 'total_amount' ) ) {
+			$item->set_total_amount( MoneyJsonTransformer::from_json( $json->total_amount ) );
+		}
+
 		return $item;
 	}
 
@@ -229,10 +325,13 @@ class Item {
 	 */
 	public function get_json() {
 		return (object) array(
-			'id'          => $this->get_id(),
-			'description' => $this->get_description(),
-			'quantity'    => $this->get_quantity(),
-			'price'       => $this->get_price(),
+			'id'           => $this->get_id(),
+			'description'  => $this->get_description(),
+			'quantity'     => $this->get_quantity(),
+			'price'        => $this->get_price(),
+			'unit_price'   => MoneyJsonTransformer::to_json( $this->get_unit_price() ),
+			'unit_tax'     => MoneyJsonTransformer::to_json( $this->get_unit_tax() ),
+			'total_amount' => MoneyJsonTransformer::to_json( $this->get_total_amount() ),
 		);
 	}
 
