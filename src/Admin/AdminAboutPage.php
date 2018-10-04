@@ -89,7 +89,8 @@ class AdminAboutPage {
 	 * Admin CSS.
 	 */
 	public function admin_css() {
-		$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		// @link https://github.com/WordPress/WordPress/blob/4.7/wp-includes/default-constants.php#L83-L93.
+		$min = SCRIPT_DEBUG ? '' : '.min';
 
 		wp_enqueue_style(
 			'proanmic-pay-admin-about',
