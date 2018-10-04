@@ -25,63 +25,63 @@ class Customer {
 	/**
 	 * Contact name.
 	 *
-	 * @var ContactName
+	 * @var ContactName|null
 	 */
 	private $name;
 
 	/**
 	 * Gender.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $gender;
 
 	/**
 	 * Date of birth.
 	 *
-	 * @var DateTime
+	 * @var DateTime|null
 	 */
 	private $birth_date;
 
 	/**
 	 * Email address.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $email;
 
 	/**
 	 * Telephone number.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $phone;
 
 	/**
 	 * IP address.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $ip_address;
 
 	/**
 	 * User agent.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $user_agent;
 
 	/**
 	 * Language.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $language;
 
 	/**
 	 * Locale.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $locale;
 
@@ -134,7 +134,7 @@ class Customer {
 	/**
 	 * Get contact name.
 	 *
-	 * @return ContactName
+	 * @return ContactName|null
 	 */
 	public function get_name() {
 		return $this->name;
@@ -152,7 +152,7 @@ class Customer {
 	/**
 	 * Get gender.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_gender() {
 		return $this->gender;
@@ -170,7 +170,7 @@ class Customer {
 	/**
 	 * Get birth date.
 	 *
-	 * @return DateTime
+	 * @return DateTime|null
 	 */
 	public function get_birth_date() {
 		return $this->birth_date;
@@ -188,7 +188,7 @@ class Customer {
 	/**
 	 * Get email.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_email() {
 		return $this->email;
@@ -206,7 +206,7 @@ class Customer {
 	/**
 	 * Get phone.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_phone() {
 		return $this->phone;
@@ -224,7 +224,7 @@ class Customer {
 	/**
 	 * Get ip address.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_ip_address() {
 		return $this->ip_address;
@@ -242,7 +242,7 @@ class Customer {
 	/**
 	 * Get user agent.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_user_agent() {
 		return $this->user_agent;
@@ -260,7 +260,7 @@ class Customer {
 	/**
 	 * Get language.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_language() {
 		return $this->language;
@@ -278,7 +278,7 @@ class Customer {
 	/**
 	 * Get locale.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_locale() {
 		return $this->locale;
