@@ -529,6 +529,8 @@ class Address {
 			$this->get_company_coc(),
 		);
 
+		$parts = array_map( 'strval', $parts );
+
 		$parts = array_map( 'trim', $parts );
 
 		$parts = array_filter( $parts );
