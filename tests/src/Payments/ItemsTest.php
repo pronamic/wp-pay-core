@@ -19,8 +19,16 @@ use WP_UnitTestCase;
  * @version 1.0
  */
 class ItemsTest extends WP_UnitTestCase {
+	/**
+	 * Items.
+	 *
+	 * @var Items
+	 */
 	private $items;
 
+	/**
+	 * Setup.
+	 */
 	public function setUp() {
 		$this->items = new Items();
 
@@ -86,7 +94,7 @@ class ItemsTest extends WP_UnitTestCase {
 		$json_data   = $this->items->get_json();
 		$json_string = wp_json_encode( $json_data, JSON_PRETTY_PRINT );
 
-		$expected = file_get_contents( __DIR__ . '/../../json/items.json' );
+		$expected = file_get_contents( __DIR__ . '/../../json/items.json', true );
 
 		$this->assertEquals( $expected, $json_string );
 	}
@@ -95,7 +103,7 @@ class ItemsTest extends WP_UnitTestCase {
 	 * Test from object.
 	 */
 	public function test_from_object() {
-		$json_string = file_get_contents( __DIR__ . '/../../json/items.json' );
+		$json_string = file_get_contents( __DIR__ . '/../../json/items.json', true );
 
 		$json = json_decode( $json_string );
 

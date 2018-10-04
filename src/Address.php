@@ -37,56 +37,56 @@ class Address {
 	/**
 	 * Contact name.
 	 *
-	 * @var ContactName
+	 * @var ContactName|null
 	 */
 	private $name;
 
 	/**
 	 * Email address.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $email;
 
 	/**
 	 * Company name.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $company_name;
 
 	/**
 	 * Company registration number.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $company_coc;
 
 	/**
 	 * Address line 1.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $line_1;
 
 	/**
 	 * Address line 2.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $line_2;
 
 	/**
 	 * Street name.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $street_name;
 
 	/**
 	 * House number.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $house_number;
 
@@ -100,21 +100,21 @@ class Address {
 	/**
 	 * House number addition.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $house_number_addition;
 
 	/**
 	 * Postal Code.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $postal_code;
 
 	/**
 	 * City.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $city;
 
@@ -123,7 +123,7 @@ class Address {
 	 *
 	 * Alias: `region`, `county`, `state`, `province`, `stateOrProvince`, `stateCode`.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $region;
 
@@ -132,7 +132,7 @@ class Address {
 	 *
 	 * @todo use country code to get country name?
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $country;
 
@@ -141,29 +141,16 @@ class Address {
 	 *
 	 * Alias: `country` or `country_code`.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $country_code;
 
 	/**
 	 * Phone.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $phone;
-
-	/**
-	 * Contact constructor.
-	 */
-	public function __construct() {
-		$this->set_name( new ContactName() );
-	}
-
-	/**
-	 * Complement.
-	 */
-	public function complement() {
-	}
 
 	/**
 	 * Get contact name.

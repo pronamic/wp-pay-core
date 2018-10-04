@@ -242,7 +242,7 @@ class Item {
 	 */
 	public function __toString() {
 		return sprintf(
-			/* translators: 1: id, 2: description, 3: quantity, 4: price, 5: amount */
+			/* translators: 1: item id, 2: item description, 3: item quantity, 4: item price, 5: item amount */
 			'%1$s %2$s %3$d %4$01.2F %5$0.2F',
 			$this->get_id(),
 			$this->get_description(),

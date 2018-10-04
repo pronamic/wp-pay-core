@@ -108,9 +108,12 @@ class Items implements Countable, IteratorAggregate {
 	 * @return object|null
 	 */
 	public function get_json() {
-		$objects = array_map( function( $item ) {
-			return $item->get_json();
-		}, $this->items );
+		$objects = array_map(
+			function( $item ) {
+					return $item->get_json();
+			},
+			$this->items
+		);
 
 		return $objects;
 	}
@@ -129,9 +132,12 @@ class Items implements Countable, IteratorAggregate {
 
 		$object = new self();
 
-		$items = array_map( function( $object ) {
-			return Item::from_json( $object );
-		}, $json );
+		$items = array_map(
+			function( $object ) {
+					return Item::from_json( $object );
+			},
+			$json
+		);
 
 		foreach ( $items as $item ) {
 			$object->add_item( $item );

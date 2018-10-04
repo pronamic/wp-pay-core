@@ -431,9 +431,9 @@ class Payment {
 	 * @param integer $post_id A payment post ID or null.
 	 */
 	public function __construct( $post_id = null ) {
-		$this->id               = $post_id;
-		$this->date             = new DateTime();
-		$this->meta             = array();
+		$this->id   = $post_id;
+		$this->date = new DateTime();
+		$this->meta = array();
 
 		$this->set_amount( new Money() );
 		$this->set_status( Statuses::OPEN );
