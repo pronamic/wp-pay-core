@@ -446,7 +446,7 @@ class AdminModule {
 		$enqueue |= 'toplevel_page_gf_edit_forms' === $screen->id;
 
 		if ( $enqueue ) {
-			$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+			$min = SCRIPT_DEBUG ? '' : '.min';
 
 			// Tippy.js - https://atomiks.github.io/tippyjs/.
 			wp_register_script(
