@@ -27,8 +27,15 @@ class AddressHelper {
 	 * @param Address $address Address to complement.
 	 */
 	public static function complement_address( Address $address ) {
+		$line_1 = $address->get_line_1();
+
+		if ( empty( $line_1 ) ) {
+			// If address line 1 is empty we can't use it to complement the address.
+			return;
+		}
+
 		try {
-			$parts = AddressSplitter::splitAddress( $address->get_line_1() );
+			$parts = AddressSplitter::splitAddress( $line_1 );
 
 			if ( null === $address->get_street_name() && array_key_exists( 'streetName', $parts ) ) {
 				$address->set_street_name( $parts['streetName'] );
