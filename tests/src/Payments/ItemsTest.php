@@ -60,7 +60,7 @@ class ItemsTest extends WP_UnitTestCase {
 	 * Test count.
 	 */
 	public function test_count() {
-		$this->assertCount( 3, $this->items );
+		$this->assertCount( 4, $this->items );
 	}
 
 	/**
