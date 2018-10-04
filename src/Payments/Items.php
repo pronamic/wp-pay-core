@@ -112,27 +112,32 @@ class Items implements Countable, IteratorAggregate {
 			return $item->get_json();
 		}, $this->items );
 
-		return (object) $objects;
+		return $objects;
 	}
 
 	/**
 	 * Create items from object.
 	 *
-	 * @param stdClass $object Object.
+	 * @param mixed $json JSON.
 	 * @return Items
+	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an array.
 	 */
-	public static function from_object( stdClass $object ) {
-		$items = new self();
-
-		foreach ( $object as $item_object ) {
-			$item = Item::from_object( $item_object );
-
-			if ( null !== $item->get_json() ) {
-				$items->add_item( $item );
-			}
+	public static function from_json( $json ) {
+		if ( ! is_array( $json ) ) {
+			throw new InvalidArgumentException( 'JSON value must be an array.' );
 		}
 
-		return $items;
+		$object = new self();
+
+		$items = array_map( function( $object ) {
+			return Item::from_object( $object );
+		}, $json );
+
+		foreach ( $items as $item ) {
+			$object->add_item( $item );
+		}
+
+		return $object;
 	}
 
 	/**

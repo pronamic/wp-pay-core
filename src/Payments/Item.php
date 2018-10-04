@@ -212,17 +212,15 @@ class Item {
 	/**
 	 * Get JSON.
 	 *
-	 * @return object|null
+	 * @return object
 	 */
 	public function get_json() {
-		$data = array(
+		return (object) array(
 			'id'          => $this->get_id(),
 			'description' => $this->get_description(),
 			'quantity'    => $this->get_quantity(),
 			'price'       => $this->get_price(),
 		);
-
-		return (object) $data;
 	}
 
 	/**

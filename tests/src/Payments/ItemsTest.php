@@ -97,11 +97,11 @@ class ItemsTest extends WP_UnitTestCase {
 	public function test_from_object() {
 		$json_string = file_get_contents( __DIR__ . '/../../json/items.json' );
 
-		$object = json_decode( $json_string );
+		$json = json_decode( $json_string );
 
-		$items = Items::from_object( $object );
+		$items = Items::from_json( $json );
 
-		$this->assertCount( 3, $items );
+		$this->assertCount( 4, $items );
 		$this->assertEquals( $json_string, wp_json_encode( $items->get_json(), JSON_PRETTY_PRINT ) );
 	}
 }
