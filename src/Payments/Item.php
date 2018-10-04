@@ -191,19 +191,31 @@ class Item {
 	/**
 	 * Create item from object.
 	 *
-	 * @param stdClass $object Object.
-	 *
+	 * @param mixed $json JSON.
 	 * @return Item
+	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
-	public static function from_object( stdClass $object ) {
+	public static function from_json( $json ) {
+		if ( ! is_object( $json ) ) {
+			throw new InvalidArgumentException( 'JSON value must be an array.' );
+		}
+
 		$item = new self();
 
-		foreach ( $object as $key => $value ) {
-			$method = sprintf( 'set_%s', $key );
+		if ( property_exists( $json, 'id' ) ) {
+			$item->set_id( $json->id );
+		}
 
-			if ( method_exists( $item, $method ) && is_callable( array( $item, $method ) ) ) {
-				call_user_func( array( $item, $method ), $value );
-			}
+		if ( property_exists( $json, 'description' ) ) {
+			$item->set_description( $json->description );
+		}
+
+		if ( property_exists( $json, 'quantity' ) ) {
+			$item->set_quantity( $json->quantity );
+		}
+
+		if ( property_exists( $json, 'price' ) ) {
+			$item->set_price( $json->price );
 		}
 
 		return $item;

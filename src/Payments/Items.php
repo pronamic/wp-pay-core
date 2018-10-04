@@ -130,7 +130,7 @@ class Items implements Countable, IteratorAggregate {
 		$object = new self();
 
 		$items = array_map( function( $object ) {
-			return Item::from_object( $object );
+			return Item::from_json( $object );
 		}, $json );
 
 		foreach ( $items as $item ) {
