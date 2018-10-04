@@ -89,6 +89,7 @@ class ItemTest extends WP_UnitTestCase {
 		$item->set_unit_price( new Money( 121, 'EUR' ) );
 		$item->set_unit_tax( new Money( 21, 'EUR' ) );
 		$item->set_total_amount( new Money( 242, 'EUR' ) );
+		$item->set_tax_rate( 0.21 );
 
 		$this->setExpectedDeprecated( __NAMESPACE__ . '\Item::get_price' );
 		$this->assertJsonStringEqualsJsonFile( __DIR__ . '/../../json/item.json', wp_json_encode( $item->get_json() ) );

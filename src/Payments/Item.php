@@ -73,6 +73,17 @@ class Item {
 	private $total_amount;
 
 	/**
+	 * Tax rate.
+	 *
+	 * 100% = 1.00
+	 *  21% = 0.21
+	 *   6% = 0.06
+	 *
+	 * @var float
+	 */
+	private $tax_rate;
+
+	/**
 	 * Constructs and initialize a iDEAL basic item.
 	 */
 	public function __construct() {
@@ -220,7 +231,7 @@ class Item {
 	}
 
 	/**
-	 * Get unit price.
+	 * Get unit price including tax.
 	 *
 	 * @return Money|null
 	 */
@@ -229,9 +240,9 @@ class Item {
 	}
 
 	/**
-	 * Set unit price.
+	 * Set unit price including tax.
 	 *
-	 * @return Money|null
+	 * @param Money|null $unit_price Unit price.
 	 */
 	public function set_unit_price( Money $unit_price = null ) {
 		$this->unit_price = $unit_price;
@@ -249,14 +260,14 @@ class Item {
 	/**
 	 * Set unit tax.
 	 *
-	 * @return Money|null
+	 * @param Money|null $unit_tax Unit tax.
 	 */
 	public function set_unit_tax( Money $unit_tax = null ) {
 		$this->unit_tax = $unit_tax;
 	}
 
 	/**
-	 * Get total amount.
+	 * Get total amount including tax.
 	 *
 	 * @return Money|null
 	 */
@@ -265,12 +276,30 @@ class Item {
 	}
 
 	/**
-	 * Set total amount.
+	 * Set total amount including tax.
 	 *
-	 * @return Money|null
+	 * @param Money|null $total_amount Total amount.
 	 */
 	public function set_total_amount( Money $total_amount = null ) {
 		$this->total_amount = $total_amount;
+	}
+
+	/**
+	 * Get tax rate.
+	 *
+	 * @return float|null
+	 */
+	public function get_tax_rate() {
+		return $this->tax_rate;
+	}
+
+	/**
+	 * Set tax rate.
+	 *
+	 * @param float $tax_rate Tax rate.
+	 */
+	public function set_tax_rate( $tax_rate ) {
+		$this->tax_rate = $tax_rate;
 	}
 
 	/**
@@ -315,6 +344,10 @@ class Item {
 			$item->set_total_amount( MoneyJsonTransformer::from_json( $json->total_amount ) );
 		}
 
+		if ( property_exists( $json, 'tax_rate' ) ) {
+			$item->set_tax_rate( $json->tax_rate );
+		}
+
 		return $item;
 	}
 
@@ -332,6 +365,7 @@ class Item {
 			'unit_price'   => MoneyJsonTransformer::to_json( $this->get_unit_price() ),
 			'unit_tax'     => MoneyJsonTransformer::to_json( $this->get_unit_tax() ),
 			'total_amount' => MoneyJsonTransformer::to_json( $this->get_total_amount() ),
+			'tax_rate'     => $this->get_tax_rate(),
 		);
 	}
 
