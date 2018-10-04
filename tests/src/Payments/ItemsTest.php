@@ -45,6 +45,15 @@ class ItemsTest extends WP_UnitTestCase {
 		$item_c = new Item();
 
 		$this->items->add_item( $item_c );
+
+		$item_d = new Item();
+
+		$item_d->set_id( null );
+		$item_d->set_description( null );
+		$item_d->set_quantity( null );
+		$item_d->set_price( null );
+
+		$this->items->add_item( $item_d );
 	}
 
 	/**
