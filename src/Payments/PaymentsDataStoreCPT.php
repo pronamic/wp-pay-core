@@ -531,20 +531,37 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 
 		if ( empty( $value ) ) {
 			// Build address from legacy meta data.
-			$contact_name = new ContactName();
-			$contact_name->set_first_name( $this->get_meta( $id, 'first_name' ) );
-			$contact_name->set_last_name( $this->get_meta( $id, 'last_name' ) );
+			$name = new ContactName();
+			$name->set_first_name( $this->get_meta( $id, 'first_name' ) );
+			$name->set_last_name( $this->get_meta( $id, 'last_name' ) );
 
-			$address = new Address();
-			$address->set_name( $contact_name );
-			$address->set_email( $this->get_meta( $id, 'email' ) );
-			$address->set_phone( $this->get_meta( $id, 'telephone_number' ) );
-			$address->set_line_1( $this->get_meta( $id, 'address' ) );
-			$address->set_postal_code( $this->get_meta( $id, 'zip' ) );
-			$address->set_city( $this->get_meta( $id, 'city' ) );
-			$address->set_country( $this->get_meta( $id, 'country' ) );
+			$address     = $this->get_meta( $id, 'address' );
+			$postal_code = $this->get_meta( $id, 'zip' );
+			$city        = $this->get_meta( $id, 'city' );
+			$country     = $this->get_meta( $id, 'country' );
 
-			return $address;
+			$parts = array(
+				$address,
+				$postal_code,
+				$city,
+				$country,
+			);
+
+			$parts = array_map( 'trim', $parts );
+
+			if ( ! empty( $parts ) ) {
+				$address = new Address();
+
+				$address->set_name( $name );
+				$address->set_email( $this->get_meta( $id, 'email' ) );
+				$address->set_phone( $this->get_meta( $id, 'telephone_number' ) );
+				$address->set_line_1( $address );
+				$address->set_postal_code( $postal_code );
+				$address->set_city( $city );
+				$address->set_country( $country );
+
+				return $address;
+			}
 		}
 
 		$object = json_decode( $value );
@@ -557,13 +574,13 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	}
 
 	/**
-	 * Get payment billing address.
+	 * Get payment shipping address.
 	 *
 	 * @param int $id Post ID.
 	 * @return Address|null
 	 */
-	private function get_billing_address( $id ) {
-		$value = $this->get_meta( $id, 'billing_address' );
+	private function get_shipping_address( $id ) {
+		$value = $this->get_meta( $id, 'shipping_address' );
 
 		if ( empty( $value ) ) {
 			return null;
@@ -634,57 +651,31 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 
 		// Deprecated properties, use `get_customer()` or `get_billing_address()` instead.
 		// @todo remove?
-		$payment->language         = $payment->get_customer()->get_language();
-		$payment->locale           = $payment->get_customer()->get_locale();
-		$payment->user_agent       = $payment->get_customer()->get_user_agent();
-		$payment->user_ip          = $payment->get_customer()->get_ip_address();
-		$payment->customer_name    = $payment->get_customer()->get_name();
-		$payment->first_name       = $payment->get_customer()->get_name()->get_first_name();
-		$payment->last_name        = $payment->get_customer()->get_name()->get_last_name();
-		$payment->address          = $payment->get_billing_address()->get_line_1();
-		$payment->zip              = $payment->get_billing_address()->get_postal_code();
-		$payment->city             = $payment->get_billing_address()->get_city();
-		$payment->country          = $payment->get_billing_address()->get_country();
-		$payment->telephone_number = $payment->get_billing_address()->get_phone();
+		$customer = $payment->get_customer();
+
+		if ( null !== $customer ) {
+			$payment->language      = $customer->get_language();
+			$payment->locale        = $customer->get_locale();
+			$payment->user_agent    = $customer->get_user_agent();
+			$payment->user_ip       = $customer->get_ip_address();
+			$payment->customer_name = (string) $customer->get_name();
+			$payment->first_name    = $customer->get_name()->get_first_name();
+			$payment->last_name     = $customer->get_name()->get_last_name();
+		}
+
+		$billing_address = $payment->get_billing_address();
+
+		if ( null !== $billing_address ) {
+			$payment->address          = $billing_address->get_line_1();
+			$payment->zip              = $billing_address->get_postal_code();
+			$payment->city             = $billing_address->get_city();
+			$payment->country          = $billing_address->get_country();
+			$payment->telephone_number = $billing_address->get_phone();
+		}
 
 		// Gravity Forms country fix.
 		if ( ! empty( $payment->country ) && 'gravityformsideal' === $payment->source && method_exists( 'GFCommon', 'get_country_code' ) ) {
 			$payment->country = \GFCommon::get_country_code( $payment->country );
-		}
-
-		// Address.
-		$parts = array(
-			$payment->address,
-			$payment->zip,
-			$payment->city,
-			$payment->country,
-		);
-
-		$parts = array_map( 'trim', $parts );
-
-		$parts = array_filter( $parts );
-
-		if ( ! empty( $parts ) ) {
-			$address = new Address();
-
-			if ( ! empty( $payment->address ) ) {
-				$address->set_line_1( $payment->address );
-			}
-
-			if ( ! empty( $payment->zip ) ) {
-				$address->set_postal_code( $payment->zip );
-			}
-
-			if ( ! empty( $payment->city ) ) {
-				$address->set_city( $payment->city );
-			}
-
-			if ( 2 === strlen( $payment->country ) ) {
-				$address->set_country_code( $payment->country );
-			}
-
-			$payment->set_billing_address( $address );
-			$payment->set_shipping_address( $address );
 		}
 
 		// Amount.
@@ -721,7 +712,6 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			'consumer_city'           => $payment->consumer_city,
 			'source'                  => $payment->source,
 			'source_id'               => $payment->source_id,
-			'email'                   => $payment->get_customer()->get_email(),
 			'analytics_client_id'     => $payment->analytics_client_id,
 			'subscription_id'         => $payment->subscription_id,
 			'recurring_type'          => $payment->recurring_type,
@@ -730,47 +720,59 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			'action_url'              => $payment->get_action_url(),
 			'start_date'              => $payment->start_date,
 			'end_date'                => $payment->end_date,
-
-			// Deprecated properties, use `get_customer()` or `get_billing_address()` instead.
-			// @todo remove?
-
-			/*
-			'language'                => $payment->get_customer()->get_language(),
-			'locale'                  => $payment->get_customer()->get_locale(),
-			'user_agent'              => $payment->get_customer()->get_user_agent(),
-			'user_ip'                 => $payment->get_customer()->get_ip_address(),
-			'customer_name'           => $payment->get_customer()->get_name(),
-			'first_name'              => $payment->get_customer()->get_name()->get_first_name(),
-			'last_name'               => $payment->get_customer()->get_name()->get_last_name(),
-			'address'                 => $payment->get_billing_address()->get_line_1(),
-			'zip'                     => $payment->get_billing_address()->get_postal_code(),
-			'city'                    => $payment->get_billing_address()->get_city(),
-			'country'                 => $payment->get_billing_address()->get_country(),
-			'telephone_number'        => $payment->get_billing_address()->get_phone(),
-			*/
 		);
+
+		// Customer.
+		$customer = $payment->get_customer();
+
+		if ( null !== $customer ) {
+			$meta['customer'] = wp_json_encode( $customer->get_json() );
+
+			// Deprecated meta values.
+			$meta['email']      = $customer->get_email();
+			$meta['language']   = $customer->get_language();
+			$meta['locale']     = $customer->get_locale();
+			$meta['user_agent'] = $customer->get_user_agent();
+			$meta['user_ip']    = $customer->get_ip_address();
+
+			$name = $customer->get_name();
+
+			if ( null !== $name ) {
+				$meta['customer_name'] = (string) $name;
+				$meta['first_name']    = $name->get_first_name();
+				$meta['last_name']     = $name->get_last_name();
+			}
+		}
+
+		$billing_address = $payment->get_billing_address();
+
+		if ( null !== $billing_address ) {
+			$meta['billing_address'] = wp_json_encode( $billing_address->get_json() );
+
+			// Deprecated meta values.
+			$meta['address']          = $billing_address->get_line_1();
+			$meta['zip']              = $billing_address->get_postal_code();
+			$meta['city']             = $billing_address->get_city();
+			$meta['country']          = $billing_address->get_country();
+			$meta['telephone_number'] = $billing_address->get_phone();
+		}
+
+		// Shipping address.
+		$shipping_address = $payment->get_shipping_address();
+
+		if ( null !== $shipping_address ) {
+			$meta['shipping_address'] = wp_json_encode( $shipping_address->get_json() );
+		}
+
+		// Items.
+		$items = $payment->get_order_items();
+
+		if ( null !== $items ) {
+			$meta['order_items'] = wp_json_encode( $items->get_json() );
+		}
 
 		// Update meta.
 		foreach ( $meta as $meta_key => $meta_value ) {
-			$this->update_meta( $payment->get_id(), $meta_key, $meta_value );
-		}
-
-		// JSON meta.
-		$meta = array(
-			'customer'         => $payment->get_customer()->get_json(),
-			'billing_address'  => $payment->get_billing_address()->get_json(),
-			'shipping_address' => $payment->get_shipping_address()->get_json(),
-			'order_items'      => $payment->get_order_items()->get_json(),
-		);
-
-		// Update JSON meta.
-		foreach ( $meta as $meta_key => $meta_value ) {
-			if ( null === $meta_value ) {
-				continue;
-			}
-
-			$meta_value = wp_json_encode( $meta_value );
-
 			$this->update_meta( $payment->get_id(), $meta_key, $meta_value );
 		}
 
