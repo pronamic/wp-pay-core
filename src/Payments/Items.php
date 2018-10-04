@@ -106,7 +106,7 @@ class Items implements Countable, IteratorAggregate {
 	/**
 	 * Get JSON.
 	 *
-	 * @return object|null
+	 * @return array
 	 */
 	public function get_json() {
 		$objects = array_map(
