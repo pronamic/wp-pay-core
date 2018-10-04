@@ -43,7 +43,7 @@ class FormScripts {
 	 * Register.
 	 */
 	public function register() {
-		$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		$min = SCRIPT_DEBUG ? '' : '.min';
 
 		wp_register_style(
 			'pronamic-pay-forms',

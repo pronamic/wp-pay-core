@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use WP_Error;
+
 /**
  * License Manager
  *

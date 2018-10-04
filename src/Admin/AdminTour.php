@@ -62,7 +62,7 @@ class AdminTour {
 	 * Admin enqueue scripts.
 	 */
 	public function admin_enqueue_scripts() {
-		$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		$min = SCRIPT_DEBUG ? '' : '.min';
 
 		// Pointers.
 		wp_register_style(

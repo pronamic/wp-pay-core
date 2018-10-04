@@ -144,7 +144,7 @@ class AdminModule {
 		if (
 			false === $redirect
 				||
-			defined( 'DOING_AJAX' ) && DOING_AJAX
+			wp_doing_ajax()
 				||
 			defined( 'DOING_CRON' ) && DOING_CRON
 				||

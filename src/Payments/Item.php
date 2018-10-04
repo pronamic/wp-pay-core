@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
+use InvalidArgumentException;
 use Pronamic\WordPress\Money\Money;
 use stdClass;
 

@@ -12,6 +12,7 @@ namespace Pronamic\WordPress\Pay\Payments;
 
 use ArrayIterator;
 use Countable;
+use InvalidArgumentException;
 use IteratorAggregate;
 use Pronamic\WordPress\Money\Money;
 use stdClass;
