@@ -155,17 +155,7 @@ class Items implements Countable, IteratorAggregate {
 	 * @return string
 	 */
 	public function __toString() {
-		$pieces = array();
-
-		$items = $this->getIterator();
-
-		while ( $items->valid() ) {
-			$item = $items->current();
-
-			$pieces[] = $item;
-
-			$items->next();
-		}
+		$pieces = array_map( 'strval', $this->items );
 
 		$pieces = array_filter( $pieces );
 
