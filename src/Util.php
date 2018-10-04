@@ -93,7 +93,7 @@ class Util {
 	 *
 	 * @param float $price The amount to convert to cents.
 	 *
-	 * @return int
+	 * @return float
 	 */
 	public static function amount_to_cents( $price ) {
 		return round( $price * 100 );
