@@ -400,28 +400,28 @@ class Payment {
 	/**
 	 * Customer.
 	 *
-	 * @var Customer
+	 * @var Customer|null
 	 */
 	public $customer;
 
 	/**
 	 * Billing address.
 	 *
-	 * @var Address
+	 * @var Address|null
 	 */
 	public $billing_address;
 
 	/**
 	 * Shipping address.
 	 *
-	 * @var Address
+	 * @var Address|null
 	 */
 	public $shipping_address;
 
 	/**
 	 * Order items.
 	 *
-	 * @var Items
+	 * @var Items|null
 	 */
 	public $order_items;
 
@@ -434,10 +434,6 @@ class Payment {
 		$this->id               = $post_id;
 		$this->date             = new DateTime();
 		$this->meta             = array();
-		$this->order_items      = new Items();
-		$this->customer         = new Customer();
-		$this->billing_address  = new Address();
-		$this->shipping_address = new Address();
 
 		$this->set_amount( new Money() );
 		$this->set_status( Statuses::OPEN );
@@ -618,7 +614,7 @@ class Payment {
 	/**
 	 * Get customer.
 	 *
-	 * @return Customer
+	 * @return Customer|null
 	 */
 	public function get_customer() {
 		return $this->customer;
@@ -636,7 +632,7 @@ class Payment {
 	/**
 	 * Get billing address.
 	 *
-	 * @return Address
+	 * @return Address|null
 	 */
 	public function get_billing_address() {
 		return $this->billing_address;
@@ -654,7 +650,7 @@ class Payment {
 	/**
 	 * Get shipping address.
 	 *
-	 * @return Address
+	 * @return Address|null
 	 */
 	public function get_shipping_address() {
 		return $this->shipping_address;
@@ -672,7 +668,7 @@ class Payment {
 	/**
 	 * Get items.
 	 *
-	 * @return Items
+	 * @return Items|null
 	 */
 	public function get_order_items() {
 		return $this->order_items;
