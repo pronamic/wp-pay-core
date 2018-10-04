@@ -23,7 +23,7 @@ class Item {
 	/**
 	 * The ID.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $id;
 
@@ -52,7 +52,7 @@ class Item {
 	 * Constructs and initialize a iDEAL basic item.
 	 */
 	public function __construct() {
-		$this->id          = '';
+		$this->id          = null;
 		$this->description = '';
 		$this->quantity    = 1;
 		$this->price       = 0;
@@ -93,7 +93,7 @@ class Item {
 	/**
 	 * Get the id / identifier of this item.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_id() {
 		return $this->id;
@@ -102,7 +102,7 @@ class Item {
 	/**
 	 * Set the id / identifier of this item.
 	 *
-	 * @param string $id Number.
+	 * @param string|null $id Number.
 	 */
 	public function set_id( $id ) {
 		$this->id = strval( $id );
@@ -111,7 +111,7 @@ class Item {
 	/**
 	 * Set the id / identifier of this item.
 	 *
-	 * @param string $id Number.
+	 * @param string|null $id Number.
 	 *
 	 * @deprecated 2.0.8
 	 */
