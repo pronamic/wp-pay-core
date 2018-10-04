@@ -112,12 +112,6 @@ class Items implements Countable, IteratorAggregate {
 			return $item->get_json();
 		}, $this->items );
 
-		$objects = array_filter( $objects );
-
-		if ( empty( $objects ) ) {
-			return null;
-		}
-
 		return (object) $objects;
 	}
 
@@ -148,8 +142,6 @@ class Items implements Countable, IteratorAggregate {
 	 */
 	public function __toString() {
 		$pieces = array_map( 'strval', $this->items );
-
-		$pieces = array_filter( $pieces );
 
 		$string = implode( PHP_EOL, $pieces );
 

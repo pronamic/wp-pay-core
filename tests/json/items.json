@@ -12,6 +12,15 @@
         "price": 25
     },
     "2": {
-        "quantity": 1
+        "id": null,
+        "description": null,
+        "quantity": 1,
+        "price": 0
+    },
+    "3": {
+        "id": null,
+        "description": null,
+        "quantity": null,
+        "price": null
     }
 }

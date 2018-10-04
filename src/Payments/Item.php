@@ -105,7 +105,7 @@ class Item {
 	 * @param string|null $id Number.
 	 */
 	public function set_id( $id ) {
-		$this->id = strval( $id );
+		$this->id = $id;
 	}
 
 	/**
@@ -221,12 +221,6 @@ class Item {
 			'quantity'    => $this->get_quantity(),
 			'price'       => $this->get_price(),
 		);
-
-		$data = array_filter( $data );
-
-		if ( empty( $data ) ) {
-			return null;
-		}
 
 		return (object) $data;
 	}
