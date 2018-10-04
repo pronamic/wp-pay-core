@@ -73,7 +73,8 @@ class ItemsTest extends WP_UnitTestCase {
 
 		$expected .= '1234 Lorem ipsum dolor sit amet. 50 39.99 1999.50' . PHP_EOL;
 		$expected .= '5678 Lorem ipsum dolor sit amet. 10 25.00 250.00' . PHP_EOL;
-		$expected .= '  1 0.00 0.00';
+		$expected .= '  1 0.00 0.00' . PHP_EOL;
+		$expected .= '  0 0.00 0.00';
 
 		$this->assertEquals( $expected, $string );
 	}
