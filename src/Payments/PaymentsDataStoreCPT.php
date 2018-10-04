@@ -535,13 +535,13 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			$name->set_first_name( $this->get_meta( $id, 'first_name' ) );
 			$name->set_last_name( $this->get_meta( $id, 'last_name' ) );
 
-			$address     = $this->get_meta( $id, 'address' );
+			$line_1      = $this->get_meta( $id, 'address' );
 			$postal_code = $this->get_meta( $id, 'zip' );
 			$city        = $this->get_meta( $id, 'city' );
 			$country     = $this->get_meta( $id, 'country' );
 
 			$parts = array(
-				$address,
+				$line_1,
 				$postal_code,
 				$city,
 				$country,
@@ -555,7 +555,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 				$address->set_name( $name );
 				$address->set_email( $this->get_meta( $id, 'email' ) );
 				$address->set_phone( $this->get_meta( $id, 'telephone_number' ) );
-				$address->set_line_1( $address );
+				$address->set_line_1( $line_1 );
 				$address->set_postal_code( $postal_code );
 				$address->set_city( $city );
 				$address->set_country( $country );
