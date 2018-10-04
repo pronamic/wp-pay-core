@@ -108,25 +108,17 @@ class Items implements Countable, IteratorAggregate {
 	 * @return object|null
 	 */
 	public function get_json() {
-		$data = array();
+		$objects = array_map( function( $item ) {
+			return $item->get_json();
+		}, $this->items );
 
-		$items = $this->getIterator();
+		$objects = array_filter( $objects );
 
-		while ( $items->valid() ) {
-			$item = $items->current();
-
-			$data[] = $item->get_json();
-
-			$items->next();
-		}
-
-		$data = array_filter( $data );
-
-		if ( empty( $data ) ) {
+		if ( empty( $objects ) ) {
 			return null;
 		}
 
-		return (object) $data;
+		return (object) $objects;
 	}
 
 	/**
