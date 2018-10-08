@@ -31,6 +31,7 @@ class AddressTest extends WP_UnitTestCase {
 		$name->set_first_name( 'Remco' );
 		$name->set_last_name( 'Tolsma' );
 
+		$address->set_company_name( 'Pronamic' );
 		$address->set_name( $name );
 		$address->set_email( 'info@pronamic.nl' );
 		$address->set_line_1( 'Burgemeester Wuiteweg 39b' );
@@ -44,6 +45,7 @@ class AddressTest extends WP_UnitTestCase {
 		$address->set_region( 'Friesland' );
 		$address->set_country_code( 'NL' );
 
+		$this->assertEquals( 'Pronamic', $address->get_company_name() );
 		$this->assertEquals( $name, $address->get_name() );
 		$this->assertEquals( 'info@pronamic.nl', $address->get_email() );
 		$this->assertEquals( 'Burgemeester Wuiteweg 39b', $address->get_line_1() );
@@ -59,6 +61,7 @@ class AddressTest extends WP_UnitTestCase {
 
 		$string = '';
 
+		$string .= 'Pronamic' . PHP_EOL;
 		$string .= 'Remco Tolsma' . PHP_EOL;
 		$string .= 'Burgemeester Wuiteweg 39b' . PHP_EOL;
 		$string .= '1e etage' . PHP_EOL;

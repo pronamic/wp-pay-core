@@ -515,8 +515,8 @@ class Address {
 	 */
 	public function __toString() {
 		$parts = array(
-			$this->get_name(),
 			$this->get_company_name(),
+			$this->get_name(),
 			$this->get_line_1(),
 			$this->get_line_2(),
 			$this->get_postal_code() . ' ' . $this->get_city(),
