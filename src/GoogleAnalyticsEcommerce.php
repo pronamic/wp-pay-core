@@ -134,28 +134,73 @@ class GoogleAnalyticsEcommerce {
 		);
 
 		// Item Hit.
-		$item = wp_parse_args(
-			array(
-				't'  => 'item',
-				'in' => sprintf(
-					'%s #%s',
-					$payment->get_source_description(),
-					$payment->get_source_id()
-				),
-				'ip' => $payment->get_amount()->get_amount(),
-				'iq' => 1,
-			),
-			$defaults
-		);
+		$lines = $payment->get_lines();
 
-		wp_remote_post(
-			self::API_URL,
-			array(
-				'user-agent' => filter_input( INPUT_SERVER, 'HTTP_USER_AGENT' ),
-				'body'       => http_build_query( $item ),
-				'blocking'   => false,
-			)
-		);
+		if ( empty( $lines ) ) {
+			$item = wp_parse_args(
+				array(
+					't'  => 'item',
+					'in' => sprintf(
+						'%s #%s',
+						$payment->get_source_description(),
+						$payment->get_source_id()
+					),
+					'ip' => $payment->get_amount()->get_amount(),
+					'iq' => 1,
+				),
+				$defaults
+			);
+
+			wp_remote_post(
+				self::API_URL,
+				array(
+					'user-agent' => filter_input( INPUT_SERVER, 'HTTP_USER_AGENT' ),
+					'body'       => http_build_query( $item ),
+					'blocking'   => false,
+				)
+			);
+		}
+
+		if ( ! empty( $lines ) ) {
+			foreach ( $lines as $line ) {
+				$item = $defaults;
+
+				// Hit - Hit type - Required for all hit types.
+				// @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#t
+				$item['t'] = 'item';
+
+				// Item Name - Required for item hit type. - Specifies the item name.
+				// @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#in
+				$item['in'] = $line->get_name();
+
+				// Item Price - Optional. - Specifies the price for a single item / unit.
+				// @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ip
+				if ( null !== $line->get_unit_price() ) {
+					$item['ip'] = $line->get_unit_price()->get_amount();
+				}
+
+				// Item Quantity - Optional. - Specifies the number of items purchased.
+				// @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#iq
+				if ( null !== $line->get_quantity() ) {
+					$item['iq'] = $line->get_quantity();
+				}
+
+				// Item Code - Optional. - Specifies the SKU or item code.
+				// @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ic
+				if ( null !== $line->get_sku() ) {
+					$item['ic'] = $line->get_sku();
+				}
+
+				wp_remote_post(
+					self::API_URL,
+					array(
+						'user-agent' => filter_input( INPUT_SERVER, 'HTTP_USER_AGENT' ),
+						'body'       => http_build_query( $item ),
+						'blocking'   => false,
+					)
+				);
+			}
+		}
 	}
 
 	/**
