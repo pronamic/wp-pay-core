@@ -48,6 +48,15 @@ class PaymentLines implements Countable, IteratorAggregate {
 	}
 
 	/**
+	 * Get array.
+	 *
+	 * @return array
+	 */
+	public function get_array() {
+		return $this->lines;
+	}
+
+	/**
 	 * Add line.
 	 *
 	 * @param PaymentLine $line The line to add.
