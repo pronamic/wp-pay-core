@@ -374,6 +374,15 @@ class AdminPaymentPostType {
 			);
 
 			add_meta_box(
+				'pronamic_payment_lines',
+				__( 'Payment Lines', 'pronamic_ideal' ),
+				array( $this, 'meta_box_lines' ),
+				$post_type,
+				'normal',
+				'high'
+			);
+
+			add_meta_box(
 				'pronamic_payment_subscription',
 				__( 'Subscription', 'pronamic_ideal' ),
 				array( $this, 'meta_box_subscription' ),
@@ -412,6 +421,19 @@ class AdminPaymentPostType {
 	 */
 	public function meta_box_info( $post ) {
 		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-payment-info.php';
+	}
+
+	/**
+	 * Pronamic Pay payment lines meta box.
+	 *
+	 * @param WP_Post $post The object for the current post/page.
+	 */
+	public function meta_box_lines( $post ) {
+		$payment = get_pronamic_payment( $post );
+
+		$lines = $payment->get_lines();
+
+		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-payment-lines.php';
 	}
 
 	/**
