@@ -234,6 +234,24 @@ class PaymentLine {
 	}
 
 	/**
+	 * Get total discount.
+	 *
+	 * @return Money|null
+	 */
+	public function get_total_discount() {
+		return $this->total_discount;
+	}
+
+	/**
+	 * Set total discount.
+	 *
+	 * @param Money|null $total_discount Total discount.
+	 */
+	public function set_total_discount( Money $total_discount = null ) {
+		$this->total_discount = $total_discount;
+	}
+
+	/**
 	 * Get total tax.
 	 *
 	 * @return Money|null
@@ -319,6 +337,10 @@ class PaymentLine {
 			$line->set_total_tax( MoneyJsonTransformer::from_json( $json->total_tax ) );
 		}
 
+		if ( isset( $json->total_discount ) ) {
+			$line->set_total_discount( MoneyJsonTransformer::from_json( $json->total_discount ) );
+		}
+
 		if ( property_exists( $json, 'tax_rate' ) ) {
 			$line->set_tax_rate( $json->tax_rate );
 		}
@@ -333,16 +355,17 @@ class PaymentLine {
 	 */
 	public function get_json() {
 		return (object) array(
-			'id'           => $this->get_id(),
-			'sku'          => $this->get_sku(),
-			'name'         => $this->get_name(),
-			'description'  => $this->get_description(),
-			'quantity'     => $this->get_quantity(),
-			'unit_price'   => MoneyJsonTransformer::to_json( $this->get_unit_price() ),
-			'unit_tax'     => MoneyJsonTransformer::to_json( $this->get_unit_tax() ),
-			'total_amount' => MoneyJsonTransformer::to_json( $this->get_total_amount() ),
-			'total_tax'    => MoneyJsonTransformer::to_json( $this->get_total_tax() ),
-			'tax_rate'     => $this->get_tax_rate(),
+			'id'             => $this->get_id(),
+			'sku'            => $this->get_sku(),
+			'name'           => $this->get_name(),
+			'description'    => $this->get_description(),
+			'quantity'       => $this->get_quantity(),
+			'unit_price'     => MoneyJsonTransformer::to_json( $this->get_unit_price() ),
+			'unit_tax'       => MoneyJsonTransformer::to_json( $this->get_unit_tax() ),
+			'total_amount'   => MoneyJsonTransformer::to_json( $this->get_total_amount() ),
+			'total_tax'      => MoneyJsonTransformer::to_json( $this->get_total_tax() ),
+			'total_discount' => MoneyJsonTransformer::to_json( $this->get_total_discount() ),
+			'tax_rate'       => $this->get_tax_rate(),
 		);
 	}
 
