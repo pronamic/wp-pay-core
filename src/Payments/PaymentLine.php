@@ -30,6 +30,13 @@ class PaymentLine {
 	private $id;
 
 	/**
+	 * SKU.
+	 *
+	 * @var string|null
+	 */
+	private $sku;
+
+	/**
 	 * Name.
 	 *
 	 * @var string|null
@@ -98,6 +105,24 @@ class PaymentLine {
 	 */
 	public function set_id( $id ) {
 		$this->id = $id;
+	}
+
+	/**
+	 * Get the SKU of this payment line.
+	 *
+	 * @return string|null
+	 */
+	public function get_sku() {
+		return $this->sku;
+	}
+
+	/**
+	 * Set the SKU of this payment line.
+	 *
+	 * @param string|null $sku SKU.
+	 */
+	public function set_sku( $sku ) {
+		$this->sku = $sku;
 	}
 
 	/**
@@ -262,6 +287,10 @@ class PaymentLine {
 			$line->set_id( $json->id );
 		}
 
+		if ( property_exists( $json, 'sku' ) ) {
+			$line->set_sku( $json->sku );
+		}
+
 		if ( property_exists( $json, 'name' ) ) {
 			$line->set_name( $json->name );
 		}
@@ -305,6 +334,7 @@ class PaymentLine {
 	public function get_json() {
 		return (object) array(
 			'id'           => $this->get_id(),
+			'sku'          => $this->get_sku(),
 			'name'         => $this->get_name(),
 			'description'  => $this->get_description(),
 			'quantity'     => $this->get_quantity(),
