@@ -27,6 +27,11 @@ class AddressTest extends WP_UnitTestCase {
 
 		$this->assertInstanceOf( __NAMESPACE__ . '\Address', $address );
 
+		$name = new ContactName();
+		$name->set_first_name( 'Remco' );
+		$name->set_last_name( 'Tolsma' );
+
+		$address->set_name( $name );
 		$address->set_line_1( 'Burgemeester Wuiteweg 39b' );
 		$address->set_line_2( '1e etage' );
 		$address->set_street_name( 'Burgemeester Wuiteweg' );
@@ -38,6 +43,7 @@ class AddressTest extends WP_UnitTestCase {
 		$address->set_region( 'Friesland' );
 		$address->set_country_code( 'NL' );
 
+		$this->assertEquals( $name, $address->get_name() );
 		$this->assertEquals( 'Burgemeester Wuiteweg 39b', $address->get_line_1() );
 		$this->assertEquals( '1e etage', $address->get_line_2() );
 		$this->assertEquals( 'Burgemeester Wuiteweg', $address->get_street_name() );
@@ -51,6 +57,7 @@ class AddressTest extends WP_UnitTestCase {
 
 		$string = '';
 
+		$string .= 'Remco Tolsma' . PHP_EOL;
 		$string .= 'Burgemeester Wuiteweg 39b' . PHP_EOL;
 		$string .= '1e etage' . PHP_EOL;
 		$string .= '9203 KA Drachten' . PHP_EOL;
