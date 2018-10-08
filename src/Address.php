@@ -164,9 +164,9 @@ class Address {
 	/**
 	 * Set contact name.
 	 *
-	 * @param ContactName $name Contact name.
+	 * @param ContactName|null $name Contact name.
 	 */
-	public function set_name( ContactName $name ) {
+	public function set_name( ContactName $name = null ) {
 		$this->name = $name;
 	}
 
@@ -458,7 +458,7 @@ class Address {
 	 */
 	public function get_json() {
 		$data = array(
-			'name'                  => $this->get_name()->get_json(),
+			'name'                  => ( null === $this->get_name() ) ? null : $this->get_name()->get_json(),
 			'email'                 => $this->get_email(),
 			'company_name'          => $this->get_company_name(),
 			'kvk_number'            => $this->get_kvk_number(),

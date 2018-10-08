@@ -30,6 +30,13 @@ class PaymentLine {
 	private $id;
 
 	/**
+	 * Name.
+	 *
+	 * @var string|null
+	 */
+	private $name;
+
+	/**
 	 * The description.
 	 *
 	 * @var string|null
@@ -39,17 +46,9 @@ class PaymentLine {
 	/**
 	 * The quantity.
 	 *
-	 * @var int
+	 * @var int|null
 	 */
 	private $quantity;
-
-	/**
-	 * The price.
-	 *
-	 * @deprecated
-	 * @var float
-	 */
-	private $price;
 
 	/**
 	 * The unit price of this payment line.
@@ -84,48 +83,6 @@ class PaymentLine {
 	private $tax_rate;
 
 	/**
-	 * Constructs and initialize a payment line.
-	 */
-	public function __construct() {
-		$this->id          = null;
-		$this->description = null;
-		$this->quantity    = 1;
-		$this->price       = 0;
-	}
-
-	/**
-	 * Call.
-	 *
-	 * @link http://php.net/manual/de/language.oop5.magic.php
-	 *
-	 * @param string $name      Method name.
-	 * @param array  $arguments Method arguments.
-	 * @return string|int|float
-	 */
-	public function __call( $name, $arguments ) {
-		$map = array(
-			'getNumber'      => 'get_id',
-			'setNumber'      => 'set_id',
-			'setDescription' => 'set_description',
-			'getQuantity'    => 'get_quantity',
-			'setQuantity'    => 'set_quantity',
-			'getPrice'       => 'get_price',
-			'setPrice'       => 'set_price',
-		);
-
-		if ( isset( $map[ $name ] ) ) {
-			$old_method = $name;
-			$new_method = $map[ $name ];
-
-			_deprecated_function( esc_html( __CLASS__ . '::' . $old_method ), '2.0.1', esc_html( __CLASS__ . '::' . $new_method ) );
-
-			return call_user_func_array( array( $this, $new_method ), $arguments );
-		}
-
-		trigger_error( esc_html( 'Call to undefined method ' . __CLASS__ . '::' . $name . '()' ), E_USER_ERROR );
-	}
-
-	/**
 	 * Get the id / identifier of this payment line.
 	 *
 	 * @return string|null
@@ -144,16 +101,21 @@ class PaymentLine {
 	}
 
 	/**
-	 * Set the id / identifier of this payment line.
+	 * Get the name of this payment line.
 	 *
-	 * @param string|null $id Number.
-	 *
-	 * @deprecated 2.0.8
+	 * @return string|null
 	 */
-	public function set_number( $id ) {
-		_deprecated_function( esc_html( __METHOD__ ), '2.0.8', esc_html( __CLASS__ . '::set_id()' ) );
+	public function get_name() {
+		return $this->name;
+	}
 
-		$this->set_id( $id );
+	/**
+	 * Set the name of this payment line.
+	 *
+	 * @param string|null $name Name.
+	 */
+	public function set_name( $name ) {
+		$this->name = $name;
 	}
 
 	/**
@@ -247,6 +209,24 @@ class PaymentLine {
 	}
 
 	/**
+	 * Get total tax.
+	 *
+	 * @return Money|null
+	 */
+	public function get_total_tax() {
+		return $this->total_tax;
+	}
+
+	/**
+	 * Set total tax.
+	 *
+	 * @param Money|null $total_tax Total tax.
+	 */
+	public function set_total_tax( Money $total_tax = null ) {
+		$this->total_tax = $total_tax;
+	}
+
+	/**
 	 * Get tax rate.
 	 *
 	 * @return float|null
@@ -282,6 +262,10 @@ class PaymentLine {
 			$line->set_id( $json->id );
 		}
 
+		if ( property_exists( $json, 'name' ) ) {
+			$line->set_name( $json->name );
+		}
+
 		if ( property_exists( $json, 'description' ) ) {
 			$line->set_description( $json->description );
 		}
@@ -302,6 +286,10 @@ class PaymentLine {
 			$line->set_total_amount( MoneyJsonTransformer::from_json( $json->total_amount ) );
 		}
 
+		if ( isset( $json->total_tax ) ) {
+			$line->set_total_tax( MoneyJsonTransformer::from_json( $json->total_tax ) );
+		}
+
 		if ( property_exists( $json, 'tax_rate' ) ) {
 			$line->set_tax_rate( $json->tax_rate );
 		}
@@ -317,11 +305,13 @@ class PaymentLine {
 	public function get_json() {
 		return (object) array(
 			'id'           => $this->get_id(),
+			'name'         => $this->get_name(),
 			'description'  => $this->get_description(),
 			'quantity'     => $this->get_quantity(),
 			'unit_price'   => MoneyJsonTransformer::to_json( $this->get_unit_price() ),
 			'unit_tax'     => MoneyJsonTransformer::to_json( $this->get_unit_tax() ),
 			'total_amount' => MoneyJsonTransformer::to_json( $this->get_total_amount() ),
+			'total_tax'    => MoneyJsonTransformer::to_json( $this->get_total_tax() ),
 			'tax_rate'     => $this->get_tax_rate(),
 		);
 	}

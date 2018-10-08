@@ -429,7 +429,7 @@ class AdminPaymentPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 */
 	public function meta_box_lines( $post ) {
-		$payment = get_pronamic_payment( $post );
+		$payment = get_pronamic_payment( $post->ID );
 
 		$lines = $payment->get_lines();
 

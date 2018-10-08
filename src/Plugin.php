@@ -836,8 +836,14 @@ class Plugin {
 
 		// Complements.
 		$payment->customer->complement();
-		$payment->billing_address->complement();
-		$payment->shipping_address->complement();
+
+		if ( null !== $payment->get_billing_address() ) {
+			AddressHelper::complement_address( $payment->get_billing_address() );
+		}
+
+		if ( null !== $payment->get_shipping_address() ) {
+			AddressHelper::complement_address( $payment->get_shipping_address() );
+		}
 	}
 
 	/**

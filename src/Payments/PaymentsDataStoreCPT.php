@@ -567,7 +567,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$object = json_decode( $value );
 
 		if ( is_object( $object ) ) {
-			$value = Address::from_object( $object );
+			$value = Address::from_json( $object );
 		}
 
 		return null;
@@ -589,7 +589,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$object = json_decode( $value );
 
 		if ( is_object( $object ) ) {
-			$value = Address::from_object( $object );
+			$value = Address::from_json( $object );
 		}
 
 		return null;
@@ -599,7 +599,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	 * Get payment lines.
 	 *
 	 * @param int $id Post ID.
-	 * @return Items|null
+	 * @return PaymentLines|null
 	 */
 	private function get_payment_lines( $id ) {
 		$value = $this->get_meta( $id, 'lines' );
@@ -611,7 +611,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$json = json_decode( $value );
 
 		// @todo what if this fails? try catch or throw exception?
-		$value = Items::from_json( $json );
+		$value = PaymentLines::from_json( $json );
 
 		return $value;
 	}
@@ -764,11 +764,11 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			$meta['shipping_address'] = wp_json_encode( $shipping_address->get_json() );
 		}
 
-		// Items.
-		$items = $payment->get_order_items();
+		// Lines.
+		$lines = $payment->get_lines();
 
-		if ( null !== $items ) {
-			$meta['order_items'] = wp_json_encode( $items->get_json() );
+		if ( null !== $lines ) {
+			$meta['lines'] = wp_json_encode( $lines->get_json() );
 		}
 
 		// Update meta.

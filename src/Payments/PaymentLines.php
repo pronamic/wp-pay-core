@@ -57,6 +57,19 @@ class PaymentLines implements Countable, IteratorAggregate {
 	}
 
 	/**
+	 * New line.
+	 *
+	 * @return PaymentLine
+	 */
+	public function new_line() {
+		$line = new PaymentLine();
+
+		$this->add_line( $line );
+
+		return $line;
+	}
+
+	/**
 	 * Count lines.
 	 *
 	 * @return int
