@@ -567,7 +567,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$object = json_decode( $value );
 
 		if ( is_object( $object ) ) {
-			$value = Address::from_json( $object );
+			return Address::from_json( $object );
 		}
 
 		return null;
@@ -589,7 +589,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$object = json_decode( $value );
 
 		if ( is_object( $object ) ) {
-			$value = Address::from_json( $object );
+			return Address::from_json( $object );
 		}
 
 		return null;
