@@ -45,6 +45,7 @@ class AddressTest extends WP_UnitTestCase {
 		$address->set_city( 'Drachten' );
 		$address->set_region( 'Friesland' );
 		$address->set_country_code( 'NL' );
+		$address->set_phone( '085 40 11 580' );
 
 		$this->assertEquals( 'Pronamic', $address->get_company_name() );
 		$this->assertEquals( '01108446', $address->get_company_coc() );
@@ -60,6 +61,7 @@ class AddressTest extends WP_UnitTestCase {
 		$this->assertEquals( 'Drachten', $address->get_city() );
 		$this->assertEquals( 'Friesland', $address->get_region() );
 		$this->assertEquals( 'NL', $address->get_country_code() );
+		$this->assertEquals( '085 40 11 580', $address->get_phone() );
 
 		$string = '';
 
@@ -69,6 +71,7 @@ class AddressTest extends WP_UnitTestCase {
 		$string .= '1e etage' . PHP_EOL;
 		$string .= '9203 KA Drachten' . PHP_EOL;
 		$string .= 'NL' . PHP_EOL;
+		$string .= '085 40 11 580' . PHP_EOL;
 		$string .= 'info@pronamic.nl';
 
 		$this->assertEquals( $string, (string) $address );
