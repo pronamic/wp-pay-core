@@ -596,13 +596,13 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	}
 
 	/**
-	 * Get items.
+	 * Get payment lines.
 	 *
 	 * @param int $id Post ID.
 	 * @return Items|null
 	 */
-	private function get_items( $id ) {
-		$value = $this->get_meta( $id, 'order_items' );
+	private function get_payment_lines( $id ) {
+		$value = $this->get_meta( $id, 'lines' );
 
 		if ( empty( $value ) ) {
 			return null;
@@ -647,7 +647,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$payment->customer            = $this->get_customer( $id );
 		$payment->billing_address     = $this->get_billing_address( $id );
 		$payment->shipping_address    = $this->get_shipping_address( $id );
-		$payment->order_items         = $this->get_items( $id );
+		$payment->lines               = $this->get_payment_lines( $id );
 
 		// Deprecated properties, use `get_customer()` or `get_billing_address()` instead.
 		// @todo remove?
