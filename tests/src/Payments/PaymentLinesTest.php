@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
+use Pronamic\WordPress\Money\Money;
 use WP_UnitTestCase;
 
 /**
@@ -37,8 +38,7 @@ class PaymentLinesTest extends WP_UnitTestCase {
 		$line_a->set_id( '1234' );
 		$line_a->set_description( 'Lorem ipsum dolor sit amet.' );
 		$line_a->set_quantity( 50 );
-		$this->setExpectedDeprecated( __NAMESPACE__ . '\PaymentLine::set_price' );
-		$line_a->set_price( 39.99 );
+		$line_a->set_total_amount( new Money( 39.99, 'EUR' ) );
 
 		$this->lines->add_line( $line_a );
 
@@ -47,8 +47,7 @@ class PaymentLinesTest extends WP_UnitTestCase {
 		$line_b->set_id( '5678' );
 		$line_b->set_description( 'Lorem ipsum dolor sit amet.' );
 		$line_b->set_quantity( 10 );
-		$this->setExpectedDeprecated( __NAMESPACE__ . '\PaymentLine::set_price' );
-		$line_b->set_price( 25 );
+		$line_b->set_total_amount( new Money( 25, 'EUR' ) );
 
 		$this->lines->add_line( $line_b );
 
@@ -61,8 +60,7 @@ class PaymentLinesTest extends WP_UnitTestCase {
 		$line_d->set_id( null );
 		$line_d->set_description( null );
 		$line_d->set_quantity( null );
-		$this->setExpectedDeprecated( __NAMESPACE__ . '\PaymentLine::set_price' );
-		$line_d->set_price( null );
+		$line_d->set_total_amount( null );
 
 		$this->lines->add_line( $line_d );
 	}
@@ -82,10 +80,10 @@ class PaymentLinesTest extends WP_UnitTestCase {
 
 		$expected = '';
 
-		$expected .= '1234 Lorem ipsum dolor sit amet. 50 39.99 1999.50' . PHP_EOL;
-		$expected .= '5678 Lorem ipsum dolor sit amet. 10 25.00 250.00' . PHP_EOL;
-		$expected .= '  1 0.00 0.00' . PHP_EOL;
-		$expected .= '  0 0.00 0.00';
+		$expected .= '1234 - Lorem ipsum dolor sit amet. - 50' . PHP_EOL;
+		$expected .= '5678 - Lorem ipsum dolor sit amet. - 10' . PHP_EOL;
+		$expected .= '1' . PHP_EOL;
+		$expected .= '';
 
 		$this->assertEquals( $expected, $string );
 	}
@@ -108,7 +106,7 @@ class PaymentLinesTest extends WP_UnitTestCase {
 
 		$json = json_decode( $json_string );
 
-		$lines = Items::from_json( $json );
+		$lines = PaymentLines::from_json( $json );
 
 		$this->assertCount( 4, $lines );
 

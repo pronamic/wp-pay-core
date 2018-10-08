@@ -3,24 +3,42 @@
         "id": "1234",
         "description": "Lorem ipsum dolor sit amet.",
         "quantity": 50,
-        "price": 39.99
+        "unit_price": null,
+        "unit_tax": null,
+        "total_amount": {
+            "amount": 39.99,
+            "currency": "EUR"
+        },
+        "tax_rate": null
     },
     {
         "id": "5678",
         "description": "Lorem ipsum dolor sit amet.",
         "quantity": 10,
-        "price": 25
+        "unit_price": null,
+        "unit_tax": null,
+        "total_amount": {
+            "amount": 25,
+            "currency": "EUR"
+        },
+        "tax_rate": null
     },
     {
         "id": null,
         "description": null,
         "quantity": 1,
-        "price": 0
+        "unit_price": null,
+        "unit_tax": null,
+        "total_amount": null,
+        "tax_rate": null
     },
     {
         "id": null,
         "description": null,
         "quantity": null,
-        "price": null
+        "unit_price": null,
+        "unit_tax": null,
+        "total_amount": null,
+        "tax_rate": null
     }
 ]

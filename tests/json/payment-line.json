@@ -2,7 +2,6 @@
 	"id": null,
 	"description": null,
 	"quantity": 2,
-	"price": 0,
 	"unit_price": {
 		"amount": 121,
 		"currency": "EUR"

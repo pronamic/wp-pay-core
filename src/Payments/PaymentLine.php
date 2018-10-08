@@ -193,44 +193,6 @@ class PaymentLine {
 	}
 
 	/**
-	 * Get the price of this payment line.
-	 *
-	 * @return float
-	 */
-	public function get_price() {
-		_deprecated_function( esc_html( __METHOD__ ), '2.1.0', esc_html( __CLASS__ . '::get_unit_price' ) );
-
-		return $this->price;
-	}
-
-	/**
-	 * Set the price of this payment line.
-	 *
-	 * @param float|Money $price Price.
-	 */
-	public function set_price( $price ) {
-		_deprecated_function( esc_html( __METHOD__ ), '2.1.0', esc_html( __CLASS__ . '::set_unit_price' ) );
-
-		if ( $price instanceof Money ) {
-			$price = $price->get_amount();
-		}
-
-		$this->price = $price;
-	}
-
-	/**
-	 * Get the amount.
-	 *
-	 * @deprecated
-	 * @return float
-	 */
-	public function get_amount() {
-		_deprecated_function( esc_html( __METHOD__ ), '2.1.0', esc_html( __CLASS__ . '::get_total_amount' ) );
-
-		return $this->price * $this->quantity;
-	}
-
-	/**
 	 * Get unit price including tax.
 	 *
 	 * @return Money|null
@@ -328,19 +290,15 @@ class PaymentLine {
 			$line->set_quantity( $json->quantity );
 		}
 
-		if ( property_exists( $json, 'price' ) ) {
-			$line->set_price( $json->price );
-		}
-
-		if ( property_exists( $json, 'unit_price' ) ) {
+		if ( isset( $json->unit_price ) ) {
 			$line->set_unit_price( MoneyJsonTransformer::from_json( $json->unit_price ) );
 		}
 
-		if ( property_exists( $json, 'unit_tax' ) ) {
+		if ( isset( $json->unit_tax ) ) {
 			$line->set_unit_tax( MoneyJsonTransformer::from_json( $json->unit_tax ) );
 		}
 
-		if ( property_exists( $json, 'total_amount' ) ) {
+		if ( isset( $json->total_amount ) ) {
 			$line->set_total_amount( MoneyJsonTransformer::from_json( $json->total_amount ) );
 		}
 
@@ -361,7 +319,6 @@ class PaymentLine {
 			'id'           => $this->get_id(),
 			'description'  => $this->get_description(),
 			'quantity'     => $this->get_quantity(),
-			'price'        => $this->get_price(),
 			'unit_price'   => MoneyJsonTransformer::to_json( $this->get_unit_price() ),
 			'unit_tax'     => MoneyJsonTransformer::to_json( $this->get_unit_tax() ),
 			'total_amount' => MoneyJsonTransformer::to_json( $this->get_total_amount() ),
@@ -375,14 +332,20 @@ class PaymentLine {
 	 * @return string
 	 */
 	public function __toString() {
-		return sprintf(
-			/* translators: 1: line id, 2: line description, 3: line quantity, 4: line price, 5: line amount */
-			'%1$s %2$s %3$d %4$01.2F %5$0.2F',
+		$parts = array(
 			$this->get_id(),
 			$this->get_description(),
-			$this->get_quantity(),
-			$this->get_price(),
-			$this->get_amount()
+			$this->get_quantity()
 		);
+
+		$parts = array_map( 'strval', $parts );
+
+		$parts = array_map( 'trim', $parts );
+
+		$parts = array_filter( $parts );
+
+		$string = implode( ' - ', $parts );
+
+		return $string;
 	}
 }

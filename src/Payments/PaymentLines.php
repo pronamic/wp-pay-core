@@ -122,7 +122,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 
 		$lines = array_map(
 			function( $object ) {
-					return Item::from_json( $object );
+					return PaymentLine::from_json( $object );
 			},
 			$json
 		);
