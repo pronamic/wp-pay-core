@@ -32,6 +32,7 @@ class AddressTest extends WP_UnitTestCase {
 		$name->set_last_name( 'Tolsma' );
 
 		$address->set_company_name( 'Pronamic' );
+		$address->set_company_coc( '01108446' );
 		$address->set_name( $name );
 		$address->set_email( 'info@pronamic.nl' );
 		$address->set_line_1( 'Burgemeester Wuiteweg 39b' );
@@ -46,6 +47,7 @@ class AddressTest extends WP_UnitTestCase {
 		$address->set_country_code( 'NL' );
 
 		$this->assertEquals( 'Pronamic', $address->get_company_name() );
+		$this->assertEquals( '01108446', $address->get_company_coc() );
 		$this->assertEquals( $name, $address->get_name() );
 		$this->assertEquals( 'info@pronamic.nl', $address->get_email() );
 		$this->assertEquals( 'Burgemeester Wuiteweg 39b', $address->get_line_1() );

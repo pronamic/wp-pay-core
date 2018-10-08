@@ -523,7 +523,6 @@ class Address {
 			$this->get_country_code(),
 			$this->get_phone(),
 			$this->get_email(),
-			$this->get_company_coc(),
 		);
 
 		$parts = array_map( 'strval', $parts );
