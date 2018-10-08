@@ -487,13 +487,18 @@ class Address {
 	/**
 	 * Create address from object.
 	 *
-	 * @param stdClass $object Object.
+	 * @param mixed $object Object.
 	 * @return Address
+	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
-	public static function from_object( stdClass $object ) {
+	public static function from_json( $json ) {
+		if ( ! is_object( $json ) ) {
+			throw new InvalidArgumentException( 'JSON value must be an array.' );
+		}
+
 		$address = new self();
 
-		foreach ( $object as $key => $value ) {
+		foreach ( $json as $key => $value ) {
 			$method = sprintf( 'set_%s', $key );
 
 			if ( is_callable( array( $address, $method ) ) ) {
