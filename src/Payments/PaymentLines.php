@@ -1,6 +1,6 @@
 <?php
 /**
- * Items
+ * Payment lines
  *
  * @author    Pronamic <info@pronamic.eu>
  * @copyright 2005-2018 Pronamic
@@ -18,24 +18,24 @@ use Pronamic\WordPress\Money\Money;
 use stdClass;
 
 /**
- * Items
+ * Payment lines
  *
  * @author  Remco Tolsma
  * @version 2.0.6
  */
-class Items implements Countable, IteratorAggregate {
+class PaymentLines implements Countable, IteratorAggregate {
 	/**
-	 * The items.
+	 * The lines.
 	 *
 	 * @var array
 	 */
-	private $items;
+	private $lines;
 
 	/**
-	 * Constructs and initialize a iDEAL basic object.
+	 * Constructs and initialize a payment lines object.
 	 */
 	public function __construct() {
-		$this->items = array();
+		$this->lines = array();
 	}
 
 	/**
@@ -44,42 +44,29 @@ class Items implements Countable, IteratorAggregate {
 	 * @see IteratorAggregate::getIterator()
 	 */
 	public function getIterator() {
-		return new ArrayIterator( $this->items );
+		return new ArrayIterator( $this->lines );
 	}
 
 	/**
-	 * Add item.
+	 * Add line.
 	 *
-	 * @param Item $item The item to add.
-	 *
-	 * @deprecated 2.0.8
+	 * @param PaymentLine $line The line to add.
 	 */
-	public function addItem( Item $item ) {
-		_deprecated_function( __FUNCTION__, '2.0.8', 'Pronamic\WordPress\Pay\Payments\Items::add_item()' );
-
-		$this->add_item( $item );
+	public function add_line( PaymentLine $line ) {
+		$this->lines[] = $line;
 	}
 
 	/**
-	 * Add item.
-	 *
-	 * @param Item $item The item to add.
-	 */
-	public function add_item( Item $item ) {
-		$this->items[] = $item;
-	}
-
-	/**
-	 * Count items.
+	 * Count lines.
 	 *
 	 * @return int
 	 */
 	public function count() {
-		return count( $this->items );
+		return count( $this->lines );
 	}
 
 	/**
-	 * Calculate the total amount of all items.
+	 * Calculate the total amount of all lines.
 	 *
 	 * @return Money
 	 */
@@ -88,15 +75,15 @@ class Items implements Countable, IteratorAggregate {
 
 		$use_bcmath = extension_loaded( 'bcmath' );
 
-		foreach ( $this->items as $item ) {
+		foreach ( $this->lines as $line ) {
 			if ( $use_bcmath ) {
 				// Use non-locale aware float value.
 				// @link http://php.net/sprintf.
-				$item_amount = sprintf( '%F', $item->get_amount() );
+				$line_amount = sprintf( '%F', $line->get_amount() );
 
-				$amount = bcadd( $amount, $item_amount, 8 );
+				$amount = bcadd( $amount, $line_amount, 8 );
 			} else {
-				$amount += $item->get_amount();
+				$amount += $line->get_amount();
 			}
 		}
 
@@ -110,10 +97,10 @@ class Items implements Countable, IteratorAggregate {
 	 */
 	public function get_json() {
 		$objects = array_map(
-			function( $item ) {
-					return $item->get_json();
+			function( $line ) {
+					return $line->get_json();
 			},
-			$this->items
+			$this->lines
 		);
 
 		return $objects;
@@ -133,27 +120,27 @@ class Items implements Countable, IteratorAggregate {
 
 		$object = new self();
 
-		$items = array_map(
+		$lines = array_map(
 			function( $object ) {
 					return Item::from_json( $object );
 			},
 			$json
 		);
 
-		foreach ( $items as $item ) {
-			$object->add_item( $item );
+		foreach ( $lines as $line ) {
+			$object->add_line( $line );
 		}
 
 		return $object;
 	}
 
 	/**
-	 * Create string representation of order items.
+	 * Create string representation the payment lines.
 	 *
 	 * @return string
 	 */
 	public function __toString() {
-		$pieces = array_map( 'strval', $this->items );
+		$pieces = array_map( 'strval', $this->lines );
 
 		$string = implode( PHP_EOL, $pieces );
 

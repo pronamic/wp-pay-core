@@ -419,11 +419,11 @@ class Payment {
 	public $shipping_address;
 
 	/**
-	 * Order items.
+	 * Payment lines.
 	 *
-	 * @var Items|null
+	 * @var PaymentLines|null
 	 */
-	public $order_items;
+	public $lines;
 
 	/**
 	 * Construct and initialize payment object.
@@ -666,30 +666,21 @@ class Payment {
 	}
 
 	/**
-	 * Get items.
+	 * Get payment lines.
 	 *
-	 * @return Items|null
+	 * @return PaymentLines|null
 	 */
-	public function get_order_items() {
-		return $this->order_items;
+	public function get_lines() {
+		return $this->lines;
 	}
 
 	/**
-	 * Set items.
+	 * Set payment lines.
 	 *
-	 * @param Items $order_items Items.
+	 * @param PaymentLines $lines Payment lines.
 	 */
-	public function set_order_items( $order_items ) {
-		$this->order_items = $order_items;
-	}
-
-	/**
-	 * Add order item.
-	 *
-	 * @param Item $item Order item.
-	 */
-	public function add_order_item( Item $item ) {
-		$this->get_order_items()->add_item( $item );
+	public function set_lines( $lines ) {
+		$this->lines = $lines;
 	}
 
 	/**

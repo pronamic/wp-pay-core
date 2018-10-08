@@ -1,6 +1,6 @@
 <?php
 /**
- * Item
+ * Payment line
  *
  * @author    Pronamic <info@pronamic.eu>
  * @copyright 2005-2018 Pronamic
@@ -16,12 +16,12 @@ use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 use stdClass;
 
 /**
- * Item.
+ * Payment line.
  *
  * @author Remco Tolsma
  * @version 1.0
  */
-class Item {
+class PaymentLine {
 	/**
 	 * The ID.
 	 *
@@ -52,21 +52,21 @@ class Item {
 	private $price;
 
 	/**
-	 * The unit price of this item.
+	 * The unit price of this payment line.
 	 *
 	 * @var Money|null
 	 */
 	private $unit_price;
 
 	/**
-	 * The unit tax of this item.
+	 * The unit tax of this payment line.
 	 *
 	 * @var Money|null
 	 */
 	private $unit_tax;
 
 	/**
-	 * Total amount of this item including tax.
+	 * Total amount of this payment line including tax.
 	 *
 	 * @var Money|null
 	 */
@@ -84,7 +84,7 @@ class Item {
 	private $tax_rate;
 
 	/**
-	 * Constructs and initialize a iDEAL basic item.
+	 * Constructs and initialize a payment line.
 	 */
 	public function __construct() {
 		$this->id          = null;
@@ -126,7 +126,7 @@ class Item {
 	}
 
 	/**
-	 * Get the id / identifier of this item.
+	 * Get the id / identifier of this payment line.
 	 *
 	 * @return string|null
 	 */
@@ -135,7 +135,7 @@ class Item {
 	}
 
 	/**
-	 * Set the id / identifier of this item.
+	 * Set the id / identifier of this payment line.
 	 *
 	 * @param string|null $id Number.
 	 */
@@ -144,7 +144,7 @@ class Item {
 	}
 
 	/**
-	 * Set the id / identifier of this item.
+	 * Set the id / identifier of this payment line.
 	 *
 	 * @param string|null $id Number.
 	 *
@@ -157,7 +157,7 @@ class Item {
 	}
 
 	/**
-	 * Get the description of this item.
+	 * Get the description of this payment line.
 	 *
 	 * @return string|null
 	 */
@@ -166,7 +166,7 @@ class Item {
 	}
 
 	/**
-	 * Set the description of this item.
+	 * Set the description of this payment line.
 	 *
 	 * @param string|null $description Description.
 	 */
@@ -175,7 +175,7 @@ class Item {
 	}
 
 	/**
-	 * Get the quantity of this item.
+	 * Get the quantity of this payment line.
 	 *
 	 * @return int
 	 */
@@ -184,7 +184,7 @@ class Item {
 	}
 
 	/**
-	 * Set the quantity of this item
+	 * Set the quantity of this payment line.
 	 *
 	 * @param int $quantity Quantity.
 	 */
@@ -193,7 +193,7 @@ class Item {
 	}
 
 	/**
-	 * Get the price of this item.
+	 * Get the price of this payment line.
 	 *
 	 * @return float
 	 */
@@ -204,7 +204,7 @@ class Item {
 	}
 
 	/**
-	 * Set the price of this item.
+	 * Set the price of this payment line.
 	 *
 	 * @param float|Money $price Price.
 	 */
@@ -303,10 +303,10 @@ class Item {
 	}
 
 	/**
-	 * Create item from object.
+	 * Create payment line from object.
 	 *
 	 * @param mixed $json JSON.
-	 * @return Item
+	 * @return PaymentLine
 	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
 	public static function from_json( $json ) {
@@ -314,41 +314,41 @@ class Item {
 			throw new InvalidArgumentException( 'JSON value must be an array.' );
 		}
 
-		$item = new self();
+		$line = new self();
 
 		if ( property_exists( $json, 'id' ) ) {
-			$item->set_id( $json->id );
+			$line->set_id( $json->id );
 		}
 
 		if ( property_exists( $json, 'description' ) ) {
-			$item->set_description( $json->description );
+			$line->set_description( $json->description );
 		}
 
 		if ( property_exists( $json, 'quantity' ) ) {
-			$item->set_quantity( $json->quantity );
+			$line->set_quantity( $json->quantity );
 		}
 
 		if ( property_exists( $json, 'price' ) ) {
-			$item->set_price( $json->price );
+			$line->set_price( $json->price );
 		}
 
 		if ( property_exists( $json, 'unit_price' ) ) {
-			$item->set_unit_price( MoneyJsonTransformer::from_json( $json->unit_price ) );
+			$line->set_unit_price( MoneyJsonTransformer::from_json( $json->unit_price ) );
 		}
 
 		if ( property_exists( $json, 'unit_tax' ) ) {
-			$item->set_unit_tax( MoneyJsonTransformer::from_json( $json->unit_tax ) );
+			$line->set_unit_tax( MoneyJsonTransformer::from_json( $json->unit_tax ) );
 		}
 
 		if ( property_exists( $json, 'total_amount' ) ) {
-			$item->set_total_amount( MoneyJsonTransformer::from_json( $json->total_amount ) );
+			$line->set_total_amount( MoneyJsonTransformer::from_json( $json->total_amount ) );
 		}
 
 		if ( property_exists( $json, 'tax_rate' ) ) {
-			$item->set_tax_rate( $json->tax_rate );
+			$line->set_tax_rate( $json->tax_rate );
 		}
 
-		return $item;
+		return $line;
 	}
 
 	/**
@@ -370,13 +370,13 @@ class Item {
 	}
 
 	/**
-	 * Create string representation of order item.
+	 * Create string representation of the payment line.
 	 *
 	 * @return string
 	 */
 	public function __toString() {
 		return sprintf(
-			/* translators: 1: item id, 2: item description, 3: item quantity, 4: item price, 5: item amount */
+			/* translators: 1: line id, 2: line description, 3: line quantity, 4: line price, 5: line amount */
 			'%1$s %2$s %3$d %4$01.2F %5$0.2F',
 			$this->get_id(),
 			$this->get_description(),

@@ -14,5 +14,6 @@
 	"total_amount": {
 		"amount": 242,
 		"currency": "EUR"
-	}
+	},
+	"tax_rate": 0.21
 }
