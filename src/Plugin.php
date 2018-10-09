@@ -14,10 +14,9 @@ use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Core\Recurring;
 use Pronamic\WordPress\Pay\Core\Statuses;
-use Pronamic\WordPress\Pay\Payments\Item;
-use Pronamic\WordPress\Pay\Payments\Items;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentDataInterface;
+use Pronamic\WordPress\Pay\Payments\PaymentLines;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Payments\StatusChecker;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
@@ -763,33 +762,78 @@ class Plugin {
 		$payment->set_credit_card( $data->get_credit_card() );
 
 		// Customer.
-		$payment->get_customer()->get_name()->set_first_name( $data->get_first_name() );
-		$payment->get_customer()->get_name()->set_last_name( $data->get_last_name() );
-		$payment->get_customer()->set_email( $data->get_email() );
-		$payment->get_customer()->set_phone( $data->get_telephone_number() );
+		$customer = array(
+			'first_name' => $data->get_first_name(),
+			'last_name'  => $data->get_last_name(),
+			'email'      => $data->get_email(),
+			'phone'      => $data->get_telephone_number(),
+		);
+
+		$customer = array_filter( $customer );
+
+		if ( ! empty( $customer ) ) {
+			$customer = Customer::from_object( (object) $customer );
+
+			$payment->set_customer( $customer );
+		}
 
 		// Billing address.
-		$payment->get_billing_address()->set_name( $payment->get_customer()->get_name() );
-		$payment->get_billing_address()->set_line_1( $data->get_address() );
-		$payment->get_billing_address()->set_postal_code( $data->get_zip() );
-		$payment->get_billing_address()->set_city( $data->get_city() );
-		$payment->get_billing_address()->set_country( $data->get_country() );
-		$payment->get_billing_address()->set_email( $data->get_email() );
-		$payment->get_billing_address()->set_phone( $data->get_telephone_number() );
+		$billing_address = array(
+			'name'        => ( $customer instanceof Customer ? $customer->get_name() : null ),
+			'line_1'      => $data->get_address(),
+			'postal_code' => $data->get_zip(),
+			'city'        => $data->get_city(),
+			'country'     => $data->get_country(),
+			'email'       => $data->get_email(),
+			'phone'       => $data->get_telephone_number(),
+		);
 
-		// Items.
-		$item = new Item();
+		$billing_address = array_filter( $billing_address );
 
-		$item->set_id( $payment->get_order_id() );
-		$item->set_description( $data->get_description() );
-		$item->set_price( $payment->get_amount()->get_amount() );
-		$item->set_quantity( 1 );
+		if ( ! empty( $billing_address ) ) {
+			$address = new Address();
 
-		$items = new Items();
+			if ( isset( $billing_address['name'] ) ) {
+				$address->set_name( $billing_address['name'] );
+			}
 
-		$items->add_item( $item );
+			if ( isset( $billing_address['line_1'] ) ) {
+				$address->set_line_1( $billing_address['line_1'] );
+			}
 
-		$payment->set_order_items( $items );
+			if ( isset( $billing_address['postal_code'] ) ) {
+				$address->set_postal_code( $billing_address['postal_code'] );
+			}
+
+			if ( isset( $billing_address['city'] ) ) {
+				$address->set_city( $billing_address['city'] );
+			}
+
+			if ( isset( $billing_address['country'] ) ) {
+				$address->set_country( $billing_address['country'] );
+			}
+
+			if ( isset( $billing_address['email'] ) ) {
+				$address->set_email( $billing_address['email'] );
+			}
+
+			if ( isset( $billing_address['phone'] ) ) {
+				$address->set_phone( $billing_address['phone'] );
+			}
+
+			$payment->set_billing_address( $address );
+		}
+
+		// Payment lines.
+		$payment->lines = new PaymentLines();
+
+		$line = $payment->lines->new_line();
+
+		$line->set_id( $payment->get_order_id() );
+		$line->set_name( $data->get_description() );
+		$line->set_quantity( 1 );
+		$line->set_unit_price( $payment->get_amount() );
+		$line->set_total_amount( $payment->get_amount() );
 
 		// Start payment.
 		return self::start_payment( $payment, $gateway );
