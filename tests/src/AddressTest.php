@@ -57,7 +57,7 @@ class AddressTest extends WP_UnitTestCase {
 		$this->address->set_city( 'Drachten' );
 		$this->address->set_region( 'Friesland' );
 		$this->address->set_country_code( 'NL' );
-		$this->address->set_country( 'Nederland' );
+		$this->address->set_country_name( 'Nederland' );
 		$this->address->set_phone( '085 40 11 580' );
 	}
 
@@ -81,7 +81,7 @@ class AddressTest extends WP_UnitTestCase {
 		$this->assertEquals( 'Drachten', $this->address->get_city() );
 		$this->assertEquals( 'Friesland', $this->address->get_region() );
 		$this->assertEquals( 'NL', $this->address->get_country_code() );
-		$this->assertEquals( 'Nederland', $this->address->get_country() );
+		$this->assertEquals( 'Nederland', $this->address->get_country_name() );
 		$this->assertEquals( '085 40 11 580', $this->address->get_phone() );
 
 		$string = '';

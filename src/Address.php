@@ -128,15 +128,6 @@ class Address {
 	private $region;
 
 	/**
-	 * Country.
-	 *
-	 * @todo use country code to get country name?
-	 *
-	 * @var string|null
-	 */
-	private $country;
-
-	/**
 	 * Country code.
 	 *
 	 * Alias: `country` or `country_code`.
@@ -144,6 +135,13 @@ class Address {
 	 * @var string|null
 	 */
 	private $country_code;
+
+	/**
+	 * Country name.
+	 *
+	 * @var string|null
+	 */
+	private $country_name;
 
 	/**
 	 * Phone.
@@ -387,24 +385,6 @@ class Address {
 	}
 
 	/**
-	 * Get country.
-	 *
-	 * @return string
-	 */
-	public function get_country() {
-		return $this->country;
-	}
-
-	/**
-	 * Set country.
-	 *
-	 * @param string $country Country.
-	 */
-	public function set_country( $country ) {
-		$this->country = $country;
-	}
-
-	/**
 	 * Get country code.
 	 *
 	 * @return string|null
@@ -431,6 +411,24 @@ class Address {
 		}
 
 		$this->country_code = $country_code;
+	}
+
+	/**
+	 * Get country name.
+	 *
+	 * @return string
+	 */
+	public function get_country_name() {
+		return $this->country_name;
+	}
+
+	/**
+	 * Set country name.
+	 *
+	 * @param string $country_name Country name.
+	 */
+	public function set_country_name( $country_name ) {
+		$this->country_name = $country_name;
 	}
 
 	/**
@@ -470,8 +468,8 @@ class Address {
 			'postal_code'           => $this->get_postal_code(),
 			'city'                  => $this->get_city(),
 			'region'                => $this->get_region(),
-			'country'               => $this->get_country(),
 			'country_code'          => $this->get_country_code(),
+			'country_name'          => $this->get_country_name(),
 			'phone'                 => $this->get_phone(),
 		);
 
