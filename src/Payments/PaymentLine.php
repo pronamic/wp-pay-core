@@ -75,9 +75,10 @@ class PaymentLine {
 	/**
 	 * Tax percentage.
 	 *
-	 * 100% = 1.00
-	 *  21% = 0.21
-	 *   6% = 0.06
+	 * 100% = 100
+	 *  21% =  21
+	 *   6% =   6
+	 * 1.5% =   1.5
 	 *
 	 * @var float
 	 */
@@ -245,7 +246,12 @@ class PaymentLine {
 	}
 
 	/**
-	 * Get tax rate.
+	 * Get tax percentage.
+	 *
+	 * 100% = 100
+	 *  21% =  21
+	 *   6% =   6
+	 * 1.5% =   1.5
 	 *
 	 * @return float|null
 	 */
@@ -254,9 +260,14 @@ class PaymentLine {
 	}
 
 	/**
-	 * Set tax rate.
+	 * Set tax percentage.
 	 *
-	 * @param float $tax_percentage Tax rate.
+	 * 100% = 100
+	 *  21% =  21
+	 *   6% =   6
+	 * 1.5% =   1.5
+	 *
+	 * @param float $tax_percentage Tax percentage.
 	 */
 	public function set_tax_percentage( $tax_percentage ) {
 		$this->tax_percentage = $tax_percentage;

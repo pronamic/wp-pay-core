@@ -9,7 +9,7 @@
             "amount": 39.99,
             "currency": "EUR"
         },
-        "tax_rate": null
+        "tax_percentage": null
     },
     {
         "id": "5678",
@@ -21,7 +21,7 @@
             "amount": 25,
             "currency": "EUR"
         },
-        "tax_rate": null
+        "tax_percentage": null
     },
     {
         "id": null,
@@ -30,7 +30,7 @@
         "unit_price": null,
         "unit_tax": null,
         "total_amount": null,
-        "tax_rate": null
+        "tax_percentage": null
     },
     {
         "id": null,
@@ -39,6 +39,6 @@
         "unit_price": null,
         "unit_tax": null,
         "total_amount": null,
-        "tax_rate": null
+        "tax_percentage": null
     }
 ]

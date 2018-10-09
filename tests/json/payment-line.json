@@ -1,18 +1,24 @@
 {
-	"id": null,
-	"description": null,
-	"quantity": 2,
-	"unit_price": {
-		"amount": 121,
-		"currency": "EUR"
-	},
-	"unit_tax": {
-		"amount": 21,
-		"currency": "EUR"
-	},
-	"total_amount": {
-		"amount": 242,
-		"currency": "EUR"
-	},
-	"tax_rate": 0.21
+    "id": null,
+    "type": null,
+    "sku": null,
+    "name": null,
+    "description": null,
+    "quantity": 2,
+    "unit_price": {
+        "amount": 121,
+        "currency": "EUR"
+    },
+    "tax_percentage": 21,
+    "tax_amount": null,
+    "discount_amount": {
+        "amount": 21,
+        "currency": "EUR"
+    },
+    "total_amount": {
+        "amount": 242,
+        "currency": "EUR"
+    },
+    "url": null,
+    "image_url": null
 }
