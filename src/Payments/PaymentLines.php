@@ -101,11 +101,11 @@ class PaymentLines implements Countable, IteratorAggregate {
 			if ( $use_bcmath ) {
 				// Use non-locale aware float value.
 				// @link http://php.net/sprintf.
-				$line_amount = sprintf( '%F', $line->get_amount() );
+				$line_amount = sprintf( '%F', $line->get_total_amount() );
 
 				$amount = bcadd( $amount, $line_amount, 8 );
 			} else {
-				$amount += $line->get_amount();
+				$amount += $line->get_total_amount();
 			}
 		}
 
