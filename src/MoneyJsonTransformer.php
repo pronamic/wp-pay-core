@@ -47,11 +47,11 @@ class MoneyJsonTransformer {
 	 *
 	 * @param mixed $json JSON.
 	 * @return Money
-	 * @throws InvalidArgumentException
+	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
 	public static function from_json( $json ) {
 		if ( ! is_object( $json ) ) {
-			throw new InvalidArgumentException( 'JSON value must be an array.' );
+			throw new InvalidArgumentException( 'JSON value must be an object.' );
 		}
 
 		$money = new Money();
