@@ -92,7 +92,7 @@ class PaymentLine {
 	private $tax_amount;
 
 	/**
-	 * The discount amount of this payment line.
+	 * The discount amount of this payment line, no tax included.
 	 *
 	 * @var Money|null
 	 */
@@ -292,7 +292,7 @@ class PaymentLine {
 	}
 
 	/**
-	 * Get discount amount.
+	 * Get discount amount, should not contain any tax.
 	 *
 	 * @return Money|null
 	 */
@@ -301,7 +301,7 @@ class PaymentLine {
 	}
 
 	/**
-	 * Set discount amount.
+	 * Set discount amount, should not contain any tax.
 	 *
 	 * @param Money $discount_amount Discount amount.
 	 */
