@@ -679,7 +679,7 @@ class Payment {
 	 *
 	 * @param PaymentLines $lines Payment lines.
 	 */
-	public function set_lines( $lines ) {
+	public function set_lines( PaymentLines $lines ) {
 		$this->lines = $lines;
 	}
 

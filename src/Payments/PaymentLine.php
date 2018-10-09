@@ -13,7 +13,6 @@ namespace Pronamic\WordPress\Pay\Payments;
 use InvalidArgumentException;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
-use stdClass;
 
 /**
  * Payment line.
@@ -28,6 +27,15 @@ class PaymentLine {
 	 * @var string|null
 	 */
 	private $id;
+
+	/**
+	 * The payment type.
+	 *
+	 * @see PaymentLineType
+	 *
+	 * @var string
+	 */
+	private $type;
 
 	/**
 	 * SKU.
@@ -65,11 +73,29 @@ class PaymentLine {
 	private $unit_price;
 
 	/**
-	 * The unit tax of this payment line.
+	 * Tax percentage.
+	 *
+	 * 100% = 1.00
+	 *  21% = 0.21
+	 *   6% = 0.06
+	 *
+	 * @var float
+	 */
+	private $tax_percentage;
+
+	/**
+	 * The tax amount of this payment line.
 	 *
 	 * @var Money|null
 	 */
-	private $unit_tax;
+	private $tax_amount;
+
+	/**
+	 * The discount amount of this payment line.
+	 *
+	 * @var Money|null
+	 */
+	private $discount_amount;
 
 	/**
 	 * Total amount of this payment line including tax.
@@ -79,15 +105,18 @@ class PaymentLine {
 	private $total_amount;
 
 	/**
-	 * Tax rate.
+	 * URL.
 	 *
-	 * 100% = 1.00
-	 *  21% = 0.21
-	 *   6% = 0.06
-	 *
-	 * @var float
+	 * @var string|null
 	 */
-	private $tax_rate;
+	private $url;
+
+	/**
+	 * Image url.
+	 *
+	 * @var string|null
+	 */
+	private $image_url;
 
 	/**
 	 * Get the id / identifier of this payment line.
@@ -105,6 +134,24 @@ class PaymentLine {
 	 */
 	public function set_id( $id ) {
 		$this->id = $id;
+	}
+
+	/**
+	 * Get type.
+	 *
+	 * @return PaymentLineType
+	 */
+	public function get_type() {
+		return $this->type;
+	}
+
+	/**
+	 * Set type.
+	 *
+	 * @param string $type Type.
+	 */
+	public function set_type( $type ) {
+		$this->type = $type;
 	}
 
 	/**
@@ -191,28 +238,64 @@ class PaymentLine {
 	/**
 	 * Set unit price including tax.
 	 *
-	 * @param Money|null $unit_price Unit price.
+	 * @param Money $unit_price Unit price.
 	 */
 	public function set_unit_price( Money $unit_price = null ) {
 		$this->unit_price = $unit_price;
 	}
 
 	/**
-	 * Get unit tax.
+	 * Get tax rate.
 	 *
-	 * @return Money|null
+	 * @return float|null
 	 */
-	public function get_unit_tax() {
-		return $this->unit_tax;
+	public function get_tax_percentage() {
+		return $this->tax_percentage;
 	}
 
 	/**
-	 * Set unit tax.
+	 * Set tax rate.
 	 *
-	 * @param Money|null $unit_tax Unit tax.
+	 * @param float $tax_percentage Tax rate.
 	 */
-	public function set_unit_tax( Money $unit_tax = null ) {
-		$this->unit_tax = $unit_tax;
+	public function set_tax_percentage( $tax_percentage ) {
+		$this->tax_percentage = $tax_percentage;
+	}
+
+	/**
+	 * Get tax amount.
+	 *
+	 * @return Money|null
+	 */
+	public function get_tax_amount() {
+		return $this->tax_amount;
+	}
+
+	/**
+	 * Set tax amount.
+	 *
+	 * @param Money $tax_amount Tax amount.
+	 */
+	public function set_tax_amount( Money $tax_amount = null ) {
+		$this->tax_amount = $tax_amount;
+	}
+
+	/**
+	 * Get discount amount.
+	 *
+	 * @return Money|null
+	 */
+	public function get_discount_amount() {
+		return $this->discount_amount;
+	}
+
+	/**
+	 * Set discount amount.
+	 *
+	 * @param Money $discount_amount Discount amount.
+	 */
+	public function set_discount_amount( Money $discount_amount = null ) {
+		$this->discount_amount = $discount_amount;
 	}
 
 	/**
@@ -227,7 +310,7 @@ class PaymentLine {
 	/**
 	 * Set total amount including tax.
 	 *
-	 * @param Money|null $total_amount Total amount.
+	 * @param Money $total_amount Total amount.
 	 */
 	public function set_total_amount( Money $total_amount = null ) {
 		$this->total_amount = $total_amount;
@@ -238,8 +321,8 @@ class PaymentLine {
 	 *
 	 * @return Money|null
 	 */
-	public function get_total_discount() {
-		return $this->total_discount;
+	public function get_url() {
+		return $this->url;
 	}
 
 	/**
@@ -247,44 +330,26 @@ class PaymentLine {
 	 *
 	 * @param Money|null $total_discount Total discount.
 	 */
-	public function set_total_discount( Money $total_discount = null ) {
+	public function set_url( Money $total_discount = null ) {
 		$this->total_discount = $total_discount;
 	}
 
 	/**
-	 * Get total tax.
+	 * Get image URL.
 	 *
-	 * @return Money|null
+	 * @return null|string
 	 */
-	public function get_total_tax() {
-		return $this->total_tax;
+	public function get_image_url() {
+		return $this->image_url;
 	}
 
 	/**
-	 * Set total tax.
+	 * Set image URL.
 	 *
-	 * @param Money|null $total_tax Total tax.
+	 * @param null|string $image_url Image url.
 	 */
-	public function set_total_tax( Money $total_tax = null ) {
-		$this->total_tax = $total_tax;
-	}
-
-	/**
-	 * Get tax rate.
-	 *
-	 * @return float|null
-	 */
-	public function get_tax_rate() {
-		return $this->tax_rate;
-	}
-
-	/**
-	 * Set tax rate.
-	 *
-	 * @param float $tax_rate Tax rate.
-	 */
-	public function set_tax_rate( $tax_rate ) {
-		$this->tax_rate = $tax_rate;
+	public function set_image_url( $image_url ) {
+		$this->image_url = $image_url;
 	}
 
 	/**
@@ -303,6 +368,10 @@ class PaymentLine {
 
 		if ( property_exists( $json, 'id' ) ) {
 			$line->set_id( $json->id );
+		}
+
+		if ( property_exists( $json, 'type' ) ) {
+			$line->set_type( $json->type );
 		}
 
 		if ( property_exists( $json, 'sku' ) ) {
@@ -325,24 +394,28 @@ class PaymentLine {
 			$line->set_unit_price( MoneyJsonTransformer::from_json( $json->unit_price ) );
 		}
 
-		if ( isset( $json->unit_tax ) ) {
-			$line->set_unit_tax( MoneyJsonTransformer::from_json( $json->unit_tax ) );
+		if ( property_exists( $json, 'tax_percentage' ) ) {
+			$line->set_tax_percentage( $json->tax_percentage );
+		}
+
+		if ( isset( $json->tax_amount ) ) {
+			$line->set_tax_amount( MoneyJsonTransformer::from_json( $json->tax_amount ) );
+		}
+
+		if ( isset( $json->discount_amount ) ) {
+			$line->set_discount_amount( MoneyJsonTransformer::from_json( $json->discount_amount ) );
 		}
 
 		if ( isset( $json->total_amount ) ) {
 			$line->set_total_amount( MoneyJsonTransformer::from_json( $json->total_amount ) );
 		}
 
-		if ( isset( $json->total_tax ) ) {
-			$line->set_total_tax( MoneyJsonTransformer::from_json( $json->total_tax ) );
+		if ( property_exists( $json, 'url' ) ) {
+			$line->set_url( $json->url );
 		}
 
-		if ( isset( $json->total_discount ) ) {
-			$line->set_total_discount( MoneyJsonTransformer::from_json( $json->total_discount ) );
-		}
-
-		if ( property_exists( $json, 'tax_rate' ) ) {
-			$line->set_tax_rate( $json->tax_rate );
+		if ( property_exists( $json, 'image_url' ) ) {
+			$line->set_image_url( $json->image_url );
 		}
 
 		return $line;
@@ -355,17 +428,19 @@ class PaymentLine {
 	 */
 	public function get_json() {
 		return (object) array(
-			'id'             => $this->get_id(),
-			'sku'            => $this->get_sku(),
-			'name'           => $this->get_name(),
-			'description'    => $this->get_description(),
-			'quantity'       => $this->get_quantity(),
-			'unit_price'     => MoneyJsonTransformer::to_json( $this->get_unit_price() ),
-			'unit_tax'       => MoneyJsonTransformer::to_json( $this->get_unit_tax() ),
-			'total_amount'   => MoneyJsonTransformer::to_json( $this->get_total_amount() ),
-			'total_tax'      => MoneyJsonTransformer::to_json( $this->get_total_tax() ),
-			'total_discount' => MoneyJsonTransformer::to_json( $this->get_total_discount() ),
-			'tax_rate'       => $this->get_tax_rate(),
+			'id'              => $this->get_id(),
+			'type'            => $this->get_type(),
+			'sku'             => $this->get_sku(),
+			'name'            => $this->get_name(),
+			'description'     => $this->get_description(),
+			'quantity'        => $this->get_quantity(),
+			'unit_price'      => MoneyJsonTransformer::to_json( $this->get_unit_price() ),
+			'tax_percentage'  => $this->get_tax_percentage(),
+			'tax_amount'      => MoneyJsonTransformer::to_json( $this->get_tax_amount() ),
+			'discount_amount' => MoneyJsonTransformer::to_json( $this->get_discount_amount() ),
+			'total_amount'    => MoneyJsonTransformer::to_json( $this->get_total_amount() ),
+			'url'             => $this->get_url(),
+			'image_url'       => $this->get_image_url(),
 		);
 	}
 
@@ -378,7 +453,7 @@ class PaymentLine {
 		$parts = array(
 			$this->get_id(),
 			$this->get_description(),
-			$this->get_quantity()
+			$this->get_quantity(),
 		);
 
 		$parts = array_map( 'strval', $parts );

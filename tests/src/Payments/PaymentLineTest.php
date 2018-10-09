@@ -87,9 +87,9 @@ class PaymentLineTest extends WP_UnitTestCase {
 
 		$line->set_quantity( 2 );
 		$line->set_unit_price( new Money( 121, 'EUR' ) );
-		$line->set_unit_tax( new Money( 21, 'EUR' ) );
+		$line->set_tax_percentage( 0.21 );
+		$line->set_discount_amount( new Money( 21, 'EUR' ) );
 		$line->set_total_amount( new Money( 242, 'EUR' ) );
-		$line->set_tax_rate( 0.21 );
 
 		$this->setExpectedDeprecated( __NAMESPACE__ . '\PaymentLine::get_price' );
 		$this->assertJsonStringEqualsJsonFile( __DIR__ . '/../../json/payment-line.json', wp_json_encode( $line->get_json() ) );
