@@ -66,7 +66,7 @@ class PaymentLine {
 	private $quantity;
 
 	/**
-	 * The unit price of this payment line.
+	 * The unit price of this payment line, including tax.
 	 *
 	 * @var Money|null
 	 */
