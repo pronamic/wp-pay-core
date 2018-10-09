@@ -106,11 +106,11 @@ class PaymentLine {
 	private $total_amount;
 
 	/**
-	 * URL.
+	 * Product URL.
 	 *
 	 * @var string|null
 	 */
-	private $url;
+	private $product_url;
 
 	/**
 	 * Image url.
@@ -328,21 +328,21 @@ class PaymentLine {
 	}
 
 	/**
-	 * Get total discount.
+	 * Get product URL.
 	 *
-	 * @return Money|null
+	 * @return string|null
 	 */
-	public function get_url() {
-		return $this->url;
+	public function get_product_url() {
+		return $this->product_url;
 	}
 
 	/**
-	 * Set total discount.
+	 * Set product URL.
 	 *
-	 * @param Money|null $total_discount Total discount.
+	 * @param string|null $product_url Product URL.
 	 */
-	public function set_url( Money $total_discount = null ) {
-		$this->total_discount = $total_discount;
+	public function set_product_url( $product_url = null ) {
+		$this->product_url = $product_url;
 	}
 
 	/**
@@ -421,8 +421,8 @@ class PaymentLine {
 			$line->set_total_amount( MoneyJsonTransformer::from_json( $json->total_amount ) );
 		}
 
-		if ( property_exists( $json, 'url' ) ) {
-			$line->set_url( $json->url );
+		if ( property_exists( $json, 'product_url' ) ) {
+			$line->set_product_url( $json->product_url );
 		}
 
 		if ( property_exists( $json, 'image_url' ) ) {
@@ -450,7 +450,7 @@ class PaymentLine {
 			'tax_amount'      => MoneyJsonTransformer::to_json( $this->get_tax_amount() ),
 			'discount_amount' => MoneyJsonTransformer::to_json( $this->get_discount_amount() ),
 			'total_amount'    => MoneyJsonTransformer::to_json( $this->get_total_amount() ),
-			'url'             => $this->get_url(),
+			'product_url'     => $this->get_product_url(),
 			'image_url'       => $this->get_image_url(),
 		);
 	}
