@@ -487,7 +487,7 @@ class Address {
 	/**
 	 * Create address from object.
 	 *
-	 * @param mixed $object Object.
+	 * @param mixed $json JSON.
 	 * @return Address
 	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */

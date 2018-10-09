@@ -166,27 +166,27 @@ class GoogleAnalyticsEcommerce {
 				$item = $defaults;
 
 				// Hit - Hit type - Required for all hit types.
-				// @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#t
+				// @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#t.
 				$item['t'] = 'item';
 
 				// Item Name - Required for item hit type. - Specifies the item name.
-				// @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#in
+				// @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#in.
 				$item['in'] = $line->get_name();
 
 				// Item Price - Optional. - Specifies the price for a single item / unit.
-				// @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ip
+				// @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ip.
 				if ( null !== $line->get_unit_price() ) {
 					$item['ip'] = $line->get_unit_price()->get_amount();
 				}
 
 				// Item Quantity - Optional. - Specifies the number of items purchased.
-				// @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#iq
+				// @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#iq.
 				if ( null !== $line->get_quantity() ) {
 					$item['iq'] = $line->get_quantity();
 				}
 
 				// Item Code - Optional. - Specifies the SKU or item code.
-				// @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ic
+				// @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ic.
 				if ( null !== $line->get_sku() ) {
 					$item['ic'] = $line->get_sku();
 				}

@@ -24,7 +24,7 @@ class MoneyJsonTransformer {
 	/**
 	 * Convert money object to JSON.
 	 *
-	 * @param Money|null $money Money
+	 * @param Money|null $money Money.
 	 */
 	public static function to_json( Money $money = null ) {
 		if ( null === $money ) {
@@ -45,7 +45,9 @@ class MoneyJsonTransformer {
 	/**
 	 * Convert JSON to money object.
 	 *
-	 * @param mixed $json
+	 * @param mixed $json JSON.
+	 * @return Money
+	 * @throws InvalidArgumentException
 	 */
 	public static function from_json( $json ) {
 		if ( ! is_object( $json ) ) {

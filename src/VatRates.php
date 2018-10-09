@@ -40,7 +40,7 @@ class VatRates {
 	 * @var string
 	 */
 	const SUPER_REDUCED = 'super_reduced';
-	
+
 	/**
 	 * Parking rate.
 	 *
