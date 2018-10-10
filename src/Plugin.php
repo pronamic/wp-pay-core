@@ -779,13 +779,13 @@ class Plugin {
 
 		// Billing address.
 		$billing_address = array(
-			'name'        => ( $customer instanceof Customer ? $customer->get_name() : null ),
-			'line_1'      => $data->get_address(),
-			'postal_code' => $data->get_zip(),
-			'city'        => $data->get_city(),
-			'country'     => $data->get_country(),
-			'email'       => $data->get_email(),
-			'phone'       => $data->get_telephone_number(),
+			'name'         => ( $customer instanceof Customer ? $customer->get_name() : null ),
+			'line_1'       => $data->get_address(),
+			'postal_code'  => $data->get_zip(),
+			'city'         => $data->get_city(),
+			'country_name' => $data->get_country(),
+			'email'        => $data->get_email(),
+			'phone'        => $data->get_telephone_number(),
 		);
 
 		$billing_address = array_filter( $billing_address );
@@ -809,8 +809,8 @@ class Plugin {
 				$address->set_city( $billing_address['city'] );
 			}
 
-			if ( isset( $billing_address['country'] ) ) {
-				$address->set_country( $billing_address['country'] );
+			if ( isset( $billing_address['country_name'] ) ) {
+				$address->set_country_name( $billing_address['country_name'] );
 			}
 
 			if ( isset( $billing_address['email'] ) ) {

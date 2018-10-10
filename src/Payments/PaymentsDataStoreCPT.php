@@ -558,7 +558,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 				$address->set_line_1( $line_1 );
 				$address->set_postal_code( $postal_code );
 				$address->set_city( $city );
-				$address->set_country( $country );
+				$address->set_country_name( $country );
 
 				return $address;
 			}
@@ -669,7 +669,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			$payment->address          = $billing_address->get_line_1();
 			$payment->zip              = $billing_address->get_postal_code();
 			$payment->city             = $billing_address->get_city();
-			$payment->country          = $billing_address->get_country();
+			$payment->country          = $billing_address->get_country_name();
 			$payment->telephone_number = $billing_address->get_phone();
 		}
 
@@ -753,7 +753,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			$meta['address']          = $billing_address->get_line_1();
 			$meta['zip']              = $billing_address->get_postal_code();
 			$meta['city']             = $billing_address->get_city();
-			$meta['country']          = $billing_address->get_country();
+			$meta['country']          = $billing_address->get_country_name();
 			$meta['telephone_number'] = $billing_address->get_phone();
 		}
 
