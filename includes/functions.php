@@ -262,7 +262,7 @@ function bind_providers_and_gateways() {
  * @see https://github.com/woothemes/woocommerce/blob/v2.0.20/woocommerce-core-functions.php#L1779
  * @access public
  * @param string $size A php.ini notation for nubmer to convert to an integer.
- * @return int
+ * @return string
  */
 function pronamic_pay_let_to_num( $size ) {
 	$l   = substr( $size, -1 );
