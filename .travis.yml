@@ -16,6 +16,7 @@ php:
 
 env:
   - COMPOSER_NO_INTERACTION=1
+  - WP_VERSION=*
 
 matrix:
   include:
@@ -27,7 +28,7 @@ matrix:
     - php: 7.2
       env: WP_VERSION=4.8
     - php: 7.2
-      env: WP_VERSION=4.7 COVERAGE=1 PHPCS=1
+      env: WP_VERSION=4.7 COVERAGE=1 DEV=1
   fast_finish: true
   allow_failures:
     - php: hhvm
@@ -55,14 +56,13 @@ install:
   # Install Composer packages.
   - composer install --no-dev
   # Test on specific WordPress version.
-  - if [ "$WP_VERSION" ]; then composer require wp-phpunit/wp-phpunit:$WP_VERSION --dev; fi
-  - if [ "$WP_VERSION" ]; then composer require johnpbloch/wordpress:$WP_VERSION --dev --update-with-dependencies; fi
-  - if [ "$PHPCS" == "1" ]; then composer install --dev; fi
+  - composer require --dev --update-with-dependencies johnpbloch/wordpress:${WP_VERSION} wp-phpunit/wp-phpunit:${WP_VERSION}
+  - if [ "$DEV" == "1" ]; then composer install --dev; fi
 
 script:
   - phpunit
   - grunt phplint
-  - if [ $PHPCS == "1" ]; then vendor/bin/phpcs . -v; fi
+  - if [ $DEV == "1" ]; then vendor/bin/phpcs . -v; fi
 
 after_success:
   - if [ $COVERAGE == "1" ]; then php vendor/bin/coveralls -v; fi
