@@ -883,7 +883,7 @@ class Plugin {
 		if ( null !== $payment->get_customer() ) {
 			$payment->email = $payment->get_customer()->get_email();
 
-			$payment->customer->complement();
+			CustomerHelper::complement_customer( $payment->get_customer() );
 		}
 
 		if ( null !== $payment->get_billing_address() ) {
