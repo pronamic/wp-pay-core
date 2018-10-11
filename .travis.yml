@@ -50,11 +50,11 @@ install:
   # Update Composer itself to the latest version (https://getcomposer.org/doc/03-cli.md#self-update-selfupdate-).
   - composer self-update
   # Install Composer packages.
-  - composer install --no-interaction --no-dev
+  - composer install --no-dev
   # Test on specific WordPress version.
   - if [ "$WP_VERSION" ]; then composer require wp-phpunit/wp-phpunit:$WP_VERSION --dev; fi
   - if [ "$WP_VERSION" ]; then composer require johnpbloch/wordpress:$WP_VERSION --dev --update-with-dependencies; fi
-  - if [[ "$GRUNT" == "1" ]]; then composer install --no-interaction --dev; fi
+  - if [[ "$GRUNT" == "1" ]]; then composer install --dev; fi
 
 script:
   - if [[ -z "$GRUNT" ]]; then grunt phpunit; fi
