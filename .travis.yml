@@ -46,6 +46,10 @@ before_install:
   - if [ "${TRAVIS_DIST_PRECISE}" == "1" ]; then nvm install node; fi
   # Create database for PHPUnit tests.
   - mysql -e 'CREATE DATABASE wp_phpunit_tests;'
+  # Remove Xdebug.
+  - phpenv config-rm xdebug.ini
+  # Validate composer.json file.
+  - composer validate --strict
 
 install:
   # Install Grunt command line interface (https://github.com/gruntjs/grunt-cli).
@@ -54,8 +58,6 @@ install:
   - npm install
   # Update Composer itself to the latest version (https://getcomposer.org/doc/03-cli.md#self-update-selfupdate-).
   - composer self-update
-  # Validate composer.json file.
-  - composer validate --strict
   # Install Composer packages.
   - composer install
   # Test on specific WordPress version.
