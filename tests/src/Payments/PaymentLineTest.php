@@ -57,7 +57,7 @@ class PaymentLineTest extends WP_UnitTestCase {
 
 		$json_string = wp_json_encode( $line->get_json(), JSON_PRETTY_PRINT );
 
-		//$this->assertEquals( wp_json_encode( $json_data, JSON_PRETTY_PRINT ), $json_string );
+		$this->assertEquals( wp_json_encode( $json_data, JSON_PRETTY_PRINT ), $json_string );
 
 		$this->assertJsonStringEqualsJsonFile( $json_file, $json_string );
 	}

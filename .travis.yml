@@ -46,8 +46,16 @@ before_install:
   - if [ "${TRAVIS_DIST_PRECISE}" == "1" ]; then nvm install node; fi
   # Create database for PHPUnit tests.
   - mysql -e 'CREATE DATABASE wp_phpunit_tests;'
-  # Remove Xdebug.
-  - phpenv config-rm xdebug.ini
+  - |
+    # Remove Xdebug for a huge performance increase:
+    if [ -f ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini ]; then
+      phpenv config-rm xdebug.ini
+    else
+      echo "xdebug.ini does not exist"
+    fi
+  - |
+    # Raise PHP memory limit to 2048MB
+    echo 'memory_limit = 2048M' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   # Validate composer.json file.
   - composer validate --strict
 
