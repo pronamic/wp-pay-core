@@ -53,5 +53,12 @@
 		"wimg/php-compatibility": "^8.0",
 		"wp-phpunit/wp-phpunit": "^4.9",
 		"johnpbloch/wordpress": "^4.9"
+	},
+	"scripts": {
+		"phpcbf":"vendor/bin/phpcbf", 
+		"phpcs": "vendor/bin/phpcs . -s -v",
+		"phplint": "ls src/**/*.php tests/**/*.php | xargs -n 1 -P 4 php -l",
+		"phpmd": "vendor/bin/phpmd src,tests text phpmd.ruleset.xml --suffixes php",
+		"phpunit": "vendor/bin/phpunit"
 	}
 }

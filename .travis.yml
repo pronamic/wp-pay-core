@@ -4,6 +4,11 @@ sudo: false
 
 language: php
 
+env:
+  global:
+    - COMPOSER_NO_INTERACTION=1
+    - WP_VERSION=*
+
 php:
 - 5.4
 - 5.5

@@ -7,6 +7,12 @@
 
 	<config name="testVersion" value="5.3-99.0"/>
 
+	<file>.</file>
+
+	<arg name="colors"/>
+	<arg name="extensions" value="php" />
+    <arg value="sp" />
+
 	<exclude-pattern>includes/xmlseclibs/*</exclude-pattern>
 	<exclude-pattern>node_modules/*</exclude-pattern>
 	<exclude-pattern>tests/bootstrap.php</exclude-pattern>
@@ -29,6 +35,12 @@
 		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
 
 		<exclude name="WordPress.Security.SafeRedirect.wp_redirect_wp_redirect" />
+	</rule>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" value="pronamic_ideal" />
+		</properties>
 	</rule>
 
 	<rule ref="Squiz.PHP.CommentedOutCode.Found">
