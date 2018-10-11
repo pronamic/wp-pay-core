@@ -649,6 +649,12 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$payment->shipping_address    = $this->get_shipping_address( $id );
 		$payment->lines               = $this->get_payment_lines( $id );
 
+		if ( null !== $payment->lines ) {
+			foreach ( $payment->lines as $line ) {
+				PaymentLineHelper::complement_payment_line( $line );
+			}
+		}
+
 		// Deprecated properties, use `get_customer()` or `get_billing_address()` instead.
 		// @todo remove?
 		$customer = $payment->get_customer();
