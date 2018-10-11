@@ -834,7 +834,7 @@ class Plugin {
 		$line->set_name( $data->get_description() );
 		$line->set_quantity( 1 );
 		$line->set_unit_price_including_tax( $payment->get_amount() );
-		$line->set_total_amount( $payment->get_amount() );
+		$line->set_total_amount_including_tax( $payment->get_amount() );
 
 		// Start payment.
 		return self::start_payment( $payment, $gateway );
