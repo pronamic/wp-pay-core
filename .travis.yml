@@ -59,11 +59,11 @@ install:
   # Install Composer packages.
   - composer install --no-dev
   # Test on specific WordPress version.
-  - composer require --dev --update-with-dependencies johnpbloch/wordpress:${WP_VERSION} wp-phpunit/wp-phpunit:${WP_VERSION}
+  - composer require --dev phpunit/phpunit johnpbloch/wordpress:${WP_VERSION} wp-phpunit/wp-phpunit:${WP_VERSION}
   - if [ "$DEV" == "1" ]; then composer install --dev; fi
 
 script:
-  - phpunit
+  - vendor/bin/phpunit
   - grunt phplint
   - if [ $DEV == "1" ]; then vendor/bin/phpcs . -v; fi
 
