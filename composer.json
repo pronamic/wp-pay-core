@@ -32,13 +32,8 @@
 			"includes/xmlseclibs/xmlseclibs-ing.php"
 		]
 	},
-	"config": {
-		"platform": {
-			"php": "5.3.3"
-		}
-	},
 	"require": {
-		"php": "^5.3",
+		"php": ">=5.3",
 		"pronamic/wp-datetime": "^1.0",
 		"pronamic/wp-money": "dev-develop as 1.1",
 		"viison/address-splitter": "^0.3.2",
@@ -52,6 +47,7 @@
 		"wp-coding-standards/wpcs": "^1.1",
 		"wimg/php-compatibility": "^8.0",
 		"wp-phpunit/wp-phpunit": "^4.9",
-		"johnpbloch/wordpress": "^4.9"
+		"johnpbloch/wordpress": "^4.9",
+		"phpstan/phpstan": "^0.10.3"
 	}
 }
