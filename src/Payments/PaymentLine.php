@@ -502,7 +502,7 @@ class PaymentLine {
 		}
 
 		if ( isset( $json->total_amount_excluding_tax ) ) {
-			$line->set_total_amount_including_tax( MoneyJsonTransformer::from_json( $json->total_amount_excluding_tax ) );
+			$line->set_total_amount_excluding_tax( MoneyJsonTransformer::from_json( $json->total_amount_excluding_tax ) );
 		}
 
 		if ( property_exists( $json, 'product_url' ) ) {
