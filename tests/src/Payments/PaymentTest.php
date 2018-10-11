@@ -108,7 +108,7 @@ class PaymentTest extends WP_UnitTestCase {
 
 		$payment->$property = $value;
 
-		$this->assertEquals( $value, $payment->$get_function() );
+		$this->assertEquals( $value, call_user_func( array( $payment, $get_function ) ) );
 	}
 
 	/**
@@ -130,7 +130,7 @@ class PaymentTest extends WP_UnitTestCase {
 			array( 'customer_name', 'get_customer_name', 'John Doe' ),
 			array( 'address', 'get_address', 'Burgemeester Wuiteweg 39b' ),
 			array( 'city', 'get_city', 'Drachten' ),
-			array( 'postal_code', 'get_postal_code', '9203 KA' ),
+			array( 'zip', 'get_zip', '9203 KA' ),
 			array( 'country', 'get_country', 'NL' ),
 			array( 'telephone_number', 'get_telephone_number', '1234567890' ),
 			array( 'analytics_client_id', 'get_analytics_client_id', 'GA1.2.1234567890.1234567890' ),

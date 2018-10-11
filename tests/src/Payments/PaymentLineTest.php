@@ -39,6 +39,7 @@ class PaymentLineTest extends WP_UnitTestCase {
 	 * Test new functions.
 	 */
 	public function test_json() {
+		// Line.
 		$line = new PaymentLine();
 
 		$line->set_quantity( 2 );
@@ -49,6 +50,15 @@ class PaymentLineTest extends WP_UnitTestCase {
 		$line->set_total_amount_excluding_tax( new Money( 200, 'EUR' ) );
 		$line->set_total_amount_including_tax( new Money( 242, 'EUR' ) );
 
-		$this->assertJsonStringEqualsJsonFile( __DIR__ . '/../../json/payment-line.json', wp_json_encode( $line->get_json() ) );
+		// JSON.
+		$json_file = __DIR__ . '/../../json/payment-line.json';
+
+		$json_data = json_decode( file_get_contents( $json_file, true ) );
+
+		$json_string = wp_json_encode( $line->get_json(), JSON_PRETTY_PRINT );
+
+		//$this->assertEquals( wp_json_encode( $json_data, JSON_PRETTY_PRINT ), $json_string );
+
+		$this->assertJsonStringEqualsJsonFile( $json_file, $json_string );
 	}
 }

@@ -102,19 +102,31 @@ class AddressTest extends WP_UnitTestCase {
 	 * Test JSON.
 	 */
 	public function test_json() {
-		$this->assertJsonStringEqualsJsonFile( __DIR__ . '/../json/address.json', wp_json_encode( $this->address->get_json() ) );
+		$json_file = __DIR__ . '/../json/address.json';
+
+		$json_data = json_decode( file_get_contents( $json_file, true ) );
+
+		$json_string = wp_json_encode( $this->address->get_json(), JSON_PRETTY_PRINT );
+
+		$this->assertEquals( wp_json_encode( $json_data, JSON_PRETTY_PRINT ), $json_string );
+
+		$this->assertJsonStringEqualsJsonFile( $json_file, $json_string );
 	}
 
 	/**
 	 * Test from object.
 	 */
 	public function test_from_object() {
-		$json_string = file_get_contents( __DIR__ . '/../json/address.json', true );
+		$json_file = __DIR__ . '/../json/address.json';
 
-		$json = json_decode( $json_string );
+		$json_data = json_decode( file_get_contents( $json_file, true ) );
 
-		$address = Address::from_json( $json );
+		$address = Address::from_json( $json_data );
 
-		$this->assertInstanceOf( __NAMESPACE__ . '\Address', $address );
+		$json_string = wp_json_encode( $address->get_json(), JSON_PRETTY_PRINT );
+
+		$this->assertEquals( wp_json_encode( $json_data, JSON_PRETTY_PRINT ), $json_string );
+
+		$this->assertJsonStringEqualsJsonFile( $json_file, $json_string );
 	}
 }

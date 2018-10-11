@@ -1,44 +1,76 @@
 [
     {
-        "id": "1234",
-        "description": "Lorem ipsum dolor sit amet.",
-        "quantity": 50,
-        "unit_price": null,
-        "unit_tax": null,
-        "total_amount": {
-            "amount": 39.99,
-            "currency": "EUR"
+        "id":"1234",
+        "type":null,
+        "sku":null,
+        "name":null,
+        "description":"Lorem ipsum dolor sit amet.",
+        "quantity":50,
+        "unit_price_excluding_tax":null,
+        "unit_price_including_tax":null,
+        "tax_percentage":null,
+        "tax_amount":null,
+        "discount_amount":null,
+        "total_amount_excluding_tax":null,
+        "total_amount_including_tax":{
+            "amount":39.99,
+            "currency":"EUR"
         },
-        "tax_percentage": null
+        "product_url":null,
+        "image_url":null
     },
     {
-        "id": "5678",
-        "description": "Lorem ipsum dolor sit amet.",
-        "quantity": 10,
-        "unit_price": null,
-        "unit_tax": null,
-        "total_amount": {
-            "amount": 25,
-            "currency": "EUR"
+        "id":"5678",
+        "type":null,
+        "sku":null,
+        "name":null,
+        "description":"Lorem ipsum dolor sit amet.",
+        "quantity":10,
+        "unit_price_excluding_tax":null,
+        "unit_price_including_tax":null,
+        "tax_percentage":null,
+        "tax_amount":null,
+        "discount_amount":null,
+        "total_amount_excluding_tax":null,
+        "total_amount_including_tax":{
+            "amount":25,
+            "currency":"EUR"
         },
-        "tax_percentage": null
+        "product_url":null,
+        "image_url":null
     },
     {
-        "id": null,
-        "description": null,
-        "quantity": 1,
-        "unit_price": null,
-        "unit_tax": null,
-        "total_amount": null,
-        "tax_percentage": null
+        "id":null,
+        "type":null,
+        "sku":null,
+        "name":null,
+        "description":null,
+        "quantity":null,
+        "unit_price_excluding_tax":null,
+        "unit_price_including_tax":null,
+        "tax_percentage":null,
+        "tax_amount":null,
+        "discount_amount":null,
+        "total_amount_excluding_tax":null,
+        "total_amount_including_tax":null,
+        "product_url":null,
+        "image_url":null
     },
     {
-        "id": null,
-        "description": null,
-        "quantity": null,
-        "unit_price": null,
-        "unit_tax": null,
-        "total_amount": null,
-        "tax_percentage": null
+        "id":null,
+        "type":null,
+        "sku":null,
+        "name":null,
+        "description":null,
+        "quantity":null,
+        "unit_price_excluding_tax":null,
+        "unit_price_including_tax":null,
+        "tax_percentage":null,
+        "tax_amount":null,
+        "discount_amount":null,
+        "total_amount_excluding_tax":null,
+        "total_amount_including_tax":null,
+        "product_url":null,
+        "image_url":null
     }
 ]

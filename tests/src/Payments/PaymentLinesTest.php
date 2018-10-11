@@ -38,7 +38,7 @@ class PaymentLinesTest extends WP_UnitTestCase {
 		$line_a->set_id( '1234' );
 		$line_a->set_description( 'Lorem ipsum dolor sit amet.' );
 		$line_a->set_quantity( 50 );
-		$line_a->set_total_amount( new Money( 39.99, 'EUR' ) );
+		$line_a->set_total_amount_including_tax( new Money( 39.99, 'EUR' ) );
 
 		$this->lines->add_line( $line_a );
 
@@ -47,7 +47,7 @@ class PaymentLinesTest extends WP_UnitTestCase {
 		$line_b->set_id( '5678' );
 		$line_b->set_description( 'Lorem ipsum dolor sit amet.' );
 		$line_b->set_quantity( 10 );
-		$line_b->set_total_amount( new Money( 25, 'EUR' ) );
+		$line_b->set_total_amount_including_tax( new Money( 25, 'EUR' ) );
 
 		$this->lines->add_line( $line_b );
 
@@ -60,7 +60,7 @@ class PaymentLinesTest extends WP_UnitTestCase {
 		$line_d->set_id( null );
 		$line_d->set_description( null );
 		$line_d->set_quantity( null );
-		$line_d->set_total_amount( null );
+		$line_d->set_total_amount_including_tax( null );
 
 		$this->lines->add_line( $line_d );
 	}
@@ -82,7 +82,7 @@ class PaymentLinesTest extends WP_UnitTestCase {
 
 		$expected .= '1234 - Lorem ipsum dolor sit amet. - 50' . PHP_EOL;
 		$expected .= '5678 - Lorem ipsum dolor sit amet. - 10' . PHP_EOL;
-		$expected .= '1' . PHP_EOL;
+		$expected .= '' . PHP_EOL;
 		$expected .= '';
 
 		$this->assertEquals( $expected, $string );
@@ -92,24 +92,33 @@ class PaymentLinesTest extends WP_UnitTestCase {
 	 * Test JSON.
 	 */
 	public function test_json() {
-		$json_data   = $this->lines->get_json();
-		$json_string = wp_json_encode( $json_data );
+		$json_file = __DIR__ . '/../../json/payment-lines.json';
 
-		$this->assertJsonStringEqualsJsonFile( __DIR__ . '/../../json/payment-lines.json', $json_string );
+		$json_data = json_decode( file_get_contents( $json_file, true ) );
+
+		$json_string = wp_json_encode( $this->lines->get_json(), JSON_PRETTY_PRINT );
+
+		$this->assertEquals( wp_json_encode( $json_data, JSON_PRETTY_PRINT ), $json_string );
+
+		$this->assertJsonStringEqualsJsonFile( $json_file, $json_string );
 	}
 
 	/**
 	 * Test from object.
 	 */
 	public function test_from_object() {
-		$json_string = file_get_contents( __DIR__ . '/../../json/payment-lines.json', true );
+		$json_file = __DIR__ . '/../../json/payment-lines.json';
 
-		$json = json_decode( $json_string );
+		$json_data = json_decode( file_get_contents( $json_file, true ) );
 
-		$lines = PaymentLines::from_json( $json );
+		$lines = PaymentLines::from_json( $json_data );
 
 		$this->assertCount( 4, $lines );
 
-		$this->assertJsonStringEqualsJsonFile( __DIR__ . '/../../json/payment-lines.json', wp_json_encode( $lines->get_json() ) );
+		$json_string = wp_json_encode( $lines->get_json(), JSON_PRETTY_PRINT );
+
+		$this->assertEquals( wp_json_encode( $json_data, JSON_PRETTY_PRINT ), $json_string );
+
+		$this->assertJsonStringEqualsJsonFile( $json_file, $json_string );
 	}
 }

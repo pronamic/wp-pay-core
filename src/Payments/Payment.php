@@ -753,7 +753,7 @@ class Payment {
 	 * @return string
 	 */
 	public function get_language() {
-		return $this->get_customer()->get_language();
+		return $this->language;
 	}
 
 	/**
@@ -762,7 +762,7 @@ class Payment {
 	 * @return string
 	 */
 	public function get_locale() {
-		return $this->get_customer()->get_locale();
+		return $this->locale;
 	}
 
 	/**
