@@ -892,6 +892,13 @@ class Plugin {
 		if ( null !== $payment->get_shipping_address() ) {
 			AddressHelper::complement_address( $payment->get_shipping_address() );
 		}
+
+		// Lines.
+		if ( null !== $payment->lines ) {
+			foreach ( $payment->lines as $line ) {
+				PaymentLineHelper::complement_payment_line( $line );
+			}
+		}
 	}
 
 	/**
