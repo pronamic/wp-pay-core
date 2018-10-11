@@ -11,7 +11,7 @@
 namespace Pronamic\WordPress\Pay;
 
 use Pronamic\WordPress\DateTime\DateTime;
-use Pronamic\WordPress\Pay\Core\Util;
+use Pronamic\WordPress\Pay\Core\Util as Core_Util;
 use stdClass;
 
 /**
@@ -121,7 +121,7 @@ class Customer {
 		// User IP.
 		if ( null === $this->get_ip_address() ) {
 			// IP (@see https://github.com/WordPress/WordPress/blob/4.9.4/wp-includes/comment.php#L1957-L1960).
-			$remote_address = Util::get_remote_address();
+			$remote_address = Core_Util::get_remote_address();
 
 			if ( ! empty( $remote_address ) ) {
 				$ip_address = sanitize_text_field( wp_unslash( $remote_address ) );
