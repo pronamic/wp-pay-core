@@ -50,7 +50,7 @@ install:
   # Update Composer itself to the latest version (https://getcomposer.org/doc/03-cli.md#self-update-selfupdate-).
   - composer self-update
   # Install Composer packages.
-  - composer install
+  - composer install --no-interaction --ignore-platform-reqs
   # Test on specific WordPress version.
   - if [ "$WP_VERSION" ]; then composer require wp-phpunit/wp-phpunit:$WP_VERSION --dev; fi
   - if [ "$WP_VERSION" ]; then composer require johnpbloch/wordpress:$WP_VERSION --dev --update-with-dependencies; fi
