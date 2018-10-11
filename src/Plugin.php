@@ -833,7 +833,7 @@ class Plugin {
 		$line->set_id( $payment->get_order_id() );
 		$line->set_name( $data->get_description() );
 		$line->set_quantity( 1 );
-		$line->set_unit_price( $payment->get_amount() );
+		$line->set_unit_price_including_tax( $payment->get_amount() );
 		$line->set_total_amount( $payment->get_amount() );
 
 		// Start payment.
