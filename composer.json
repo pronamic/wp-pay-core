@@ -55,8 +55,9 @@
 		"johnpbloch/wordpress": "^4.9"
 	},
 	"scripts": {
+		"coveralls": "vendor/bin/coveralls -v",
 		"phpcbf":"vendor/bin/phpcbf", 
-		"phpcs": "vendor/bin/phpcs . -s -v",
+		"phpcs": "vendor/bin/phpcs -s -v",
 		"phplint": "ls src/**/*.php tests/**/*.php | xargs -n 1 -P 4 php -l",
 		"phpmd": "vendor/bin/phpmd src,tests text phpmd.ruleset.xml --suffixes php",
 		"phpunit": "vendor/bin/phpunit"
