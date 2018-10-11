@@ -712,6 +712,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			'consumer_city'           => $payment->consumer_city,
 			'source'                  => $payment->source,
 			'source_id'               => $payment->source_id,
+			'email'                   => $payment->get_email(),
 			'analytics_client_id'     => $payment->analytics_client_id,
 			'subscription_id'         => $payment->subscription_id,
 			'recurring_type'          => $payment->recurring_type,
@@ -729,7 +730,6 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			$meta['customer'] = wp_json_encode( $customer->get_json() );
 
 			// Deprecated meta values.
-			$meta['email']      = $customer->get_email();
 			$meta['language']   = $customer->get_language();
 			$meta['locale']     = $customer->get_locale();
 			$meta['user_agent'] = $customer->get_user_agent();

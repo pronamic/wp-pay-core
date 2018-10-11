@@ -879,7 +879,11 @@ class Plugin {
 		}
 
 		// Complements.
-		$payment->customer->complement();
+		if ( null !== $payment->get_customer() ) {
+			$payment->email = $payment->get_customer()->get_email();
+
+			$payment->customer->complement();
+		}
 
 		if ( null !== $payment->get_billing_address() ) {
 			AddressHelper::complement_address( $payment->get_billing_address() );
