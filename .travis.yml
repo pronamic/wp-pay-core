@@ -19,11 +19,11 @@ matrix:
     - php: 5.3
       dist: precise
       env: TRAVIS_DIST_PRECISE=1
-    - php: 5.6
+    - php: 7.2
       env: WP_MULTISITE=1
-    - php: 5.6
+    - php: 7.2
       env: WP_VERSION=4.8
-    - php: 5.6
+    - php: 7.2
       env: WP_VERSION=4.7 COVERAGE=1 GRUNT=1
   fast_finish: true
   allow_failures:
@@ -50,10 +50,11 @@ install:
   # Update Composer itself to the latest version (https://getcomposer.org/doc/03-cli.md#self-update-selfupdate-).
   - composer self-update
   # Install Composer packages.
-  - composer install --no-interaction --ignore-platform-reqs
+  - composer install --no-interaction --no-dev
   # Test on specific WordPress version.
   - if [ "$WP_VERSION" ]; then composer require wp-phpunit/wp-phpunit:$WP_VERSION --dev; fi
   - if [ "$WP_VERSION" ]; then composer require johnpbloch/wordpress:$WP_VERSION --dev --update-with-dependencies; fi
+  - if [[ "$GRUNT" == "1" ]]; then composer install --no-interaction --dev; fi
 
 script:
   - if [[ -z "$GRUNT" ]]; then grunt phpunit; fi
