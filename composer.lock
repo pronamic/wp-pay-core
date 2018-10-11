@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7661d0c8fd0011d3092a95bf813306d5",
+    "content-hash": "a976dde616f9961586f3b19594095d76",
     "packages": [
         {
             "name": "composer/installers",
@@ -170,16 +170,16 @@
         },
         {
             "name": "pronamic/wp-money",
-            "version": "1.1.0",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pronamic/wp-money.git",
-                "reference": "92b9ebd3bbed47aaa59b73fdf13f1c23a1684479"
+                "reference": "c508c09055fa5b043a5bc7c9e18cb921e4ff0a54"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pronamic/wp-money/zipball/92b9ebd3bbed47aaa59b73fdf13f1c23a1684479",
-                "reference": "92b9ebd3bbed47aaa59b73fdf13f1c23a1684479",
+                "url": "https://api.github.com/repos/pronamic/wp-money/zipball/c508c09055fa5b043a5bc7c9e18cb921e4ff0a54",
+                "reference": "c508c09055fa5b043a5bc7c9e18cb921e4ff0a54",
                 "shasum": ""
             },
             "require": {
@@ -208,7 +208,7 @@
             "license": [
                 "GPL-3.0-or-later"
             ],
-            "time": "2018-08-16T09:03:49+00:00"
+            "time": "2018-10-03T14:52:11+00:00"
         },
         {
             "name": "viison/address-splitter",
@@ -2198,9 +2198,18 @@
             "time": "2018-07-06T07:56:42+00:00"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "alias": "1.1",
+            "alias_normalized": "1.1.0.0",
+            "version": "dev-develop",
+            "package": "pronamic/wp-money"
+        }
+    ],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "pronamic/wp-money": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
