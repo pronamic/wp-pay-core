@@ -298,7 +298,7 @@ class Payment {
 	/**
 	 * The payment method chosen by the user who started this payment.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $method;
 
@@ -732,7 +732,7 @@ class Payment {
 	 * Get the payment method.
 	 *
 	 * @todo Constant?
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_method() {
 		return $this->method;
