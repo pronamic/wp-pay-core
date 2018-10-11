@@ -29,7 +29,7 @@ matrix:
     - php: 5.6
       env: WP_VERSION=4.8
     - php: 5.6
-      env: WP_VERSION=4.7 COVERAGE=1 GRUNT=1
+      env: WP_VERSION=4.7 COVERAGE=1 PHPCS=1 PHPMD=1
   fast_finish: true
   allow_failures:
     - php: hhvm
@@ -54,17 +54,21 @@ install:
   - npm install
   # Update Composer itself to the latest version (https://getcomposer.org/doc/03-cli.md#self-update-selfupdate-).
   - composer self-update
+  # Validate composer.json file.
+  - composer validate --strict
   # Install Composer packages.
   - composer install
   # Test on specific WordPress version.
-  - if [ "$WP_VERSION" ]; then composer require wp-phpunit/wp-phpunit:$WP_VERSION --dev; fi
-  - if [ "$WP_VERSION" ]; then composer require johnpbloch/wordpress:$WP_VERSION --dev --update-with-dependencies; fi
+  - composer require --dev --update-with-dependencies johnpbloch/wordpress:${WP_VERSION} wp-phpunit/wp-phpunit:${WP_VERSION}
+  # List available packages.
+  - composer show
 
 script:
-  - if [[ -z "$GRUNT" ]]; then grunt phpunit; fi
-  - if [[ -z "$GRUNT" ]]; then grunt phplint; fi
-  - if [[ "$GRUNT" == "1" ]]; then grunt; fi
+  - composer run-script phplint
+  - composer run-script phpunit
+  - if [ $PHPCS == "1" ]; then composer run-script phpcs; fi
+  - if [ $PHPMD == "1" ]; then composer run-script phpmd; fi
 
 after_success:
-  - if [ $COVERAGE == "1" ]; then php vendor/bin/coveralls -v; fi
+  - if [ $COVERAGE == "1" ]; then composer run-script coveralls; fi
   - if [ $COVERAGE == "1" ]; then bash <(curl -s https://codecov.io/bash); fi
