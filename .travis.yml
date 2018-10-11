@@ -15,8 +15,9 @@ php:
   - hhvm
 
 env:
-  - COMPOSER_NO_INTERACTION=1
-  - WP_VERSION=*
+  global:
+    - COMPOSER_NO_INTERACTION=1
+    - WP_VERSION=*
 
 matrix:
   include:
@@ -53,6 +54,8 @@ install:
   - npm install
   # Update Composer itself to the latest version (https://getcomposer.org/doc/03-cli.md#self-update-selfupdate-).
   - composer self-update
+  # Validat composer.json file.
+  - composer validate --strict
   # Install Composer packages.
   - composer install --no-dev
   # Test on specific WordPress version.
