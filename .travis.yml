@@ -20,6 +20,8 @@ jobs:
       env: WP_VERSION=4.7
     - php: 7.2
       env: WP_MULTISITE=1
+    - php: 7.2
+      env: PHPMD=1
     - php: 7.1
     - php: 7.0
     - php: 5.6
@@ -28,8 +30,8 @@ jobs:
     - php: 5.3
       dist: precise
       env: TRAVIS_DIST_PRECISE=1
-    - nightly
-    - hhvm
+    - php: nightly
+    - php: hhvm
   allow_failures:
     - php: hhvm
     - php: nightly
