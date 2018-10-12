@@ -501,7 +501,7 @@ class Address {
 
 			if ( is_callable( array( $address, $method ) ) ) {
 				if ( 'name' === $key ) {
-					$value = ContactName::from_object( $value );
+					$value = ContactName::from_json( $value );
 				}
 
 				call_user_func( array( $address, $method ), $value );

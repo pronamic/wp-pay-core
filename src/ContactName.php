@@ -185,25 +185,30 @@ class ContactName {
 	/**
 	 * Create contact name from object.
 	 *
-	 * @param stdClass $object Object.
+	 * @param mixed $json JSON.
 	 * @return ContactName
+	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
-	public static function from_object( stdClass $object ) {
-		$contact_name = new self();
+	public static function from_json( $json ) {
+		if ( ! is_object( $json ) ) {
+			throw new InvalidArgumentException( 'JSON value must be an array.' );
+		}
 
-		$properties = get_class_vars( get_class( $contact_name ) );
+		$name = new self();
+
+		$properties = get_class_vars( get_class( $name ) );
 
 		foreach ( $properties as $property => $default_value ) {
 			$method = sprintf( 'set_%s', $property );
 
-			if ( isset( $object->{$property} ) && is_callable( array( $contact_name, $method ) ) ) {
+			if ( isset( $object->{$property} ) && is_callable( array( $name, $method ) ) ) {
 				$value = $object->{$property};
 
-				call_user_func( array( $contact_name, $method ), $value );
+				call_user_func( array( $name, $method ), $value );
 			}
 		}
 
-		return $contact_name;
+		return $name;
 	}
 
 	/**

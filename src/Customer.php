@@ -276,26 +276,34 @@ class Customer {
 	/**
 	 * Create address from object.
 	 *
-	 * @param stdClass $object Object.
-	 *
+	 * @param mixed $json JSON.
 	 * @return Customer
+	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
-	public static function from_object( stdClass $object ) {
-		$contact = new self();
+	public static function from_json( $json ) {
+		if ( ! is_object( $json ) ) {
+			throw new InvalidArgumentException( 'JSON value must be an array.' );
+		}
 
-		foreach ( $object as $key => $value ) {
+		$customer = new self();
+
+		foreach ( $json as $key => $value ) {
 			$method = sprintf( 'set_%s', $key );
 
-			if ( is_callable( array( $contact, $method ) ) ) {
+			if ( is_callable( array( $customer, $method ) ) ) {
 				if ( 'name' === $key ) {
-					$value = ContactName::from_object( $value );
+					$value = ContactName::from_json( $value );
 				}
 
-				call_user_func( array( $contact, $method ), $value );
+				if ( 'birth_date' === $key ) {
+					$value = new DateTime( $value );
+				}
+
+				call_user_func( array( $customer, $method ), $value );
 			}
 		}
 
-		return $contact;
+		return $customer;
 	}
 
 	/**
@@ -309,7 +317,7 @@ class Customer {
 			$this->get_email(),
 			$this->get_phone(),
 			$this->get_gender(),
-			$this->get_birth_date(),
+			( null === $this->get_birth_date() ) ? null : $this->get_birth_date()->format( DATE_RFC3339 ),
 			$this->get_user_agent(),
 			$this->get_ip_address(),
 			$this->get_language(),

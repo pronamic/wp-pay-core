@@ -773,7 +773,7 @@ class Plugin {
 		$customer = array_filter( $customer );
 
 		if ( ! empty( $customer ) ) {
-			$customer = Customer::from_object( (object) $customer );
+			$customer = Customer::from_json( (object) $customer );
 
 			$payment->set_customer( $customer );
 		}

@@ -514,7 +514,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$object = json_decode( $value );
 
 		if ( is_object( $object ) ) {
-			return Customer::from_object( $object );
+			return Customer::from_json( $object );
 		}
 
 		return null;
