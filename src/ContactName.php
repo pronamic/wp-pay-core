@@ -196,16 +196,24 @@ class ContactName {
 
 		$name = new self();
 
-		$properties = get_class_vars( get_class( $name ) );
+		if ( property_exists( $json, 'prefix' ) ) {
+			$name->set_prefix( $json->prefix );
+		}
 
-		foreach ( $properties as $property => $default_value ) {
-			$method = sprintf( 'set_%s', $property );
+		if ( property_exists( $json, 'first_name' ) ) {
+			$name->set_first_name( $json->first_name );
+		}
 
-			if ( isset( $object->{$property} ) && is_callable( array( $name, $method ) ) ) {
-				$value = $object->{$property};
+		if ( property_exists( $json, 'midle_name' ) ) {
+			$name->set_midle_name( $json->midle_name );
+		}
 
-				call_user_func( array( $name, $method ), $value );
-			}
+		if ( property_exists( $json, 'last_name' ) ) {
+			$name->set_last_name( $json->last_name );
+		}
+
+		if ( property_exists( $json, 'suffix' ) ) {
+			$name->set_suffix( $json->suffix );
 		}
 
 		return $name;
