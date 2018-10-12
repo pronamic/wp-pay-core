@@ -13,11 +13,11 @@ jobs:
   fast_finish: true
   include:
     - php: 7.2
-      env: WP_VERSION=4.7 COVERAGE=1 PHPCS=1
+      env: WP_VERSION=4.9 COVERAGE=1 PHPCS=1
     - php: 7.2
       env: WP_VERSION=4.8
     - php: 7.2
-      env: WP_VERSION=4.9
+      env: WP_VERSION=4.7
     - php: 7.2
       env: WP_MULTISITE=1
     - php: 7.1
@@ -46,16 +46,15 @@ before_install:
   - if [ "${TRAVIS_DIST_PRECISE}" == "1" ]; then nvm install node; fi
   # Create database for PHPUnit tests.
   - mysql -e 'CREATE DATABASE wp_phpunit_tests;'
+  # Remove Xdebug for a huge performance increase:
   - |
-    # Remove Xdebug for a huge performance increase:
     if [ -f ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini ]; then
       phpenv config-rm xdebug.ini
     else
       echo "xdebug.ini does not exist"
     fi
-  - |
-    # Raise PHP memory limit to 2048MB
-    echo 'memory_limit = 2048M' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  # Raise PHP memory limit to 2048MB
+  - echo 'memory_limit = 2048M' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   # Validate composer.json file.
   - composer validate --strict
 
@@ -74,9 +73,13 @@ install:
   - composer show
 
 script:
+  # PHPLint
   - composer run-script phplint
+  # PHPUnit
   - composer run-script phpunit
+  # PHP_CodeSniffer
   - if [ $PHPCS == "1" ]; then composer run-script phpcs; fi
+  # PHP Mess Detector
   - if [ $PHPMD == "1" ]; then composer run-script phpmd; fi
 
 after_success:
