@@ -44,4 +44,11 @@ class PaymentLineType {
 	 * @var string
 	 */
 	const SHIPPING = 'shipping';
+
+	/**
+	 * Constant for 'fee' type.
+	 *
+	 * @var string
+	 */
+	const FEE = 'fee';
 }
