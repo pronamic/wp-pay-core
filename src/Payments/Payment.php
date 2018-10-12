@@ -426,6 +426,13 @@ class Payment {
 	public $lines;
 
 	/**
+	 * Version.
+	 *
+	 * @var string|null
+	 */
+	private $version;
+
+	/**
 	 * Construct and initialize payment object.
 	 *
 	 * @param integer $post_id A payment post ID or null.
@@ -1208,5 +1215,23 @@ class Payment {
 	 */
 	public function get_recurring() {
 		return $this->recurring;
+	}
+
+	/**
+	 * Set version.
+	 *
+	 * @param string|null $version Version.
+	 */
+	public function set_version( $version ) {
+		$this->version = $version;
+	}
+
+	/**
+	 * Get the version.
+	 *
+	 * @return string|null
+	 */
+	public function get_version() {
+		return $this->version;
 	}
 }

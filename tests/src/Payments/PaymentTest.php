@@ -59,6 +59,7 @@ class PaymentTest extends WP_UnitTestCase {
 			array( 'set_id', 'get_id', uniqid() ),
 			array( 'set_transaction_id', 'get_transaction_id', uniqid() ),
 			array( 'set_status', 'get_status', 'completed' ),
+			array( 'set_version', 'get_version', '5.4.2' ),
 		);
 	}
 

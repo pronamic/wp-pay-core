@@ -900,6 +900,11 @@ class Plugin {
 				PaymentLineHelper::complement_payment_line( $line );
 			}
 		}
+
+		// Version.
+		if ( null === $payment->get_version() ) {
+			$payment->set_version( pronamic_pay_plugin()->get_version() );
+		}
 	}
 
 	/**
