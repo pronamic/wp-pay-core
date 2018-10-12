@@ -664,9 +664,14 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			$payment->locale        = $customer->get_locale();
 			$payment->user_agent    = $customer->get_user_agent();
 			$payment->user_ip       = $customer->get_ip_address();
-			$payment->customer_name = (string) $customer->get_name();
-			$payment->first_name    = $customer->get_name()->get_first_name();
-			$payment->last_name     = $customer->get_name()->get_last_name();
+
+			$name = $customer->get_name();
+
+			if ( null !== $name ) {
+				$payment->customer_name = strval( $name );
+				$payment->first_name    = $name->get_first_name();
+				$payment->last_name     = $name->get_last_name();
+			}
 		}
 
 		$billing_address = $payment->get_billing_address();
