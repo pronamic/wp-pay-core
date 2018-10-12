@@ -27,36 +27,36 @@ class CustomerHelper {
 	 */
 	public static function complement_customer( Customer $customer ) {
 		// Locale.
-		if ( null === $this->get_locale() && is_user_logged_in() ) {
+		if ( null === $customer->get_locale() && is_user_logged_in() ) {
 			$locale = get_user_locale();
 
-			$this->set_locale( $locale );
+			$customer->set_locale( $locale );
 		}
 
 		// Language.
-		if ( null === $this->get_language() && null !== $this->get_locale() ) {
-			$language = substr( $this->get_locale(), 0, 2 );
+		if ( null === $customer->get_language() && null !== $customer->get_locale() ) {
+			$language = substr( $customer->get_locale(), 0, 2 );
 
-			$this->set_language( $language );
+			$customer->set_language( $language );
 		}
 
 		// User Agent.
-		if ( null === $this->get_user_agent() ) {
+		if ( null === $customer->get_user_agent() ) {
 			// User Agent (@see https://github.com/WordPress/WordPress/blob/4.9.4/wp-includes/comment.php#L1962-L1965).
 			$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : null; // WPCS: input var ok.
 
-			$this->set_user_agent( $user_agent );
+			$customer->set_user_agent( $user_agent );
 		}
 
 		// User IP.
-		if ( null === $this->get_ip_address() ) {
+		if ( null === $customer->get_ip_address() ) {
 			// IP (@see https://github.com/WordPress/WordPress/blob/4.9.4/wp-includes/comment.php#L1957-L1960).
 			$remote_address = Core_Util::get_remote_address();
 
 			if ( ! empty( $remote_address ) ) {
 				$ip_address = sanitize_text_field( wp_unslash( $remote_address ) );
 
-				$this->set_ip_address( $ip_address );
+				$customer->set_ip_address( $ip_address );
 			}
 		}
 	}
