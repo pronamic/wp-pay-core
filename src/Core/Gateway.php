@@ -110,7 +110,7 @@ abstract class Gateway {
 	/**
 	 * Error
 	 *
-	 * @var WP_Error
+	 * @var WP_Error|null
 	 */
 	public $error;
 
