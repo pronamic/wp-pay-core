@@ -253,9 +253,9 @@ class Customer {
 	 */
 	public function get_json() {
 		$data = array(
-			'name'       => $this->get_name()->get_json(),
+			'name'       => ( null === $this->get_name() ) ? null : $this->get_name()->get_json(),
 			'gender'     => $this->get_gender(),
-			'birth_date' => $this->get_birth_date(),
+			'birth_date' => ( null === $this->get_birth_date() ) ? null : $this->get_birth_date()->format( DATE_RFC3339 ),
 			'email'      => $this->get_email(),
 			'phone'      => $this->get_phone(),
 			'ip_address' => $this->get_ip_address(),
