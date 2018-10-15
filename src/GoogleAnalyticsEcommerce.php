@@ -35,7 +35,7 @@ class GoogleAnalyticsEcommerce {
 	 *
 	 * @var int
 	 */
-	const API_VERSION = 1;
+	const API_VERSION = '1';
 
 	/**
 	 * Anonymous client ID.
@@ -49,16 +49,15 @@ class GoogleAnalyticsEcommerce {
 	 */
 	public function __construct() {
 		// Actions.
-		add_action( 'pronamic_payment_status_update', array( $this, 'maybe_send_transaction' ), 10, 2 );
+		add_action( 'pronamic_payment_status_update', array( $this, 'maybe_send_transaction' ), 10 );
 	}
 
 	/**
 	 * Maybe send transaction for the specified payment.
 	 *
-	 * @param Payment $payment      Payment.
-	 * @param boolean $can_redirect Flag which indicates if a redirect is allowed in this function.
+	 * @param Payment $payment Payment.
 	 */
-	public function maybe_send_transaction( $payment, $can_redirect ) {
+	public function maybe_send_transaction( $payment ) {
 		// Only process successful payments.
 		if ( Statuses::SUCCESS !== $payment->get_status() ) {
 			return;
@@ -111,7 +110,7 @@ class GoogleAnalyticsEcommerce {
 			'v'   => self::API_VERSION,
 			'tid' => get_option( 'pronamic_pay_google_analytics_property' ),
 			'cid' => $this->get_client_id( $payment ),
-			'ti'  => $payment->get_id(),
+			'ti'  => strval( $payment->get_id() ),
 			'cu'  => $payment->get_currency(),
 		);
 
@@ -119,7 +118,7 @@ class GoogleAnalyticsEcommerce {
 		$transaction = wp_parse_args(
 			array(
 				't'  => 'transaction',
-				'tr' => $payment->get_amount()->get_amount(),
+				'tr' => sprintf( '%F', $payment->get_amount()->get_amount() ),
 			),
 			$defaults
 		);
@@ -128,7 +127,7 @@ class GoogleAnalyticsEcommerce {
 			self::API_URL,
 			array(
 				'user-agent' => filter_input( INPUT_SERVER, 'HTTP_USER_AGENT' ),
-				'body'       => http_build_query( $transaction ),
+				'body'       => $transaction,
 				'blocking'   => false,
 			)
 		);
@@ -176,7 +175,7 @@ class GoogleAnalyticsEcommerce {
 				// Item Price - Optional. - Specifies the price for a single item / unit.
 				// @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ip.
 				if ( null !== $line->get_unit_price() ) {
-					$item['ip'] = $line->get_unit_price()->get_amount();
+					$item['ip'] = sprintf( '%F', $line->get_unit_price()->get_amount() );
 				}
 
 				// Item Quantity - Optional. - Specifies the number of items purchased.
@@ -195,7 +194,7 @@ class GoogleAnalyticsEcommerce {
 					self::API_URL,
 					array(
 						'user-agent' => filter_input( INPUT_SERVER, 'HTTP_USER_AGENT' ),
-						'body'       => http_build_query( $item ),
+						'body'       => $item,
 						'blocking'   => false,
 					)
 				);
