@@ -333,7 +333,7 @@ class Address {
 	/**
 	 * Get postal code.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_postal_code() {
 		return $this->postal_code;
@@ -342,7 +342,7 @@ class Address {
 	/**
 	 * Set postal code.
 	 *
-	 * @param string $postal_code Postal Code.
+	 * @param string|null $postal_code Postal Code.
 	 */
 	public function set_postal_code( $postal_code ) {
 		$this->postal_code = $postal_code;
@@ -416,7 +416,7 @@ class Address {
 	/**
 	 * Get country name.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_country_name() {
 		return $this->country_name;
@@ -425,7 +425,7 @@ class Address {
 	/**
 	 * Set country name.
 	 *
-	 * @param string $country_name Country name.
+	 * @param string|null $country_name Country name.
 	 */
 	public function set_country_name( $country_name ) {
 		$this->country_name = $country_name;
@@ -443,7 +443,7 @@ class Address {
 	/**
 	 * Set phone.
 	 *
-	 * @param string $phone Phone.
+	 * @param string|null $phone Phone.
 	 */
 	public function set_phone( $phone ) {
 		$this->phone = $phone;
