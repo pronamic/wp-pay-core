@@ -330,9 +330,9 @@ class FormPostType {
 			$money_parser = new MoneyParser();
 
 			foreach ( $data['_pronamic_payment_form_amount_choices'] as $i => $amount ) {
-				$amount = $money_parser->parse( $amount )->get_amount();
+				$amount = $money_parser->parse( $amount );
 
-				$data['_pronamic_payment_form_amount_choices'][ $i ] = \Pronamic\WordPress\Pay\Core\Util::amount_to_cents( $amount );
+				$data['_pronamic_payment_form_amount_choices'][ $i ] = $amount->get_cents();
 			}
 
 			// Remove empty choices.
