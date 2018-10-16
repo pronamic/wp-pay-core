@@ -154,7 +154,7 @@ class PaymentLine {
 	/**
 	 * Get type.
 	 *
-	 * @return PaymentLineType
+	 * @return string
 	 */
 	public function get_type() {
 		return $this->type;
