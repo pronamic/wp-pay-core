@@ -111,7 +111,6 @@ class GoogleAnalyticsEcommerce {
 			'tid' => get_option( 'pronamic_pay_google_analytics_property' ),
 			'cid' => $this->get_client_id( $payment ),
 			'ti'  => strval( $payment->get_id() ),
-			'cu'  => $payment->get_currency(),
 		);
 
 		// Transaction Hit.
@@ -122,6 +121,39 @@ class GoogleAnalyticsEcommerce {
 			),
 			$defaults
 		);
+
+		// Currency.
+		if ( null !== $payment->get_currency() ) {
+			/*
+			 * Currency Code
+			 * Optional.
+			 * When present indicates the local currency for all transaction currency values. Value should be a valid ISO 4217 currency code.
+			 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cu
+			 */
+			$transaction['cu'] = $payment->get_currency();
+		}
+
+		// Shipping.
+		if ( null !== $payment->get_shipping_amount() ) {
+			/*
+			 * Transaction Shipping
+			 * Optional.
+			 * Specifies the total shipping cost of the transaction.
+			 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ts
+			 */
+			$transaction['ts'] = sprintf( '%F', $payment->get_shipping_amount()->get_amount() );
+		}
+
+		// Tax.
+		if ( null !== $payment->get_tax_amount() ) {
+			/*
+			 * Transaction Tax
+			 * Optional.
+			 * Specifies the total tax of the transaction.
+			 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#tt
+			 */
+			$transaction['tt'] = sprintf( '%F', $payment->get_tax_amount()->get_amount() );
+		}
 
 		wp_remote_post(
 			self::API_URL,

@@ -132,6 +132,20 @@ class Payment {
 	protected $amount;
 
 	/**
+	 * The tax amount of this payment.
+	 *
+	 * @var Money|null
+	 */
+	private $tax_amount;
+
+	/**
+	 * The shipping amount of this payment.
+	 *
+	 * @var Money|null
+	 */
+	private $shipping_amount;
+
+	/**
 	 * The expiration period of this payment.
 	 *
 	 * @todo Is this required/used?
@@ -715,6 +729,42 @@ class Payment {
 	 */
 	public function set_amount( Money $amount ) {
 		$this->amount = $amount;
+	}
+
+	/**
+	 * Get the tax amount.
+	 *
+	 * @return Money|null
+	 */
+	public function get_tax_amount() {
+		return $this->tax_amount;
+	}
+
+	/**
+	 * Set the tax amount.
+	 *
+	 * @param Money|null $tax_amount Money object.
+	 */
+	public function set_tax_amount( Money $tax_amount ) {
+		$this->tax_amount = $tax_amount;
+	}
+
+	/**
+	 * Get the shipping amount.
+	 *
+	 * @return Money|null
+	 */
+	public function get_shipping_amount() {
+		return $this->shipping_amount;
+	}
+
+	/**
+	 * Set the shipping amount.
+	 *
+	 * @param Money|null $shipping_amount Money object.
+	 */
+	public function set_shipping_amount( Money $shipping_amount ) {
+		$this->shipping_amount = $shipping_amount;
 	}
 
 	/**
