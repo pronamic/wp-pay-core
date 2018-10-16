@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use InvalidArgumentException;
 use stdClass;
 
 /**
@@ -166,11 +167,11 @@ class ContactName {
 	 */
 	public function get_json() {
 		$data = array(
-			'prefix'     => $this->get_prefix(),
-			'first_name' => $this->get_first_name(),
-			'midle_name' => $this->get_middle_name(),
-			'last_name'  => $this->get_last_name(),
-			'suffix'     => $this->get_suffix(),
+			'prefix'      => $this->get_prefix(),
+			'first_name'  => $this->get_first_name(),
+			'middle_name' => $this->get_middle_name(),
+			'last_name'   => $this->get_last_name(),
+			'suffix'      => $this->get_suffix(),
 		);
 
 		$data = array_filter( $data );
@@ -204,8 +205,8 @@ class ContactName {
 			$name->set_first_name( $json->first_name );
 		}
 
-		if ( property_exists( $json, 'midle_name' ) ) {
-			$name->set_midle_name( $json->midle_name );
+		if ( property_exists( $json, 'middle_name' ) ) {
+			$name->set_middle_name( $json->middle_name );
 		}
 
 		if ( property_exists( $json, 'last_name' ) ) {
