@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use InvalidArgumentException;
 use Pronamic\WordPress\DateTime\DateTime;
 
 /**
