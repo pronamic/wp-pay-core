@@ -810,7 +810,7 @@ class Payment {
 	 * @return string
 	 */
 	public function get_language() {
-		return $this->language;
+		return $this->get_customer()->get_language();
 	}
 
 	/**
@@ -819,7 +819,7 @@ class Payment {
 	 * @return string
 	 */
 	public function get_locale() {
-		return $this->locale;
+		return $this->get_customer()->get_locale();
 	}
 
 	/**
@@ -1147,7 +1147,7 @@ class Payment {
 	 * @return string
 	 */
 	public function get_first_name() {
-		return $this->first_name;
+		return $this->get_customer()->get_name()->get_first_name();
 	}
 
 	/**
@@ -1156,7 +1156,7 @@ class Payment {
 	 * @return string
 	 */
 	public function get_last_name() {
-		return $this->last_name;
+		return $this->get_customer()->get_name()->get_last_name();
 	}
 
 	/**
@@ -1165,7 +1165,7 @@ class Payment {
 	 * @return string
 	 */
 	public function get_customer_name() {
-		return $this->customer_name;
+		return strval( $this->get_customer()->get_name() );
 	}
 
 	/**
@@ -1174,7 +1174,7 @@ class Payment {
 	 * @return string
 	 */
 	public function get_address() {
-		return $this->address;
+		return $this->get_billing_address()->get_line_1();
 	}
 
 	/**
@@ -1183,7 +1183,7 @@ class Payment {
 	 * @return string
 	 */
 	public function get_city() {
-		return $this->city;
+		return $this->get_billing_address()->get_city();
 	}
 
 	/**
@@ -1192,7 +1192,7 @@ class Payment {
 	 * @return string
 	 */
 	public function get_zip() {
-		return $this->zip;
+		return $this->get_billing_address()->get_postal_code();
 	}
 
 	/**
@@ -1201,7 +1201,7 @@ class Payment {
 	 * @return string
 	 */
 	public function get_country() {
-		return $this->country;
+		return $this->get_billing_address()->get_country_name();
 	}
 
 	/**
@@ -1210,7 +1210,7 @@ class Payment {
 	 * @return string
 	 */
 	public function get_telephone_number() {
-		return $this->telephone_number;
+		return $this->get_billing_address()->get_phone();
 	}
 
 	/**

@@ -11,7 +11,6 @@
 namespace Pronamic\WordPress\Pay;
 
 use Pronamic\WordPress\DateTime\DateTime;
-use stdClass;
 
 /**
  * Contact.
