@@ -810,6 +810,10 @@ class Payment {
 	 * @return string
 	 */
 	public function get_language() {
+		if ( null === $this->get_customer() ) {
+			return null;
+		}
+
 		return $this->get_customer()->get_language();
 	}
 
@@ -819,6 +823,10 @@ class Payment {
 	 * @return string
 	 */
 	public function get_locale() {
+		if ( null === $this->get_customer() ) {
+			return null;
+		}
+
 		return $this->get_customer()->get_locale();
 	}
 
@@ -1147,6 +1155,10 @@ class Payment {
 	 * @return string
 	 */
 	public function get_first_name() {
+		if ( null === $this->get_customer() || null === $this->get_customer()->get_name() ) {
+			return null;
+		}
+
 		return $this->get_customer()->get_name()->get_first_name();
 	}
 
@@ -1156,6 +1168,10 @@ class Payment {
 	 * @return string
 	 */
 	public function get_last_name() {
+		if ( null === $this->get_customer() || null === $this->get_customer()->get_name() ) {
+			return null;
+		}
+
 		return $this->get_customer()->get_name()->get_last_name();
 	}
 
@@ -1165,6 +1181,10 @@ class Payment {
 	 * @return string
 	 */
 	public function get_customer_name() {
+		if ( null === $this->get_customer() || null === $this->get_customer()->get_name() ) {
+			return null;
+		}
+
 		return strval( $this->get_customer()->get_name() );
 	}
 
