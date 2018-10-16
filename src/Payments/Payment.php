@@ -599,24 +599,6 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
-	 * Get the payment amount.
-	 *
-	 * @return Money
-	 */
-	public function get_amount() {
-		return $this->amount;
-	}
-
-	/**
-	 * Set the payment amount.
-	 *
-	 * @param Money $amount Money object.
-	 */
-	public function set_amount( Money $amount ) {
-		$this->amount = $amount;
-	}
-
-	/**
 	 * Get the tax amount.
 	 *
 	 * @return Money|null
@@ -650,24 +632,6 @@ class Payment extends LegacyPayment {
 	 */
 	public function set_shipping_amount( Money $shipping_amount ) {
 		$this->shipping_amount = $shipping_amount;
-	}
-
-	/**
-	 * Get the payment currency.
-	 *
-	 * @return string
-	 */
-	public function get_currency() {
-		return $this->get_amount()->get_currency()->get_alphabetic_code();
-	}
-
-	/**
-	 * Get currency numeric code
-	 *
-	 * @return string|null
-	 */
-	public function get_currency_numeric_code() {
-		return $this->get_amount()->get_currency()->get_numeric_code();
 	}
 
 	/**
