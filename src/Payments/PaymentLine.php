@@ -87,7 +87,7 @@ class PaymentLine {
 	 *   6% =   6
 	 * 1.5% =   1.5
 	 *
-	 * @var float
+	 * @var float|null
 	 */
 	private $tax_percentage;
 
@@ -308,7 +308,7 @@ class PaymentLine {
 	 *   6% =   6
 	 * 1.5% =   1.5
 	 *
-	 * @param float $tax_percentage Tax percentage.
+	 * @param float|null $tax_percentage Tax percentage.
 	 */
 	public function set_tax_percentage( $tax_percentage ) {
 		$this->tax_percentage = $tax_percentage;

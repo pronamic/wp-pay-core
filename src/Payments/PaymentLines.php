@@ -132,7 +132,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 	 * Create items from object.
 	 *
 	 * @param mixed $json JSON.
-	 * @return Items
+	 * @return PaymentLines
 	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an array.
 	 */
 	public static function from_json( $json ) {
