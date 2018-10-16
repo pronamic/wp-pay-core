@@ -895,8 +895,8 @@ class Plugin {
 		}
 
 		// Lines.
-		if ( null !== $payment->lines ) {
-			foreach ( $payment->lines as $line ) {
+		if ( null !== $payment->get_lines() ) {
+			foreach ( $payment->get_lines() as $line ) {
 				PaymentLineHelper::complement_payment_line( $line );
 			}
 		}
