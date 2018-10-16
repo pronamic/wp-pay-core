@@ -305,6 +305,31 @@ class Util {
 					);
 
 					break;
+				default:
+					$html .= sprintf(
+						'<label for="%s">%s</label> ',
+						esc_attr( $field['id'] ),
+						$field['label']
+					);
+
+					$type = $field['type'];
+
+					if ( empty( $type ) ) {
+						$type = 'text';
+					}
+
+					$attributes = array(
+						'type' => $type,
+						'id'   => $field['id'],
+						'name' => $field['name'],
+					);
+
+					$html .= sprintf(
+						'<input %s>',
+						Pay_Util::array_to_html_attributes( $attributes )
+					);
+
+					break;
 			}
 		}
 

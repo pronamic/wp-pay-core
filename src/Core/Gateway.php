@@ -555,6 +555,75 @@ abstract class Gateway {
 	}
 
 	/**
+	 * Get a gender field.
+	 *
+	 * @return array|null
+	 */
+	public function get_gender_field() {
+		$payment_methods = array(
+			PaymentMethods::AFTERPAY,
+			PaymentMethods::FOCUM,
+			PaymentMethods::IN3,
+			PaymentMethods::KLARNA_PAY_LATER,
+		);
+
+		$payment_method = $this->get_payment_method();
+
+		// Only add field for specified payment methods.
+		if ( ! in_array( $payment_method, $payment_methods, true ) ) {
+			return null;
+		}
+
+		// Return field.
+		return array(
+			'id'       => 'pronamic_pay_gender',
+			'name'     => 'pronamic_pay_gender',
+			'label'    => __( 'Gender', 'pronamic_ideal' ),
+			'required' => true,
+			'type'     => 'select',
+			'choices'  => array(
+				array(
+					'options' => array(
+						''  => __( '— Select gender —', 'pronamic_ideal' ),
+						'F' => __( 'Female', 'pronamic_ideal' ),
+						'M' => __( 'Male', 'pronamic_ideal' ),
+					),
+				),
+			),
+		);
+	}
+
+	/**
+	 * Get a date of birth field.
+	 *
+	 * @return array|null
+	 */
+	public function get_birth_date_field() {
+		$payment_methods = array(
+			PaymentMethods::AFTERPAY,
+			PaymentMethods::FOCUM,
+			PaymentMethods::IN3,
+			PaymentMethods::KLARNA_PAY_LATER,
+		);
+
+		$payment_method = $this->get_payment_method();
+
+		// Only add field for specified payment methods.
+		if ( ! in_array( $payment_method, $payment_methods, true ) ) {
+			return null;
+		}
+
+		// Return field.
+		return array(
+			'id'       => 'pronamic_pay_birth_date',
+			'name'     => 'pronamic_pay_birth_date',
+			'label'    => __( 'Date of birth', 'pronamic_ideal' ),
+			'required' => true,
+			'type'     => 'date',
+		);
+	}
+
+	/**
 	 * Get the payment method to use on this gateway.
 	 *
 	 * @since 1.2.3
@@ -586,11 +655,17 @@ abstract class Gateway {
 	public function get_input_fields() {
 		$fields = array();
 
-		$issuer_field = $this->get_issuer_field();
+		// Issuer field.
+		$fields[] = $this->get_issuer_field();
 
-		if ( ! empty( $issuer_field ) ) {
-			$fields[] = $issuer_field;
-		}
+		// Gender field.
+		$fields[] = $this->get_gender_field();
+
+		// Birth date field.
+		$fields[] = $this->get_birth_date_field();
+
+		// Remove empty input fields.
+		$fields = array_filter( $fields );
 
 		return $fields;
 	}
