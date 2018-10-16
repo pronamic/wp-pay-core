@@ -125,13 +125,6 @@ class Payment extends LegacyPayment {
 	public $order_id;
 
 	/**
-	 * The amount of this payment, for example 18.95.
-	 *
-	 * @var Money
-	 */
-	protected $amount;
-
-	/**
 	 * The tax amount of this payment.
 	 *
 	 * @var Money|null

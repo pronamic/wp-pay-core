@@ -31,6 +31,13 @@ use WP_Post;
  */
 abstract class LegacyPayment {
 	/**
+	 * The amount of this payment, for example 18.95.
+	 *
+	 * @var Money
+	 */
+	protected $amount;
+
+	/**
 	 * The language of the user who started this payment.
 	 *
 	 * @deprecated 2.0.8
@@ -137,6 +144,42 @@ abstract class LegacyPayment {
 	 * @var string
 	 */
 	public $user_ip;
+
+	/**
+	 * Get the payment amount.
+	 *
+	 * @return Money
+	 */
+	public function get_amount() {
+		return $this->amount;
+	}
+
+	/**
+	 * Set the payment amount.
+	 *
+	 * @param Money $amount Money object.
+	 */
+	public function set_amount( Money $amount ) {
+		$this->amount = $amount;
+	}
+
+	/**
+	 * Get the payment currency.
+	 *
+	 * @return string
+	 */
+	public function get_currency() {
+		return $this->get_amount()->get_currency()->get_alphabetic_code();
+	}
+
+	/**
+	 * Get currency numeric code
+	 *
+	 * @return string|null
+	 */
+	public function get_currency_numeric_code() {
+		return $this->get_amount()->get_currency()->get_numeric_code();
+	}
 
 	/**
 	 * Get the payment language.
