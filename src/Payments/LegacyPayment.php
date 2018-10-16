@@ -141,7 +141,7 @@ abstract class LegacyPayment {
 	/**
 	 * Get the payment language.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_language() {
 		if ( null === $this->get_customer() ) {
@@ -154,7 +154,7 @@ abstract class LegacyPayment {
 	/**
 	 * Get the payment locale.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_locale() {
 		if ( null === $this->get_customer() ) {
@@ -179,10 +179,14 @@ abstract class LegacyPayment {
 	/**
 	 * Get first name.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_first_name() {
-		if ( null === $this->get_customer() || null === $this->get_customer()->get_name() ) {
+		if ( null === $this->get_customer() ) {
+			return null;
+		}
+
+		if ( null === $this->get_customer()->get_name() ) {
 			return null;
 		}
 
@@ -192,10 +196,14 @@ abstract class LegacyPayment {
 	/**
 	 * Get last name.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_last_name() {
-		if ( null === $this->get_customer() || null === $this->get_customer()->get_name() ) {
+		if ( null === $this->get_customer() ) {
+			return null;
+		}
+
+		if ( null === $this->get_customer()->get_name() ) {
 			return null;
 		}
 
@@ -205,10 +213,14 @@ abstract class LegacyPayment {
 	/**
 	 * Get customer name.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_customer_name() {
-		if ( null === $this->get_customer() || null === $this->get_customer()->get_name() ) {
+		if ( null === $this->get_customer() ) {
+			return null;
+		}
+
+		if ( null === $this->get_customer()->get_name() ) {
 			return null;
 		}
 
@@ -218,45 +230,65 @@ abstract class LegacyPayment {
 	/**
 	 * Get address.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_address() {
+		if ( null === $this->get_billing_address() ) {
+			return null;
+		}
+
 		return $this->get_billing_address()->get_line_1();
 	}
 
 	/**
 	 * Get city.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_city() {
+		if ( null === $this->get_billing_address() ) {
+			return null;
+		}
+
 		return $this->get_billing_address()->get_city();
 	}
 
 	/**
 	 * Get ZIP.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_zip() {
+		if ( null === $this->get_billing_address() ) {
+			return null;
+		}
+
 		return $this->get_billing_address()->get_postal_code();
 	}
 
 	/**
 	 * Get country.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_country() {
-		return $this->get_billing_address()->get_country_name();
+		if ( null === $this->get_billing_address() ) {
+			return null;
+		}
+
+		return $this->get_billing_address()->get_country_code();
 	}
 
 	/**
 	 * Get telephone number.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_telephone_number() {
+		if ( null === $this->get_billing_address() ) {
+			return null;
+		}
+
 		return $this->get_billing_address()->get_phone();
 	}
 }
