@@ -189,28 +189,39 @@ class GoogleAnalyticsEcommerce {
 			foreach ( $lines as $line ) {
 				$item = $defaults;
 
-				// Hit - Hit type - Required for all hit types.
-				// @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#t.
+				/*
+				 * Hit - Hit type - Required for all hit types.
+				 * The type of hit. Must be one of 'pageview', 'screenview', 'event', 'transaction', 'item', 'social', 'exception', 'timing'.
+				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#t
+				 */
 				$item['t'] = 'item';
 
-				// Item Name - Required for item hit type. - Specifies the item name.
-				// @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#in.
+				/*
+				 * Item Name - Required for item hit type. - Specifies the item name.
+				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#in
+				 */
 				$item['in'] = $line->get_name();
 
-				// Item Price - Optional. - Specifies the price for a single item / unit.
-				// @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ip.
+				/*
+				 * Item Price - Optional. - Specifies the price for a single item / unit.
+				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ip
+				 */
 				if ( null !== $line->get_unit_price() ) {
 					$item['ip'] = sprintf( '%F', $line->get_unit_price()->get_amount() );
 				}
 
-				// Item Quantity - Optional. - Specifies the number of items purchased.
-				// @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#iq.
+				/*
+				 * Item Quantity - Optional. - Specifies the number of items purchased.
+				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#iq
+				 */
 				if ( null !== $line->get_quantity() ) {
 					$item['iq'] = $line->get_quantity();
 				}
 
-				// Item Code - Optional. - Specifies the SKU or item code.
-				// @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ic.
+				/*
+				 * Item Code - Optional. - Specifies the SKU or item code.
+				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ic.
+				 */
 				if ( null !== $line->get_id() ) {
 					$item['ic'] = $line->get_id();
 				}
