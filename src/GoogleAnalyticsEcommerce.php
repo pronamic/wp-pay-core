@@ -91,13 +91,6 @@ class GoogleAnalyticsEcommerce {
 			return false;
 		}
 
-		// Ignore free orders.
-		$amount = $payment->get_amount()->get_amount();
-
-		if ( empty( $amount ) ) {
-			return false;
-		}
-
 		return true;
 	}
 
