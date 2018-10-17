@@ -230,6 +230,14 @@ class GoogleAnalyticsEcommerce {
 					$item['ic'] = $line->get_sku();
 				}
 
+				/*
+				 * Item Category - Optional. - Specifies the category that the item belongs to.
+				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#iv
+				 */
+				if ( null !== $line->get_product_category() ) {
+					$item['iv'] = $line->get_product_category();
+				}
+
 				wp_remote_post(
 					self::API_URL,
 					array(
