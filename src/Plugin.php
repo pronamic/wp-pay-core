@@ -894,6 +894,17 @@ class Plugin {
 		if ( null === $payment->get_version() ) {
 			$payment->set_version( pronamic_pay_plugin()->get_version() );
 		}
+
+		// Issuer.
+		if ( null === $payment->issuer ) {
+			if ( PaymentMethods::CREDIT_CARD === $payment->method && filter_has_var( INPUT_POST, 'pronamic_credit_card_issuer_id' ) ) {
+				$payment->issuer = filter_input( INPUT_POST, 'pronamic_credit_card_issuer_id', FILTER_SANITIZE_STRING );
+			}
+
+			if ( PaymentMethods::IDEAL === $payment->method && filter_has_var( INPUT_POST, 'pronamic_ideal_issuer_id' ) ) {
+				$payment->issuer = filter_input( INPUT_POST, 'pronamic_ideal_issuer_id', FILTER_SANITIZE_STRING );
+			}
+		}
 	}
 
 	/**
