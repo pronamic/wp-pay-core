@@ -134,6 +134,13 @@ class PaymentLine {
 	private $image_url;
 
 	/**
+	 * Product category.
+	 *
+	 * @var string|null
+	 */
+	private $product_category;
+
+	/**
 	 * Get the id / identifier of this payment line.
 	 *
 	 * @return string|null
@@ -432,6 +439,24 @@ class PaymentLine {
 	}
 
 	/**
+	 * Get product category.
+	 *
+	 * @return null|string
+	 */
+	public function get_product_category() {
+		return $this->product_category;
+	}
+
+	/**
+	 * Set product category.
+	 *
+	 * @param null|string $product_category Product category.
+	 */
+	public function set_product_category( $product_category ) {
+		$this->product_category = $product_category;
+	}
+
+	/**
 	 * Create payment line from object.
 	 *
 	 * @param mixed $json JSON.
@@ -513,6 +538,11 @@ class PaymentLine {
 			$line->set_image_url( $json->image_url );
 		}
 
+		if ( property_exists( $json, 'product_category' ) ) {
+			$line->set_product_category( $json->product_category );
+		}
+
+
 		return $line;
 	}
 
@@ -538,6 +568,7 @@ class PaymentLine {
 			'total_amount_including_tax' => MoneyJsonTransformer::to_json( $this->get_total_amount_including_tax() ),
 			'product_url'                => $this->get_product_url(),
 			'image_url'                  => $this->get_image_url(),
+			'product_category'           => $this->get_product_category(),
 		);
 	}
 
