@@ -150,7 +150,7 @@ class AdminPaymentPostType {
 
 				if ( $payment->get_ga_tracked() ) {
 					$notice = array(
-						'type'    => 'updated',
+						'type'    => 'info',
 						'message' => __( 'Payment sent to Google Analytics.', 'pronamic_ideal' ),
 					);
 				} else {
