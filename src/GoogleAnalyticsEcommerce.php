@@ -236,6 +236,10 @@ class GoogleAnalyticsEcommerce {
 
 				// Item Code - Optional. - Specifies the SKU or item code.
 				// @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ic.
+				if ( null !== $line->get_id() ) {
+					$item['ic'] = $line->get_id();
+				}
+
 				if ( null !== $line->get_sku() ) {
 					$item['ic'] = $line->get_sku();
 				}
