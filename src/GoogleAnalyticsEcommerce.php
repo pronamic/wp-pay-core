@@ -58,31 +58,47 @@ class GoogleAnalyticsEcommerce {
 	 * @param Payment $payment Payment.
 	 */
 	public function maybe_send_transaction( $payment ) {
-		// Only process successful payments.
-		if ( Statuses::SUCCESS !== $payment->get_status() ) {
+		// Ignore test mode payments.
+		if ( Gateway::MODE_TEST === get_post_meta( $payment->get_config_id(), '_pronamic_gateway_mode', true ) ) {
 			return;
 		}
 
-		// Ignore free orders.
-		$amount = $payment->get_amount()->get_amount();
+		$this->send_transaction( $payment );
+	}
 
-		if ( empty( $amount ) ) {
-			return;
+	/**
+	 * Is this a valid payment to track?
+	 *
+	 * @param Payment $payment Payment to track.
+	 *
+	 * @return bool
+	 */
+	public function valid_payment( $payment ) {
+		// Is payment already tracked?
+		if ( $payment->get_ga_tracked() ) {
+			return false;
 		}
 
 		// Check if Google Analytics property ID has been set.
 		$property_id = get_option( 'pronamic_pay_google_analytics_property' );
 
 		if ( empty( $property_id ) ) {
-			return;
+			return false;
 		}
 
-		// Ignore test mode payments.
-		if ( Gateway::MODE_TEST === get_post_meta( $payment->config_id, '_pronamic_gateway_mode', true ) ) {
-			return;
+		// Only process successful payments.
+		if ( Statuses::SUCCESS !== $payment->get_status() ) {
+			return false;
 		}
 
-		$this->send_transaction( $payment );
+		// Ignore free orders.
+		$amount = $payment->get_amount()->get_amount();
+
+		if ( empty( $amount ) ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -105,7 +121,11 @@ class GoogleAnalyticsEcommerce {
 	 *
 	 * @param Payment $payment Payment.
 	 */
-	private function send_transaction( $payment ) {
+	public function send_transaction( $payment ) {
+		if ( ! $this->valid_payment( $payment ) ) {
+			return;
+		}
+
 		$defaults = array(
 			'v'   => self::API_VERSION,
 			'tid' => get_option( 'pronamic_pay_google_analytics_property' ),
@@ -163,6 +183,10 @@ class GoogleAnalyticsEcommerce {
 				'blocking'   => false,
 			)
 		);
+
+		// Mark payment as tracked.
+		$payment->set_ga_tracked( true );
+		$payment->save();
 
 		// Item Hit.
 		$lines = $payment->get_lines();

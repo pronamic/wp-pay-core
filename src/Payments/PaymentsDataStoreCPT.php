@@ -426,6 +426,13 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		);
 
 		$this->register_meta_key(
+			'ga_tracked',
+			array(
+				'label' => __( 'Google Analytics tracked', 'pronamic_ideal' ),
+			)
+		);
+
+		$this->register_meta_key(
 			'subscription_id',
 			array(
 				'label'          => __( 'Subscription ID', 'pronamic_ideal' ),
@@ -639,6 +646,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$payment->email               = $this->get_meta( $id, 'email' );
 		$payment->status              = $this->get_meta( $id, 'status' );
 		$payment->analytics_client_id = $this->get_meta( $id, 'analytics_client_id' );
+		$payment->ga_tracked          = $this->get_meta( $id, 'ga_tracked' );
 		$payment->subscription_id     = $this->get_meta( $id, 'subscription_id' );
 		$payment->recurring_type      = $this->get_meta( $id, 'recurring_type' );
 		$payment->recurring           = $this->get_meta( $id, 'recurring' );
@@ -727,6 +735,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			'source_id'               => $payment->source_id,
 			'email'                   => $payment->get_email(),
 			'analytics_client_id'     => $payment->analytics_client_id,
+			'ga_tracked'              => $payment->get_ga_tracked(),
 			'subscription_id'         => $payment->subscription_id,
 			'recurring_type'          => $payment->recurring_type,
 			'recurring'               => $payment->recurring,

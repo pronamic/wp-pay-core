@@ -209,6 +209,13 @@ class Payment extends LegacyPayment {
 	public $analytics_client_id;
 
 	/**
+	 * Google Analytics e-commerce tracked.
+	 *
+	 * @var bool
+	 */
+	public $ga_tracked;
+
+	/**
 	 * The status of this payment.
 	 *
 	 * @todo   Check constant?
@@ -697,6 +704,24 @@ class Payment extends LegacyPayment {
 	 */
 	public function set_status( $status ) {
 		$this->status = $status;
+	}
+
+	/**
+	 * Is tracked in Google Analytics?
+	 *
+	 * @return bool
+	 */
+	public function get_ga_tracked() {
+		return (bool) $this->ga_tracked;
+	}
+
+	/**
+	 * Set if payment is tracked in Google Analytics.
+	 *
+	 * @param bool $tracked Tracked in Google Analytics.
+	 */
+	public function set_ga_tracked( $tracked ) {
+		$this->ga_tracked = $tracked;
 	}
 
 	/**

@@ -61,7 +61,7 @@ class AdminPaymentPostType {
 
 		add_action( 'manage_' . self::POST_TYPE . '_posts_custom_column', array( $this, 'custom_columns' ), 10, 2 );
 
-		add_action( 'load-post.php', array( $this, 'maybe_check_status' ) );
+		add_action( 'load-post.php', array( $this, 'maybe_process_payment_action' ) );
 
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 
@@ -105,9 +105,9 @@ class AdminPaymentPostType {
 	}
 
 	/**
-	 * Maybe check status.
+	 * Maybe process payment action.
 	 */
-	public function maybe_check_status() {
+	public function maybe_process_payment_action() {
 		// Current user.
 		if ( ! current_user_can( 'edit_payments' ) ) {
 			return;
@@ -122,6 +122,7 @@ class AdminPaymentPostType {
 
 		$post_id = filter_input( INPUT_GET, 'post', FILTER_SANITIZE_NUMBER_INT );
 
+		// Status check action.
 		if ( filter_has_var( INPUT_GET, 'pronamic_pay_check_status' ) && check_admin_referer( 'pronamic_payment_check_status_' . $post_id ) ) {
 			$payment = get_pronamic_payment( $post_id );
 
@@ -131,6 +132,36 @@ class AdminPaymentPostType {
 				'type'    => 'info',
 				'message' => __( 'Payment status updated.', 'pronamic_ideal' ),
 			);
+		}
+
+		// Send to Google Analytics action.
+		if ( filter_has_var( INPUT_GET, 'pronamic_pay_ga_track' ) && check_admin_referer( 'pronamic_payment_ga_track_' . $post_id ) ) {
+			$payment = get_pronamic_payment( $post_id );
+
+			$ga_ecommerce = pronamic_pay_plugin()->google_analytics_ecommerce;
+
+			if ( ! $ga_ecommerce->valid_payment( $payment ) ) {
+				$notice = array(
+					'type'    => 'error',
+					'message' => __( 'Payment details or an invalid tracking ID prevent payment from being tracked by Google Analytics.', 'pronamic_ideal' ),
+				);
+			} else {
+				pronamic_pay_plugin()->google_analytics_ecommerce->send_transaction( $payment );
+
+				if ( $payment->get_ga_tracked() ) {
+					$notice = array(
+						'type'    => 'updated',
+						'message' => __( 'Payment sent to Google Analytics.', 'pronamic_ideal' ),
+					);
+				} else {
+					$notice = array(
+						'type'    => 'error',
+						'message' => __( 'Payment could not be sent to Google Analytics.', 'pronamic_ideal' ),
+					);
+				}
+			}
+
+			$this->admin_notices[] = $notice;
 		}
 	}
 
