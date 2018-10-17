@@ -1056,4 +1056,57 @@ class Payment extends LegacyPayment {
 	public function get_version() {
 		return $this->version;
 	}
+
+	/**
+	 * Create payment from object.
+	 *
+	 * @param mixed        $json    JSON.
+	 * @param Payment|null $payment Payment.
+	 * @return Payment
+	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
+	 */
+	public static function from_json( $json, self $payment = null ) {
+		if ( ! is_object( $json ) ) {
+			throw new InvalidArgumentException( 'JSON value must be an array.' );
+		}
+
+		if ( null === $payment ) {
+			$payment = new self();
+		}
+
+		if ( property_exists( $json, 'id' ) ) {
+			$payment->set_id( $json->id );
+		}
+
+		return $payment;
+	}
+
+	/**
+	 * Get JSON.
+	 *
+	 * @return object
+	 */
+	public function get_json() {
+		$object = (object) array();
+
+		$object->id = $this->get_id();
+
+		if ( null !== $this->get_customer() ) {
+			$object->customer = $this->get_customer()->get_json();
+		}
+
+		if ( null !== $this->get_billing_address() ) {
+			$object->billing_address = $this->get_billing_address()->get_json();
+		}
+
+		if ( null !== $this->get_shipping_address() ) {
+			$object->shipping_address = $this->get_shipping_address()->get_json();
+		}
+
+		if ( null !== $this->get_lines() ) {
+			$object->lines = $this->get_lines()->get_json();
+		}
+
+		return $object;
+	}
 }

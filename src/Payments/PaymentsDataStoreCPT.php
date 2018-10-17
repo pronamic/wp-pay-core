@@ -67,6 +67,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 				'post_type'     => 'pronamic_payment',
 				'post_date_gmt' => $this->get_mysql_utc_date( $payment->date ),
 				'post_title'    => $title,
+				'post_content'  => wp_json_encode( $payment->get_json() ),
 				'post_status'   => empty( $post_status ) ? 'payment_pending' : null,
 				'post_author'   => $payment->user_id,
 			),
@@ -116,7 +117,8 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	 */
 	public function update( Payment $payment ) {
 		$data = array(
-			'ID' => $payment->get_id(),
+			'ID'           => $payment->get_id(),
+			'post_content' => wp_json_encode( $payment->get_json() ),
 		);
 
 		$post_status = $this->get_post_status( $payment->status );
