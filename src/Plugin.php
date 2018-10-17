@@ -825,17 +825,6 @@ class Plugin {
 			$payment->set_billing_address( $address );
 		}
 
-		// Payment lines.
-		$payment->lines = new PaymentLines();
-
-		$line = $payment->lines->new_line();
-
-		$line->set_id( $payment->get_order_id() );
-		$line->set_name( $data->get_description() );
-		$line->set_quantity( 1 );
-		$line->set_unit_price_including_tax( $payment->get_amount() );
-		$line->set_total_amount_including_tax( $payment->get_amount() );
-
 		// Start payment.
 		return self::start_payment( $payment, $gateway );
 	}
