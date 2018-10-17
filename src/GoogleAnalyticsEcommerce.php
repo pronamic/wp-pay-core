@@ -185,31 +185,6 @@ class GoogleAnalyticsEcommerce {
 		// Item Hit.
 		$lines = $payment->get_lines();
 
-		if ( empty( $lines ) ) {
-			$item = wp_parse_args(
-				array(
-					't'  => 'item',
-					'in' => sprintf(
-						'%s #%s',
-						$payment->get_source_description(),
-						$payment->get_source_id()
-					),
-					'ip' => $payment->get_amount()->get_amount(),
-					'iq' => 1,
-				),
-				$defaults
-			);
-
-			wp_remote_post(
-				self::API_URL,
-				array(
-					'user-agent' => filter_input( INPUT_SERVER, 'HTTP_USER_AGENT' ),
-					'body'       => http_build_query( $item ),
-					'blocking'   => false,
-				)
-			);
-		}
-
 		if ( ! empty( $lines ) ) {
 			foreach ( $lines as $line ) {
 				$item = $defaults;
