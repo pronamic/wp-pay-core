@@ -131,6 +131,7 @@ class GoogleAnalyticsEcommerce {
 			'tid' => get_option( 'pronamic_pay_google_analytics_property' ),
 			'cid' => $this->get_client_id( $payment ),
 			'ti'  => strval( $payment->get_id() ),
+			'ni'  => 1,
 		);
 
 		// Transaction Hit.
