@@ -58,6 +58,38 @@ class PaymentLineHelper {
 	 * @param PaymentLine $line Payment line to complement.
 	 */
 	public static function complement_payment_line( PaymentLine $line ) {
+		if ( null !== $line->get_tax_amount() ) {
+			$tax = $line->get_tax_amount()->get_amount();
+
+			if ( null === $line->get_total_amount_including_tax() && null !== $line->get_total_amount_excluding_tax() ) {
+				$money = $line->get_total_amount_excluding_tax();
+
+				$exclusive = $money->get_amount();
+				$inclusive = $exclusive + $tax;
+
+				$line->set_total_amount_including_tax( new Money( $inclusive, $money->get_currency() ) );
+			}
+
+			if ( null === $line->get_total_amount_excluding_tax() && null !== $line->get_total_amount_including_tax() ) {
+				$money = $line->get_total_amount_including_tax();
+
+				$inclusive = $money->get_amount();
+				$exclusive = $inclusive - $tax;
+
+				$line->set_total_amount_excluding_tax( new Money( $inclusive, $money->get_currency() ) );
+			}
+
+			if ( null === $line->get_tax_percentage() && null !== $line->get_total_amount_excluding_tax() ) {
+				$money = $line->get_total_amount_excluding_tax();
+
+				$exclusive = $money->get_amount();
+
+				$tax_percentage = ( $tax / ( $exclusive / 100 ) );
+
+				$line->set_tax_percentage( $tax_percentage );
+			}
+		}
+
 		if ( null !== $line->get_tax_percentage() ) {
 			if ( null === $line->get_unit_price_including_tax() && null !== $line->get_unit_price_excluding_tax() ) {
 				$line->set_unit_price_including_tax( self::exclusive_to_inclusive( $line->get_unit_price_excluding_tax(), $line->get_tax_percentage() ) );
