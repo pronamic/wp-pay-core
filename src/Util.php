@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use Pronamic\WordPress\Money\Money;
 use SimpleXMLElement;
 use WP_Error;
 
@@ -93,10 +94,16 @@ class Util {
 	 *
 	 * @param float $price The amount to convert to cents.
 	 *
+	 * @deprecated 2.0.9 Use \Pronamic\WordPress\Money\Money::get_cents() instead.
+	 *
 	 * @return float
 	 */
 	public static function amount_to_cents( $price ) {
-		return round( $price * 100 );
+		_deprecated_function( __FUNCTION__, '5.5', 'Pronamic\WordPress\Money\Money::get_cents()' );
+
+		$money = new Money( $price );
+
+		return $money->get_cents();
 	}
 
 	/**
