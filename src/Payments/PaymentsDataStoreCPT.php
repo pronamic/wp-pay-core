@@ -596,7 +596,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @param Payment $payment The payment to update.
 	 */
 	private function update_post_meta( $payment ) {
-		$meta = $this->get_update_meta();
+		$meta = $this->get_update_meta( $payment );
 
 		foreach ( $meta as $meta_key => $meta_value ) {
 			$this->update_meta( $payment->get_id(), $meta_key, $meta_value );
