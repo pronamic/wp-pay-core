@@ -31,7 +31,7 @@ use Pronamic\WordPress\Pay\Core\Statuses;
  * @version 2.0.8
  * @since   3.7.0
  */
-class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
+class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
 	 * Construct payments data store CPT object.
 	 */
@@ -499,7 +499,7 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-data.php#L462-L507
 	 * @param Payment $payment The payment to read.
 	 */
-	private function read_post_meta( $payment ) {
+	protected function read_post_meta( $payment ) {
 		$id = $payment->get_id();
 
 		$payment->config_id           = $this->get_meta( $id, 'config_id' );
@@ -530,35 +530,6 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			}
 		}
 
-		// Deprecated properties, use `get_customer()` or `get_billing_address()` instead.
-		// @todo remove?
-		$customer = $payment->get_customer();
-
-		if ( null !== $customer ) {
-			$payment->language   = $customer->get_language();
-			$payment->locale     = $customer->get_locale();
-			$payment->user_agent = $customer->get_user_agent();
-			$payment->user_ip    = $customer->get_ip_address();
-
-			$name = $customer->get_name();
-
-			if ( null !== $name ) {
-				$payment->customer_name = strval( $name );
-				$payment->first_name    = $name->get_first_name();
-				$payment->last_name     = $name->get_last_name();
-			}
-		}
-
-		$billing_address = $payment->get_billing_address();
-
-		if ( null !== $billing_address ) {
-			$payment->address          = $billing_address->get_line_1();
-			$payment->zip              = $billing_address->get_postal_code();
-			$payment->city             = $billing_address->get_city();
-			$payment->country          = $billing_address->get_country_name();
-			$payment->telephone_number = $billing_address->get_phone();
-		}
-
 		// Gravity Forms country fix.
 		if ( ! empty( $payment->country ) && 'gravityformsideal' === $payment->source && method_exists( 'GFCommon', 'get_country_code' ) ) {
 			$payment->country = \GFCommon::get_country_code( $payment->country );
@@ -571,15 +542,18 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 				$this->get_meta( $id, 'currency' )
 			)
 		);
+
+		// Legacy.
+		parent::read_post_meta( $payment );
 	}
 
 	/**
-	 * Update payment post meta.
+	 * Get update meta.
 	 *
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
 	 * @param Payment $payment The payment to update.
+	 * @param array   $meta    Meta array
 	 */
-	private function update_post_meta( $payment ) {
+	protected function get_update_meta( $payment, $meta = array() ) {
 		$meta = array(
 			'config_id'               => $payment->config_id,
 			'key'                     => $payment->key,
@@ -610,37 +584,20 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			'version'                 => $payment->get_version(),
 		);
 
-		// Customer.
-		$customer = $payment->get_customer();
+		$meta = parent::get_update_meta( $payment, $meta );
 
-		if ( null !== $customer ) {
-			// Deprecated meta values.
-			$meta['language']   = $customer->get_language();
-			$meta['locale']     = $customer->get_locale();
-			$meta['user_agent'] = $customer->get_user_agent();
-			$meta['user_ip']    = $customer->get_ip_address();
+		return $meta;
+	}
 
-			$name = $customer->get_name();
+	/**
+	 * Update payment post meta.
+	 *
+	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
+	 * @param Payment $payment The payment to update.
+	 */
+	private function update_post_meta( $payment ) {
+		$meta = $this->get_update_meta();
 
-			if ( null !== $name ) {
-				$meta['customer_name'] = (string) $name;
-				$meta['first_name']    = $name->get_first_name();
-				$meta['last_name']     = $name->get_last_name();
-			}
-		}
-
-		$billing_address = $payment->get_billing_address();
-
-		if ( null !== $billing_address ) {
-			// Deprecated meta values.
-			$meta['address']          = $billing_address->get_line_1();
-			$meta['zip']              = $billing_address->get_postal_code();
-			$meta['city']             = $billing_address->get_city();
-			$meta['country']          = $billing_address->get_country_name();
-			$meta['telephone_number'] = $billing_address->get_phone();
-		}
-
-		// Update meta.
 		foreach ( $meta as $meta_key => $meta_value ) {
 			$this->update_meta( $payment->get_id(), $meta_key, $meta_value );
 		}
