@@ -105,6 +105,14 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$payment->date    = new DateTime( get_post_field( 'post_date_gmt', $payment->get_id(), 'raw' ), new DateTimeZone( 'UTC' ) );
 		$payment->user_id = get_post_field( 'post_author', $payment->get_id(), 'raw' );
 
+		$content = get_post_field( 'post_content', $payment->post, 'raw' );
+
+		$json = json_decode( $content );
+
+		if ( is_object( $json ) ) {
+			Payment::from_json( $json, $payment );
+		}
+
 		$this->read_post_meta( $payment );
 	}
 
@@ -428,13 +436,6 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		);
 
 		$this->register_meta_key(
-			'ga_tracked',
-			array(
-				'label' => __( 'Google Analytics tracked', 'pronamic_ideal' ),
-			)
-		);
-
-		$this->register_meta_key(
 			'subscription_id',
 			array(
 				'label'          => __( 'Subscription ID', 'pronamic_ideal' ),
@@ -493,139 +494,6 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	}
 
 	/**
-	 * Get payment customer.
-	 *
-	 * @param int $id Post ID.
-	 * @return Customer|null
-	 */
-	private function get_customer( $id ) {
-		$value = $this->get_meta( $id, 'customer' );
-
-		if ( empty( $value ) ) {
-			// Build customer from legacy meta data.
-			$customer = new Customer();
-
-			$contact_name = new ContactName();
-			$contact_name->set_first_name( $this->get_meta( $id, 'first_name' ) );
-			$contact_name->set_last_name( $this->get_meta( $id, 'last_name' ) );
-
-			$customer->set_name( $contact_name );
-			$customer->set_email( $this->get_meta( $id, 'email' ) );
-			$customer->set_phone( $this->get_meta( $id, 'telephone_number' ) );
-			$customer->set_ip_address( $this->get_meta( $id, 'user_ip' ) );
-			$customer->set_user_agent( $this->get_meta( $id, 'user_agent' ) );
-			$customer->set_language( $this->get_meta( $id, 'language' ) );
-			$customer->set_locale( $this->get_meta( $id, 'locale' ) );
-
-			return $customer;
-		}
-
-		$object = json_decode( $value );
-
-		if ( is_object( $object ) ) {
-			return Customer::from_json( $object );
-		}
-
-		return null;
-	}
-
-	/**
-	 * Get payment billing address.
-	 *
-	 * @param int $id Post ID.
-	 * @return Address|null
-	 */
-	private function get_billing_address( $id ) {
-		$value = $this->get_meta( $id, 'billing_address' );
-
-		if ( empty( $value ) ) {
-			// Build address from legacy meta data.
-			$name = new ContactName();
-			$name->set_first_name( $this->get_meta( $id, 'first_name' ) );
-			$name->set_last_name( $this->get_meta( $id, 'last_name' ) );
-
-			$line_1      = $this->get_meta( $id, 'address' );
-			$postal_code = $this->get_meta( $id, 'zip' );
-			$city        = $this->get_meta( $id, 'city' );
-			$country     = $this->get_meta( $id, 'country' );
-
-			$parts = array(
-				$line_1,
-				$postal_code,
-				$city,
-				$country,
-			);
-
-			$parts = array_map( 'trim', $parts );
-
-			if ( ! empty( $parts ) ) {
-				$address = new Address();
-
-				$address->set_name( $name );
-				$address->set_email( $this->get_meta( $id, 'email' ) );
-				$address->set_phone( $this->get_meta( $id, 'telephone_number' ) );
-				$address->set_line_1( $line_1 );
-				$address->set_postal_code( $postal_code );
-				$address->set_city( $city );
-				$address->set_country_name( $country );
-
-				return $address;
-			}
-		}
-
-		$object = json_decode( $value );
-
-		if ( is_object( $object ) ) {
-			return Address::from_json( $object );
-		}
-
-		return null;
-	}
-
-	/**
-	 * Get payment shipping address.
-	 *
-	 * @param int $id Post ID.
-	 * @return Address|null
-	 */
-	private function get_shipping_address( $id ) {
-		$value = $this->get_meta( $id, 'shipping_address' );
-
-		if ( empty( $value ) ) {
-			return null;
-		}
-
-		$object = json_decode( $value );
-
-		if ( is_object( $object ) ) {
-			return Address::from_json( $object );
-		}
-
-		return null;
-	}
-
-	/**
-	 * Get payment lines.
-	 *
-	 * @param int $id Post ID.
-	 * @return PaymentLines|null
-	 */
-	private function get_payment_lines( $id ) {
-		$value = $this->get_meta( $id, 'lines' );
-
-		if ( empty( $value ) ) {
-			return null;
-		}
-
-		$json = json_decode( $value );
-
-		// @todo what if this fails? try catch or throw exception?
-		$value = PaymentLines::from_json( $json );
-
-		return $value;
-	}
-
-	/**
 	 * Read post meta.
 	 *
 	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-data.php#L462-L507
@@ -648,16 +516,11 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$payment->email               = $this->get_meta( $id, 'email' );
 		$payment->status              = $this->get_meta( $id, 'status' );
 		$payment->analytics_client_id = $this->get_meta( $id, 'analytics_client_id' );
-		$payment->ga_tracked          = $this->get_meta( $id, 'ga_tracked' );
 		$payment->subscription_id     = $this->get_meta( $id, 'subscription_id' );
 		$payment->recurring_type      = $this->get_meta( $id, 'recurring_type' );
 		$payment->recurring           = $this->get_meta( $id, 'recurring' );
 		$payment->start_date          = $this->get_meta_date( $id, 'start_date' );
 		$payment->end_date            = $this->get_meta_date( $id, 'end_date' );
-		$payment->customer            = $this->get_customer( $id );
-		$payment->billing_address     = $this->get_billing_address( $id );
-		$payment->shipping_address    = $this->get_shipping_address( $id );
-		$payment->lines               = $this->get_payment_lines( $id );
 
 		$payment->set_version( $this->get_meta( $id, 'version' ) );
 
@@ -737,7 +600,6 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			'source_id'               => $payment->source_id,
 			'email'                   => $payment->get_email(),
 			'analytics_client_id'     => $payment->analytics_client_id,
-			'ga_tracked'              => $payment->get_ga_tracked(),
 			'subscription_id'         => $payment->subscription_id,
 			'recurring_type'          => $payment->recurring_type,
 			'recurring'               => $payment->recurring,
@@ -752,8 +614,6 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$customer = $payment->get_customer();
 
 		if ( null !== $customer ) {
-			$meta['customer'] = wp_json_encode( $customer->get_json() );
-
 			// Deprecated meta values.
 			$meta['language']   = $customer->get_language();
 			$meta['locale']     = $customer->get_locale();
@@ -772,28 +632,12 @@ class PaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$billing_address = $payment->get_billing_address();
 
 		if ( null !== $billing_address ) {
-			$meta['billing_address'] = wp_json_encode( $billing_address->get_json() );
-
 			// Deprecated meta values.
 			$meta['address']          = $billing_address->get_line_1();
 			$meta['zip']              = $billing_address->get_postal_code();
 			$meta['city']             = $billing_address->get_city();
 			$meta['country']          = $billing_address->get_country_name();
 			$meta['telephone_number'] = $billing_address->get_phone();
-		}
-
-		// Shipping address.
-		$shipping_address = $payment->get_shipping_address();
-
-		if ( null !== $shipping_address ) {
-			$meta['shipping_address'] = wp_json_encode( $shipping_address->get_json() );
-		}
-
-		// Lines.
-		$lines = $payment->get_lines();
-
-		if ( null !== $lines ) {
-			$meta['lines'] = wp_json_encode( $lines->get_json() );
 		}
 
 		// Update meta.

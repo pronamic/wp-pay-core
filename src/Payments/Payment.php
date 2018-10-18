@@ -1074,8 +1074,28 @@ class Payment extends LegacyPayment {
 			$payment = new self();
 		}
 
-		if ( property_exists( $json, 'id' ) ) {
+		if ( isset( $json->id ) ) {
 			$payment->set_id( $json->id );
+		}
+
+		if ( isset( $json->customer ) ) {
+			$payment->set_customer( Customer::from_json( $json->customer ) );
+		}
+
+		if ( isset( $json->billing_address ) ) {
+			$payment->set_billing_address( Address::from_json( $json->billing_address ) );
+		}
+
+		if ( isset( $json->shipping_address ) ) {
+			$payment->set_shipping_address( Address::from_json( $json->shipping_address ) );
+		}
+
+		if ( isset( $json->lines ) ) {
+			$payment->set_lines( PaymentLines::from_json( $json->lines ) );
+		}
+
+		if ( isset( $json->ga_tracked ) ) {
+			$payment->set_ga_tracked( $json->ga_tracked );
 		}
 
 		return $payment;
@@ -1089,7 +1109,9 @@ class Payment extends LegacyPayment {
 	public function get_json() {
 		$object = (object) array();
 
-		$object->id = $this->get_id();
+		if ( null !== $this->get_id() ) {
+			$object->id = $this->get_id();
+		}
 
 		if ( null !== $this->get_customer() ) {
 			$object->customer = $this->get_customer()->get_json();
@@ -1105,6 +1127,10 @@ class Payment extends LegacyPayment {
 
 		if ( null !== $this->get_lines() ) {
 			$object->lines = $this->get_lines()->get_json();
+		}
+
+		if ( null !== $this->get_ga_tracked() ) {
+			$object->ga_tracked = $this->get_ga_tracked();
 		}
 
 		return $object;
