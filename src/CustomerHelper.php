@@ -26,6 +26,33 @@ class CustomerHelper {
 	 * @param Customer $customer Customer to complement.
 	 */
 	public static function complement_customer( Customer $customer ) {
+		// Name.
+		if ( null === $customer->get_name() && is_user_logged_in() ) {
+			$user = wp_get_current_user();
+
+			$data = array(
+				'first_name' => $user->user_firstname,
+				'last_name'  => $user->user_lastname,
+			);
+
+			$data = array_map( 'trim', $data );
+			$data = array_filter( $data );
+
+			if ( ! empty( $data ) ) {
+				$name = new ContactName();
+
+				$customer->set_name( $name );
+
+				if ( isset( $data['first_name'] ) ) {
+					$name->set_first_name( $data['first_name'] );
+				}
+
+				if ( isset( $data['last_name'] ) ) {
+					$name->set_last_name( $data['last_name'] );
+				}
+			}
+		}
+
 		// Locale.
 		if ( null === $customer->get_locale() ) {
 			$locales = array();
