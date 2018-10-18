@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use Pronamic\WordPress\Pay\Core\Server;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
 
 /**
@@ -66,7 +67,7 @@ class CustomerHelper {
 
 			// Locale based on ACCEPT_LANGUAGE header.
 			if ( function_exists( 'locale_accept_from_http' ) ) {
-				$locales[] = locale_accept_from_http( filter_input( INPUT_SERVER, 'HTTP_ACCEPT_LANGUAGE' ) );
+				$locales[] = locale_accept_from_http( Server::get( 'HTTP_ACCEPT_LANGUAGE' ) );
 			}
 
 			// Site locale.
