@@ -96,9 +96,9 @@ class Customer {
 	/**
 	 * Set contact name.
 	 *
-	 * @param ContactName $name Contact name.
+	 * @param ContactName|null $name Contact name.
 	 */
-	public function set_name( ContactName $name ) {
+	public function set_name( ContactName $name = null ) {
 		$this->name = $name;
 	}
 
