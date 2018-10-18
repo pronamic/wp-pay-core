@@ -27,10 +27,32 @@ class CustomerHelper {
 	 */
 	public static function complement_customer( Customer $customer ) {
 		// Locale.
-		if ( null === $customer->get_locale() && is_user_logged_in() ) {
-			$locale = get_user_locale();
+		if ( null === $customer->get_locale() ) {
+			$locales = array();
 
-			$customer->set_locale( $locale );
+			// User locale.
+			if ( is_user_logged_in() ) {
+				$user = wp_get_current_user();
+
+				$locales[] = $user->locale;
+			}
+
+			// Locale based on ACCEPT_LANGUAGE header.
+			if ( function_exists( 'locale_accept_from_http' ) ) {
+				$locales[] = locale_accept_from_http( filter_input( INPUT_SERVER, 'HTTP_ACCEPT_LANGUAGE' ) );
+			}
+
+			// Site locale.
+			$locales[] = get_locale();
+
+			// Find first valid locale.
+			$locales = array_filter( $locales );
+
+			$locale = reset( $locales );
+
+			if ( ! empty( $locale ) ) {
+				$customer->set_locale( $locale );
+			}
 		}
 
 		// Language.
