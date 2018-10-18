@@ -339,6 +339,13 @@ class Payment extends LegacyPayment {
 	private $version;
 
 	/**
+	 * Mode.
+	 *
+	 * @var string|null
+	 */
+	private $mode;
+
+	/**
 	 * Construct and initialize payment object.
 	 *
 	 * @param integer $post_id A payment post ID or null.
@@ -1047,12 +1054,30 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
-	 * Get the version.
+	 * Get version.
 	 *
 	 * @return string|null
 	 */
 	public function get_version() {
 		return $this->version;
+	}
+
+	/**
+	 * Set mode.
+	 *
+	 * @param string|null $mode Mode.
+	 */
+	public function set_mode( $mode ) {
+		$this->mode = $mode;
+	}
+
+	/**
+	 * Get mode.
+	 *
+	 * @return string|null
+	 */
+	public function get_mode() {
+		return $this->mode;
 	}
 
 	/**
@@ -1096,6 +1121,10 @@ class Payment extends LegacyPayment {
 			$payment->set_ga_tracked( $json->ga_tracked );
 		}
 
+		if ( isset( $json->mode ) ) {
+			$payment->set_mode( $json->mode );
+		}
+
 		return $payment;
 	}
 
@@ -1129,6 +1158,10 @@ class Payment extends LegacyPayment {
 
 		if ( null !== $this->get_ga_tracked() ) {
 			$object->ga_tracked = $this->get_ga_tracked();
+		}
+
+		if ( null !== $this->get_mode() ) {
+			$object->mode = $this->get_mode();
 		}
 
 		return $object;

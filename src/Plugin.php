@@ -895,6 +895,13 @@ class Plugin {
 			$payment->set_version( pronamic_pay_plugin()->get_version() );
 		}
 
+		// Mode.
+		if ( null === $payment->get_mode() ) {
+			$mode = get_post_meta( $payment->get_config_id(), '_pronamic_gateway_mode', true );
+
+			$payment->set_mode( $mode );
+		}
+
 		// Issuer.
 		if ( null === $payment->issuer ) {
 			if ( PaymentMethods::CREDIT_CARD === $payment->method && filter_has_var( INPUT_POST, 'pronamic_credit_card_issuer_id' ) ) {
