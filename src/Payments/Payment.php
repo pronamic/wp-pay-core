@@ -782,8 +782,6 @@ class Payment extends LegacyPayment {
 			home_url( '/' )
 		);
 
-		$url = str_replace( '.test', '.dev', $url );
-
 		return $url;
 	}
 
