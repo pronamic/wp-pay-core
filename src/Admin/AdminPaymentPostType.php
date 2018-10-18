@@ -382,7 +382,9 @@ class AdminPaymentPostType {
 
 				break;
 			case 'pronamic_payment_customer':
-				echo esc_html( $payment->get_customer()->get_name() );
+				if ( null !== $payment->get_customer() ) {
+					echo esc_html( $payment->get_customer()->get_name() );
+				}
 
 				break;
 		}
