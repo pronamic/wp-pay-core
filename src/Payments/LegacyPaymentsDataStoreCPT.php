@@ -196,42 +196,6 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	}
 
 	/**
-	 * Maybe set legacy payment properties.
-	 *
-	 * @param Payment $payment Payment.
-	 */
-	private function maybe_set_legacy_payment_properties( $payment ) {
-		// Deprecated properties, use `get_customer()` or `get_billing_address()` instead.
-		// @todo remove?
-		$customer = $payment->get_customer();
-
-		if ( null !== $customer ) {
-			$payment->language   = $customer->get_language();
-			$payment->locale     = $customer->get_locale();
-			$payment->user_agent = $customer->get_user_agent();
-			$payment->user_ip    = $customer->get_ip_address();
-
-			$name = $customer->get_name();
-
-			if ( null !== $name ) {
-				$payment->customer_name = strval( $name );
-				$payment->first_name    = $name->get_first_name();
-				$payment->last_name     = $name->get_last_name();
-			}
-		}
-
-		$billing_address = $payment->get_billing_address();
-
-		if ( null !== $billing_address ) {
-			$payment->address          = $billing_address->get_line_1();
-			$payment->zip              = $billing_address->get_postal_code();
-			$payment->city             = $billing_address->get_city();
-			$payment->country          = $billing_address->get_country_name();
-			$payment->telephone_number = $billing_address->get_phone();
-		}
-	}
-
-	/**
 	 * Read post meta.
 	 *
 	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-data.php#L462-L507
@@ -240,7 +204,6 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	protected function read_post_meta( $payment ) {
 		$this->maybe_create_customer_from_legacy_meta( $payment );
 		$this->maybe_create_billing_address_from_legacy_meta( $payment );
-		$this->maybe_set_legacy_payment_properties( $payment );
 	}
 
 	/**

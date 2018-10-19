@@ -13,6 +13,7 @@ namespace Pronamic\WordPress\Pay\Payments;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Pay\Address;
+use Pronamic\WordPress\Pay\ContactName;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\CreditCard;
 use Pronamic\WordPress\Pay\Core\Statuses;
@@ -36,114 +37,6 @@ abstract class LegacyPayment {
 	 * @var Money
 	 */
 	protected $amount;
-
-	/**
-	 * The language of the user who started this payment.
-	 *
-	 * @deprecated 2.0.8
-	 *
-	 * @var string
-	 */
-	public $language;
-
-	/**
-	 * The locale of the user who started this payment.
-	 *
-	 * @deprecated 2.0.8
-	 *
-	 * @var string
-	 */
-	public $locale;
-
-	/**
-	 * The customer name of the consumer of this payment.
-	 *
-	 * @deprecated 2.0.8
-	 *
-	 * @var  string
-	 */
-	public $customer_name;
-
-	/**
-	 * The address of the consumer of this payment.
-	 *
-	 * @deprecated 2.0.8
-	 *
-	 * @var string
-	 */
-	public $address;
-
-	/**
-	 * The city of the consumer of this payment.
-	 *
-	 * @deprecated 2.0.8
-	 *
-	 * @var string
-	 */
-	public $city;
-
-	/**
-	 * The ZIP of the consumer of this payment.
-	 *
-	 * @deprecated 2.0.8
-	 *
-	 * @var string
-	 */
-	public $zip;
-
-	/**
-	 * The country of the consumer of this payment.
-	 *
-	 * @deprecated 2.0.8
-	 *
-	 * @var string
-	 */
-	public $country;
-
-	/**
-	 * The telephone number of the consumer of this payment.
-	 *
-	 * @deprecated 2.0.8
-	 *
-	 * @var string
-	 */
-	public $telephone_number;
-
-	/**
-	 * The first name of the user who started this payment.
-	 *
-	 * @deprecated 2.0.8
-	 *
-	 * @var string
-	 */
-	public $first_name;
-
-	/**
-	 * The last name of the user who started this payment.
-	 *
-	 * @deprecated 2.0.8
-	 *
-	 * @var string
-	 */
-	public $last_name;
-
-	/**
-	 * User agent.
-	 *
-	 * @deprecated 2.0.8
-	 *
-	 * @var string
-	 */
-	public $user_agent;
-
-	/**
-	 * User IP address.
-	 *
-	 * @deprecated 2.0.8
-	 *
-	 * @var string
-	 */
-	public $user_ip;
 
 	/**
 	 * Get the payment amount.
@@ -333,5 +226,135 @@ abstract class LegacyPayment {
 		}
 
 		return $this->get_billing_address()->get_phone();
+	}
+
+	/**
+	 * Get.
+	 *
+	 * @link http://php.net/manual/en/language.oop5.overloading.php#object.get
+	 * @param string $name Name.
+	 * @return mixed
+	 */
+	public function __get( $name ) {
+		switch ( $name ) {
+			case 'language':
+				return $this->get_language();
+			case 'locale':
+				return $this->get_locale();
+			case 'user_agent':
+				return ( null === $this->get_customer() ) ? null : $this->get_customer()->get_user_agent();
+			case 'user_ip':
+				return ( null === $this->get_customer() ) ? null : $this->get_customer()->get_ip_address();
+			case 'customer_name':
+				return $this->get_customer_name();
+			case 'first_name':
+				return $this->get_first_name();
+			case 'last_name':
+				return $this->get_last_name();
+			case 'address':
+				return $this->get_address();
+			case 'zip':
+				return $this->get_zip();
+			case 'city':
+				return $this->get_city();
+			case 'country':
+				return $this->get_country();
+			case 'telephone_number':
+				return $this->get_telephone_number();
+		}
+
+		return $this->{$name};
+	}
+
+	/**
+	 * Set.
+	 *
+	 * @link http://php.net/manual/en/language.oop5.overloading.php#object.set
+	 * @param string $name  Name.
+	 * @param mixed  $value Value.
+	 */
+	public function __set( $name, $value ) {
+		$legacy_keys = array(
+			'language',
+			'locale',
+			'first_name',
+			'last_name',
+			'telephone_number',
+			'country',
+			'zip',
+			'city',
+			'address',
+		);
+
+		if ( ! in_array( $name, $legacy_keys, true ) ) {
+			$this->{$name} = $value;
+
+			return;
+		}
+
+		$customer     = $this->get_customer();
+		$address      = $this->get_billing_address();
+		$contact_name = null;
+
+		if ( in_array( $name, array( 'language', 'locale', 'first_name', 'last_name' ), true ) ) {
+			if ( null === $value && null === $customer ) {
+				return;
+			}
+
+			if ( null === $customer ) {
+				$customer = new Customer();
+
+				$this->set_customer( $customer );
+			}
+
+			if ( in_array( $name, array( 'first_name', 'last_name' ), true ) ) {
+				$contact_name = $customer->get_name();
+
+				if ( null === $value && null === $contact_name ) {
+					return;
+				}
+
+				if ( null === $contact_name ) {
+					$contact_name = new ContactName();
+
+					$customer->set_name( $contact_name );
+				}
+			}
+		}
+
+		if ( in_array( $name, array( 'telephone_number', 'country', 'zip', 'city', 'address' ), true ) ) {
+			if ( null === $value && null === $address ) {
+				return;
+			}
+
+			if ( null === $address ) {
+				$address = new Address();
+
+				$this->set_billing_address( $address );
+			}
+		}
+
+		switch ( $name ) {
+			case 'language':
+				return ( null === $customer ) ? null : $customer->set_language( $value );
+			case 'first_name':
+				return ( null === $contact_name ) ? null : $contact_name->set_first_name( $value );
+			case 'last_name':
+				return ( null === $contact_name ) ? null : $contact_name->set_last_name( $value );
+			case 'locale':
+				return ( null === $customer ) ? null : $customer->set_locale( $value );
+			case 'telephone_number':
+				return ( null === $address ) ? null : $address->set_phone( $value );
+			case 'country':
+				return ( null === $address ) ? null : $address->set_country_code( $value );
+			case 'zip':
+				return ( null === $address ) ? null : $address->set_postal_code( $value );
+			case 'city':
+				return ( null === $address ) ? null : $address->set_city( $value );
+			case 'address':
+				return ( null === $address ) ? null : $address->set_line_1( $value );
+		}
+
+		$this->{$name} = $value;
 	}
 }
