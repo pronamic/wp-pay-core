@@ -15,9 +15,8 @@ use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Core\Recurring;
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Payments\Payment;
-use Pronamic\WordPress\Pay\Payments\PaymentDataInterface;
+use Pronamic\WordPress\Pay\Payments\PaymentData;
 use Pronamic\WordPress\Pay\Payments\PaymentLineHelper;
-use Pronamic\WordPress\Pay\Payments\PaymentLines;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Payments\StatusChecker;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
@@ -733,15 +732,15 @@ class Plugin {
 	/**
 	 * Start a payment.
 	 *
-	 * @param string               $config_id      A gateway configuration ID.
-	 * @param Gateway              $gateway        The gateway to start the payment at.
-	 * @param PaymentDataInterface $data           A payment data interface object with all the required payment info.
-	 * @param string|null          $payment_method The payment method to use to start the payment.
+	 * @param string      $config_id      A gateway configuration ID.
+	 * @param Gateway     $gateway        The gateway to start the payment at.
+	 * @param PaymentData $data           A payment data interface object with all the required payment info.
+	 * @param string|null $payment_method The payment method to use to start the payment.
 	 *
 	 * @return Payment
 	 */
-	public static function start( $config_id, Gateway $gateway, PaymentDataInterface $data, $payment_method = null ) {
-		$payment = new Payments\Payment();
+	public static function start( $config_id, Gateway $gateway, PaymentData $data, $payment_method = null ) {
+		$payment = new Payment();
 
 		/* translators: %s: payment data title */
 		$payment->title                  = sprintf( __( 'Payment for %s', 'pronamic_ideal' ), $data->get_title() );
@@ -836,10 +835,25 @@ class Plugin {
 	 * @param Gateway                 $gateway      Gateway.
 	 * @param SubscriptionPaymentData $data         The subscription payment data.
 	 *
+	 * @throws \Exception Throws an Exception on incorrect date interval.
+	 *
 	 * @return Payment
 	 */
-	public static function start_recurring( Subscription $subscription, Gateway $gateway, $data = null ) {
+	public static function start_recurring( $subscription, $gateway = null, $data = null ) {
 		return pronamic_pay_plugin()->subscriptions_module->start_recurring( $subscription, $gateway, $data );
+	}
+
+	/**
+	 * Start recurring payment.
+	 *
+	 * @param Payment $payment Payment or subscription for backwards compatibility.
+	 *
+	 * @throws \Exception Throws an Exception on incorrect date interval.
+	 *
+	 * @return Payment
+	 */
+	public static function start_recurring_payment( Payment $payment ) {
+		return pronamic_pay_plugin()->subscriptions_module->start_payment( $payment );
 	}
 
 	/**
@@ -943,14 +957,14 @@ class Plugin {
 		// Gateway.
 		if ( null === $gateway ) {
 			$gateway = self::get_gateway( $payment->get_config_id() );
+		}
 
-			if ( ! $gateway ) {
-				$payment->set_status( Statuses::FAILURE );
+		if ( ! $gateway ) {
+			$payment->set_status( Statuses::FAILURE );
 
-				$payment->save();
+			$payment->save();
 
-				return $payment;
-			}
+			return $payment;
 		}
 
 		// Start payment at the gateway.

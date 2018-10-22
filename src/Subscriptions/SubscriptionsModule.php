@@ -14,10 +14,12 @@ use DateInterval;
 use DatePeriod;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
+use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\Recurring;
 use Pronamic\WordPress\Pay\Core\Server;
 use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
 use WP_CLI;
@@ -188,6 +190,11 @@ class SubscriptionsModule {
 							exit;
 						}
 
+						if ( ! $payment ) {
+							// @todo
+							exit;
+						}
+
 						$gateway->redirect( $payment );
 					}
 
@@ -252,36 +259,146 @@ class SubscriptionsModule {
 	/**
 	 * Start a recurring payment at the specified gateway for the specified subscription.
 	 *
-	 * @param Subscription            $subscription The subscription to start a recurring payment for.
-	 * @param Gateway                 $gateway      The gateway to start the recurring payment at.
-	 * @param SubscriptionPaymentData $data         The subscription payment data.
+	 * @param Subscription                 $subscription The subscription to start a recurring payment for.
+	 * @param Gateway|null                 $gateway      The gateway to start the recurring payment at.
+	 * @param SubscriptionPaymentData|null $data         The subscription payment data.
+	 *
+	 * @throws \Exception Throws an Exception on incorrect date interval.
+	 *
+	 * @return Payment
 	 */
-	public function start_recurring( Subscription $subscription, Gateway $gateway, $data = null ) {
+	public function start_recurring( Subscription $subscription, $gateway = null, $data = null ) {
+		// Make sure there's payment data to process.
 		if ( null === $data ) {
 			$data = new SubscriptionPaymentData( $subscription );
 		}
 
-		if ( false === $data->get_recurring() ) {
-			// If next payment date is after the subscription end date unset the next payment date.
-			if ( isset( $subscription->end_date, $subscription->next_payment ) && $subscription->end_date <= $subscription->next_payment ) {
-				$subscription->next_payment = null;
-			}
+		// Create payment.
+		$payment = new Payment();
 
-			// If there is no next payment date change the subscription status to completed.
-			if ( empty( $subscription->next_payment ) ) {
-				$subscription->status      = Statuses::COMPLETED;
-				$subscription->expiry_date = $subscription->end_date;
+		$payment->user_id         = $data->get_user_id();
+		$payment->config_id       = $subscription->get_config_id();
+		$payment->order_id        = $data->get_order_id();
+		$payment->description     = $data->get_description();
+		$payment->source          = $data->get_source();
+		$payment->source_id       = $data->get_source_id();
+		$payment->email           = $data->get_email();
+		$payment->method          = $subscription->payment_method;
+		$payment->recurring       = ( false === $data->get_recurring() ? false : true );
+		$payment->subscription    = $subscription;
+		$payment->subscription_id = $subscription->get_id();
+		$payment->set_amount( $data->get_amount() );
 
-				$subscription->save();
-
-				// @todo
-				return;
-			}
-
-			if ( ! $gateway->supports( 'recurring' ) ) {
-				return;
-			}
+		// Set payment method from payment data if available.
+		if ( method_exists( $data, 'get_payment_method' ) ) {
+			$payment->method = $data->get_payment_method();
 		}
+
+		// Set issuer for manual renewal.
+		if ( ! $payment->get_recurring() ) {
+			$payment->issuer = $data->get_issuer_id();
+		}
+
+		// Customer.
+		$customer = array(
+			'first_name' => $data->get_first_name(),
+			'last_name'  => $data->get_last_name(),
+			'email'      => $data->get_email(),
+			'phone'      => $data->get_telephone_number(),
+		);
+
+		$customer = array_filter( $customer );
+
+		if ( ! empty( $customer ) ) {
+			$customer = Customer::from_json( (object) $customer );
+
+			$payment->set_customer( $customer );
+		}
+
+		// Billing address.
+		$billing_address = array(
+			'name'         => ( $customer instanceof Customer ? $customer->get_name() : null ),
+			'line_1'       => $data->get_address(),
+			'postal_code'  => $data->get_zip(),
+			'city'         => $data->get_city(),
+			'country_name' => $data->get_country(),
+			'email'        => $data->get_email(),
+			'phone'        => $data->get_telephone_number(),
+		);
+
+		$billing_address = array_filter( $billing_address );
+
+		if ( ! empty( $billing_address ) ) {
+			$address = new Address();
+
+			if ( isset( $billing_address['name'] ) ) {
+				$address->set_name( $billing_address['name'] );
+			}
+
+			if ( isset( $billing_address['line_1'] ) ) {
+				$address->set_line_1( $billing_address['line_1'] );
+			}
+
+			if ( isset( $billing_address['postal_code'] ) ) {
+				$address->set_postal_code( $billing_address['postal_code'] );
+			}
+
+			if ( isset( $billing_address['city'] ) ) {
+				$address->set_city( $billing_address['city'] );
+			}
+
+			if ( isset( $billing_address['country_name'] ) ) {
+				$address->set_country_name( $billing_address['country_name'] );
+			}
+
+			if ( isset( $billing_address['email'] ) ) {
+				$address->set_email( $billing_address['email'] );
+			}
+
+			if ( isset( $billing_address['phone'] ) ) {
+				$address->set_phone( $billing_address['phone'] );
+			}
+
+			$payment->set_billing_address( $address );
+		}
+
+		// Maybe complete subscription for manual renewal.
+		if ( $this->maybe_complete_manual_renewal_subscription( $payment ) ) {
+			// @todo
+			return;
+		}
+
+		// Make sure to only start payments for supported gateways.
+		if ( null === $gateway ) {
+			$gateway = Plugin::get_gateway( $payment->get_config_id() );
+		}
+
+		if ( false === $payment->get_recurring() && ( ! $gateway || ! $gateway->supports( 'recurring' ) ) ) {
+			// @todo
+			return;
+		}
+
+		// Start payment.
+		return $this->start_payment( $payment, $gateway );
+	}
+
+	/**
+	 * Start payment.
+	 *
+	 * @param Payment      $payment Payment.
+	 * @param Gateway|null $gateway Gateway to start the recurring payment at.
+	 *
+	 * @throws \Exception Throws an Exception on incorrect date interval.
+	 *
+	 * @return Payment
+	 */
+	public function start_payment( Payment $payment, $gateway = null ) {
+		// Set recurring type.
+		if ( $payment->get_recurring() ) {
+			$payment->recurring_type = Recurring::RECURRING;
+		}
+
+		$subscription = $payment->get_subscription();
 
 		// Calculate payment start and end dates.
 		$start_date = new DateTime();
@@ -299,43 +416,8 @@ class SubscriptionsModule {
 
 		$subscription->next_payment = $end_date;
 
-		// Create follow up payment.
-		$payment = new Payment();
-
-		// Payment method.
-		if ( method_exists( $data, 'get_payment_method' ) ) {
-			$payment_method = $data->get_payment_method();
-		} else {
-			$payment_method = $subscription->payment_method;
-		}
-
-		$payment->config_id        = $subscription->get_config_id();
-		$payment->user_id          = $data->get_user_id();
-		$payment->source           = $data->get_source();
-		$payment->source_id        = $data->get_source_id();
-		$payment->description      = $data->get_description();
-		$payment->order_id         = $data->get_order_id();
-		$payment->email            = $data->get_email();
-		$payment->customer_name    = $data->get_customer_name();
-		$payment->address          = $data->get_address();
-		$payment->city             = $data->get_city();
-		$payment->zip              = $data->get_zip();
-		$payment->country          = $data->get_country();
-		$payment->telephone_number = $data->get_telephone_number();
-		$payment->method           = $payment_method;
-		$payment->subscription     = $subscription;
-		$payment->subscription_id  = $subscription->get_id();
-		$payment->start_date       = $start_date;
-		$payment->end_date         = $end_date;
-		$payment->recurring_type   = 'recurring';
-		$payment->recurring        = true;
-		$payment->set_amount( $data->get_amount() );
-
-		// Handle renewals.
-		if ( false === $data->get_recurring() ) {
-			$payment->recurring = false;
-			$payment->issuer    = $data->get_issuer_id();
-		}
+		$payment->start_date = $start_date;
+		$payment->end_date   = $end_date;
 
 		// Start payment.
 		$payment = Plugin::start_payment( $payment, $gateway );
@@ -389,6 +471,41 @@ class SubscriptionsModule {
 	}
 
 	/**
+	 * Maybe complete manual renewal subscription.
+	 *
+	 * @param Payment $payment Payment.
+	 *
+	 * @return bool
+	 */
+	public function maybe_complete_manual_renewal_subscription( Payment $payment ) {
+		/**
+		 * Check if this is a manual renewal payment.
+		 *
+		 * @see SubscriptionsModule::handle_subscription()
+		 */
+		if ( false !== $payment->get_recurring() ) {
+			return false;
+		}
+
+		$subscription = $payment->get_subscription();
+
+		// Unset the next payment date if next payment date is after the subscription end date.
+		if ( isset( $subscription->end_date, $subscription->next_payment ) && $subscription->end_date <= $subscription->next_payment ) {
+			$subscription->next_payment = null;
+		}
+
+		// Set the subscription status to `completed` if there is no next payment date.
+		if ( empty( $subscription->next_payment ) ) {
+			$subscription->status      = Statuses::COMPLETED;
+			$subscription->expiry_date = $subscription->end_date;
+
+			$subscription->save();
+
+			return true;
+		}
+	}
+
+	/**
 	 * Maybe schedule subscription payments.
 	 */
 	public function maybe_schedule_subscription_payments() {
@@ -403,6 +520,8 @@ class SubscriptionsModule {
 	 * Maybe create subscription for the specified payment.
 	 *
 	 * @param Payment $payment The new payment.
+	 *
+	 * @throws \Exception Throws an Exception on incorrect date interval.
 	 */
 	public function maybe_create_subscription( $payment ) {
 		// Check if there is already subscription attached to the payment.
