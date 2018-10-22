@@ -148,7 +148,7 @@ class SubscriptionsModule {
 
 		// Check if subscription key is valid.
 		if ( $key !== $subscription->get_key() ) {
-			wp_redirect( home_url() );
+			wp_safe_redirect( home_url() );
 
 			exit;
 		}
@@ -446,7 +446,7 @@ class SubscriptionsModule {
 		}
 
 		if ( $can_redirect ) {
-			wp_redirect( home_url() );
+			wp_safe_redirect( home_url() );
 
 			exit;
 		}
