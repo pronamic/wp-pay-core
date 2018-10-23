@@ -59,7 +59,7 @@ class GoogleAnalyticsEcommerce {
 	 */
 	public function maybe_send_transaction( $payment ) {
 		// Ignore test mode payments.
-		if ( Gateway::MODE_TEST === get_post_meta( $payment->get_config_id(), '_pronamic_gateway_mode', true ) ) {
+		if ( Gateway::MODE_TEST === $payment->get_mode() ) {
 			return;
 		}
 
