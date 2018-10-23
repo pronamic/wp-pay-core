@@ -130,10 +130,10 @@ function get_pronamic_payment_by_purchase_id( $purchase_id ) {
  * Get payment by the specified transaction ID.
  *
  * @param string $transaction_id The transaction ID to query for.
- * @param string $entrance_code  The entrance code to query for.
+ *
  * @return Payment|null
  */
-function get_pronamic_payment_by_transaction_id( $transaction_id, $entrance_code = null ) {
+function get_pronamic_payment_by_transaction_id( $transaction_id ) {
 	return get_pronamic_payment_by_meta( '_pronamic_payment_transaction_id', $transaction_id );
 }
 
