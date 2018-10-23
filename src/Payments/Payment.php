@@ -888,7 +888,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Get subscription.
 	 *
-	 * @return Subscription
+	 * @return Subscription|bool
 	 */
 	public function get_subscription() {
 		if ( is_object( $this->subscription ) ) {
