@@ -17,7 +17,8 @@
             "currency":"EUR"
         },
         "product_url":null,
-        "image_url":null
+        "image_url":null,
+        "product_category":null
     },
     {
         "id":"5678",
@@ -37,7 +38,8 @@
             "currency":"EUR"
         },
         "product_url":null,
-        "image_url":null
+        "image_url":null,
+        "product_category":null
     },
     {
         "id":null,
@@ -54,7 +56,8 @@
         "total_amount_excluding_tax":null,
         "total_amount_including_tax":null,
         "product_url":null,
-        "image_url":null
+        "image_url":null,
+        "product_category":null
     },
     {
         "id":null,
@@ -71,6 +74,7 @@
         "total_amount_excluding_tax":null,
         "total_amount_including_tax":null,
         "product_url":null,
-        "image_url":null
+        "image_url":null,
+        "product_category":null
     }
 ]

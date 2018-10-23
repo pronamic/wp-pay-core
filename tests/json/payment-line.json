@@ -28,5 +28,6 @@
         "currency":"EUR"
     },
     "product_url":null,
-    "image_url":null
+    "image_url":null,
+    "product_category":null
 }
