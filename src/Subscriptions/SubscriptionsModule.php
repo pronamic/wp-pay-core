@@ -539,6 +539,13 @@ class SubscriptionsModule {
 			return;
 		}
 
+		// Customer name.
+		$customer_name = null;
+
+		if ( null !== $payment->get_customer() && null !== $payment->get_customer()->get_name() ) {
+			$customer_name = strval( $payment->get_customer()->get_name() );
+		}
+
 		// New subscription.
 		$subscription = new Subscription();
 
@@ -554,7 +561,7 @@ class SubscriptionsModule {
 		$subscription->source_id       = $payment->subscription_source_id;
 		$subscription->description     = $payment->description;
 		$subscription->email           = $payment->email;
-		$subscription->customer_name   = $payment->customer_name;
+		$subscription->customer_name   = $customer_name;
 		$subscription->payment_method  = $payment->method;
 		$subscription->status          = Statuses::OPEN;
 		$subscription->set_amount( $subscription_data->get_amount() );
