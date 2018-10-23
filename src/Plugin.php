@@ -637,7 +637,7 @@ class Plugin {
 			case 'abnamro-internetkassa':
 				$config->form_action_url = sprintf(
 					'https://internetkassa.abnamro.nl/ncol/%s/orderstandard%s.asp',
-					'test' === $mode ? 'test' : 'prod',
+					Gateway::MODE_TEST === $mode ? 'test' : 'prod',
 					$is_utf8 ? '_utf8' : ''
 				);
 
@@ -645,7 +645,7 @@ class Plugin {
 			case 'abnamro-ideal-zelfbouw-v3':
 				$config->payment_server_url = 'https://abnamro.ideal-payment.de/ideal/iDEALv3';
 
-				if ( 'test' === $mode ) {
+				if ( Gateway::MODE_TEST === $mode ) {
 					$config->payment_server_url = 'https://abnamro-test.ideal-payment.de/ideal/iDEALv3';
 				}
 
@@ -671,7 +671,7 @@ class Plugin {
 			case 'ing-ideal-basic':
 				$config->url = 'https://ideal.secure-ing.com/ideal/mpiPayInitIng.do';
 
-				if ( 'test' === $mode ) {
+				if ( Gateway::MODE_TEST === $mode ) {
 					$config->url = 'https://idealtest.secure-ing.com/ideal/mpiPayInitIng.do';
 				}
 
@@ -679,7 +679,7 @@ class Plugin {
 			case 'ing-ideal-advanced-v3':
 				$config->payment_server_url = 'https://ideal.secure-ing.com/ideal/iDEALv3';
 
-				if ( 'test' === $mode ) {
+				if ( Gateway::MODE_TEST === $mode ) {
 					$config->payment_server_url = 'https://idealtest.secure-ing.com/ideal/iDEALv3';
 				}
 
@@ -689,7 +689,7 @@ class Plugin {
 			case 'mollie-ideal-basic':
 				$config->url = 'https://secure.mollie.nl/xml/idealAcquirer/lite/';
 
-				if ( 'test' === $mode ) {
+				if ( Gateway::MODE_TEST === $mode ) {
 					$config->url = 'https://secure.mollie.nl/xml/idealAcquirer/testmode/lite/';
 				}
 
@@ -697,7 +697,7 @@ class Plugin {
 			case 'postcode-ideal':
 				$config->payment_server_url = 'https://ideal.postcode.nl/ideal';
 
-				if ( 'test' === $mode ) {
+				if ( Gateway::MODE_TEST === $mode ) {
 					$config->payment_server_url = 'https://ideal-test.postcode.nl/ideal';
 				}
 
@@ -707,7 +707,7 @@ class Plugin {
 			case 'rabobank-ideal-professional-v3':
 				$config->payment_server_url = 'https://ideal.rabobank.nl/ideal/iDEALv3';
 
-				if ( 'test' === $mode ) {
+				if ( Gateway::MODE_TEST === $mode ) {
 					$config->payment_server_url = 'https://idealtest.rabobank.nl/ideal/iDEALv3';
 				}
 
@@ -717,7 +717,7 @@ class Plugin {
 			case 'sisow-ideal-basic':
 				$config->url = 'https://www.sisow.nl/Sisow/iDeal/IssuerHandler.ashx';
 
-				if ( 'test' === $mode ) {
+				if ( Gateway::MODE_TEST === $mode ) {
 					$config->url = 'https://www.sisow.nl/Sisow/iDeal/IssuerHandler.ashx/test';
 				}
 
