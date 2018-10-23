@@ -45,6 +45,20 @@ class Subscription {
 	public $key;
 
 	/**
+	 * The title of this subscription.
+	 *
+	 * @var string
+	 */
+	public $title;
+
+	/**
+	 * The post author user ID of this subscription.
+	 *
+	 * @var string
+	 */
+	public $user_id;
+
+	/**
 	 * The frequency of this subscription, for example: `daily`, `weekly`, `monthly` or `annually`.
 	 *
 	 * @var string
