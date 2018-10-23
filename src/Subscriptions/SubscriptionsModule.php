@@ -105,42 +105,30 @@ class SubscriptionsModule {
 
 		// @link https://github.com/woothemes/woocommerce/blob/2.3.11/includes/class-wc-cache-helper.php
 		// @link https://www.w3-edge.com/products/w3-total-cache/
-		if ( ! defined( 'DONOTCACHEPAGE' ) ) {
-			define( 'DONOTCACHEPAGE', true );
-		}
+		$do_not_constants = array(
+			'DONOTCACHEPAGE',
+			'DONOTCACHEDB',
+			'DONOTMINIFY',
+			'DONOTCDN',
+			'DONOTCACHEOBJECT',
+		);
 
-		if ( ! defined( 'DONOTCACHEDB' ) ) {
-			define( 'DONOTCACHEDB', true );
-		}
-
-		if ( ! defined( 'DONOTMINIFY' ) ) {
-			define( 'DONOTMINIFY', true );
-		}
-
-		if ( ! defined( 'DONOTCDN' ) ) {
-			define( 'DONOTCDN', true );
-		}
-
-		if ( ! defined( 'DONOTCACHEOBJECT' ) ) {
-			define( 'DONOTCACHEOBJECT', true );
+		foreach ( $do_not_constants as $do_not_constant ) {
+			if ( ! defined( $do_not_constant ) ) {
+				define( $do_not_constant, true );
+			}
 		}
 
 		nocache_headers();
 
 		$subscription_id = filter_input( INPUT_GET, 'subscription', FILTER_SANITIZE_STRING );
-		$subscription    = get_pronamic_subscription( $subscription_id );
+		$action          = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
+		$key             = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_STRING );
 
-		$action = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
+		$subscription = get_pronamic_subscription( $subscription_id );
 
-		$key = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_STRING );
-
-		// Check if subscription is valid.
-		if ( ! $subscription ) {
-			return;
-		}
-
-		// Check if subscription key is valid.
-		if ( $key !== $subscription->get_key() ) {
+		// Check if subscription and key are valid.
+		if ( ! $subscription || $key !== $subscription->get_key() ) {
 			wp_safe_redirect( home_url() );
 
 			exit;
@@ -161,36 +149,29 @@ class SubscriptionsModule {
 			case 'renew':
 				$gateway = Plugin::get_gateway( $subscription->config_id );
 
-				$html = null;
+				$html = __( 'The subscription can not be renewed.', 'pronamic_ideal' );
 
-				if ( ! $gateway ) {
-					$html = __( 'The subscription can not be renewed.', 'pronamic_ideal' );
-				} elseif ( $gateway->supports( 'recurring' ) && Statuses::ACTIVE === $subscription->get_status() ) {
+				if ( $gateway && $gateway->supports( 'recurring' ) && Statuses::ACTIVE === $subscription->get_status() ) {
 					$html = __( 'The subscription is already active.', 'pronamic_ideal' );
-				} else {
-					if ( 'POST' === Server::get( 'REQUEST_METHOD' ) ) {
-						$data = new SubscriptionPaymentData( $subscription );
+				} elseif ( $gateway && 'POST' === Server::get( 'REQUEST_METHOD' ) ) {
+					$data = new SubscriptionPaymentData( $subscription );
 
-						$data->set_recurring( false );
+					$data->set_recurring( false );
 
-						$payment = $this->start_recurring( $subscription, $gateway, $data );
+					$payment = $this->start_recurring( $subscription, $gateway, $data );
 
-						$error = $gateway->get_error();
+					$error = $gateway->get_error();
 
-						if ( $gateway->has_error() && is_wp_error( $error ) ) {
-							Plugin::render_errors( $error );
+					if ( $gateway->has_error() && is_wp_error( $error ) ) {
+						Plugin::render_errors( $error );
 
-							exit;
-						}
-
-						if ( ! $payment ) {
-							// @todo
-							exit;
-						}
-
-						$gateway->redirect( $payment );
+						exit;
 					}
 
+					if ( $payment ) {
+						$gateway->redirect( $payment );
+					}
+				} elseif ( $gateway ) {
 					// Payment method input HTML.
 					$gateway->set_payment_method( $subscription->payment_method );
 
