@@ -884,8 +884,6 @@ class Plugin {
 
 		// Complements.
 		if ( null !== $payment->get_customer() ) {
-			$payment->email = $payment->get_customer()->get_email();
-
 			CustomerHelper::complement_customer( $payment->get_customer() );
 		}
 

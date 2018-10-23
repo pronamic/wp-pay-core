@@ -568,7 +568,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			'consumer_city'           => $payment->consumer_city,
 			'source'                  => $payment->source,
 			'source_id'               => $payment->source_id,
-			'email'                   => $payment->get_email(),
+			'email'                   => ( null === $payment->get_customer() ? null : $payment->get_customer()->get_email() ),
 			'analytics_client_id'     => $payment->analytics_client_id,
 			'subscription_id'         => $payment->subscription_id,
 			'recurring_type'          => $payment->recurring_type,
