@@ -48,8 +48,8 @@ class Util {
 			 * The response code is cast to a integer since WordPress 4.1, therefor we can't use
 			 * strict comparison on the required response code.
 			 *
-			 * @see https://github.com/WordPress/WordPress/blob/4.1/wp-includes/class-http.php#L528-L529
-			 * @see https://github.com/WordPress/WordPress/blob/4.0/wp-includes/class-http.php#L527
+			 * @link https://github.com/WordPress/WordPress/blob/4.1/wp-includes/class-http.php#L528-L529
+			 * @link https://github.com/WordPress/WordPress/blob/4.0/wp-includes/class-http.php#L527
 			 */
 			if ( wp_remote_retrieve_response_code( $result ) == $required_response_code ) { // WPCS: loose comparison ok.
 				$return = wp_remote_retrieve_body( $result );
@@ -201,7 +201,7 @@ class Util {
 	/**
 	 * Convert boolean to an numceric boolean.
 	 *
-	 * @see https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
+	 * @link https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
 	 *
 	 * @param boolean $boolean The boolean value to convert to an integer value.
 	 *
@@ -214,7 +214,7 @@ class Util {
 	/**
 	 * Convert boolean to an string boolean
 	 *
-	 * @see https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
+	 * @link https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
 	 *
 	 * @param bool $boolean The boolean value to convert to a string value.
 	 * @return string

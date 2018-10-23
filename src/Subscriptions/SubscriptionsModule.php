@@ -31,8 +31,8 @@ use WP_Query;
  * Copyright: Copyright (c) 2005 - 2018
  * Company: Pronamic
  *
- * @see https://woocommerce.com/2017/04/woocommerce-3-0-release/
- * @see https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
+ * @link https://woocommerce.com/2017/04/woocommerce-3-0-release/
+ * @link https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
  * @author  Remco Tolsma
  * @version 2.0.2
  * @since   2.0.1
@@ -83,9 +83,9 @@ class SubscriptionsModule {
 		add_action( 'pronamic_subscription_status_update', array( $this, 'log_subscription_status_update' ), 10, 4 );
 
 		// WordPress CLI.
-		// @see https://github.com/woocommerce/woocommerce/blob/3.3.1/includes/class-woocommerce.php#L365-L369.
-		// @see https://github.com/woocommerce/woocommerce/blob/3.3.1/includes/class-wc-cli.php.
-		// @see https://make.wordpress.org/cli/handbook/commands-cookbook/.
+		// @link https://github.com/woocommerce/woocommerce/blob/3.3.1/includes/class-woocommerce.php#L365-L369.
+		// @link https://github.com/woocommerce/woocommerce/blob/3.3.1/includes/class-wc-cli.php.
+		// @link https://make.wordpress.org/cli/handbook/commands-cookbook/.
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			WP_CLI::add_command( 'pay subscriptions test', array( $this, 'cli_subscriptions_test' ) );
 		}
@@ -110,8 +110,8 @@ class SubscriptionsModule {
 			return;
 		}
 
-		// @see https://github.com/woothemes/woocommerce/blob/2.3.11/includes/class-wc-cache-helper.php
-		// @see https://www.w3-edge.com/products/w3-total-cache/
+		// @link https://github.com/woothemes/woocommerce/blob/2.3.11/includes/class-wc-cache-helper.php
+		// @link https://www.w3-edge.com/products/w3-total-cache/
 		if ( ! defined( 'DONOTCACHEPAGE' ) ) {
 			define( 'DONOTCACHEPAGE', true );
 		}
@@ -568,7 +568,7 @@ class SubscriptionsModule {
 
 		// @todo
 		// Calculate dates
-		// @see https://github.com/pronamic/wp-pronamic-ideal/blob/4.7.0/classes/Pronamic/WP/Pay/Plugin.php#L883-L964
+		// @link https://github.com/pronamic/wp-pronamic-ideal/blob/4.7.0/classes/Pronamic/WP/Pay/Plugin.php#L883-L964
 		$interval = $subscription->get_date_interval();
 
 		$start_date  = clone $payment->date;
@@ -610,7 +610,7 @@ class SubscriptionsModule {
 		$end_date = null;
 
 		if ( $subscription_data->frequency ) {
-			// @see https://stackoverflow.com/a/10818981/6411283
+			// @link https://stackoverflow.com/a/10818981/6411283
 			$period = new DatePeriod( $start_date, $interval, $subscription_data->frequency );
 
 			$dates = iterator_to_array( $period );
@@ -645,8 +645,8 @@ class SubscriptionsModule {
 	/**
 	 * Get expiring subscriptions.
 	 *
-	 * @see https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/license-renewals.php#L715-L746
-	 * @see https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/license-renewals.php#L652-L712
+	 * @link https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/license-renewals.php#L715-L746
+	 * @link https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/license-renewals.php#L652-L712
 	 *
 	 * @param DateTime $start_date The start date of the period to check for expiring subscriptions.
 	 * @param DateTime $end_date   The end date of the period to check for expiring subscriptions.
@@ -761,9 +761,9 @@ class SubscriptionsModule {
 	/**
 	 * Send renewal notices.
 	 *
-	 * @see https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/license-renewals.php#L652-L712
-	 * @see https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/license-renewals.php#L715-L746
-	 * @see https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/classes/class-sl-emails.php#L41-L126
+	 * @link https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/license-renewals.php#L652-L712
+	 * @link https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/license-renewals.php#L715-L746
+	 * @link https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/classes/class-sl-emails.php#L41-L126
 	 */
 	public function send_subscription_renewal_notices() {
 		$interval = new DateInterval( 'P1W' ); // 1 week

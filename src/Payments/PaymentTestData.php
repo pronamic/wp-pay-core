@@ -148,8 +148,8 @@ class PaymentTestData extends PaymentData {
 	 * Get subscription.
 	 *
 	 * @since 1.2.1
-	 * @see https://github.com/woothemes/woocommerce/blob/v2.1.3/includes/abstracts/abstract-wc-payment-gateway.php#L52
-	 * @see https://github.com/wp-premium/woocommerce-subscriptions/blob/2.0.18/includes/class-wc-subscriptions-renewal-order.php#L371-L398
+	 * @link https://github.com/woothemes/woocommerce/blob/v2.1.3/includes/abstracts/abstract-wc-payment-gateway.php#L52
+	 * @link https://github.com/wp-premium/woocommerce-subscriptions/blob/2.0.18/includes/class-wc-subscriptions-renewal-order.php#L371-L398
 	 * @return string|bool
 	 */
 	public function get_subscription() {
@@ -224,7 +224,7 @@ class PaymentTestData extends PaymentData {
 	public function get_credit_card() {
 		$credit_card = new CreditCard();
 
-		// @see http://www.paypalobjects.com/en_US/vhelp/paypalmanager_help/credit_card_numbers.htm
+		// @link http://www.paypalobjects.com/en_US/vhelp/paypalmanager_help/credit_card_numbers.htm
 		// Test card to simulate a 3-D Secure registered card.
 		$credit_card->set_number( '5300000000000006' );
 

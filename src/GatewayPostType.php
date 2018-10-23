@@ -32,10 +32,10 @@ class GatewayPostType {
 		/**
 		 * Priotiry of the initial post types function should be set to < 10.
 		 *
-		 * @see https://core.trac.wordpress.org/ticket/28488
-		 * @see https://core.trac.wordpress.org/changeset/29318
+		 * @link https://core.trac.wordpress.org/ticket/28488
+		 * @link https://core.trac.wordpress.org/changeset/29318
 		 *
-		 * @see https://github.com/WordPress/WordPress/blob/4.0/wp-includes/post.php#L167
+		 * @link https://github.com/WordPress/WordPress/blob/4.0/wp-includes/post.php#L167
 		 */
 		add_action( 'init', array( $this, 'register_gateway_post_type' ), 0 ); // Highest priority.
 
@@ -45,7 +45,7 @@ class GatewayPostType {
 	/**
 	 * Register post types.
 	 *
-	 * @see https://github.com/WordPress/WordPress/blob/4.6.1/wp-includes/post.php#L1277-L1300
+	 * @link https://github.com/WordPress/WordPress/blob/4.6.1/wp-includes/post.php#L1277-L1300
 	 */
 	public function register_gateway_post_type() {
 		register_post_type(

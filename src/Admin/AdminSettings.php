@@ -209,8 +209,8 @@ class AdminSettings {
 	/**
 	 * Input checkbox.
 	 *
-	 * @see https://github.com/WordPress/WordPress/blob/4.9.1/wp-admin/options-writing.php#L60-L68
-	 * @see https://github.com/WordPress/WordPress/blob/4.9.1/wp-admin/options-reading.php#L110-L141
+	 * @link https://github.com/WordPress/WordPress/blob/4.9.1/wp-admin/options-writing.php#L60-L68
+	 * @link https://github.com/WordPress/WordPress/blob/4.9.1/wp-admin/options-reading.php#L110-L141
 	 * @param array $args Arguments.
 	 */
 	public function input_checkbox( $args ) {

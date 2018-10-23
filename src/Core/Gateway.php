@@ -452,7 +452,7 @@ abstract class Gateway {
 		}
 
 		// Redirect, See Other.
-		// http://en.wikipedia.org/wiki/HTTP_303.
+		// https://en.wikipedia.org/wiki/HTTP_303.
 		wp_redirect( $payment->get_action_url(), 303 );
 
 		exit;

@@ -198,7 +198,7 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	/**
 	 * Read post meta.
 	 *
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-data.php#L462-L507
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-data.php#L462-L507
 	 * @param Payment $payment The payment to read.
 	 */
 	protected function read_post_meta( $payment ) {

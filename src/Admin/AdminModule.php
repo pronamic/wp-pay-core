@@ -134,8 +134,8 @@ class AdminModule {
 	/**
 	 * Maybe redirect.
 	 *
-	 * @see https://github.com/woothemes/woocommerce/blob/2.4.4/includes/admin/class-wc-admin.php#L29
-	 * @see https://github.com/woothemes/woocommerce/blob/2.4.4/includes/admin/class-wc-admin.php#L96-L122
+	 * @link https://github.com/woothemes/woocommerce/blob/2.4.4/includes/admin/class-wc-admin.php#L29
+	 * @link https://github.com/woothemes/woocommerce/blob/2.4.4/includes/admin/class-wc-admin.php#L96-L122
 	 */
 	public function maybe_redirect() {
 		$redirect = get_transient( 'pronamic_pay_admin_redirect' );
@@ -525,7 +525,7 @@ class AdminModule {
 	 * Create the admin menu.
 	 */
 	public function admin_menu() {
-		// @see https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin-menus.php#L145
+		// @link https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin-menus.php#L145
 		$counts = wp_count_posts( 'pronamic_payment' );
 
 		$badge = '';

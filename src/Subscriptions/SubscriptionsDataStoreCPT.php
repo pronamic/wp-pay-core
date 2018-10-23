@@ -20,8 +20,8 @@ use Pronamic\WordPress\Pay\Core\Statuses;
 /**
  * Title: Subscriptions data store CPT
  *
- * @see https://woocommerce.com/2017/04/woocommerce-3-0-release/
- * @see https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
+ * @link https://woocommerce.com/2017/04/woocommerce-3-0-release/
+ * @link https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
  * @author  Remco Tolsma
  * @version 2.0.6
  * @since   2.0.1
@@ -39,7 +39,7 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 	/**
 	 * Create subscription.
 	 *
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L47-L76
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L47-L76
 	 * @param Subscription $subscription Create the specified subscription in this data store.
 	 */
 	public function create( $subscription ) {
@@ -76,8 +76,8 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 	/**
 	 * Read subscription.
 	 *
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L78-L111
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L81-L136
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L78-L111
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L81-L136
 	 * @param Subscription $subscription The subscription to read the additional data for.
 	 */
 	public function read( $subscription ) {
@@ -92,8 +92,8 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 	/**
 	 * Update subscription.
 	 *
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L113-L154
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L113-L154
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
 	 * @param Subscription $subscription The subscription to update in this data store.
 	 */
 	public function update( $subscription ) {
@@ -279,7 +279,7 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 	/**
 	 * Read post meta.
 	 *
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-data.php#L462-L507
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-data.php#L462-L507
 	 * @param Subscription $subscription The subscription to read the post meta for.
 	 */
 	private function read_post_meta( $subscription ) {
@@ -339,7 +339,7 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		if ( empty( $end_date ) && $subscription->frequency ) {
 			$interval = $subscription->get_date_interval();
 
-			// @see https://stackoverflow.com/a/10818981/6411283
+			// @link https://stackoverflow.com/a/10818981/6411283
 			$period = new DatePeriod( $start_date, $interval, $subscription->frequency );
 
 			$dates = iterator_to_array( $period );
@@ -368,7 +368,7 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 	/**
 	 * Update payment post meta.
 	 *
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
 	 * @param Subscription $subscription The subscription to update the post meta for.
 	 */
 	private function update_post_meta( $subscription ) {

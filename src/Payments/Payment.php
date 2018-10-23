@@ -907,7 +907,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Format string
 	 *
-	 * @see https://github.com/woocommerce/woocommerce/blob/v2.2.3/includes/abstracts/abstract-wc-email.php#L187-L195
+	 * @link https://github.com/woocommerce/woocommerce/blob/v2.2.3/includes/abstracts/abstract-wc-email.php#L187-L195
 	 *
 	 * @param string $string The string to format.
 	 * @return string
@@ -928,7 +928,7 @@ class Payment extends LegacyPayment {
 		);
 
 		// Make sure there is an dynamic part in the order ID.
-		// @see https://secure.ogone.com/ncol/param_cookbook.asp.
+		// @link https://secure.ogone.com/ncol/param_cookbook.asp.
 		if ( 0 === $count ) {
 			$string .= $this->get_id();
 		}

@@ -44,7 +44,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
 	 * Create payment.
 	 *
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L47-L76
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L47-L76
 	 *
 	 * @param Payment $payment The payment to create in this data store.
 	 *
@@ -91,11 +91,11 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
 	 * Read payment.
 	 *
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-order.php#L85-L111
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L78-L111
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L81-L136
-	 * @see https://developer.wordpress.org/reference/functions/get_post/
-	 * @see https://developer.wordpress.org/reference/classes/wp_post/
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-order.php#L85-L111
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L78-L111
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L81-L136
+	 * @link https://developer.wordpress.org/reference/functions/get_post/
+	 * @link https://developer.wordpress.org/reference/classes/wp_post/
 	 *
 	 * @param Payment $payment The payment to read from this data store.
 	 */
@@ -119,8 +119,8 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
 	 * Update payment.
 	 *
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L113-L154
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L113-L154
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
 	 * @param Payment $payment The payment to update in this data store.
 	 */
 	public function update( Payment $payment ) {
@@ -496,7 +496,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
 	 * Read post meta.
 	 *
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-data.php#L462-L507
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-data.php#L462-L507
 	 * @param Payment $payment The payment to read.
 	 */
 	protected function read_post_meta( $payment ) {
@@ -592,7 +592,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
 	 * Update payment post meta.
 	 *
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
 	 * @param Payment $payment The payment to update.
 	 */
 	private function update_post_meta( $payment ) {

@@ -25,7 +25,7 @@ class Util {
 	/**
 	 * Remote get body.
 	 *
-	 * @see https://developer.wordpress.org/reference/functions/wp_remote_request/
+	 * @link https://developer.wordpress.org/reference/functions/wp_remote_request/
 	 *
 	 * @param string $url                    The URL to use for the remote request.
 	 * @param int    $required_response_code The required response code.
@@ -120,7 +120,7 @@ class Util {
 	/**
 	 * Convert boolean to an numceric boolean.
 	 *
-	 * @see https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
+	 * @link https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
 	 *
 	 * @param boolean $boolean The boolean to convert to 1 or 0.
 	 *
@@ -133,7 +133,7 @@ class Util {
 	/**
 	 * Convert boolean to an string boolean.
 	 *
-	 * @see https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
+	 * @link https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
 	 *
 	 * @param boolean $boolean The boolean to convert to the string 'true' or 'false'.
 	 * @return string

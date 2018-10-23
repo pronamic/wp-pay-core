@@ -69,10 +69,10 @@ class FormPostType {
 		/**
 		 * Priotiry of the initial post types function should be set to < 10.
 		 *
-		 * @see https://core.trac.wordpress.org/ticket/28488.
-		 * @see https://core.trac.wordpress.org/changeset/29318.
+		 * @link https://core.trac.wordpress.org/ticket/28488.
+		 * @link https://core.trac.wordpress.org/changeset/29318.
 		 *
-		 * @see https://github.com/WordPress/WordPress/blob/4.0/wp-includes/post.php#L167.
+		 * @link https://github.com/WordPress/WordPress/blob/4.0/wp-includes/post.php#L167.
 		 */
 		add_action( 'init', array( $this, 'register_post_type' ), 0 ); // Highest priority.
 
@@ -82,7 +82,7 @@ class FormPostType {
 
 		/*
 		 * Add meta box, we use priority 9 to make sure it loads before Yoast SEO meta box.
-		 * @see https://github.com/Yoast/wordpress-seo/blob/2.3.4/admin/class-metabox.php#L20.
+		 * @link https://github.com/Yoast/wordpress-seo/blob/2.3.4/admin/class-metabox.php#L20.
 		 */
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 9 );
 

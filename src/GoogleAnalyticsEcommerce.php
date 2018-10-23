@@ -25,7 +25,7 @@ class GoogleAnalyticsEcommerce {
 	/**
 	 * Google Analytics Measurement Protocol API endpoint URL.
 	 *
-	 * @see https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
+	 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
 	 * @var string
 	 */
 	const API_URL = 'https://www.google-analytics.com/collect';
@@ -97,7 +97,7 @@ class GoogleAnalyticsEcommerce {
 	/**
 	 * Send transaction.
 	 *
-	 * @see https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide#ecom
+	 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide#ecom
 	 *
 	 * Parameters:
 	 * v=1              // Version.
