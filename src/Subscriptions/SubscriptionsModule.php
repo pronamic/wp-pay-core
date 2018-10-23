@@ -555,40 +555,47 @@ class SubscriptionsModule {
 		$interval_date_day   = $subscription_data->get_interval_date_day();
 		$interval_date_month = $subscription_data->get_interval_date_month();
 
-		if ( 'W' === $subscription->interval_period && is_numeric( $interval_date_day ) ) {
-			$days_delta = $interval_date_day - $next_date->format( 'w' );
+		switch ( $subscription->interval_period ) {
+			case 'W':
+				if ( is_numeric( $interval_date_day ) ) {
+					$days_delta = $interval_date_day - $next_date->format( 'w' );
 
-			$next_date->modify( sprintf( '+%s days', $days_delta ) );
-			$next_date->setTime( 0, 0 );
-		}
+					$next_date->modify( sprintf( '+%s days', $days_delta ) );
+					$next_date->setTime( 0, 0 );
+				}
 
-		if ( 'M' === $subscription->interval_period && is_numeric( $interval_date ) ) {
-			$next_date->setDate(
-				intval( $next_date->format( 'Y' ) ),
-				intval( $next_date->format( 'm' ) ),
-				intval( $interval_date )
-			);
+				break;
+			case 'M':
+				if ( is_numeric( $interval_date ) ) {
+					$next_date->setDate(
+						intval( $next_date->format( 'Y' ) ),
+						intval( $next_date->format( 'm' ) ),
+						intval( $interval_date )
+					);
 
-			$next_date->setTime( 0, 0 );
-		}
+					$next_date->setTime( 0, 0 );
+				} elseif ( 'last' === $interval_date ) {
+					$next_date->modify( 'last day of ' . $next_date->format( 'F Y' ) );
+					$next_date->setTime( 0, 0 );
+				}
 
-		if ( 'M' === $subscription->interval_period && 'last' === $interval_date ) {
-			$next_date->modify( 'last day of ' . $next_date->format( 'F Y' ) );
-			$next_date->setTime( 0, 0 );
-		}
+				break;
+			case 'Y':
+				if ( is_numeric( $interval_date_month ) ) {
+					$next_date->setDate(
+						intval( $next_date->format( 'Y' ) ),
+						intval( $interval_date_month ),
+						intval( $next_date->format( 'd' ) )
+					);
 
-		if ( 'Y' === $subscription->interval_period && is_numeric( $interval_date_month ) ) {
-			$next_date->setDate(
-				intval( $next_date->format( 'Y' ) ),
-				intval( $interval_date_month ),
-				intval( $next_date->format( 'd' ) )
-			);
+					$next_date->setTime( 0, 0 );
 
-			$next_date->setTime( 0, 0 );
+					if ( 'last' === $interval_date ) {
+						$next_date->modify( 'last day of ' . $next_date->format( 'F Y' ) );
+					}
+				}
 
-			if ( 'last' === $interval_date ) {
-				$next_date->modify( 'last day of ' . $next_date->format( 'F Y' ) );
-			}
+				break;
 		}
 
 		$end_date = null;
