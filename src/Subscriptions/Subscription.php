@@ -63,7 +63,7 @@ class Subscription {
 	 * The interval period of this subscription.
 	 *
 	 * @todo Improve documentation?
-	 * @var  int
+	 * @var  string
 	 */
 	public $interval_period;
 

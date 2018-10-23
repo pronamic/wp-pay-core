@@ -19,6 +19,7 @@ use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\Recurring;
 use Pronamic\WordPress\Pay\Core\Server;
 use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
@@ -98,15 +99,7 @@ class SubscriptionsModule {
 	 * email notifications so users can cancel or renew their subscription.
 	 */
 	public function handle_subscription() {
-		if ( ! filter_has_var( INPUT_GET, 'subscription' ) ) {
-			return;
-		}
-
-		if ( ! filter_has_var( INPUT_GET, 'action' ) ) {
-			return;
-		}
-
-		if ( ! filter_has_var( INPUT_GET, 'key' ) ) {
+		if ( ! Util::input_has_vars( INPUT_GET, array( 'subscription', 'action', 'key' ) ) ) {
 			return;
 		}
 
@@ -265,7 +258,7 @@ class SubscriptionsModule {
 	 *
 	 * @throws \Exception Throws an Exception on incorrect date interval.
 	 *
-	 * @return Payment
+	 * @return Payment|bool
 	 */
 	public function start_recurring( Subscription $subscription, $gateway = null, $data = null ) {
 		// Make sure there's payment data to process.
@@ -365,7 +358,7 @@ class SubscriptionsModule {
 		// Maybe complete subscription for manual renewal.
 		if ( $this->maybe_complete_manual_renewal_subscription( $payment ) ) {
 			// @todo
-			return;
+			return false;
 		}
 
 		// Make sure to only start payments for supported gateways.
@@ -375,7 +368,7 @@ class SubscriptionsModule {
 
 		if ( false === $payment->get_recurring() && ( ! $gateway || ! $gateway->supports( 'recurring' ) ) ) {
 			// @todo
-			return;
+			return false;
 		}
 
 		// Start payment.
@@ -589,7 +582,12 @@ class SubscriptionsModule {
 		}
 
 		if ( 'M' === $subscription->interval_period && is_numeric( $interval_date ) ) {
-			$next_date->setDate( $next_date->format( 'Y' ), $next_date->format( 'm' ), $interval_date );
+			$next_date->setDate(
+				intval( $next_date->format( 'Y' ) ),
+				intval( $next_date->format( 'm' ) ),
+				intval( $interval_date )
+			);
+
 			$next_date->setTime( 0, 0 );
 		}
 
@@ -599,7 +597,12 @@ class SubscriptionsModule {
 		}
 
 		if ( 'Y' === $subscription->interval_period && is_numeric( $interval_date_month ) ) {
-			$next_date->setDate( $next_date->format( 'Y' ), $interval_date_month, $next_date->format( 'd' ) );
+			$next_date->setDate(
+				intval( $next_date->format( 'Y' ) ),
+				intval( $interval_date_month ),
+				intval( $next_date->format( 'd' ) )
+			);
+
 			$next_date->setTime( 0, 0 );
 
 			if ( 'last' === $interval_date ) {
@@ -811,7 +814,11 @@ class SubscriptionsModule {
 			// Update renewal notice sent date meta.
 			$renewal_sent_date = clone $start_date;
 
-			$renewal_sent_date->setTime( $expiry_date->format( 'H' ), $expiry_date->format( 'i' ), $expiry_date->format( 's' ) );
+			$renewal_sent_date->setTime(
+				intval( $expiry_date->format( 'H' ) ),
+				intval( $expiry_date->format( 'i' ) ),
+				intval( $expiry_date->format( 's' ) )
+			);
 
 			update_post_meta( $post->ID, '_pronamic_subscription_renewal_sent_1week', $renewal_sent_date->format( DateTime::MYSQL ) );
 		}

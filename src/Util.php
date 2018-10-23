@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use Pronamic\WordPress\Pay\Core\Util as Core_Util;
 use Pronamic\WordPress\Money\Money;
 use SimpleXMLElement;
 use WP_Error;
@@ -25,32 +26,20 @@ class Util {
 	/**
 	 * Remote get body.
 	 *
-	 * @link https://developer.wordpress.org/reference/functions/wp_remote_request/
+	 * @link       https://developer.wordpress.org/reference/functions/wp_remote_request/
 	 *
 	 * @param string $url                    The URL to use for the remote request.
 	 * @param int    $required_response_code The required response code.
 	 * @param array  $args                   The WordPress HTTP API request arguments.
 	 *
-	 * @return string|WP_Error
+	 * @deprecated 2.0.9 Use Pronamic\WordPress\Pay\Core\Util::remote_get_body() instead.
+	 *
+	 * @return array|bool|string|WP_Error
 	 */
 	public static function remote_get_body( $url, $required_response_code = 200, array $args = array() ) {
-		$result = wp_remote_request( $url, $args );
+		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Pay\Core\Util::remote_get_body()' );
 
-		$response_code = wp_remote_retrieve_response_code( $result );
-
-		if ( $response_code === $required_response_code ) {
-			return wp_remote_retrieve_body( $result );
-		}
-
-		return new WP_Error(
-			'wrong_response_code',
-			sprintf(
-				/* translators: 1: response code, 2: required response code */
-				__( 'The response code (<code>%1$s<code>) was incorrect, required response code <code>%2$s</code>.', 'pronamic_ideal' ),
-				$response_code,
-				$required_response_code
-			)
-		);
+		return Core_Util::remote_get_body( $url, $required_response_code, $args );
 	}
 
 	/**
@@ -58,35 +47,14 @@ class Util {
 	 *
 	 * @param string $string The XML string to convert to a SimpleXMLElement object.
 	 *
+	 * @deprecated 2.0.9 Use Pronamic\WordPress\Pay\Core\Util::simplexml_load_string() instead.
+	 *
 	 * @return SimpleXMLElement|WP_Error
 	 */
 	public static function simplexml_load_string( $string ) {
-		$result = false;
+		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Pay\Core\Util::simplexml_load_string()' );
 
-		// Suppress all XML errors.
-		$use_errors = libxml_use_internal_errors( true );
-
-		// Load.
-		$xml = simplexml_load_string( $string );
-
-		if ( false !== $xml ) {
-			$result = $xml;
-		} else {
-			$error = new WP_Error( 'simplexml_load_error', __( 'Could not load the XML string.', 'pronamic_ideal' ) );
-
-			foreach ( libxml_get_errors() as $e ) {
-				$error->add( 'libxml_error', $e->message, $e );
-			}
-
-			libxml_clear_errors();
-
-			$result = $error;
-		}
-
-		// Set back to previous value.
-		libxml_use_internal_errors( $use_errors );
-
-		return $result;
+		return Core_Util::simplexml_load_string( $string );
 	}
 
 	/**
@@ -99,7 +67,7 @@ class Util {
 	 * @return float
 	 */
 	public static function amount_to_cents( $price ) {
-		_deprecated_function( __FUNCTION__, '5.5', 'Pronamic\WordPress\Money\Money::get_cents()' );
+		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Money\Money::get_cents()' );
 
 		$money = new Money( $price );
 
@@ -111,10 +79,14 @@ class Util {
 	 *
 	 * @param int $cents The numberof cents to convert to an amount.
 	 *
+	 * @deprecated 2.0.9 Use \Pronamic\WordPress\Pay\Core\Util::cents_to_amount() instead.
+	 *
 	 * @return float
 	 */
 	public static function cents_to_amount( $cents ) {
-		return $cents / 100;
+		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Pay\Core\Util::cents_to_amount()' );
+
+		return Core_Util::cents_to_amount( $cents );
 	}
 
 	/**
@@ -124,10 +96,14 @@ class Util {
 	 *
 	 * @param boolean $boolean The boolean to convert to 1 or 0.
 	 *
+	 * @deprecated 2.0.9 Use \Pronamic\WordPress\Pay\Core\Util::boolean_to_numeric() instead.
+	 *
 	 * @return int
 	 */
 	public static function boolean_to_numeric( $boolean ) {
-		return $boolean ? 1 : 0;
+		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Pay\Core\Util::boolean_to_numeric()' );
+
+		return Core_Util::boolean_to_numeric( $boolean );
 	}
 
 	/**
@@ -136,10 +112,15 @@ class Util {
 	 * @link https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
 	 *
 	 * @param boolean $boolean The boolean to convert to the string 'true' or 'false'.
+	 *
+	 * @deprecated 2.0.9 Use \Pronamic\WordPress\Pay\Core\Util::boolean_to_string() instead.
+	 *
 	 * @return string
 	 */
 	public static function boolean_to_string( $boolean ) {
-		return $boolean ? 'true' : 'false';
+		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Pay\Core\Util::boolean_to_string()' );
+
+		return Core_Util::boolean_to_string( $boolean );
 	}
 
 	/**
@@ -219,10 +200,14 @@ class Util {
 	 * @param string $url        The URL to extend with specified parameters.
 	 * @param array  $parameters The parameters to add to the specified URL.
 	 *
+	 * @deprecated 2.0.9 Use \Pronamic\WordPress\Pay\Core\Util::build_url() instead.
+	 *
 	 * @return string
 	 */
 	public static function build_url( $url, array $parameters ) {
-		return $url . '?' . _http_build_query( $parameters, null, '&' );
+		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Pay\Core\Util::build_url()' );
+
+		return Core_Util::build_url( $url, $parameters );
 	}
 
 	/**
