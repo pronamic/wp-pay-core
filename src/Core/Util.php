@@ -268,7 +268,14 @@ class Util {
 	 */
 	public static function get_remote_address() {
 		if ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
-			return Server::get( 'HTTP_X_FORWARDED_FOR', FILTER_VALIDATE_IP );
+			$ip_address = Server::get( 'HTTP_X_FORWARDED_FOR', FILTER_VALIDATE_IP );
+
+			if ( false !== strpos( $ip_address, ',' ) ) {
+				$ip_addresses = explode( ',', $ip_address );
+				$ip_address   = trim( $ip_addresses[0] );
+			}
+
+			return $ip_address;
 		}
 
 		if ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
