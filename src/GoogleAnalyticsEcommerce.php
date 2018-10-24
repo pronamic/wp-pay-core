@@ -138,14 +138,14 @@ class GoogleAnalyticsEcommerce {
 		);
 
 		// Currency.
-		if ( null !== $payment->get_currency() ) {
+		if ( null !== $payment->get_total_amount()->get_currency()->get_alphabetic_code() ) {
 			/*
 			 * Currency Code
 			 * Optional.
 			 * When present indicates the local currency for all transaction currency values. Value should be a valid ISO 4217 currency code.
 			 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cu
 			 */
-			$transaction['cu'] = $payment->get_currency();
+			$transaction['cu'] = $payment->get_total_amount()->get_currency()->get_alphabetic_code();
 		}
 
 		// Shipping.
