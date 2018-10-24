@@ -270,9 +270,13 @@ class Util {
 		if ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
 			$ip_address = Server::get( 'HTTP_X_FORWARDED_FOR', FILTER_VALIDATE_IP );
 
-			if ( false !== strpos( $ip_address, ',' ) ) {
-				$ip_addresses = explode( ',', $ip_address );
-				$ip_address   = trim( $ip_addresses[0] );
+			// Maybe invalid because HTTP_X_FORWARDED_FOR contains multiple IP addresses.
+			if ( false === $ip_address ) {
+				$forwarded_for = filter_var( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ), FILTER_SANITIZE_STRING ); // WPCS: input var okay.
+
+				$ip_addresses = explode( ',', $forwarded_for );
+
+				$ip_address = filter_var( trim( $ip_addresses[0] ), FILTER_VALIDATE_IP );
 			}
 
 			return $ip_address;
