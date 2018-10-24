@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay;
 
 use Pronamic\WordPress\Pay\Core\Gateway;
+use Pronamic\WordPress\Pay\Core\Server;
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Payments\Payment;
 
@@ -172,7 +173,7 @@ class GoogleAnalyticsEcommerce {
 		wp_remote_post(
 			self::API_URL,
 			array(
-				'user-agent' => filter_input( INPUT_SERVER, 'HTTP_USER_AGENT' ),
+				'user-agent' => Server::get( 'HTTP_USER_AGENT' ),
 				'body'       => $transaction,
 				'blocking'   => false,
 			)
@@ -241,7 +242,7 @@ class GoogleAnalyticsEcommerce {
 				wp_remote_post(
 					self::API_URL,
 					array(
-						'user-agent' => filter_input( INPUT_SERVER, 'HTTP_USER_AGENT' ),
+						'user-agent' => Server::get( 'HTTP_USER_AGENT' ),
 						'body'       => $item,
 						'blocking'   => false,
 					)
