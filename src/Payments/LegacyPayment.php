@@ -77,9 +77,13 @@ abstract class LegacyPayment {
 	/**
 	 * Get the payment language.
 	 *
+	 * @deprecated 2.0.9 Use Payment::get_customer()->get_language() instead.
+	 *
 	 * @return string|null
 	 */
 	public function get_language() {
+		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_customer()->get_language()' );
+
 		if ( null === $this->get_customer() ) {
 			return null;
 		}
@@ -90,9 +94,13 @@ abstract class LegacyPayment {
 	/**
 	 * Get the payment locale.
 	 *
+	 * @deprecated 2.0.9 Use Payment::get_customer()->get_locale() instead.
+	 *
 	 * @return string|null
 	 */
 	public function get_locale() {
+		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_customer()->get_locale()' );
+
 		if ( null === $this->get_customer() ) {
 			return null;
 		}
@@ -104,6 +112,7 @@ abstract class LegacyPayment {
 	 * Get the redirect URL for this payment.
 	 *
 	 * @deprecated 4.1.2 Use get_return_redirect_url()
+	 *
 	 * @return string
 	 */
 	public function get_redirect_url() {
@@ -115,9 +124,13 @@ abstract class LegacyPayment {
 	/**
 	 * Get first name.
 	 *
+	 * @deprecated 2.0.9 Use Payment::get_customer()->get_name()->get_first_name() instead.
+	 *
 	 * @return string|null
 	 */
 	public function get_first_name() {
+		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_customer()->get_name()->get_first_name()' );
+
 		if ( null === $this->get_customer() ) {
 			return null;
 		}
@@ -132,9 +145,13 @@ abstract class LegacyPayment {
 	/**
 	 * Get last name.
 	 *
+	 * @deprecated 2.0.9 Use Payment::get_customer()->get_name()->get_last_name() instead.
+	 *
 	 * @return string|null
 	 */
 	public function get_last_name() {
+		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_customer()->get_name()->get_last_name()' );
+
 		if ( null === $this->get_customer() ) {
 			return null;
 		}
@@ -149,9 +166,13 @@ abstract class LegacyPayment {
 	/**
 	 * Get customer name.
 	 *
+	 * @deprecated 2.0.9 Use Payment::get_customer()->get_name() instead.
+	 *
 	 * @return string|null
 	 */
 	public function get_customer_name() {
+		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_customer()->get_name()' );
+
 		if ( null === $this->get_customer() ) {
 			return null;
 		}
@@ -166,9 +187,13 @@ abstract class LegacyPayment {
 	/**
 	 * Get address.
 	 *
+	 * @deprecated 2.0.9 Use Payment::get_billing_address()->get_line_1() instead.
+	 *
 	 * @return string|null
 	 */
 	public function get_address() {
+		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_billing_address()->get_line_1()' );
+
 		if ( null === $this->get_billing_address() ) {
 			return null;
 		}
@@ -179,9 +204,13 @@ abstract class LegacyPayment {
 	/**
 	 * Get city.
 	 *
+	 * @deprecated 2.0.9 Use Payment::get_billing_address()->get_city() instead.
+	 *
 	 * @return string|null
 	 */
 	public function get_city() {
+		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_billing_address()->get_city()' );
+
 		if ( null === $this->get_billing_address() ) {
 			return null;
 		}
@@ -192,9 +221,13 @@ abstract class LegacyPayment {
 	/**
 	 * Get ZIP.
 	 *
+	 * @deprecated 2.0.9 Use Payment::get_billing_address()->get_postal_code() instead.
+	 *
 	 * @return string|null
 	 */
 	public function get_zip() {
+		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_billing_address()->get_postal_code()' );
+
 		if ( null === $this->get_billing_address() ) {
 			return null;
 		}
@@ -205,9 +238,13 @@ abstract class LegacyPayment {
 	/**
 	 * Get country.
 	 *
+	 * @deprecated 2.0.9 Use Payment::get_billing_address()->get_country_code() instead.
+	 *
 	 * @return string|null
 	 */
 	public function get_country() {
+		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_billing_address()->get_country()' );
+
 		if ( null === $this->get_billing_address() ) {
 			return null;
 		}
@@ -218,9 +255,13 @@ abstract class LegacyPayment {
 	/**
 	 * Get telephone number.
 	 *
+	 * @deprecated 2.0.9 Use Payment::get_billing_address()->get_phone() instead.
+	 *
 	 * @return string|null
 	 */
 	public function get_telephone_number() {
+		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_billing_address()->get_phone()' );
+
 		if ( null === $this->get_billing_address() ) {
 			return null;
 		}
@@ -270,8 +311,11 @@ abstract class LegacyPayment {
 	 * Set.
 	 *
 	 * @link http://php.net/manual/en/language.oop5.overloading.php#object.set
+	 *
 	 * @param string $name  Name.
 	 * @param mixed  $value Value.
+	 *
+	 * @return null
 	 */
 	public function __set( $name, $value ) {
 		$legacy_keys = array(
@@ -289,7 +333,7 @@ abstract class LegacyPayment {
 		if ( ! in_array( $name, $legacy_keys, true ) ) {
 			$this->{$name} = $value;
 
-			return;
+			return null;
 		}
 
 		$customer     = $this->get_customer();
@@ -298,7 +342,7 @@ abstract class LegacyPayment {
 
 		if ( in_array( $name, array( 'language', 'locale', 'first_name', 'last_name' ), true ) ) {
 			if ( null === $value && null === $customer ) {
-				return;
+				return null;
 			}
 
 			if ( null === $customer ) {
@@ -311,7 +355,7 @@ abstract class LegacyPayment {
 				$contact_name = $customer->get_name();
 
 				if ( null === $value && null === $contact_name ) {
-					return;
+					return null;
 				}
 
 				if ( null === $contact_name ) {
@@ -324,7 +368,7 @@ abstract class LegacyPayment {
 
 		if ( in_array( $name, array( 'telephone_number', 'country', 'zip', 'city', 'address' ), true ) ) {
 			if ( null === $value && null === $address ) {
-				return;
+				return null;
 			}
 
 			if ( null === $address ) {
@@ -356,5 +400,7 @@ abstract class LegacyPayment {
 		}
 
 		$this->{$name} = $value;
+
+		return null;
 	}
 }
