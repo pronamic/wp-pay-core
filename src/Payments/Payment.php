@@ -622,7 +622,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Get total amount (including tax).
 	 *
-	 * @return null|Money
+	 * @return Money
 	 */
 	public function get_total_amount() {
 		return $this->total_amount;
@@ -631,9 +631,9 @@ class Payment extends LegacyPayment {
 	/**
 	 * Set total amount (including tax).
 	 *
-	 * @param null|Money $total_amount Total amount including tax.
+	 * @param Money $total_amount Total amount including tax.
 	 */
-	public function set_total_amount( $total_amount ) {
+	public function set_total_amount( Money $total_amount ) {
 		$this->total_amount = $total_amount;
 	}
 
