@@ -204,6 +204,18 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	protected function read_post_meta( $payment ) {
 		$this->maybe_create_customer_from_legacy_meta( $payment );
 		$this->maybe_create_billing_address_from_legacy_meta( $payment );
+
+		// Amount.
+		$amount = $payment->get_meta( 'amount' );
+
+		if ( ! empty( $amount ) ) {
+			$payment->set_total_amount(
+				new Money(
+					$amount,
+					$payment->get_meta( 'currency' )
+				)
+			);
+		}
 	}
 
 	/**

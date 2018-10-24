@@ -34,6 +34,8 @@ abstract class LegacyPayment {
 	/**
 	 * The amount of this payment, for example 18.95.
 	 *
+	 * @deprecated 2.0.9 Use Payment::$total_amount instead.
+	 *
 	 * @var Money
 	 */
 	protected $amount;
@@ -41,37 +43,53 @@ abstract class LegacyPayment {
 	/**
 	 * Get the payment amount.
 	 *
+	 * @deprecated 2.0.9 Use Payment::get_total_amount() instead.
+	 *
 	 * @return Money
 	 */
 	public function get_amount() {
-		return $this->amount;
+		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_total_amount()' );
+
+		return $this->get_total_amount();
 	}
 
 	/**
 	 * Set the payment amount.
 	 *
 	 * @param Money $amount Money object.
+	 *
+	 * @deprecated 2.0.9 Use Payment::set_total_amount() instead.
 	 */
 	public function set_amount( Money $amount ) {
-		$this->amount = $amount;
+		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::set_total_amount()' );
+
+		$this->set_total_amount( $amount );
 	}
 
 	/**
-	 * Get the payment currency.
+	 * Get the payment currency alphabetic code.
+	 *
+	 * @deprecated 2.0.9 Use Payment::get_total_amount()->get_currency()->get_alphabetic_code() instead.
 	 *
 	 * @return string
 	 */
 	public function get_currency() {
-		return $this->get_amount()->get_currency()->get_alphabetic_code();
+		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_total_amount()->get_currency()->get_alphabetic_code()' );
+
+		return $this->get_total_amount()->get_currency()->get_alphabetic_code();
 	}
 
 	/**
 	 * Get currency numeric code
 	 *
+	 * @deprecated 2.0.9 Use Payment::get_total_amount()->get_currency()->get_numeric_code() instead.
+	 *
 	 * @return string|null
 	 */
 	public function get_currency_numeric_code() {
-		return $this->get_amount()->get_currency()->get_numeric_code();
+		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_total_amount()->get_currency()->get_numeric_code()' );
+
+		return $this->get_total_amount()->get_currency()->get_numeric_code();
 	}
 
 	/**

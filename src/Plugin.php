@@ -758,7 +758,7 @@ class Plugin {
 		$payment->subscription           = $data->get_subscription();
 		$payment->subscription_id        = $data->get_subscription_id();
 		$payment->subscription_source_id = $data->get_subscription_source_id();
-		$payment->set_amount( $data->get_amount() );
+		$payment->set_total_amount( $data->get_amount() );
 		$payment->set_credit_card( $data->get_credit_card() );
 
 		// Customer.
@@ -942,7 +942,7 @@ class Plugin {
 		$pronamic_ideal->payments_data_store->create( $payment );
 
 		// Prevent payment start at gateway if amount is empty.
-		$amount = $payment->get_amount()->get_amount();
+		$amount = $payment->get_total_amount()->get_amount();
 
 		if ( empty( $amount ) ) {
 			$payment->set_status( Statuses::SUCCESS );

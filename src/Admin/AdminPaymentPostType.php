@@ -374,7 +374,7 @@ class AdminPaymentPostType {
 
 				break;
 			case 'pronamic_payment_amount':
-				echo esc_html( $payment->get_amount()->format_i18n() );
+				echo esc_html( $payment->get_total_amount()->format_i18n() );
 
 				break;
 			case 'pronamic_payment_date':

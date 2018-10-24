@@ -532,9 +532,9 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		}
 
 		// Amount.
-		$payment->set_amount(
+		$payment->set_total_amount(
 			new Money(
-				$this->get_meta( $id, 'amount' ),
+				$this->get_meta( $id, 'total_amount' ),
 				$this->get_meta( $id, 'currency' )
 			)
 		);
@@ -555,7 +555,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			'key'                     => $payment->key,
 			'order_id'                => $payment->order_id,
 			'currency'                => $payment->get_currency(),
-			'amount'                  => $payment->get_amount()->get_amount(),
+			'total_amount'            => $payment->get_total_amount()->get_amount(),
 			'method'                  => $payment->method,
 			'issuer'                  => $payment->issuer,
 			'expiration_period'       => null,

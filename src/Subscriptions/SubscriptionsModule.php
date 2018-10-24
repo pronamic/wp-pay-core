@@ -261,7 +261,7 @@ class SubscriptionsModule {
 		$payment->recurring       = ( false === $data->get_recurring() ? false : true );
 		$payment->subscription    = $subscription;
 		$payment->subscription_id = $subscription->get_id();
-		$payment->set_amount( $data->get_amount() );
+		$payment->set_total_amount( $data->get_amount() );
 
 		// Set payment method from payment data if available.
 		if ( method_exists( $data, 'get_payment_method' ) ) {

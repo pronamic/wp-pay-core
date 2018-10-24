@@ -131,7 +131,7 @@ class GoogleAnalyticsEcommerce {
 		$transaction = wp_parse_args(
 			array(
 				't'  => 'transaction',
-				'tr' => sprintf( '%F', $payment->get_amount()->get_amount() ),
+				'tr' => sprintf( '%F', $payment->get_total_amount()->get_amount() ),
 			),
 			$defaults
 		);

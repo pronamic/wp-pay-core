@@ -125,6 +125,13 @@ class Payment extends LegacyPayment {
 	public $order_id;
 
 	/**
+	 * The total amount (including tax) of this payment.
+	 *
+	 * @var Money|null
+	 */
+	private $total_amount;
+
+	/**
 	 * The tax amount of this payment.
 	 *
 	 * @var Money|null
@@ -355,7 +362,7 @@ class Payment extends LegacyPayment {
 		$this->date = new DateTime();
 		$this->meta = array();
 
-		$this->set_amount( new Money() );
+		$this->set_total_amount( new Money() );
 		$this->set_status( Statuses::OPEN );
 
 		if ( null !== $post_id ) {
@@ -613,6 +620,24 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
+	 * Get total amount (including tax).
+	 *
+	 * @return null|Money
+	 */
+	public function get_total_amount() {
+		return $this->total_amount;
+	}
+
+	/**
+	 * Set total amount (including tax).
+	 *
+	 * @param null|Money $total_amount Total amount including tax.
+	 */
+	public function set_total_amount( $total_amount ) {
+		$this->total_amount = $total_amount;
+	}
+
+	/**
 	 * Get the tax amount.
 	 *
 	 * @return Money|null
@@ -800,7 +825,7 @@ class Payment extends LegacyPayment {
 	public function get_action_url() {
 		$action_url = $this->action_url;
 
-		$amount = $this->get_amount()->get_amount();
+		$amount = $this->get_total_amount()->get_amount();
 
 		if ( empty( $amount ) ) {
 			$status = $this->get_status();
