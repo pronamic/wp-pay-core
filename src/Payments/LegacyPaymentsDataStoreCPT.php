@@ -222,7 +222,9 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	 * Get update meta.
 	 *
 	 * @param Payment $payment The payment to update.
-	 * @param array   $meta    Meta array
+	 * @param array   $meta    Meta array.
+	 *
+	 * @return array
 	 */
 	protected function get_update_meta( $payment, $meta = array() ) {
 		// Customer.
