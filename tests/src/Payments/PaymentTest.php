@@ -11,8 +11,9 @@
 namespace Pronamic\WordPress\Pay\Payments;
 
 use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Pay\ContactName;
 use Pronamic\WordPress\Pay\CreditCard;
-use stdClass;
+use Pronamic\WordPress\Pay\Customer;
 use WP_UnitTestCase;
 
 /**
@@ -36,12 +37,18 @@ class PaymentTest extends WP_UnitTestCase {
 	 *
 	 * @dataProvider get_and_set_provider
 	 *
-	 * @param string $set_function Setter function name.
-	 * @param string $get_function Getter function name.
-	 * @param string $value        Expected value.
+	 * @param string $set_function      Setter function name.
+	 * @param string $get_function      Getter function name.
+	 * @param string $value             Expected value.
+	 * @param bool   $expect_deprecated Deprecated notice expected.
 	 */
-	public function test_set_and_get( $set_function, $get_function, $value ) {
+	public function test_set_and_get( $set_function, $get_function, $value, $expect_deprecated = false ) {
 		$payment = new Payment();
+
+		if ( $expect_deprecated ) {
+			$this->setExpectedDeprecated( $set_function );
+			$this->setExpectedDeprecated( $get_function );
+		}
 
 		$payment->$set_function( $value );
 
@@ -55,11 +62,14 @@ class PaymentTest extends WP_UnitTestCase {
 	 */
 	public function get_and_set_provider() {
 		return array(
-			array( 'set_amount', 'get_amount', new Money( 89.95, 'EUR' ) ),
+			array( 'set_total_amount', 'get_total_amount', new Money( 89.95, 'EUR' ) ),
 			array( 'set_id', 'get_id', uniqid() ),
 			array( 'set_transaction_id', 'get_transaction_id', uniqid() ),
 			array( 'set_status', 'get_status', 'completed' ),
 			array( 'set_version', 'get_version', '5.4.2' ),
+
+			// Deprecated.
+			array( 'set_amount', 'get_amount', new Money( 89.95, 'EUR' ), true ),
 		);
 	}
 
@@ -100,14 +110,28 @@ class PaymentTest extends WP_UnitTestCase {
 	 *
 	 * @dataProvider get_provider
 	 *
-	 * @param string $property     Property name.
-	 * @param string $get_function Getter function name.
-	 * @param string $value        Expected value.
+	 * @param string $property          Property name.
+	 * @param string $get_function      Getter function name.
+	 * @param string $value             Expected value.
+	 * @param bool   $expect_deprecated Expect deprecated notice.
 	 */
-	public function test_get( $property, $get_function, $value ) {
+	public function test_get( $property, $get_function, $value, $expect_deprecated = false ) {
 		$payment = new Payment();
 
-		$payment->$property = $value;
+		if ( $expect_deprecated ) {
+			$this->setExpectedDeprecated( $get_function );
+		}
+
+		if ( 'customer_name' === $property ) {
+			$names = explode( ' ', $value );
+
+			$payment->set_customer( new Customer() );
+			$payment->get_customer()->set_name( new ContactName() );
+			$payment->get_customer()->get_name()->set_first_name( $names[0] );
+			$payment->get_customer()->get_name()->set_last_name( $names[1] );
+		} else {
+			$payment->$property = $value;
+		}
 
 		$this->assertEquals( $value, call_user_func( array( $payment, $get_function ) ) );
 	}
@@ -122,20 +146,22 @@ class PaymentTest extends WP_UnitTestCase {
 			array( 'order_id', 'get_order_id', 1234 ),
 			array( 'method', 'get_method', 'ideal' ),
 			array( 'issuer', 'get_issuer', 'ideal_KNABNL2H' ),
-			array( 'language', 'get_language', 'nl' ),
-			array( 'locale', 'get_locale', 'nl_NL' ),
 			array( 'description', 'get_description', 'Lorem ipsum dolor sit amet, consectetur.' ),
 			array( 'email', 'get_email', 'john.doe@example.com' ),
-			array( 'first_name', 'get_first_name', 'John' ),
-			array( 'last_name', 'get_last_name', 'Doe' ),
-			array( 'customer_name', 'get_customer_name', 'John Doe' ),
-			array( 'address', 'get_address', 'Burgemeester Wuiteweg 39b' ),
-			array( 'city', 'get_city', 'Drachten' ),
-			array( 'zip', 'get_zip', '9203 KA' ),
-			array( 'country', 'get_country', 'NL' ),
-			array( 'telephone_number', 'get_telephone_number', '1234567890' ),
 			array( 'analytics_client_id', 'get_analytics_client_id', 'GA1.2.1234567890.1234567890' ),
 			array( 'entrance_code', 'get_entrance_code', uniqid() ),
+
+			// Deprecated.
+			array( 'language', 'get_language', 'nl', true ),
+			array( 'locale', 'get_locale', 'nl_NL', true ),
+			array( 'first_name', 'get_first_name', 'John', true ),
+			array( 'last_name', 'get_last_name', 'Doe', true ),
+			array( 'customer_name', 'get_customer_name', 'John Doe', true ),
+			array( 'address', 'get_address', 'Burgemeester Wuiteweg 39b', true ),
+			array( 'city', 'get_city', 'Drachten', true ),
+			array( 'zip', 'get_zip', '9203 KA', true ),
+			array( 'country', 'get_country', 'NL', true ),
+			array( 'telephone_number', 'get_telephone_number', '1234567890', true ),
 		);
 	}
 
