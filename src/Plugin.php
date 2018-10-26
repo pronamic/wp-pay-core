@@ -273,14 +273,17 @@ class Plugin {
 			return;
 		}
 
+		// Gateway.
 		$gateway = self::get_gateway( $payment->config_id );
 
 		if ( empty( $gateway ) ) {
 			return;
 		}
 
+		// Update status.
 		$gateway->update_status( $payment );
 
+		// Add gateway errors as payment notes.
 		if ( $gateway->has_error() ) {
 			foreach ( $gateway->error->get_error_codes() as $code ) {
 				$payment->add_note( sprintf( '%s: %s', $code, $gateway->error->get_error_message( $code ) ) );
