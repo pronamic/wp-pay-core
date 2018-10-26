@@ -542,7 +542,6 @@ class PaymentLine {
 			$line->set_product_category( $json->product_category );
 		}
 
-
 		return $line;
 	}
 
