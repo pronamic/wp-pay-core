@@ -530,19 +530,25 @@ class AdminPaymentPostType {
 	private function translate_post_status_to_meta_status( $post_status ) {
 		switch ( $post_status ) {
 			case 'payment_pending':
-				return Statuses::OPEN;
 			case 'payment_processing':
+			case 'payment_reserved':
 				return Statuses::OPEN;
+
+			case 'payment_refunded':
+				return Statuses::REFUNDED;
+
 			case 'payment_on_hold':
 				return null;
+
 			case 'payment_completed':
 				return Statuses::SUCCESS;
+
 			case 'payment_cancelled':
 				return Statuses::CANCELLED;
-			case 'payment_refunded':
-				return null;
+
 			case 'payment_failed':
 				return Statuses::FAILURE;
+
 			case 'payment_expired':
 				return Statuses::EXPIRED;
 		}

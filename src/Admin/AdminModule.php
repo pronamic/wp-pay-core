@@ -682,22 +682,29 @@ class AdminModule {
 			case 'payment_pending':
 			case 'subscr_pending':
 				return 'pronamic-pay-icon-pending';
+
 			case 'payment_cancelled':
 			case 'subscr_cancelled':
 				return 'pronamic-pay-icon-cancelled';
+
 			case 'payment_completed':
 			case 'subscr_completed':
 				return 'pronamic-pay-icon-completed';
+
 			case 'payment_refunded':
 				return 'pronamic-pay-icon-refunded';
+
 			case 'payment_failed':
 			case 'subscr_failed':
 				return 'pronamic-pay-icon-failed';
+
 			case 'payment_on_hold':
 			case 'payment_expired':
 			case 'subscr_expired':
 				return 'pronamic-pay-icon-on-hold';
+
 			case 'payment_processing':
+			case 'payment_reserved':
 			case 'subscr_active':
 			default:
 				return 'pronamic-pay-icon-processing';

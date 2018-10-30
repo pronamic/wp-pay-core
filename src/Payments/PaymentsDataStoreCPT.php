@@ -139,7 +139,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
 	 * Get post status.
 	 *
-	 * @param string $meta_status The payment to get a WordPress post status for.
+	 * @param string $meta_status The meta status to get a WordPress post status for.
 	 *
 	 * @return string|null
 	 */
@@ -147,14 +147,22 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		switch ( $meta_status ) {
 			case Statuses::CANCELLED:
 				return 'payment_cancelled';
+
 			case Statuses::EXPIRED:
 				return 'payment_expired';
+
 			case Statuses::FAILURE:
 				return 'payment_failed';
+
+			case Statuses::RESERVED:
+				return 'payment_reserved';
+
 			case Statuses::SUCCESS:
 				return 'payment_completed';
+
 			case Statuses::OPEN:
 				return 'payment_pending';
+
 			default:
 				return null;
 		}
