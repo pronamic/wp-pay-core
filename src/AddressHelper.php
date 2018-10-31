@@ -48,11 +48,11 @@ class AddressHelper {
 			if ( array_key_exists( 'houseNumberParts', $parts ) ) {
 				$house_number_parts = $parts['houseNumberParts'];
 
-				if ( null === $address->get_house_number_base() && array_key_exists( 'base', $house_number_parts ) ) {
+				if ( null === $address->get_house_number_base() && array_key_exists( 'base', $house_number_parts ) && ! empty( $house_number_parts['base'] ) ) {
 					$address->set_house_number_base( $house_number_parts['base'] );
 				}
 
-				if ( null === $address->get_house_number_addition() && array_key_exists( 'extension', $house_number_parts ) ) {
+				if ( null === $address->get_house_number_addition() && array_key_exists( 'extension', $house_number_parts ) && ! empty( $house_number_parts['extension'] ) ) {
 					$address->set_house_number_addition( $house_number_parts['extension'] );
 				}
 			}
