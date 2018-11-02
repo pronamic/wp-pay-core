@@ -73,10 +73,38 @@ class FormsModule {
 	/**
 	 * Get form output.
 	 *
-	 * @param string $id Form ID.
+	 * @param string|array $id Form ID or form settings.
 	 * @return string
 	 */
 	public function get_form_output( $id ) {
+		if ( is_array( $id ) ) {
+			$config_id     = $id['config_id'];
+			$button_text   = null;
+			$amount_method = FormPostType::AMOUNT_METHOD_INPUT_FIXED;
+			$amounts       = array( $id['amount'] );
+			$title         = null;
+
+			$id = 'button-' . base64_encode(
+				wp_json_encode(
+					(object) array(
+						'config_id' => $config_id,
+					)
+				)
+			);
+		} else {
+			$config_id     = get_post_meta( $id, '_pronamic_payment_form_config_id', true );
+			$button_text   = get_post_meta( $id, '_pronamic_payment_form_button_text', true );
+			$amount_method = get_post_meta( $id, '_pronamic_payment_form_amount_method', true );
+			$amounts       = get_post_meta( $id, '_pronamic_payment_form_amount_choices', true );
+			$title         = ( is_singular( 'pronamic_pay_form' ) ? null : get_the_title( $id ) );
+		}
+
+		// Button text.
+		if ( empty( $button_text ) ) {
+			$button_text = empty( $button_text ) ? __( 'Pay Now', 'pronamic_ideal' ) : $button_text;
+		}
+
+		// Load template.
 		$file = plugin_dir_path( $this->plugin->get_file() ) . 'templates/form.php';
 
 		ob_start();

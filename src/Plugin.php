@@ -487,6 +487,9 @@ class Plugin {
 		$this->payments_module      = new Payments\PaymentsModule( $this );
 		$this->subscriptions_module = new Subscriptions\SubscriptionsModule( $this );
 
+		// Gutenberg blocks.
+		$this->gutenberg_blocks = new Blocks\Blocks( $this );
+
 		// Google Analytics Ecommerce.
 		$this->google_analytics_ecommerce = new GoogleAnalyticsEcommerce();
 

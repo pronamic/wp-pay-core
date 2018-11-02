@@ -31,6 +31,13 @@ class FormPostType {
 	const POST_TYPE = 'pronamic_pay_form';
 
 	/**
+	 * Amount method input fixed.
+	 *
+	 * @var string
+	 */
+	const AMOUNT_METHOD_INPUT_FIXED = 'fixed';
+
+	/**
 	 * Amount method input only.
 	 *
 	 * @var string

@@ -72,6 +72,22 @@ class FormProcessor {
 
 		$config_id = get_post_meta( $id, '_pronamic_payment_form_config_id', true );
 
+		$encoded_id = filter_input( INPUT_POST, 'pronamic_pay_form_id', FILTER_SANITIZE_STRING );
+
+		$source_id = $id;
+
+		if ( false === $id && false !== strpos( $encoded_id, '-' ) ) {
+			$id_parts = explode( '-', $encoded_id );
+
+			$form_atts = base64_decode( $id_parts[1] );
+
+			$form_atts = json_decode( $form_atts );
+
+			$config_id = $form_atts->config_id;
+
+			$source_id = $id_parts[0];
+		}
+
 		$gateway = Plugin::get_gateway( $config_id );
 
 		if ( ! $gateway ) {
@@ -79,7 +95,7 @@ class FormProcessor {
 		}
 
 		// Data.
-		$data = new PaymentFormData();
+		$data = new PaymentFormData( $source_id );
 
 		$payment = Plugin::start( $config_id, $gateway, $data );
 
@@ -99,7 +115,7 @@ class FormProcessor {
 
 		$user = get_user_by( 'email', $email );
 
-		if ( ! $user ) {
+		if ( ! empty( $email ) && ! $user ) {
 			// Make a random string for password.
 			$password = wp_generate_password( 10 );
 
@@ -119,12 +135,14 @@ class FormProcessor {
 			$user = new WP_User( $user_id );
 		}
 
-		wp_update_post(
-			array(
-				'ID'          => $payment->post->ID,
-				'post_author' => $user->ID,
-			)
-		);
+		if ( is_object( $user ) ) {
+			wp_update_post(
+				array(
+					'ID'          => $payment->post->ID,
+					'post_author' => $user->ID,
+				)
+			);
+		}
 
 		$gateway->redirect( $payment );
 
@@ -138,6 +156,13 @@ class FormProcessor {
 	 */
 	private function validate() {
 		global $pronamic_pay_errors;
+
+		// Needs validation?
+		$form_id = filter_input( INPUT_POST, 'pronamic_pay_form_id', FILTER_SANITIZE_STRING );
+
+		if ( false !== strpos( $form_id, '-' ) ) {
+			return true;
+		}
 
 		// First Name.
 		$first_name = filter_input( INPUT_POST, 'pronamic_pay_first_name', FILTER_SANITIZE_STRING );
