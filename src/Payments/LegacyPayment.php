@@ -413,7 +413,7 @@ abstract class LegacyPayment {
 				return ( null === $address ) ? null : $address->set_city( $value );
 			case 'address':
 				return ( null === $address ) ? null : $address->set_line_1( $value );
-			case 'locale':
+			case 'user_id':
 				return ( null === $customer ) ? null : $customer->set_user_id( $value );
 		}
 
