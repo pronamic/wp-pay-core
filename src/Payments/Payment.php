@@ -70,13 +70,6 @@ class Payment extends LegacyPayment {
 	public $config_id;
 
 	/**
-	 * The user ID.
-	 *
-	 * @var integer
-	 */
-	public $user_id;
-
-	/**
 	 * The key of this payment, used in URL's for security.
 	 *
 	 * @var string

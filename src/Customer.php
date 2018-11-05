@@ -85,6 +85,13 @@ class Customer {
 	private $locale;
 
 	/**
+	 * WordPress user ID.
+	 *
+	 * @var integer|null
+	 */
+	private $user_id;
+
+	/**
 	 * Get contact name.
 	 *
 	 * @return ContactName|null
@@ -244,6 +251,24 @@ class Customer {
 	 */
 	public function set_locale( $locale ) {
 		$this->locale = $locale;
+	}
+
+	/**
+	 * Get WordPress user ID.
+	 *
+	 * @return integer|null
+	 */
+	public function get_user_id() {
+		return $this->user_id;
+	}
+
+	/**
+	 * Set WordPress user ID.
+	 *
+	 * @param integer|null $user_id WordPress user ID.
+	 */
+	public function set_user_id( $user_id ) {
+		$this->user_id = $user_id;
 	}
 
 	/**

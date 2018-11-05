@@ -65,7 +65,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 				'post_title'    => $title,
 				'post_content'  => wp_json_encode( $payment->get_json() ),
 				'post_status'   => empty( $post_status ) ? 'payment_pending' : null,
-				'post_author'   => $payment->user_id,
+				'post_author'   => null === $payment->get_customer() ? null : $payment->get_customer()->get_user_id(),
 			),
 			true
 		);
