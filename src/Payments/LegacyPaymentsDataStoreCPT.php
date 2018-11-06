@@ -198,19 +198,33 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	/**
 	 * Read post meta.
 	 *
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-data.php#L462-L507
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-data.php#L462-L507
 	 * @param Payment $payment The payment to read.
 	 */
 	protected function read_post_meta( $payment ) {
 		$this->maybe_create_customer_from_legacy_meta( $payment );
 		$this->maybe_create_billing_address_from_legacy_meta( $payment );
+
+		// Amount.
+		$amount = $payment->get_meta( 'amount' );
+
+		if ( ! empty( $amount ) ) {
+			$payment->set_total_amount(
+				new Money(
+					$amount,
+					$payment->get_meta( 'currency' )
+				)
+			);
+		}
 	}
 
 	/**
 	 * Get update meta.
 	 *
 	 * @param Payment $payment The payment to update.
-	 * @param array   $meta    Meta array
+	 * @param array   $meta    Meta array.
+	 *
+	 * @return array
 	 */
 	protected function get_update_meta( $payment, $meta = array() ) {
 		// Customer.

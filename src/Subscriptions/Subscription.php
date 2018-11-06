@@ -45,6 +45,20 @@ class Subscription {
 	public $key;
 
 	/**
+	 * The title of this subscription.
+	 *
+	 * @var string
+	 */
+	public $title;
+
+	/**
+	 * The post author user ID of this subscription.
+	 *
+	 * @var string
+	 */
+	public $user_id;
+
+	/**
 	 * The frequency of this subscription, for example: `daily`, `weekly`, `monthly` or `annually`.
 	 *
 	 * @var string
@@ -63,7 +77,7 @@ class Subscription {
 	 * The interval period of this subscription.
 	 *
 	 * @todo Improve documentation?
-	 * @var  int
+	 * @var  string
 	 */
 	public $interval_period;
 
@@ -375,7 +389,7 @@ class Subscription {
 	/**
 	 * Get date interval.
 	 *
-	 * @see http://php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters
+	 * @link http://php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters
 	 * @return \DateInterval
 	 * @throws \Exception    Throws an Exception when the `interval_spec` cannot be parsed as an interval.
 	 */

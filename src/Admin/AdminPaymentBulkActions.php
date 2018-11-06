@@ -13,7 +13,7 @@ namespace Pronamic\WordPress\Pay\Admin;
 /**
  * WordPress admin payment bulk actions
  *
- * @see https://www.skyverge.com/blog/add-custom-bulk-action/
+ * @link https://www.skyverge.com/blog/add-custom-bulk-action/
  * @author Remco Tolsma
  * @version 4.1.0
  * @since 4.1.0
@@ -54,8 +54,8 @@ class AdminPaymentBulkActions {
 	/**
 	 * Custom bulk actions.
 	 *
-	 * @see https://make.wordpress.org/core/2016/10/04/custom-bulk-actions/
-	 * @see https://github.com/WordPress/WordPress/blob/4.7/wp-admin/includes/class-wp-list-table.php#L440-L452
+	 * @link https://make.wordpress.org/core/2016/10/04/custom-bulk-actions/
+	 * @link https://github.com/WordPress/WordPress/blob/4.7/wp-admin/includes/class-wp-list-table.php#L440-L452
 	 * @param array $bulk_actions Bulk actions.
 	 * @return array
 	 */
@@ -73,7 +73,7 @@ class AdminPaymentBulkActions {
 	 * Handle bulk action.
 	 *
 	 * @see hhttps://make.wordpress.org/core/2016/10/04/custom-bulk-actions/
-	 * @see https://github.com/WordPress/WordPress/blob/4.7/wp-admin/edit.php#L166-L167
+	 * @link https://github.com/WordPress/WordPress/blob/4.7/wp-admin/edit.php#L166-L167
 	 * @param string $sendback Sendback URL.
 	 * @param string $doaction Action indicator.
 	 * @param array  $post_ids  Post ID's to bulk edit.

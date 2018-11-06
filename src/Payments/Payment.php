@@ -70,13 +70,6 @@ class Payment extends LegacyPayment {
 	public $config_id;
 
 	/**
-	 * The user ID.
-	 *
-	 * @var integer
-	 */
-	public $user_id;
-
-	/**
 	 * The key of this payment, used in URL's for security.
 	 *
 	 * @var string
@@ -123,6 +116,13 @@ class Payment extends LegacyPayment {
 	 * @var string
 	 */
 	public $order_id;
+
+	/**
+	 * The total amount (including tax) of this payment.
+	 *
+	 * @var Money|null
+	 */
+	private $total_amount;
 
 	/**
 	 * The tax amount of this payment.
@@ -355,7 +355,7 @@ class Payment extends LegacyPayment {
 		$this->date = new DateTime();
 		$this->meta = array();
 
-		$this->set_amount( new Money() );
+		$this->set_total_amount( new Money() );
 		$this->set_status( Statuses::OPEN );
 
 		if ( null !== $post_id ) {
@@ -613,6 +613,24 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
+	 * Get total amount (including tax).
+	 *
+	 * @return Money
+	 */
+	public function get_total_amount() {
+		return $this->total_amount;
+	}
+
+	/**
+	 * Set total amount (including tax).
+	 *
+	 * @param Money $total_amount Total amount including tax.
+	 */
+	public function set_total_amount( Money $total_amount ) {
+		$this->total_amount = $total_amount;
+	}
+
+	/**
 	 * Get the tax amount.
 	 *
 	 * @return Money|null
@@ -800,7 +818,7 @@ class Payment extends LegacyPayment {
 	public function get_action_url() {
 		$action_url = $this->action_url;
 
-		$amount = $this->get_amount()->get_amount();
+		$amount = $this->get_total_amount()->get_amount();
 
 		if ( empty( $amount ) ) {
 			$status = $this->get_status();
@@ -888,7 +906,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Get subscription.
 	 *
-	 * @return Subscription
+	 * @return Subscription|bool
 	 */
 	public function get_subscription() {
 		if ( is_object( $this->subscription ) ) {
@@ -907,7 +925,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Format string
 	 *
-	 * @see https://github.com/woocommerce/woocommerce/blob/v2.2.3/includes/abstracts/abstract-wc-email.php#L187-L195
+	 * @link https://github.com/woocommerce/woocommerce/blob/v2.2.3/includes/abstracts/abstract-wc-email.php#L187-L195
 	 *
 	 * @param string $string The string to format.
 	 * @return string
@@ -928,7 +946,7 @@ class Payment extends LegacyPayment {
 		);
 
 		// Make sure there is an dynamic part in the order ID.
-		// @see https://secure.ogone.com/ncol/param_cookbook.asp.
+		// @link https://secure.ogone.com/ncol/param_cookbook.asp.
 		if ( 0 === $count ) {
 			$string .= $this->get_id();
 		}

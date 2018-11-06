@@ -134,8 +134,8 @@ class AdminModule {
 	/**
 	 * Maybe redirect.
 	 *
-	 * @see https://github.com/woothemes/woocommerce/blob/2.4.4/includes/admin/class-wc-admin.php#L29
-	 * @see https://github.com/woothemes/woocommerce/blob/2.4.4/includes/admin/class-wc-admin.php#L96-L122
+	 * @link https://github.com/woothemes/woocommerce/blob/2.4.4/includes/admin/class-wc-admin.php#L29
+	 * @link https://github.com/woothemes/woocommerce/blob/2.4.4/includes/admin/class-wc-admin.php#L96-L122
 	 */
 	public function maybe_redirect() {
 		$redirect = get_transient( 'pronamic_pay_admin_redirect' );
@@ -525,7 +525,7 @@ class AdminModule {
 	 * Create the admin menu.
 	 */
 	public function admin_menu() {
-		// @see https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin-menus.php#L145
+		// @link https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin-menus.php#L145
 		$counts = wp_count_posts( 'pronamic_payment' );
 
 		$badge = '';
@@ -682,22 +682,29 @@ class AdminModule {
 			case 'payment_pending':
 			case 'subscr_pending':
 				return 'pronamic-pay-icon-pending';
+
 			case 'payment_cancelled':
 			case 'subscr_cancelled':
 				return 'pronamic-pay-icon-cancelled';
+
 			case 'payment_completed':
 			case 'subscr_completed':
 				return 'pronamic-pay-icon-completed';
+
 			case 'payment_refunded':
 				return 'pronamic-pay-icon-refunded';
+
 			case 'payment_failed':
 			case 'subscr_failed':
 				return 'pronamic-pay-icon-failed';
+
 			case 'payment_on_hold':
 			case 'payment_expired':
 			case 'subscr_expired':
 				return 'pronamic-pay-icon-on-hold';
+
 			case 'payment_processing':
+			case 'payment_reserved':
 			case 'subscr_active':
 			default:
 				return 'pronamic-pay-icon-processing';

@@ -13,10 +13,6 @@ namespace Pronamic\WordPress\Pay\Payments;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Money\Money;
-use Pronamic\WordPress\Pay\AbstractDataStoreCPT;
-use Pronamic\WordPress\Pay\Address;
-use Pronamic\WordPress\Pay\Customer;
-use Pronamic\WordPress\Pay\ContactName;
 use Pronamic\WordPress\Pay\Core\Statuses;
 
 /**
@@ -44,7 +40,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
 	 * Create payment.
 	 *
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L47-L76
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L47-L76
 	 *
 	 * @param Payment $payment The payment to create in this data store.
 	 *
@@ -69,7 +65,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 				'post_title'    => $title,
 				'post_content'  => wp_json_encode( $payment->get_json() ),
 				'post_status'   => empty( $post_status ) ? 'payment_pending' : null,
-				'post_author'   => $payment->user_id,
+				'post_author'   => null === $payment->get_customer() ? null : $payment->get_customer()->get_user_id(),
 			),
 			true
 		);
@@ -91,11 +87,11 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
 	 * Read payment.
 	 *
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-order.php#L85-L111
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L78-L111
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L81-L136
-	 * @see https://developer.wordpress.org/reference/functions/get_post/
-	 * @see https://developer.wordpress.org/reference/classes/wp_post/
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-order.php#L85-L111
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L78-L111
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L81-L136
+	 * @link https://developer.wordpress.org/reference/functions/get_post/
+	 * @link https://developer.wordpress.org/reference/classes/wp_post/
 	 *
 	 * @param Payment $payment The payment to read from this data store.
 	 */
@@ -119,8 +115,8 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
 	 * Update payment.
 	 *
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L113-L154
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L113-L154
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
 	 * @param Payment $payment The payment to update in this data store.
 	 */
 	public function update( Payment $payment ) {
@@ -143,7 +139,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
 	 * Get post status.
 	 *
-	 * @param string $meta_status The payment to get a WordPress post status for.
+	 * @param string $meta_status The meta status to get a WordPress post status for.
 	 *
 	 * @return string|null
 	 */
@@ -151,14 +147,22 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		switch ( $meta_status ) {
 			case Statuses::CANCELLED:
 				return 'payment_cancelled';
+
 			case Statuses::EXPIRED:
 				return 'payment_expired';
+
 			case Statuses::FAILURE:
 				return 'payment_failed';
+
+			case Statuses::RESERVED:
+				return 'payment_reserved';
+
 			case Statuses::SUCCESS:
 				return 'payment_completed';
+
 			case Statuses::OPEN:
 				return 'payment_pending';
+
 			default:
 				return null;
 		}
@@ -496,7 +500,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
 	 * Read post meta.
 	 *
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-data.php#L462-L507
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-data.php#L462-L507
 	 * @param Payment $payment The payment to read.
 	 */
 	protected function read_post_meta( $payment ) {
@@ -530,36 +534,42 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			}
 		}
 
-		// Gravity Forms country fix.
-		if ( ! empty( $payment->country ) && 'gravityformsideal' === $payment->source && method_exists( 'GFCommon', 'get_country_code' ) ) {
-			$payment->country = \GFCommon::get_country_code( $payment->country );
-		}
-
 		// Amount.
-		$payment->set_amount(
+		$payment->set_total_amount(
 			new Money(
-				$this->get_meta( $id, 'amount' ),
+				$this->get_meta( $id, 'total_amount' ),
 				$this->get_meta( $id, 'currency' )
 			)
 		);
 
 		// Legacy.
 		parent::read_post_meta( $payment );
+
+		// Gravity Forms country fix.
+		if ( 'gravityformsideal' === $payment->get_source() && null !== $payment->get_billing_address() ) {
+			$country_name = $payment->get_billing_address()->get_country_name();
+
+			if ( ! empty( $country_name ) && method_exists( 'GFCommon', 'get_country_code' ) ) {
+				$payment->get_billing_address()->set_country_code( \GFCommon::get_country_code( $country_name ) );
+			}
+		}
 	}
 
 	/**
 	 * Get update meta.
 	 *
 	 * @param Payment $payment The payment to update.
-	 * @param array   $meta    Meta array
+	 * @param array   $meta    Meta array.
+	 *
+	 * @return array
 	 */
 	protected function get_update_meta( $payment, $meta = array() ) {
 		$meta = array(
 			'config_id'               => $payment->config_id,
 			'key'                     => $payment->key,
 			'order_id'                => $payment->order_id,
-			'currency'                => $payment->get_currency(),
-			'amount'                  => $payment->get_amount()->get_amount(),
+			'currency'                => $payment->get_total_amount()->get_currency()->get_alphabetic_code(),
+			'total_amount'            => $payment->get_total_amount()->get_amount(),
 			'method'                  => $payment->method,
 			'issuer'                  => $payment->issuer,
 			'expiration_period'       => null,
@@ -572,7 +582,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			'consumer_city'           => $payment->consumer_city,
 			'source'                  => $payment->source,
 			'source_id'               => $payment->source_id,
-			'email'                   => $payment->get_email(),
+			'email'                   => ( null === $payment->get_customer() ? null : $payment->get_customer()->get_email() ),
 			'analytics_client_id'     => $payment->analytics_client_id,
 			'subscription_id'         => $payment->subscription_id,
 			'recurring_type'          => $payment->recurring_type,
@@ -592,7 +602,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
 	 * Update payment post meta.
 	 *
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
 	 * @param Payment $payment The payment to update.
 	 */
 	private function update_post_meta( $payment ) {

@@ -58,7 +58,7 @@ class FormsModule {
 	/**
 	 * Maybe add form to content.
 	 *
-	 * @see https://developer.wordpress.org/reference/hooks/the_content/
+	 * @link https://developer.wordpress.org/reference/hooks/the_content/
 	 * @param string $content Post content to maybe extend with a payment form.
 	 * @return string
 	 */

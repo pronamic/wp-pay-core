@@ -240,7 +240,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Get the language code (ISO639).
 	 *
-	 * @see http://www.w3.org/WAI/ER/IG/ert/iso639.htm
+	 * @link http://www.w3.org/WAI/ER/IG/ert/iso639.htm
 	 *
 	 * @return string
 	 */
@@ -249,8 +249,8 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Get the language (ISO639) and country (ISO3166) code.
 	 *
-	 * @see http://www.w3.org/WAI/ER/IG/ert/iso639.htm
-	 * @see http://www.iso.org/iso/home/standards/country_codes.htm
+	 * @link http://www.w3.org/WAI/ER/IG/ert/iso639.htm
+	 * @link http://www.iso.org/iso/home/standards/country_codes.htm
 	 *
 	 * @return string
 	 */

@@ -14,10 +14,13 @@ use DateInterval;
 use DatePeriod;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
+use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\Recurring;
 use Pronamic\WordPress\Pay\Core\Server;
 use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\Core\Util;
+use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
 use WP_CLI;
@@ -29,8 +32,8 @@ use WP_Query;
  * Copyright: Copyright (c) 2005 - 2018
  * Company: Pronamic
  *
- * @see https://woocommerce.com/2017/04/woocommerce-3-0-release/
- * @see https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
+ * @link https://woocommerce.com/2017/04/woocommerce-3-0-release/
+ * @link https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
  * @author  Remco Tolsma
  * @version 2.0.2
  * @since   2.0.1
@@ -81,9 +84,9 @@ class SubscriptionsModule {
 		add_action( 'pronamic_subscription_status_update', array( $this, 'log_subscription_status_update' ), 10, 4 );
 
 		// WordPress CLI.
-		// @see https://github.com/woocommerce/woocommerce/blob/3.3.1/includes/class-woocommerce.php#L365-L369.
-		// @see https://github.com/woocommerce/woocommerce/blob/3.3.1/includes/class-wc-cli.php.
-		// @see https://make.wordpress.org/cli/handbook/commands-cookbook/.
+		// @link https://github.com/woocommerce/woocommerce/blob/3.3.1/includes/class-woocommerce.php#L365-L369.
+		// @link https://github.com/woocommerce/woocommerce/blob/3.3.1/includes/class-wc-cli.php.
+		// @link https://make.wordpress.org/cli/handbook/commands-cookbook/.
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			WP_CLI::add_command( 'pay subscriptions test', array( $this, 'cli_subscriptions_test' ) );
 		}
@@ -96,57 +99,37 @@ class SubscriptionsModule {
 	 * email notifications so users can cancel or renew their subscription.
 	 */
 	public function handle_subscription() {
-		if ( ! filter_has_var( INPUT_GET, 'subscription' ) ) {
+		if ( ! Util::input_has_vars( INPUT_GET, array( 'subscription', 'action', 'key' ) ) ) {
 			return;
 		}
 
-		if ( ! filter_has_var( INPUT_GET, 'action' ) ) {
-			return;
-		}
+		// @link https://github.com/woothemes/woocommerce/blob/2.3.11/includes/class-wc-cache-helper.php
+		// @link https://www.w3-edge.com/products/w3-total-cache/
+		$do_not_constants = array(
+			'DONOTCACHEPAGE',
+			'DONOTCACHEDB',
+			'DONOTMINIFY',
+			'DONOTCDN',
+			'DONOTCACHEOBJECT',
+		);
 
-		if ( ! filter_has_var( INPUT_GET, 'key' ) ) {
-			return;
-		}
-
-		// @see https://github.com/woothemes/woocommerce/blob/2.3.11/includes/class-wc-cache-helper.php
-		// @see https://www.w3-edge.com/products/w3-total-cache/
-		if ( ! defined( 'DONOTCACHEPAGE' ) ) {
-			define( 'DONOTCACHEPAGE', true );
-		}
-
-		if ( ! defined( 'DONOTCACHEDB' ) ) {
-			define( 'DONOTCACHEDB', true );
-		}
-
-		if ( ! defined( 'DONOTMINIFY' ) ) {
-			define( 'DONOTMINIFY', true );
-		}
-
-		if ( ! defined( 'DONOTCDN' ) ) {
-			define( 'DONOTCDN', true );
-		}
-
-		if ( ! defined( 'DONOTCACHEOBJECT' ) ) {
-			define( 'DONOTCACHEOBJECT', true );
+		foreach ( $do_not_constants as $do_not_constant ) {
+			if ( ! defined( $do_not_constant ) ) {
+				define( $do_not_constant, true );
+			}
 		}
 
 		nocache_headers();
 
 		$subscription_id = filter_input( INPUT_GET, 'subscription', FILTER_SANITIZE_STRING );
-		$subscription    = get_pronamic_subscription( $subscription_id );
+		$action          = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
+		$key             = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_STRING );
 
-		$action = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
+		$subscription = get_pronamic_subscription( $subscription_id );
 
-		$key = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_STRING );
-
-		// Check if subscription is valid.
-		if ( ! $subscription ) {
-			return;
-		}
-
-		// Check if subscription key is valid.
-		if ( $key !== $subscription->get_key() ) {
-			wp_redirect( home_url() );
+		// Check if subscription and key are valid.
+		if ( ! $subscription || $key !== $subscription->get_key() ) {
+			wp_safe_redirect( home_url() );
 
 			exit;
 		}
@@ -166,31 +149,29 @@ class SubscriptionsModule {
 			case 'renew':
 				$gateway = Plugin::get_gateway( $subscription->config_id );
 
-				$html = null;
+				$html = __( 'The subscription can not be renewed.', 'pronamic_ideal' );
 
-				if ( ! $gateway ) {
-					$html = __( 'The subscription can not be renewed.', 'pronamic_ideal' );
-				} elseif ( $gateway->supports( 'recurring' ) && Statuses::ACTIVE === $subscription->get_status() ) {
+				if ( $gateway && $gateway->supports( 'recurring' ) && Statuses::ACTIVE === $subscription->get_status() ) {
 					$html = __( 'The subscription is already active.', 'pronamic_ideal' );
-				} else {
-					if ( 'POST' === Server::get( 'REQUEST_METHOD' ) ) {
-						$data = new SubscriptionPaymentData( $subscription );
+				} elseif ( $gateway && 'POST' === Server::get( 'REQUEST_METHOD' ) ) {
+					$data = new SubscriptionPaymentData( $subscription );
 
-						$data->set_recurring( false );
+					$data->set_recurring( false );
 
-						$payment = $this->start_recurring( $subscription, $gateway, $data );
+					$payment = $this->start_recurring( $subscription, $gateway, $data );
 
-						$error = $gateway->get_error();
+					$error = $gateway->get_error();
 
-						if ( $gateway->has_error() && is_wp_error( $error ) ) {
-							Plugin::render_errors( $error );
+					if ( $gateway->has_error() && is_wp_error( $error ) ) {
+						Plugin::render_errors( $error );
 
-							exit;
-						}
-
-						$gateway->redirect( $payment );
+						exit;
 					}
 
+					if ( $payment ) {
+						$gateway->redirect( $payment );
+					}
+				} elseif ( $gateway ) {
 					// Payment method input HTML.
 					$gateway->set_payment_method( $subscription->payment_method );
 
@@ -252,36 +233,146 @@ class SubscriptionsModule {
 	/**
 	 * Start a recurring payment at the specified gateway for the specified subscription.
 	 *
-	 * @param Subscription            $subscription The subscription to start a recurring payment for.
-	 * @param Gateway                 $gateway      The gateway to start the recurring payment at.
-	 * @param SubscriptionPaymentData $data         The subscription payment data.
+	 * @param Subscription                 $subscription The subscription to start a recurring payment for.
+	 * @param Gateway|null                 $gateway      The gateway to start the recurring payment at.
+	 * @param SubscriptionPaymentData|null $data         The subscription payment data.
+	 *
+	 * @throws \Exception Throws an Exception on incorrect date interval.
+	 *
+	 * @return Payment|bool
 	 */
-	public function start_recurring( Subscription $subscription, Gateway $gateway, $data = null ) {
+	public function start_recurring( Subscription $subscription, $gateway = null, $data = null ) {
+		// Make sure there's payment data to process.
 		if ( null === $data ) {
 			$data = new SubscriptionPaymentData( $subscription );
 		}
 
-		if ( false === $data->get_recurring() ) {
-			// If next payment date is after the subscription end date unset the next payment date.
-			if ( isset( $subscription->end_date, $subscription->next_payment ) && $subscription->end_date <= $subscription->next_payment ) {
-				$subscription->next_payment = null;
-			}
+		// Create payment.
+		$payment = new Payment();
 
-			// If there is no next payment date change the subscription status to completed.
-			if ( empty( $subscription->next_payment ) ) {
-				$subscription->status      = Statuses::COMPLETED;
-				$subscription->expiry_date = $subscription->end_date;
+		$payment->user_id         = $data->get_user_id();
+		$payment->config_id       = $subscription->get_config_id();
+		$payment->order_id        = $data->get_order_id();
+		$payment->description     = $data->get_description();
+		$payment->source          = $data->get_source();
+		$payment->source_id       = $data->get_source_id();
+		$payment->email           = $data->get_email();
+		$payment->method          = $subscription->payment_method;
+		$payment->recurring       = ( false === $data->get_recurring() ? false : true );
+		$payment->subscription    = $subscription;
+		$payment->subscription_id = $subscription->get_id();
+		$payment->set_total_amount( $data->get_amount() );
 
-				$subscription->save();
-
-				// @todo
-				return;
-			}
-
-			if ( ! $gateway->supports( 'recurring' ) ) {
-				return;
-			}
+		// Set payment method from payment data if available.
+		if ( method_exists( $data, 'get_payment_method' ) ) {
+			$payment->method = $data->get_payment_method();
 		}
+
+		// Set issuer for manual renewal.
+		if ( ! $payment->get_recurring() ) {
+			$payment->issuer = $data->get_issuer_id();
+		}
+
+		// Customer.
+		$customer = array(
+			'first_name' => $data->get_first_name(),
+			'last_name'  => $data->get_last_name(),
+			'email'      => $data->get_email(),
+			'phone'      => $data->get_telephone_number(),
+		);
+
+		$customer = array_filter( $customer );
+
+		if ( ! empty( $customer ) ) {
+			$customer = Customer::from_json( (object) $customer );
+
+			$payment->set_customer( $customer );
+		}
+
+		// Billing address.
+		$billing_address = array(
+			'name'         => ( $customer instanceof Customer ? $customer->get_name() : null ),
+			'line_1'       => $data->get_address(),
+			'postal_code'  => $data->get_zip(),
+			'city'         => $data->get_city(),
+			'country_name' => $data->get_country(),
+			'email'        => $data->get_email(),
+			'phone'        => $data->get_telephone_number(),
+		);
+
+		$billing_address = array_filter( $billing_address );
+
+		if ( ! empty( $billing_address ) ) {
+			$address = new Address();
+
+			if ( isset( $billing_address['name'] ) ) {
+				$address->set_name( $billing_address['name'] );
+			}
+
+			if ( isset( $billing_address['line_1'] ) ) {
+				$address->set_line_1( $billing_address['line_1'] );
+			}
+
+			if ( isset( $billing_address['postal_code'] ) ) {
+				$address->set_postal_code( $billing_address['postal_code'] );
+			}
+
+			if ( isset( $billing_address['city'] ) ) {
+				$address->set_city( $billing_address['city'] );
+			}
+
+			if ( isset( $billing_address['country_name'] ) ) {
+				$address->set_country_name( $billing_address['country_name'] );
+			}
+
+			if ( isset( $billing_address['email'] ) ) {
+				$address->set_email( $billing_address['email'] );
+			}
+
+			if ( isset( $billing_address['phone'] ) ) {
+				$address->set_phone( $billing_address['phone'] );
+			}
+
+			$payment->set_billing_address( $address );
+		}
+
+		// Maybe complete subscription for manual renewal.
+		if ( $this->maybe_complete_manual_renewal_subscription( $payment ) ) {
+			// @todo
+			return false;
+		}
+
+		// Make sure to only start payments for supported gateways.
+		if ( null === $gateway ) {
+			$gateway = Plugin::get_gateway( $payment->get_config_id() );
+		}
+
+		if ( false === $payment->get_recurring() && ( ! $gateway || ! $gateway->supports( 'recurring' ) ) ) {
+			// @todo
+			return false;
+		}
+
+		// Start payment.
+		return $this->start_payment( $payment, $gateway );
+	}
+
+	/**
+	 * Start payment.
+	 *
+	 * @param Payment      $payment Payment.
+	 * @param Gateway|null $gateway Gateway to start the recurring payment at.
+	 *
+	 * @throws \Exception Throws an Exception on incorrect date interval.
+	 *
+	 * @return Payment
+	 */
+	public function start_payment( Payment $payment, $gateway = null ) {
+		// Set recurring type.
+		if ( $payment->get_recurring() ) {
+			$payment->recurring_type = Recurring::RECURRING;
+		}
+
+		$subscription = $payment->get_subscription();
 
 		// Calculate payment start and end dates.
 		$start_date = new DateTime();
@@ -299,43 +390,8 @@ class SubscriptionsModule {
 
 		$subscription->next_payment = $end_date;
 
-		// Create follow up payment.
-		$payment = new Payment();
-
-		// Payment method.
-		if ( method_exists( $data, 'get_payment_method' ) ) {
-			$payment_method = $data->get_payment_method();
-		} else {
-			$payment_method = $subscription->payment_method;
-		}
-
-		$payment->config_id        = $subscription->get_config_id();
-		$payment->user_id          = $data->get_user_id();
-		$payment->source           = $data->get_source();
-		$payment->source_id        = $data->get_source_id();
-		$payment->description      = $data->get_description();
-		$payment->order_id         = $data->get_order_id();
-		$payment->email            = $data->get_email();
-		$payment->customer_name    = $data->get_customer_name();
-		$payment->address          = $data->get_address();
-		$payment->city             = $data->get_city();
-		$payment->zip              = $data->get_zip();
-		$payment->country          = $data->get_country();
-		$payment->telephone_number = $data->get_telephone_number();
-		$payment->method           = $payment_method;
-		$payment->subscription     = $subscription;
-		$payment->subscription_id  = $subscription->get_id();
-		$payment->start_date       = $start_date;
-		$payment->end_date         = $end_date;
-		$payment->recurring_type   = 'recurring';
-		$payment->recurring        = true;
-		$payment->set_amount( $data->get_amount() );
-
-		// Handle renewals.
-		if ( false === $data->get_recurring() ) {
-			$payment->recurring = false;
-			$payment->issuer    = $data->get_issuer_id();
-		}
+		$payment->start_date = $start_date;
+		$payment->end_date   = $end_date;
 
 		// Start payment.
 		$payment = Plugin::start_payment( $payment, $gateway );
@@ -364,7 +420,7 @@ class SubscriptionsModule {
 		}
 
 		if ( $can_redirect ) {
-			wp_redirect( home_url() );
+			wp_safe_redirect( home_url() );
 
 			exit;
 		}
@@ -389,6 +445,41 @@ class SubscriptionsModule {
 	}
 
 	/**
+	 * Maybe complete manual renewal subscription.
+	 *
+	 * @param Payment $payment Payment.
+	 *
+	 * @return bool
+	 */
+	public function maybe_complete_manual_renewal_subscription( Payment $payment ) {
+		/**
+		 * Check if this is a manual renewal payment.
+		 *
+		 * @see SubscriptionsModule::handle_subscription()
+		 */
+		if ( false !== $payment->get_recurring() ) {
+			return false;
+		}
+
+		$subscription = $payment->get_subscription();
+
+		// Unset the next payment date if next payment date is after the subscription end date.
+		if ( isset( $subscription->end_date, $subscription->next_payment ) && $subscription->end_date <= $subscription->next_payment ) {
+			$subscription->next_payment = null;
+		}
+
+		// Set the subscription status to `completed` if there is no next payment date.
+		if ( empty( $subscription->next_payment ) ) {
+			$subscription->status      = Statuses::COMPLETED;
+			$subscription->expiry_date = $subscription->end_date;
+
+			$subscription->save();
+
+			return true;
+		}
+	}
+
+	/**
 	 * Maybe schedule subscription payments.
 	 */
 	public function maybe_schedule_subscription_payments() {
@@ -403,6 +494,8 @@ class SubscriptionsModule {
 	 * Maybe create subscription for the specified payment.
 	 *
 	 * @param Payment $payment The new payment.
+	 *
+	 * @throws \Exception Throws an Exception on incorrect date interval.
 	 */
 	public function maybe_create_subscription( $payment ) {
 		// Check if there is already subscription attached to the payment.
@@ -420,6 +513,13 @@ class SubscriptionsModule {
 			return;
 		}
 
+		// Customer name.
+		$customer_name = null;
+
+		if ( null !== $payment->get_customer() && null !== $payment->get_customer()->get_name() ) {
+			$customer_name = strval( $payment->get_customer()->get_name() );
+		}
+
 		// New subscription.
 		$subscription = new Subscription();
 
@@ -435,14 +535,14 @@ class SubscriptionsModule {
 		$subscription->source_id       = $payment->subscription_source_id;
 		$subscription->description     = $payment->description;
 		$subscription->email           = $payment->email;
-		$subscription->customer_name   = $payment->customer_name;
+		$subscription->customer_name   = $customer_name;
 		$subscription->payment_method  = $payment->method;
 		$subscription->status          = Statuses::OPEN;
 		$subscription->set_amount( $subscription_data->get_amount() );
 
 		// @todo
 		// Calculate dates
-		// @see https://github.com/pronamic/wp-pronamic-ideal/blob/4.7.0/classes/Pronamic/WP/Pay/Plugin.php#L883-L964
+		// @link https://github.com/pronamic/wp-pronamic-ideal/blob/4.7.0/classes/Pronamic/WP/Pay/Plugin.php#L883-L964
 		$interval = $subscription->get_date_interval();
 
 		$start_date  = clone $payment->date;
@@ -455,36 +555,53 @@ class SubscriptionsModule {
 		$interval_date_day   = $subscription_data->get_interval_date_day();
 		$interval_date_month = $subscription_data->get_interval_date_month();
 
-		if ( 'W' === $subscription->interval_period && is_numeric( $interval_date_day ) ) {
-			$days_delta = $interval_date_day - $next_date->format( 'w' );
+		switch ( $subscription->interval_period ) {
+			case 'W':
+				if ( is_numeric( $interval_date_day ) ) {
+					$days_delta = $interval_date_day - $next_date->format( 'w' );
 
-			$next_date->modify( sprintf( '+%s days', $days_delta ) );
-			$next_date->setTime( 0, 0 );
-		}
+					$next_date->modify( sprintf( '+%s days', $days_delta ) );
+					$next_date->setTime( 0, 0 );
+				}
 
-		if ( 'M' === $subscription->interval_period && is_numeric( $interval_date ) ) {
-			$next_date->setDate( $next_date->format( 'Y' ), $next_date->format( 'm' ), $interval_date );
-			$next_date->setTime( 0, 0 );
-		}
+				break;
+			case 'M':
+				if ( is_numeric( $interval_date ) ) {
+					$next_date->setDate(
+						intval( $next_date->format( 'Y' ) ),
+						intval( $next_date->format( 'm' ) ),
+						intval( $interval_date )
+					);
 
-		if ( 'M' === $subscription->interval_period && 'last' === $interval_date ) {
-			$next_date->modify( 'last day of ' . $next_date->format( 'F Y' ) );
-			$next_date->setTime( 0, 0 );
-		}
+					$next_date->setTime( 0, 0 );
+				} elseif ( 'last' === $interval_date ) {
+					$next_date->modify( 'last day of ' . $next_date->format( 'F Y' ) );
+					$next_date->setTime( 0, 0 );
+				}
 
-		if ( 'Y' === $subscription->interval_period && is_numeric( $interval_date_month ) ) {
-			$next_date->setDate( $next_date->format( 'Y' ), $interval_date_month, $next_date->format( 'd' ) );
-			$next_date->setTime( 0, 0 );
+				break;
+			case 'Y':
+				if ( is_numeric( $interval_date_month ) ) {
+					$next_date->setDate(
+						intval( $next_date->format( 'Y' ) ),
+						intval( $interval_date_month ),
+						intval( $next_date->format( 'd' ) )
+					);
 
-			if ( 'last' === $interval_date ) {
-				$next_date->modify( 'last day of ' . $next_date->format( 'F Y' ) );
-			}
+					$next_date->setTime( 0, 0 );
+
+					if ( 'last' === $interval_date ) {
+						$next_date->modify( 'last day of ' . $next_date->format( 'F Y' ) );
+					}
+				}
+
+				break;
 		}
 
 		$end_date = null;
 
 		if ( $subscription_data->frequency ) {
-			// @see https://stackoverflow.com/a/10818981/6411283
+			// @link https://stackoverflow.com/a/10818981/6411283
 			$period = new DatePeriod( $start_date, $interval, $subscription_data->frequency );
 
 			$dates = iterator_to_array( $period );
@@ -519,8 +636,8 @@ class SubscriptionsModule {
 	/**
 	 * Get expiring subscriptions.
 	 *
-	 * @see https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/license-renewals.php#L715-L746
-	 * @see https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/license-renewals.php#L652-L712
+	 * @link https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/license-renewals.php#L715-L746
+	 * @link https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/license-renewals.php#L652-L712
 	 *
 	 * @param DateTime $start_date The start date of the period to check for expiring subscriptions.
 	 * @param DateTime $end_date   The end date of the period to check for expiring subscriptions.
@@ -635,9 +752,9 @@ class SubscriptionsModule {
 	/**
 	 * Send renewal notices.
 	 *
-	 * @see https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/license-renewals.php#L652-L712
-	 * @see https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/license-renewals.php#L715-L746
-	 * @see https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/classes/class-sl-emails.php#L41-L126
+	 * @link https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/license-renewals.php#L652-L712
+	 * @link https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/license-renewals.php#L715-L746
+	 * @link https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/classes/class-sl-emails.php#L41-L126
 	 */
 	public function send_subscription_renewal_notices() {
 		$interval = new DateInterval( 'P1W' ); // 1 week
@@ -685,7 +802,11 @@ class SubscriptionsModule {
 			// Update renewal notice sent date meta.
 			$renewal_sent_date = clone $start_date;
 
-			$renewal_sent_date->setTime( $expiry_date->format( 'H' ), $expiry_date->format( 'i' ), $expiry_date->format( 's' ) );
+			$renewal_sent_date->setTime(
+				intval( $expiry_date->format( 'H' ) ),
+				intval( $expiry_date->format( 'i' ) ),
+				intval( $expiry_date->format( 's' ) )
+			);
 
 			update_post_meta( $post->ID, '_pronamic_subscription_renewal_sent_1week', $renewal_sent_date->format( DateTime::MYSQL ) );
 		}

@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay;
 
 use Pronamic\WordPress\Pay\Core\Gateway;
+use Pronamic\WordPress\Pay\Core\Server;
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Payments\Payment;
 
@@ -25,7 +26,7 @@ class GoogleAnalyticsEcommerce {
 	/**
 	 * Google Analytics Measurement Protocol API endpoint URL.
 	 *
-	 * @see https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
+	 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
 	 * @var string
 	 */
 	const API_URL = 'https://www.google-analytics.com/collect';
@@ -59,7 +60,7 @@ class GoogleAnalyticsEcommerce {
 	 */
 	public function maybe_send_transaction( $payment ) {
 		// Ignore test mode payments.
-		if ( Gateway::MODE_TEST === get_post_meta( $payment->get_config_id(), '_pronamic_gateway_mode', true ) ) {
+		if ( Gateway::MODE_TEST === $payment->get_mode() ) {
 			return;
 		}
 
@@ -97,7 +98,7 @@ class GoogleAnalyticsEcommerce {
 	/**
 	 * Send transaction.
 	 *
-	 * @see https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide#ecom
+	 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide#ecom
 	 *
 	 * Parameters:
 	 * v=1              // Version.
@@ -131,20 +132,20 @@ class GoogleAnalyticsEcommerce {
 		$transaction = wp_parse_args(
 			array(
 				't'  => 'transaction',
-				'tr' => sprintf( '%F', $payment->get_amount()->get_amount() ),
+				'tr' => sprintf( '%F', $payment->get_total_amount()->get_amount() ),
 			),
 			$defaults
 		);
 
 		// Currency.
-		if ( null !== $payment->get_currency() ) {
+		if ( null !== $payment->get_total_amount()->get_currency()->get_alphabetic_code() ) {
 			/*
 			 * Currency Code
 			 * Optional.
 			 * When present indicates the local currency for all transaction currency values. Value should be a valid ISO 4217 currency code.
 			 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cu
 			 */
-			$transaction['cu'] = $payment->get_currency();
+			$transaction['cu'] = $payment->get_total_amount()->get_currency()->get_alphabetic_code();
 		}
 
 		// Shipping.
@@ -172,7 +173,7 @@ class GoogleAnalyticsEcommerce {
 		wp_remote_post(
 			self::API_URL,
 			array(
-				'user-agent' => filter_input( INPUT_SERVER, 'HTTP_USER_AGENT' ),
+				'user-agent' => Server::get( 'HTTP_USER_AGENT' ),
 				'body'       => $transaction,
 				'blocking'   => false,
 			)
@@ -241,7 +242,7 @@ class GoogleAnalyticsEcommerce {
 				wp_remote_post(
 					self::API_URL,
 					array(
-						'user-agent' => filter_input( INPUT_SERVER, 'HTTP_USER_AGENT' ),
+						'user-agent' => Server::get( 'HTTP_USER_AGENT' ),
 						'body'       => $item,
 						'blocking'   => false,
 					)

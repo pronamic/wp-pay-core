@@ -62,7 +62,7 @@ class AdminReports {
 		);
 
 		if ( false !== $hook_suffix ) {
-			// @see https://github.com/WordPress/WordPress/blob/4.2.4/wp-admin/admin-header.php#L82-L87.
+			// @link https://github.com/WordPress/WordPress/blob/4.2.4/wp-admin/admin-header.php#L82-L87.
 			add_action( 'admin_print_styles-' . $hook_suffix, array( $this, 'admin_css' ) );
 		}
 	}
@@ -295,8 +295,8 @@ class AdminReports {
 	/**
 	 * Get report.
 	 *
-	 * @see https://github.com/woothemes/woocommerce/blob/2.3.11/assets/js/admin/reports.js
-	 * @see https://github.com/woothemes/woocommerce/blob/master/includes/admin/reports/class-wc-report-sales-by-date.php
+	 * @link https://github.com/woothemes/woocommerce/blob/2.3.11/assets/js/admin/reports.js
+	 * @link https://github.com/woothemes/woocommerce/blob/master/includes/admin/reports/class-wc-report-sales-by-date.php
 	 * @param string    $status   Status.
 	 * @param string    $function Function.
 	 * @param \DateTime $start    Start date.

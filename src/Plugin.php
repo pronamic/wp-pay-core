@@ -16,9 +16,8 @@ use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Core\Recurring;
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Payments\Payment;
-use Pronamic\WordPress\Pay\Payments\PaymentDataInterface;
+use Pronamic\WordPress\Pay\Payments\PaymentData;
 use Pronamic\WordPress\Pay\Payments\PaymentLineHelper;
-use Pronamic\WordPress\Pay\Payments\PaymentLines;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Payments\StatusChecker;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
@@ -219,10 +218,10 @@ class Plugin {
 		 * $this->load();
 		 * wpsc_core_load_gateways();
 		 *
-		 * @see https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L342-L343
-		 * @see https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L26-L35
-		 * @see https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L54
-		 * @see https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L296-L297
+		 * @link https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L342-L343
+		 * @link https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L26-L35
+		 * @link https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L54
+		 * @link https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L296-L297
 		 */
 		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ), 5 );
 
@@ -275,14 +274,17 @@ class Plugin {
 			return;
 		}
 
+		// Gateway.
 		$gateway = self::get_gateway( $payment->config_id );
 
 		if ( empty( $gateway ) ) {
 			return;
 		}
 
+		// Update status.
 		$gateway->update_status( $payment );
 
+		// Add gateway errors as payment notes.
 		if ( $gateway->has_error() ) {
 			foreach ( $gateway->error->get_error_codes() as $code ) {
 				$payment->add_note( sprintf( '%s: %s', $code, $gateway->error->get_error_message( $code ) ) );
@@ -385,8 +387,8 @@ class Plugin {
 				exit;
 			}
 
-			// @see https://github.com/woothemes/woocommerce/blob/2.3.11/includes/class-wc-cache-helper.php
-			// @see https://www.w3-edge.com/products/w3-total-cache/
+			// @link https://github.com/woothemes/woocommerce/blob/2.3.11/includes/class-wc-cache-helper.php
+			// @link https://www.w3-edge.com/products/w3-total-cache/
 			if ( ! defined( 'DONOTCACHEPAGE' ) ) {
 				define( 'DONOTCACHEPAGE', true );
 			}
@@ -639,7 +641,7 @@ class Plugin {
 			case 'abnamro-internetkassa':
 				$config->form_action_url = sprintf(
 					'https://internetkassa.abnamro.nl/ncol/%s/orderstandard%s.asp',
-					'test' === $mode ? 'test' : 'prod',
+					Gateway::MODE_TEST === $mode ? 'test' : 'prod',
 					$is_utf8 ? '_utf8' : ''
 				);
 
@@ -647,7 +649,7 @@ class Plugin {
 			case 'abnamro-ideal-zelfbouw-v3':
 				$config->payment_server_url = 'https://abnamro.ideal-payment.de/ideal/iDEALv3';
 
-				if ( 'test' === $mode ) {
+				if ( Gateway::MODE_TEST === $mode ) {
 					$config->payment_server_url = 'https://abnamro-test.ideal-payment.de/ideal/iDEALv3';
 				}
 
@@ -673,7 +675,7 @@ class Plugin {
 			case 'ing-ideal-basic':
 				$config->url = 'https://ideal.secure-ing.com/ideal/mpiPayInitIng.do';
 
-				if ( 'test' === $mode ) {
+				if ( Gateway::MODE_TEST === $mode ) {
 					$config->url = 'https://idealtest.secure-ing.com/ideal/mpiPayInitIng.do';
 				}
 
@@ -681,7 +683,7 @@ class Plugin {
 			case 'ing-ideal-advanced-v3':
 				$config->payment_server_url = 'https://ideal.secure-ing.com/ideal/iDEALv3';
 
-				if ( 'test' === $mode ) {
+				if ( Gateway::MODE_TEST === $mode ) {
 					$config->payment_server_url = 'https://idealtest.secure-ing.com/ideal/iDEALv3';
 				}
 
@@ -691,7 +693,7 @@ class Plugin {
 			case 'mollie-ideal-basic':
 				$config->url = 'https://secure.mollie.nl/xml/idealAcquirer/lite/';
 
-				if ( 'test' === $mode ) {
+				if ( Gateway::MODE_TEST === $mode ) {
 					$config->url = 'https://secure.mollie.nl/xml/idealAcquirer/testmode/lite/';
 				}
 
@@ -699,7 +701,7 @@ class Plugin {
 			case 'postcode-ideal':
 				$config->payment_server_url = 'https://ideal.postcode.nl/ideal';
 
-				if ( 'test' === $mode ) {
+				if ( Gateway::MODE_TEST === $mode ) {
 					$config->payment_server_url = 'https://ideal-test.postcode.nl/ideal';
 				}
 
@@ -709,7 +711,7 @@ class Plugin {
 			case 'rabobank-ideal-professional-v3':
 				$config->payment_server_url = 'https://ideal.rabobank.nl/ideal/iDEALv3';
 
-				if ( 'test' === $mode ) {
+				if ( Gateway::MODE_TEST === $mode ) {
 					$config->payment_server_url = 'https://idealtest.rabobank.nl/ideal/iDEALv3';
 				}
 
@@ -719,7 +721,7 @@ class Plugin {
 			case 'sisow-ideal-basic':
 				$config->url = 'https://www.sisow.nl/Sisow/iDeal/IssuerHandler.ashx';
 
-				if ( 'test' === $mode ) {
+				if ( Gateway::MODE_TEST === $mode ) {
 					$config->url = 'https://www.sisow.nl/Sisow/iDeal/IssuerHandler.ashx/test';
 				}
 
@@ -734,15 +736,15 @@ class Plugin {
 	/**
 	 * Start a payment.
 	 *
-	 * @param string               $config_id      A gateway configuration ID.
-	 * @param Gateway              $gateway        The gateway to start the payment at.
-	 * @param PaymentDataInterface $data           A payment data interface object with all the required payment info.
-	 * @param string|null          $payment_method The payment method to use to start the payment.
+	 * @param string      $config_id      A gateway configuration ID.
+	 * @param Gateway     $gateway        The gateway to start the payment at.
+	 * @param PaymentData $data           A payment data interface object with all the required payment info.
+	 * @param string|null $payment_method The payment method to use to start the payment.
 	 *
 	 * @return Payment
 	 */
-	public static function start( $config_id, Gateway $gateway, PaymentDataInterface $data, $payment_method = null ) {
-		$payment = new Payments\Payment();
+	public static function start( $config_id, Gateway $gateway, PaymentData $data, $payment_method = null ) {
+		$payment = new Payment();
 
 		/* translators: %s: payment data title */
 		$payment->title                  = sprintf( __( 'Payment for %s', 'pronamic_ideal' ), $data->get_title() );
@@ -760,7 +762,7 @@ class Plugin {
 		$payment->subscription           = $data->get_subscription();
 		$payment->subscription_id        = $data->get_subscription_id();
 		$payment->subscription_source_id = $data->get_subscription_source_id();
-		$payment->set_amount( $data->get_amount() );
+		$payment->set_total_amount( $data->get_amount() );
 		$payment->set_credit_card( $data->get_credit_card() );
 
 		// Customer.
@@ -837,10 +839,25 @@ class Plugin {
 	 * @param Gateway                 $gateway      Gateway.
 	 * @param SubscriptionPaymentData $data         The subscription payment data.
 	 *
+	 * @throws \Exception Throws an Exception on incorrect date interval.
+	 *
 	 * @return Payment
 	 */
-	public static function start_recurring( Subscription $subscription, Gateway $gateway, $data = null ) {
+	public static function start_recurring( $subscription, $gateway = null, $data = null ) {
 		return pronamic_pay_plugin()->subscriptions_module->start_recurring( $subscription, $gateway, $data );
+	}
+
+	/**
+	 * Start recurring payment.
+	 *
+	 * @param Payment $payment Payment or subscription for backwards compatibility.
+	 *
+	 * @throws \Exception Throws an Exception on incorrect date interval.
+	 *
+	 * @return Payment
+	 */
+	public static function start_recurring_payment( Payment $payment ) {
+		return pronamic_pay_plugin()->subscriptions_module->start_payment( $payment );
 	}
 
 	/**
@@ -870,26 +887,8 @@ class Plugin {
 		}
 
 		// Complements.
-		$customer = $payment->get_customer();
-
-		if ( null !== $customer ) {
-			CustomerHelper::complement_customer( $customer );
-
-			if ( null === $customer->get_gender() && filter_has_var( INPUT_POST, 'pronamic_pay_gender' ) ) {
-				$gender = filter_input( INPUT_POST, 'pronamic_pay_gender', FILTER_SANITIZE_STRING );
-
-				$customer->set_gender( $gender );
-			}
-
-			if ( null === $customer->get_birth_date() && filter_has_var( INPUT_POST, 'pronamic_pay_birth_date' ) ) {
-				$birth_date_string = filter_input( INPUT_POST, 'pronamic_pay_birth_date', FILTER_SANITIZE_STRING );
-
-				$birth_date = DateTime::createFromFormat( 'Y-m-d', $birth_date_string );
-
-				if ( false !== $birth_date ) {
-					$customer->set_birth_date( $birth_date );
-				}
-			}
+		if ( null !== $payment->get_customer() ) {
+			CustomerHelper::complement_customer( $payment->get_customer() );
 		}
 
 		if ( null !== $payment->get_billing_address() ) {
@@ -947,7 +946,7 @@ class Plugin {
 		$pronamic_ideal->payments_data_store->create( $payment );
 
 		// Prevent payment start at gateway if amount is empty.
-		$amount = $payment->get_amount()->get_amount();
+		$amount = $payment->get_total_amount()->get_amount();
 
 		if ( empty( $amount ) ) {
 			$payment->set_status( Statuses::SUCCESS );
@@ -960,14 +959,14 @@ class Plugin {
 		// Gateway.
 		if ( null === $gateway ) {
 			$gateway = self::get_gateway( $payment->get_config_id() );
+		}
 
-			if ( ! $gateway ) {
-				$payment->set_status( Statuses::FAILURE );
+		if ( ! $gateway ) {
+			$payment->set_status( Statuses::FAILURE );
 
-				$payment->save();
+			$payment->save();
 
-				return $payment;
-			}
+			return $payment;
 		}
 
 		// Start payment at the gateway.

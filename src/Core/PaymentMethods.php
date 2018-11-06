@@ -74,8 +74,8 @@ class PaymentMethods {
 	/**
 	 * Bunq
 	 *
-	 * @see https://www.sisow.nl/news/00009
-	 * @see https://plugins.trac.wordpress.org/browser/sisow-for-woocommerce/tags/4.7.2/includes/classes/Sisow/Gateway/Bunq.php
+	 * @link https://www.sisow.nl/news/00009
+	 * @link https://plugins.trac.wordpress.org/browser/sisow-for-woocommerce/tags/4.7.2/includes/classes/Sisow/Gateway/Bunq.php
 	 * @since 1.3.13
 	 * @var string
 	 */
