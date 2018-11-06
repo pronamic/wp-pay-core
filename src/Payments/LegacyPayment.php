@@ -241,6 +241,8 @@ abstract class LegacyPayment {
 				return $this->get_language();
 			case 'locale':
 				return $this->get_locale();
+			case 'email':
+				return ( null === $this->get_customer() ) ? null : $this->get_customer()->get_email();
 			case 'user_agent':
 				return ( null === $this->get_customer() ) ? null : $this->get_customer()->get_user_agent();
 			case 'user_ip':
@@ -277,6 +279,7 @@ abstract class LegacyPayment {
 		$legacy_keys = array(
 			'language',
 			'locale',
+			'email',
 			'first_name',
 			'last_name',
 			'telephone_number',
@@ -296,7 +299,7 @@ abstract class LegacyPayment {
 		$address      = $this->get_billing_address();
 		$contact_name = null;
 
-		if ( in_array( $name, array( 'language', 'locale', 'first_name', 'last_name' ), true ) ) {
+		if ( in_array( $name, array( 'language', 'locale', 'email', 'first_name', 'last_name' ), true ) ) {
 			if ( null === $value && null === $customer ) {
 				return;
 			}
@@ -337,6 +340,8 @@ abstract class LegacyPayment {
 		switch ( $name ) {
 			case 'language':
 				return ( null === $customer ) ? null : $customer->set_language( $value );
+			case 'email':
+				return ( null === $customer ) ? null : $customer->set_email( $value );
 			case 'first_name':
 				return ( null === $contact_name ) ? null : $contact_name->set_first_name( $value );
 			case 'last_name':

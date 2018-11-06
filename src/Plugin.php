@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use DateTime;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Core\Recurring;
@@ -869,10 +870,26 @@ class Plugin {
 		}
 
 		// Complements.
-		if ( null !== $payment->get_customer() ) {
-			$payment->email = $payment->get_customer()->get_email();
+		$customer = $payment->get_customer();
 
-			CustomerHelper::complement_customer( $payment->get_customer() );
+		if ( null !== $customer ) {
+			CustomerHelper::complement_customer( $customer );
+
+			if ( null === $customer->get_gender() && filter_has_var( INPUT_POST, 'pronamic_pay_gender' ) ) {
+				$gender = filter_input( INPUT_POST, 'pronamic_pay_gender', FILTER_SANITIZE_STRING );
+
+				$customer->set_gender( $gender );
+			}
+
+			if ( null === $customer->get_birth_date() && filter_has_var( INPUT_POST, 'pronamic_pay_birth_date' ) ) {
+				$birth_date_string = filter_input( INPUT_POST, 'pronamic_pay_birth_date', FILTER_SANITIZE_STRING );
+
+				$birth_date = DateTime::createFromFormat( 'Y-m-d', $birth_date_string );
+
+				if ( false !== $birth_date ) {
+					$customer->set_birth_date( $birth_date );
+				}
+			}
 		}
 
 		if ( null !== $payment->get_billing_address() ) {
