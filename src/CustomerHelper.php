@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use DateTime;
 use Pronamic\WordPress\Pay\Core\Server;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
 
@@ -107,6 +108,24 @@ class CustomerHelper {
 				$ip_address = sanitize_text_field( wp_unslash( $remote_address ) );
 
 				$customer->set_ip_address( $ip_address );
+			}
+		}
+
+		// Gender.
+		if ( null === $customer->get_gender() && filter_has_var( INPUT_POST, 'pronamic_pay_gender' ) ) {
+			$gender = filter_input( INPUT_POST, 'pronamic_pay_gender', FILTER_SANITIZE_STRING );
+
+			$customer->set_gender( $gender );
+		}
+
+		// Birth date.
+		if ( null === $customer->get_birth_date() && filter_has_var( INPUT_POST, 'pronamic_pay_birth_date' ) ) {
+			$birth_date_string = filter_input( INPUT_POST, 'pronamic_pay_birth_date', FILTER_SANITIZE_STRING );
+
+			$birth_date = DateTime::createFromFormat( 'Y-m-d', $birth_date_string );
+
+			if ( false !== $birth_date ) {
+				$customer->set_birth_date( $birth_date );
 			}
 		}
 	}
