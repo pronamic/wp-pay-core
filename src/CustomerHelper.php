@@ -45,29 +45,12 @@ class CustomerHelper {
 
 				$customer->set_name( $name );
 
-				if ( isset( $data['first_name'] ) ) {
-					$name->set_first_name( $data['first_name'] );
-				}
 
-				if ( isset( $data['last_name'] ) ) {
-					$name->set_last_name( $data['last_name'] );
-				}
 			}
 		}
 
-		// Initials.
 		if ( null !== $customer->get_name() ) {
-			$name = $customer->get_name();
-
-			if ( null === $name->get_initials() ) {
-				$names = explode( ' ', trim( $name->get_first_name() . ' ' . $name->get_middle_name() ) );
-
-				$initials = array_map( function( $name ) {
-					return strtoupper( substr( $name, 0, 1 ) ) . '.';
-				}, $names );
-
-				$name->set_initials( implode( '', $initials ) );
-			}
+			ContactNameHelper::complement_name( $name );
 		}
 
 		// Locale.
@@ -142,6 +125,25 @@ class CustomerHelper {
 			if ( false !== $birth_date ) {
 				$customer->set_birth_date( $birth_date );
 			}
+		}
+	}
+
+	/**
+	 * Anonymize customer.
+	 *
+	 * @param Customer $customer Customer to anonymize.
+	 */
+	public static function anonymize_customer( Customer $customer ) {
+		$customer->set_gender( null );
+		$customer->set_birth_date( null );
+		$customer->set_email( null );
+		$customer->set_phone( null );
+		$customer->set_ip_address( null );
+
+		$name = $customer->get_name();
+
+		if ( null !== $name ) {
+			ContactNameHelper::anonymize_name( $name );
 		}
 	}
 }

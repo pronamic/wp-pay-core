@@ -27,6 +27,14 @@ class AddressHelper {
 	 * @param Address $address Address to complement.
 	 */
 	public static function complement_address( Address $address ) {
+		// Name.
+		$name =  $address->get_name();
+
+		if ( null !== $name ) {
+			ContactNameHelper::complement_name( $name );
+		}
+
+		// Address lines.
 		$line_1 = $address->get_line_1();
 
 		if ( empty( $line_1 ) ) {
@@ -59,6 +67,29 @@ class AddressHelper {
 		} catch ( Exception $e ) {
 			// On exceptions the address wil not be complemented, no problem.
 			return;
+		}
+	}
+
+	/**
+	 * Anonymize address.
+	 *
+	 * @param Address $address Address to complement.
+	 */
+	public static function anonymize_address( Address $address ) {
+		$address->set_email( null );
+		$address->set_line_1( null );
+		$address->set_line_2( null );
+		$address->set_street_name( null );
+		$address->set_house_number( null );
+		$address->set_house_number_base( null );
+		$address->set_house_number_addition( null );
+		$address->set_postal_code( null );
+		$address->set_phone( null );
+
+		$name = $address->get_name();
+
+		if ( null !== $name ) {
+			ContactNameHelper::anonymize_name( $name );
 		}
 	}
 }

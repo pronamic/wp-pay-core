@@ -111,6 +111,30 @@ class PaymentsPrivacy {
 				$export_data[] = $privacy_manager->export_meta( $meta_key, $meta_options, $payment_meta );
 			}
 
+			// Customer.
+			$customer = $payment->get_customer();
+
+			if ( null !== $customer ) {
+				CustomerHelper::anonymize_customer( $customer );
+			}
+
+			// Billing Address.
+			$address = $payment->get_billing_address();
+
+			if ( null !== $address ) {
+				AddressHelper::anonymize_address( $address );
+			}
+
+			// Shipping Address.
+			$address = $payment->get_shipping_address();
+
+			if ( null !== $address ) {
+				AddressHelper::anonymize_address( $address );
+			}
+
+			// Save.
+			$payment->save();
+
 			// Add item to export data.
 			if ( ! empty( $export_data ) ) {
 				$items[] = array(
