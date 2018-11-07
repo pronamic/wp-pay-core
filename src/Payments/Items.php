@@ -17,8 +17,9 @@ use Pronamic\WordPress\Money\Money;
 /**
  * Items
  *
- * @author  Remco Tolsma
- * @version 2.0.6
+ * @deprecated Use `PaymentLines`.
+ * @author     Remco Tolsma
+ * @version    2.0.6
  */
 class Items implements IteratorAggregate {
 	/**
@@ -48,8 +49,21 @@ class Items implements IteratorAggregate {
 	 * Add item.
 	 *
 	 * @param Item $item The item to add.
+	 *
+	 * @deprecated 2.0.8
 	 */
 	public function addItem( Item $item ) {
+		_deprecated_function( __FUNCTION__, '2.0.8', 'Pronamic\WordPress\Pay\Payments\Items::add_item()' );
+
+		$this->add_item( $item );
+	}
+
+	/**
+	 * Add item.
+	 *
+	 * @param Item $item The item to add.
+	 */
+	public function add_item( Item $item ) {
 		$this->items[] = $item;
 	}
 

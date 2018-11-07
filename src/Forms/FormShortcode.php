@@ -41,8 +41,8 @@ class FormShortcode {
 	/**
 	 * Shortcode form.
 	 *
-	 * @see https://github.com/WordImpress/Give/blob/1.1/includes/shortcodes.php#L39-L65
-	 * @see https://github.com/WordImpress/Give/blob/1.1/includes/forms/template.php#L18-L140
+	 * @link https://github.com/WordImpress/Give/blob/1.1/includes/shortcodes.php#L39-L65
+	 * @link https://github.com/WordImpress/Give/blob/1.1/includes/forms/template.php#L18-L140
 	 * @param array $atts Shortcode attributes array.
 	 * @return string
 	 */

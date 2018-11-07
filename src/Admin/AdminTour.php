@@ -30,9 +30,9 @@ class AdminTour {
 	/**
 	 * Constructs and initializes an pointers object.
 	 *
-	 * @see https://github.com/WordPress/WordPress/blob/4.2.4/wp-includes/js/wp-pointer.js
-	 * @see https://github.com/WordPress/WordPress/blob/4.2.4/wp-admin/includes/template.php#L1955-L2016
-	 * @see https://github.com/Yoast/wordpress-seo/blob/2.3.4/admin/class-pointers.php
+	 * @link https://github.com/WordPress/WordPress/blob/4.2.4/wp-includes/js/wp-pointer.js
+	 * @link https://github.com/WordPress/WordPress/blob/4.2.4/wp-admin/includes/template.php#L1955-L2016
+	 * @link https://github.com/Yoast/wordpress-seo/blob/2.3.4/admin/class-pointers.php
 	 *
 	 * @param Plugin $plugin Plugin.
 	 */
@@ -62,7 +62,7 @@ class AdminTour {
 	 * Admin enqueue scripts.
 	 */
 	public function admin_enqueue_scripts() {
-		$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		$min = SCRIPT_DEBUG ? '' : '.min';
 
 		// Pointers.
 		wp_register_style(
@@ -137,7 +137,7 @@ class AdminTour {
 			case 'toplevel_page_pronamic_ideal':
 				$pointers = array(
 					array(
-						// @see https://github.com/WordPress/WordPress/blob/4.7/wp-admin/edit.php#L321
+						// @link https://github.com/WordPress/WordPress/blob/4.7/wp-admin/edit.php#L321
 						'selector' => '.wrap .wp-header-end',
 						'options'  => (object) array(
 							'content'      => $this->get_content( 'pointer-dashboard' ),

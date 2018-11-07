@@ -27,8 +27,23 @@ class AddressHelper {
 	 * @param Address $address Address to complement.
 	 */
 	public static function complement_address( Address $address ) {
+		// Name.
+		$name = $address->get_name();
+
+		if ( null !== $name ) {
+			ContactNameHelper::complement_name( $name );
+		}
+
+		// Address lines.
+		$line_1 = $address->get_line_1();
+
+		if ( empty( $line_1 ) ) {
+			// If address line 1 is empty we can't use it to complement the address.
+			return;
+		}
+
 		try {
-			$parts = AddressSplitter::splitAddress( $address->get_line_1() );
+			$parts = AddressSplitter::splitAddress( $line_1 );
 
 			if ( null === $address->get_street_name() && array_key_exists( 'streetName', $parts ) ) {
 				$address->set_street_name( $parts['streetName'] );
@@ -41,19 +56,40 @@ class AddressHelper {
 			if ( array_key_exists( 'houseNumberParts', $parts ) ) {
 				$house_number_parts = $parts['houseNumberParts'];
 
-				if ( is_array( $house_number_parts ) ) {
-					if ( null === $address->get_house_number_base() && array_key_exists( 'base', $house_number_parts ) ) {
-						$address->set_house_number_base( $house_number_parts['base'] );
-					}
+				if ( null === $address->get_house_number_base() && array_key_exists( 'base', $house_number_parts ) && ! empty( $house_number_parts['base'] ) ) {
+					$address->set_house_number_base( $house_number_parts['base'] );
+				}
 
-					if ( null === $address->get_house_number_addition() && array_key_exists( 'extension', $house_number_parts ) ) {
-						$address->set_house_number_addition( $house_number_parts['extension'] );
-					}
+				if ( null === $address->get_house_number_addition() && array_key_exists( 'extension', $house_number_parts ) && ! empty( $house_number_parts['extension'] ) ) {
+					$address->set_house_number_addition( $house_number_parts['extension'] );
 				}
 			}
 		} catch ( Exception $e ) {
 			// On exceptions the address wil not be complemented, no problem.
 			return;
+		}
+	}
+
+	/**
+	 * Anonymize address.
+	 *
+	 * @param Address $address Address to complement.
+	 */
+	public static function anonymize_address( Address $address ) {
+		$address->set_email( PrivacyManager::anonymize_data( 'email', $address->get_email() ) );
+		$address->set_line_1( PrivacyManager::anonymize_data( 'text', $address->get_line_1() ) );
+		$address->set_line_2( PrivacyManager::anonymize_data( 'text', $address->get_line_2() ) );
+		$address->set_street_name( PrivacyManager::anonymize_data( 'text', $address->get_street_name() ) );
+		$address->set_house_number( PrivacyManager::anonymize_data( 'text', $address->get_house_number() ) );
+		$address->set_house_number_base( PrivacyManager::anonymize_data( 'text', $address->get_house_number_base() ) );
+		$address->set_house_number_addition( PrivacyManager::anonymize_data( 'text', $address->get_house_number_addition() ) );
+		$address->set_postal_code( PrivacyManager::anonymize_data( 'text', $address->get_postal_code() ) );
+		$address->set_phone( PrivacyManager::anonymize_data( 'text', $address->get_phone() ) );
+
+		$name = $address->get_name();
+
+		if ( null !== $name ) {
+			ContactNameHelper::anonymize_name( $name );
 		}
 	}
 }

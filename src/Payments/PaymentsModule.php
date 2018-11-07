@@ -38,13 +38,6 @@ class PaymentsModule {
 	public $privacy;
 
 	/**
-	 * Free payments to complete at shutdown.
-	 *
-	 * @var array
-	 */
-	public $free = array();
-
-	/**
 	 * Construct and initialize a payments module object.
 	 *
 	 * @param Plugin $plugin The plugin.

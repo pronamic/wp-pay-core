@@ -7,6 +7,12 @@
 
 	<config name="testVersion" value="5.3-99.0"/>
 
+	<file>.</file>
+
+	<arg name="colors"/>
+	<arg name="extensions" value="php" />
+    <arg value="sp" />
+
 	<exclude-pattern>includes/xmlseclibs/*</exclude-pattern>
 	<exclude-pattern>node_modules/*</exclude-pattern>
 	<exclude-pattern>tests/bootstrap.php</exclude-pattern>
@@ -14,7 +20,10 @@
 	<exclude-pattern>vendor/*</exclude-pattern>
 	<exclude-pattern>wordpress/*</exclude-pattern>
 
-	<rule ref="PHPCompatibility" />
+	<rule ref="PHPCompatibility">
+		<!-- https://github.com/WordPress/WordPress/blob/4.9.8/wp-includes/compat.php#L355-L359 -->
+		<exclude name="PHPCompatibility.Constants.NewConstants.json_pretty_printFound" />
+	</rule>
 
 	<rule ref="WordPress">
 		<exclude name="Generic.Files.LowercasedFilename.NotFound" />
@@ -28,15 +37,21 @@
 		<exclude name="WordPress.Security.SafeRedirect.wp_redirect_wp_redirect" />
 	</rule>
 
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" value="pronamic_ideal" />
+		</properties>
+	</rule>
+
 	<rule ref="Squiz.PHP.CommentedOutCode.Found">
 		<exclude-pattern>/tests/UtilTest.php</exclude-pattern>
 	</rule>
 
-	<rule ref="PHPCompatibility.PHP.NewConstants.sort_flag_caseFound">
-		<exclude-pattern>/src/Admin/GatewaySettings.php</exclude-pattern>
-	</rule>
-
 	<rule ref="WordPress.PHP.DevelopmentFunctions.error_log_trigger_error">
 		<exclude-pattern>/src/Payments/Item.php</exclude-pattern>
+	</rule>
+
+	<rule ref="WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_putenv">
+		<exclude-pattern>/tests/phpstan-bootstrap.php</exclude-pattern>
 	</rule>
 </ruleset>

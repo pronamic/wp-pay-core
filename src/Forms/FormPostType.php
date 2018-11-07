@@ -69,10 +69,10 @@ class FormPostType {
 		/**
 		 * Priotiry of the initial post types function should be set to < 10.
 		 *
-		 * @see https://core.trac.wordpress.org/ticket/28488.
-		 * @see https://core.trac.wordpress.org/changeset/29318.
+		 * @link https://core.trac.wordpress.org/ticket/28488.
+		 * @link https://core.trac.wordpress.org/changeset/29318.
 		 *
-		 * @see https://github.com/WordPress/WordPress/blob/4.0/wp-includes/post.php#L167.
+		 * @link https://github.com/WordPress/WordPress/blob/4.0/wp-includes/post.php#L167.
 		 */
 		add_action( 'init', array( $this, 'register_post_type' ), 0 ); // Highest priority.
 
@@ -82,7 +82,7 @@ class FormPostType {
 
 		/*
 		 * Add meta box, we use priority 9 to make sure it loads before Yoast SEO meta box.
-		 * @see https://github.com/Yoast/wordpress-seo/blob/2.3.4/admin/class-metabox.php#L20.
+		 * @link https://github.com/Yoast/wordpress-seo/blob/2.3.4/admin/class-metabox.php#L20.
 		 */
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 9 );
 
@@ -330,9 +330,9 @@ class FormPostType {
 			$money_parser = new MoneyParser();
 
 			foreach ( $data['_pronamic_payment_form_amount_choices'] as $i => $amount ) {
-				$amount = $money_parser->parse( $amount )->get_amount();
+				$amount = $money_parser->parse( $amount );
 
-				$data['_pronamic_payment_form_amount_choices'][ $i ] = \Pronamic\WordPress\Pay\Core\Util::amount_to_cents( $amount );
+				$data['_pronamic_payment_form_amount_choices'][ $i ] = $amount->get_cents();
 			}
 
 			// Remove empty choices.
@@ -346,7 +346,7 @@ class FormPostType {
 	/**
 	 * Get shortcode of the specified form post ID.
 	 *
-	 * @param string $post_id Post ID.
+	 * @param int|null $post_id Post ID.
 	 * @return string
 	 */
 	private function get_shortcode( $post_id = null ) {

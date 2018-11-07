@@ -116,8 +116,8 @@ class CreditCard {
 	/**
 	 * Get expiration date.
 	 *
-	 * @see http://php.net/manual/en/datetime.formats.relative.php
-	 * @see http://php.net/manual/en/datetime.setdate.php
+	 * @link http://php.net/manual/en/datetime.formats.relative.php
+	 * @link http://php.net/manual/en/datetime.setdate.php
 	 * @return \DateTime|null
 	 */
 	public function get_expiration_date() {

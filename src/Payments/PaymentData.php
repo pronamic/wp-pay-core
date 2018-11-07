@@ -123,13 +123,6 @@ abstract class PaymentData extends AbstractPaymentData {
 	 * @return string
 	 */
 	public function get_analytics_client_id() {
-		$property_id = get_option( 'pronamic_pay_google_analytics_property' );
-
-		// Only use Client ID if Analytics property has been set.
-		if ( empty( $property_id ) ) {
-			return;
-		}
-
 		return GoogleAnalyticsEcommerce::get_cookie_client_id();
 	}
 
@@ -199,7 +192,7 @@ abstract class PaymentData extends AbstractPaymentData {
 			return '';
 		}
 
-		// @see https://github.com/WordPress/WordPress/blob/3.8.1/wp-includes/pluggable.php#L1085
+		// @link https://github.com/WordPress/WordPress/blob/3.8.1/wp-includes/pluggable.php#L1085
 		// The blogname option is escaped with esc_html on the way into the database in sanitize_option
 		// we want to reverse this for the gateways.
 		$blogname = wp_specialchars_decode( $blogname, ENT_QUOTES );
@@ -219,7 +212,7 @@ abstract class PaymentData extends AbstractPaymentData {
 	/**
 	 * Get subscription ID.
 	 *
-	 * @see https://github.com/woothemes/woocommerce/blob/v2.1.3/includes/abstracts/abstract-wc-payment-gateway.php#L52
+	 * @link https://github.com/woothemes/woocommerce/blob/v2.1.3/includes/abstracts/abstract-wc-payment-gateway.php#L52
 	 * @return string
 	 */
 	public function get_subscription_id() {

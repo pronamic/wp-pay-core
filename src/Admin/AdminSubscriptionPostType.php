@@ -67,7 +67,7 @@ class AdminSubscriptionPostType {
 	/**
 	 * Filters and sorting handler.
 	 *
-	 * @see https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin-post-types.php#L1585-L1596
+	 * @link https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin-post-types.php#L1585-L1596
 	 *
 	 * @param  array $vars Request variables.
 	 * @return array
@@ -280,7 +280,7 @@ class AdminSubscriptionPostType {
 			'high'
 		);
 
-		// @see http://kovshenin.com/2012/how-to-remove-the-publish-box-from-a-post-type/.
+		// @link http://kovshenin.com/2012/how-to-remove-the-publish-box-from-a-post-type/.
 		remove_meta_box( 'submitdiv', $post_type, 'side' );
 	}
 

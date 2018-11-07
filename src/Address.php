@@ -1,6 +1,6 @@
 <?php
 /**
- * Address
+ * Address.
  *
  * @author    Pronamic <info@pronamic.eu>
  * @copyright 2005-2018 Pronamic
@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay;
 
 use InvalidArgumentException;
+use stdClass;
 
 /**
  * Address
@@ -34,36 +35,56 @@ use InvalidArgumentException;
  */
 class Address {
 	/**
-	 * Line 1.
+	 * Contact name.
 	 *
-	 * PayPal: The first line of the address. For example, number, street, and so on.
+	 * @var ContactName|null
+	 */
+	private $name;
+
+	/**
+	 * Email address.
 	 *
-	 * @link https://developer.paypal.com/docs/api/payments/v1/#definitions
+	 * @var string|null
+	 */
+	private $email;
+
+	/**
+	 * Company name.
+	 *
+	 * @var string|null
+	 */
+	private $company_name;
+
+	/**
+	 * Kamer van Koophandel number.
+	 *
+	 * @var string|null
+	 */
+	private $kvk_number;
+
+	/**
+	 * Address line 1.
 	 *
 	 * @var string|null
 	 */
 	private $line_1;
 
 	/**
-	 * Line 2.
-	 *
-	 * PayPal: The second line of the address. For example, suite or apartment number.
-	 *
-	 * @link https://developer.paypal.com/docs/api/payments/v1/#definitions
+	 * Address line 2.
 	 *
 	 * @var string|null
 	 */
 	private $line_2;
 
 	/**
-	 * Street name (exclusive house number).
+	 * Street name.
 	 *
 	 * @var string|null
 	 */
 	private $street_name;
 
 	/**
-	 * House number (including addition/extension).
+	 * House number.
 	 *
 	 * @var string|null
 	 */
@@ -77,25 +98,23 @@ class Address {
 	private $house_number_base;
 
 	/**
-	 * House number addition/extension.
+	 * House number addition.
 	 *
 	 * @var string|null
 	 */
 	private $house_number_addition;
 
 	/**
-	 * Postal code.
+	 * Postal Code.
 	 *
-	 * Alias: `postal_code`, `post_code`, `zip` or `zip_code`.
-	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $postal_code;
 
 	/**
 	 * City.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $city;
 
@@ -104,7 +123,7 @@ class Address {
 	 *
 	 * Alias: `region`, `county`, `state`, `province`, `stateOrProvince`, `stateCode`.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $region;
 
@@ -113,12 +132,98 @@ class Address {
 	 *
 	 * Alias: `country` or `country_code`.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $country_code;
 
 	/**
-	 * Get line 1.
+	 * Country name.
+	 *
+	 * @var string|null
+	 */
+	private $country_name;
+
+	/**
+	 * Phone.
+	 *
+	 * @var string|null
+	 */
+	private $phone;
+
+	/**
+	 * Get contact name.
+	 *
+	 * @return ContactName|null
+	 */
+	public function get_name() {
+		return $this->name;
+	}
+
+	/**
+	 * Set contact name.
+	 *
+	 * @param ContactName|null $name Contact name.
+	 */
+	public function set_name( ContactName $name = null ) {
+		$this->name = $name;
+	}
+
+	/**
+	 * Get email.
+	 *
+	 * @return string|null
+	 */
+	public function get_email() {
+		return $this->email;
+	}
+
+	/**
+	 * Set email.
+	 *
+	 * @param string|null $email Email.
+	 */
+	public function set_email( $email ) {
+		$this->email = $email;
+	}
+
+	/**
+	 * Get company name.
+	 *
+	 * @return string|null
+	 */
+	public function get_company_name() {
+		return $this->company_name;
+	}
+
+	/**
+	 * Set company name.
+	 *
+	 * @param string|null $company_name Company name.
+	 */
+	public function set_company_name( $company_name ) {
+		$this->company_name = $company_name;
+	}
+
+	/**
+	 * Get Kamer van Koophandel number.
+	 *
+	 * @return string|null
+	 */
+	public function get_kvk_number() {
+		return $this->kvk_number;
+	}
+
+	/**
+	 * Set Kamer van Koophandel number.
+	 *
+	 * @param string|null $kvk_number Kamer van Koophandel number.
+	 */
+	public function set_kvk_number( $kvk_number ) {
+		$this->kvk_number = $kvk_number;
+	}
+
+	/**
+	 * Get address line 1.
 	 *
 	 * @return string|null
 	 */
@@ -127,16 +232,16 @@ class Address {
 	}
 
 	/**
-	 * Set line 1.
+	 * Set address line 1.
 	 *
-	 * @param string|null $line_1 Line 1.
+	 * @param string|null $line_1 Address 1.
 	 */
 	public function set_line_1( $line_1 ) {
 		$this->line_1 = $line_1;
 	}
 
 	/**
-	 * Get line 2.
+	 * Get address line 2.
 	 *
 	 * @return string|null
 	 */
@@ -145,9 +250,9 @@ class Address {
 	}
 
 	/**
-	 * Set line 2.
+	 * Set address line 2.
 	 *
-	 * @param string|null $line_2 Line 2.
+	 * @param string|null $line_2 Address 2.
 	 */
 	public function set_line_2( $line_2 ) {
 		$this->line_2 = $line_2;
@@ -237,7 +342,7 @@ class Address {
 	/**
 	 * Set postal code.
 	 *
-	 * @param string|null $postal_code Postal code.
+	 * @param string|null $postal_code Postal Code.
 	 */
 	public function set_postal_code( $postal_code ) {
 		$this->postal_code = $postal_code;
@@ -292,7 +397,8 @@ class Address {
 	 * Set country code.
 	 *
 	 * @throws InvalidArgumentException Thrown when country code length is not equal to 2.
-	 * @param string|null $country_code Country code.
+	 *
+	 * @param string $country_code Country code.
 	 */
 	public function set_country_code( $country_code ) {
 		if ( 2 !== strlen( $country_code ) ) {
@@ -308,17 +414,121 @@ class Address {
 	}
 
 	/**
-	 * Create string representation of address.
+	 * Get country name.
+	 *
+	 * @return string|null
+	 */
+	public function get_country_name() {
+		return $this->country_name;
+	}
+
+	/**
+	 * Set country name.
+	 *
+	 * @param string|null $country_name Country name.
+	 */
+	public function set_country_name( $country_name ) {
+		$this->country_name = $country_name;
+	}
+
+	/**
+	 * Get phone.
+	 *
+	 * @return string|null
+	 */
+	public function get_phone() {
+		return $this->phone;
+	}
+
+	/**
+	 * Set phone.
+	 *
+	 * @param string|null $phone Phone.
+	 */
+	public function set_phone( $phone ) {
+		$this->phone = $phone;
+	}
+
+	/**
+	 * Get JSON.
+	 *
+	 * @return object|null
+	 */
+	public function get_json() {
+		$data = array(
+			'name'                  => ( null === $this->get_name() ) ? null : $this->get_name()->get_json(),
+			'email'                 => $this->get_email(),
+			'company_name'          => $this->get_company_name(),
+			'kvk_number'            => $this->get_kvk_number(),
+			'line_1'                => $this->get_line_1(),
+			'line_2'                => $this->get_line_2(),
+			'street_name'           => $this->get_street_name(),
+			'house_number'          => $this->get_house_number(),
+			'house_number_addition' => $this->get_house_number_addition(),
+			'postal_code'           => $this->get_postal_code(),
+			'city'                  => $this->get_city(),
+			'region'                => $this->get_region(),
+			'country_code'          => $this->get_country_code(),
+			'country_name'          => $this->get_country_name(),
+			'phone'                 => $this->get_phone(),
+		);
+
+		$data = array_filter( $data );
+
+		if ( empty( $data ) ) {
+			return null;
+		}
+
+		return (object) $data;
+	}
+
+	/**
+	 * Create address from object.
+	 *
+	 * @param mixed $json JSON.
+	 * @return Address
+	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
+	 */
+	public static function from_json( $json ) {
+		if ( ! is_object( $json ) ) {
+			throw new InvalidArgumentException( 'JSON value must be an array.' );
+		}
+
+		$address = new self();
+
+		foreach ( $json as $key => $value ) {
+			$method = sprintf( 'set_%s', $key );
+
+			if ( is_callable( array( $address, $method ) ) ) {
+				if ( 'name' === $key ) {
+					$value = ContactName::from_json( $value );
+				}
+
+				call_user_func( array( $address, $method ), $value );
+			}
+		}
+
+		return $address;
+	}
+
+	/**
+	 * Create string representation of personal name.
 	 *
 	 * @return string
 	 */
 	public function __toString() {
 		$parts = array(
+			$this->get_company_name(),
+			$this->get_name(),
 			$this->get_line_1(),
 			$this->get_line_2(),
 			$this->get_postal_code() . ' ' . $this->get_city(),
 			$this->get_country_code(),
+			$this->get_phone(),
+			$this->get_email(),
 		);
+
+		$parts = array_map( 'strval', $parts );
 
 		$parts = array_map( 'trim', $parts );
 

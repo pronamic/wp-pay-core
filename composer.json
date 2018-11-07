@@ -40,7 +40,7 @@
 	"require": {
 		"php": "^5.3",
 		"pronamic/wp-datetime": "^1.0",
-		"pronamic/wp-money": "^1.1",
+		"pronamic/wp-money": "dev-develop as 1.1",
 		"viison/address-splitter": "^0.3.2",
 		"composer/installers": "^1.6"
 	},
@@ -50,8 +50,16 @@
 		"phpunit/phpunit": "^4.5",
 		"squizlabs/php_codesniffer": "^2.7",
 		"wp-coding-standards/wpcs": "^1.1",
-		"wimg/php-compatibility": "^8.0",
+		"wimg/php-compatibility": "^9.0",
 		"wp-phpunit/wp-phpunit": "^4.9",
 		"johnpbloch/wordpress": "^4.9"
+	},
+	"scripts": {
+		"coveralls": "vendor/bin/coveralls -v",
+		"phpcbf":"vendor/bin/phpcbf", 
+		"phpcs": "vendor/bin/phpcs -s -v",
+		"phplint": "ls src/**/*.php tests/**/*.php | xargs -n 1 -P 4 php -l",
+		"phpmd": "vendor/bin/phpmd src,tests text phpmd.ruleset.xml --suffixes php",
+		"phpunit": "vendor/bin/phpunit"
 	}
 }

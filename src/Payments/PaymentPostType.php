@@ -28,10 +28,10 @@ class PaymentPostType {
 		/**
 		 * Priotiry of the initial post types function should be set to < 10
 		 *
-		 * @see https://core.trac.wordpress.org/ticket/28488
-		 * @see https://core.trac.wordpress.org/changeset/29318
+		 * @link https://core.trac.wordpress.org/ticket/28488
+		 * @link https://core.trac.wordpress.org/changeset/29318
 		 *
-		 * @see https://github.com/WordPress/WordPress/blob/4.0/wp-includes/post.php#L167
+		 * @link https://github.com/WordPress/WordPress/blob/4.0/wp-includes/post.php#L167
 		 */
 		add_action( 'init', array( $this, 'register_payment_post_type' ), 0 ); // Highest priority.
 		add_action( 'init', array( $this, 'register_post_status' ), 9 );
@@ -40,7 +40,7 @@ class PaymentPostType {
 	/**
 	 * Register post types.
 	 *
-	 * @see https://github.com/WordPress/WordPress/blob/4.6.1/wp-includes/post.php#L1277-L1300
+	 * @link https://github.com/WordPress/WordPress/blob/4.6.1/wp-includes/post.php#L1277-L1300
 	 */
 	public function register_payment_post_type() {
 		register_post_type(
@@ -87,6 +87,7 @@ class PaymentPostType {
 	public static function get_payment_states() {
 		return array(
 			'payment_pending'    => _x( 'Pending', 'Payment status', 'pronamic_ideal' ),
+			'payment_reserved'   => _x( 'Reserved', 'Payment status', 'pronamic_ideal' ),
 			'payment_processing' => _x( 'Processing', 'Payment status', 'pronamic_ideal' ),
 			'payment_on_hold'    => _x( 'On Hold', 'Payment status', 'pronamic_ideal' ),
 			'payment_completed'  => _x( 'Completed', 'Payment status', 'pronamic_ideal' ),
@@ -114,6 +115,19 @@ class PaymentPostType {
 				'show_in_admin_status_list' => true,
 				/* translators: %s: count value */
 				'label_count'               => _n_noop( 'Pending <span class="count">(%s)</span>', 'Pending <span class="count">(%s)</span>', 'pronamic_ideal' ),
+			)
+		);
+
+		register_post_status(
+			'payment_reserved',
+			array(
+				'label'                     => _x( 'Reserved', 'Payment status', 'pronamic_ideal' ),
+				'public'                    => false,
+				'exclude_from_search'       => false,
+				'show_in_admin_all_list'    => true,
+				'show_in_admin_status_list' => true,
+				/* translators: %s: count value */
+				'label_count'               => _n_noop( 'Reserved <span class="count">(%s)</span>', 'Reserved <span class="count">(%s)</span>', 'pronamic_ideal' ),
 			)
 		);
 

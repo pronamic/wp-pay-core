@@ -43,7 +43,7 @@ class FormScripts {
 	 * Register.
 	 */
 	public function register() {
-		$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		$min = SCRIPT_DEBUG ? '' : '.min';
 
 		wp_register_style(
 			'pronamic-pay-forms',
@@ -56,8 +56,8 @@ class FormScripts {
 	/**
 	 * Enqueue.
 	 *
-	 * @see https://mikejolley.com/2013/12/02/sensible-script-enqueuing-shortcodes/
-	 * @see http://wordpress.stackexchange.com/questions/165754/enqueue-scripts-styles-when-shortcode-is-present
+	 * @link https://mikejolley.com/2013/12/02/sensible-script-enqueuing-shortcodes/
+	 * @link http://wordpress.stackexchange.com/questions/165754/enqueue-scripts-styles-when-shortcode-is-present
 	 */
 	public function enqueue() {
 		if (

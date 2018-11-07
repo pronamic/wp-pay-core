@@ -57,6 +57,20 @@ class Statuses {
 	const OPEN = 'Open';
 
 	/**
+	 * Status indicator for refunded
+	 *
+	 * @var string
+	 */
+	const REFUNDED = 'Refunded';
+
+	/**
+	 * Status indicator for reserved
+	 *
+	 * @var string
+	 */
+	const RESERVED = 'Reserved';
+
+	/**
 	 * Status indicator for active
 	 *
 	 * @var string

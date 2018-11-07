@@ -4,31 +4,38 @@ sudo: false
 
 language: php
 
-php:
-- 5.4
-- 5.5
-- 5.6
-- 7.0
-- 7.1
-- 7.2
-- nightly
-- hhvm
+env:
+  global:
+    - COMPOSER_NO_INTERACTION=1
+    - WP_VERSION=*
 
-matrix:
+jobs:
+  fast_finish: true
   include:
+    - php: 7.2
+      env: WP_VERSION=4.9 COVERAGE=1 PHPCS=1
+    - php: 7.2
+      env: WP_VERSION=4.8
+    - php: 7.2
+      env: WP_VERSION=4.7
+    - php: 7.2
+      env: WP_MULTISITE=1
+    - php: 7.2
+      env: PHPMD=1
+    - php: 7.1
+    - php: 7.0
+    - php: 5.6
+    - php: 5.5
+    - php: 5.4
     - php: 5.3
       dist: precise
       env: TRAVIS_DIST_PRECISE=1
-    - php: 5.6
-      env: WP_MULTISITE=1
-    - php: 5.6
-      env: WP_VERSION=4.8
-    - php: 5.6
-      env: WP_VERSION=4.7 COVERAGE=1 GRUNT=1
-  fast_finish: true
+    - php: nightly
+    - php: hhvm
   allow_failures:
     - php: hhvm
     - php: nightly
+    - env: PHPMD=1
 
 cache:
   directories:
@@ -41,6 +48,17 @@ before_install:
   - if [ "${TRAVIS_DIST_PRECISE}" == "1" ]; then nvm install node; fi
   # Create database for PHPUnit tests.
   - mysql -e 'CREATE DATABASE wp_phpunit_tests;'
+  # Remove Xdebug for a huge performance increase:
+  - |
+    if [ -f ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini ]; then
+      phpenv config-rm xdebug.ini
+    else
+      echo "xdebug.ini does not exist"
+    fi
+  # Raise PHP memory limit to 2048MB
+  - echo 'memory_limit = 2048M' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  # Validate composer.json file.
+  - composer validate --strict
 
 install:
   # Install Grunt command line interface (https://github.com/gruntjs/grunt-cli).
@@ -52,14 +70,20 @@ install:
   # Install Composer packages.
   - composer install
   # Test on specific WordPress version.
-  - if [ "$WP_VERSION" ]; then composer require wp-phpunit/wp-phpunit:$WP_VERSION --dev; fi
-  - if [ "$WP_VERSION" ]; then composer require johnpbloch/wordpress:$WP_VERSION --dev --update-with-dependencies; fi
+  - composer require --dev --update-with-dependencies johnpbloch/wordpress:${WP_VERSION} wp-phpunit/wp-phpunit:${WP_VERSION}
+  # List available packages.
+  - composer show
 
 script:
-  - if [[ -z "$GRUNT" ]]; then grunt phpunit; fi
-  - if [[ -z "$GRUNT" ]]; then grunt phplint; fi
-  - if [[ "$GRUNT" == "1" ]]; then grunt; fi
+  # PHPLint
+  - composer run-script phplint
+  # PHPUnit
+  - composer run-script phpunit
+  # PHP_CodeSniffer
+  - if [ $PHPCS == "1" ]; then composer run-script phpcs; fi
+  # PHP Mess Detector
+  - if [ $PHPMD == "1" ]; then composer run-script phpmd; fi
 
 after_success:
-  - if [ $COVERAGE == "1" ]; then php vendor/bin/coveralls -v; fi
+  - if [ $COVERAGE == "1" ]; then composer run-script coveralls; fi
   - if [ $COVERAGE == "1" ]; then bash <(curl -s https://codecov.io/bash); fi

@@ -1,0 +1,33 @@
+{
+    "id":null,
+    "type":null,
+    "sku":null,
+    "name":null,
+    "description":null,
+    "quantity":2,
+    "unit_price_excluding_tax":{
+        "amount":100,
+        "currency":"EUR"
+    },
+    "unit_price_including_tax":{
+        "amount":121,
+        "currency":"EUR"
+    },
+    "tax_percentage":21,
+    "tax_amount":null,
+    "discount_amount":{
+        "amount":21,
+        "currency":"EUR"
+    },
+    "total_amount_excluding_tax":{
+        "amount":200,
+        "currency":"EUR"
+    },
+    "total_amount_including_tax":{
+        "amount":242,
+        "currency":"EUR"
+    },
+    "product_url":null,
+    "image_url":null,
+    "product_category":null
+}

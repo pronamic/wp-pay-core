@@ -127,7 +127,7 @@ class SubscriptionTest extends WP_UnitTestCase {
 	/**
 	 * Test getting no subscription.
 	 *
-	 * @see https://github.com/easydigitaldownloads/easy-digital-downloads/blob/2.8.18/tests/tests-payment-class.php#L70-L79
+	 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/blob/2.8.18/tests/tests-payment-class.php#L70-L79
 	 */
 	public function test_getting_no_subscription() {
 		$subscription = new Subscription();

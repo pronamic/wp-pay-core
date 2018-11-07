@@ -39,10 +39,10 @@ class Settings {
 	/**
 	 * Initialize.
 	 *
-	 * @see https://make.wordpress.org/core/2016/10/26/registering-your-settings-in-wordpress-4-7/
-	 * @see https://github.com/WordPress/WordPress/blob/4.6/wp-admin/includes/plugin.php#L1767-L1795
-	 * @see https://github.com/WordPress/WordPress/blob/4.7/wp-includes/option.php#L1849-L1925
-	 * @see https://github.com/WordPress/WordPress/blob/4.7/wp-includes/option.php#L1715-L1847
+	 * @link https://make.wordpress.org/core/2016/10/26/registering-your-settings-in-wordpress-4-7/
+	 * @link https://github.com/WordPress/WordPress/blob/4.6/wp-admin/includes/plugin.php#L1767-L1795
+	 * @link https://github.com/WordPress/WordPress/blob/4.7/wp-includes/option.php#L1849-L1925
+	 * @link https://github.com/WordPress/WordPress/blob/4.7/wp-includes/option.php#L1715-L1847
 	 */
 	public function init() {
 		register_setting(

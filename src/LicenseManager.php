@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use WP_Error;
+
 /**
  * License Manager
  *
@@ -44,8 +46,8 @@ class LicenseManager {
 	/**
 	 * Admin notices.
 	 *
-	 * @see https://github.com/WordPress/WordPress/blob/4.2.4/wp-admin/options.php#L205-L218
-	 * @see https://github.com/easydigitaldownloads/Easy-Digital-Downloads/blob/2.4.2/includes/class-edd-license-handler.php#L309-L369
+	 * @link https://github.com/WordPress/WordPress/blob/4.2.4/wp-admin/options.php#L205-L218
+	 * @link https://github.com/easydigitaldownloads/Easy-Digital-Downloads/blob/2.4.2/includes/class-edd-license-handler.php#L309-L369
 	 */
 	public function admin_notices() {
 		$data = get_transient( 'pronamic_pay_license_data' );
