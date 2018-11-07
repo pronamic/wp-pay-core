@@ -45,9 +45,12 @@ class ContactNameHelper {
 		if ( null === $name->get_initials() ) {
 			$names = explode( ' ', trim( $name->get_first_name() . ' ' . $name->get_middle_name() ) );
 
-			$initials = array_map( function( $name ) {
-				return strtoupper( substr( $name, 0, 1 ) ) . '.';
-			}, $names );
+			$initials = array_map(
+				function( $name ) {
+					return strtoupper( substr( $name, 0, 1 ) ) . '.';
+				},
+				$names
+			);
 
 			$name->set_initials( implode( '', $initials ) );
 		}
