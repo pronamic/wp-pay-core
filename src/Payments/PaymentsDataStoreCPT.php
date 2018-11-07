@@ -544,15 +544,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		// Legacy.
 		parent::read_post_meta( $payment );
-
-		// Gravity Forms country fix.
-		if ( 'gravityformsideal' === $payment->get_source() && null !== $payment->get_billing_address() ) {
-			$country_name = $payment->get_billing_address()->get_country_name();
-
-			if ( ! empty( $country_name ) && method_exists( 'GFCommon', 'get_country_code' ) ) {
-				$payment->get_billing_address()->set_country_code( \GFCommon::get_country_code( $country_name ) );
-			}
-		}
 	}
 
 	/**
