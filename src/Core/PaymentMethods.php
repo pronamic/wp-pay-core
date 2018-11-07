@@ -231,7 +231,6 @@ class PaymentMethods {
 	 * Get payment methods
 	 *
 	 * @since 1.3.0
-	 * @var string
 	 * @return array
 	 */
 	public static function get_payment_methods() {
@@ -282,7 +281,7 @@ class PaymentMethods {
 	 *
 	 * @since 1.3.0
 	 *
-	 * @param null        $method  Method to get the name for.
+	 * @param string|null $method  Method to get the name for.
 	 * @param string|null $default Default name to return if method was not found.
 	 *
 	 * @return string|null

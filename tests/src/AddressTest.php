@@ -29,7 +29,7 @@ class AddressTest extends WP_UnitTestCase {
 	/**
 	 * Name.
 	 *
-	 * @var Address
+	 * @var ContactName
 	 */
 	private $name;
 
