@@ -10,6 +10,9 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
+use Pronamic\WordPress\Pay\AddressHelper;
+use Pronamic\WordPress\Pay\CustomerHelper;
+
 /**
  * Payments Privacy class.
  *
