@@ -47,7 +47,10 @@ class CustomerHelper {
 			}
 		}
 
-		if ( null !== $customer->get_name() ) {
+		// Name.
+		$name = $customer->get_name();
+
+		if ( null !== $name ) {
 			ContactNameHelper::complement_name( $name );
 		}
 
