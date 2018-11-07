@@ -174,12 +174,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pronamic/wp-money.git",
-                "reference": "961e0d0f32041384da23b1959a4d523ce4a662f1"
+                "reference": "10c56193be499292355c8827d6ce0f4559e0680e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pronamic/wp-money/zipball/961e0d0f32041384da23b1959a4d523ce4a662f1",
-                "reference": "961e0d0f32041384da23b1959a4d523ce4a662f1",
+                "url": "https://api.github.com/repos/pronamic/wp-money/zipball/10c56193be499292355c8827d6ce0f4559e0680e",
+                "reference": "10c56193be499292355c8827d6ce0f4559e0680e",
                 "shasum": ""
             },
             "require": {
@@ -208,7 +208,7 @@
             "license": [
                 "GPL-3.0-or-later"
             ],
-            "time": "2018-10-26T09:46:52+00:00"
+            "time": "2018-11-05T15:21:08+00:00"
         },
         {
             "name": "viison/address-splitter",
