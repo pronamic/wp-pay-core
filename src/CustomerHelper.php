@@ -55,6 +55,21 @@ class CustomerHelper {
 			}
 		}
 
+		// Initials.
+		if ( null !== $customer->get_name() ) {
+			$name = $customer->get_name();
+
+			if ( null === $name->get_initials() ) {
+				$names = explode( ' ', trim( $name->get_first_name() . ' ' . $name->get_middle_name() ) );
+
+				$initials = array_map( function( $name ) {
+					return strtoupper( substr( $name, 0, 1 ) ) . '.';
+				}, $names );
+
+				$name->set_initials( implode( '', $initials ) );
+			}
+		}
+
 		// Locale.
 		if ( null === $customer->get_locale() ) {
 			$locales = array();

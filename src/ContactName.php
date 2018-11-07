@@ -24,7 +24,7 @@ class ContactName {
 	/**
 	 * Prefix.
 	 *
-	 * @var string
+	 * @var string|null
 	 *
 	 * @link https://en.wikipedia.org/wiki/Personal_name
 	 * @link https://en.wikipedia.org/wiki/Suffix_(name)
@@ -32,9 +32,18 @@ class ContactName {
 	private $prefix;
 
 	/**
+	 * Initials.
+	 *
+	 * @var string|null
+	 *
+	 * @link https://nl.wikipedia.org/wiki/Voorletter
+	 */
+	private $initials;
+
+	/**
 	 * First name.
 	 *
-	 * @var string
+	 * @var string|null
 	 *
 	 * @link https://en.wikipedia.org/wiki/Personal_name
 	 */
@@ -43,7 +52,7 @@ class ContactName {
 	/**
 	 * Middle name.
 	 *
-	 * @var string
+	 * @var string|null
 	 *
 	 * @link https://en.wikipedia.org/wiki/Middle_name
 	 * @link https://en.wikipedia.org/wiki/Tussenvoegsel
@@ -53,7 +62,7 @@ class ContactName {
 	/**
 	 * Last name.
 	 *
-	 * @var string
+	 * @var string|null
 	 *
 	 * @link https://en.wikipedia.org/wiki/Personal_name
 	 * @link https://en.wikipedia.org/wiki/Surname
@@ -63,7 +72,7 @@ class ContactName {
 	/**
 	 * Suffix.
 	 *
-	 * @var string
+	 * @var string|null
 	 *
 	 * @link https://en.wikipedia.org/wiki/Personal_name
 	 * @link https://en.wikipedia.org/wiki/Suffix_(name)
@@ -73,7 +82,7 @@ class ContactName {
 	/**
 	 * Get prefix.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_prefix() {
 		return $this->prefix;
@@ -82,16 +91,34 @@ class ContactName {
 	/**
 	 * Set prefix.
 	 *
-	 * @param string $prefix Prefix.
+	 * @param string|null $prefix Prefix.
 	 */
 	public function set_prefix( $prefix ) {
 		$this->prefix = $prefix;
 	}
 
 	/**
+	 * Get initials.
+	 *
+	 * @return string|null
+	 */
+	public function get_initials() {
+		return $this->initials;
+	}
+
+	/**
+	 * Set initials.
+	 *
+	 * @param string|null $initials Initials.
+	 */
+	public function set_initials( $initials ) {
+		$this->initials = $initials;
+	}
+
+	/**
 	 * Get first name.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_first_name() {
 		return $this->first_name;
@@ -100,7 +127,7 @@ class ContactName {
 	/**
 	 * Set first name.
 	 *
-	 * @param string $first_name First name.
+	 * @param string|null $first_name First name.
 	 */
 	public function set_first_name( $first_name ) {
 		$this->first_name = $first_name;
@@ -109,7 +136,7 @@ class ContactName {
 	/**
 	 * Get middle name.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_middle_name() {
 		return $this->middle_name;
@@ -118,7 +145,7 @@ class ContactName {
 	/**
 	 * Set middle name.
 	 *
-	 * @param string $middle_name Middle name.
+	 * @param string|null $middle_name Middle name.
 	 */
 	public function set_middle_name( $middle_name ) {
 		$this->middle_name = $middle_name;
@@ -127,7 +154,7 @@ class ContactName {
 	/**
 	 * Get last name.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_last_name() {
 		return $this->last_name;
@@ -136,7 +163,7 @@ class ContactName {
 	/**
 	 * Set last name.
 	 *
-	 * @param string $last_name Last name.
+	 * @param string|null $last_name Last name.
 	 */
 	public function set_last_name( $last_name ) {
 		$this->last_name = $last_name;
@@ -145,7 +172,7 @@ class ContactName {
 	/**
 	 * Get suffix.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_suffix() {
 		return $this->suffix;
@@ -154,7 +181,7 @@ class ContactName {
 	/**
 	 * Set suffix.
 	 *
-	 * @param string $suffix Suffix.
+	 * @param string|null $suffix Suffix.
 	 */
 	public function set_suffix( $suffix ) {
 		$this->suffix = $suffix;
@@ -168,6 +195,7 @@ class ContactName {
 	public function get_json() {
 		$data = array(
 			'prefix'      => $this->get_prefix(),
+			'initials'    => $this->get_initials(),
 			'first_name'  => $this->get_first_name(),
 			'middle_name' => $this->get_middle_name(),
 			'last_name'   => $this->get_last_name(),
@@ -199,6 +227,10 @@ class ContactName {
 
 		if ( property_exists( $json, 'prefix' ) ) {
 			$name->set_prefix( $json->prefix );
+		}
+
+		if ( property_exists( $json, 'initials' ) ) {
+			$name->set_initials( $json->initials );
 		}
 
 		if ( property_exists( $json, 'first_name' ) ) {
