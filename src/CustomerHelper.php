@@ -44,8 +44,6 @@ class CustomerHelper {
 				$name = new ContactName();
 
 				$customer->set_name( $name );
-
-
 			}
 		}
 
@@ -134,11 +132,11 @@ class CustomerHelper {
 	 * @param Customer $customer Customer to anonymize.
 	 */
 	public static function anonymize_customer( Customer $customer ) {
-		$customer->set_gender( null );
+		$customer->set_gender( PrivacyManager::anonymize_data( 'text', $customer->get_gender() ) );
 		$customer->set_birth_date( null );
-		$customer->set_email( null );
-		$customer->set_phone( null );
-		$customer->set_ip_address( null );
+		$customer->set_email( PrivacyManager::anonymize_data( 'email', $customer->get_email() ) );
+		$customer->set_phone( PrivacyManager::anonymize_data( 'text', $customer->get_phone() ) );
+		$customer->set_ip_address( PrivacyManager::anonymize_ip( $customer->get_ip_address() ) );
 
 		$name = $customer->get_name();
 

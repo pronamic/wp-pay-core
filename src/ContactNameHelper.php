@@ -23,9 +23,9 @@ use Pronamic\WordPress\Pay\Core\Util as Core_Util;
  */
 class ContactNameHelper {
 	/**
-	 * Complement customer.
+	 * Complement name.
 	 *
-	 * @param Customer $customer Customer to complement.
+	 * @param ContactName $name Contact name to complement.
 	 */
 	public static function complement_name( ContactName $name ) {
 		// Name.
@@ -56,11 +56,11 @@ class ContactNameHelper {
 	/**
 	 * Anonymize customer.
 	 *
-	 * @param Customer $customer Customer to anonymize.
+	 * @param ContactName $name Contact name to anonymize.
 	 */
-	public static function anonymize_name( Customer $customer ) {
-		$name->set_first_name( null );
-		$name->set_middle_name( null );
-		$name->set_last_name( null );
+	public static function anonymize_name( ContactName $name ) {
+		$name->set_first_name( PrivacyManager::anonymize_data( 'text', $name->get_first_name() ) );
+		$name->set_middle_name( PrivacyManager::anonymize_data( 'text', $name->get_middle_name() ) );
+		$name->set_last_name( PrivacyManager::anonymize_data( 'text', $name->get_last_name() ) );
 	}
 }

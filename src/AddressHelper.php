@@ -76,15 +76,15 @@ class AddressHelper {
 	 * @param Address $address Address to complement.
 	 */
 	public static function anonymize_address( Address $address ) {
-		$address->set_email( null );
-		$address->set_line_1( null );
-		$address->set_line_2( null );
-		$address->set_street_name( null );
-		$address->set_house_number( null );
-		$address->set_house_number_base( null );
-		$address->set_house_number_addition( null );
-		$address->set_postal_code( null );
-		$address->set_phone( null );
+		$address->set_email( PrivacyManager::anonymize_data( 'email', $address->get_email() ) );
+		$address->set_line_1( PrivacyManager::anonymize_data( 'text', $address->get_line_1() ) );
+		$address->set_line_2( PrivacyManager::anonymize_data( 'text', $address->get_line_2() ) );
+		$address->set_street_name( PrivacyManager::anonymize_data( 'text', $address->get_street_name() ) );
+		$address->set_house_number( PrivacyManager::anonymize_data( 'text', $address->get_house_number() ) );
+		$address->set_house_number_base( PrivacyManager::anonymize_data( 'text', $address->get_house_number_base() ) );
+		$address->set_house_number_addition( PrivacyManager::anonymize_data( 'text', $address->get_house_number_addition() ) );
+		$address->set_postal_code( PrivacyManager::anonymize_data( 'text', $address->get_postal_code() ) );
+		$address->set_phone( PrivacyManager::anonymize_data( 'text', $address->get_phone() ) );
 
 		$name = $address->get_name();
 

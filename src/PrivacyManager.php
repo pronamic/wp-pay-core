@@ -221,4 +221,39 @@ class PrivacyManager {
 
 		return $email;
 	}
+
+	/**
+	 * Anonymize data.
+	 *
+	 * @link https://github.com/WordPress/WordPress/blob/4.9.8/wp-includes/functions.php#L5932-L5978
+	 *
+	 * @param  string      $type The type of data to be anonymized.
+	 * @param  string|null $data Optional The data to be anonymized.
+	 * @return string|null The anonymous data for the requested type.
+	 */
+	public static function anonymize_data( $type, $data = null ) {
+		if ( null === $data ) {
+			return null;
+		}
+
+		return wp_privacy_anonymize_data( $type, $data );
+	}
+
+	/**
+	 * Anonymize IPv4 or IPv6 address.
+	 *
+	 * @link https://github.com/WordPress/WordPress/blob/4.9.8/wp-includes/functions.php#L5862-L5930
+	 *
+	 * @param  string|null $ip_addr        The IPv4 or IPv6 address to be anonymized.
+	 * @param  bool        $ipv6_fallback  Optional. Whether to return the original IPv6 address if the needed functions
+	 *                                to anonymize it are not present. Default false, return `::` (unspecified address).
+	 * @return string|null The anonymized IP address.
+	 */
+	public static function anonymize_ip( $ip_addr, $ipv6_fallback = false ) {
+		if ( null === $ip_addr ) {
+			return null;
+		}
+
+		return wp_privacy_anonymize_ip( $ip_addr, $ipv6_fallback );
+	}
 }
