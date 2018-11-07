@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
+use InvalidArgumentException;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Pay\Address;
@@ -780,7 +781,9 @@ class Payment extends LegacyPayment {
 			return delete_post_meta( $this->id, $key );
 		}
 
-		return update_post_meta( $this->id, $key, $value );
+		$result = update_post_meta( $this->id, $key, $value );
+
+		return ( false !== $result );
 	}
 
 	/**
