@@ -28,7 +28,7 @@ class AddressHelper {
 	 */
 	public static function complement_address( Address $address ) {
 		// Name.
-		$name =  $address->get_name();
+		$name = $address->get_name();
 
 		if ( null !== $name ) {
 			ContactNameHelper::complement_name( $name );
