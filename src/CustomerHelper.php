@@ -114,7 +114,9 @@ class CustomerHelper {
 		if ( null === $customer->get_gender() && filter_has_var( INPUT_POST, 'pronamic_pay_gender' ) ) {
 			$gender = filter_input( INPUT_POST, 'pronamic_pay_gender', FILTER_SANITIZE_STRING );
 
-			$customer->set_gender( $gender );
+			if ( Gender::is_valid( $gender ) ) {
+				$customer->set_gender( $gender );	
+			}
 		}
 
 		// Birth date.
