@@ -63,7 +63,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 				'post_type'     => 'pronamic_payment',
 				'post_date_gmt' => $this->get_mysql_utc_date( $payment->date ),
 				'post_title'    => $title,
-				'post_content'  => wp_json_encode( $payment->get_json() ),
+				'post_content'  => wp_slash( wp_json_encode( $payment->get_json() ) ),
 				'post_status'   => empty( $post_status ) ? 'payment_pending' : null,
 				'post_author'   => null === $payment->get_customer() ? null : $payment->get_customer()->get_user_id(),
 			),
@@ -122,7 +122,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	public function update( Payment $payment ) {
 		$data = array(
 			'ID'           => $payment->get_id(),
-			'post_content' => wp_json_encode( $payment->get_json() ),
+			'post_content' => wp_slash( wp_json_encode( $payment->get_json() ) ),
 		);
 
 		$post_status = $this->get_post_status( $payment->status );
