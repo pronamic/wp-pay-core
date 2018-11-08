@@ -264,26 +264,45 @@ class Util {
 	/**
 	 * Get remote address.
 	 *
+	 * @link https://github.com/WordPress/WordPress/blob/4.9.8/wp-admin/includes/class-wp-community-events.php#L210-L274
+	 *
 	 * @return mixed|null
 	 */
 	public static function get_remote_address() {
-		if ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
-			$ip_address = Server::get( 'HTTP_X_FORWARDED_FOR', FILTER_VALIDATE_IP );
+		// In order of preference, with the best ones for this purpose first.
+		$headers = array(
+			'HTTP_CLIENT_IP',
+			'HTTP_X_FORWARDED_FOR',
+			'HTTP_X_FORWARDED',
+			'HTTP_X_CLUSTER_CLIENT_IP',
+			'HTTP_FORWARDED_FOR',
+			'HTTP_FORWARDED',
+			'REMOTE_ADDR',
+		);
 
-			// Maybe invalid because HTTP_X_FORWARDED_FOR contains multiple IP addresses.
-			if ( false === $ip_address ) {
-				$forwarded_for = filter_var( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ), FILTER_SANITIZE_STRING ); // WPCS: input var okay.
+		foreach ( $headers as $header ) {
+			if ( isset( $_SERVER[ $header ] ) ) {
+				/*
+				 * HTTP_X_FORWARDED_FOR can contain a chain of comma-separated
+				 * addresses. The first one is the original client. It can't be
+				 * trusted for authenticity, but we don't need to for this purpose.
+				 */
+				$addresses = explode( ',', sanitize_text_field( wp_unslash( $_SERVER[ $header ] ) ) );
 
-				$ip_addresses = explode( ',', $forwarded_for );
+				$addresses = array_slice( $addresses, 0, 1 );
 
-				$ip_address = filter_var( trim( $ip_addresses[0] ), FILTER_VALIDATE_IP );
+				foreach ( $addresses as $address ) {
+					$address = trim( $address );
+
+					$address = filter_var( $address, FILTER_VALIDATE_IP );
+
+					if ( false === $address ) {
+						continue;
+					}
+
+					return $address;
+				}
 			}
-
-			return $ip_address;
-		}
-
-		if ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
-			return Server::get( 'REMOTE_ADDR', FILTER_VALIDATE_IP );
 		}
 
 		return null;
