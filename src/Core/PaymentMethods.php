@@ -64,6 +64,14 @@ class PaymentMethods {
 	const BELFIUS = 'belfius';
 
 	/**
+	 * Billink
+	 *
+	 * @since 2.0.9
+	 * @var string
+	 */
+	const BILLINK = 'billink';
+
+	/**
 	 * Bitcoin
 	 *
 	 * @since 1.3.9
@@ -240,6 +248,7 @@ class PaymentMethods {
 			self::BANCONTACT              => __( 'Bancontact', 'pronamic_ideal' ),
 			self::BANK_TRANSFER           => __( 'Bank Transfer', 'pronamic_ideal' ),
 			self::BELFIUS                 => __( 'Belfius Direct Net', 'pronamic_ideal' ),
+			self::BILLINK                 => __( 'Billink', 'pronamic_ideal' ),
 			self::BITCOIN                 => __( 'Bitcoin', 'pronamic_ideal' ),
 			self::BUNQ                    => __( 'Bunq', 'pronamic_ideal' ),
 			self::IN3                     => __( 'In3', 'pronamic_ideal' ),
