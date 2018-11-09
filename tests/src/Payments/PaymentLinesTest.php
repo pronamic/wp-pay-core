@@ -10,7 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
-use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Money\TaxedMoney;
 use WP_UnitTestCase;
 
 /**
@@ -38,7 +38,7 @@ class PaymentLinesTest extends WP_UnitTestCase {
 		$line_a->set_id( '1234' );
 		$line_a->set_description( 'Lorem ipsum dolor sit amet.' );
 		$line_a->set_quantity( 50 );
-		$line_a->set_total_amount( new Money( 39.99, 'EUR' ) );
+		$line_a->set_total_amount( new TaxedMoney( 39.99, 'EUR' ) );
 
 		$this->lines->add_line( $line_a );
 
@@ -47,7 +47,7 @@ class PaymentLinesTest extends WP_UnitTestCase {
 		$line_b->set_id( '5678' );
 		$line_b->set_description( 'Lorem ipsum dolor sit amet.' );
 		$line_b->set_quantity( 10 );
-		$line_b->set_total_amount( new Money( 25, 'EUR' ) );
+		$line_b->set_total_amount( new TaxedMoney( 25, 'EUR' ) );
 
 		$this->lines->add_line( $line_b );
 
