@@ -160,7 +160,7 @@ class GoogleAnalyticsEcommerce {
 		}
 
 		// Tax.
-		if ( $payment->get_total_amount()->get_tax_amount() > 0 ) {
+		if ( $payment->get_total_amount()->has_tax() ) {
 			/*
 			 * Transaction Tax
 			 * Optional.
