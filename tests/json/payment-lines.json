@@ -6,13 +6,9 @@
         "name":null,
         "description":"Lorem ipsum dolor sit amet.",
         "quantity":50,
-        "unit_price_excluding_tax":null,
-        "unit_price_including_tax":null,
-        "tax_percentage":null,
-        "tax_amount":null,
+        "unit_price":null,
         "discount_amount":null,
-        "total_amount_excluding_tax":null,
-        "total_amount_including_tax":{
+        "total_amount":{
             "amount":39.99,
             "currency":"EUR"
         },
@@ -27,13 +23,9 @@
         "name":null,
         "description":"Lorem ipsum dolor sit amet.",
         "quantity":10,
-        "unit_price_excluding_tax":null,
-        "unit_price_including_tax":null,
-        "tax_percentage":null,
-        "tax_amount":null,
+        "unit_price":null,
         "discount_amount":null,
-        "total_amount_excluding_tax":null,
-        "total_amount_including_tax":{
+        "total_amount":{
             "amount":25,
             "currency":"EUR"
         },
@@ -48,13 +40,9 @@
         "name":null,
         "description":null,
         "quantity":null,
-        "unit_price_excluding_tax":null,
-        "unit_price_including_tax":null,
-        "tax_percentage":null,
-        "tax_amount":null,
+        "unit_price":null,
         "discount_amount":null,
-        "total_amount_excluding_tax":null,
-        "total_amount_including_tax":null,
+        "total_amount":null,
         "product_url":null,
         "image_url":null,
         "product_category":null
@@ -66,13 +54,9 @@
         "name":null,
         "description":null,
         "quantity":null,
-        "unit_price_excluding_tax":null,
-        "unit_price_including_tax":null,
-        "tax_percentage":null,
-        "tax_amount":null,
+        "unit_price":null,
         "discount_amount":null,
-        "total_amount_excluding_tax":null,
-        "total_amount_including_tax":null,
+        "total_amount":null,
         "product_url":null,
         "image_url":null,
         "product_category":null

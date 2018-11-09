@@ -13,11 +13,13 @@ namespace Pronamic\WordPress\Pay\Payments;
 use InvalidArgumentException;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\CreditCard;
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
+use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
 use WP_Post;
 
 /**
@@ -119,18 +121,11 @@ class Payment extends LegacyPayment {
 	public $order_id;
 
 	/**
-	 * The total amount (including tax) of this payment.
+	 * The total amount of this payment.
 	 *
-	 * @var Money|null
+	 * @var TaxedMoney
 	 */
 	private $total_amount;
-
-	/**
-	 * The tax amount of this payment.
-	 *
-	 * @var Money|null
-	 */
-	private $tax_amount;
 
 	/**
 	 * The shipping amount of this payment.
@@ -356,7 +351,7 @@ class Payment extends LegacyPayment {
 		$this->date = new DateTime();
 		$this->meta = array();
 
-		$this->set_total_amount( new Money() );
+		$this->set_total_amount( new TaxedMoney() );
 		$this->set_status( Statuses::OPEN );
 
 		if ( null !== $post_id ) {
@@ -614,39 +609,21 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
-	 * Get total amount (including tax).
+	 * Get total amount.
 	 *
-	 * @return Money
+	 * @return TaxedMoney
 	 */
 	public function get_total_amount() {
 		return $this->total_amount;
 	}
 
 	/**
-	 * Set total amount (including tax).
+	 * Set total amount.
 	 *
-	 * @param Money $total_amount Total amount including tax.
+	 * @param TaxedMoney $total_amount Total amount.
 	 */
-	public function set_total_amount( Money $total_amount ) {
+	public function set_total_amount( TaxedMoney $total_amount ) {
 		$this->total_amount = $total_amount;
-	}
-
-	/**
-	 * Get the tax amount.
-	 *
-	 * @return Money|null
-	 */
-	public function get_tax_amount() {
-		return $this->tax_amount;
-	}
-
-	/**
-	 * Set the tax amount.
-	 *
-	 * @param Money|null $tax_amount Money object.
-	 */
-	public function set_tax_amount( Money $tax_amount ) {
-		$this->tax_amount = $tax_amount;
 	}
 
 	/**
@@ -1122,6 +1099,10 @@ class Payment extends LegacyPayment {
 			$payment->set_id( $json->id );
 		}
 
+		if ( isset( $json->total_amount ) ) {
+			$payment->set_total_amount( TaxedMoneyJsonTransformer::from_json( $json->total_amount ) );
+		}
+
 		if ( isset( $json->customer ) ) {
 			$payment->set_customer( Customer::from_json( $json->customer ) );
 		}
@@ -1160,6 +1141,8 @@ class Payment extends LegacyPayment {
 		if ( null !== $this->get_id() ) {
 			$object->id = $this->get_id();
 		}
+
+		$object->total_amount = TaxedMoneyJsonTransformer::to_json( $this->get_total_amount() );
 
 		if ( null !== $this->get_customer() ) {
 			$object->customer = $this->get_customer()->get_json();

@@ -12,7 +12,6 @@ namespace Pronamic\WordPress\Pay\Payments;
 
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
-use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Core\Statuses;
 
 /**
@@ -528,20 +527,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		$payment->set_version( $this->get_meta( $id, 'version' ) );
 
-		if ( null !== $payment->lines ) {
-			foreach ( $payment->lines as $line ) {
-				PaymentLineHelper::complement_payment_line( $line );
-			}
-		}
-
-		// Amount.
-		$payment->set_total_amount(
-			new Money(
-				$this->get_meta( $id, 'total_amount' ),
-				$this->get_meta( $id, 'currency' )
-			)
-		);
-
 		// Legacy.
 		parent::read_post_meta( $payment );
 	}
@@ -560,7 +545,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			'key'                     => $payment->key,
 			'order_id'                => $payment->order_id,
 			'currency'                => $payment->get_total_amount()->get_currency()->get_alphabetic_code(),
-			'total_amount'            => $payment->get_total_amount()->get_amount(),
 			'method'                  => $payment->method,
 			'issuer'                  => $payment->issuer,
 			'expiration_period'       => null,

@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Payments;
 
 use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Money\TaxedMoney;
 use WP_UnitTestCase;
 
 /**
@@ -43,12 +44,9 @@ class PaymentLineTest extends WP_UnitTestCase {
 		$line = new PaymentLine();
 
 		$line->set_quantity( 2 );
-		$line->set_unit_price_excluding_tax( new Money( 100, 'EUR' ) );
-		$line->set_unit_price_including_tax( new Money( 121, 'EUR' ) );
-		$line->set_tax_percentage( 21 );
+		$line->set_unit_price( new TaxedMoney( 121, 'EUR', null, 21 ) );
 		$line->set_discount_amount( new Money( 21, 'EUR' ) );
-		$line->set_total_amount_excluding_tax( new Money( 200, 'EUR' ) );
-		$line->set_total_amount_including_tax( new Money( 242, 'EUR' ) );
+		$line->set_total_amount( new TaxedMoney( 242, 'EUR', null, 21 ) );
 
 		// JSON.
 		$json_file = __DIR__ . '/../../json/payment-line.json';

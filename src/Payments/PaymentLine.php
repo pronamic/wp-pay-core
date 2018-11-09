@@ -12,7 +12,9 @@ namespace Pronamic\WordPress\Pay\Payments;
 
 use InvalidArgumentException;
 use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
+use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
 
 /**
  * Payment line.
@@ -66,37 +68,11 @@ class PaymentLine {
 	private $quantity;
 
 	/**
-	 * The unit price of this payment line, excluding tax.
+	 * The unit price of this payment line.
 	 *
-	 * @var Money|null
+	 * @var TaxedMoney|null
 	 */
-	private $unit_price_excluding_tax;
-
-	/**
-	 * The unit price of this payment line, including tax.
-	 *
-	 * @var Money|null
-	 */
-	private $unit_price_including_tax;
-
-	/**
-	 * Tax percentage.
-	 *
-	 * 100% = 100
-	 *  21% =  21
-	 *   6% =   6
-	 * 1.5% =   1.5
-	 *
-	 * @var float|null
-	 */
-	private $tax_percentage;
-
-	/**
-	 * The tax amount of this payment line.
-	 *
-	 * @var Money|null
-	 */
-	private $tax_amount;
+	private $unit_price;
 
 	/**
 	 * The discount amount of this payment line, no tax included.
@@ -106,18 +82,11 @@ class PaymentLine {
 	private $discount_amount;
 
 	/**
-	 * Total amount of this payment line excluding tax.
+	 * Total amount of this payment line.
 	 *
-	 * @var Money|null
+	 * @var TaxedMoney
 	 */
-	private $total_amount_excluding_tax;
-
-	/**
-	 * Total amount of this payment line including tax.
-	 *
-	 * @var Money|null
-	 */
-	private $total_amount_including_tax;
+	private $total_amount;
 
 	/**
 	 * Product URL.
@@ -139,6 +108,14 @@ class PaymentLine {
 	 * @var string|null
 	 */
 	private $product_category;
+
+	/**
+	 * Payment line constructor.
+	 */
+	public function __construct() {
+		$this->set_unit_price( new TaxedMoney() );
+		$this->set_total_amount( new TaxedMoney() );
+	}
 
 	/**
 	 * Get the id / identifier of this payment line.
@@ -249,94 +226,21 @@ class PaymentLine {
 	}
 
 	/**
-	 * Get unit price including tax.
+	 * Get unit price.
 	 *
-	 * @return Money|null
+	 * @return TaxedMoney
 	 */
 	public function get_unit_price() {
-		return $this->get_unit_price_including_tax();
+		return $this->unit_price;
 	}
 
 	/**
-	 * Get unit price excluding tax.
+	 * Set unit price.
 	 *
-	 * @return Money|null
+	 * @param TaxedMoney $price Unit price.
 	 */
-	public function get_unit_price_excluding_tax() {
-		return $this->unit_price_excluding_tax;
-	}
-
-	/**
-	 * Set unit price excluding tax.
-	 *
-	 * @param Money $price Unit price including tax.
-	 */
-	public function set_unit_price_excluding_tax( Money $price = null ) {
-		$this->unit_price_excluding_tax = $price;
-	}
-
-	/**
-	 * Get unit price including tax.
-	 *
-	 * @return Money|null
-	 */
-	public function get_unit_price_including_tax() {
-		return $this->unit_price_including_tax;
-	}
-
-	/**
-	 * Set unit price including tax.
-	 *
-	 * @param Money $price Unit price including tax.
-	 */
-	public function set_unit_price_including_tax( Money $price = null ) {
-		$this->unit_price_including_tax = $price;
-	}
-
-	/**
-	 * Get tax percentage.
-	 *
-	 * 100% = 100
-	 *  21% =  21
-	 *   6% =   6
-	 * 1.5% =   1.5
-	 *
-	 * @return float|null
-	 */
-	public function get_tax_percentage() {
-		return $this->tax_percentage;
-	}
-
-	/**
-	 * Set tax percentage.
-	 *
-	 * 100% = 100
-	 *  21% =  21
-	 *   6% =   6
-	 * 1.5% =   1.5
-	 *
-	 * @param float|null $tax_percentage Tax percentage.
-	 */
-	public function set_tax_percentage( $tax_percentage ) {
-		$this->tax_percentage = $tax_percentage;
-	}
-
-	/**
-	 * Get tax amount.
-	 *
-	 * @return Money|null
-	 */
-	public function get_tax_amount() {
-		return $this->tax_amount;
-	}
-
-	/**
-	 * Set tax amount.
-	 *
-	 * @param Money $tax_amount Tax amount.
-	 */
-	public function set_tax_amount( Money $tax_amount = null ) {
-		$this->tax_amount = $tax_amount;
+	public function set_unit_price( TaxedMoney $price = null ) {
+		$this->unit_price = $price;
 	}
 
 	/**
@@ -358,48 +262,33 @@ class PaymentLine {
 	}
 
 	/**
-	 * Get total amount including tax.
+	 * Get tax amount.
 	 *
 	 * @return Money|null
+	 */
+	public function get_tax_amount() {
+		return new Money(
+			$this->get_total_amount()->get_tax_amount(),
+			$this->get_total_amount()->get_currency()
+		);
+	}
+
+	/**
+	 * Get total amount.
+	 *
+	 * @return TaxedMoney
 	 */
 	public function get_total_amount() {
-		return $this->get_total_amount_including_tax();
+		return $this->total_amount;
 	}
 
 	/**
-	 * Get total amount excluding tax.
+	 * Set total amount.
 	 *
-	 * @return Money|null
+	 * @param TaxedMoney $total_amount Total amount.
 	 */
-	public function get_total_amount_excluding_tax() {
-		return $this->total_amount_excluding_tax;
-	}
-
-	/**
-	 * Set total amount excluding tax.
-	 *
-	 * @param Money $total_amount Total amount.
-	 */
-	public function set_total_amount_excluding_tax( Money $total_amount = null ) {
-		$this->total_amount_excluding_tax = $total_amount;
-	}
-
-	/**
-	 * Get total amount including tax.
-	 *
-	 * @return Money|null
-	 */
-	public function get_total_amount_including_tax() {
-		return $this->total_amount_including_tax;
-	}
-
-	/**
-	 * Set total amount including tax.
-	 *
-	 * @param Money $total_amount Total amount.
-	 */
-	public function set_total_amount_including_tax( Money $total_amount = null ) {
-		$this->total_amount_including_tax = $total_amount;
+	public function set_total_amount( TaxedMoney $total_amount = null ) {
+		$this->total_amount = $total_amount;
 	}
 
 	/**
@@ -495,23 +384,7 @@ class PaymentLine {
 		}
 
 		if ( isset( $json->unit_price ) ) {
-			$line->set_unit_price_including_tax( MoneyJsonTransformer::from_json( $json->unit_price ) );
-		}
-
-		if ( isset( $json->unit_price_including_tax ) ) {
-			$line->set_unit_price_including_tax( MoneyJsonTransformer::from_json( $json->unit_price_including_tax ) );
-		}
-
-		if ( isset( $json->unit_price_excluding_tax ) ) {
-			$line->set_unit_price_excluding_tax( MoneyJsonTransformer::from_json( $json->unit_price_excluding_tax ) );
-		}
-
-		if ( property_exists( $json, 'tax_percentage' ) ) {
-			$line->set_tax_percentage( $json->tax_percentage );
-		}
-
-		if ( isset( $json->tax_amount ) ) {
-			$line->set_tax_amount( MoneyJsonTransformer::from_json( $json->tax_amount ) );
+			$line->set_unit_price( TaxedMoneyJsonTransformer::from_json( $json->unit_price ) );
 		}
 
 		if ( isset( $json->discount_amount ) ) {
@@ -519,15 +392,7 @@ class PaymentLine {
 		}
 
 		if ( isset( $json->total_amount ) ) {
-			$line->set_total_amount_including_tax( MoneyJsonTransformer::from_json( $json->total_amount ) );
-		}
-
-		if ( isset( $json->total_amount_including_tax ) ) {
-			$line->set_total_amount_including_tax( MoneyJsonTransformer::from_json( $json->total_amount_including_tax ) );
-		}
-
-		if ( isset( $json->total_amount_excluding_tax ) ) {
-			$line->set_total_amount_excluding_tax( MoneyJsonTransformer::from_json( $json->total_amount_excluding_tax ) );
+			$line->set_total_amount( TaxedMoneyJsonTransformer::from_json( $json->total_amount ) );
 		}
 
 		if ( property_exists( $json, 'product_url' ) ) {
@@ -552,22 +417,18 @@ class PaymentLine {
 	 */
 	public function get_json() {
 		return (object) array(
-			'id'                         => $this->get_id(),
-			'type'                       => $this->get_type(),
-			'sku'                        => $this->get_sku(),
-			'name'                       => $this->get_name(),
-			'description'                => $this->get_description(),
-			'quantity'                   => $this->get_quantity(),
-			'unit_price_excluding_tax'   => MoneyJsonTransformer::to_json( $this->get_unit_price_excluding_tax() ),
-			'unit_price_including_tax'   => MoneyJsonTransformer::to_json( $this->get_unit_price_including_tax() ),
-			'tax_percentage'             => $this->get_tax_percentage(),
-			'tax_amount'                 => MoneyJsonTransformer::to_json( $this->get_tax_amount() ),
-			'discount_amount'            => MoneyJsonTransformer::to_json( $this->get_discount_amount() ),
-			'total_amount_excluding_tax' => MoneyJsonTransformer::to_json( $this->get_total_amount_excluding_tax() ),
-			'total_amount_including_tax' => MoneyJsonTransformer::to_json( $this->get_total_amount_including_tax() ),
-			'product_url'                => $this->get_product_url(),
-			'image_url'                  => $this->get_image_url(),
-			'product_category'           => $this->get_product_category(),
+			'id'               => $this->get_id(),
+			'type'             => $this->get_type(),
+			'sku'              => $this->get_sku(),
+			'name'             => $this->get_name(),
+			'description'      => $this->get_description(),
+			'quantity'         => $this->get_quantity(),
+			'unit_price'       => TaxedMoneyJsonTransformer::to_json( $this->get_unit_price() ),
+			'discount_amount'  => MoneyJsonTransformer::to_json( $this->get_discount_amount() ),
+			'total_amount'     => TaxedMoneyJsonTransformer::to_json( $this->get_total_amount() ),
+			'product_url'      => $this->get_product_url(),
+			'image_url'        => $this->get_image_url(),
+			'product_category' => $this->get_product_category(),
 		);
 	}
 

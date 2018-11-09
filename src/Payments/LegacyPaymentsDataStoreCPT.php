@@ -10,14 +10,11 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
-use Pronamic\WordPress\DateTime\DateTime;
-use Pronamic\WordPress\DateTime\DateTimeZone;
-use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\AbstractDataStoreCPT;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\ContactName;
-use Pronamic\WordPress\Pay\Core\Statuses;
 
 /**
  * Title: Payments data store CPT
@@ -210,7 +207,7 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 
 		if ( ! empty( $amount ) ) {
 			$payment->set_total_amount(
-				new Money(
+				new TaxedMoney(
 					$amount,
 					$payment->get_meta( 'currency' )
 				)

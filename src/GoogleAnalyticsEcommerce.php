@@ -160,14 +160,14 @@ class GoogleAnalyticsEcommerce {
 		}
 
 		// Tax.
-		if ( null !== $payment->get_tax_amount() ) {
+		if ( $payment->get_total_amount()->get_tax_amount() > 0 ) {
 			/*
 			 * Transaction Tax
 			 * Optional.
 			 * Specifies the total tax of the transaction.
 			 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#tt
 			 */
-			$transaction['tt'] = sprintf( '%F', $payment->get_tax_amount()->get_amount() );
+			$transaction['tt'] = sprintf( '%F', $payment->get_total_amount()->get_tax_amount() );
 		}
 
 		wp_remote_post(

@@ -5,13 +5,10 @@
     "name":null,
     "description":null,
     "quantity":2,
-    "unit_price_excluding_tax":{
-        "amount":100,
-        "currency":"EUR"
-    },
-    "unit_price_including_tax":{
+    "unit_price":{
         "amount":121,
-        "currency":"EUR"
+        "currency":"EUR",
+        "tax_amount":21
     },
     "tax_percentage":21,
     "tax_amount":null,
@@ -19,13 +16,10 @@
         "amount":21,
         "currency":"EUR"
     },
-    "total_amount_excluding_tax":{
-        "amount":200,
-        "currency":"EUR"
-    },
-    "total_amount_including_tax":{
+    "total_amount":{
         "amount":242,
-        "currency":"EUR"
+        "currency":"EUR",
+        "tax_amount":42
     },
     "product_url":null,
     "image_url":null,

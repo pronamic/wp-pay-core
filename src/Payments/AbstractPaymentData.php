@@ -10,7 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
-use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\CreditCard;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
@@ -104,10 +104,10 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Get amount.
 	 *
-	 * @return Money
+	 * @return TaxedMoney
 	 */
 	public function get_amount() {
-		return new Money(
+		return new TaxedMoney(
 			$this->get_items()->get_amount()->get_amount(),
 			$this->get_currency_alphabetic_code()
 		);

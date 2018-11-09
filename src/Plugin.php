@@ -17,7 +17,6 @@ use Pronamic\WordPress\Pay\Core\Recurring;
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentData;
-use Pronamic\WordPress\Pay\Payments\PaymentLineHelper;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Payments\StatusChecker;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
@@ -897,13 +896,6 @@ class Plugin {
 
 		if ( null !== $payment->get_shipping_address() ) {
 			AddressHelper::complement_address( $payment->get_shipping_address() );
-		}
-
-		// Lines.
-		if ( null !== $payment->get_lines() ) {
-			foreach ( $payment->get_lines() as $line ) {
-				PaymentLineHelper::complement_payment_line( $line );
-			}
 		}
 
 		// Version.
