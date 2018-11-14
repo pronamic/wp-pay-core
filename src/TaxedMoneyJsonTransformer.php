@@ -39,7 +39,7 @@ class TaxedMoneyJsonTransformer {
 			$object->amount = $money->get_amount();
 		}
 
-		if ( null !== $money->get_currency() ) {
+		if ( null !== $money->get_currency()->get_alphabetic_code() ) {
 			$object->currency = $money->get_currency()->get_alphabetic_code();
 		}
 
