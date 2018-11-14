@@ -624,16 +624,19 @@ class Plugin {
 	 * @return mixed
 	 */
 	public static function get_gateway( $config_id ) {
-		if ( empty( $config_id ) ) {
+		// Check if config is published.
+		if ( 'publish' !== get_post_status( $config_id ) ) {
 			return null;
 		}
 
+		// Get config.
 		$gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 		$mode       = get_post_meta( $config_id, '_pronamic_gateway_mode', true );
 		$is_utf8    = strcasecmp( get_bloginfo( 'charset' ), 'UTF-8' ) === 0;
 
 		$config = Core\ConfigProvider::get_config( $gateway_id, $config_id );
 
+		// Adjust config for specific gateways.
 		switch ( $gateway_id ) {
 			case 'abnamro-ideal-easy':
 			case 'abnamro-ideal-only-kassa':
@@ -727,6 +730,7 @@ class Plugin {
 				break;
 		}
 
+		// Create and return gateway.
 		$gateway = Core\GatewayFactory::create( $config );
 
 		return $gateway;
