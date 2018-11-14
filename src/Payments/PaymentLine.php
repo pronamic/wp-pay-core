@@ -113,7 +113,6 @@ class PaymentLine {
 	 * Payment line constructor.
 	 */
 	public function __construct() {
-		$this->set_unit_price( new TaxedMoney() );
 		$this->set_total_amount( new TaxedMoney() );
 	}
 
@@ -287,7 +286,7 @@ class PaymentLine {
 	 *
 	 * @param TaxedMoney $total_amount Total amount.
 	 */
-	public function set_total_amount( TaxedMoney $total_amount = null ) {
+	public function set_total_amount( TaxedMoney $total_amount ) {
 		$this->total_amount = $total_amount;
 	}
 
