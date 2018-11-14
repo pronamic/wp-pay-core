@@ -115,7 +115,7 @@ class CustomerHelper {
 			$gender = filter_input( INPUT_POST, 'pronamic_pay_gender', FILTER_SANITIZE_STRING );
 
 			if ( Gender::is_valid( $gender ) ) {
-				$customer->set_gender( $gender );	
+				$customer->set_gender( $gender );
 			}
 		}
 
