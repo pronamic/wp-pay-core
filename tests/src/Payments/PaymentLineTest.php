@@ -44,7 +44,7 @@ class PaymentLineTest extends WP_UnitTestCase {
 		$line = new PaymentLine();
 
 		$line->set_quantity( 2 );
-		$line->set_unit_price( new TaxedMoney( 121, 'EUR', null, 21 ) );
+		$line->set_unit_price( new TaxedMoney( 121, 'EUR', 21 ) );
 		$line->set_discount_amount( new Money( 21, 'EUR' ) );
 		$line->set_total_amount( new TaxedMoney( 242, 'EUR', null, 21 ) );
 

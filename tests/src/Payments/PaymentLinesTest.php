@@ -60,7 +60,6 @@ class PaymentLinesTest extends WP_UnitTestCase {
 		$line_d->set_id( null );
 		$line_d->set_description( null );
 		$line_d->set_quantity( null );
-		$line_d->set_total_amount( null );
 
 		$this->lines->add_line( $line_d );
 	}

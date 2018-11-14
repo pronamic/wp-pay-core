@@ -8,10 +8,9 @@
     "unit_price":{
         "amount":121,
         "currency":"EUR",
-        "tax_amount":21
+        "tax_amount":21,
+        "tax_percentage":21
     },
-    "tax_percentage":21,
-    "tax_amount":null,
     "discount_amount":{
         "amount":21,
         "currency":"EUR"
@@ -19,7 +18,8 @@
     "total_amount":{
         "amount":242,
         "currency":"EUR",
-        "tax_amount":42
+        "tax_amount":42,
+        "tax_percentage":21
     },
     "product_url":null,
     "image_url":null,

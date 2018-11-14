@@ -42,7 +42,9 @@
         "quantity":null,
         "unit_price":null,
         "discount_amount":null,
-        "total_amount":null,
+        "total_amount":{
+            "amount":0
+        },
         "product_url":null,
         "image_url":null,
         "product_category":null
@@ -56,7 +58,9 @@
         "quantity":null,
         "unit_price":null,
         "discount_amount":null,
-        "total_amount":null,
+        "total_amount":{
+            "amount":0
+        },
         "product_url":null,
         "image_url":null,
         "product_category":null
