@@ -1065,6 +1065,8 @@ class Payment extends LegacyPayment {
 	 * Set mode.
 	 *
 	 * @param string|null $mode Mode.
+	 *
+	 * @throws InvalidArgumentException Throws invalid argument exception when mode is not a string or not one of the mode constants.
 	 */
 	public function set_mode( $mode ) {
 		if ( ! is_string( $mode ) ) {
