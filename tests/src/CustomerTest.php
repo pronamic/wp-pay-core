@@ -53,6 +53,7 @@ class CustomerTest extends WP_UnitTestCase {
 		$this->customer->set_user_agent( 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.85 Safari/537.36' );
 		$this->customer->set_language( 'nl' );
 		$this->customer->set_locale( 'nl_NL' );
+		$this->customer->set_user_id( 2 );
 	}
 
 	/**
@@ -70,6 +71,7 @@ class CustomerTest extends WP_UnitTestCase {
 		$this->assertEquals( 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.85 Safari/537.36', $this->customer->get_user_agent() );
 		$this->assertEquals( 'nl', $this->customer->get_language() );
 		$this->assertEquals( 'nl_NL', $this->customer->get_locale() );
+		$this->assertEquals( 2, $this->customer->get_user_id() );
 
 		$string = '';
 
