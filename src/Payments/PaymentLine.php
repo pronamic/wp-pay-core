@@ -239,7 +239,7 @@ class PaymentLine {
 	 * @param TaxedMoney $price Unit price.
 	 */
 	public function set_unit_price( TaxedMoney $price = null ) {
-		$this->unit_price = $price;
+		$this->unit_price = ( null === $price ? null : $price );
 	}
 
 	/**
