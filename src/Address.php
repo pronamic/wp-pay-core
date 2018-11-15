@@ -56,11 +56,11 @@ class Address {
 	private $company_name;
 
 	/**
-	 * Kamer van Koophandel number.
+	 * Chamber of Commerce registration number.
 	 *
 	 * @var string|null
 	 */
-	private $kvk_number;
+	private $coc_number;
 
 	/**
 	 * Address line 1.
@@ -209,17 +209,17 @@ class Address {
 	 *
 	 * @return string|null
 	 */
-	public function get_kvk_number() {
-		return $this->kvk_number;
+	public function get_coc_number() {
+		return $this->coc_number;
 	}
 
 	/**
 	 * Set Kamer van Koophandel number.
 	 *
-	 * @param string|null $kvk_number Kamer van Koophandel number.
+	 * @param string|null $coc_number Kamer van Koophandel number.
 	 */
-	public function set_kvk_number( $kvk_number ) {
-		$this->kvk_number = $kvk_number;
+	public function set_coc_number( $coc_number ) {
+		$this->coc_number = $coc_number;
 	}
 
 	/**
@@ -459,7 +459,7 @@ class Address {
 			'name'                  => ( null === $this->get_name() ) ? null : $this->get_name()->get_json(),
 			'email'                 => $this->get_email(),
 			'company_name'          => $this->get_company_name(),
-			'kvk_number'            => $this->get_kvk_number(),
+			'coc_number'            => $this->get_coc_number(),
 			'line_1'                => $this->get_line_1(),
 			'line_2'                => $this->get_line_2(),
 			'street_name'           => $this->get_street_name(),

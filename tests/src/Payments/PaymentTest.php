@@ -246,7 +246,7 @@ class PaymentTest extends WP_UnitTestCase {
 		$address->set_name( $name );
 		$address->set_email( 'info@pronamic.nl' );
 		$address->set_company_name( 'Pronamic' );
-		$address->set_kvk_number( '01108446' );
+		$address->set_coc_number( '01108446' );
 		$address->set_line_1( 'Burgemeester Wuiteweg 39b' );
 		$address->set_line_2( '1e etage' );
 		$address->set_postal_code( '9203 KA' );

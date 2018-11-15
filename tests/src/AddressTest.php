@@ -44,7 +44,7 @@ class AddressTest extends WP_UnitTestCase {
 		$this->name->set_last_name( 'Tolsma' );
 
 		$this->address->set_company_name( 'Pronamic' );
-		$this->address->set_kvk_number( '01108446' );
+		$this->address->set_coc_number( '01108446' );
 		$this->address->set_name( $this->name );
 		$this->address->set_email( 'info@pronamic.nl' );
 		$this->address->set_line_1( 'Burgemeester Wuiteweg 39b' );
@@ -68,7 +68,7 @@ class AddressTest extends WP_UnitTestCase {
 		$this->assertInstanceOf( __NAMESPACE__ . '\Address', $this->address );
 
 		$this->assertEquals( 'Pronamic', $this->address->get_company_name() );
-		$this->assertEquals( '01108446', $this->address->get_kvk_number() );
+		$this->assertEquals( '01108446', $this->address->get_coc_number() );
 		$this->assertEquals( $this->name, $this->address->get_name() );
 		$this->assertEquals( 'info@pronamic.nl', $this->address->get_email() );
 		$this->assertEquals( 'Burgemeester Wuiteweg 39b', $this->address->get_line_1() );
