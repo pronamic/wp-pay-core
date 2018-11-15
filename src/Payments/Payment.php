@@ -15,6 +15,7 @@ use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Address;
+use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\CreditCard;
 use Pronamic\WordPress\Pay\Core\Statuses;
@@ -1066,6 +1067,14 @@ class Payment extends LegacyPayment {
 	 * @param string|null $mode Mode.
 	 */
 	public function set_mode( $mode ) {
+		if ( ! is_string( $mode ) ) {
+			throw new InvalidArgumentException( 'Mode must be a string.' );
+		}
+
+		if ( ! in_array( $mode, array( Gateway::MODE_TEST, Gateway::MODE_LIVE ), true ) ) {
+			throw new InvalidArgumentException( 'Invalid mode.' );
+		}
+
 		$this->mode = $mode;
 	}
 
