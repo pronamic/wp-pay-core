@@ -415,7 +415,7 @@ class PaymentLine {
 	 * @return object
 	 */
 	public function get_json() {
-		return (object) array(
+		$properties = array(
 			'id'               => $this->get_id(),
 			'type'             => $this->get_type(),
 			'sku'              => $this->get_sku(),
@@ -429,6 +429,10 @@ class PaymentLine {
 			'image_url'        => $this->get_image_url(),
 			'product_category' => $this->get_product_category(),
 		);
+
+		$properties = array_filter( $properties );
+
+		return (object) $properties;
 	}
 
 	/**
