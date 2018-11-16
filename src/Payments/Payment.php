@@ -19,6 +19,7 @@ use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\CreditCard;
 use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
 use WP_Post;
@@ -1112,6 +1113,10 @@ class Payment extends LegacyPayment {
 
 		if ( isset( $json->total_amount ) ) {
 			$payment->set_total_amount( TaxedMoneyJsonTransformer::from_json( $json->total_amount ) );
+		}
+
+		if ( isset( $json->shipping_amount ) ) {
+			$payment->set_shipping_amount( MoneyJsonTransformer::from_json( $json->shipping_amount ) );
 		}
 
 		if ( isset( $json->customer ) ) {
