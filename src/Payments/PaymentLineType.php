@@ -51,4 +51,33 @@ class PaymentLineType {
 	 * @var string
 	 */
 	const FEE = 'fee';
+
+	/**
+	 * Transform string to payment line type.
+	 *
+	 * @param string $type Payment line type.
+	 *
+	 * @return string
+	 */
+	public static function transform( $type ) {
+		switch ( strtolower( $type ) ) {
+			case 'digital':
+				return self::DIGITAL;
+
+			case 'discount':
+				return self::DISCOUNT;
+
+			case 'fee':
+				return self::FEE;
+
+			case 'physical':
+				return self::PHYSICAL;
+
+			case 'shipping':
+				return self::SHIPPING;
+
+			default:
+				return self::DIGITAL;
+		}
+	}
 }
