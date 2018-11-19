@@ -57,39 +57,23 @@
   "lines":[
     {
       "id":"1234",
-      "type":null,
-      "sku":null,
-      "name":null,
       "description":"Lorem ipsum dolor sit amet.",
       "quantity":50,
-      "unit_price":null,
-      "discount_amount":null,
       "total_amount":{
         "amount":39.99,
         "currency":"EUR"
-      },
-      "product_url":null,
-      "image_url":null,
-      "product_category":null
+      }
     },
     {
       "id":5678,
-      "type":null,
-      "sku":null,
-      "name":null,
       "description":"Lorem ipsum dolor sit amet.",
       "quantity":10,
-      "unit_price":null,
-      "discount_amount":null,
       "total_amount":{
         "amount":25,
         "currency":"EUR",
         "tax_amount":5.25,
         "tax_percentage":21
-      },
-      "product_url":null,
-      "image_url":null,
-      "product_category":null
+      }
     }
   ],
   "ga_tracked":true,

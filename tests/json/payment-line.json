@@ -1,9 +1,4 @@
 {
-    "id":null,
-    "type":null,
-    "sku":null,
-    "name":null,
-    "description":null,
     "quantity":2,
     "unit_price":{
         "amount":121,
@@ -20,8 +15,5 @@
         "currency":"EUR",
         "tax_amount":42,
         "tax_percentage":21
-    },
-    "product_url":null,
-    "image_url":null,
-    "product_category":null
+    }
 }
