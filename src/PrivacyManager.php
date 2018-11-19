@@ -175,7 +175,7 @@ class PrivacyManager {
 	 */
 	public static function mask_email( $email ) {
 		// Is this an email address?
-		if ( false === strpos( $email, '@' ) ) {
+		if ( ! is_string( $email ) || false === strpos( $email, '@' ) ) {
 			return $email;
 		}
 
