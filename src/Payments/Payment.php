@@ -1187,8 +1187,11 @@ class Payment extends LegacyPayment {
 			$object->id = $this->get_id();
 		}
 
-		$object->total_amount    = TaxedMoneyJsonTransformer::to_json( $this->get_total_amount() );
-		$object->shipping_amount = MoneyJsonTransformer::to_json( $this->get_shipping_amount() );
+		$object->total_amount = TaxedMoneyJsonTransformer::to_json( $this->get_total_amount() );
+
+		if ( null !== $this->get_shipping_amount() ) {
+			$object->shipping_amount = MoneyJsonTransformer::to_json( $this->get_shipping_amount() );
+		}
 
 		if ( null !== $this->get_customer() ) {
 			$object->customer = $this->get_customer()->get_json();
