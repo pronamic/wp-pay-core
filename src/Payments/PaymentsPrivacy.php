@@ -209,6 +209,9 @@ class PaymentsPrivacy {
 				AddressHelper::anonymize_address( $address );
 			}
 
+			// Set anonymized.
+			$payment->set_anonymized( true );
+
 			// Save.
 			$payment->save();
 

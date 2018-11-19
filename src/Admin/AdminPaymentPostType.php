@@ -62,6 +62,7 @@ class AdminPaymentPostType {
 		add_action( 'manage_' . self::POST_TYPE . '_posts_custom_column', array( $this, 'custom_columns' ), 10, 2 );
 
 		add_action( 'load-post.php', array( $this, 'maybe_process_payment_action' ) );
+		add_action( 'load-post.php', array( $this, 'maybe_display_anonymized_notice' ) );
 
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 
@@ -203,6 +204,36 @@ class AdminPaymentPostType {
 
 			$this->admin_notices[] = $notice;
 		}
+	}
+
+	/**
+	 * Maybe display anonymized notice.
+	 */
+	public function maybe_display_anonymized_notice() {
+		// Current user.
+		if ( ! current_user_can( 'edit_payments' ) ) {
+			return;
+		}
+
+		// Screen.
+		$screen = get_current_screen();
+
+		if ( ! ( 'post' === $screen->base && 'pronamic_payment' === $screen->post_type ) ) {
+			return;
+		}
+
+		$post_id = filter_input( INPUT_GET, 'post', FILTER_SANITIZE_NUMBER_INT );
+
+		$payment = new Payment( $post_id );
+
+		if ( ! $payment->is_anonymized() ) {
+			return;
+		}
+
+		$this->admin_notices[] = array(
+			'type'    => 'info',
+			'message' => __( 'This payment has been anonymized. Personal details are not available anymore.', 'pronamic_ideal' ),
+		);
 	}
 
 	/**

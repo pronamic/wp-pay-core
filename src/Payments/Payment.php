@@ -344,6 +344,13 @@ class Payment extends LegacyPayment {
 	private $mode;
 
 	/**
+	 * Is anonymized.
+	 *
+	 * @var bool|null
+	 */
+	private $anonymized;
+
+	/**
 	 * Construct and initialize payment object.
 	 *
 	 * @param integer $post_id A payment post ID or null.
@@ -1091,6 +1098,24 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
+	 * Is anonymized?
+	 *
+	 * @return bool
+	 */
+	public function is_anonymized() {
+		return ( true === $this->anonymized );
+	}
+
+	/**
+	 * Set anonymized.
+	 *
+	 * @param bool|null $anonymized Anonymized.
+	 */
+	public function set_anonymized( $anonymized ) {
+		$this->anonymized = $anonymized;
+	}
+
+	/**
 	 * Create payment from object.
 	 *
 	 * @param mixed        $json    JSON.
@@ -1143,6 +1168,10 @@ class Payment extends LegacyPayment {
 			$payment->set_mode( $json->mode );
 		}
 
+		if ( isset( $json->anonymized ) ) {
+			$payment->set_anonymized( $json->anonymized );
+		}
+
 		return $payment;
 	}
 
@@ -1183,6 +1212,10 @@ class Payment extends LegacyPayment {
 
 		if ( null !== $this->get_mode() ) {
 			$object->mode = $this->get_mode();
+		}
+
+		if ( $this->is_anonymized() ) {
+			$object->anonymized = $this->is_anonymized();
 		}
 
 		return $object;
