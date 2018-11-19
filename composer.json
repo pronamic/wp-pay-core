@@ -48,11 +48,13 @@
 		"php-coveralls/php-coveralls": "^1.0",
 		"phpmd/phpmd": "^2.4",
 		"phpunit/phpunit": "^4.5",
-		"squizlabs/php_codesniffer": "^2.7",
-		"wp-coding-standards/wpcs": "^1.1",
+		"squizlabs/php_codesniffer": "^2.9",
+		"wp-coding-standards/wpcs": "^1.2",
 		"wimg/php-compatibility": "^9.0",
 		"wp-phpunit/wp-phpunit": "^4.9",
-		"johnpbloch/wordpress": "^4.9"
+		"johnpbloch/wordpress": "^4.9",
+		"phpcompatibility/phpcompatibility-wp": "^2.0",
+		"dealerdirect/phpcodesniffer-composer-installer": "^0.5.0"
 	},
 	"scripts": {
 		"coveralls": "vendor/bin/coveralls -v",
