@@ -74,6 +74,57 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 	}
 
 	/**
+	 * Update subscription.
+	 *
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L113-L154
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
+	 * @param Subscription $subscription The subscription to update in this data store.
+	 */
+	public function update( $subscription ) {
+		$id = $subscription->get_id();
+
+		if ( empty( $id ) ) {
+			return false;
+		}
+
+		$data = array(
+			'ID' => $id,
+		);
+
+		$post_status = $this->get_post_status( $subscription->get_status() );
+
+		if ( ! empty( $post_status ) ) {
+			$data['post_status'] = $post_status;
+		}
+
+		$result = wp_update_post( $data, true );
+
+		if ( is_wp_error( $result ) ) {
+			return false;
+		}
+
+		$this->update_post_meta( $subscription );
+
+		return true;
+	}
+
+	/**
+	 * Save subscription.
+	 *
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L113-L154
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
+	 * @param Subscription $subscription The subscription to save in this data store.
+	 * @return boolean True if saved, false otherwise.
+	 */
+	public function save( $subscription ) {
+		$id = $subscription->get_id();
+
+		$result = empty( $id ) ? $this->create( $subscription ) : $this->update( $subscription );
+
+		return $result;
+	}
+
+	/**
 	 * Read subscription.
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L78-L111
@@ -87,29 +138,6 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		$subscription->user_id = get_post_field( 'post_author', $subscription->get_id(), 'raw' );
 
 		$this->read_post_meta( $subscription );
-	}
-
-	/**
-	 * Update subscription.
-	 *
-	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L113-L154
-	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
-	 * @param Subscription $subscription The subscription to update in this data store.
-	 */
-	public function update( $subscription ) {
-		$data = array(
-			'ID' => $subscription->get_id(),
-		);
-
-		$post_status = $this->get_post_status( $subscription->get_status() );
-
-		if ( ! empty( $post_status ) ) {
-			$data['post_status'] = $post_status;
-		}
-
-		wp_update_post( $data );
-
-		$this->update_post_meta( $subscription );
 	}
 
 	/**

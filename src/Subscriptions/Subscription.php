@@ -819,6 +819,6 @@ class Subscription {
 	 * @return void
 	 */
 	public function save() {
-		pronamic_pay_plugin()->subscriptions_data_store->update( $this );
+		pronamic_pay_plugin()->subscriptions_data_store->save( $this );
 	}
 }

@@ -84,6 +84,58 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	}
 
 	/**
+	 * Update payment.
+	 *
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L113-L154
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
+	 * @param Payment $payment The payment to update in this data store.
+	 */
+	public function update( Payment $payment ) {
+		$id = $payment->get_id();
+
+		if ( empty( $id ) ) {
+			return false;
+		}
+
+		$data = array(
+			'ID'           => $id,
+			'post_content' => wp_slash( wp_json_encode( $payment->get_json() ) ),
+		);
+
+		$post_status = $this->get_post_status( $payment->status );
+
+		if ( ! empty( $post_status ) ) {
+			$data['post_status'] = $post_status;
+		}
+
+		$result = wp_update_post( $data, true );
+
+		if ( is_wp_error( $result ) ) {
+			return false;
+		}
+
+		$this->update_post_meta( $payment );
+
+		return true;
+	}
+
+	/**
+	 * Save payment.
+	 *
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L113-L154
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
+	 * @param Payment $payment The payment to save in this data store.
+	 * @return boolean True if saved, false otherwise.
+	 */
+	public function save( $payment ) {
+		$id = $payment->get_id();
+
+		$result = empty( $id ) ? $this->create( $payment ) : $this->update( $payment );
+
+		return $result;
+	}
+
+	/**
 	 * Read payment.
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-order.php#L85-L111
@@ -109,30 +161,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		}
 
 		$this->read_post_meta( $payment );
-	}
-
-	/**
-	 * Update payment.
-	 *
-	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L113-L154
-	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
-	 * @param Payment $payment The payment to update in this data store.
-	 */
-	public function update( Payment $payment ) {
-		$data = array(
-			'ID'           => $payment->get_id(),
-			'post_content' => wp_slash( wp_json_encode( $payment->get_json() ) ),
-		);
-
-		$post_status = $this->get_post_status( $payment->status );
-
-		if ( ! empty( $post_status ) ) {
-			$data['post_status'] = $post_status;
-		}
-
-		wp_update_post( $data );
-
-		$this->update_post_meta( $payment );
 	}
 
 	/**

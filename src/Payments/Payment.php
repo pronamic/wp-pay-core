@@ -385,7 +385,7 @@ class Payment extends LegacyPayment {
 	 * @return void
 	 */
 	public function save() {
-		pronamic_pay_plugin()->payments_data_store->update( $this );
+		pronamic_pay_plugin()->payments_data_store->save( $this );
 	}
 
 	/**
