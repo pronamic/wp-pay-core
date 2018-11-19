@@ -199,7 +199,7 @@ function get_pronamic_subscription_by_meta( $meta_key, $meta_value ) {
  *
  * @param string $meta_key   The meta key to query for.
  * @param string $meta_value The Meta value to query for.
- * @return array
+ * @return Subscription[]
  */
 function get_pronamic_subscriptions_by_meta( $meta_key, $meta_value ) {
 	global $wpdb;
