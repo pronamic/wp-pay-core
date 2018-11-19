@@ -453,7 +453,7 @@ class AdminModule {
 				'tippy.js',
 				plugins_url( 'assets/tippy.js/tippy.all' . $min . '.js', $this->plugin->get_file() ),
 				array(),
-				'3.0.2',
+				'3.2.0',
 				true
 			);
 
