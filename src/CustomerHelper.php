@@ -139,8 +139,8 @@ class CustomerHelper {
 	public static function anonymize_customer( Customer $customer ) {
 		$customer->set_gender( PrivacyManager::anonymize_data( 'text', $customer->get_gender() ) );
 		$customer->set_birth_date( null );
-		$customer->set_email( PrivacyManager::anonymize_data( 'email', $customer->get_email() ) );
-		$customer->set_phone( PrivacyManager::anonymize_data( 'text', $customer->get_phone() ) );
+		$customer->set_email( PrivacyManager::anonymize_data( 'email_mask', $customer->get_email() ) );
+		$customer->set_phone( PrivacyManager::anonymize_data( 'phone', $customer->get_phone() ) );
 		$customer->set_ip_address( PrivacyManager::anonymize_ip( $customer->get_ip_address() ) );
 
 		$name = $customer->get_name();

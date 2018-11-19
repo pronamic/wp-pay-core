@@ -37,6 +37,7 @@ class PrivacyManager {
 		// Filters.
 		add_filter( 'wp_privacy_personal_data_exporters', array( $this, 'register_exporters' ), 10 );
 		add_filter( 'wp_privacy_personal_data_erasers', array( $this, 'register_erasers' ), 10 );
+		add_filter( 'wp_privacy_anonymize_data', array( $this, 'anonymize_custom_data_types' ), 10, 3 );
 	}
 
 	/**
@@ -156,7 +157,7 @@ class PrivacyManager {
 
 				// Mask email addresses.
 				if ( false !== strpos( $meta_value, '@' ) ) {
-					$meta_value = $this->mask_email( $meta_value );
+					$meta_value = self::mask_email( $meta_value );
 				}
 
 				update_post_meta( $post_id, $meta_key, $meta_value );
@@ -172,7 +173,7 @@ class PrivacyManager {
 	 *
 	 * @return string
 	 */
-	public function mask_email( $email ) {
+	public static function mask_email( $email ) {
 		// Is this an email address?
 		if ( false === strpos( $email, '@' ) ) {
 			return $email;
@@ -255,5 +256,29 @@ class PrivacyManager {
 		}
 
 		return wp_privacy_anonymize_ip( $ip_addr, $ipv6_fallback );
+	}
+
+	/**
+	 * Anonymize custom data types.
+	 *
+	 * @param string $anonymous Anonymized data.
+	 * @param string $type      Type of the data.
+	 * @param string $data      Original data.
+	 *
+	 * @return string Anonymized string.
+	 */
+	public static function anonymize_custom_data_types( $anonymous, $type, $data ) {
+		switch ( $type ) {
+			case 'email_mask':
+				$anonymous = self::mask_email( $data );
+
+				break;
+			case 'phone':
+				$anonymous = preg_replace( '/\d/u', '0', $data );
+
+				break;
+		}
+
+		return $anonymous;
 	}
 }
