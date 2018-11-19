@@ -142,6 +142,7 @@ class CustomerHelper {
 		$customer->set_email( PrivacyManager::anonymize_data( 'email_mask', $customer->get_email() ) );
 		$customer->set_phone( PrivacyManager::anonymize_data( 'phone', $customer->get_phone() ) );
 		$customer->set_ip_address( PrivacyManager::anonymize_ip( $customer->get_ip_address() ) );
+		$customer->set_user_agent( PrivacyManager::anonymize_data( $customer->get_user_agent() ) );
 
 		$name = $customer->get_name();
 
