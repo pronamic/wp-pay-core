@@ -11,8 +11,8 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DateInterval;
+use Exception;
 use Pronamic\WordPress\DateTime\DateTime;
-use Pronamic\WordPress\Money\Currency;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Core\Statuses;
@@ -390,13 +390,16 @@ class Subscription {
 	 * Get date interval.
 	 *
 	 * @link http://php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters
-	 * @return \DateInterval
-	 * @throws \Exception    Throws an Exception when the `interval_spec` cannot be parsed as an interval.
+	 * @return \DateInterval|null
 	 */
 	public function get_date_interval() {
 		$interval_spec = 'P' . $this->interval . $this->interval_period;
 
-		$interval = new DateInterval( $interval_spec );
+		try {
+			$interval = new DateInterval( $interval_spec );
+		} catch ( Exception $e ) {
+			$interval = null;
+		}
 
 		return $interval;
 	}
