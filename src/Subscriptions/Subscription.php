@@ -414,9 +414,9 @@ class Subscription {
 	}
 
 	/**
-	 * Get the currency of this subscription.
+	 * Get the currency alphabetic code of this subscription.
 	 *
-	 * @return Currency
+	 * @return string
 	 */
 	public function get_currency() {
 		return $this->get_amount()->get_currency()->get_alphabetic_code();

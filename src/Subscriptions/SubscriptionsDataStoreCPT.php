@@ -40,7 +40,10 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 	 * Create subscription.
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L47-L76
+	 *
 	 * @param Subscription $subscription Create the specified subscription in this data store.
+	 *
+	 * @return bool
 	 */
 	public function create( $subscription ) {
 		$post_status = $this->get_post_status( $subscription->get_status() );
@@ -78,7 +81,10 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L113-L154
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
+	 *
 	 * @param Subscription $subscription The subscription to update in this data store.
+	 *
+	 * @return bool
 	 */
 	public function update( $subscription ) {
 		$id = $subscription->get_id();
