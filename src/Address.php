@@ -401,7 +401,7 @@ class Address {
 	 * @param string $country_code Country code.
 	 */
 	public function set_country_code( $country_code ) {
-		if ( 2 !== strlen( $country_code ) ) {
+		if ( null !== $country_code && 2 !== strlen( $country_code ) ) {
 			throw new InvalidArgumentException(
 				sprintf(
 					'Given country code `%s` not ISO 3166-1 alpha-2 value.',
