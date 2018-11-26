@@ -682,7 +682,7 @@ class SubscriptionsModule {
 		// Check if the payment is connected to a subscription.
 		$subscription = $payment->get_subscription();
 
-		if ( empty( $subscription ) ) {
+		if ( empty( $subscription ) || null === $subscription->get_id() ) {
 			// Payment not connected to a subscription, nothing to do.
 			return;
 		}
