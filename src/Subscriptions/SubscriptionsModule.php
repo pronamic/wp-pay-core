@@ -67,7 +67,7 @@ class SubscriptionsModule {
 		// Actions.
 		add_action( 'wp_loaded', array( $this, 'handle_subscription' ) );
 
-		add_action( 'plugins_loaded', array( $this, 'maybe_schedule_subscription_payments' ), 5 );
+		add_action( 'plugins_loaded', array( $this, 'maybe_schedule_subscription_payments' ), 6 );
 
 		// Exclude subscription notes.
 		add_filter( 'comments_clauses', array( $this, 'exclude_subscription_comment_notes' ), 10, 2 );
