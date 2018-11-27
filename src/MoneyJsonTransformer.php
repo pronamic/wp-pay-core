@@ -33,7 +33,7 @@ class MoneyJsonTransformer {
 
 		$object = (object) array();
 
-		$object->value = $money->get_amount();
+		$object->value = $money->get_value();
 
 		if ( null !== $money->get_currency() ) {
 			$object->currency = $money->get_currency()->get_alphabetic_code();
@@ -57,7 +57,7 @@ class MoneyJsonTransformer {
 		$money = new Money();
 
 		if ( property_exists( $json, 'value' ) ) {
-			$money->set_amount( $json->value );
+			$money->set_value( $json->value );
 		}
 
 		if ( property_exists( $json, 'currency' ) ) {
