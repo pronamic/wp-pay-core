@@ -524,9 +524,12 @@ class SubscriptionsModule {
 		$subscription = new Subscription();
 
 		$subscription->config_id = $payment->config_id;
-		$subscription->user_id   = $payment->user_id;
-		/* translators: %s: payment title */
-		$subscription->title           = sprintf( __( 'Subscription for %s', 'pronamic_ideal' ), $payment->title );
+		$subscription->user_id   = ( null !== $payment->get_customer() ? $payment->get_customer()->get_user_id() : null );
+		$subscription->title     = sprintf(
+			/* translators: %s: payment title */
+			__( 'Subscription for %s', 'pronamic_ideal' ),
+			$payment->title
+		);
 		$subscription->frequency       = $subscription_data->get_frequency();
 		$subscription->interval        = $subscription_data->get_interval();
 		$subscription->interval_period = $subscription_data->get_interval_period();
