@@ -174,28 +174,31 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pronamic/wp-money.git",
-                "reference": "35d7b68569e9b3be13071cd5dae9c9b90349415e"
+                "reference": "dc7f10947d64c0b1b3ba5c60a14fcc891dd0647f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pronamic/wp-money/zipball/35d7b68569e9b3be13071cd5dae9c9b90349415e",
-                "reference": "35d7b68569e9b3be13071cd5dae9c9b90349415e",
+                "url": "https://api.github.com/repos/pronamic/wp-money/zipball/dc7f10947d64c0b1b3ba5c60a14fcc891dd0647f",
+                "reference": "dc7f10947d64c0b1b3ba5c60a14fcc891dd0647f",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3"
             },
             "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^0.5.0",
                 "johnpbloch/wordpress": "^4.9",
                 "koodimonni-language/de_de": "*",
                 "koodimonni-language/fr_fr": "*",
                 "koodimonni-language/nl_nl": "*",
                 "php-coveralls/php-coveralls": "^1.1",
+                "phpcompatibility/phpcompatibility-wp": "^2.0",
                 "phpmd/phpmd": "^2.4",
                 "phpunit/phpunit": "^4.8",
+                "squizlabs/php_codesniffer": "^2.9",
                 "vlucas/phpdotenv": "^2.0",
                 "wimg/php-compatibility": "^8.1",
-                "wp-coding-standards/wpcs": "^1.0",
+                "wp-coding-standards/wpcs": "^1.2",
                 "wp-phpunit/wp-phpunit": "^4.9"
             },
             "type": "library",
@@ -208,7 +211,7 @@
             "license": [
                 "GPL-3.0-or-later"
             ],
-            "time": "2018-11-14T15:34:53+00:00"
+            "time": "2018-11-27T19:21:13+00:00"
         },
         {
             "name": "viison/address-splitter",
