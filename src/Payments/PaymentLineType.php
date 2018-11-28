@@ -53,6 +53,13 @@ class PaymentLineType {
 	const FEE = 'fee';
 
 	/**
+	 * Constant for 'tax' type.
+	 *
+	 * @var string
+	 */
+	const TAX = 'tax';
+
+	/**
 	 * Transform string to payment line type.
 	 *
 	 * @param string $type Payment line type.
