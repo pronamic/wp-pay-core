@@ -167,7 +167,7 @@ class GoogleAnalyticsEcommerce {
 			 * Specifies the total tax of the transaction.
 			 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#tt
 			 */
-			$transaction['tt'] = sprintf( '%F', $payment->get_total_amount()->get_tax_amount() );
+			$transaction['tt'] = sprintf( '%F', $payment->get_total_amount()->get_tax_value() );
 		}
 
 		wp_remote_post(

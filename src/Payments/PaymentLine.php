@@ -267,7 +267,7 @@ class PaymentLine {
 	 */
 	public function get_tax_amount() {
 		return new Money(
-			$this->get_total_amount()->get_tax_amount(),
+			$this->get_total_amount()->get_tax_value(),
 			$this->get_total_amount()->get_currency()
 		);
 	}
