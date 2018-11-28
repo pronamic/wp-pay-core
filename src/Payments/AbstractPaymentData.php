@@ -108,7 +108,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	 */
 	public function get_amount() {
 		return new TaxedMoney(
-			$this->get_items()->get_amount()->get_amount(),
+			$this->get_items()->get_amount()->get_value(),
 			$this->get_currency_alphabetic_code()
 		);
 	}

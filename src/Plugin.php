@@ -947,7 +947,7 @@ class Plugin {
 		$pronamic_ideal->payments_data_store->create( $payment );
 
 		// Prevent payment start at gateway if amount is empty.
-		$amount = $payment->get_total_amount()->get_amount();
+		$amount = $payment->get_total_amount()->get_value();
 
 		if ( empty( $amount ) ) {
 			$payment->set_status( Statuses::SUCCESS );

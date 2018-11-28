@@ -148,7 +148,7 @@ class Util {
 
 		$money_parser = new MoneyParser();
 
-		$amount = $money_parser->parse( $value )->get_amount();
+		$amount = $money_parser->parse( $value )->get_value();
 
 		return $amount;
 	}

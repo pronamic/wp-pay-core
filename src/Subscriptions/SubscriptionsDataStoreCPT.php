@@ -416,7 +416,7 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		$this->update_meta( $id, 'interval', $subscription->interval );
 		$this->update_meta( $id, 'interval_period', $subscription->interval_period );
 		$this->update_meta( $id, 'currency', $subscription->get_currency() );
-		$this->update_meta( $id, 'amount', $subscription->get_amount()->get_amount() );
+		$this->update_meta( $id, 'amount', $subscription->get_amount()->get_value() );
 		$this->update_meta( $id, 'transaction_id', $subscription->transaction_id );
 		$this->update_meta( $id, 'description', $subscription->description );
 		$this->update_meta( $id, 'email', $subscription->email );

@@ -807,7 +807,7 @@ class Payment extends LegacyPayment {
 	public function get_action_url() {
 		$action_url = $this->action_url;
 
-		$amount = $this->get_total_amount()->get_amount();
+		$amount = $this->get_total_amount()->get_value();
 
 		if ( empty( $amount ) ) {
 			$status = $this->get_status();

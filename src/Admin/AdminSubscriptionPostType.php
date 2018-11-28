@@ -457,7 +457,7 @@ class AdminSubscriptionPostType {
 			if ( 'amount' === $meta ) {
 				$money_parser = new MoneyParser();
 
-				$meta_value = $money_parser->parse( $meta_value )->get_amount();
+				$meta_value = $money_parser->parse( $meta_value )->get_value();
 			}
 
 			$update_meta[ $meta ] = $meta_value;

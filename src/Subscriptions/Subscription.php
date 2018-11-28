@@ -788,7 +788,7 @@ class Subscription {
 			if ( 'amount' === $key ) {
 				$money_parser = new MoneyParser();
 
-				$current_value = $money_parser->parse( $current_value )->get_amount();
+				$current_value = $money_parser->parse( $current_value )->get_value();
 			}
 
 			if ( $current_value === $value ) {

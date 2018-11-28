@@ -500,7 +500,7 @@ class AdminModule {
 
 				$money_parser = new MoneyParser();
 
-				$amount = $money_parser->parse( $string )->get_amount();
+				$amount = $money_parser->parse( $string )->get_value();
 
 				$data = new \Pronamic\WordPress\Pay\Payments\PaymentTestData( wp_get_current_user(), $amount );
 

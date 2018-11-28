@@ -107,7 +107,7 @@ class SubscriptionPaymentData extends PaymentData {
 		$item = new Item();
 		$item->set_number( $this->get_order_id() );
 		$item->set_description( $this->get_description() );
-		$item->set_price( $this->subscription->get_amount()->get_amount() );
+		$item->set_price( $this->subscription->get_amount()->get_value() );
 		$item->set_quantity( 1 );
 
 		$items->add_item( $item );

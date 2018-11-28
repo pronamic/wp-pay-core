@@ -132,7 +132,7 @@ class GoogleAnalyticsEcommerce {
 		$transaction = wp_parse_args(
 			array(
 				't'  => 'transaction',
-				'tr' => sprintf( '%F', $payment->get_total_amount()->get_amount() ),
+				'tr' => sprintf( '%F', $payment->get_total_amount()->get_value() ),
 			),
 			$defaults
 		);
@@ -156,7 +156,7 @@ class GoogleAnalyticsEcommerce {
 			 * Specifies the total shipping cost of the transaction.
 			 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ts
 			 */
-			$transaction['ts'] = sprintf( '%F', $payment->get_shipping_amount()->get_amount() );
+			$transaction['ts'] = sprintf( '%F', $payment->get_shipping_amount()->get_value() );
 		}
 
 		// Tax.
