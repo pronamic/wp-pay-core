@@ -398,7 +398,7 @@ class Address {
 	 *
 	 * @throws InvalidArgumentException Thrown when country code length is not equal to 2.
 	 *
-	 * @param string $country_code Country code.
+	 * @param null|string $country_code Country code.
 	 */
 	public function set_country_code( $country_code ) {
 		if ( null !== $country_code && 2 !== strlen( $country_code ) ) {
