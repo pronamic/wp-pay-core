@@ -26,7 +26,10 @@ use Pronamic\WordPress\Pay\Core\Server;
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\Customer;
+use Pronamic\WordPress\Pay\Extensions\WooCommerce\CreditCardGateway;
+use Pronamic\WordPress\Pay\Extensions\WooCommerce\DirectDebitBancontactGateway;
 use Pronamic\WordPress\Pay\Extensions\WooCommerce\DirectDebitIDealGateway;
+use Pronamic\WordPress\Pay\Extensions\WooCommerce\DirectDebitSofortGateway;
 use Pronamic\WordPress\Pay\Extensions\WooCommerce\WooCommerce;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
@@ -198,7 +201,6 @@ class SubscriptionsModule {
 			$customer->set_email( $user->get( 'user_email' ) );
 
 			$payment->set_config_id( ( false === $config_id_key ? $config_id : $item[ $config_id_key ] ) );
-			$payment->method = PaymentMethods::DIRECT_DEBIT_IDEAL;
 			$payment->set_source( $item[ $source_key ] );
 			$payment->set_source_id( $item[ $source_id_key ] );
 			$payment->set_customer( $customer );
@@ -210,6 +212,28 @@ class SubscriptionsModule {
 					$payment->subscription_source_id = $subscription_source_id;
 					$subscription->interval          = get_post_meta( $subscription_source_id, '_billing_interval', true );
 					$subscription->interval_period   = Util::to_period( get_post_meta( $subscription_source_id, '_billing_period', true ) );
+
+					// Payment method.
+					$payment_method = get_post_meta( $payment->get_source_id(), '_payment_method', true );
+
+					switch ( $payment_method ) {
+						case CreditCardGateway::ID:
+							$payment->method = PaymentMethods::CREDIT_CARD;
+
+							break;
+						case DirectDebitBancontactGateway::ID:
+							$payment->method = PaymentMethods::DIRECT_DEBIT_BANCONTACT;
+
+							break;
+						case DirectDebitIDealGateway::ID:
+							$payment->method = PaymentMethods::DIRECT_DEBIT_IDEAL;
+
+							break;
+						case DirectDebitSofortGateway::ID:
+							$payment->method = PaymentMethods::DIRECT_DEBIT_SOFORT;
+
+							break;
+					}
 
 					// Start date.
 					$payment->date = new DateTime( get_the_date( DATE_ATOM, $subscription_source_id ) );
@@ -229,8 +253,8 @@ class SubscriptionsModule {
 					);
 
 					// Update WooCommerce Subscription payment method.
-					update_post_meta( $subscription_source_id, '_payment_method', DirectDebitIDealGateway::ID );
-					update_post_meta( $subscription_source_id, '_payment_method_title', PaymentMethods::get_name( $subscription->payment_method, __( 'Pronamic', 'pronamic_ideal' ) ) );
+					update_post_meta( $subscription_source_id, '_payment_method', $payment_method );
+					update_post_meta( $subscription_source_id, '_payment_method_title', PaymentMethods::get_name( $payment->method, __( 'Pronamic', 'pronamic_ideal' ) ) );
 					delete_post_meta( $subscription_source_id, '_requires_manual_renewal' );
 
 					// Set WooCommerce subscription post parent.
