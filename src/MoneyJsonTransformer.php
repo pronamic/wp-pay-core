@@ -37,7 +37,7 @@ class MoneyJsonTransformer {
 
 		$object->value = $money->get_value();
 
-		if ( null !== $money->get_currency() ) {
+		if ( null !== $money->get_currency()->get_alphabetic_code() ) {
 			$object->currency = $money->get_currency()->get_alphabetic_code();
 		}
 
