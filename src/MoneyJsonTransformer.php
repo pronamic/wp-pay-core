@@ -25,6 +25,8 @@ class MoneyJsonTransformer {
 	 * Convert money object to JSON.
 	 *
 	 * @param Money|null $money Money.
+	 *
+	 * @return null|object
 	 */
 	public static function to_json( Money $money = null ) {
 		if ( null === $money ) {
