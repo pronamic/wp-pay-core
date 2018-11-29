@@ -32,6 +32,13 @@ class PaymentLineType {
 	const DISCOUNT = 'discount';
 
 	/**
+	 * Constant for 'fee' type.
+	 *
+	 * @var string
+	 */
+	const FEE = 'fee';
+
+	/**
 	 * Constant for 'physical' type.
 	 *
 	 * @var string
@@ -44,13 +51,6 @@ class PaymentLineType {
 	 * @var string
 	 */
 	const SHIPPING = 'shipping';
-
-	/**
-	 * Constant for 'fee' type.
-	 *
-	 * @var string
-	 */
-	const FEE = 'fee';
 
 	/**
 	 * Constant for 'tax' type.
