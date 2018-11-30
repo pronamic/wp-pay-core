@@ -176,6 +176,13 @@ class Plugin {
 	public $google_analytics_ecommerce;
 
 	/**
+	 * Gateway integrations.
+	 *
+	 * @var array
+	 */
+	public $gateway_integrations;
+
+	/**
 	 * Construct and initialize an Pronamic Pay plugin object.
 	 *
 	 * @param string|array|object $args The plugin arguments.
