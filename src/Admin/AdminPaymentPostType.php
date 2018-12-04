@@ -602,8 +602,10 @@ class AdminPaymentPostType {
 		switch ( $post_status ) {
 			case 'payment_pending':
 			case 'payment_processing':
-			case 'payment_reserved':
 				return Statuses::OPEN;
+
+			case 'payment_reserved':
+				return Statuses::RESERVED;
 
 			case 'payment_refunded':
 				return Statuses::REFUNDED;
