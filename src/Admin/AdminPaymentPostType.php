@@ -601,7 +601,6 @@ class AdminPaymentPostType {
 	private function translate_post_status_to_meta_status( $post_status ) {
 		switch ( $post_status ) {
 			case 'payment_pending':
-			case 'payment_processing':
 				return Statuses::OPEN;
 
 			case 'payment_reserved':

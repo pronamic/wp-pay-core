@@ -703,7 +703,6 @@ class AdminModule {
 			case 'subscr_expired':
 				return 'pronamic-pay-icon-on-hold';
 
-			case 'payment_processing':
 			case 'payment_reserved':
 			case 'subscr_active':
 			default:
