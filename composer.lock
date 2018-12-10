@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "37e884f529a05a643fd3fac43904e0a3",
+    "content-hash": "3b28757700e3fd5702eee18b3cd02a63",
     "packages": [
         {
             "name": "composer/installers",
@@ -170,16 +170,16 @@
         },
         {
             "name": "pronamic/wp-money",
-            "version": "dev-develop",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pronamic/wp-money.git",
-                "reference": "dc7f10947d64c0b1b3ba5c60a14fcc891dd0647f"
+                "reference": "28b508d7ae573728c3104b183d124e80e549963c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pronamic/wp-money/zipball/dc7f10947d64c0b1b3ba5c60a14fcc891dd0647f",
-                "reference": "dc7f10947d64c0b1b3ba5c60a14fcc891dd0647f",
+                "url": "https://api.github.com/repos/pronamic/wp-money/zipball/28b508d7ae573728c3104b183d124e80e549963c",
+                "reference": "28b508d7ae573728c3104b183d124e80e549963c",
                 "shasum": ""
             },
             "require": {
@@ -187,7 +187,7 @@
             },
             "require-dev": {
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.5.0",
-                "johnpbloch/wordpress": "^4.9",
+                "johnpbloch/wordpress": "^5.0",
                 "koodimonni-language/de_de": "*",
                 "koodimonni-language/fr_fr": "*",
                 "koodimonni-language/nl_nl": "*",
@@ -197,9 +197,9 @@
                 "phpunit/phpunit": "^4.8",
                 "squizlabs/php_codesniffer": "^2.9",
                 "vlucas/phpdotenv": "^2.0",
-                "wimg/php-compatibility": "^8.1",
+                "wimg/php-compatibility": "^9.0",
                 "wp-coding-standards/wpcs": "^1.2",
-                "wp-phpunit/wp-phpunit": "^4.9"
+                "wp-phpunit/wp-phpunit": "^5.0"
             },
             "type": "library",
             "autoload": {
@@ -211,7 +211,7 @@
             "license": [
                 "GPL-3.0-or-later"
             ],
-            "time": "2018-11-27T19:21:13+00:00"
+            "time": "2018-12-10T18:41:41+00:00"
         },
         {
             "name": "viison/address-splitter",
@@ -472,20 +472,20 @@
         },
         {
             "name": "johnpbloch/wordpress",
-            "version": "4.9.8",
+            "version": "5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/johnpbloch/wordpress.git",
-                "reference": "de02cd79a41e06f36558040724414197cb7f6246"
+                "reference": "391c36c97f55384bbb3e38146752dc9ac6235d4c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/johnpbloch/wordpress/zipball/de02cd79a41e06f36558040724414197cb7f6246",
-                "reference": "de02cd79a41e06f36558040724414197cb7f6246",
+                "url": "https://api.github.com/repos/johnpbloch/wordpress/zipball/391c36c97f55384bbb3e38146752dc9ac6235d4c",
+                "reference": "391c36c97f55384bbb3e38146752dc9ac6235d4c",
                 "shasum": ""
             },
             "require": {
-                "johnpbloch/wordpress-core": "4.9.8",
+                "johnpbloch/wordpress-core": "5.0.0",
                 "johnpbloch/wordpress-core-installer": "^1.0",
                 "php": ">=5.3.2"
             },
@@ -507,27 +507,27 @@
                 "cms",
                 "wordpress"
             ],
-            "time": "2018-08-02T21:48:39+00:00"
+            "time": "2018-12-09T20:56:03+00:00"
         },
         {
             "name": "johnpbloch/wordpress-core",
-            "version": "4.9.8",
+            "version": "5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/johnpbloch/wordpress-core.git",
-                "reference": "50323f9b91d7689d615b4af02caf9d80584b1cfc"
+                "reference": "a11a6399a3681ffbbf7e27ac4e372d836529fdb7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/johnpbloch/wordpress-core/zipball/50323f9b91d7689d615b4af02caf9d80584b1cfc",
-                "reference": "50323f9b91d7689d615b4af02caf9d80584b1cfc",
+                "url": "https://api.github.com/repos/johnpbloch/wordpress-core/zipball/a11a6399a3681ffbbf7e27ac4e372d836529fdb7",
+                "reference": "a11a6399a3681ffbbf7e27ac4e372d836529fdb7",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
             "provide": {
-                "wordpress/core-implementation": "4.9.8"
+                "wordpress/core-implementation": "5.0.0"
             },
             "type": "wordpress-core",
             "notification-url": "https://packagist.org/downloads/",
@@ -547,7 +547,7 @@
                 "cms",
                 "wordpress"
             ],
-            "time": "2018-08-02T21:48:32+00:00"
+            "time": "2018-12-09T20:55:56+00:00"
         },
         {
             "name": "johnpbloch/wordpress-core-installer",
@@ -2388,16 +2388,16 @@
         },
         {
             "name": "wp-phpunit/wp-phpunit",
-            "version": "4.9.8",
+            "version": "5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wp-phpunit/wp-phpunit.git",
-                "reference": "555b5f2ecc1010f811663d00b408fcbf15bc4f5c"
+                "reference": "7a485dc6679beaf61bdeac88ba471b519739e061"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wp-phpunit/wp-phpunit/zipball/555b5f2ecc1010f811663d00b408fcbf15bc4f5c",
-                "reference": "555b5f2ecc1010f811663d00b408fcbf15bc4f5c",
+                "url": "https://api.github.com/repos/wp-phpunit/wp-phpunit/zipball/7a485dc6679beaf61bdeac88ba471b519739e061",
+                "reference": "7a485dc6679beaf61bdeac88ba471b519739e061",
                 "shasum": ""
             },
             "type": "library",
@@ -2427,21 +2427,12 @@
                 "test",
                 "wordpress"
             ],
-            "time": "2018-07-06T07:56:42+00:00"
+            "time": "2018-12-07T10:16:54+00:00"
         }
     ],
-    "aliases": [
-        {
-            "alias": "1.1",
-            "alias_normalized": "1.1.0.0",
-            "version": "dev-develop",
-            "package": "pronamic/wp-money"
-        }
-    ],
+    "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "pronamic/wp-money": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
