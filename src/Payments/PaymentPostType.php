@@ -63,6 +63,7 @@ class PaymentPostType {
 					'filter_items_list'        => __( 'Filter payments list', 'pronamic_ideal' ),
 					'items_list_navigation'    => __( 'Payments list navigation', 'pronamic_ideal' ),
 					'items_list'               => __( 'Payments list', 'pronamic_ideal' ),
+
 					/*
 					 * New Post Type Labels in 5.0.
 					 * @link https://make.wordpress.org/core/2018/12/05/new-post-type-labels-in-5-0/
