@@ -23,8 +23,9 @@ use WP_UnitTestCase;
 /**
  * Payment test
  *
- * @author Remco Tolsma
- * @version 1.0
+ * @author  Remco Tolsma
+ * @version 2.1.0
+ * @since   1.0.0
  */
 class PaymentTest extends WP_UnitTestCase {
 	/**

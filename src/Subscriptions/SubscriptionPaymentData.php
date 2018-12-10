@@ -17,9 +17,9 @@ use Pronamic\WordPress\Pay\Payments\PaymentData;
 /**
  * WordPress subscription payment data
  *
- * @author Reüel van der Steege
- * @version 2.0.2
- * @since 2.0.1
+ * @author  Reüel van der Steege
+ * @version 2.1.0
+ * @since   2.0.1
  */
 class SubscriptionPaymentData extends PaymentData {
 	/**

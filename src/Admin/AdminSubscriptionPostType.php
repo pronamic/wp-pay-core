@@ -21,7 +21,7 @@ use WP_Post;
  * WordPress admin subscription post type
  *
  * @author  Reüel van der Steege
- * @version 2.0.3
+ * @version 2.1.0
  * @since   1.0.0
  */
 class AdminSubscriptionPostType {

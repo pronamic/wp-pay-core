@@ -265,7 +265,7 @@ class Util {
 	 * Get remote address.
 	 *
 	 * @link https://github.com/WordPress/WordPress/blob/4.9.8/wp-admin/includes/class-wp-community-events.php#L210-L274
-	 *
+	 * @since 2.1.0
 	 * @return mixed|null
 	 */
 	public static function get_remote_address() {

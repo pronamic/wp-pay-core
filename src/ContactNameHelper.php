@@ -18,7 +18,7 @@ use Pronamic\WordPress\Pay\Core\Util as Core_Util;
  * Contact name helper
  *
  * @author  Remco Tolsma
- * @version 2.0.8
+ * @version 2.1.0
  * @since   2.0.8
  */
 class ContactNameHelper {

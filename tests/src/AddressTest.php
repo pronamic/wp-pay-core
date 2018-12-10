@@ -16,7 +16,8 @@ use WP_UnitTestCase;
  * Address test
  *
  * @author Remco Tolsma
- * @version 1.0
+ * @version 2.1.0
+ * @since   2.1.0
  */
 class AddressTest extends WP_UnitTestCase {
 	/**

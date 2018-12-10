@@ -20,7 +20,11 @@ use Pronamic\WordPress\Pay\Payments\Payment;
 use WP_Post;
 
 /**
- * Subscription.
+ * Subscription
+ *
+ * @author  Remco Tolsma
+ * @version 2.1.0
+ * @since   1.0.0
  */
 class Subscription {
 	/**

@@ -17,7 +17,7 @@ use Pronamic\WordPress\Pay\CustomerHelper;
  * Payments Privacy class.
  *
  * @author  Reüel van der Steege
- * @version 2.0.2
+ * @version 2.1.0
  * @since   2.0.2
  */
 class PaymentsPrivacy {

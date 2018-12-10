@@ -21,7 +21,8 @@ use stdClass;
  * Payment lines
  *
  * @author  Remco Tolsma
- * @version 2.0.6
+ * @version 2.1.0
+ * @since   2.1.0
  */
 class PaymentLines implements Countable, IteratorAggregate {
 	/**

@@ -17,8 +17,8 @@ use Pronamic\WordPress\DateTime\DateTime;
  * Contact.
  *
  * @author  Reüel van der Steege.
- * @since   2.0.8
- * @version 2.0.8
+ * @since   2.1.0
+ * @version 2.1.0
  */
 class Customer {
 	/**

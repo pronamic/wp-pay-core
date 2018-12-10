@@ -16,9 +16,10 @@ use stdClass;
 /**
  * Personal Name
  *
- * @link   https://en.wikipedia.org/wiki/Personal_name
- * @author Remco Tolsma
- * @since  1.4.0
+ * @link    https://en.wikipedia.org/wiki/Personal_name
+ * @author  Remco Tolsma
+ * @version 2.1.0
+ * @since   1.4.0
  */
 class ContactName {
 	/**

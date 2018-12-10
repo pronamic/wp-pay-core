@@ -19,8 +19,9 @@ use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
 /**
  * Payment line.
  *
- * @author Remco Tolsma
- * @version 1.0
+ * @author  Remco Tolsma
+ * @version 2.1.0
+ * @since   2.1.0
  */
 class PaymentLine {
 	/**

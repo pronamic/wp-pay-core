@@ -25,8 +25,8 @@ use Pronamic\WordPress\Pay\ContactName;
  * @see     https://woocommerce.com/2017/04/woocommerce-3-0-release/
  * @see     https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
  * @author  Remco Tolsma
- * @version 2.0.8
- * @since   3.7.0
+ * @version 2.1.0
+ * @since   2.1.0
  */
 class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	/**
