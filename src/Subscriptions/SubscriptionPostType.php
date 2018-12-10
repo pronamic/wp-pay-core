@@ -62,6 +62,15 @@ class SubscriptionPostType {
 					'filter_items_list'     => __( 'Filter subscriptions list', 'pronamic_ideal' ),
 					'items_list_navigation' => __( 'Subscriptions list navigation', 'pronamic_ideal' ),
 					'items_list'            => __( 'Subscriptions list', 'pronamic_ideal' ),
+					/*
+					 * New Post Type Labels in 5.0.
+					 * @link https://make.wordpress.org/core/2018/12/05/new-post-type-labels-in-5-0/
+					 */
+					'item_published'           => __( 'Subscription published.', 'pronamic_ideal' ),
+					'item_published_privately' => __( 'Subscription published privately.', 'pronamic_ideal' ),
+					'item_reverted_to_draft'   => __( 'Subscription reverted to draft.', 'pronamic_ideal' ),
+					'item_scheduled'           => __( 'Subscription scheduled.', 'pronamic_ideal' ),
+					'item_updated'             => __( 'Subscription updated.', 'pronamic_ideal' ),
 				),
 				'public'             => false,
 				'publicly_queryable' => false,
