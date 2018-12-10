@@ -10,12 +10,13 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use DateTime;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Core\Recurring;
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Payments\Payment;
-use Pronamic\WordPress\Pay\Payments\PaymentDataInterface;
+use Pronamic\WordPress\Pay\Payments\PaymentData;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Payments\StatusChecker;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
@@ -28,7 +29,7 @@ use WP_Query;
  * Plugin
  *
  * @author  Remco Tolsma
- * @version 2.0.8
+ * @version 2.1.0
  * @since   2.0.1
  */
 class Plugin {
@@ -175,6 +176,13 @@ class Plugin {
 	public $google_analytics_ecommerce;
 
 	/**
+	 * Gateway integrations.
+	 *
+	 * @var array
+	 */
+	public $gateway_integrations;
+
+	/**
 	 * Construct and initialize an Pronamic Pay plugin object.
 	 *
 	 * @param string|array|object $args The plugin arguments.
@@ -216,10 +224,10 @@ class Plugin {
 		 * $this->load();
 		 * wpsc_core_load_gateways();
 		 *
-		 * @see https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L342-L343
-		 * @see https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L26-L35
-		 * @see https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L54
-		 * @see https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L296-L297
+		 * @link https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L342-L343
+		 * @link https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L26-L35
+		 * @link https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L54
+		 * @link https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L296-L297
 		 */
 		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ), 5 );
 
@@ -272,14 +280,17 @@ class Plugin {
 			return;
 		}
 
+		// Gateway.
 		$gateway = self::get_gateway( $payment->config_id );
 
 		if ( empty( $gateway ) ) {
 			return;
 		}
 
+		// Update status.
 		$gateway->update_status( $payment );
 
+		// Add gateway errors as payment notes.
 		if ( $gateway->has_error() ) {
 			foreach ( $gateway->error->get_error_codes() as $code ) {
 				$payment->add_note( sprintf( '%s: %s', $code, $gateway->error->get_error_message( $code ) ) );
@@ -382,8 +393,8 @@ class Plugin {
 				exit;
 			}
 
-			// @see https://github.com/woothemes/woocommerce/blob/2.3.11/includes/class-wc-cache-helper.php
-			// @see https://www.w3-edge.com/products/w3-total-cache/
+			// @link https://github.com/woothemes/woocommerce/blob/2.3.11/includes/class-wc-cache-helper.php
+			// @link https://www.w3-edge.com/products/w3-total-cache/
 			if ( ! defined( 'DONOTCACHEPAGE' ) ) {
 				define( 'DONOTCACHEPAGE', true );
 			}
@@ -620,23 +631,26 @@ class Plugin {
 	 * @return mixed
 	 */
 	public static function get_gateway( $config_id ) {
-		if ( empty( $config_id ) ) {
+		// Check if config is published.
+		if ( 'publish' !== get_post_status( $config_id ) ) {
 			return null;
 		}
 
+		// Get config.
 		$gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 		$mode       = get_post_meta( $config_id, '_pronamic_gateway_mode', true );
 		$is_utf8    = strcasecmp( get_bloginfo( 'charset' ), 'UTF-8' ) === 0;
 
 		$config = Core\ConfigProvider::get_config( $gateway_id, $config_id );
 
+		// Adjust config for specific gateways.
 		switch ( $gateway_id ) {
 			case 'abnamro-ideal-easy':
 			case 'abnamro-ideal-only-kassa':
 			case 'abnamro-internetkassa':
 				$config->form_action_url = sprintf(
 					'https://internetkassa.abnamro.nl/ncol/%s/orderstandard%s.asp',
-					'test' === $mode ? 'test' : 'prod',
+					Gateway::MODE_TEST === $mode ? 'test' : 'prod',
 					$is_utf8 ? '_utf8' : ''
 				);
 
@@ -644,7 +658,7 @@ class Plugin {
 			case 'abnamro-ideal-zelfbouw-v3':
 				$config->payment_server_url = 'https://abnamro.ideal-payment.de/ideal/iDEALv3';
 
-				if ( 'test' === $mode ) {
+				if ( Gateway::MODE_TEST === $mode ) {
 					$config->payment_server_url = 'https://abnamro-test.ideal-payment.de/ideal/iDEALv3';
 				}
 
@@ -670,7 +684,7 @@ class Plugin {
 			case 'ing-ideal-basic':
 				$config->url = 'https://ideal.secure-ing.com/ideal/mpiPayInitIng.do';
 
-				if ( 'test' === $mode ) {
+				if ( Gateway::MODE_TEST === $mode ) {
 					$config->url = 'https://idealtest.secure-ing.com/ideal/mpiPayInitIng.do';
 				}
 
@@ -678,7 +692,7 @@ class Plugin {
 			case 'ing-ideal-advanced-v3':
 				$config->payment_server_url = 'https://ideal.secure-ing.com/ideal/iDEALv3';
 
-				if ( 'test' === $mode ) {
+				if ( Gateway::MODE_TEST === $mode ) {
 					$config->payment_server_url = 'https://idealtest.secure-ing.com/ideal/iDEALv3';
 				}
 
@@ -688,7 +702,7 @@ class Plugin {
 			case 'mollie-ideal-basic':
 				$config->url = 'https://secure.mollie.nl/xml/idealAcquirer/lite/';
 
-				if ( 'test' === $mode ) {
+				if ( Gateway::MODE_TEST === $mode ) {
 					$config->url = 'https://secure.mollie.nl/xml/idealAcquirer/testmode/lite/';
 				}
 
@@ -696,7 +710,7 @@ class Plugin {
 			case 'postcode-ideal':
 				$config->payment_server_url = 'https://ideal.postcode.nl/ideal';
 
-				if ( 'test' === $mode ) {
+				if ( Gateway::MODE_TEST === $mode ) {
 					$config->payment_server_url = 'https://ideal-test.postcode.nl/ideal';
 				}
 
@@ -706,7 +720,7 @@ class Plugin {
 			case 'rabobank-ideal-professional-v3':
 				$config->payment_server_url = 'https://ideal.rabobank.nl/ideal/iDEALv3';
 
-				if ( 'test' === $mode ) {
+				if ( Gateway::MODE_TEST === $mode ) {
 					$config->payment_server_url = 'https://idealtest.rabobank.nl/ideal/iDEALv3';
 				}
 
@@ -716,13 +730,14 @@ class Plugin {
 			case 'sisow-ideal-basic':
 				$config->url = 'https://www.sisow.nl/Sisow/iDeal/IssuerHandler.ashx';
 
-				if ( 'test' === $mode ) {
+				if ( Gateway::MODE_TEST === $mode ) {
 					$config->url = 'https://www.sisow.nl/Sisow/iDeal/IssuerHandler.ashx/test';
 				}
 
 				break;
 		}
 
+		// Create and return gateway.
 		$gateway = Core\GatewayFactory::create( $config );
 
 		return $gateway;
@@ -731,46 +746,99 @@ class Plugin {
 	/**
 	 * Start a payment.
 	 *
-	 * @param string               $config_id      A gateway configuration ID.
-	 * @param Gateway              $gateway        The gateway to start the payment at.
-	 * @param PaymentDataInterface $data           A payment data interface object with all the required payment info.
-	 * @param string|null          $payment_method The payment method to use to start the payment.
+	 * @param string      $config_id      A gateway configuration ID.
+	 * @param Gateway     $gateway        The gateway to start the payment at.
+	 * @param PaymentData $data           A payment data interface object with all the required payment info.
+	 * @param string|null $payment_method The payment method to use to start the payment.
 	 *
 	 * @return Payment
 	 */
-	public static function start( $config_id, Gateway $gateway, PaymentDataInterface $data, $payment_method = null ) {
-		$payment = new Payments\Payment();
+	public static function start( $config_id, Gateway $gateway, PaymentData $data, $payment_method = null ) {
+		$payment = new Payment();
 
 		/* translators: %s: payment data title */
 		$payment->title                  = sprintf( __( 'Payment for %s', 'pronamic_ideal' ), $data->get_title() );
 		$payment->user_id                = $data->get_user_id();
 		$payment->config_id              = $config_id;
 		$payment->order_id               = $data->get_order_id();
-		$payment->language               = $data->get_language();
-		$payment->locale                 = $data->get_language_and_country();
-		$payment->entrance_code          = $data->get_entrance_code();
 		$payment->description            = $data->get_description();
 		$payment->source                 = $data->get_source();
 		$payment->source_id              = $data->get_source_id();
 		$payment->email                  = $data->get_email();
 		$payment->method                 = $payment_method;
 		$payment->issuer                 = $data->get_issuer( $payment_method );
-		$payment->first_name             = $data->get_first_name();
-		$payment->last_name              = $data->get_last_name();
-		$payment->customer_name          = $data->get_customer_name();
-		$payment->address                = $data->get_address();
-		$payment->zip                    = $data->get_zip();
-		$payment->city                   = $data->get_city();
-		$payment->country                = $data->get_country();
-		$payment->telephone_number       = $data->get_telephone_number();
 		$payment->analytics_client_id    = $data->get_analytics_client_id();
 		$payment->recurring              = $data->get_recurring();
 		$payment->subscription           = $data->get_subscription();
 		$payment->subscription_id        = $data->get_subscription_id();
 		$payment->subscription_source_id = $data->get_subscription_source_id();
-		$payment->set_amount( $data->get_amount() );
+		$payment->set_total_amount( $data->get_amount() );
 		$payment->set_credit_card( $data->get_credit_card() );
 
+		// Customer.
+		$customer = array(
+			'first_name' => $data->get_first_name(),
+			'last_name'  => $data->get_last_name(),
+			'email'      => $data->get_email(),
+			'phone'      => $data->get_telephone_number(),
+		);
+
+		$customer = array_filter( $customer );
+
+		if ( ! empty( $customer ) ) {
+			$customer = Customer::from_json( (object) $customer );
+
+			$payment->set_customer( $customer );
+		}
+
+		// Billing address.
+		$billing_address = array(
+			'name'         => ( $customer instanceof Customer ? $customer->get_name() : null ),
+			'line_1'       => $data->get_address(),
+			'postal_code'  => $data->get_zip(),
+			'city'         => $data->get_city(),
+			'country_name' => $data->get_country(),
+			'email'        => $data->get_email(),
+			'phone'        => $data->get_telephone_number(),
+		);
+
+		$billing_address = array_filter( $billing_address );
+
+		if ( ! empty( $billing_address ) ) {
+			$address = new Address();
+
+			if ( isset( $billing_address['name'] ) ) {
+				$address->set_name( $billing_address['name'] );
+			}
+
+			if ( isset( $billing_address['line_1'] ) ) {
+				$address->set_line_1( $billing_address['line_1'] );
+			}
+
+			if ( isset( $billing_address['postal_code'] ) ) {
+				$address->set_postal_code( $billing_address['postal_code'] );
+			}
+
+			if ( isset( $billing_address['city'] ) ) {
+				$address->set_city( $billing_address['city'] );
+			}
+
+			if ( isset( $billing_address['country_name'] ) ) {
+				$address->set_country_name( $billing_address['country_name'] );
+			}
+
+			if ( isset( $billing_address['email'] ) ) {
+				$address->set_email( $billing_address['email'] );
+			}
+
+			if ( isset( $billing_address['phone'] ) ) {
+				$address->set_phone( $billing_address['phone'] );
+			}
+
+			$payment->set_billing_address( $address );
+		}
+
+		// Start payment.
 		return self::start_payment( $payment, $gateway );
 	}
 
@@ -781,10 +849,25 @@ class Plugin {
 	 * @param Gateway                 $gateway      Gateway.
 	 * @param SubscriptionPaymentData $data         The subscription payment data.
 	 *
+	 * @throws \Exception Throws an Exception on incorrect date interval.
+	 *
 	 * @return Payment
 	 */
-	public static function start_recurring( Subscription $subscription, Gateway $gateway, $data = null ) {
+	public static function start_recurring( $subscription, $gateway = null, $data = null ) {
 		return pronamic_pay_plugin()->subscriptions_module->start_recurring( $subscription, $gateway, $data );
+	}
+
+	/**
+	 * Start recurring payment.
+	 *
+	 * @param Payment $payment Payment or subscription for backwards compatibility.
+	 *
+	 * @throws \Exception Throws an Exception on incorrect date interval.
+	 *
+	 * @return Payment
+	 */
+	public static function start_recurring_payment( Payment $payment ) {
+		return pronamic_pay_plugin()->subscriptions_module->start_payment( $payment );
 	}
 
 	/**
@@ -793,6 +876,11 @@ class Plugin {
 	 * @param Payment $payment Payment.
 	 */
 	private static function complement_payment( Payment $payment ) {
+		// Entrance Code.
+		if ( null === $payment->entrance_code ) {
+			$payment->entrance_code = uniqid();
+		}
+
 		// Key.
 		if ( null === $payment->key ) {
 			$payment->key = uniqid( 'pay_' );
@@ -803,21 +891,50 @@ class Plugin {
 			$payment->user_id = get_current_user_id();
 		}
 
-		// Locale.
-		if ( null === $payment->locale && is_user_logged_in() ) {
-			$payment->locale = get_user_locale();
+		// Google Analytics client ID.
+		if ( null === $payment->analytics_client_id ) {
+			$payment->analytics_client_id = GoogleAnalyticsEcommerce::get_cookie_client_id();
 		}
 
-		// User Agent.
-		if ( null === $payment->user_agent ) {
-			// User Agent (@see https://github.com/WordPress/WordPress/blob/4.9.4/wp-includes/comment.php#L1962-L1965).
-			$payment->user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : null; // WPCS: input var ok.
+		// Complements.
+		if ( null !== $payment->get_customer() ) {
+			CustomerHelper::complement_customer( $payment->get_customer() );
+
+			// Email.
+			if ( null === $payment->get_email() ) {
+				$payment->email = $payment->get_customer()->get_email();
+			}
 		}
 
-		// User IP.
-		if ( null === $payment->user_ip ) {
-			// IP (@see https://github.com/WordPress/WordPress/blob/4.9.4/wp-includes/comment.php#L1957-L1960).
-			$payment->user_ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : null; // WPCS: input var ok.
+		if ( null !== $payment->get_billing_address() ) {
+			AddressHelper::complement_address( $payment->get_billing_address() );
+		}
+
+		if ( null !== $payment->get_shipping_address() ) {
+			AddressHelper::complement_address( $payment->get_shipping_address() );
+		}
+
+		// Version.
+		if ( null === $payment->get_version() ) {
+			$payment->set_version( pronamic_pay_plugin()->get_version() );
+		}
+
+		// Mode.
+		if ( null === $payment->get_mode() ) {
+			$mode = get_post_meta( $payment->get_config_id(), '_pronamic_gateway_mode', true );
+
+			$payment->set_mode( $mode );
+		}
+
+		// Issuer.
+		if ( null === $payment->issuer ) {
+			if ( PaymentMethods::CREDIT_CARD === $payment->method && filter_has_var( INPUT_POST, 'pronamic_credit_card_issuer_id' ) ) {
+				$payment->issuer = filter_input( INPUT_POST, 'pronamic_credit_card_issuer_id', FILTER_SANITIZE_STRING );
+			}
+
+			if ( PaymentMethods::IDEAL === $payment->method && filter_has_var( INPUT_POST, 'pronamic_ideal_issuer_id' ) ) {
+				$payment->issuer = filter_input( INPUT_POST, 'pronamic_ideal_issuer_id', FILTER_SANITIZE_STRING );
+			}
 		}
 	}
 
@@ -829,7 +946,7 @@ class Plugin {
 	 *
 	 * @return Payment
 	 */
-	public static function start_payment( Payment $payment, Gateway $gateway ) {
+	public static function start_payment( Payment $payment, $gateway = null ) {
 		global $pronamic_ideal;
 
 		self::complement_payment( $payment );
@@ -837,10 +954,23 @@ class Plugin {
 		$pronamic_ideal->payments_data_store->create( $payment );
 
 		// Prevent payment start at gateway if amount is empty.
-		$amount = $payment->get_amount()->get_amount();
+		$amount = $payment->get_total_amount()->get_value();
 
 		if ( empty( $amount ) ) {
 			$payment->set_status( Statuses::SUCCESS );
+
+			$payment->save();
+
+			return $payment;
+		}
+
+		// Gateway.
+		if ( null === $gateway ) {
+			$gateway = self::get_gateway( $payment->get_config_id() );
+		}
+
+		if ( ! $gateway ) {
+			$payment->set_status( Statuses::FAILURE );
 
 			$payment->save();
 

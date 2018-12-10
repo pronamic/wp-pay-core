@@ -17,7 +17,7 @@ use Pronamic\WordPress\Pay\Plugin;
  * WordPress Pay admin
  *
  * @author  Remco Tolsma
- * @version 2.0.8
+ * @version 2.1.0
  * @since   1.0.0
  */
 class AdminModule {
@@ -134,8 +134,8 @@ class AdminModule {
 	/**
 	 * Maybe redirect.
 	 *
-	 * @see https://github.com/woothemes/woocommerce/blob/2.4.4/includes/admin/class-wc-admin.php#L29
-	 * @see https://github.com/woothemes/woocommerce/blob/2.4.4/includes/admin/class-wc-admin.php#L96-L122
+	 * @link https://github.com/woothemes/woocommerce/blob/2.4.4/includes/admin/class-wc-admin.php#L29
+	 * @link https://github.com/woothemes/woocommerce/blob/2.4.4/includes/admin/class-wc-admin.php#L96-L122
 	 */
 	public function maybe_redirect() {
 		$redirect = get_transient( 'pronamic_pay_admin_redirect' );
@@ -144,7 +144,7 @@ class AdminModule {
 		if (
 			false === $redirect
 				||
-			defined( 'DOING_AJAX' ) && DOING_AJAX
+			wp_doing_ajax()
 				||
 			defined( 'DOING_CRON' ) && DOING_CRON
 				||
@@ -344,7 +344,10 @@ class AdminModule {
 					'completed' => array(
 						'post_title'   => __( 'Payment completed', 'pronamic_ideal' ),
 						'post_name'    => __( 'completed', 'pronamic_ideal' ),
-						'post_content' => __( '<p>The payment has been successfully completed.</p>', 'pronamic_ideal' ),
+						'post_content' => sprintf(
+							'<p>%s</p>',
+							__( 'The payment has been successfully completed.', 'pronamic_ideal' )
+						),
 						'post_meta'    => array(
 							'_yoast_wpseo_meta-robots-noindex' => true,
 						),
@@ -353,7 +356,10 @@ class AdminModule {
 					'cancel'    => array(
 						'post_title'   => __( 'Payment cancelled', 'pronamic_ideal' ),
 						'post_name'    => __( 'cancelled', 'pronamic_ideal' ),
-						'post_content' => __( '<p>You have cancelled the payment.</p>', 'pronamic_ideal' ),
+						'post_content' => sprintf(
+							'<p>%s</p>',
+							__( 'You have cancelled the payment.', 'pronamic_ideal' )
+						),
 						'post_meta'    => array(
 							'_yoast_wpseo_meta-robots-noindex' => true,
 						),
@@ -362,7 +368,10 @@ class AdminModule {
 					'expired'   => array(
 						'post_title'   => __( 'Payment expired', 'pronamic_ideal' ),
 						'post_name'    => __( 'expired', 'pronamic_ideal' ),
-						'post_content' => __( '<p>Your payment session has expired.</p>', 'pronamic_ideal' ),
+						'post_content' => sprintf(
+							'<p>%s</p>',
+							__( 'Your payment session has expired.', 'pronamic_ideal' )
+						),
 						'post_meta'    => array(
 							'_yoast_wpseo_meta-robots-noindex' => true,
 						),
@@ -371,7 +380,10 @@ class AdminModule {
 					'error'     => array(
 						'post_title'   => __( 'Payment error', 'pronamic_ideal' ),
 						'post_name'    => __( 'error', 'pronamic_ideal' ),
-						'post_content' => __( '<p>An error has occurred during payment.</p>', 'pronamic_ideal' ),
+						'post_content' => sprintf(
+							'<p>%s</p>',
+							__( 'An error has occurred during payment.', 'pronamic_ideal' )
+						),
 						'post_meta'    => array(
 							'_yoast_wpseo_meta-robots-noindex' => true,
 						),
@@ -380,7 +392,10 @@ class AdminModule {
 					'unknown'   => array(
 						'post_title'   => __( 'Payment status unknown', 'pronamic_ideal' ),
 						'post_name'    => __( 'unknown', 'pronamic_ideal' ),
-						'post_content' => __( '<p>The payment status is unknown.</p>', 'pronamic_ideal' ),
+						'post_content' => sprintf(
+							'<p>%s</p>',
+							__( 'The payment status is unknown.', 'pronamic_ideal' )
+						),
 						'post_meta'    => array(
 							'_yoast_wpseo_meta-robots-noindex' => true,
 						),
@@ -431,14 +446,14 @@ class AdminModule {
 		$enqueue |= 'toplevel_page_gf_edit_forms' === $screen->id;
 
 		if ( $enqueue ) {
-			$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+			$min = SCRIPT_DEBUG ? '' : '.min';
 
 			// Tippy.js - https://atomiks.github.io/tippyjs/.
 			wp_register_script(
 				'tippy.js',
 				plugins_url( 'assets/tippy.js/tippy.all' . $min . '.js', $this->plugin->get_file() ),
 				array(),
-				'3.0.2',
+				'3.3.0',
 				true
 			);
 
@@ -485,7 +500,7 @@ class AdminModule {
 
 				$money_parser = new MoneyParser();
 
-				$amount = $money_parser->parse( $string )->get_amount();
+				$amount = $money_parser->parse( $string )->get_value();
 
 				$data = new \Pronamic\WordPress\Pay\Payments\PaymentTestData( wp_get_current_user(), $amount );
 
@@ -510,7 +525,7 @@ class AdminModule {
 	 * Create the admin menu.
 	 */
 	public function admin_menu() {
-		// @see https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin-menus.php#L145
+		// @link https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin-menus.php#L145
 		$counts = wp_count_posts( 'pronamic_payment' );
 
 		$badge = '';
@@ -667,22 +682,28 @@ class AdminModule {
 			case 'payment_pending':
 			case 'subscr_pending':
 				return 'pronamic-pay-icon-pending';
+
 			case 'payment_cancelled':
 			case 'subscr_cancelled':
 				return 'pronamic-pay-icon-cancelled';
+
 			case 'payment_completed':
 			case 'subscr_completed':
 				return 'pronamic-pay-icon-completed';
+
 			case 'payment_refunded':
 				return 'pronamic-pay-icon-refunded';
+
 			case 'payment_failed':
 			case 'subscr_failed':
 				return 'pronamic-pay-icon-failed';
+
 			case 'payment_on_hold':
 			case 'payment_expired':
 			case 'subscr_expired':
 				return 'pronamic-pay-icon-on-hold';
-			case 'payment_processing':
+
+			case 'payment_reserved':
 			case 'subscr_active':
 			default:
 				return 'pronamic-pay-icon-processing';

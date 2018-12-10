@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay;
 
 use Pronamic\WordPress\Pay\Core\Gateway;
+use Pronamic\WordPress\Pay\Core\Server;
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Payments\Payment;
 
@@ -18,14 +19,14 @@ use Pronamic\WordPress\Pay\Payments\Payment;
  * Pronamic Pay Google Analytics e-commerce
  *
  * @author  Reüel van der Steege
- * @version 2.0.5
+ * @version 2.1.0
  * @since   2.0.1
  */
 class GoogleAnalyticsEcommerce {
 	/**
 	 * Google Analytics Measurement Protocol API endpoint URL.
 	 *
-	 * @see https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
+	 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
 	 * @var string
 	 */
 	const API_URL = 'https://www.google-analytics.com/collect';
@@ -35,7 +36,7 @@ class GoogleAnalyticsEcommerce {
 	 *
 	 * @var int
 	 */
-	const API_VERSION = 1;
+	const API_VERSION = '1';
 
 	/**
 	 * Anonymous client ID.
@@ -49,37 +50,17 @@ class GoogleAnalyticsEcommerce {
 	 */
 	public function __construct() {
 		// Actions.
-		add_action( 'pronamic_payment_status_update', array( $this, 'maybe_send_transaction' ), 10, 2 );
+		add_action( 'pronamic_payment_status_update', array( $this, 'maybe_send_transaction' ), 10 );
 	}
 
 	/**
 	 * Maybe send transaction for the specified payment.
 	 *
-	 * @param Payment $payment      Payment.
-	 * @param boolean $can_redirect Flag which indicates if a redirect is allowed in this function.
+	 * @param Payment $payment Payment.
 	 */
-	public function maybe_send_transaction( $payment, $can_redirect ) {
-		// Only process successful payments.
-		if ( Statuses::SUCCESS !== $payment->get_status() ) {
-			return;
-		}
-
-		// Ignore free orders.
-		$amount = $payment->get_amount()->get_amount();
-
-		if ( empty( $amount ) ) {
-			return;
-		}
-
-		// Check if Google Analytics property ID has been set.
-		$property_id = get_option( 'pronamic_pay_google_analytics_property' );
-
-		if ( empty( $property_id ) ) {
-			return;
-		}
-
+	public function maybe_send_transaction( $payment ) {
 		// Ignore test mode payments.
-		if ( Gateway::MODE_TEST === get_post_meta( $payment->config_id, '_pronamic_gateway_mode', true ) ) {
+		if ( Gateway::MODE_TEST === $payment->get_mode() ) {
 			return;
 		}
 
@@ -87,9 +68,37 @@ class GoogleAnalyticsEcommerce {
 	}
 
 	/**
+	 * Is this a valid payment to track?
+	 *
+	 * @param Payment $payment Payment to track.
+	 *
+	 * @return bool
+	 */
+	public function valid_payment( $payment ) {
+		// Is payment already tracked?
+		if ( $payment->get_ga_tracked() ) {
+			return false;
+		}
+
+		// Check if Google Analytics property ID has been set.
+		$property_id = get_option( 'pronamic_pay_google_analytics_property' );
+
+		if ( empty( $property_id ) ) {
+			return false;
+		}
+
+		// Only process successful payments.
+		if ( Statuses::SUCCESS !== $payment->get_status() ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Send transaction.
 	 *
-	 * @see https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide#ecom
+	 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide#ecom
 	 *
 	 * Parameters:
 	 * v=1              // Version.
@@ -106,56 +115,140 @@ class GoogleAnalyticsEcommerce {
 	 *
 	 * @param Payment $payment Payment.
 	 */
-	private function send_transaction( $payment ) {
+	public function send_transaction( $payment ) {
+		if ( ! $this->valid_payment( $payment ) ) {
+			return;
+		}
+
 		$defaults = array(
 			'v'   => self::API_VERSION,
 			'tid' => get_option( 'pronamic_pay_google_analytics_property' ),
 			'cid' => $this->get_client_id( $payment ),
-			'ti'  => $payment->get_id(),
-			'cu'  => $payment->get_currency(),
+			'ti'  => strval( $payment->get_id() ),
+			'ni'  => 1,
 		);
 
 		// Transaction Hit.
 		$transaction = wp_parse_args(
 			array(
 				't'  => 'transaction',
-				'tr' => $payment->get_amount()->get_amount(),
+				'tr' => sprintf( '%F', $payment->get_total_amount()->get_value() ),
 			),
 			$defaults
 		);
 
+		// Currency.
+		if ( null !== $payment->get_total_amount()->get_currency()->get_alphabetic_code() ) {
+			/*
+			 * Currency Code
+			 * Optional.
+			 * When present indicates the local currency for all transaction currency values. Value should be a valid ISO 4217 currency code.
+			 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cu
+			 */
+			$transaction['cu'] = $payment->get_total_amount()->get_currency()->get_alphabetic_code();
+		}
+
+		// Shipping.
+		if ( null !== $payment->get_shipping_amount() ) {
+			/*
+			 * Transaction Shipping
+			 * Optional.
+			 * Specifies the total shipping cost of the transaction.
+			 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ts
+			 */
+			$transaction['ts'] = sprintf( '%F', $payment->get_shipping_amount()->get_value() );
+		}
+
+		// Tax.
+		if ( $payment->get_total_amount()->has_tax() ) {
+			/*
+			 * Transaction Tax
+			 * Optional.
+			 * Specifies the total tax of the transaction.
+			 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#tt
+			 */
+			$transaction['tt'] = sprintf( '%F', $payment->get_total_amount()->get_tax_value() );
+		}
+
 		wp_remote_post(
 			self::API_URL,
 			array(
-				'user-agent' => filter_input( INPUT_SERVER, 'HTTP_USER_AGENT' ),
-				'body'       => http_build_query( $transaction ),
+				'user-agent' => Server::get( 'HTTP_USER_AGENT' ),
+				'body'       => $transaction,
 				'blocking'   => false,
 			)
 		);
+
+		// Mark payment as tracked.
+		$payment->set_ga_tracked( true );
+		$payment->save();
 
 		// Item Hit.
-		$item = wp_parse_args(
-			array(
-				't'  => 'item',
-				'in' => sprintf(
-					'%s #%s',
-					$payment->get_source_description(),
-					$payment->get_source_id()
-				),
-				'ip' => $payment->get_amount()->get_amount(),
-				'iq' => 1,
-			),
-			$defaults
-		);
+		$lines = $payment->get_lines();
 
-		wp_remote_post(
-			self::API_URL,
-			array(
-				'user-agent' => filter_input( INPUT_SERVER, 'HTTP_USER_AGENT' ),
-				'body'       => http_build_query( $item ),
-				'blocking'   => false,
-			)
-		);
+		if ( ! empty( $lines ) ) {
+			foreach ( $lines as $line ) {
+				$item = $defaults;
+
+				/*
+				 * Hit - Hit type - Required for all hit types.
+				 * The type of hit. Must be one of 'pageview', 'screenview', 'event', 'transaction', 'item', 'social', 'exception', 'timing'.
+				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#t
+				 */
+				$item['t'] = 'item';
+
+				/*
+				 * Item Name - Required for item hit type. - Specifies the item name.
+				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#in
+				 */
+				$item['in'] = $line->get_name();
+
+				/*
+				 * Item Price - Optional. - Specifies the price for a single item / unit.
+				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ip
+				 */
+				if ( null !== $line->get_unit_price() ) {
+					$item['ip'] = sprintf( '%F', $line->get_unit_price()->get_amount() );
+				}
+
+				/*
+				 * Item Quantity - Optional. - Specifies the number of items purchased.
+				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#iq
+				 */
+				if ( null !== $line->get_quantity() ) {
+					$item['iq'] = $line->get_quantity();
+				}
+
+				/*
+				 * Item Code - Optional. - Specifies the SKU or item code.
+				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ic
+				 */
+				if ( null !== $line->get_id() ) {
+					$item['ic'] = $line->get_id();
+				}
+
+				if ( null !== $line->get_sku() ) {
+					$item['ic'] = $line->get_sku();
+				}
+
+				/*
+				 * Item Category - Optional. - Specifies the category that the item belongs to.
+				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#iv
+				 */
+				if ( null !== $line->get_product_category() ) {
+					$item['iv'] = $line->get_product_category();
+				}
+
+				wp_remote_post(
+					self::API_URL,
+					array(
+						'user-agent' => Server::get( 'HTTP_USER_AGENT' ),
+						'body'       => $item,
+						'blocking'   => false,
+					)
+				);
+			}
+		}
 	}
 
 	/**
@@ -222,7 +315,7 @@ class GoogleAnalyticsEcommerce {
 	/**
 	 * Get cookie client ID.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public static function get_cookie_client_id() {
 		$client_id = null;

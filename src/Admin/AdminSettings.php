@@ -16,8 +16,9 @@ use Pronamic\WordPress\Pay\Util;
 /**
  * WordPress iDEAL admin
  *
- * @author Remco Tolsma
- * @version 1.0.0
+ * @author  Remco Tolsma
+ * @version 2.1.0
+ * @since   1.0.0
  */
 class AdminSettings {
 	/**
@@ -209,8 +210,8 @@ class AdminSettings {
 	/**
 	 * Input checkbox.
 	 *
-	 * @see https://github.com/WordPress/WordPress/blob/4.9.1/wp-admin/options-writing.php#L60-L68
-	 * @see https://github.com/WordPress/WordPress/blob/4.9.1/wp-admin/options-reading.php#L110-L141
+	 * @link https://github.com/WordPress/WordPress/blob/4.9.1/wp-admin/options-writing.php#L60-L68
+	 * @link https://github.com/WordPress/WordPress/blob/4.9.1/wp-admin/options-reading.php#L110-L141
 	 * @param array $args Arguments.
 	 */
 	public function input_checkbox( $args ) {

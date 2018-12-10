@@ -78,7 +78,7 @@ function get_pronamic_payment_by_meta( $meta_key, $meta_value ) {
  *
  * @param string $meta_key   The meta key to query for.
  * @param string $meta_value The Meta value to query for.
- * @return array
+ * @return Payment[]
  */
 function get_pronamic_payments_by_meta( $meta_key, $meta_value ) {
 	global $wpdb;
@@ -130,10 +130,10 @@ function get_pronamic_payment_by_purchase_id( $purchase_id ) {
  * Get payment by the specified transaction ID.
  *
  * @param string $transaction_id The transaction ID to query for.
- * @param string $entrance_code  The entrance code to query for.
+ *
  * @return Payment|null
  */
-function get_pronamic_payment_by_transaction_id( $transaction_id, $entrance_code = null ) {
+function get_pronamic_payment_by_transaction_id( $transaction_id ) {
 	return get_pronamic_payment_by_meta( '_pronamic_payment_transaction_id', $transaction_id );
 }
 
@@ -199,7 +199,7 @@ function get_pronamic_subscription_by_meta( $meta_key, $meta_value ) {
  *
  * @param string $meta_key   The meta key to query for.
  * @param string $meta_value The Meta value to query for.
- * @return array
+ * @return Subscription[]
  */
 function get_pronamic_subscriptions_by_meta( $meta_key, $meta_value ) {
 	global $wpdb;
@@ -259,7 +259,7 @@ function bind_providers_and_gateways() {
  *
  * This function transforms the php.ini notation for numbers (like '2M') to an integer.
  *
- * @see https://github.com/woothemes/woocommerce/blob/v2.0.20/woocommerce-core-functions.php#L1779
+ * @link https://github.com/woothemes/woocommerce/blob/v2.0.20/woocommerce-core-functions.php#L1779
  * @access public
  * @param string $size A php.ini notation for nubmer to convert to an integer.
  * @return int
@@ -286,7 +286,7 @@ function pronamic_pay_let_to_num( $size ) {
 			// no break.
 	}
 
-	return $ret;
+	return intval( $ret );
 }
 
 /**
@@ -303,7 +303,7 @@ function pronamic_pay_get_thousands_separator() {
 	// WordPress.
 	if ( false === $separator ) {
 		// WordPress locale number format was introduced in WordPress version 2.3.
-		// @see https://github.com/WordPress/WordPress/blob/2.3/wp-includes/locale.php#L90-L100.
+		// @link https://github.com/WordPress/WordPress/blob/2.3/wp-includes/locale.php#L90-L100.
 		$separator = $wp_locale->number_format['thousands_sep'];
 	}
 
@@ -324,7 +324,7 @@ function pronamic_pay_get_decimal_separator() {
 	// WordPress.
 	if ( false === $separator ) {
 		// WordPress locale number format was introduced in WordPress version 2.3.
-		// @see https://github.com/WordPress/WordPress/blob/2.3/wp-includes/locale.php#L90-L100.
+		// @link https://github.com/WordPress/WordPress/blob/2.3/wp-includes/locale.php#L90-L100.
 		$separator = $wp_locale->number_format['decimal_point'];
 	}
 
@@ -334,21 +334,27 @@ function pronamic_pay_get_decimal_separator() {
 /**
  * Pronamic Pay get page ID.
  *
- * @see https://github.com/woothemes/woocommerce/blob/v2.0.16/woocommerce-core-functions.php#L344
+ * @link https://github.com/woothemes/woocommerce/blob/v2.0.16/woocommerce-core-functions.php#L344
  *
  * @param string $page Pronamic Pay page identifier slug.
  * @return int
  */
 function pronamic_pay_get_page_id( $page ) {
-	$option = sprintf( 'pronamic_pay_%s_page_id', $page );
+	$option_name = sprintf( 'pronamic_pay_%s_page_id', $page );
 
-	return get_option( $option, -1 );
+	$option = get_option( $option_name, -1 );
+
+	if ( false === $option ) {
+		return -1;
+	}
+
+	return $option;
 }
 
 /**
  * Helper function to update post meta data.
  *
- * @see http://codex.wordpress.org/Function_Reference/update_post_meta
+ * @link http://codex.wordpress.org/Function_Reference/update_post_meta
  * @param int   $post_id The post ID to update the specified meta data for.
  * @param array $data    The data array with meta keys/values.
  */

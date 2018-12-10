@@ -1,0 +1,81 @@
+{
+  "id":1,
+  "total_amount":{
+    "value":242,
+    "currency":"EUR",
+    "tax_value":42,
+    "tax_percentage":21
+  },
+  "customer":{
+    "name":{
+      "first_name":"Remco",
+      "last_name":"Tolsma"
+    },
+    "gender":"M",
+    "birth_date":"1970-12-31T00:00:00+00:00",
+    "email":"remco@pronamic.nl",
+    "phone":"085 40 11 580",
+    "ip_address":"127.0.0.1",
+    "user_agent":"Mozilla\/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/40.0.2214.85 Safari\/537.36",
+    "language":"nl",
+    "locale":"nl_NL"
+  },
+  "billing_address":{
+    "name":{
+      "first_name":"Remco",
+      "last_name":"Tolsma"
+    },
+    "email":"info@pronamic.nl",
+    "company_name":"Pronamic",
+    "coc_number":"01108446",
+    "line_1":"Burgemeester Wuiteweg 39b",
+    "line_2":"1e etage",
+    "postal_code":"9203 KA",
+    "city":"Drachten",
+    "region":"Friesland",
+    "country_code":"NL",
+    "country_name":"Nederland",
+    "phone":"085 40 11 580"
+  },
+  "shipping_address":{
+    "name":{
+      "first_name":"Remco",
+      "last_name":"Tolsma"
+    },
+    "email":"info@pronamic.nl",
+    "company_name":"Pronamic",
+    "coc_number":"01108446",
+    "line_1":"Burgemeester Wuiteweg 39b",
+    "line_2":"1e etage",
+    "postal_code":"9203 KA",
+    "city":"Drachten",
+    "region":"Friesland",
+    "country_code":"NL",
+    "country_name":"Nederland",
+    "phone":"085 40 11 580"
+  },
+  "lines":[
+    {
+      "id":"1234",
+      "description":"Lorem ipsum dolor sit amet.",
+      "quantity":50,
+      "total_amount":{
+        "value":39.99,
+        "currency":"EUR"
+      }
+    },
+    {
+      "id":5678,
+      "description":"Lorem ipsum dolor sit amet.",
+      "quantity":10,
+      "total_amount":{
+        "value":25,
+        "currency":"EUR",
+        "tax_value":5.25,
+        "tax_percentage":21
+      }
+    }
+  ],
+  "ga_tracked":true,
+  "mode":"live"
+}

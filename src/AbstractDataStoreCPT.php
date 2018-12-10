@@ -10,14 +10,15 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use Exception;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
 
 /**
  * Abstract Data Store Custom Post Type
  *
- * @see https://woocommerce.com/2017/04/woocommerce-3-0-release/
- * @see https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
+ * @link https://woocommerce.com/2017/04/woocommerce-3-0-release/
+ * @link https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
  * @author  Remco Tolsma
  * @version 2.0.6
  * @since   3.7.0
@@ -107,8 +108,6 @@ abstract class AbstractDataStoreCPT {
 	 * @param int    $id  Post ID.
 	 * @param string $key Key.
 	 *
-	 * @throws \Exception In case of an error.
-	 *
 	 * @return DateTime|null
 	 */
 	public function get_meta_date( $id, $key ) {
@@ -118,7 +117,11 @@ abstract class AbstractDataStoreCPT {
 			return null;
 		}
 
-		$date = new DateTime( $value, new DateTimeZone( 'UTC' ) );
+		try {
+			$date = new DateTime( $value, new DateTimeZone( 'UTC' ) );
+		} catch ( Exception $e ) {
+			$date = null;
+		}
 
 		return $date;
 	}

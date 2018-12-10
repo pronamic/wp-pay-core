@@ -10,23 +10,28 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
-use Pronamic\WordPress\Money\Currency;
+use InvalidArgumentException;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Address;
+use Pronamic\WordPress\Pay\Core\Gateway;
+use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\CreditCard;
 use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
+use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
 use WP_Post;
 
 /**
  * Payment
  *
  * @author  Remco Tolsma
- * @version 2.0.8
+ * @version 2.1.0
  * @since   1.0.0
  */
-class Payment {
+class Payment extends LegacyPayment {
 	/**
 	 * The payment post object.
 	 *
@@ -68,13 +73,6 @@ class Payment {
 	 * @var integer
 	 */
 	public $config_id;
-
-	/**
-	 * The user ID.
-	 *
-	 * @var integer
-	 */
-	public $user_id;
 
 	/**
 	 * The key of this payment, used in URL's for security.
@@ -125,11 +123,18 @@ class Payment {
 	public $order_id;
 
 	/**
-	 * The amount of this payment, for example 18.95.
+	 * The total amount of this payment.
 	 *
-	 * @var Money
+	 * @var TaxedMoney
 	 */
-	protected $amount;
+	private $total_amount;
+
+	/**
+	 * The shipping amount of this payment.
+	 *
+	 * @var Money|null
+	 */
+	private $shipping_amount;
 
 	/**
 	 * The expiration period of this payment.
@@ -138,20 +143,6 @@ class Payment {
 	 * @var string
 	 */
 	public $expiration_period;
-
-	/**
-	 * The language of the user who started this payment.
-	 *
-	 * @var string
-	 */
-	public $language;
-
-	/**
-	 * The locale of the user who started this payment.
-	 *
-	 * @var string
-	 */
-	public $locale;
 
 	/**
 	 * The entrance code of this payment.
@@ -209,59 +200,18 @@ class Payment {
 	public $consumer_city;
 
 	/**
-	 * The customer name of the consumer of this payment.
-	 *
-	 * @todo Is this required?
-	 * @var  string
-	 */
-	public $customer_name;
-
-	/**
-	 * The address of the consumer of this payment.
-	 *
-	 * @todo Is this required?
-	 * @var  string
-	 */
-	public $address;
-
-	/**
-	 * The city of the consumer of this payment.
-	 *
-	 * @todo Is this required?
-	 * @var  string
-	 */
-	public $city;
-
-	/**
-	 * The ZIP of the consumer of this payment.
-	 *
-	 * @todo Is this required?
-	 * @var  string
-	 */
-	public $zip;
-
-	/**
-	 * The country of the consumer of this payment.
-	 *
-	 * @todo Is this required?
-	 * @var  string
-	 */
-	public $country;
-
-	/**
-	 * The telephone number of the consumer of this payment.
-	 *
-	 * @todo Is this required?
-	 * @var  string
-	 */
-	public $telephone_number;
-
-	/**
 	 * The Google Analytics client ID of the user who started this payment.
 	 *
 	 * @var string
 	 */
 	public $analytics_client_id;
+
+	/**
+	 * Google Analytics e-commerce tracked.
+	 *
+	 * @var bool
+	 */
+	public $ga_tracked;
 
 	/**
 	 * The status of this payment.
@@ -286,14 +236,14 @@ class Payment {
 	public $action_url;
 
 	/**
-	 * The payment method chosen by to user who started this payment.
+	 * The payment method chosen by the user who started this payment.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $method;
 
 	/**
-	 * The issuer chosen by to user who started this payment.
+	 * The issuer chosen by the user who started this payment.
 	 *
 	 * @var string
 	 */
@@ -321,20 +271,6 @@ class Payment {
 	 * @var boolean
 	 */
 	public $recurring;
-
-	/**
-	 * The first name of the user who started this payment.
-	 *
-	 * @var string
-	 */
-	public $first_name;
-
-	/**
-	 * The last name of the user who started this payment.
-	 *
-	 * @var string
-	 */
-	public $last_name;
 
 	/**
 	 * The recurring type.
@@ -366,32 +302,53 @@ class Payment {
 	public $end_date;
 
 	/**
-	 * User agent.
+	 * Customer.
 	 *
-	 * @var string
+	 * @var Customer|null
 	 */
-	public $user_agent;
-
-	/**
-	 * User IP address.
-	 *
-	 * @var string
-	 */
-	public $user_ip;
+	public $customer;
 
 	/**
 	 * Billing address.
 	 *
 	 * @var Address|null
 	 */
-	private $billing_address;
+	public $billing_address;
 
 	/**
-	 * Shiping address.
+	 * Shipping address.
 	 *
 	 * @var Address|null
 	 */
-	private $shipping_address;
+	public $shipping_address;
+
+	/**
+	 * Payment lines.
+	 *
+	 * @var PaymentLines|null
+	 */
+	public $lines;
+
+	/**
+	 * Version.
+	 *
+	 * @var string|null
+	 */
+	private $version;
+
+	/**
+	 * Mode.
+	 *
+	 * @var string|null
+	 */
+	private $mode;
+
+	/**
+	 * Is anonymized.
+	 *
+	 * @var bool|null
+	 */
+	private $anonymized;
 
 	/**
 	 * Construct and initialize payment object.
@@ -403,7 +360,7 @@ class Payment {
 		$this->date = new DateTime();
 		$this->meta = array();
 
-		$this->set_amount( new Money() );
+		$this->set_total_amount( new TaxedMoney() );
 		$this->set_status( Statuses::OPEN );
 
 		if ( null !== $post_id ) {
@@ -435,7 +392,7 @@ class Payment {
 	 * @return void
 	 */
 	public function save() {
-		pronamic_pay_plugin()->payments_data_store->update( $this );
+		pronamic_pay_plugin()->payments_data_store->save( $this );
 	}
 
 	/**
@@ -458,6 +415,60 @@ class Payment {
 	}
 
 	/**
+	 * Get payment date.
+	 *
+	 * @return DateTime
+	 */
+	public function get_date() {
+		return $this->date;
+	}
+
+	/**
+	 * Set payment date.
+	 *
+	 * @param DateTime $date Date.
+	 */
+	public function set_date( $date ) {
+		$this->date = $date;
+	}
+
+	/**
+	 * Get start date.
+	 *
+	 * @return DateTime
+	 */
+	public function get_start_date() {
+		return $this->start_date;
+	}
+
+	/**
+	 * Set start date.
+	 *
+	 * @param DateTime $start_date Start date.
+	 */
+	public function set_start_date( $start_date ) {
+		$this->start_date = $start_date;
+	}
+
+	/**
+	 * Get end date.
+	 *
+	 * @return DateTime
+	 */
+	public function get_end_date() {
+		return $this->end_date;
+	}
+
+	/**
+	 * Set end date.
+	 *
+	 * @param DateTime $end_date End date.
+	 */
+	public function set_end_date( $end_date ) {
+		$this->end_date = $end_date;
+	}
+
+	/**
 	 * Get the source identifier of this payment.
 	 *
 	 * @return string
@@ -467,12 +478,48 @@ class Payment {
 	}
 
 	/**
+	 * Set the source of this payment.
+	 *
+	 * @param string $source Source.
+	 */
+	public function set_source( $source ) {
+		$this->source = $source;
+	}
+
+	/**
 	 * Get the source ID of this payment.
 	 *
 	 * @return string
 	 */
 	public function get_source_id() {
 		return $this->source_id;
+	}
+
+	/**
+	 * Set the source ID of this payment.
+	 *
+	 * @param string|int $source_id Source ID.
+	 */
+	public function set_source_id( $source_id ) {
+		$this->source_id = $source_id;
+	}
+
+	/**
+	 * Get the config ID of this payment.
+	 *
+	 * @return string
+	 */
+	public function get_config_id() {
+		return $this->config_id;
+	}
+
+	/**
+	 * Set the config ID of this payment.
+	 *
+	 * @param string|int $config_id Config ID.
+	 */
+	public function set_config_id( $config_id ) {
+		$this->config_id = $config_id;
 	}
 
 	/**
@@ -490,6 +537,78 @@ class Payment {
 	}
 
 	/**
+	 * Get customer.
+	 *
+	 * @return Customer|null
+	 */
+	public function get_customer() {
+		return $this->customer;
+	}
+
+	/**
+	 * Set customer.
+	 *
+	 * @param Customer $customer Contact.
+	 */
+	public function set_customer( $customer ) {
+		$this->customer = $customer;
+	}
+
+	/**
+	 * Get billing address.
+	 *
+	 * @return Address|null
+	 */
+	public function get_billing_address() {
+		return $this->billing_address;
+	}
+
+	/**
+	 * Set billing address.
+	 *
+	 * @param Address $billing_address Billing address.
+	 */
+	public function set_billing_address( $billing_address ) {
+		$this->billing_address = $billing_address;
+	}
+
+	/**
+	 * Get shipping address.
+	 *
+	 * @return Address|null
+	 */
+	public function get_shipping_address() {
+		return $this->shipping_address;
+	}
+
+	/**
+	 * Set shipping address.
+	 *
+	 * @param Address $shipping_address Shipping address.
+	 */
+	public function set_shipping_address( $shipping_address ) {
+		$this->shipping_address = $shipping_address;
+	}
+
+	/**
+	 * Get payment lines.
+	 *
+	 * @return PaymentLines|null
+	 */
+	public function get_lines() {
+		return $this->lines;
+	}
+
+	/**
+	 * Set payment lines.
+	 *
+	 * @param PaymentLines $lines Payment lines.
+	 */
+	public function set_lines( PaymentLines $lines ) {
+		$this->lines = $lines;
+	}
+
+	/**
 	 * Get the order ID of this payment.
 	 *
 	 * @return string
@@ -499,46 +618,46 @@ class Payment {
 	}
 
 	/**
-	 * Get the payment amount.
+	 * Get total amount.
 	 *
-	 * @return Money
+	 * @return TaxedMoney
 	 */
-	public function get_amount() {
-		return $this->amount;
+	public function get_total_amount() {
+		return $this->total_amount;
 	}
 
 	/**
-	 * Set the payment amount.
+	 * Set total amount.
 	 *
-	 * @param Money $amount Money object.
+	 * @param TaxedMoney $total_amount Total amount.
 	 */
-	public function set_amount( Money $amount ) {
-		$this->amount = $amount;
+	public function set_total_amount( TaxedMoney $total_amount ) {
+		$this->total_amount = $total_amount;
 	}
 
 	/**
-	 * Get the payment currency.
+	 * Get the shipping amount.
 	 *
-	 * @return string
+	 * @return Money|null
 	 */
-	public function get_currency() {
-		return $this->get_amount()->get_currency()->get_alphabetic_code();
+	public function get_shipping_amount() {
+		return $this->shipping_amount;
 	}
 
 	/**
-	 * Get currency numeric code
+	 * Set the shipping amount.
 	 *
-	 * @return string|null
+	 * @param Money|null $shipping_amount Money object.
 	 */
-	public function get_currency_numeric_code() {
-		return $this->get_amount()->get_currency()->get_numeric_code();
+	public function set_shipping_amount( Money $shipping_amount ) {
+		$this->shipping_amount = $shipping_amount;
 	}
 
 	/**
 	 * Get the payment method.
 	 *
 	 * @todo Constant?
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_method() {
 		return $this->method;
@@ -551,24 +670,6 @@ class Payment {
 	 */
 	public function get_issuer() {
 		return $this->issuer;
-	}
-
-	/**
-	 * Get the payment language.
-	 *
-	 * @return string
-	 */
-	public function get_language() {
-		return $this->language;
-	}
-
-	/**
-	 * Get the payment locale.
-	 *
-	 * @return string
-	 */
-	public function get_locale() {
-		return $this->locale;
 	}
 
 	/**
@@ -618,6 +719,24 @@ class Payment {
 	}
 
 	/**
+	 * Is tracked in Google Analytics?
+	 *
+	 * @return bool
+	 */
+	public function get_ga_tracked() {
+		return (bool) $this->ga_tracked;
+	}
+
+	/**
+	 * Set if payment is tracked in Google Analytics.
+	 *
+	 * @param bool $tracked Tracked in Google Analytics.
+	 */
+	public function set_ga_tracked( $tracked ) {
+		$this->ga_tracked = $tracked;
+	}
+
+	/**
 	 * Get the meta value of this specified meta key.
 	 *
 	 * @param string $key Meta key.
@@ -648,7 +767,9 @@ class Payment {
 			return delete_post_meta( $this->id, $key );
 		}
 
-		return update_post_meta( $this->id, $key, $value );
+		$result = update_post_meta( $this->id, $key, $value );
+
+		return ( false !== $result );
 	}
 
 	/**
@@ -686,7 +807,7 @@ class Payment {
 	public function get_action_url() {
 		$action_url = $this->action_url;
 
-		$amount = $this->get_amount()->get_amount();
+		$amount = $this->get_total_amount()->get_value();
 
 		if ( empty( $amount ) ) {
 			$status = $this->get_status();
@@ -724,18 +845,6 @@ class Payment {
 		$url = apply_filters( 'pronamic_payment_redirect_url_' . $this->source, $url, $this );
 
 		return $url;
-	}
-
-	/**
-	 * Get the redirect URL for this payment.
-	 *
-	 * @deprecated 4.1.2 Use get_return_redirect_url()
-	 * @return string
-	 */
-	public function get_redirect_url() {
-		_deprecated_function( __FUNCTION__, '4.1.2', 'get_return_redirect_url()' );
-
-		return $this->get_return_redirect_url();
 	}
 
 	/**
@@ -786,7 +895,7 @@ class Payment {
 	/**
 	 * Get subscription.
 	 *
-	 * @return Subscription
+	 * @return Subscription|bool
 	 */
 	public function get_subscription() {
 		if ( is_object( $this->subscription ) ) {
@@ -805,7 +914,7 @@ class Payment {
 	/**
 	 * Format string
 	 *
-	 * @see https://github.com/woocommerce/woocommerce/blob/v2.2.3/includes/abstracts/abstract-wc-email.php#L187-L195
+	 * @link https://github.com/woocommerce/woocommerce/blob/v2.2.3/includes/abstracts/abstract-wc-email.php#L187-L195
 	 *
 	 * @param string $string The string to format.
 	 * @return string
@@ -826,7 +935,7 @@ class Payment {
 		);
 
 		// Make sure there is an dynamic part in the order ID.
-		// @see https://secure.ogone.com/ncol/param_cookbook.asp.
+		// @link https://secure.ogone.com/ncol/param_cookbook.asp.
 		if ( 0 === $count ) {
 			$string .= $this->get_id();
 		}
@@ -889,78 +998,6 @@ class Payment {
 	}
 
 	/**
-	 * Get first name.
-	 *
-	 * @return string
-	 */
-	public function get_first_name() {
-		return $this->first_name;
-	}
-
-	/**
-	 * Get last name.
-	 *
-	 * @return string
-	 */
-	public function get_last_name() {
-		return $this->last_name;
-	}
-
-	/**
-	 * Get customer name.
-	 *
-	 * @return string
-	 */
-	public function get_customer_name() {
-		return $this->customer_name;
-	}
-
-	/**
-	 * Get address.
-	 *
-	 * @return string
-	 */
-	public function get_address() {
-		return $this->address;
-	}
-
-	/**
-	 * Get city.
-	 *
-	 * @return string
-	 */
-	public function get_city() {
-		return $this->city;
-	}
-
-	/**
-	 * Get ZIP.
-	 *
-	 * @return string
-	 */
-	public function get_zip() {
-		return $this->zip;
-	}
-
-	/**
-	 * Get country.
-	 *
-	 * @return string
-	 */
-	public function get_country() {
-		return $this->country;
-	}
-
-	/**
-	 * Get telephone number.
-	 *
-	 * @return string
-	 */
-	public function get_telephone_number() {
-		return $this->telephone_number;
-	}
-
-	/**
 	 * Get Google Analytics client ID.
 	 *
 	 * @return string
@@ -1015,38 +1052,175 @@ class Payment {
 	}
 
 	/**
-	 * Get billing address.
+	 * Set version.
 	 *
-	 * @return Address|null
+	 * @param string|null $version Version.
 	 */
-	public function get_billing_address() {
-		return $this->billing_address;
+	public function set_version( $version ) {
+		$this->version = $version;
 	}
 
 	/**
-	 * Set billing address.
+	 * Get version.
 	 *
-	 * @param Address|null $address Address.
+	 * @return string|null
 	 */
-	public function set_billing_address( $address ) {
-		$this->billing_address = $address;
+	public function get_version() {
+		return $this->version;
 	}
 
 	/**
-	 * Get shipping address.
+	 * Set mode.
 	 *
-	 * @return Address|null
+	 * @param string|null $mode Mode.
+	 *
+	 * @throws InvalidArgumentException Throws invalid argument exception when mode is not a string or not one of the mode constants.
 	 */
-	public function get_shipping_address() {
-		return $this->shipping_address;
+	public function set_mode( $mode ) {
+		if ( ! is_string( $mode ) ) {
+			throw new InvalidArgumentException( 'Mode must be a string.' );
+		}
+
+		if ( ! in_array( $mode, array( Gateway::MODE_TEST, Gateway::MODE_LIVE ), true ) ) {
+			throw new InvalidArgumentException( 'Invalid mode.' );
+		}
+
+		$this->mode = $mode;
 	}
 
 	/**
-	 * Set shipping address.
+	 * Get mode.
 	 *
-	 * @param Address|null $address Address.
+	 * @return string|null
 	 */
-	public function set_shipping_address( $address ) {
-		$this->shipping_address = $address;
+	public function get_mode() {
+		return $this->mode;
+	}
+
+	/**
+	 * Is anonymized?
+	 *
+	 * @return bool
+	 */
+	public function is_anonymized() {
+		return ( true === $this->anonymized );
+	}
+
+	/**
+	 * Set anonymized.
+	 *
+	 * @param bool|null $anonymized Anonymized.
+	 */
+	public function set_anonymized( $anonymized ) {
+		$this->anonymized = $anonymized;
+	}
+
+	/**
+	 * Create payment from object.
+	 *
+	 * @param mixed        $json    JSON.
+	 * @param Payment|null $payment Payment.
+	 * @return Payment
+	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
+	 */
+	public static function from_json( $json, self $payment = null ) {
+		if ( ! is_object( $json ) ) {
+			throw new InvalidArgumentException( 'JSON value must be an array.' );
+		}
+
+		if ( null === $payment ) {
+			$payment = new self();
+		}
+
+		if ( isset( $json->id ) ) {
+			$payment->set_id( $json->id );
+		}
+
+		if ( isset( $json->total_amount ) ) {
+			$payment->set_total_amount( TaxedMoneyJsonTransformer::from_json( $json->total_amount ) );
+		}
+
+		if ( isset( $json->shipping_amount ) ) {
+			$payment->set_shipping_amount( MoneyJsonTransformer::from_json( $json->shipping_amount ) );
+		}
+
+		if ( isset( $json->customer ) ) {
+			$payment->set_customer( Customer::from_json( $json->customer ) );
+		}
+
+		if ( isset( $json->billing_address ) ) {
+			$payment->set_billing_address( Address::from_json( $json->billing_address ) );
+		}
+
+		if ( isset( $json->shipping_address ) ) {
+			$payment->set_shipping_address( Address::from_json( $json->shipping_address ) );
+		}
+
+		if ( isset( $json->lines ) ) {
+			$payment->set_lines( PaymentLines::from_json( $json->lines ) );
+		}
+
+		if ( isset( $json->ga_tracked ) ) {
+			$payment->set_ga_tracked( $json->ga_tracked );
+		}
+
+		if ( isset( $json->mode ) ) {
+			$payment->set_mode( $json->mode );
+		}
+
+		if ( isset( $json->anonymized ) ) {
+			$payment->set_anonymized( $json->anonymized );
+		}
+
+		return $payment;
+	}
+
+	/**
+	 * Get JSON.
+	 *
+	 * @return object
+	 */
+	public function get_json() {
+		$object = (object) array();
+
+		if ( null !== $this->get_id() ) {
+			$object->id = $this->get_id();
+		}
+
+		$object->total_amount = TaxedMoneyJsonTransformer::to_json( $this->get_total_amount() );
+
+		if ( null !== $this->get_shipping_amount() ) {
+			$object->shipping_amount = MoneyJsonTransformer::to_json( $this->get_shipping_amount() );
+		}
+
+		if ( null !== $this->get_customer() ) {
+			$object->customer = $this->get_customer()->get_json();
+		}
+
+		if ( null !== $this->get_billing_address() ) {
+			$object->billing_address = $this->get_billing_address()->get_json();
+		}
+
+		if ( null !== $this->get_shipping_address() ) {
+			$object->shipping_address = $this->get_shipping_address()->get_json();
+		}
+
+		if ( null !== $this->get_lines() ) {
+			$object->lines = $this->get_lines()->get_json();
+		}
+
+		if ( null !== $this->get_ga_tracked() ) {
+			$object->ga_tracked = $this->get_ga_tracked();
+		}
+
+		if ( null !== $this->get_mode() ) {
+			$object->mode = $this->get_mode();
+		}
+
+		if ( $this->is_anonymized() ) {
+			$object->anonymized = $this->is_anonymized();
+		}
+
+		return $object;
 	}
 }

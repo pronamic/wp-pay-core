@@ -17,9 +17,9 @@ use Pronamic\WordPress\Pay\Plugin;
 /**
  * WordPress admin install
  *
- * @author Remco Tolsma
- * @version 3.7.0
- * @since 3.7.0
+ * @author  Remco Tolsma
+ * @version 2.1.0
+ * @since   1.0.0
  */
 class Install {
 	/**
@@ -45,7 +45,7 @@ class Install {
 	/**
 	 * Constructs and initializes an install object.
 	 *
-	 * @see https://github.com/woothemes/woocommerce/blob/2.4.3/includes/class-wc-install.php
+	 * @link https://github.com/woothemes/woocommerce/blob/2.4.3/includes/class-wc-install.php
 	 *
 	 * @param Plugin      $plugin Plugin.
 	 * @param AdminModule $admin  Admin.
@@ -143,9 +143,9 @@ class Install {
 	/**
 	 * Create roles.
 	 *
-	 * @see https://codex.wordpress.org/Function_Reference/register_post_type
-	 * @see https://github.com/woothemes/woocommerce/blob/v2.2.3/includes/class-wc-install.php#L519-L562
-	 * @see https://github.com/woothemes/woocommerce/blob/v2.2.3/includes/class-wc-post-types.php#L245
+	 * @link https://codex.wordpress.org/Function_Reference/register_post_type
+	 * @link https://github.com/woothemes/woocommerce/blob/v2.2.3/includes/class-wc-install.php#L519-L562
+	 * @link https://github.com/woothemes/woocommerce/blob/v2.2.3/includes/class-wc-post-types.php#L245
 	 */
 	private function create_roles() {
 		// Payer role.
@@ -157,7 +157,7 @@ class Install {
 			)
 		);
 
-		// @see https://developer.wordpress.org/reference/functions/wp_roles/.
+		// @link https://developer.wordpress.org/reference/functions/wp_roles/.
 		$roles = wp_roles();
 
 		// Payments.

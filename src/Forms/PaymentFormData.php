@@ -82,7 +82,7 @@ class PaymentFormData extends PaymentData {
 
 			$money_parser = new MoneyParser();
 
-			$amount = $money_parser->parse( $amount )->get_amount();
+			$amount = $money_parser->parse( $amount )->get_value();
 		} elseif ( in_array( $amount_method, array( FormPostType::AMOUNT_METHOD_CHOICES_ONLY, FormPostType::AMOUNT_METHOD_CHOICES_AND_INPUT ), true ) ) {
 			$amount /= 100;
 		}
@@ -95,7 +95,7 @@ class PaymentFormData extends PaymentData {
 		$item->set_price( $amount );
 		$item->set_quantity( 1 );
 
-		$items->addItem( $item );
+		$items->add_item( $item );
 
 		return $items;
 	}

@@ -15,9 +15,9 @@ use Pronamic\WordPress\Pay\Plugin;
 /**
  * WordPress admin about
  *
- * @author Remco Tolsma
- * @version 3.7.0
- * @since 3.7.0
+ * @author  Remco Tolsma
+ * @version 2.1.0
+ * @since   1.0.0
  */
 class AdminAboutPage {
 	/**
@@ -37,9 +37,9 @@ class AdminAboutPage {
 	/**
 	 * Constructs and initializes admin about page object.
 	 *
-	 * @see https://github.com/WordImpress/Give/blob/1.1/includes/admin/dashboard-widgets.php
-	 * @see https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin.php
-	 * @see https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin-dashboard.php
+	 * @link https://github.com/WordImpress/Give/blob/1.1/includes/admin/dashboard-widgets.php
+	 * @link https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin.php
+	 * @link https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin-dashboard.php
 	 *
 	 * @param Plugin      $plugin Plugin.
 	 * @param AdminModule $admin  Admin.
@@ -89,7 +89,8 @@ class AdminAboutPage {
 	 * Admin CSS.
 	 */
 	public function admin_css() {
-		$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		// @link https://github.com/WordPress/WordPress/blob/4.7/wp-includes/default-constants.php#L83-L93.
+		$min = SCRIPT_DEBUG ? '' : '.min';
 
 		wp_enqueue_style(
 			'proanmic-pay-admin-about',

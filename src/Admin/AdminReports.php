@@ -15,9 +15,9 @@ use Pronamic\WordPress\Pay\Plugin;
 /**
  * WordPress admin reports
  *
- * @author Remco Tolsma
- * @version 3.7.0
- * @since 3.7.0
+ * @author  Remco Tolsma
+ * @version 2.1.0
+ * @since   1.0.0
  */
 class AdminReports {
 	/**
@@ -62,7 +62,7 @@ class AdminReports {
 		);
 
 		if ( false !== $hook_suffix ) {
-			// @see https://github.com/WordPress/WordPress/blob/4.2.4/wp-admin/admin-header.php#L82-L87.
+			// @link https://github.com/WordPress/WordPress/blob/4.2.4/wp-admin/admin-header.php#L82-L87.
 			add_action( 'admin_print_styles-' . $hook_suffix, array( $this, 'admin_css' ) );
 		}
 	}
@@ -78,7 +78,7 @@ class AdminReports {
 	 * Enqueue admin scripts.
 	 */
 	public function admin_css() {
-		$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		$min = SCRIPT_DEBUG ? '' : '.min';
 
 		// Flot - http://www.flotcharts.org/.
 		$flot_version = '0.8.0-alpha';
@@ -295,8 +295,8 @@ class AdminReports {
 	/**
 	 * Get report.
 	 *
-	 * @see https://github.com/woothemes/woocommerce/blob/2.3.11/assets/js/admin/reports.js
-	 * @see https://github.com/woothemes/woocommerce/blob/master/includes/admin/reports/class-wc-report-sales-by-date.php
+	 * @link https://github.com/woothemes/woocommerce/blob/2.3.11/assets/js/admin/reports.js
+	 * @link https://github.com/woothemes/woocommerce/blob/master/includes/admin/reports/class-wc-report-sales-by-date.php
 	 * @param string    $status   Status.
 	 * @param string    $function Function.
 	 * @param \DateTime $start    Start date.

@@ -13,8 +13,9 @@ namespace Pronamic\WordPress\Pay\Payments;
 /**
  * Item.
  *
- * @author Remco Tolsma
- * @version 1.0
+ * @deprecated Use `PaymentLine`.
+ * @author     Remco Tolsma
+ * @version    1.0
  */
 class Item {
 	/**

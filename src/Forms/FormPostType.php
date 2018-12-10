@@ -19,8 +19,8 @@ use WP_Post;
  * Form Post Type
  *
  * @author  Remco Tolsma
- * @version 2.0.5
- * @since   3.7.0
+ * @version 2.1.0
+ * @since   1.0.0
  */
 class FormPostType {
 	/**
@@ -69,10 +69,10 @@ class FormPostType {
 		/**
 		 * Priotiry of the initial post types function should be set to < 10.
 		 *
-		 * @see https://core.trac.wordpress.org/ticket/28488.
-		 * @see https://core.trac.wordpress.org/changeset/29318.
+		 * @link https://core.trac.wordpress.org/ticket/28488.
+		 * @link https://core.trac.wordpress.org/changeset/29318.
 		 *
-		 * @see https://github.com/WordPress/WordPress/blob/4.0/wp-includes/post.php#L167.
+		 * @link https://github.com/WordPress/WordPress/blob/4.0/wp-includes/post.php#L167.
 		 */
 		add_action( 'init', array( $this, 'register_post_type' ), 0 ); // Highest priority.
 
@@ -82,7 +82,7 @@ class FormPostType {
 
 		/*
 		 * Add meta box, we use priority 9 to make sure it loads before Yoast SEO meta box.
-		 * @see https://github.com/Yoast/wordpress-seo/blob/2.3.4/admin/class-metabox.php#L20.
+		 * @link https://github.com/Yoast/wordpress-seo/blob/2.3.4/admin/class-metabox.php#L20.
 		 */
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 9 );
 
@@ -100,21 +100,31 @@ class FormPostType {
 			array(
 				'label'              => __( 'Payment Forms', 'pronamic_ideal' ),
 				'labels'             => array(
-					'name'                  => __( 'Payment Forms', 'pronamic_ideal' ),
-					'singular_name'         => __( 'Payment Form', 'pronamic_ideal' ),
-					'add_new'               => __( 'Add New', 'pronamic_ideal' ),
-					'add_new_item'          => __( 'Add New Payment Form', 'pronamic_ideal' ),
-					'edit_item'             => __( 'Edit Payment Form', 'pronamic_ideal' ),
-					'new_item'              => __( 'New Payment Form', 'pronamic_ideal' ),
-					'all_items'             => __( 'All Payment Forms', 'pronamic_ideal' ),
-					'view_item'             => __( 'View Payment Form', 'pronamic_ideal' ),
-					'search_items'          => __( 'Search Payment Forms', 'pronamic_ideal' ),
-					'not_found'             => __( 'No payment forms found.', 'pronamic_ideal' ),
-					'not_found_in_trash'    => __( 'No payment forms found in Trash.', 'pronamic_ideal' ),
-					'menu_name'             => __( 'Payment Forms', 'pronamic_ideal' ),
-					'filter_items_list'     => __( 'Filter payment forms list', 'pronamic_ideal' ),
-					'items_list_navigation' => __( 'Payment forms list navigation', 'pronamic_ideal' ),
-					'items_list'            => __( 'Payment forms list', 'pronamic_ideal' ),
+					'name'                     => __( 'Payment Forms', 'pronamic_ideal' ),
+					'singular_name'            => __( 'Payment Form', 'pronamic_ideal' ),
+					'add_new'                  => __( 'Add New', 'pronamic_ideal' ),
+					'add_new_item'             => __( 'Add New Payment Form', 'pronamic_ideal' ),
+					'edit_item'                => __( 'Edit Payment Form', 'pronamic_ideal' ),
+					'new_item'                 => __( 'New Payment Form', 'pronamic_ideal' ),
+					'all_items'                => __( 'All Payment Forms', 'pronamic_ideal' ),
+					'view_item'                => __( 'View Payment Form', 'pronamic_ideal' ),
+					'search_items'             => __( 'Search Payment Forms', 'pronamic_ideal' ),
+					'not_found'                => __( 'No payment forms found.', 'pronamic_ideal' ),
+					'not_found_in_trash'       => __( 'No payment forms found in Trash.', 'pronamic_ideal' ),
+					'menu_name'                => __( 'Payment Forms', 'pronamic_ideal' ),
+					'filter_items_list'        => __( 'Filter payment forms list', 'pronamic_ideal' ),
+					'items_list_navigation'    => __( 'Payment forms list navigation', 'pronamic_ideal' ),
+					'items_list'               => __( 'Payment forms list', 'pronamic_ideal' ),
+
+					/*
+					 * New Post Type Labels in 5.0.
+					 * @link https://make.wordpress.org/core/2018/12/05/new-post-type-labels-in-5-0/
+					 */
+					'item_published'           => __( 'Payment form published.', 'pronamic_ideal' ),
+					'item_published_privately' => __( 'Payment form published privately.', 'pronamic_ideal' ),
+					'item_reverted_to_draft'   => __( 'Payment form reverted to draft.', 'pronamic_ideal' ),
+					'item_scheduled'           => __( 'Payment form scheduled.', 'pronamic_ideal' ),
+					'item_updated'             => __( 'Payment form updated.', 'pronamic_ideal' ),
 				),
 				'public'             => true,
 				'publicly_queryable' => true,
@@ -330,9 +340,9 @@ class FormPostType {
 			$money_parser = new MoneyParser();
 
 			foreach ( $data['_pronamic_payment_form_amount_choices'] as $i => $amount ) {
-				$amount = $money_parser->parse( $amount )->get_amount();
+				$amount = $money_parser->parse( $amount );
 
-				$data['_pronamic_payment_form_amount_choices'][ $i ] = \Pronamic\WordPress\Pay\Core\Util::amount_to_cents( $amount );
+				$data['_pronamic_payment_form_amount_choices'][ $i ] = $amount->get_cents();
 			}
 
 			// Remove empty choices.
@@ -346,7 +356,7 @@ class FormPostType {
 	/**
 	 * Get shortcode of the specified form post ID.
 	 *
-	 * @param string $post_id Post ID.
+	 * @param int|null $post_id Post ID.
 	 * @return string
 	 */
 	private function get_shortcode( $post_id = null ) {

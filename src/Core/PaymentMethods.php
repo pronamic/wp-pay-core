@@ -19,11 +19,19 @@ use WP_Query;
  * Copyright: Copyright (c) 2005 - 2018
  * Company: Pronamic
  *
- * @author Remco Tolsma
- * @version 2.0.0
- * @since 1.0.1
+ * @author  Remco Tolsma
+ * @version 2.1.0
+ * @since   1.0.1
  */
 class PaymentMethods {
+	/**
+	 * AfterPay.
+	 *
+	 * @var string
+	 * @since 2.1.0
+	 */
+	const AFTERPAY = 'afterpay';
+
 	/**
 	 * Alipay
 	 *
@@ -56,6 +64,14 @@ class PaymentMethods {
 	const BELFIUS = 'belfius';
 
 	/**
+	 * Billink
+	 *
+	 * @since 2.0.9
+	 * @var string
+	 */
+	const BILLINK = 'billink';
+
+	/**
 	 * Bitcoin
 	 *
 	 * @since 1.3.9
@@ -66,12 +82,28 @@ class PaymentMethods {
 	/**
 	 * Bunq
 	 *
-	 * @see https://www.sisow.nl/news/00009
-	 * @see https://plugins.trac.wordpress.org/browser/sisow-for-woocommerce/tags/4.7.2/includes/classes/Sisow/Gateway/Bunq.php
+	 * @link https://www.sisow.nl/news/00009
+	 * @link https://plugins.trac.wordpress.org/browser/sisow-for-woocommerce/tags/4.7.2/includes/classes/Sisow/Gateway/Bunq.php
 	 * @since 1.3.13
 	 * @var string
 	 */
 	const BUNQ = 'bunq';
+
+	/**
+	 * Constant for the In3 payment method.
+	 *
+	 * @var string
+	 * @since 2.1.0
+	 */
+	const IN3 = 'in3';
+
+	/**
+	 * Capayable.
+	 *
+	 * @var string
+	 * @since 2.0.9
+	 */
+	const CAPAYABLE = 'capayable';
 
 	/**
 	 * Credit Card
@@ -112,6 +144,14 @@ class PaymentMethods {
 	const DIRECT_DEBIT_SOFORT = 'direct_debit_sofort';
 
 	/**
+	 * Constant for the Focum payment method.
+	 *
+	 * @var string
+	 * @since 2.1.0
+	 */
+	const FOCUM = 'focum';
+
+	/**
 	 * Constant for the iDEAL payment method.
 	 *
 	 * @var string
@@ -146,6 +186,14 @@ class PaymentMethods {
 	 * @var string
 	 */
 	const KBC = 'kbc';
+
+	/**
+	 * Constant for the Klarna Pay Later payment method.
+	 *
+	 * @var string
+	 * @since 2.1.0
+	 */
+	const KLARNA_PAY_LATER = 'klarna_pay_later';
 
 	/**
 	 * Constant for the Maestro payment method.
@@ -199,27 +247,44 @@ class PaymentMethods {
 	 * Get payment methods
 	 *
 	 * @since 1.3.0
-	 * @var string
 	 * @return array
 	 */
 	public static function get_payment_methods() {
 		$payment_methods = array(
+			self::AFTERPAY                => __( 'AfterPay', 'pronamic_ideal' ),
 			self::ALIPAY                  => __( 'Alipay', 'pronamic_ideal' ),
 			self::BANCONTACT              => __( 'Bancontact', 'pronamic_ideal' ),
 			self::BANK_TRANSFER           => __( 'Bank Transfer', 'pronamic_ideal' ),
 			self::BELFIUS                 => __( 'Belfius Direct Net', 'pronamic_ideal' ),
+			self::BILLINK                 => __( 'Billink', 'pronamic_ideal' ),
 			self::BITCOIN                 => __( 'Bitcoin', 'pronamic_ideal' ),
 			self::BUNQ                    => __( 'Bunq', 'pronamic_ideal' ),
+			self::CAPAYABLE               => __( 'Capayable', 'pronamic_ideal' ),
+			self::IN3                     => __( 'In3', 'pronamic_ideal' ),
 			self::CREDIT_CARD             => __( 'Credit Card', 'pronamic_ideal' ),
 			self::DIRECT_DEBIT            => __( 'Direct Debit', 'pronamic_ideal' ),
-			self::DIRECT_DEBIT_BANCONTACT => __( 'Direct Debit mandate via Bancontact', 'pronamic_ideal' ),
-			self::DIRECT_DEBIT_IDEAL      => __( 'Direct Debit mandate via iDEAL', 'pronamic_ideal' ),
-			self::DIRECT_DEBIT_SOFORT     => __( 'Direct Debit mandate via SOFORT', 'pronamic_ideal' ),
+			self::DIRECT_DEBIT_BANCONTACT => sprintf(
+				/* translators: %s: payment method */
+				__( 'Direct Debit mandate via %s', 'pronamic_ideal' ),
+				__( 'Bancontact', 'pronamic_ideal' )
+			),
+			self::DIRECT_DEBIT_IDEAL      => sprintf(
+				/* translators: %s: payment method */
+				__( 'Direct Debit mandate via %s', 'pronamic_ideal' ),
+				__( 'iDEAL', 'pronamic_ideal' )
+			),
+			self::DIRECT_DEBIT_SOFORT     => sprintf(
+				/* translators: %s: payment method */
+				__( 'Direct Debit mandate via %s', 'pronamic_ideal' ),
+				__( 'SOFORT', 'pronamic_ideal' )
+			),
+			self::FOCUM                   => __( 'Focum', 'pronamic_ideal' ),
 			self::GIROPAY                 => __( 'Giropay', 'pronamic_ideal' ),
 			self::GULDEN                  => __( 'Gulden', 'pronamic_ideal' ),
 			self::IDEAL                   => __( 'iDEAL', 'pronamic_ideal' ),
 			self::IDEALQR                 => __( 'iDEAL QR', 'pronamic_ideal' ),
 			self::KBC                     => __( 'KBC/CBC Payment Button', 'pronamic_ideal' ),
+			self::KLARNA_PAY_LATER        => __( 'Klarna Pay Later', 'pronamic_ideal' ),
 			self::MAESTRO                 => __( 'Maestro', 'pronamic_ideal' ),
 			self::PAYCONIQ                => __( 'Payconiq', 'pronamic_ideal' ),
 			self::PAYPAL                  => __( 'PayPal', 'pronamic_ideal' ),
@@ -234,7 +299,7 @@ class PaymentMethods {
 	 *
 	 * @since 1.3.0
 	 *
-	 * @param null        $method  Method to get the name for.
+	 * @param string|null $method  Method to get the name for.
 	 * @param string|null $default Default name to return if method was not found.
 	 *
 	 * @return string|null

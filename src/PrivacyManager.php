@@ -37,6 +37,7 @@ class PrivacyManager {
 		// Filters.
 		add_filter( 'wp_privacy_personal_data_exporters', array( $this, 'register_exporters' ), 10 );
 		add_filter( 'wp_privacy_personal_data_erasers', array( $this, 'register_erasers' ), 10 );
+		add_filter( 'wp_privacy_anonymize_data', array( $this, 'anonymize_custom_data_types' ), 10, 3 );
 	}
 
 	/**
@@ -156,7 +157,7 @@ class PrivacyManager {
 
 				// Mask email addresses.
 				if ( false !== strpos( $meta_value, '@' ) ) {
-					$meta_value = $this->mask_email( $meta_value );
+					$meta_value = self::mask_email( $meta_value );
 				}
 
 				update_post_meta( $post_id, $meta_key, $meta_value );
@@ -172,9 +173,9 @@ class PrivacyManager {
 	 *
 	 * @return string
 	 */
-	public function mask_email( $email ) {
+	public static function mask_email( $email ) {
 		// Is this an email address?
-		if ( false === strpos( $email, '@' ) ) {
+		if ( ! is_string( $email ) || false === strpos( $email, '@' ) ) {
 			return $email;
 		}
 
@@ -220,5 +221,64 @@ class PrivacyManager {
 		);
 
 		return $email;
+	}
+
+	/**
+	 * Anonymize data.
+	 *
+	 * @link https://github.com/WordPress/WordPress/blob/4.9.8/wp-includes/functions.php#L5932-L5978
+	 *
+	 * @param  string      $type The type of data to be anonymized.
+	 * @param  string|null $data Optional The data to be anonymized.
+	 * @return string|null The anonymous data for the requested type.
+	 */
+	public static function anonymize_data( $type, $data = null ) {
+		if ( null === $data ) {
+			return null;
+		}
+
+		return wp_privacy_anonymize_data( $type, $data );
+	}
+
+	/**
+	 * Anonymize IPv4 or IPv6 address.
+	 *
+	 * @link https://github.com/WordPress/WordPress/blob/4.9.8/wp-includes/functions.php#L5862-L5930
+	 *
+	 * @param  string|null $ip_addr        The IPv4 or IPv6 address to be anonymized.
+	 * @param  bool        $ipv6_fallback  Optional. Whether to return the original IPv6 address if the needed functions
+	 *                                to anonymize it are not present. Default false, return `::` (unspecified address).
+	 * @return string|null The anonymized IP address.
+	 */
+	public static function anonymize_ip( $ip_addr, $ipv6_fallback = false ) {
+		if ( null === $ip_addr ) {
+			return null;
+		}
+
+		return wp_privacy_anonymize_ip( $ip_addr, $ipv6_fallback );
+	}
+
+	/**
+	 * Anonymize custom data types.
+	 *
+	 * @param string $anonymous Anonymized data.
+	 * @param string $type      Type of the data.
+	 * @param string $data      Original data.
+	 *
+	 * @return string Anonymized string.
+	 */
+	public static function anonymize_custom_data_types( $anonymous, $type, $data ) {
+		switch ( $type ) {
+			case 'email_mask':
+				$anonymous = self::mask_email( $data );
+
+				break;
+			case 'phone':
+				$anonymous = preg_replace( '/\d/u', '0', $data );
+
+				break;
+		}
+
+		return $anonymous;
 	}
 }

@@ -30,7 +30,7 @@ class AdminNotices {
 	/**
 	 * Constructs and initializes an notices object.
 	 *
-	 * @see https://github.com/woothemes/woocommerce/blob/2.4.3/includes/admin/class-wc-admin-notices.php
+	 * @link https://github.com/woothemes/woocommerce/blob/2.4.3/includes/admin/class-wc-admin-notices.php
 	 *
 	 * @param Plugin $plugin Plugin.
 	 */
@@ -44,7 +44,7 @@ class AdminNotices {
 	/**
 	 * Admin notices.
 	 *
-	 * @see https://github.com/WordPress/WordPress/blob/4.3.1/wp-admin/admin-header.php#L245-L250
+	 * @link https://github.com/WordPress/WordPress/blob/4.3.1/wp-admin/admin-header.php#L245-L250
 	 */
 	public function admin_notices() {
 		$screen = get_current_screen();

@@ -130,7 +130,6 @@ class GatewaySettings {
 		$available = $gateway->get_transient_available_payment_methods();
 
 		$payment_methods = array();
-		$sort            = array();
 
 		foreach ( $supported as $payment_method ) {
 			$name = PaymentMethods::get_name( $payment_method );
@@ -144,14 +143,12 @@ class GatewaySettings {
 			$sort[ $payment_method ] = $name;
 		}
 
-		$sort_flags = SORT_STRING;
-
-		if ( version_compare( PHP_VERSION, '5.4', '>=' ) ) {
-			// SORT_FLAG_CASE is available since PHP 5.4.
-			$sort_flags = SORT_STRING | SORT_FLAG_CASE;
-		}
-
-		array_multisort( $sort, $sort_flags, $payment_methods );
+		usort(
+			$payment_methods,
+			function( $a, $b ) {
+				return strnatcasecmp( $a['name'], $b['name'] );
+			}
+		);
 
 		require Plugin::$dirname . '/admin/meta-box-gateway-config-payment-methods.php';
 	}

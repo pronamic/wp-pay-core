@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Core;
 
+use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Util as Pay_Util;
 use SimpleXMLElement;
@@ -36,42 +37,39 @@ class Util {
 	 * @return array|bool|string|WP_Error
 	 */
 	public static function remote_get_body( $url, $required_response_code = 200, array $args = array() ) {
-		$return = false;
-
 		$result = wp_remote_request( $url, $args );
 
 		if ( is_wp_error( $result ) ) {
-			$return = $result;
-		} else {
-			/*
-			 * The response code is cast to a integer since WordPress 4.1, therefor we can't use
-			 * strict comparison on the required response code.
-			 *
-			 * @see https://github.com/WordPress/WordPress/blob/4.1/wp-includes/class-http.php#L528-L529
-			 * @see https://github.com/WordPress/WordPress/blob/4.0/wp-includes/class-http.php#L527
-			 */
-			if ( wp_remote_retrieve_response_code( $result ) == $required_response_code ) { // WPCS: loose comparison ok.
-				$return = wp_remote_retrieve_body( $result );
-			} else {
-				$return = new WP_Error(
-					'wrong_response_code',
-					sprintf(
-						/* translators: 1: received responce code, 2: required response code */
-						__( 'The response code (<code>%1$s<code>) was incorrect, required response code <code>%2$s</code>.', 'pronamic_ideal' ),
-						wp_remote_retrieve_response_code( $result ),
-						$required_response_code
-					)
-				);
-			}
+			return $result;
 		}
 
-		return $return;
+		/*
+		 * The response code is cast to a integer since WordPress 4.1, therefor we can't use
+		 * strict comparison on the required response code.
+		 *
+		 * @link https://github.com/WordPress/WordPress/blob/4.1/wp-includes/class-http.php#L528-L529
+		 * @link https://github.com/WordPress/WordPress/blob/4.0/wp-includes/class-http.php#L527
+		 */
+		if ( wp_remote_retrieve_response_code( $result ) == $required_response_code ) { // WPCS: loose comparison ok.
+			return wp_remote_retrieve_body( $result );
+		}
+
+		// Wrong response code.
+		return new WP_Error(
+			'wrong_response_code',
+			sprintf(
+				/* translators: 1: received responce code, 2: required response code */
+				__( 'The response code (<code>%1$s<code>) was incorrect, required response code <code>%2$s</code>.', 'pronamic_ideal' ),
+				wp_remote_retrieve_response_code( $result ),
+				$required_response_code
+			)
+		);
 	}
 
 	/**
 	 * SimpleXML load string.
 	 *
-	 * @param string $string The XML string to load.
+	 * @param string $string The XML string to convert to a SimpleXMLElement object.
 	 *
 	 * @return SimpleXMLElement|WP_Error
 	 */
@@ -109,10 +107,16 @@ class Util {
 	 *
 	 * @param float $amount The amount to conver to cents.
 	 *
+	 * @deprecated 2.0.9 Use \Pronamic\WordPress\Money\Money::get_cents() instead.
+	 *
 	 * @return int
 	 */
 	public static function amount_to_cents( $amount ) {
-		return round( $amount * 100 );
+		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Money\Money::get_cents()' );
+
+		$money = new Money( $amount );
+
+		return $money->get_cents();
 	}
 
 	/**
@@ -140,11 +144,11 @@ class Util {
 	 * @return float
 	 */
 	public static function string_to_amount( $value ) {
-		_deprecated_function( __FUNCTION__, '5.3', 'Pronamic\WordPress\Money\Parser::parse()->get_amount()' );
+		_deprecated_function( __FUNCTION__, '2.0.3', 'Pronamic\WordPress\Money\Parser::parse()->get_amount()' );
 
 		$money_parser = new MoneyParser();
 
-		$amount = $money_parser->parse( $value )->get_amount();
+		$amount = $money_parser->parse( $value )->get_value();
 
 		return $amount;
 	}
@@ -194,7 +198,7 @@ class Util {
 	/**
 	 * Convert boolean to an numceric boolean.
 	 *
-	 * @see https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
+	 * @link https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
 	 *
 	 * @param boolean $boolean The boolean value to convert to an integer value.
 	 *
@@ -207,7 +211,7 @@ class Util {
 	/**
 	 * Convert boolean to an string boolean
 	 *
-	 * @see https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
+	 * @link https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
 	 *
 	 * @param bool $boolean The boolean value to convert to a string value.
 	 * @return string
@@ -258,6 +262,53 @@ class Util {
 	}
 
 	/**
+	 * Get remote address.
+	 *
+	 * @link https://github.com/WordPress/WordPress/blob/4.9.8/wp-admin/includes/class-wp-community-events.php#L210-L274
+	 * @since 2.1.0
+	 * @return mixed|null
+	 */
+	public static function get_remote_address() {
+		// In order of preference, with the best ones for this purpose first.
+		$headers = array(
+			'HTTP_CLIENT_IP',
+			'HTTP_X_FORWARDED_FOR',
+			'HTTP_X_FORWARDED',
+			'HTTP_X_CLUSTER_CLIENT_IP',
+			'HTTP_FORWARDED_FOR',
+			'HTTP_FORWARDED',
+			'REMOTE_ADDR',
+		);
+
+		foreach ( $headers as $header ) {
+			if ( isset( $_SERVER[ $header ] ) ) {
+				/*
+				 * HTTP_X_FORWARDED_FOR can contain a chain of comma-separated
+				 * addresses. The first one is the original client. It can't be
+				 * trusted for authenticity, but we don't need to for this purpose.
+				 */
+				$addresses = explode( ',', sanitize_text_field( wp_unslash( $_SERVER[ $header ] ) ) );
+
+				$addresses = array_slice( $addresses, 0, 1 );
+
+				foreach ( $addresses as $address ) {
+					$address = trim( $address );
+
+					$address = filter_var( $address, FILTER_VALIDATE_IP );
+
+					if ( false === $address ) {
+						continue;
+					}
+
+					return $address;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Convert input fields array to HTML.
 	 *
 	 * @param array $fields Array with fields data to convert to HTML.
@@ -288,6 +339,31 @@ class Util {
 					);
 
 					break;
+				default:
+					$html .= sprintf(
+						'<label for="%s">%s</label> ',
+						esc_attr( $field['id'] ),
+						$field['label']
+					);
+
+					$type = $field['type'];
+
+					if ( empty( $type ) ) {
+						$type = 'text';
+					}
+
+					$attributes = array(
+						'type' => $type,
+						'id'   => $field['id'],
+						'name' => $field['name'],
+					);
+
+					$html .= sprintf(
+						'<input %s>',
+						Pay_Util::array_to_html_attributes( $attributes )
+					);
+
+					break;
 			}
 		}
 
@@ -307,5 +383,23 @@ class Util {
 	 */
 	public static function class_method_exists( $class, $method ) {
 		return class_exists( $class ) && method_exists( $class, $method );
+	}
+
+	/**
+	 * Check if input type has vars.
+	 *
+	 * @param int   $type           One of INPUT_GET, INPUT_POST, INPUT_COOKIE, INPUT_SERVER, or INPUT_ENV.
+	 * @param array $variable_names Array of variable names to check in input type.
+	 *
+	 * @return bool
+	 */
+	public static function input_has_vars( $type, $variable_names ) {
+		foreach ( $variable_names as $variable_name ) {
+			if ( ! filter_has_var( $type, $variable_name ) ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 }

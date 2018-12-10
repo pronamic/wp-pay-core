@@ -1,0 +1,18 @@
+{
+    "quantity":2,
+    "unit_price":{
+        "value":121,
+        "currency":"EUR",
+        "tax_value":21
+    },
+    "discount_amount":{
+        "value":21,
+        "currency":"EUR"
+    },
+    "total_amount":{
+        "value":242,
+        "currency":"EUR",
+        "tax_value":42,
+        "tax_percentage":21
+    }
+}

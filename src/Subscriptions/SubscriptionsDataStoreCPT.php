@@ -20,10 +20,10 @@ use Pronamic\WordPress\Pay\Core\Statuses;
 /**
  * Title: Subscriptions data store CPT
  *
- * @see https://woocommerce.com/2017/04/woocommerce-3-0-release/
- * @see https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
+ * @link https://woocommerce.com/2017/04/woocommerce-3-0-release/
+ * @link https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
  * @author  Remco Tolsma
- * @version 2.0.6
+ * @version 2.1.0
  * @since   2.0.1
  */
 class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
@@ -39,8 +39,11 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 	/**
 	 * Create subscription.
 	 *
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L47-L76
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L47-L76
+	 *
 	 * @param Subscription $subscription Create the specified subscription in this data store.
+	 *
+	 * @return bool
 	 */
 	public function create( $subscription ) {
 		$post_status = $this->get_post_status( $subscription->get_status() );
@@ -74,10 +77,64 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 	}
 
 	/**
+	 * Update subscription.
+	 *
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L113-L154
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
+	 *
+	 * @param Subscription $subscription The subscription to update in this data store.
+	 *
+	 * @return bool
+	 */
+	public function update( $subscription ) {
+		$id = $subscription->get_id();
+
+		if ( empty( $id ) ) {
+			return false;
+		}
+
+		$data = array(
+			'ID' => $id,
+		);
+
+		$post_status = $this->get_post_status( $subscription->get_status() );
+
+		if ( ! empty( $post_status ) ) {
+			$data['post_status'] = $post_status;
+		}
+
+		$result = wp_update_post( $data, true );
+
+		if ( is_wp_error( $result ) ) {
+			return false;
+		}
+
+		$this->update_post_meta( $subscription );
+
+		return true;
+	}
+
+	/**
+	 * Save subscription.
+	 *
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L113-L154
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
+	 * @param Subscription $subscription The subscription to save in this data store.
+	 * @return boolean True if saved, false otherwise.
+	 */
+	public function save( $subscription ) {
+		$id = $subscription->get_id();
+
+		$result = empty( $id ) ? $this->create( $subscription ) : $this->update( $subscription );
+
+		return $result;
+	}
+
+	/**
 	 * Read subscription.
 	 *
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L78-L111
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L81-L136
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L78-L111
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L81-L136
 	 * @param Subscription $subscription The subscription to read the additional data for.
 	 */
 	public function read( $subscription ) {
@@ -87,29 +144,6 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		$subscription->user_id = get_post_field( 'post_author', $subscription->get_id(), 'raw' );
 
 		$this->read_post_meta( $subscription );
-	}
-
-	/**
-	 * Update subscription.
-	 *
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L113-L154
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
-	 * @param Subscription $subscription The subscription to update in this data store.
-	 */
-	public function update( $subscription ) {
-		$data = array(
-			'ID' => $subscription->get_id(),
-		);
-
-		$post_status = $this->get_post_status( $subscription->get_status() );
-
-		if ( ! empty( $post_status ) ) {
-			$data['post_status'] = $post_status;
-		}
-
-		wp_update_post( $data );
-
-		$this->update_post_meta( $subscription );
 	}
 
 	/**
@@ -279,7 +313,7 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 	/**
 	 * Read post meta.
 	 *
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-data.php#L462-L507
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-data.php#L462-L507
 	 * @param Subscription $subscription The subscription to read the post meta for.
 	 */
 	private function read_post_meta( $subscription ) {
@@ -339,7 +373,7 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		if ( empty( $end_date ) && $subscription->frequency ) {
 			$interval = $subscription->get_date_interval();
 
-			// @see https://stackoverflow.com/a/10818981/6411283
+			// @link https://stackoverflow.com/a/10818981/6411283
 			$period = new DatePeriod( $start_date, $interval, $subscription->frequency );
 
 			$dates = iterator_to_array( $period );
@@ -368,7 +402,7 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 	/**
 	 * Update payment post meta.
 	 *
-	 * @see https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
 	 * @param Subscription $subscription The subscription to update the post meta for.
 	 */
 	private function update_post_meta( $subscription ) {
@@ -382,7 +416,7 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		$this->update_meta( $id, 'interval', $subscription->interval );
 		$this->update_meta( $id, 'interval_period', $subscription->interval_period );
 		$this->update_meta( $id, 'currency', $subscription->get_currency() );
-		$this->update_meta( $id, 'amount', $subscription->get_amount()->get_amount() );
+		$this->update_meta( $id, 'amount', $subscription->get_amount()->get_value() );
 		$this->update_meta( $id, 'transaction_id', $subscription->transaction_id );
 		$this->update_meta( $id, 'description', $subscription->description );
 		$this->update_meta( $id, 'email', $subscription->email );

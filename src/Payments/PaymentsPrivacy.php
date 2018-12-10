@@ -10,11 +10,14 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
+use Pronamic\WordPress\Pay\AddressHelper;
+use Pronamic\WordPress\Pay\CustomerHelper;
+
 /**
  * Payments Privacy class.
  *
  * @author  Reüel van der Steege
- * @version 2.0.2
+ * @version 2.1.0
  * @since   2.0.2
  */
 class PaymentsPrivacy {
@@ -184,6 +187,33 @@ class PaymentsPrivacy {
 
 				$privacy_manager->erase_meta( $payment_id, $meta_key, $meta_options['privacy_erasure'] );
 			}
+
+			// Customer.
+			$customer = $payment->get_customer();
+
+			if ( null !== $customer ) {
+				CustomerHelper::anonymize_customer( $customer );
+			}
+
+			// Billing Address.
+			$address = $payment->get_billing_address();
+
+			if ( null !== $address ) {
+				AddressHelper::anonymize_address( $address );
+			}
+
+			// Shipping Address.
+			$address = $payment->get_shipping_address();
+
+			if ( null !== $address ) {
+				AddressHelper::anonymize_address( $address );
+			}
+
+			// Set anonymized.
+			$payment->set_anonymized( true );
+
+			// Save.
+			$payment->save();
 
 			// Add payment note.
 			$payment->add_note( __( 'Payment anonymized for personal data erasure request.', 'pronamic_ideal' ) );

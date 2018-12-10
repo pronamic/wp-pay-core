@@ -21,7 +21,7 @@ use WP_Query;
  * WordPress admin payment post type
  *
  * @author  Remco Tolsma
- * @version 2.0.3
+ * @version 2.1.0
  * @since   1.0.0
  */
 class AdminPaymentPostType {
@@ -61,7 +61,8 @@ class AdminPaymentPostType {
 
 		add_action( 'manage_' . self::POST_TYPE . '_posts_custom_column', array( $this, 'custom_columns' ), 10, 2 );
 
-		add_action( 'load-post.php', array( $this, 'maybe_check_status' ) );
+		add_action( 'load-post.php', array( $this, 'maybe_process_payment_action' ) );
+		add_action( 'load-post.php', array( $this, 'maybe_display_anonymized_notice' ) );
 
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 
@@ -85,7 +86,7 @@ class AdminPaymentPostType {
 	/**
 	 * Filters and sorting handler.
 	 *
-	 * @see https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin-post-types.php#L1585-L1596
+	 * @link https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin-post-types.php#L1585-L1596
 	 *
 	 * @param  array $vars Request variables.
 	 * @return array
@@ -105,9 +106,9 @@ class AdminPaymentPostType {
 	}
 
 	/**
-	 * Maybe check status.
+	 * Maybe process payment action.
 	 */
-	public function maybe_check_status() {
+	public function maybe_process_payment_action() {
 		// Current user.
 		if ( ! current_user_can( 'edit_payments' ) ) {
 			return;
@@ -122,6 +123,7 @@ class AdminPaymentPostType {
 
 		$post_id = filter_input( INPUT_GET, 'post', FILTER_SANITIZE_NUMBER_INT );
 
+		// Status check action.
 		if ( filter_has_var( INPUT_GET, 'pronamic_pay_check_status' ) && check_admin_referer( 'pronamic_payment_check_status_' . $post_id ) ) {
 			$payment = get_pronamic_payment( $post_id );
 
@@ -132,6 +134,106 @@ class AdminPaymentPostType {
 				'message' => __( 'Payment status updated.', 'pronamic_ideal' ),
 			);
 		}
+
+		// Create invoice action.
+		if ( filter_has_var( INPUT_GET, 'pronamic_pay_create_invoice' ) && check_admin_referer( 'pronamic_payment_create_invoice_' . $post_id ) ) {
+			$payment = get_pronamic_payment( $post_id );
+
+			$gateway = Plugin::get_gateway( $payment->get_config_id() );
+
+			// Admin notice.
+			if ( is_callable( array( $gateway, 'create_invoice' ) ) && $gateway->create_invoice( $payment ) ) {
+				$this->admin_notices[] = array(
+					'type'    => 'info',
+					'message' => __( 'Invoice created.', 'pronamic_ideal' ),
+				);
+			} else {
+				$this->admin_notices[] = array(
+					'type'    => 'error',
+					'message' => __( 'Invoice could not be created.', 'pronamic_ideal' ),
+				);
+			}
+		}
+
+		// Cancel reservation action.
+		if ( filter_has_var( INPUT_GET, 'pronamic_pay_cancel_reservation' ) && check_admin_referer( 'pronamic_payment_cancel_reservation_' . $post_id ) ) {
+			$payment = get_pronamic_payment( $post_id );
+
+			$gateway = Plugin::get_gateway( $payment->get_config_id() );
+
+			// Admin notice.
+			if ( is_callable( array( $gateway, 'cancel_reservation' ) ) && $gateway->cancel_reservation( $payment ) ) {
+				$this->admin_notices[] = array(
+					'type'    => 'info',
+					'message' => __( 'Reservation cancelled.', 'pronamic_ideal' ),
+				);
+			} else {
+				$this->admin_notices[] = array(
+					'type'    => 'error',
+					'message' => __( 'Reservation could not be cancelled.', 'pronamic_ideal' ),
+				);
+			}
+		}
+
+		// Send to Google Analytics action.
+		if ( filter_has_var( INPUT_GET, 'pronamic_pay_ga_track' ) && check_admin_referer( 'pronamic_payment_ga_track_' . $post_id ) ) {
+			$payment = get_pronamic_payment( $post_id );
+
+			$ga_ecommerce = pronamic_pay_plugin()->google_analytics_ecommerce;
+
+			if ( ! $ga_ecommerce->valid_payment( $payment ) ) {
+				$notice = array(
+					'type'    => 'error',
+					'message' => __( 'Payment details or an invalid tracking ID prevent payment from being tracked by Google Analytics.', 'pronamic_ideal' ),
+				);
+			} else {
+				pronamic_pay_plugin()->google_analytics_ecommerce->send_transaction( $payment );
+
+				if ( $payment->get_ga_tracked() ) {
+					$notice = array(
+						'type'    => 'info',
+						'message' => __( 'Payment sent to Google Analytics.', 'pronamic_ideal' ),
+					);
+				} else {
+					$notice = array(
+						'type'    => 'error',
+						'message' => __( 'Payment could not be sent to Google Analytics.', 'pronamic_ideal' ),
+					);
+				}
+			}
+
+			$this->admin_notices[] = $notice;
+		}
+	}
+
+	/**
+	 * Maybe display anonymized notice.
+	 */
+	public function maybe_display_anonymized_notice() {
+		// Current user.
+		if ( ! current_user_can( 'edit_payments' ) ) {
+			return;
+		}
+
+		// Screen.
+		$screen = get_current_screen();
+
+		if ( ! ( 'post' === $screen->base && 'pronamic_payment' === $screen->post_type ) ) {
+			return;
+		}
+
+		$post_id = filter_input( INPUT_GET, 'post', FILTER_SANITIZE_NUMBER_INT );
+
+		$payment = new Payment( $post_id );
+
+		if ( ! $payment->is_anonymized() ) {
+			return;
+		}
+
+		$this->admin_notices[] = array(
+			'type'    => 'info',
+			'message' => __( 'This payment has been anonymized. Personal details are not available anymore.', 'pronamic_ideal' ),
+		);
 	}
 
 	/**
@@ -343,7 +445,7 @@ class AdminPaymentPostType {
 
 				break;
 			case 'pronamic_payment_amount':
-				echo esc_html( $payment->get_amount()->format_i18n() );
+				echo esc_html( $payment->get_total_amount()->format_i18n() );
 
 				break;
 			case 'pronamic_payment_date':
@@ -351,7 +453,9 @@ class AdminPaymentPostType {
 
 				break;
 			case 'pronamic_payment_customer':
-				echo esc_html( get_post_meta( $post_id, '_pronamic_payment_customer_name', true ) );
+				if ( null !== $payment->get_customer() ) {
+					echo esc_html( $payment->get_customer()->get_name() );
+				}
 
 				break;
 		}
@@ -368,6 +472,15 @@ class AdminPaymentPostType {
 				'pronamic_payment',
 				__( 'Payment', 'pronamic_ideal' ),
 				array( $this, 'meta_box_info' ),
+				$post_type,
+				'normal',
+				'high'
+			);
+
+			add_meta_box(
+				'pronamic_payment_lines',
+				__( 'Payment Lines', 'pronamic_ideal' ),
+				array( $this, 'meta_box_lines' ),
 				$post_type,
 				'normal',
 				'high'
@@ -400,7 +513,7 @@ class AdminPaymentPostType {
 				'high'
 			);
 
-			// @see http://kovshenin.com/2012/how-to-remove-the-publish-box-from-a-post-type/.
+			// @link http://kovshenin.com/2012/how-to-remove-the-publish-box-from-a-post-type/.
 			remove_meta_box( 'submitdiv', $post_type, 'side' );
 		}
 	}
@@ -412,6 +525,19 @@ class AdminPaymentPostType {
 	 */
 	public function meta_box_info( $post ) {
 		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-payment-info.php';
+	}
+
+	/**
+	 * Pronamic Pay payment lines meta box.
+	 *
+	 * @param WP_Post $post The object for the current post/page.
+	 */
+	public function meta_box_lines( $post ) {
+		$payment = get_pronamic_payment( $post->ID );
+
+		$lines = $payment->get_lines();
+
+		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-payment-lines.php';
 	}
 
 	/**
@@ -476,18 +602,25 @@ class AdminPaymentPostType {
 		switch ( $post_status ) {
 			case 'payment_pending':
 				return Statuses::OPEN;
-			case 'payment_processing':
-				return Statuses::OPEN;
+
+			case 'payment_reserved':
+				return Statuses::RESERVED;
+
+			case 'payment_refunded':
+				return Statuses::REFUNDED;
+
 			case 'payment_on_hold':
 				return null;
+
 			case 'payment_completed':
 				return Statuses::SUCCESS;
+
 			case 'payment_cancelled':
 				return Statuses::CANCELLED;
-			case 'payment_refunded':
-				return null;
+
 			case 'payment_failed':
 				return Statuses::FAILURE;
+
 			case 'payment_expired':
 				return Statuses::EXPIRED;
 		}
@@ -520,37 +653,37 @@ class AdminPaymentPostType {
 	/**
 	 * Post updated messages.
 	 *
-	 * @see https://codex.wordpress.org/Function_Reference/register_post_type
-	 * @see https://github.com/WordPress/WordPress/blob/4.4.2/wp-admin/edit-form-advanced.php#L134-L173
-	 * @see https://github.com/woothemes/woocommerce/blob/2.5.5/includes/admin/class-wc-admin-post-types.php#L111-L168
+	 * @link https://codex.wordpress.org/Function_Reference/register_post_type
+	 * @link https://github.com/WordPress/WordPress/blob/4.4.2/wp-admin/edit-form-advanced.php#L134-L173
+	 * @link https://github.com/woothemes/woocommerce/blob/2.5.5/includes/admin/class-wc-admin-post-types.php#L111-L168
 	 * @param array $messages Message.
 	 * @return array
 	 */
 	public function post_updated_messages( $messages ) {
 		global $post;
 
-		// @see https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352797&filters[translation_id]=37948900
+		// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352797&filters[translation_id]=37948900
 		$scheduled_date = date_i18n( __( 'M j, Y @ H:i', 'pronamic_ideal' ), strtotime( $post->post_date ) );
 
 		$messages[ self::POST_TYPE ] = array(
 			0  => '', // Unused. Messages start at index 1.
 			1  => __( 'Payment updated.', 'pronamic_ideal' ),
-			// @see https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352799&filters[translation_id]=37947229.
+			// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352799&filters[translation_id]=37947229.
 			2  => $messages['post'][2],
-			// @see https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352800&filters[translation_id]=37947870.
+			// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352800&filters[translation_id]=37947870.
 			3  => $messages['post'][3],
-			// @see https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352798&filters[translation_id]=37947230.
+			// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352798&filters[translation_id]=37947230.
 			4  => __( 'Payment updated.', 'pronamic_ideal' ),
-			// @see https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352801&filters[translation_id]=37947231.
+			// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352801&filters[translation_id]=37947231.
 			// translators: %s: date and time of the revision
 			5  => isset( $_GET['revision'] ) ? sprintf( __( 'Payment restored to revision from %s.', 'pronamic_ideal' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false, // WPCS: CSRF ok. // Input var okay.
-			// @see https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352802&filters[translation_id]=37949178.
+			// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352802&filters[translation_id]=37949178.
 			6  => __( 'Payment published.', 'pronamic_ideal' ),
-			// @see https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352803&filters[translation_id]=37947232.
+			// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352803&filters[translation_id]=37947232.
 			7  => __( 'Payment saved.', 'pronamic_ideal' ),
-			// @see https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352804&filters[translation_id]=37949303.
+			// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352804&filters[translation_id]=37949303.
 			8  => __( 'Payment submitted.', 'pronamic_ideal' ),
-			// @see https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352805&filters[translation_id]=37949302.
+			// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352805&filters[translation_id]=37949302.
 			/* translators: %s: scheduled date */
 			9  => sprintf( __( 'Payment scheduled for: %s.', 'pronamic_ideal' ), '<strong>' . $scheduled_date . '</strong>' ),
 			// @https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352806&filters[translation_id]=37949301.

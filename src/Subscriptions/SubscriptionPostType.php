@@ -16,8 +16,8 @@ use Pronamic\WordPress\Pay\Payments\PaymentPostType;
  * Title: WordPress iDEAL post types
  *
  * @author  Remco Tolsma
- * @version 2.0.5
- * @since   3.7.0
+ * @version 2.1.0
+ * @since   1.0.0
  */
 class SubscriptionPostType {
 	/**
@@ -27,10 +27,10 @@ class SubscriptionPostType {
 		/**
 		 * Priotiry of the initial post types function should be set to < 10.
 		 *
-		 * @see https://core.trac.wordpress.org/ticket/28488
-		 * @see https://core.trac.wordpress.org/changeset/29318
+		 * @link https://core.trac.wordpress.org/ticket/28488
+		 * @link https://core.trac.wordpress.org/changeset/29318
 		 *
-		 * @see https://github.com/WordPress/WordPress/blob/4.0/wp-includes/post.php#L167
+		 * @link https://github.com/WordPress/WordPress/blob/4.0/wp-includes/post.php#L167
 		 */
 		add_action( 'init', array( $this, 'register_subscription_post_type' ), 0 ); // Highest priority.
 		add_action( 'init', array( $this, 'register_post_status' ), 9 );
@@ -39,7 +39,7 @@ class SubscriptionPostType {
 	/**
 	 * Register post types.
 	 *
-	 * @see https://github.com/WordPress/WordPress/blob/4.6.1/wp-includes/post.php#L1277-L1300
+	 * @link https://github.com/WordPress/WordPress/blob/4.6.1/wp-includes/post.php#L1277-L1300
 	 */
 	public function register_subscription_post_type() {
 		register_post_type(
@@ -47,21 +47,31 @@ class SubscriptionPostType {
 			array(
 				'label'              => __( 'Subscriptions', 'pronamic_ideal' ),
 				'labels'             => array(
-					'name'                  => __( 'Subscriptions', 'pronamic_ideal' ),
-					'singular_name'         => __( 'Subscription', 'pronamic_ideal' ),
-					'add_new'               => __( 'Add New', 'pronamic_ideal' ),
-					'add_new_item'          => __( 'Add New Subscription', 'pronamic_ideal' ),
-					'edit_item'             => __( 'Edit Subscription', 'pronamic_ideal' ),
-					'new_item'              => __( 'New Subscription', 'pronamic_ideal' ),
-					'all_items'             => __( 'All Subscriptions', 'pronamic_ideal' ),
-					'view_item'             => __( 'View Subscription', 'pronamic_ideal' ),
-					'search_items'          => __( 'Search Subscriptions', 'pronamic_ideal' ),
-					'not_found'             => __( 'No subscriptions found.', 'pronamic_ideal' ),
-					'not_found_in_trash'    => __( 'No subscriptions found in Trash.', 'pronamic_ideal' ),
-					'menu_name'             => __( 'Subscriptions', 'pronamic_ideal' ),
-					'filter_items_list'     => __( 'Filter subscriptions list', 'pronamic_ideal' ),
-					'items_list_navigation' => __( 'Subscriptions list navigation', 'pronamic_ideal' ),
-					'items_list'            => __( 'Subscriptions list', 'pronamic_ideal' ),
+					'name'                     => __( 'Subscriptions', 'pronamic_ideal' ),
+					'singular_name'            => __( 'Subscription', 'pronamic_ideal' ),
+					'add_new'                  => __( 'Add New', 'pronamic_ideal' ),
+					'add_new_item'             => __( 'Add New Subscription', 'pronamic_ideal' ),
+					'edit_item'                => __( 'Edit Subscription', 'pronamic_ideal' ),
+					'new_item'                 => __( 'New Subscription', 'pronamic_ideal' ),
+					'all_items'                => __( 'All Subscriptions', 'pronamic_ideal' ),
+					'view_item'                => __( 'View Subscription', 'pronamic_ideal' ),
+					'search_items'             => __( 'Search Subscriptions', 'pronamic_ideal' ),
+					'not_found'                => __( 'No subscriptions found.', 'pronamic_ideal' ),
+					'not_found_in_trash'       => __( 'No subscriptions found in Trash.', 'pronamic_ideal' ),
+					'menu_name'                => __( 'Subscriptions', 'pronamic_ideal' ),
+					'filter_items_list'        => __( 'Filter subscriptions list', 'pronamic_ideal' ),
+					'items_list_navigation'    => __( 'Subscriptions list navigation', 'pronamic_ideal' ),
+					'items_list'               => __( 'Subscriptions list', 'pronamic_ideal' ),
+
+					/*
+					 * New Post Type Labels in 5.0.
+					 * @link https://make.wordpress.org/core/2018/12/05/new-post-type-labels-in-5-0/
+					 */
+					'item_published'           => __( 'Subscription published.', 'pronamic_ideal' ),
+					'item_published_privately' => __( 'Subscription published privately.', 'pronamic_ideal' ),
+					'item_reverted_to_draft'   => __( 'Subscription reverted to draft.', 'pronamic_ideal' ),
+					'item_scheduled'           => __( 'Subscription scheduled.', 'pronamic_ideal' ),
+					'item_updated'             => __( 'Subscription updated.', 'pronamic_ideal' ),
 				),
 				'public'             => false,
 				'publicly_queryable' => false,

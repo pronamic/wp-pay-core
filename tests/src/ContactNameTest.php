@@ -18,20 +18,22 @@ use WP_UnitTestCase;
  * @author  Remco Tolsma
  * @version 1.0
  */
-class PersonalNameTest extends WP_UnitTestCase {
+class ContactNameTest extends WP_UnitTestCase {
 	/**
 	 * Test personal name.
 	 */
-	public function test_personal_name() {
-		$name = new PersonalName();
+	public function test_contact_name() {
+		$name = new ContactName();
 
 		$name->set_prefix( 'Dr.' );
+		$name->set_initials( 'J.F.' );
 		$name->set_first_name( 'John' );
 		$name->set_middle_name( 'Fitzgerald' );
 		$name->set_last_name( 'Doe' );
 		$name->set_suffix( 'J.D.' );
 
 		$this->assertEquals( 'Dr.', $name->get_prefix() );
+		$this->assertEquals( 'J.F.', $name->get_initials() );
 		$this->assertEquals( 'John', $name->get_first_name() );
 		$this->assertEquals( 'Fitzgerald', $name->get_middle_name() );
 		$this->assertEquals( 'Doe', $name->get_last_name() );

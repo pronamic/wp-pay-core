@@ -7,6 +7,17 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.1.0] - 2018-12-10
+- Added support for payment lines.
+- Store payment data as JSON.
+- Added support for customer data in payment.
+- Added support for billing and shipping address in payment.
+- Added support for AfterPay payment methods.
+- Added Capayable.
+- Updated Tippy.js to version 3.3.0.
+- Removed unused payment processing status.
+- Added new WordPress 5.0 post type labels.
+
 ## [2.0.8] - 2018-09-28
 - Added `get_meta()` method to core gateway config factory.
 - Updated Tippy.js from 2.6.0 to 3.0.2.
@@ -127,7 +138,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.0.8...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.1.0...HEAD
+[2.1.0]: https://github.com/wp-pay/core/compare/2.0.8...2.1.0
 [2.0.8]: https://github.com/wp-pay/core/compare/2.0.7...2.0.8
 [2.0.7]: https://github.com/wp-pay/core/compare/2.0.6...2.0.7
 [2.0.6]: https://github.com/wp-pay/core/compare/2.0.5...2.0.6

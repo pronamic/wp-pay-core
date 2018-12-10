@@ -21,7 +21,7 @@ use WP_Post;
  * WordPress admin subscription post type
  *
  * @author  Reüel van der Steege
- * @version 2.0.3
+ * @version 2.1.0
  * @since   1.0.0
  */
 class AdminSubscriptionPostType {
@@ -67,7 +67,7 @@ class AdminSubscriptionPostType {
 	/**
 	 * Filters and sorting handler.
 	 *
-	 * @see https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin-post-types.php#L1585-L1596
+	 * @link https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin-post-types.php#L1585-L1596
 	 *
 	 * @param  array $vars Request variables.
 	 * @return array
@@ -280,7 +280,7 @@ class AdminSubscriptionPostType {
 			'high'
 		);
 
-		// @see http://kovshenin.com/2012/how-to-remove-the-publish-box-from-a-post-type/.
+		// @link http://kovshenin.com/2012/how-to-remove-the-publish-box-from-a-post-type/.
 		remove_meta_box( 'submitdiv', $post_type, 'side' );
 	}
 
@@ -457,7 +457,7 @@ class AdminSubscriptionPostType {
 			if ( 'amount' === $meta ) {
 				$money_parser = new MoneyParser();
 
-				$meta_value = $money_parser->parse( $meta_value )->get_amount();
+				$meta_value = $money_parser->parse( $meta_value )->get_value();
 			}
 
 			$update_meta[ $meta ] = $meta_value;

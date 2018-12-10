@@ -101,7 +101,16 @@ class StatusChecker {
 		$payment = new Payment( $payment_id );
 
 		// Empty payment.
-		if ( null === $payment ) {
+		if ( null === $payment->post ) {
+			// Clear scheduled hook for non-existing payment.
+			$args = array(
+				'payment_id'   => $payment_id,
+				'seconds'      => $seconds,
+				'number_tries' => $number_tries,
+			);
+
+			wp_clear_scheduled_hook( 'pronamic_ideal_check_transaction_status', $args );
+
 			// Payment with the specified ID could not be found, can't check the status.
 			return;
 		}

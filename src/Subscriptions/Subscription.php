@@ -11,8 +11,8 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DateInterval;
+use Exception;
 use Pronamic\WordPress\DateTime\DateTime;
-use Pronamic\WordPress\Money\Currency;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Core\Statuses;
@@ -20,7 +20,11 @@ use Pronamic\WordPress\Pay\Payments\Payment;
 use WP_Post;
 
 /**
- * Subscription.
+ * Subscription
+ *
+ * @author  Remco Tolsma
+ * @version 2.1.0
+ * @since   1.0.0
  */
 class Subscription {
 	/**
@@ -45,6 +49,20 @@ class Subscription {
 	public $key;
 
 	/**
+	 * The title of this subscription.
+	 *
+	 * @var string
+	 */
+	public $title;
+
+	/**
+	 * The post author user ID of this subscription.
+	 *
+	 * @var string
+	 */
+	public $user_id;
+
+	/**
 	 * The frequency of this subscription, for example: `daily`, `weekly`, `monthly` or `annually`.
 	 *
 	 * @var string
@@ -63,7 +81,7 @@ class Subscription {
 	 * The interval period of this subscription.
 	 *
 	 * @todo Improve documentation?
-	 * @var  int
+	 * @var  string
 	 */
 	public $interval_period;
 
@@ -169,46 +187,6 @@ class Subscription {
 	 * @var  string
 	 */
 	public $order_id;
-
-	/**
-	 * The address of the consumer of this subscription.
-	 *
-	 * @todo Is this required?
-	 * @var  string
-	 */
-	public $address;
-
-	/**
-	 * The city of the consumer of this subscription.
-	 *
-	 * @todo Is this required?
-	 * @var  string
-	 */
-	public $city;
-
-	/**
-	 * The ZIP of the consumer of this subscription.
-	 *
-	 * @todo Is this required?
-	 * @var  string
-	 */
-	public $zip;
-
-	/**
-	 * The country of the consumer of this subscription.
-	 *
-	 * @todo Is this required?
-	 * @var  string
-	 */
-	public $country;
-
-	/**
-	 * The telephone number of the consumer of this subscription.
-	 *
-	 * @todo Is this required?
-	 * @var  string
-	 */
-	public $telephone_number;
 
 	/**
 	 * The gateway configuration ID to use with this subscription.
@@ -415,14 +393,17 @@ class Subscription {
 	/**
 	 * Get date interval.
 	 *
-	 * @see http://php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters
-	 * @return \DateInterval
-	 * @throws \Exception    Throws an Exception when the `interval_spec` cannot be parsed as an interval.
+	 * @link http://php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters
+	 * @return \DateInterval|null
 	 */
 	public function get_date_interval() {
 		$interval_spec = 'P' . $this->interval . $this->interval_period;
 
-		$interval = new DateInterval( $interval_spec );
+		try {
+			$interval = new DateInterval( $interval_spec );
+		} catch ( Exception $e ) {
+			$interval = null;
+		}
 
 		return $interval;
 	}
@@ -437,9 +418,9 @@ class Subscription {
 	}
 
 	/**
-	 * Get the currency of this subscription.
+	 * Get the currency alphabetic code of this subscription.
 	 *
-	 * @return Currency
+	 * @return string
 	 */
 	public function get_currency() {
 		return $this->get_amount()->get_currency()->get_alphabetic_code();
@@ -811,7 +792,7 @@ class Subscription {
 			if ( 'amount' === $key ) {
 				$money_parser = new MoneyParser();
 
-				$current_value = $money_parser->parse( $current_value )->get_amount();
+				$current_value = $money_parser->parse( $current_value )->get_value();
 			}
 
 			if ( $current_value === $value ) {
@@ -845,6 +826,6 @@ class Subscription {
 	 * @return void
 	 */
 	public function save() {
-		pronamic_pay_plugin()->subscriptions_data_store->update( $this );
+		pronamic_pay_plugin()->subscriptions_data_store->save( $this );
 	}
 }
