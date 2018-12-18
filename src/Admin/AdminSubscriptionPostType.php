@@ -203,7 +203,7 @@ class AdminSubscriptionPostType {
 				}
 
 				if ( isset( $config_id ) && ! empty( $config_id ) ) {
-					echo get_the_title( $config_id );
+					echo esc_html( get_the_title( $config_id ) );
 				} else {
 					echo '—';
 				}

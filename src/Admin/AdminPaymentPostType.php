@@ -418,7 +418,7 @@ class AdminPaymentPostType {
 				$config_id = get_post_meta( $post_id, '_pronamic_payment_config_id', true );
 
 				if ( ! empty( $config_id ) ) {
-					echo get_the_title( $config_id );
+					echo esc_html( get_the_title( $config_id ) );
 				} else {
 					echo '—';
 				}
