@@ -115,7 +115,7 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			$customer->set_ip_address( $data['ip_address'] );
 		}
 
-		if ( null === $customer->get_user_id() && isset( $data['user_agent'] ) ) {
+		if ( null === $customer->get_user_agent() && isset( $data['user_agent'] ) ) {
 			$customer->set_user_agent( $data['user_agent'] );
 		}
 
