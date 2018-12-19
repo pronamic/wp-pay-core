@@ -70,11 +70,6 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	 * @param Payment $payment The payment to read.
 	 */
 	private function maybe_create_customer_from_legacy_meta( $payment ) {
-		if ( null !== $payment->get_customer() ) {
-			// Bail out if there is already a customer.
-			return;
-		}
-
 		$id = $payment->get_id();
 
 		$data = array(
@@ -95,34 +90,40 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		}
 
 		// Build customer from legacy meta data.
-		$customer = new Customer();
+		$customer = $payment->get_customer();
+
+		if ( null === $customer ) {
+			$customer = new Customer();
+		}
 
 		$payment->set_customer( $customer );
 
 		// Customer name.
-		$customer->set_name( $this->get_contact_name_from_legacy_meta( $payment ) );
+		if ( null === $customer->get_name() ) {
+			$customer->set_name( $this->get_contact_name_from_legacy_meta( $payment ) );
+		}
 
-		if ( isset( $data['email'] ) ) {
+		if ( null === $customer->get_email() && isset( $data['email'] ) ) {
 			$customer->set_email( $data['email'] );
 		}
 
-		if ( isset( $data['phone'] ) ) {
+		if ( null === $customer->get_phone() && isset( $data['phone'] ) ) {
 			$customer->set_phone( $data['phone'] );
 		}
 
-		if ( isset( $data['ip_address'] ) ) {
+		if ( null === $customer->get_ip_address() && isset( $data['ip_address'] ) ) {
 			$customer->set_ip_address( $data['ip_address'] );
 		}
 
-		if ( isset( $data['user_agent'] ) ) {
+		if ( null === $customer->get_user_id() && isset( $data['user_agent'] ) ) {
 			$customer->set_user_agent( $data['user_agent'] );
 		}
 
-		if ( isset( $data['language'] ) ) {
+		if ( null === $customer->get_language() && isset( $data['language'] ) ) {
 			$customer->set_language( $data['language'] );
 		}
 
-		if ( isset( $data['locale'] ) ) {
+		if ( null === $customer->get_locale() && isset( $data['locale'] ) ) {
 			$customer->set_locale( $data['locale'] );
 		}
 	}
