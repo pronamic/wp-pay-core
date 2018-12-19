@@ -7,6 +7,9 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.1.1] - 2018-12-19
+- Fix incomplete payment customer from legacy meta.
+
 ## [2.1.0] - 2018-12-10
 - Added support for payment lines.
 - Store payment data as JSON.
