@@ -301,7 +301,7 @@ class Plugin {
 		$payment->save();
 
 		// Maybe redirect.
-		if ( defined( 'DOING_CRON' ) && ( empty( $payment->status ) || Statuses::OPEN === $payment->status ) ) {
+		if ( wp_doing_cron() && ( empty( $payment->status ) || Statuses::OPEN === $payment->status ) ) {
 			$can_redirect = false;
 		}
 

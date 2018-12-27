@@ -146,7 +146,7 @@ class AdminModule {
 				||
 			wp_doing_ajax()
 				||
-			defined( 'DOING_CRON' ) && DOING_CRON
+			wp_doing_cron()
 				||
 			is_network_admin()
 				||

@@ -29,6 +29,7 @@
 		},
 		"files": [
 			"includes/functions.php",
+			"includes/wp-compatibility.php",
 			"includes/xmlseclibs/xmlseclibs-ing.php"
 		]
 	},

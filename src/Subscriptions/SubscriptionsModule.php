@@ -415,7 +415,7 @@ class SubscriptionsModule {
 
 		$subscription->save();
 
-		if ( defined( 'DOING_CRON' ) && empty( $subscription->status ) ) {
+		if ( wp_doing_cron() && empty( $subscription->status ) ) {
 			$can_redirect = false;
 		}
 
