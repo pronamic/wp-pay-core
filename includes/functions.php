@@ -290,48 +290,6 @@ function pronamic_pay_let_to_num( $size ) {
 }
 
 /**
- * Return the thousand separator.
- *
- * @return string
- */
-function pronamic_pay_get_thousands_separator() {
-	global $wp_locale;
-
-	// Seperator.
-	$separator = get_option( 'pronamic_pay_thousands_sep' );
-
-	// WordPress.
-	if ( false === $separator ) {
-		// WordPress locale number format was introduced in WordPress version 2.3.
-		// @link https://github.com/WordPress/WordPress/blob/2.3/wp-includes/locale.php#L90-L100.
-		$separator = $wp_locale->number_format['thousands_sep'];
-	}
-
-	return $separator;
-}
-
-/**
- * Return the decimal separator.
- *
- * @return string
- */
-function pronamic_pay_get_decimal_separator() {
-	global $wp_locale;
-
-	// Seperator.
-	$separator = get_option( 'pronamic_pay_decimal_sep' );
-
-	// WordPress.
-	if ( false === $separator ) {
-		// WordPress locale number format was introduced in WordPress version 2.3.
-		// @link https://github.com/WordPress/WordPress/blob/2.3/wp-includes/locale.php#L90-L100.
-		$separator = $wp_locale->number_format['decimal_point'];
-	}
-
-	return $separator ? $separator : '.';
-}
-
-/**
  * Pronamic Pay get page ID.
  *
  * @link https://github.com/woothemes/woocommerce/blob/v2.0.16/woocommerce-core-functions.php#L344
