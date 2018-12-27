@@ -301,17 +301,36 @@ class Plugin {
 		$payment->save();
 
 		// Maybe redirect.
-		if ( wp_doing_cron() && ( empty( $payment->status ) || Statuses::OPEN === $payment->status ) ) {
-			$can_redirect = false;
+		if ( ! $can_redirect ) {
+			return;
 		}
 
-		if ( $can_redirect ) {
-			$url = $payment->get_return_redirect_url();
-
-			wp_redirect( $url );
-
-			exit;
+		/*
+		 * If WordPress is doing cron we can't redirect.
+		 *
+		 * @link https://github.com/pronamic/wp-pronamic-ideal/commit/bb967a3e7804ecfbd83dea110eb8810cbad097d7
+		 * @link https://github.com/pronamic/wp-pronamic-ideal/commit/3ab4a7c1fc2cef0b6f565f8205da42aa1203c3c5
+		 */
+		if ( wp_doing_cron() ) {
+			return;
 		}
+
+		/*
+		 * If WordPress CLI is runnig we can't redirect.
+		 *
+		 * @link https://basecamp.com/1810084/projects/10966871/todos/346407847
+		 * @link https://github.com/woocommerce/woocommerce/blob/3.5.3/includes/class-woocommerce.php#L381-L383
+		 */
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			return;
+		}
+
+		// Redirect.
+		$url = $payment->get_return_redirect_url();
+
+		wp_redirect( $url );
+
+		exit;
 	}
 
 	/**
