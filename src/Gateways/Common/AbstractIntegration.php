@@ -1,4 +1,12 @@
 <?php
+/**
+ * Abstract Integration
+ *
+ * @author    Pronamic <info@pronamic.eu>
+ * @copyright 2005-2018 Pronamic
+ * @license   GPL-3.0-or-later
+ * @package   Pronamic\WordPress\Pay\Gateways\Common
+ */
 
 namespace Pronamic\WordPress\Pay\Gateways\Common;
 
@@ -14,30 +22,80 @@ namespace Pronamic\WordPress\Pay\Gateways\Common;
  * @link    https://github.com/thephpleague/omnipay-common/blob/master/src/Omnipay/Common/AbstractGateway.php
  */
 abstract class AbstractIntegration implements IntegrationInterface {
+	/**
+	 * ID.
+	 *
+	 * @var string
+	 */
 	protected $id;
 
+	/**
+	 * Name.
+	 *
+	 * @var string
+	 */
 	protected $name;
 
+	/**
+	 * URL.
+	 *
+	 * @var string
+	 */
 	public $url;
 
+	/**
+	 * Product URL.
+	 *
+	 * @var string
+	 */
 	public $product_url;
 
+	/**
+	 * Dashboard URL.
+	 *
+	 * @var string
+	 */
 	public $dashboard_url;
 
+	/**
+	 * Provider.
+	 *
+	 * @var string
+	 */
 	public $provider;
 
+	/**
+	 * Get ID.
+	 *
+	 * @return string
+	 */
 	public function get_id() {
 		return $this->id;
 	}
 
+	/**
+	 * Set ID.
+	 *
+	 * @param string $id ID.
+	 */
 	public function set_id( $id ) {
 		$this->id = $id;
 	}
 
+	/**
+	 * Get name.
+	 *
+	 * @return string
+	 */
 	public function get_name() {
 		return $this->name;
 	}
 
+	/**
+	 * Set name.
+	 *
+	 * @param string $name Name.
+	 */
 	public function set_name( $name ) {
 		$this->name = $name;
 	}
@@ -52,6 +110,11 @@ abstract class AbstractIntegration implements IntegrationInterface {
 		return array();
 	}
 
+	/**
+	 * Get dashboard URL.
+	 *
+	 * @return array
+	 */
 	public function get_dashboard_url() {
 		$url = array();
 
@@ -66,6 +129,11 @@ abstract class AbstractIntegration implements IntegrationInterface {
 		return $url;
 	}
 
+	/**
+	 * Get product URL.
+	 *
+	 * @return string|false
+	 */
 	public function get_product_url() {
 		$url = false;
 

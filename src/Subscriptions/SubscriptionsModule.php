@@ -439,7 +439,7 @@ class SubscriptionsModule {
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			return;
 		}
-		
+
 		// Redirect.
 		wp_safe_redirect( home_url() );
 

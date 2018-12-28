@@ -12,7 +12,7 @@
 if ( ! function_exists( 'wp_doing_cron' ) ) {
 	/**
 	 * Compat function to mimic wp_doing_cron().
-	 * 
+	 *
 	 * @link https://github.com/WordPress/WordPress/blob/4.9/wp-includes/load.php#L1066-L1082
 	 * @ignore
 	 * @since 2.1.2
