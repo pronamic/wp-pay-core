@@ -146,7 +146,7 @@ class AdminModule {
 				||
 			wp_doing_ajax()
 				||
-			Pronamic\WordPress\Pay\doing_cron()
+			\Pronamic\WordPress\Pay\doing_cron()
 				||
 			is_network_admin()
 				||

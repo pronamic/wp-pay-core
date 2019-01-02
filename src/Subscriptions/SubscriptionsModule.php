@@ -426,7 +426,7 @@ class SubscriptionsModule {
 		 * @link https://github.com/pronamic/wp-pronamic-ideal/commit/bb967a3e7804ecfbd83dea110eb8810cbad097d7
 		 * @link https://github.com/pronamic/wp-pronamic-ideal/commit/3ab4a7c1fc2cef0b6f565f8205da42aa1203c3c5
 		 */
-		if ( Pronamic\WordPress\Pay\doing_cron() ) {
+		if ( \Pronamic\WordPress\Pay\doing_cron() ) {
 			return;
 		}
 
