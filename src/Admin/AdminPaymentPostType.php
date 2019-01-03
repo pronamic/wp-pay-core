@@ -94,13 +94,19 @@ class AdminPaymentPostType {
 	public function request( $vars ) {
 		$screen = get_current_screen();
 
-		if ( self::POST_TYPE === $screen->post_type ) {
-			if ( ! isset( $vars['post_status'] ) ) {
-				$vars['post_status'] = array_keys( PaymentPostType::get_payment_states() );
-
-				$vars['post_status'][] = 'publish';
-			}
+		// Check payment post type.
+		if ( self::POST_TYPE !== $screen->post_type ) {
+			return $vars;
 		}
+
+		// Check post status var.
+		if ( isset( $vars['post_status'] ) && ! empty( $vars['post_status'] ) ) {
+			return $vars;
+		}
+
+		// Set request post status from payment states.
+		$vars['post_status']   = array_keys( PaymentPostType::get_payment_states() );
+		$vars['post_status'][] = 'publish';
 
 		return $vars;
 	}
