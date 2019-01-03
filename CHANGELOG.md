@@ -7,8 +7,11 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.1.2] - 2019-01-03
+- Fixed empty payments and subscriptions list tables with 'All' filter since WordPress 5.0.2.
+
 ## [2.1.1] - 2018-12-19
-- Fix incomplete payment customer from legacy meta.
+- Fixed incomplete payment customer from legacy meta.
 
 ## [2.1.0] - 2018-12-10
 - Added support for payment lines.
