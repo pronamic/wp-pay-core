@@ -53,7 +53,7 @@ abstract class AbstractIntegration implements IntegrationInterface {
 	/**
 	 * Dashboard URL.
 	 *
-	 * @var string
+	 * @var string|array
 	 */
 	public $dashboard_url;
 
