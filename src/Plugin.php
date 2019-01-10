@@ -796,10 +796,12 @@ class Plugin {
 
 		// Customer.
 		$customer = array(
-			'first_name' => $data->get_first_name(),
-			'last_name'  => $data->get_last_name(),
-			'email'      => $data->get_email(),
-			'phone'      => $data->get_telephone_number(),
+			'name'  => (object) array(
+				'first_name' => $data->get_first_name(),
+				'last_name'  => $data->get_last_name(),
+			),
+			'email' => $data->get_email(),
+			'phone' => $data->get_telephone_number(),
 		);
 
 		$customer = array_filter( $customer );
