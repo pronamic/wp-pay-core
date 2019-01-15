@@ -15,7 +15,7 @@ use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Core\Recurring;
 use Pronamic\WordPress\Pay\Core\Statuses;
-use Pronamic\WordPress\Pay\Core\Util;
+use Pronamic\WordPress\Pay\Core\Util as Core_Util;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentData;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
@@ -312,7 +312,7 @@ class Plugin {
 		 * @link https://github.com/pronamic/wp-pronamic-ideal/commit/bb967a3e7804ecfbd83dea110eb8810cbad097d7
 		 * @link https://github.com/pronamic/wp-pronamic-ideal/commit/3ab4a7c1fc2cef0b6f565f8205da42aa1203c3c5
 		 */
-		if ( Util::doing_cron() ) {
+		if ( Core_Util::doing_cron() ) {
 			return;
 		}
 
