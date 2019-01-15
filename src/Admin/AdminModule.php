@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Admin;
 
 use Pronamic\WordPress\Money\Parser as MoneyParser;
+use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\Plugin;
 
 /**
@@ -146,7 +147,7 @@ class AdminModule {
 				||
 			wp_doing_ajax()
 				||
-			\Pronamic\WordPress\Pay\doing_cron()
+			Util::doing_cron()
 				||
 			is_network_admin()
 				||
