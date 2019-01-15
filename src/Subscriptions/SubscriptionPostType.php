@@ -79,6 +79,8 @@ class SubscriptionPostType {
 				'show_in_nav_menus'  => false,
 				'show_in_menu'       => false,
 				'show_in_admin_bar'  => false,
+				'show_in_rest'       => true,
+				'rest_base'          => 'pronamic-subscriptions',
 				'supports'           => false,
 				'rewrite'            => false,
 				'query_var'          => false,
