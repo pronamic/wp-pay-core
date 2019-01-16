@@ -828,4 +828,43 @@ class Subscription {
 	public function save() {
 		pronamic_pay_plugin()->subscriptions_data_store->save( $this );
 	}
+
+	/**
+	 * Create subscription from object.
+	 *
+	 * @param mixed             $json         JSON.
+	 * @param Subscription|null $subscription Subscription.
+	 * @return Subscription
+	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
+	 */
+	public static function from_json( $json, self $subscription = null ) {
+		if ( ! is_object( $json ) ) {
+			throw new InvalidArgumentException( 'JSON value must be an object.' );
+		}
+
+		if ( null === $subscription ) {
+			$subscription = new self();
+		}
+
+		if ( isset( $json->id ) ) {
+			$subscription->set_id( $json->id );
+		}
+
+		return $subscription;
+	}
+
+	/**
+	 * Get JSON.
+	 *
+	 * @return object
+	 */
+	public function get_json() {
+		$object = (object) array();
+
+		if ( null !== $this->get_id() ) {
+			$object->id = $this->get_id();
+		}
+
+		return $object;
+	}
 }

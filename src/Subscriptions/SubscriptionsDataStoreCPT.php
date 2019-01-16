@@ -56,6 +56,7 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 					'Subscription – %s',
 					date_i18n( _x( 'M d, Y @ h:i A', 'Subscription title date format parsed by `date_i18n`.', 'pronamic_ideal' ) )
 				),
+				'post_content'  => wp_slash( wp_json_encode( $subscription->get_json() ) ),
 				'post_status'   => empty( $post_status ) ? 'subscr_pending' : $post_status,
 				'post_author'   => $subscription->user_id,
 			),
@@ -94,7 +95,8 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		}
 
 		$data = array(
-			'ID' => $id,
+			'ID'           => $id,
+			'post_content' => wp_slash( wp_json_encode( $subscription->get_json() ) ),
 		);
 
 		$post_status = $this->get_post_status( $subscription->get_status() );
@@ -142,6 +144,14 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		$subscription->title   = get_the_title( $subscription->get_id() );
 		$subscription->date    = new DateTime( get_post_field( 'post_date_gmt', $subscription->get_id(), 'raw' ), new DateTimeZone( 'UTC' ) );
 		$subscription->user_id = get_post_field( 'post_author', $subscription->get_id(), 'raw' );
+
+		$content = get_post_field( 'post_content', $subscription->post, 'raw' );
+
+		$json = json_decode( $content );
+
+		if ( is_object( $json ) ) {
+			Subscription::from_json( $json, $subscription );
+		}
 
 		$this->read_post_meta( $subscription );
 	}

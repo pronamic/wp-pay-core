@@ -1125,7 +1125,7 @@ class Payment extends LegacyPayment {
 	 */
 	public static function from_json( $json, self $payment = null ) {
 		if ( ! is_object( $json ) ) {
-			throw new InvalidArgumentException( 'JSON value must be an array.' );
+			throw new InvalidArgumentException( 'JSON value must be an object.' );
 		}
 
 		if ( null === $payment ) {
