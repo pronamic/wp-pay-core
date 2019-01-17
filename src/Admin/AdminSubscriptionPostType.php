@@ -59,9 +59,6 @@ class AdminSubscriptionPostType {
 		add_action( 'save_post_' . self::POST_TYPE, array( $this, 'save_post' ) );
 
 		add_filter( 'post_row_actions', array( $this, 'post_row_actions' ), 10, 2 );
-
-		// Transition post status.
-		add_action( 'transition_post_status', array( $this, 'transition_post_status' ), 10, 3 );
 	}
 
 	/**
@@ -349,57 +346,6 @@ class AdminSubscriptionPostType {
 		}
 
 		return $actions;
-	}
-
-	/**
-	 * Translate post status to meta status.
-	 *
-	 * @param string $post_status Post status.
-	 * @return string
-	 */
-	private function translate_post_status_to_meta_status( $post_status ) {
-		switch ( $post_status ) {
-			case 'subscr_pending':
-				return Statuses::OPEN;
-			case 'subscr_cancelled':
-				return Statuses::CANCELLED;
-			case 'subscr_expired':
-				return Statuses::EXPIRED;
-			case 'subscr_failed':
-				return Statuses::FAILURE;
-			case 'subscr_active':
-				return Statuses::ACTIVE;
-			case 'subscr_completed':
-				return Statuses::COMPLETED;
-		}
-	}
-
-	/**
-	 * Transition post status.
-	 *
-	 * @param string  $new_status New status.
-	 * @param string  $old_status Old status.
-	 * @param WP_Post $post       WordPress post.
-	 */
-	public function transition_post_status( $new_status, $old_status, $post ) {
-		if ( ! filter_has_var( INPUT_POST, 'pronamic_subscription_update_nonce' ) ) {
-			return;
-		}
-
-		if ( ! check_admin_referer( 'pronamic_subscription_update', 'pronamic_subscription_update_nonce' ) ) {
-			return;
-		}
-
-		if ( 'pronamic_pay_subscr' !== get_post_type( $post ) ) {
-			return;
-		}
-
-		$new_status_meta = $this->translate_post_status_to_meta_status( $new_status );
-
-		$subscription = new Subscription( $post->ID );
-		$subscription->set_status( $new_status_meta );
-
-		pronamic_pay_plugin()->subscriptions_data_store->update_meta_status( $subscription );
 	}
 
 	/**

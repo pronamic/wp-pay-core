@@ -34,6 +34,88 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$this->meta_key_prefix = '_pronamic_payment_';
 
 		$this->register_meta();
+
+		$this->status_map = array(
+			Statuses::CANCELLED => 'payment_cancelled',
+			Statuses::EXPIRED   => 'payment_expired',
+			Statuses::FAILURE   => 'payment_failed',
+			Statuses::RESERVED  => 'payment_reserved',
+			Statuses::SUCCESS   => 'payment_completed',
+			Statuses::OPEN      => 'payment_pending',
+		);
+	}
+
+	public function get_post_status_from_meta_status( $meta_status ) {
+		if ( isset( $this->status_map[ $meta_status ] ) ) {
+			return $this->status_map[ $meta_status ];
+		}
+
+		return null;
+	}
+
+	public function get_meta_status_from_post_status( $post_status ) {
+		$key = array_search( $post_status, $this->status_map, true );
+
+		if ( false !== $key ) {
+			return $key;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Setup.
+	 */
+	public function setup() {
+		add_filter( 'wp_insert_post_data', array( $this, 'insert_payment_post_data' ), 10, 2 );
+	}
+
+	/**
+	 * Complement payment post data.
+	 *
+	 * @link https://github.com/WordPress/WordPress/blob/5.0.3/wp-includes/post.php#L3515-L3523
+	 *
+	 * @param array $data    An array of slashed post data.
+	 * @param array $postarr An array of sanitized, but otherwise unmodified post data.
+	 * @return array
+	 */
+	public function insert_payment_post_data( $data, $postarr ) {
+		$payment = null;
+
+		if ( isset( $postarr['pronamic_payment'] ) ) {
+			$payment = $postarr['pronamic_payment'];
+		} elseif ( isset( $postarr['ID'] ) ) {
+			$post_id = $postarr['ID'];
+
+			if ( 'pronamic_payment' === get_post_type( $post_id ) ) {
+				$payment = get_pronamic_payment( $post_id );
+			}
+		}
+
+		if ( $payment instanceof Payment ) {
+			// If post status is set we convert the post status to meta status.
+			if ( isset( $postarr['post_status'] ) ) {
+				$meta_status = $this->get_meta_status_from_post_status( $postarr['post_status'] );
+
+				if ( null !== $meta_status ) {
+					$payment->set_status( $meta_status );
+				}
+			}
+
+			// If post status is not set we convert meta status to post status.
+			if ( ! isset( $data['post_status'] ) ) {
+				$post_status = $this->get_post_status_from_meta_status( $payment->get_status() );
+
+				if ( null !== $post_status ) {
+					$data['post_status'] = $post_status;
+				}
+			}
+
+			$data['post_content']   = wp_slash( wp_json_encode( $payment->get_json() ) );
+			$data['post_mime_type'] = 'application/json';
+		}
+
+		return $data;
 	}
 
 	/**
@@ -59,13 +141,11 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		$result = wp_insert_post(
 			array(
-				'post_type'      => 'pronamic_payment',
-				'post_mime_type' => 'application/json',
-				'post_date_gmt'  => $this->get_mysql_utc_date( $payment->date ),
-				'post_title'     => $title,
-				'post_content'   => wp_slash( wp_json_encode( $payment->get_json() ) ),
-				'post_status'    => empty( $post_status ) ? 'payment_pending' : null,
-				'post_author'    => null === $payment->get_customer() ? null : $payment->get_customer()->get_user_id(),
+				'post_type'        => 'pronamic_payment',
+				'post_date_gmt'    => $this->get_mysql_utc_date( $payment->date ),
+				'post_title'       => $title,
+				'post_author'      => null === $payment->get_customer() ? null : $payment->get_customer()->get_user_id(),
+				'pronamic_payment' => $payment,
 			),
 			true
 		);
@@ -99,16 +179,9 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		}
 
 		$data = array(
-			'ID'             => $id,
-			'post_mime_type' => 'application/json',
-			'post_content'   => wp_slash( wp_json_encode( $payment->get_json() ) ),
+			'ID'               => $id,
+			'pronamic_payment' => $payment,
 		);
-
-		$post_status = $this->get_post_status( $payment->status );
-
-		if ( ! empty( $post_status ) ) {
-			$data['post_status'] = $post_status;
-		}
 
 		$result = wp_update_post( $data, true );
 

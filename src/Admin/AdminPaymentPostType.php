@@ -76,9 +76,6 @@ class AdminPaymentPostType {
 
 		add_filter( 'post_updated_messages', array( $this, 'post_updated_messages' ) );
 
-		// Transition Post Status.
-		add_action( 'transition_post_status', array( $this, 'transition_post_status' ), 10, 3 );
-
 		// Bulk Actions.
 		new AdminPaymentBulkActions();
 	}
@@ -596,64 +593,6 @@ class AdminPaymentPostType {
 		}
 
 		return $actions;
-	}
-
-	/**
-	 * Translate post status to meta status.
-	 *
-	 * @param string $post_status Post status.
-	 * @return string
-	 */
-	private function translate_post_status_to_meta_status( $post_status ) {
-		switch ( $post_status ) {
-			case 'payment_pending':
-				return Statuses::OPEN;
-
-			case 'payment_reserved':
-				return Statuses::RESERVED;
-
-			case 'payment_refunded':
-				return Statuses::REFUNDED;
-
-			case 'payment_on_hold':
-				return null;
-
-			case 'payment_completed':
-				return Statuses::SUCCESS;
-
-			case 'payment_cancelled':
-				return Statuses::CANCELLED;
-
-			case 'payment_failed':
-				return Statuses::FAILURE;
-
-			case 'payment_expired':
-				return Statuses::EXPIRED;
-		}
-	}
-
-	/**
-	 * Transition post status.
-	 *
-	 * @param string  $new_status New status.
-	 * @param string  $old_status Old status.
-	 * @param WP_Post $post       WordPress post.
-	 */
-	public function transition_post_status( $new_status, $old_status, $post ) {
-		if (
-			filter_has_var( INPUT_POST, 'pronamic_payment_update_nonce' )
-				&&
-			check_admin_referer( 'pronamic_payment_update', 'pronamic_payment_update_nonce' )
-				&&
-			'pronamic_payment' === get_post_type( $post )
-		) {
-			$new_status_meta = $this->translate_post_status_to_meta_status( $new_status );
-
-			$payment = new Payment( $post->ID );
-			$payment->set_status( $new_status_meta );
-
-			$this->plugin->payments_data_store->update_meta_status( $payment );
-		}
 	}
 
 	/**

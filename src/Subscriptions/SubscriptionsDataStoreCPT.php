@@ -34,6 +34,89 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		$this->meta_key_prefix = '_pronamic_subscription_';
 
 		$this->register_meta();
+
+		$this->status_map = array(
+			Statuses::CANCELLED => 'subscr_cancelled',
+			Statuses::EXPIRED   => 'subscr_expired',
+			Statuses::FAILURE   => 'subscr_failed',
+			Statuses::ACTIVE    => 'subscr_active',
+			Statuses::SUCCESS   => 'subscr_active',
+			Statuses::OPEN      => 'subscr_pending',
+			Statuses::COMPLETED => 'subscr_completed',
+		);
+	}
+
+	public function get_post_status_from_meta_status( $meta_status ) {
+		if ( isset( $this->status_map[ $meta_status ] ) ) {
+			return $this->status_map[ $meta_status ];
+		}
+
+		return null;
+	}
+
+	public function get_meta_status_from_post_status( $post_status ) {
+		$key = array_search( $post_status, $this->status_map, true );
+
+		if ( false !== $key ) {
+			return $key;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Setup.
+	 */
+	public function setup() {
+		add_filter( 'wp_insert_post_data', array( $this, 'insert_subscription_post_data' ), 10, 2 );
+	}
+
+	/**
+	 * Complement subscription post data.
+	 *
+	 * @link https://github.com/WordPress/WordPress/blob/5.0.3/wp-includes/post.php#L3515-L3523
+	 *
+	 * @param array $data    An array of slashed post data.
+	 * @param array $postarr An array of sanitized, but otherwise unmodified post data.
+	 * @return array
+	 */
+	public function insert_subscription_post_data( $data, $postarr ) {
+		$subscription = null;
+
+		if ( isset( $postarr['pronamic_subscription'] ) ) {
+			$subscription = $postarr['pronamic_subscription'];
+		} elseif ( isset( $postarr['ID'] ) ) {
+			$post_id = $postarr['ID'];
+
+			if ( 'pronamic_pay_subscr' === get_post_type( $post_id ) ) {
+				$subscription = get_pronamic_subscription( $post_id );
+			}
+		}
+
+		if ( $subscription instanceof Subscription ) {
+			// If post status is set we convert the post status to meta status.
+			if ( isset( $data['post_status'] ) ) {
+				$meta_status = $this->get_meta_status_from_post_status( $data['post_status'] );
+
+				if ( null !== $meta_status ) {
+					$subscription->set_status( $meta_status );
+				}
+			}
+
+			// If post status is not set we convert meta status to post status.
+			if ( ! isset( $data['post_status'] ) ) {
+				$post_status = $this->get_post_status_from_meta_status( $subscription->get_status() );
+
+				if ( null !== $post_status ) {
+					$data['post_status'] = $post_status;
+				}
+			}
+
+			$data['post_content']   = wp_slash( wp_json_encode( $subscription->get_json() ) );
+			$data['post_mime_type'] = 'application/json';
+		}
+
+		return $data;
 	}
 
 	/**
@@ -50,16 +133,14 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 
 		$result = wp_insert_post(
 			array(
-				'post_type'      => 'pronamic_pay_subscr',
-				'post_mime_type' => 'application/json',
-				'post_date_gmt'  => $this->get_mysql_utc_date( $subscription->date ),
-				'post_title'     => sprintf(
+				'post_type'             => 'pronamic_pay_subscr',
+				'post_date_gmt'         => $this->get_mysql_utc_date( $subscription->date ),
+				'post_title'            => sprintf(
 					'Subscription – %s',
 					date_i18n( _x( 'M d, Y @ h:i A', 'Subscription title date format parsed by `date_i18n`.', 'pronamic_ideal' ) )
 				),
-				'post_content'   => wp_slash( wp_json_encode( $subscription->get_json() ) ),
-				'post_status'    => empty( $post_status ) ? 'subscr_pending' : $post_status,
-				'post_author'    => $subscription->user_id,
+				'post_author'           => $subscription->user_id,
+				'pronamic_subscription' => $subscription,
 			),
 			true
 		);
@@ -96,16 +177,9 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		}
 
 		$data = array(
-			'ID'             => $id,
-			'post_mime_type' => 'application/json',
-			'post_content'   => wp_slash( wp_json_encode( $subscription->get_json() ) ),
+			'ID'                    => $id,
+			'pronamic_subscription' => $subscription,
 		);
-
-		$post_status = $this->get_post_status( $subscription->get_status() );
-
-		if ( ! empty( $post_status ) ) {
-			$data['post_status'] = $post_status;
-		}
 
 		$result = wp_update_post( $data, true );
 
