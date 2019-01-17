@@ -287,6 +287,7 @@ class Customer {
 			'user_agent' => $this->get_user_agent(),
 			'language'   => $this->get_language(),
 			'locale'     => $this->get_locale(),
+			'user_id'    => $this->get_user_id(),
 		);
 
 		$data = array_filter( $data );

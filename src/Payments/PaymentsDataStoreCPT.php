@@ -13,6 +13,7 @@ namespace Pronamic\WordPress\Pay\Payments;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\Customer;
 
 /**
  * Title: Payments data store CPT
@@ -149,10 +150,12 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @param Payment $payment The payment to read from this data store.
 	 */
 	public function read( Payment $payment ) {
-		$payment->post    = get_post( $payment->get_id() );
-		$payment->title   = get_the_title( $payment->get_id() );
-		$payment->date    = new DateTime( get_post_field( 'post_date_gmt', $payment->get_id(), 'raw' ), new DateTimeZone( 'UTC' ) );
-		$payment->user_id = get_post_field( 'post_author', $payment->get_id(), 'raw' );
+		$payment->post  = get_post( $payment->get_id() );
+		$payment->title = get_the_title( $payment->get_id() );
+		$payment->date  = new DateTime(
+			get_post_field( 'post_date_gmt', $payment->get_id(), 'raw' ),
+			new DateTimeZone( 'UTC' )
+		);
 
 		$content = get_post_field( 'post_content', $payment->post, 'raw' );
 
@@ -160,6 +163,19 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		if ( is_object( $json ) ) {
 			Payment::from_json( $json, $payment );
+		}
+
+		// Set user ID from `post_author` field if not set from payment JSON.
+		if ( null === $payment->get_customer() ) {
+			$customer = new Customer();
+
+			$payment->set_customer( $customer );
+		}
+
+		if ( null === $payment->get_customer()->get_user_id() ) {
+			$post_author = get_post_field( 'post_author', $payment->get_id(), 'raw' );
+
+			$payment->get_customer()->set_user_id( $post_author );
 		}
 
 		$this->read_post_meta( $payment );

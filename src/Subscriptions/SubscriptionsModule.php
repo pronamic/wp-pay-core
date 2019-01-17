@@ -250,7 +250,6 @@ class SubscriptionsModule {
 		// Create payment.
 		$payment = new Payment();
 
-		$payment->user_id         = $data->get_user_id();
 		$payment->config_id       = $subscription->get_config_id();
 		$payment->order_id        = $data->get_order_id();
 		$payment->description     = $data->get_description();
@@ -275,12 +274,13 @@ class SubscriptionsModule {
 
 		// Customer.
 		$customer = array(
-			'name'  => (object) array(
+			'name'    => (object) array(
 				'first_name' => $data->get_first_name(),
 				'last_name'  => $data->get_last_name(),
 			),
-			'email' => $data->get_email(),
-			'phone' => $data->get_telephone_number(),
+			'email'   => $data->get_email(),
+			'phone'   => $data->get_telephone_number(),
+			'user_id' => $data->get_user_id(),
 		);
 
 		$customer = array_filter( $customer );
