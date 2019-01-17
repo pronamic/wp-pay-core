@@ -211,7 +211,7 @@ class PaymentTestData extends PaymentData {
 		$subscription->frequency       = $times;
 		$subscription->interval        = $interval;
 		$subscription->interval_period = Core_Util::to_period( $interval_period );
-		$subscription->set_amount( $this->get_amount() );
+		$subscription->set_total_amount( $this->get_amount() );
 
 		return $subscription;
 	}

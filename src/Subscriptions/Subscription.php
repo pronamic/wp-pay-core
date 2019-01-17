@@ -243,16 +243,17 @@ class Subscription extends PaymentInfo {
 	 * @return string
 	 */
 	public function get_currency() {
-		return $this->get_amount()->get_currency()->get_alphabetic_code();
+		return $this->get_total_amount()->get_currency()->get_alphabetic_code();
 	}
 
 	/**
 	 * Get the amount of this subscription.
 	 *
+	 * @deprecated 2.1.3
 	 * @return Money
 	 */
 	public function get_amount() {
-		return $this->amount;
+		return $this->get_total_amount();
 	}
 
 	/**
@@ -260,10 +261,11 @@ class Subscription extends PaymentInfo {
 	 *
 	 * @param Money $amount Money object.
 	 *
+	 * @deprecated 2.1.3
 	 * @return void
 	 */
 	public function set_amount( Money $amount ) {
-		$this->amount = $amount;
+		$this->set_total_amount( $amount );
 	}
 
 	/**

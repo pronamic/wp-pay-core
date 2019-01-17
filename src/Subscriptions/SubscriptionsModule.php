@@ -208,7 +208,7 @@ class SubscriptionsModule {
 						esc_html__( 'Subscription length', 'pronamic_ideal' ),
 						esc_html( $length ),
 						esc_html__( 'Amount', 'pronamic_ideal' ),
-						esc_html( $subscription->get_amount()->format_i18n() )
+						esc_html( $subscription->get_total_amount()->format_i18n() )
 					);
 
 					$form_inner .= $gateway->get_input_html();
@@ -563,7 +563,7 @@ class SubscriptionsModule {
 		$subscription->customer_name   = $customer_name;
 		$subscription->payment_method  = $payment->method;
 		$subscription->status          = Statuses::OPEN;
-		$subscription->set_amount( $subscription_data->get_amount() );
+		$subscription->set_total_amount( $subscription_data->get_total_amount() );
 
 		// @todo
 		// Calculate dates
