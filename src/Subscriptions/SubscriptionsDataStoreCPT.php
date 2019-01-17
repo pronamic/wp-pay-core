@@ -28,7 +28,7 @@ use Pronamic\WordPress\Pay\Core\Statuses;
  * @version 2.1.0
  * @since   2.0.1
  */
-class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
+class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	/**
 	 * Subscriptions.
 	 *
@@ -489,7 +489,7 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-data.php#L462-L507
 	 * @param Subscription $subscription The subscription to read the post meta for.
 	 */
-	private function read_post_meta( $subscription ) {
+	protected function read_post_meta( $subscription ) {
 		$id = $subscription->get_id();
 
 		$subscription->config_id       = $this->get_meta( $id, 'config_id' );

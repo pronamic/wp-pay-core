@@ -27,7 +27,7 @@ use WP_Post;
  * @version 2.1.0
  * @since   1.0.0
  */
-class Subscription extends PaymentInfo {
+class Subscription extends LegacySubscription {
 	/**
 	 * The key of this subscription, used in URL's for security.
 	 *
@@ -41,13 +41,6 @@ class Subscription extends PaymentInfo {
 	 * @var string
 	 */
 	public $title;
-
-	/**
-	 * The post author user ID of this subscription.
-	 *
-	 * @var string
-	 */
-	public $user_id;
 
 	/**
 	 * The frequency of this subscription, for example: `daily`, `weekly`, `monthly` or `annually`.
@@ -92,13 +85,6 @@ class Subscription extends PaymentInfo {
 	 * @var  int|null
 	 */
 	public $interval_date_month;
-
-	/**
-	 * The amount of this subscription, for example 18.95.
-	 *
-	 * @var Money
-	 */
-	protected $amount;
 
 	/**
 	 * The status of this subscription, for example 'Success'.
@@ -235,37 +221,6 @@ class Subscription extends PaymentInfo {
 		}
 
 		return $interval;
-	}
-
-	/**
-	 * Get the currency alphabetic code of this subscription.
-	 *
-	 * @return string
-	 */
-	public function get_currency() {
-		return $this->get_total_amount()->get_currency()->get_alphabetic_code();
-	}
-
-	/**
-	 * Get the amount of this subscription.
-	 *
-	 * @deprecated 2.1.3
-	 * @return Money
-	 */
-	public function get_amount() {
-		return $this->get_total_amount();
-	}
-
-	/**
-	 * Set the amount of this subscription.
-	 *
-	 * @param Money $amount Money object.
-	 *
-	 * @deprecated 2.1.3
-	 * @return void
-	 */
-	public function set_amount( Money $amount ) {
-		$this->set_total_amount( $amount );
 	}
 
 	/**
