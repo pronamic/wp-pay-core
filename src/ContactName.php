@@ -23,6 +23,13 @@ use stdClass;
  */
 class ContactName {
 	/**
+	 * Full Name.
+	 *
+	 * @var string|null
+	 */
+	private $full_name;
+
+	/**
 	 * Prefix.
 	 *
 	 * @var string|null
@@ -79,6 +86,24 @@ class ContactName {
 	 * @link https://en.wikipedia.org/wiki/Suffix_(name)
 	 */
 	private $suffix;
+
+	/**
+	 * Get full name.
+	 *
+	 * @return string|null
+	 */
+	public function get_full_name() {
+		return $this->full_name;
+	}
+
+	/**
+	 * Set full name.
+	 *
+	 * @param string|null $full_name Full name.
+	 */
+	public function set_full_name( $full_name ) {
+		$this->full_name = $full_name;
+	}
 
 	/**
 	 * Get prefix.
@@ -195,6 +220,7 @@ class ContactName {
 	 */
 	public function get_json() {
 		$data = array(
+			'full_name'   => $this->get_full_name(),
 			'prefix'      => $this->get_prefix(),
 			'initials'    => $this->get_initials(),
 			'first_name'  => $this->get_first_name(),
@@ -225,6 +251,10 @@ class ContactName {
 		}
 
 		$name = new self();
+
+		if ( property_exists( $json, 'full_name' ) ) {
+			$name->set_full_name( $json->full_name );
+		}
 
 		if ( property_exists( $json, 'prefix' ) ) {
 			$name->set_prefix( $json->prefix );
@@ -272,6 +302,10 @@ class ContactName {
 		$pieces = array_filter( $pieces );
 
 		$string = implode( ' ', $pieces );
+
+		if ( empty( $string ) ) {
+			$string = $this->get_full_name();
+		}
 
 		return $string;
 	}

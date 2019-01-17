@@ -39,6 +39,7 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$id = $payment->get_id();
 
 		$data = array(
+			'full_name'  => $this->get_meta( $id, 'customer_name' ),
 			'first_name' => $this->get_meta( $id, 'first_name' ),
 			'last_name'  => $this->get_meta( $id, 'last_name' ),
 		);
@@ -52,6 +53,10 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		}
 
 		$name = new ContactName();
+
+		if ( isset( $data['full_name'] ) ) {
+			$name->set_full_name( $data['full_name'] );
+		}
 
 		if ( isset( $data['first_name'] ) ) {
 			$name->set_first_name( $data['first_name'] );
@@ -73,6 +78,7 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$id = $payment->get_id();
 
 		$data = array(
+			'full_name'  => $this->get_meta( $id, 'customer_name' ),
 			'first_name' => $this->get_meta( $id, 'first_name' ),
 			'last_name'  => $this->get_meta( $id, 'last_name' ),
 			'email'      => $this->get_meta( $id, 'email' ),
