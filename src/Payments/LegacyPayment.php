@@ -37,7 +37,7 @@ use Pronamic\WordPress\Pay\Customer;
  * @property string $address
  * @property string $user_id
  */
-abstract class LegacyPayment {
+abstract class LegacyPayment extends PaymentInfo {
 	/**
 	 * The amount of this payment, for example 18.95.
 	 *
