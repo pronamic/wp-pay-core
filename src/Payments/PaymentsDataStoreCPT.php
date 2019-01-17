@@ -68,6 +68,8 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 */
 	public function setup() {
 		add_filter( 'wp_insert_post_data', array( $this, 'insert_payment_post_data' ), 10, 2 );
+
+		add_action( 'save_post_pronamic_payment', array( $this, 'save_post_meta' ), 100 );
 	}
 
 	/**
@@ -119,6 +121,21 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	}
 
 	/**
+	 * Save post meta.
+	 *
+	 * @param int $post_id Post ID
+	 */
+	public function save_post_meta( $post_id ) {
+		if ( 'pronamic_payment' !== get_post_type( $post_id ) ) {
+			return;
+		}
+
+		$payment = get_pronamic_payment( $post_id );
+
+		$this->update_post_meta( $payment );
+	}
+
+	/**
 	 * Create payment.
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L47-L76
@@ -157,8 +174,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$payment->set_id( $result );
 		$payment->post = get_post( $result );
 
-		$this->update_post_meta( $payment );
-
 		do_action( 'pronamic_pay_new_payment', $payment );
 
 		return true;
@@ -188,8 +203,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		if ( is_wp_error( $result ) ) {
 			return false;
 		}
-
-		$this->update_post_meta( $payment );
 
 		return true;
 	}

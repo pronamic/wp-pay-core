@@ -12,6 +12,7 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DatePeriod;
 use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\AbstractDataStoreCPT;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
@@ -69,6 +70,8 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 	 */
 	public function setup() {
 		add_filter( 'wp_insert_post_data', array( $this, 'insert_subscription_post_data' ), 10, 2 );
+
+		add_action( 'save_post_pronamic_pay_subscr', array( $this, 'save_post_meta' ), 100 );
 	}
 
 	/**
@@ -112,11 +115,50 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 				}
 			}
 
+			// Update subscription from post array.
+			$this->update_subscription_form_post_array( $subscription, $postarr );
+
+			// Data.
 			$data['post_content']   = wp_slash( wp_json_encode( $subscription->get_json() ) );
 			$data['post_mime_type'] = 'application/json';
 		}
 
 		return $data;
+	}
+
+	private function update_subscription_form_post_array( $subscription, $postarr ) {
+		if ( ! isset( $postarr['pronamic_subscription_update_nonce'] ) ) {
+			return;
+		}
+
+		if ( ! check_admin_referer( 'pronamic_subscription_update', 'pronamic_subscription_update_nonce' ) ) {
+			return;
+		}
+
+		if ( isset( $_POST['pronamic_subscription_amount'] ) ) {
+			$amount = sanitize_text_field( wp_unslash( $_POST['pronamic_subscription_amount'] ) );
+
+			$money_parser = new MoneyParser();
+
+			$value = $money_parser->parse( $amount )->get_value();
+
+			$subscription->get_total_amount()->set_value( $value );
+		}
+	}
+
+	/**
+	 * Save post meta.
+	 *
+	 * @param int $post_id Post ID
+	 */
+	public function save_post_meta( $post_id ) {
+		if ( 'pronamic_pay_subscr' !== get_post_type( $post_id ) ) {
+			return;
+		}
+
+		$subscription = get_pronamic_subscription( $post_id );
+
+		$this->update_post_meta( $subscription );
 	}
 
 	/**
@@ -152,8 +194,6 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		$subscription->set_id( $result );
 		$subscription->post = get_post( $result );
 
-		$this->update_post_meta( $subscription );
-
 		do_action( 'pronamic_pay_new_subscription', $subscription );
 
 		return true;
@@ -186,8 +226,6 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		if ( is_wp_error( $result ) ) {
 			return false;
 		}
-
-		$this->update_post_meta( $subscription );
 
 		return true;
 	}

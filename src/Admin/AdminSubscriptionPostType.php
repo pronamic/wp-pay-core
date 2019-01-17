@@ -10,7 +10,6 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
-use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
@@ -55,8 +54,6 @@ class AdminSubscriptionPostType {
 		add_action( 'manage_' . self::POST_TYPE . '_posts_custom_column', array( $this, 'custom_columns' ), 10, 2 );
 
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
-
-		add_action( 'save_post_' . self::POST_TYPE, array( $this, 'save_post' ) );
 
 		add_filter( 'post_row_actions', array( $this, 'post_row_actions' ), 10, 2 );
 	}
@@ -346,75 +343,5 @@ class AdminSubscriptionPostType {
 		}
 
 		return $actions;
-	}
-
-	/**
-	 * When the post is saved, saves our custom data.
-	 *
-	 * @param int $post_id The ID of the post being saved.
-	 */
-	public function save_post( $post_id ) {
-		if ( ! filter_has_var( INPUT_POST, 'pronamic_subscription_update_nonce' ) ) {
-			return;
-		}
-
-		if ( ! check_admin_referer( 'pronamic_subscription_update', 'pronamic_subscription_update_nonce' ) ) {
-			return;
-		}
-
-		if ( 'pronamic_pay_subscr' !== get_post_type( $post_id ) ) {
-			return;
-		}
-
-		// If this is an autosave, our form has not been submitted, so we don't want to do anything.
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-			return;
-		}
-
-		// Check the user's permissions.
-		if ( ! current_user_can( 'edit_post', $post_id ) ) {
-			return;
-		}
-
-		/* OK, its safe for us to save the data now. */
-		$definition = array(
-			'amount' => 'sanitize_text_field',
-		);
-
-		$subscription = new Subscription( $post_id );
-
-		$update_meta = array();
-
-		foreach ( $definition as $meta => $function ) {
-			$meta_key   = pronamic_pay_plugin()->subscriptions_data_store->meta_key_prefix . $meta;
-			$meta_value = null;
-
-			if ( 'sanitize_text_field' === $function ) {
-				if ( isset( $_POST[ $meta_key ] ) ) { // WPCS: input var OK.
-					$meta_value = sanitize_text_field( wp_unslash( $_POST[ $meta_key ] ) ); // WPCS: input var OK.
-				}
-			} else {
-				$filter  = $function;
-				$options = null;
-
-				if ( is_array( $function ) && isset( $function['filter'] ) ) {
-					$filter  = $function['filter'];
-					$options = $function;
-				}
-
-				$meta_value = filter_input( INPUT_POST, $meta_key, $filter, $options );
-			}
-
-			// Convert user input amount to float.
-			if ( 'amount' === $meta ) {
-				$money_parser = new MoneyParser();
-
-				$meta_value = $money_parser->parse( $meta_value )->get_value();
-			}
-
-			$update_meta[ $meta ] = $meta_value;
-		}
-
-		$subscription->update_meta( $update_meta );
 	}
 }
