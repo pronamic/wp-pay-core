@@ -220,8 +220,6 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 * @return bool
 	 */
 	public function create( $subscription ) {
-		$post_status = $this->get_post_status( $subscription->get_status() );
-
 		$result = wp_insert_post(
 			array(
 				'post_type'             => 'pronamic_pay_subscr',
@@ -320,40 +318,13 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	}
 
 	/**
-	 * Get post status.
-	 *
-	 * @param string $meta_status The subscription meta status to get the post status for.
-	 *
-	 * @return string|null
-	 */
-	public function get_post_status( $meta_status ) {
-		switch ( $meta_status ) {
-			case Statuses::CANCELLED:
-				return 'subscr_cancelled';
-			case Statuses::EXPIRED:
-				return 'subscr_expired';
-			case Statuses::FAILURE:
-				return 'subscr_failed';
-			case Statuses::ACTIVE:
-			case Statuses::SUCCESS:
-				return 'subscr_active';
-			case Statuses::OPEN:
-				return 'subscr_pending';
-			case Statuses::COMPLETED:
-				return 'subscr_completed';
-			default:
-				return null;
-		}
-	}
-
-	/**
 	 * Get meta status label.
 	 *
 	 * @param string $meta_status The subscription meta status to get the status label for.
 	 * @return string|boolean
 	 */
 	public function get_meta_status_label( $meta_status ) {
-		$post_status = $this->get_post_status( $meta_status );
+		$post_status = $this->get_post_status_from_meta_status( $meta_status );
 
 		if ( empty( $post_status ) ) {
 			return false;
@@ -569,6 +540,9 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 
 		// Next Payment Date.
 		$subscription->next_payment = $this->get_meta_date( $id, 'next_payment' );
+
+		// Legacy.
+		parent::read_post_meta( $subscription );
 	}
 
 	/**

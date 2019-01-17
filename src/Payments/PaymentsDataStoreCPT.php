@@ -197,8 +197,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			);
 		}
 
-		$post_status = $this->get_post_status( $payment->status );
-
 		$result = wp_insert_post(
 			array(
 				'post_type'        => 'pronamic_payment',
@@ -310,45 +308,13 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	}
 
 	/**
-	 * Get post status.
-	 *
-	 * @param string $meta_status The meta status to get a WordPress post status for.
-	 *
-	 * @return string|null
-	 */
-	public function get_post_status( $meta_status ) {
-		switch ( $meta_status ) {
-			case Statuses::CANCELLED:
-				return 'payment_cancelled';
-
-			case Statuses::EXPIRED:
-				return 'payment_expired';
-
-			case Statuses::FAILURE:
-				return 'payment_failed';
-
-			case Statuses::RESERVED:
-				return 'payment_reserved';
-
-			case Statuses::SUCCESS:
-				return 'payment_completed';
-
-			case Statuses::OPEN:
-				return 'payment_pending';
-
-			default:
-				return null;
-		}
-	}
-
-	/**
 	 * Get meta status label.
 	 *
 	 * @param string $meta_status The payment meta status to get the status label for.
 	 * @return string|boolean
 	 */
 	public function get_meta_status_label( $meta_status ) {
-		$post_status = $this->get_post_status( $meta_status );
+		$post_status = $this->get_post_status_from_meta_status( $meta_status );
 
 		if ( empty( $post_status ) ) {
 			return false;
