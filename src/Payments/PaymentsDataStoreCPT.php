@@ -139,8 +139,8 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		if ( $payment instanceof Payment ) {
 			// If post status is set we convert the post status to meta status.
-			if ( isset( $postarr['post_status'] ) ) {
-				$meta_status = $this->get_meta_status_from_post_status( $postarr['post_status'] );
+			if ( isset( $data['post_status'] ) ) {
+				$meta_status = $this->get_meta_status_from_post_status( $data['post_status'] );
 
 				if ( null !== $meta_status ) {
 					$payment->set_status( $meta_status );
