@@ -73,6 +73,8 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$id = $payment->get_id();
 
 		$data = array(
+			'first_name' => $this->get_meta( $id, 'first_name' ),
+			'last_name'  => $this->get_meta( $id, 'last_name' ),
 			'email'      => $this->get_meta( $id, 'email' ),
 			'phone'      => $this->get_meta( $id, 'telephone_number' ),
 			'ip_address' => $this->get_meta( $id, 'user_ip' ),
