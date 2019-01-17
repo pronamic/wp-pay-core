@@ -50,15 +50,16 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 
 		$result = wp_insert_post(
 			array(
-				'post_type'     => 'pronamic_pay_subscr',
-				'post_date_gmt' => $this->get_mysql_utc_date( $subscription->date ),
-				'post_title'    => sprintf(
+				'post_type'      => 'pronamic_pay_subscr',
+				'post_mime_type' => 'application/json',
+				'post_date_gmt'  => $this->get_mysql_utc_date( $subscription->date ),
+				'post_title'     => sprintf(
 					'Subscription – %s',
 					date_i18n( _x( 'M d, Y @ h:i A', 'Subscription title date format parsed by `date_i18n`.', 'pronamic_ideal' ) )
 				),
-				'post_content'  => wp_slash( wp_json_encode( $subscription->get_json() ) ),
-				'post_status'   => empty( $post_status ) ? 'subscr_pending' : $post_status,
-				'post_author'   => $subscription->user_id,
+				'post_content'   => wp_slash( wp_json_encode( $subscription->get_json() ) ),
+				'post_status'    => empty( $post_status ) ? 'subscr_pending' : $post_status,
+				'post_author'    => $subscription->user_id,
 			),
 			true
 		);
@@ -95,8 +96,9 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		}
 
 		$data = array(
-			'ID'           => $id,
-			'post_content' => wp_slash( wp_json_encode( $subscription->get_json() ) ),
+			'ID'             => $id,
+			'post_mime_type' => 'application/json',
+			'post_content'   => wp_slash( wp_json_encode( $subscription->get_json() ) ),
 		);
 
 		$post_status = $this->get_post_status( $subscription->get_status() );
