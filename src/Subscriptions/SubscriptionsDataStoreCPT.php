@@ -169,6 +169,12 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		return $data;
 	}
 
+	/**
+	 * Update subscription from post array.
+	 *
+	 * @param Subscription $subscription Subscription.
+	 * @param array        $postarr      Post data array.
+	 */
 	private function update_subscription_form_post_array( $subscription, $postarr ) {
 		if ( ! isset( $postarr['pronamic_subscription_update_nonce'] ) ) {
 			return;
@@ -192,7 +198,7 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 	/**
 	 * Save post meta.
 	 *
-	 * @param int $post_id Post ID
+	 * @param int $post_id Post ID.
 	 */
 	public function save_post_meta( $post_id ) {
 		if ( 'pronamic_pay_subscr' !== get_post_type( $post_id ) ) {

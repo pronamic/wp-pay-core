@@ -166,7 +166,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
 	 * Save post meta.
 	 *
-	 * @param int $post_id Post ID
+	 * @param int $post_id Post ID.
 	 */
 	public function save_post_meta( $post_id ) {
 		if ( 'pronamic_payment' !== get_post_type( $post_id ) ) {
