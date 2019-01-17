@@ -30,6 +30,20 @@ use Pronamic\WordPress\Pay\Core\Statuses;
  */
 class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 	/**
+	 * Subscriptions.
+	 *
+	 * @var array
+	 */
+	private $subscriptions;
+
+	/**
+	 * Status map.
+	 *
+	 * @var array
+	 */
+	private $status_map;
+
+	/**
 	 * Construct subscriptions data store CPT object.
 	 */
 	public function __construct() {
@@ -37,7 +51,7 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 
 		$this->register_meta();
 
-		$this->subscriptions[] = array();
+		$this->subscriptions = array();
 
 		$this->status_map = array(
 			Statuses::CANCELLED => 'subscr_cancelled',
@@ -50,6 +64,21 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		);
 	}
 
+	/**
+	 * Setup.
+	 */
+	public function setup() {
+		add_filter( 'wp_insert_post_data', array( $this, 'insert_subscription_post_data' ), 10, 2 );
+
+		add_action( 'save_post_pronamic_pay_subscr', array( $this, 'save_post_meta' ), 100 );
+	}
+
+	/**
+	 * Get subscription by ID.
+	 *
+	 * @param int $id Payment ID.
+	 * @return Payment
+	 */
 	private function get_subscription( $id ) {
 		if ( ! isset( $this->subscriptions[ $id ] ) ) {
 			$this->subscriptions[ $id ] = get_pronamic_subscription( $id );
@@ -58,7 +87,13 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		return $this->subscriptions[ $id ];
 	}
 
-	public function get_post_status_from_meta_status( $meta_status ) {
+	/**
+	 * Get post status from meta status.
+	 *
+	 * @param string $meta_status Meta status.
+	 * @return string|null
+	 */
+	private function get_post_status_from_meta_status( $meta_status ) {
 		if ( isset( $this->status_map[ $meta_status ] ) ) {
 			return $this->status_map[ $meta_status ];
 		}
@@ -66,7 +101,13 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		return null;
 	}
 
-	public function get_meta_status_from_post_status( $post_status ) {
+	/**
+	 * Get meta status from post status.
+	 *
+	 * @param string $post_status Post status.
+	 * @return string|null
+	 */
+	private function get_meta_status_from_post_status( $post_status ) {
 		$key = array_search( $post_status, $this->status_map, true );
 
 		if ( false !== $key ) {
@@ -74,15 +115,6 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		}
 
 		return null;
-	}
-
-	/**
-	 * Setup.
-	 */
-	public function setup() {
-		add_filter( 'wp_insert_post_data', array( $this, 'insert_subscription_post_data' ), 10, 2 );
-
-		add_action( 'save_post_pronamic_pay_subscr', array( $this, 'save_post_meta' ), 100 );
 	}
 
 	/**

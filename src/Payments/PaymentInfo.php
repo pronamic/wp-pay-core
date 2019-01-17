@@ -852,7 +852,7 @@ abstract class PaymentInfo {
 		}
 
 		if ( ! $info instanceof self ) {
-			throw new InvalidArgumentException( 'Info must be an object.' );	
+			throw new InvalidArgumentException( 'Info must be an object.' );
 		}
 
 		if ( isset( $json->id ) ) {
