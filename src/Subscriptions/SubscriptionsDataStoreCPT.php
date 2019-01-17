@@ -13,6 +13,7 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 use DatePeriod;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
+use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\AbstractDataStoreCPT;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
@@ -36,6 +37,8 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 
 		$this->register_meta();
 
+		$this->subscriptions[] = array();
+
 		$this->status_map = array(
 			Statuses::CANCELLED => 'subscr_cancelled',
 			Statuses::EXPIRED   => 'subscr_expired',
@@ -45,6 +48,14 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 			Statuses::OPEN      => 'subscr_pending',
 			Statuses::COMPLETED => 'subscr_completed',
 		);
+	}
+
+	private function get_subscription( $id ) {
+		if ( ! isset( $this->subscriptions[ $id ] ) ) {
+			$this->subscriptions[ $id ] = get_pronamic_subscription( $id );
+		}
+
+		return $this->subscriptions[ $id ];
 	}
 
 	public function get_post_status_from_meta_status( $meta_status ) {
@@ -92,7 +103,7 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 			$post_id = $postarr['ID'];
 
 			if ( 'pronamic_pay_subscr' === get_post_type( $post_id ) ) {
-				$subscription = get_pronamic_subscription( $post_id );
+				$subscription = $this->get_subscription( $post_id );
 			}
 		}
 
@@ -135,8 +146,8 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 			return;
 		}
 
-		if ( isset( $_POST['pronamic_subscription_amount'] ) ) {
-			$amount = sanitize_text_field( wp_unslash( $_POST['pronamic_subscription_amount'] ) );
+		if ( isset( $postarr['pronamic_subscription_amount'] ) ) {
+			$amount = sanitize_text_field( wp_unslash( $postarr['pronamic_subscription_amount'] ) );
 
 			$money_parser = new MoneyParser();
 
@@ -156,7 +167,7 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 			return;
 		}
 
-		$subscription = get_pronamic_subscription( $post_id );
+		$subscription = $this->get_subscription( $post_id );
 
 		$this->update_post_meta( $subscription );
 	}
@@ -458,13 +469,12 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		$subscription->payment_method  = $this->get_meta( $id, 'payment_method' );
 
 		// Amount.
-		$subscription->set_amount(
-			new Money(
-				$this->get_meta( $id, 'amount' ),
-				$this->get_meta( $id, 'currency' )
-			)
-		);
+		$total_amount = $subscription->get_total_amount();
 
+		$total_amount->set_value( $this->get_meta( $id, 'amount' ) );
+		$total_amount->set_currency( $this->get_meta( $id, 'currency' ) );
+
+		// First Payment.
 		$first_payment = $subscription->get_first_payment();
 
 		if ( is_object( $first_payment ) ) {
@@ -539,9 +549,8 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		$this->update_meta( $id, 'frequency', $subscription->frequency );
 		$this->update_meta( $id, 'interval', $subscription->interval );
 		$this->update_meta( $id, 'interval_period', $subscription->interval_period );
-		$this->update_meta( $id, 'currency', $subscription->get_currency() );
-		$this->update_meta( $id, 'amount', $subscription->get_amount()->get_value() );
-		$this->update_meta( $id, 'transaction_id', $subscription->transaction_id );
+		$this->update_meta( $id, 'currency', $subscription->get_total_amount()->get_currency()->get_alphabetic_code() );
+		$this->update_meta( $id, 'amount', $subscription->get_total_amount()->get_value() );
 		$this->update_meta( $id, 'description', $subscription->description );
 		$this->update_meta( $id, 'email', $subscription->email );
 		$this->update_meta( $id, 'customer_name', $subscription->customer_name );

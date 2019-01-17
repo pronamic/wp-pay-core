@@ -470,55 +470,57 @@ class AdminPaymentPostType {
 	 * @param string $post_type Post Type.
 	 */
 	public function add_meta_boxes( $post_type ) {
-		if ( self::POST_TYPE === $post_type ) {
-			add_meta_box(
-				'pronamic_payment',
-				__( 'Payment', 'pronamic_ideal' ),
-				array( $this, 'meta_box_info' ),
-				$post_type,
-				'normal',
-				'high'
-			);
-
-			add_meta_box(
-				'pronamic_payment_lines',
-				__( 'Payment Lines', 'pronamic_ideal' ),
-				array( $this, 'meta_box_lines' ),
-				$post_type,
-				'normal',
-				'high'
-			);
-
-			add_meta_box(
-				'pronamic_payment_subscription',
-				__( 'Subscription', 'pronamic_ideal' ),
-				array( $this, 'meta_box_subscription' ),
-				$post_type,
-				'normal',
-				'high'
-			);
-
-			add_meta_box(
-				'pronamic_payment_notes',
-				__( 'Notes', 'pronamic_ideal' ),
-				array( $this, 'meta_box_notes' ),
-				$post_type,
-				'normal',
-				'high'
-			);
-
-			add_meta_box(
-				'pronamic_payment_update',
-				__( 'Update', 'pronamic_ideal' ),
-				array( $this, 'meta_box_update' ),
-				$post_type,
-				'side',
-				'high'
-			);
-
-			// @link http://kovshenin.com/2012/how-to-remove-the-publish-box-from-a-post-type/.
-			remove_meta_box( 'submitdiv', $post_type, 'side' );
+		if ( self::POST_TYPE !== $post_type ) {
+			return;
 		}
+
+		add_meta_box(
+			'pronamic_payment',
+			__( 'Payment', 'pronamic_ideal' ),
+			array( $this, 'meta_box_info' ),
+			$post_type,
+			'normal',
+			'high'
+		);
+
+		add_meta_box(
+			'pronamic_payment_lines',
+			__( 'Payment Lines', 'pronamic_ideal' ),
+			array( $this, 'meta_box_lines' ),
+			$post_type,
+			'normal',
+			'high'
+		);
+
+		add_meta_box(
+			'pronamic_payment_subscription',
+			__( 'Subscription', 'pronamic_ideal' ),
+			array( $this, 'meta_box_subscription' ),
+			$post_type,
+			'normal',
+			'high'
+		);
+
+		add_meta_box(
+			'pronamic_payment_notes',
+			__( 'Notes', 'pronamic_ideal' ),
+			array( $this, 'meta_box_notes' ),
+			$post_type,
+			'normal',
+			'high'
+		);
+
+		add_meta_box(
+			'pronamic_payment_update',
+			__( 'Update', 'pronamic_ideal' ),
+			array( $this, 'meta_box_update' ),
+			$post_type,
+			'side',
+			'high'
+		);
+
+		// @link http://kovshenin.com/2012/how-to-remove-the-publish-box-from-a-post-type/.
+		remove_meta_box( 'submitdiv', $post_type, 'side' );
 	}
 
 	/**

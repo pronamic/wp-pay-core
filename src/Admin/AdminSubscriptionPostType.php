@@ -214,7 +214,7 @@ class AdminSubscriptionPostType {
 
 				break;
 			case 'pronamic_subscription_amount':
-				echo esc_html( $subscription->get_amount()->format_i18n() );
+				echo esc_html( $subscription->get_total_amount()->format_i18n() );
 
 				break;
 			case 'pronamic_subscription_recurring':
@@ -248,6 +248,15 @@ class AdminSubscriptionPostType {
 			'pronamic_subscription',
 			__( 'Subscription', 'pronamic_ideal' ),
 			array( $this, 'meta_box_info' ),
+			$post_type,
+			'normal',
+			'high'
+		);
+
+		add_meta_box(
+			'pronamic_payment_lines',
+			__( 'Payment Lines', 'pronamic_ideal' ),
+			array( $this, 'meta_box_lines' ),
 			$post_type,
 			'normal',
 			'high'
@@ -291,6 +300,19 @@ class AdminSubscriptionPostType {
 	 */
 	public function meta_box_info( $post ) {
 		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-subscription-info.php';
+	}
+
+	/**
+	 * Pronamic Pay payment lines meta box.
+	 *
+	 * @param WP_Post $post The object for the current post/page.
+	 */
+	public function meta_box_lines( $post ) {
+		$subscription = get_pronamic_subscription( $post->ID );
+
+		$lines = $subscription->get_lines();
+
+		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-payment-lines.php';
 	}
 
 	/**

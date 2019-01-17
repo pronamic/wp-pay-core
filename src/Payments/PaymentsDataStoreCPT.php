@@ -35,6 +35,8 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		$this->register_meta();
 
+		$this->payments[] = array();
+
 		$this->status_map = array(
 			Statuses::CANCELLED => 'payment_cancelled',
 			Statuses::EXPIRED   => 'payment_expired',
@@ -43,6 +45,14 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			Statuses::SUCCESS   => 'payment_completed',
 			Statuses::OPEN      => 'payment_pending',
 		);
+	}
+
+	private function get_payment( $id ) {
+		if ( ! isset( $this->payments[ $id ] ) ) {
+			$this->payments[ $id ] = get_pronamic_payment( $id );
+		}
+
+		return $this->payments[ $id ];
 	}
 
 	public function get_post_status_from_meta_status( $meta_status ) {
@@ -90,7 +100,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			$post_id = $postarr['ID'];
 
 			if ( 'pronamic_payment' === get_post_type( $post_id ) ) {
-				$payment = get_pronamic_payment( $post_id );
+				$payment = $this->get_payment( $post_id );
 			}
 		}
 
@@ -130,7 +140,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			return;
 		}
 
-		$payment = get_pronamic_payment( $post_id );
+		$payment = $this->get_payment( $post_id );
 
 		$this->update_post_meta( $payment );
 	}
