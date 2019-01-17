@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Money\TaxedMoney;
 use WP_UnitTestCase;
 
 /**
@@ -53,10 +54,9 @@ class SubscriptionTest extends WP_UnitTestCase {
 	 */
 	public function get_and_set_provider() {
 		return array(
-			array( 'set_amount', 'get_amount', new Money( 89.95, 'EUR' ) ),
+			array( 'set_total_amount', 'get_total_amount', new TaxedMoney( 89.95, 'EUR' ) ),
 			array( 'set_id', 'get_id', uniqid() ),
 			array( 'set_status', 'get_status', 'completed' ),
-			array( 'set_transaction_id', 'get_transaction_id', uniqid() ),
 		);
 	}
 
