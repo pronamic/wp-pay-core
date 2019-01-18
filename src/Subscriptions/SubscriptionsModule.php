@@ -178,7 +178,7 @@ class SubscriptionsModule {
 					}
 
 					$form_inner = sprintf(
-						'<h1>%14s</h1> <p>%2$s</p> <hr /> <p><strong>%3$s:</strong> %4$s</p> <p><strong>%5$s:</strong> %6$s</p>',
+						'<h1>%1$s</h1> <p>%2$s</p> <hr /> <p><strong>%3$s:</strong> %4$s</p> <p><strong>%5$s:</strong> %6$s</p>',
 						esc_html__( 'Subscription Renewal', 'pronamic_ideal' ),
 						sprintf(
 							/* translators: %s: expiry date */
