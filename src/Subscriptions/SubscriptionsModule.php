@@ -87,7 +87,7 @@ class SubscriptionsModule {
 		// @link https://github.com/woocommerce/woocommerce/blob/3.3.1/includes/class-woocommerce.php#L365-L369.
 		// @link https://github.com/woocommerce/woocommerce/blob/3.3.1/includes/class-wc-cli.php.
 		// @link https://make.wordpress.org/cli/handbook/commands-cookbook/.
-		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+		if ( Util::doing_cli() ) {
 			WP_CLI::add_command( 'pay subscriptions test', array( $this, 'cli_subscriptions_test' ) );
 		}
 	}
@@ -233,6 +233,21 @@ class SubscriptionsModule {
 	 * @return Payment
 	 */
 	public function new_subscription_payment( Subscription $subscription ) {
+		// Unset the next payment date if next payment date is after the subscription end date.
+		if ( isset( $subscription->end_date, $subscription->next_payment ) && $subscription->next_payment > $subscription->end_date ) {
+			$subscription->next_payment = null;
+		}
+
+		// Set the subscription status to `completed` if there is no next payment date.
+		if ( empty( $subscription->next_payment ) ) {
+			$subscription->status      = Statuses::COMPLETED;
+			$subscription->expiry_date = $subscription->end_date;
+
+			$subscription->save();
+
+			return false;
+		}
+
 		// Create payment.
 		$payment = new Payment();
 
@@ -269,14 +284,12 @@ class SubscriptionsModule {
 	 */
 	public function start_recurring( Subscription $subscription, $gateway = null, $recurring = true ) {
 		$payment = $this->new_subscription_payment( $subscription );
-		
-		$payment->recurring = $recurring;
 
-		// Maybe complete subscription for manual renewal.
-		if ( $this->maybe_complete_manual_renewal_subscription( $payment ) ) {
-			// @todo
-			return false;
+		if ( empty( $payment ) ) {
+			return;
 		}
+
+		$payment->recurring = $recurring;
 
 		// Make sure to only start payments for supported gateways.
 		if ( null === $gateway ) {
@@ -372,7 +385,7 @@ class SubscriptionsModule {
 		 * @link https://basecamp.com/1810084/projects/10966871/todos/346407847
 		 * @link https://github.com/woocommerce/woocommerce/blob/3.5.3/includes/class-woocommerce.php#L381-L383
 		 */
-		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+		if ( Util::doing_cli() ) {
 			return;
 		}
 
@@ -398,41 +411,6 @@ class SubscriptionsModule {
 		}
 
 		return $clauses;
-	}
-
-	/**
-	 * Maybe complete manual renewal subscription.
-	 *
-	 * @param Payment $payment Payment.
-	 *
-	 * @return bool
-	 */
-	public function maybe_complete_manual_renewal_subscription( Payment $payment ) {
-		/**
-		 * Check if this is a manual renewal payment.
-		 *
-		 * @see SubscriptionsModule::handle_subscription()
-		 */
-		if ( false !== $payment->get_recurring() ) {
-			return false;
-		}
-
-		$subscription = $payment->get_subscription();
-
-		// Unset the next payment date if next payment date is after the subscription end date.
-		if ( isset( $subscription->end_date, $subscription->next_payment ) && $subscription->end_date <= $subscription->next_payment ) {
-			$subscription->next_payment = null;
-		}
-
-		// Set the subscription status to `completed` if there is no next payment date.
-		if ( empty( $subscription->next_payment ) ) {
-			$subscription->status      = Statuses::COMPLETED;
-			$subscription->expiry_date = $subscription->end_date;
-
-			$subscription->save();
-
-			return true;
-		}
 	}
 
 	/**
