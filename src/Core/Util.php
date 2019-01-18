@@ -136,6 +136,29 @@ class Util {
 	}
 
 	/**
+	 * No cache.
+	 */
+	public static function no_cache() {
+		// @link https://github.com/woothemes/woocommerce/blob/2.3.11/includes/class-wc-cache-helper.php
+		// @link https://www.w3-edge.com/products/w3-total-cache/
+		$do_not_constants = array(
+			'DONOTCACHEPAGE',
+			'DONOTCACHEDB',
+			'DONOTMINIFY',
+			'DONOTCDN',
+			'DONOTCACHEOBJECT',
+		);
+
+		foreach ( $do_not_constants as $do_not_constant ) {
+			if ( ! defined( $do_not_constant ) ) {
+				define( $do_not_constant, true );
+			}
+		}
+
+		nocache_headers();
+	}
+
+	/**
 	 * Amount to cents.
 	 *
 	 * @param float $amount The amount to conver to cents.

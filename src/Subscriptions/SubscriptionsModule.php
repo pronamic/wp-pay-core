@@ -103,23 +103,7 @@ class SubscriptionsModule {
 			return;
 		}
 
-		// @link https://github.com/woothemes/woocommerce/blob/2.3.11/includes/class-wc-cache-helper.php
-		// @link https://www.w3-edge.com/products/w3-total-cache/
-		$do_not_constants = array(
-			'DONOTCACHEPAGE',
-			'DONOTCACHEDB',
-			'DONOTMINIFY',
-			'DONOTCDN',
-			'DONOTCACHEOBJECT',
-		);
-
-		foreach ( $do_not_constants as $do_not_constant ) {
-			if ( ! defined( $do_not_constant ) ) {
-				define( $do_not_constant, true );
-			}
-		}
-
-		nocache_headers();
+		Util::no_cache();
 
 		$subscription_id = filter_input( INPUT_GET, 'subscription', FILTER_SANITIZE_STRING );
 		$action          = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
