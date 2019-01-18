@@ -142,8 +142,10 @@ class SubscriptionsModule {
 				if ( Statuses::CANCELLED !== $subscription->get_status() ) {
 					$subscription->set_status( Statuses::CANCELLED );
 
-					$this->update_subscription( $subscription, $should_redirect );
+					$subscription->save();
 				}
+
+				wp_safe_redirect( home_url() );
 
 				break;
 			case 'renew':
