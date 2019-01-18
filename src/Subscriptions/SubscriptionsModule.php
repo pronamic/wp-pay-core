@@ -137,9 +137,7 @@ class SubscriptionsModule {
 
 				$html = __( 'The subscription can not be renewed.', 'pronamic_ideal' );
 
-				if ( $gateway && $gateway->supports( 'recurring' ) && Statuses::ACTIVE === $subscription->get_status() ) {
-					$html = __( 'The subscription is already active.', 'pronamic_ideal' );
-				} elseif ( $gateway && 'POST' === Server::get( 'REQUEST_METHOD' ) ) {
+				if ( $gateway && 'POST' === Server::get( 'REQUEST_METHOD' ) ) {
 					$payment = $this->start_recurring( $subscription, $gateway, false );
 
 					$error = $gateway->get_error();
