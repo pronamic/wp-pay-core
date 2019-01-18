@@ -29,6 +29,13 @@ use Pronamic\WordPress\Pay\Customer;
  */
 class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
+	 * Payment.
+	 *
+	 * @var Payment
+	 */
+	private $payment;
+
+	/**
 	 * Payments.
 	 *
 	 * @var array
@@ -68,7 +75,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	public function setup() {
 		add_filter( 'wp_insert_post_data', array( $this, 'insert_payment_post_data' ), 10, 2 );
 
-		add_action( 'save_post_pronamic_payment', array( $this, 'save_post_meta' ), 100 );
+		add_action( 'save_post_pronamic_payment', array( $this, 'save_post_meta' ), 100, 3 );
 	}
 
 	/**
@@ -125,38 +132,27 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @return array
 	 */
 	public function insert_payment_post_data( $data, $postarr ) {
-		$payment = null;
+		$this->payment = null;
 
 		if ( isset( $postarr['pronamic_payment'] ) ) {
-			$payment = $postarr['pronamic_payment'];
+			$this->payment = $postarr['pronamic_payment'];
 		} elseif ( isset( $postarr['ID'] ) ) {
 			$post_id = $postarr['ID'];
 
 			if ( 'pronamic_payment' === get_post_type( $post_id ) ) {
-				$payment = $this->get_payment( $post_id );
+				$this->payment = $this->get_payment( $post_id );
 			}
 		}
 
-		if ( $payment instanceof Payment ) {
-			// If post status is set we convert the post status to meta status.
-			if ( isset( $data['post_status'] ) ) {
-				$meta_status = $this->get_meta_status_from_post_status( $data['post_status'] );
+		if ( $this->payment instanceof Payment ) {
+			// Post status is always retrieved from the payment status.
+			$post_status = $this->get_post_status_from_meta_status( $this->payment->get_status() );
 
-				if ( null !== $meta_status ) {
-					$payment->set_status( $meta_status );
-				}
+			if ( null !== $post_status ) {
+				$data['post_status'] = $post_status;
 			}
 
-			// If post status is not set we convert meta status to post status.
-			if ( ! isset( $data['post_status'] ) ) {
-				$post_status = $this->get_post_status_from_meta_status( $payment->get_status() );
-
-				if ( null !== $post_status ) {
-					$data['post_status'] = $post_status;
-				}
-			}
-
-			$data['post_content']   = wp_slash( wp_json_encode( $payment->get_json() ) );
+			$data['post_content']   = wp_slash( wp_json_encode( $this->payment->get_json() ) );
 			$data['post_mime_type'] = 'application/json';
 		}
 
@@ -166,16 +162,23 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
 	 * Save post meta.
 	 *
-	 * @param int $post_id Post ID.
+	 * @link https://github.com/WordPress/WordPress/blob/5.0.3/wp-includes/post.php#L3724-L3736
+	 *
+	 * @param int     $post_ID Post ID.
+	 * @param WP_Post $post    Post object.
+	 * @param bool    $update  Whether this is an existing post being updated or not.
 	 */
-	public function save_post_meta( $post_id ) {
-		if ( 'pronamic_payment' !== get_post_type( $post_id ) ) {
-			return;
+	public function save_post_meta( $post_id, $post, $update ) {
+		if ( $this->payment instanceof Payment ) {
+			if ( ! $update && null === $this->payment->get_id() ) {
+				$this->payment->set_id( $post_id );
+				$this->payment->post = $post;
+			}
+
+			$this->update_post_meta( $this->payment );
 		}
 
-		$payment = $this->get_payment( $post_id );
-
-		$this->update_post_meta( $payment );
+		$this->payment = null;
 	}
 
 	/**
@@ -211,9 +214,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		if ( is_wp_error( $result ) ) {
 			return false;
 		}
-
-		$payment->set_id( $result );
-		$payment->post = get_post( $result );
 
 		do_action( 'pronamic_pay_new_payment', $payment );
 
@@ -721,10 +721,16 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @param Payment $payment The payment to update.
 	 */
 	private function update_post_meta( $payment ) {
+		$id = $payment->get_id();
+
+		if ( empty( $id ) ) {
+			return;
+		}
+
 		$meta = $this->get_update_meta( $payment );
 
 		foreach ( $meta as $meta_key => $meta_value ) {
-			$this->update_meta( $payment->get_id(), $meta_key, $meta_value );
+			$this->update_meta( $id, $meta_key, $meta_value );
 		}
 
 		$this->update_meta_status( $payment );
@@ -737,6 +743,10 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 */
 	public function update_meta_status( $payment ) {
 		$id = $payment->get_id();
+
+		if ( empty( $id ) ) {
+			return;
+		}
 
 		$previous_status = $this->get_meta( $id, 'status' );
 

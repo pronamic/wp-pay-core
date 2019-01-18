@@ -30,6 +30,13 @@ use Pronamic\WordPress\Pay\Core\Statuses;
  */
 class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	/**
+	 * Subscription.
+	 *
+	 * @var Subscription
+	 */
+	private $subscription;
+
+	/**
 	 * Subscriptions.
 	 *
 	 * @var array
@@ -70,7 +77,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	public function setup() {
 		add_filter( 'wp_insert_post_data', array( $this, 'insert_subscription_post_data' ), 10, 2 );
 
-		add_action( 'save_post_pronamic_pay_subscr', array( $this, 'save_post_meta' ), 100 );
+		add_action( 'save_post_pronamic_pay_subscr', array( $this, 'save_post_meta' ), 100, 3 );
 	}
 
 	/**
@@ -127,42 +134,31 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 * @return array
 	 */
 	public function insert_subscription_post_data( $data, $postarr ) {
-		$subscription = null;
+		$this->subscription = null;
 
 		if ( isset( $postarr['pronamic_subscription'] ) ) {
-			$subscription = $postarr['pronamic_subscription'];
+			$this->subscription = $postarr['pronamic_subscription'];
 		} elseif ( isset( $postarr['ID'] ) ) {
 			$post_id = $postarr['ID'];
 
 			if ( 'pronamic_pay_subscr' === get_post_type( $post_id ) ) {
-				$subscription = $this->get_subscription( $post_id );
+				$this->subscription = $this->get_subscription( $post_id );
 			}
 		}
 
-		if ( $subscription instanceof Subscription ) {
-			// If post status is set we convert the post status to meta status.
-			if ( isset( $data['post_status'] ) ) {
-				$meta_status = $this->get_meta_status_from_post_status( $data['post_status'] );
+		if ( $this->subscription instanceof Subscription ) {
+			// Post status is always retrieved from the subscription status.
+			$post_status = $this->get_post_status_from_meta_status( $this->subscription->get_status() );
 
-				if ( null !== $meta_status ) {
-					$subscription->set_status( $meta_status );
-				}
-			}
-
-			// If post status is not set we convert meta status to post status.
-			if ( ! isset( $data['post_status'] ) ) {
-				$post_status = $this->get_post_status_from_meta_status( $subscription->get_status() );
-
-				if ( null !== $post_status ) {
-					$data['post_status'] = $post_status;
-				}
+			if ( null !== $post_status ) {
+				$data['post_status'] = $post_status;
 			}
 
 			// Update subscription from post array.
-			$this->update_subscription_form_post_array( $subscription, $postarr );
+			$this->update_subscription_form_post_array( $this->subscription, $postarr );
 
 			// Data.
-			$data['post_content']   = wp_slash( wp_json_encode( $subscription->get_json() ) );
+			$data['post_content']   = wp_slash( wp_json_encode( $this->subscription->get_json() ) );
 			$data['post_mime_type'] = 'application/json';
 		}
 
@@ -198,16 +194,23 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	/**
 	 * Save post meta.
 	 *
-	 * @param int $post_id Post ID.
+	 * @link https://github.com/WordPress/WordPress/blob/5.0.3/wp-includes/post.php#L3724-L3736
+	 *
+	 * @param int     $post_ID Post ID.
+	 * @param WP_Post $post    Post object.
+	 * @param bool    $update  Whether this is an existing post being updated or not.
 	 */
-	public function save_post_meta( $post_id ) {
-		if ( 'pronamic_pay_subscr' !== get_post_type( $post_id ) ) {
-			return;
+	public function save_post_meta( $post_id, $post, $update ) {
+		if ( $this->subscription instanceof Subscription ) {
+			if ( ! $update && null === $this->subscription->get_id() ) {
+				$this->subscription->set_id( $post_id );
+				$this->subscription->post = $post;
+			}
+
+			$this->update_post_meta( $this->subscription );
 		}
 
-		$subscription = $this->get_subscription( $post_id );
-
-		$this->update_post_meta( $subscription );
+		$this->subscription = null;
 	}
 
 	/**
@@ -238,8 +241,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 			return false;
 		}
 
-		$subscription->set_id( $result );
-		$subscription->post = get_post( $result );
+		$this->update_post_meta( $subscription );
 
 		do_action( 'pronamic_pay_new_subscription', $subscription );
 
@@ -463,6 +465,10 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	protected function read_post_meta( $subscription ) {
 		$id = $subscription->get_id();
 
+		if ( empty( $id ) ) {
+			return;
+		}
+
 		$subscription->config_id       = $this->get_meta( $id, 'config_id' );
 		$subscription->key             = $this->get_meta( $id, 'key' );
 		$subscription->source          = $this->get_meta( $id, 'source' );
@@ -554,6 +560,10 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	private function update_post_meta( $subscription ) {
 		$id = $subscription->get_id();
 
+		if ( empty( $id ) ) {
+			return;
+		}
+
 		$this->update_meta( $id, 'config_id', $subscription->config_id );
 		$this->update_meta( $id, 'key', $subscription->key );
 		$this->update_meta( $id, 'source', $subscription->source );
@@ -582,6 +592,10 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 */
 	public function update_meta_status( $subscription ) {
 		$id = $subscription->get_id();
+
+		if ( empty( $id ) ) {
+			return;
+		}
 
 		$previous_status = $this->get_meta( $id, 'status' );
 
