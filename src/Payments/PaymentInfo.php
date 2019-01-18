@@ -464,9 +464,9 @@ abstract class PaymentInfo {
 	/**
 	 * Set payment lines.
 	 *
-	 * @param PaymentLines $lines Payment lines.
+	 * @param PaymentLines|null $lines Payment lines.
 	 */
-	public function set_lines( PaymentLines $lines ) {
+	public function set_lines( PaymentLines $lines = null ) {
 		$this->lines = $lines;
 	}
 
