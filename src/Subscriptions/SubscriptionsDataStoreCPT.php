@@ -147,15 +147,12 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 		}
 
 		if ( $this->subscription instanceof Subscription ) {
-			// Post status is always retrieved from the subscription status.
-			$post_status = $this->get_post_status_from_meta_status( $this->subscription->get_status() );
-
-			if ( null !== $post_status ) {
-				$data['post_status'] = $post_status;
-			}
-
 			// Update subscription from post array.
 			$this->update_subscription_form_post_array( $this->subscription, $postarr );
+
+			if ( ! isset( $data['post_status'] ) || 'trash' !== $data['post_status'] ) {
+				$data['post_status'] = $this->get_post_status_from_meta_status( $this->subscription->get_status() );
+			}
 
 			// Data.
 			$data['post_content']   = wp_slash( wp_json_encode( $this->subscription->get_json() ) );
@@ -172,6 +169,15 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 * @param array        $postarr      Post data array.
 	 */
 	private function update_subscription_form_post_array( $subscription, $postarr ) {
+		if ( isset( $postarr['pronamic_subscription_post_status'] ) ) {
+			$post_status = sanitize_text_field( wp_unslash( $postarr['pronamic_subscription_post_status'] ) );
+			$meta_status = $this->get_meta_status_from_post_status( $post_status );
+
+			if ( null !== $meta_status ) {
+				$subscription->set_status( $meta_status );
+			}
+		}
+
 		if ( ! isset( $postarr['pronamic_subscription_update_nonce'] ) ) {
 			return;
 		}

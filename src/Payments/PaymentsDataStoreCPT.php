@@ -145,18 +145,36 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		}
 
 		if ( $this->payment instanceof Payment ) {
-			// Post status is always retrieved from the payment status.
-			$post_status = $this->get_post_status_from_meta_status( $this->payment->get_status() );
+			// Update subscription from post array.
+			$this->update_payment_form_post_array( $this->payment, $postarr );
 
-			if ( null !== $post_status ) {
-				$data['post_status'] = $post_status;
+			if ( ! isset( $data['post_status'] ) || 'trash' !== $data['post_status'] ) {
+				$data['post_status'] = $this->get_post_status_from_meta_status( $this->payment->get_status() );
 			}
 
+			// Data.
 			$data['post_content']   = wp_slash( wp_json_encode( $this->payment->get_json() ) );
 			$data['post_mime_type'] = 'application/json';
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Update payment from post array.
+	 *
+	 * @param Subscription $payment Payment.
+	 * @param array        $postarr Post data array.
+	 */
+	private function update_payment_form_post_array( $payment, $postarr ) {
+		if ( isset( $postarr['pronamic_payment_post_status'] ) ) {
+			$post_status = sanitize_text_field( wp_unslash( $postarr['pronamic_payment_post_status'] ) );
+			$meta_status = $this->get_meta_status_from_post_status( $post_status );
+
+			if ( null !== $meta_status ) {
+				$payment->set_status( $meta_status );
+			}
+		}
 	}
 
 	/**
