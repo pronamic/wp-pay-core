@@ -304,7 +304,7 @@ class ContactName {
 		$string = implode( ' ', $pieces );
 
 		if ( empty( $string ) ) {
-			$string = $this->get_full_name();
+			$string = (string) $this->get_full_name();
 		}
 
 		return $string;
