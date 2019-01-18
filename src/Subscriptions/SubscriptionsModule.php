@@ -154,11 +154,7 @@ class SubscriptionsModule {
 				if ( $gateway && $gateway->supports( 'recurring' ) && Statuses::ACTIVE === $subscription->get_status() ) {
 					$html = __( 'The subscription is already active.', 'pronamic_ideal' );
 				} elseif ( $gateway && 'POST' === Server::get( 'REQUEST_METHOD' ) ) {
-					$data = new SubscriptionPaymentData( $subscription );
-
-					$data->set_recurring( false );
-
-					$payment = $this->start_recurring( $subscription, $gateway, $data );
+					$payment = $this->start_recurring( $subscription, $gateway, false );
 
 					$error = $gateway->get_error();
 
@@ -231,112 +227,50 @@ class SubscriptionsModule {
 	}
 
 	/**
+	 * Create a new subscription payment.
+	 *
+	 * @param Subscription $subscription Subscription
+	 * @return Payment
+	 */
+	public function new_subscription_payment( Subscription $subscription ) {
+		// Create payment.
+		$payment = new Payment();
+
+		$payment->config_id       = $subscription->get_config_id();
+		$payment->order_id        = $subscription->get_order_id();
+		$payment->description     = $subscription->description;
+		$payment->source          = $subscription->get_source();
+		$payment->source_id       = $subscription->get_source_id();
+		$payment->email           = $subscription->get_email();
+		$payment->method          = $subscription->payment_method;
+		$payment->issuer          = $subscription->issuer;
+		$payment->recurring       = true;
+		$payment->subscription    = $subscription;
+		$payment->subscription_id = $subscription->get_id();
+
+		$payment->set_total_amount( $subscription->get_total_amount() );
+		$payment->set_customer( $subscription->get_customer() );
+		$payment->set_billing_address( $subscription->get_billing_address() );
+		$payment->set_shipping_address( $subscription->get_shipping_address() );
+		$payment->set_lines( $subscription->get_lines() );
+
+		return $payment;
+	}
+
+	/**
 	 * Start a recurring payment at the specified gateway for the specified subscription.
 	 *
 	 * @param Subscription                 $subscription The subscription to start a recurring payment for.
 	 * @param Gateway|null                 $gateway      The gateway to start the recurring payment at.
-	 * @param SubscriptionPaymentData|null $data         The subscription payment data.
 	 *
 	 * @throws \Exception Throws an Exception on incorrect date interval.
 	 *
 	 * @return Payment|bool
 	 */
-	public function start_recurring( Subscription $subscription, $gateway = null, $data = null ) {
-		// Make sure there's payment data to process.
-		if ( null === $data ) {
-			$data = new SubscriptionPaymentData( $subscription );
-		}
-
-		// Create payment.
-		$payment = new Payment();
-
-		$payment->config_id       = $subscription->get_config_id();
-		$payment->order_id        = $data->get_order_id();
-		$payment->description     = $data->get_description();
-		$payment->source          = $data->get_source();
-		$payment->source_id       = $data->get_source_id();
-		$payment->email           = $data->get_email();
-		$payment->method          = $subscription->payment_method;
-		$payment->recurring       = ( false === $data->get_recurring() ? false : true );
-		$payment->subscription    = $subscription;
-		$payment->subscription_id = $subscription->get_id();
-		$payment->set_total_amount( $data->get_amount() );
-
-		// Set payment method from payment data if available.
-		if ( method_exists( $data, 'get_payment_method' ) ) {
-			$payment->method = $data->get_payment_method();
-		}
-
-		// Set issuer for manual renewal.
-		if ( ! $payment->get_recurring() ) {
-			$payment->issuer = $data->get_issuer_id();
-		}
-
-		// Customer.
-		$customer = array(
-			'name'    => (object) array(
-				'first_name' => $data->get_first_name(),
-				'last_name'  => $data->get_last_name(),
-			),
-			'email'   => $data->get_email(),
-			'phone'   => $data->get_telephone_number(),
-			'user_id' => $data->get_user_id(),
-		);
-
-		$customer = array_filter( $customer );
-
-		if ( ! empty( $customer ) ) {
-			$customer = Customer::from_json( (object) $customer );
-
-			$payment->set_customer( $customer );
-		}
-
-		// Billing address.
-		$billing_address = array(
-			'name'         => ( $customer instanceof Customer ? $customer->get_name() : null ),
-			'line_1'       => $data->get_address(),
-			'postal_code'  => $data->get_zip(),
-			'city'         => $data->get_city(),
-			'country_name' => $data->get_country(),
-			'email'        => $data->get_email(),
-			'phone'        => $data->get_telephone_number(),
-		);
-
-		$billing_address = array_filter( $billing_address );
-
-		if ( ! empty( $billing_address ) ) {
-			$address = new Address();
-
-			if ( isset( $billing_address['name'] ) ) {
-				$address->set_name( $billing_address['name'] );
-			}
-
-			if ( isset( $billing_address['line_1'] ) ) {
-				$address->set_line_1( $billing_address['line_1'] );
-			}
-
-			if ( isset( $billing_address['postal_code'] ) ) {
-				$address->set_postal_code( $billing_address['postal_code'] );
-			}
-
-			if ( isset( $billing_address['city'] ) ) {
-				$address->set_city( $billing_address['city'] );
-			}
-
-			if ( isset( $billing_address['country_name'] ) ) {
-				$address->set_country_name( $billing_address['country_name'] );
-			}
-
-			if ( isset( $billing_address['email'] ) ) {
-				$address->set_email( $billing_address['email'] );
-			}
-
-			if ( isset( $billing_address['phone'] ) ) {
-				$address->set_phone( $billing_address['phone'] );
-			}
-
-			$payment->set_billing_address( $address );
-		}
+	public function start_recurring( Subscription $subscription, $gateway = null, $recurring = true ) {
+		$payment = $this->new_subscription_payment( $subscription );
+		
+		$payment->recurring = $recurring;
 
 		// Maybe complete subscription for manual renewal.
 		if ( $this->maybe_complete_manual_renewal_subscription( $payment ) ) {
