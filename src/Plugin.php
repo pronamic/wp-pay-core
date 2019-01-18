@@ -412,29 +412,8 @@ class Plugin {
 				exit;
 			}
 
-			// @link https://github.com/woothemes/woocommerce/blob/2.3.11/includes/class-wc-cache-helper.php
-			// @link https://www.w3-edge.com/products/w3-total-cache/
-			if ( ! defined( 'DONOTCACHEPAGE' ) ) {
-				define( 'DONOTCACHEPAGE', true );
-			}
-
-			if ( ! defined( 'DONOTCACHEDB' ) ) {
-				define( 'DONOTCACHEDB', true );
-			}
-
-			if ( ! defined( 'DONOTMINIFY' ) ) {
-				define( 'DONOTMINIFY', true );
-			}
-
-			if ( ! defined( 'DONOTCDN' ) ) {
-				define( 'DONOTCDN', true );
-			}
-
-			if ( ! defined( 'DONOTCACHEOBJECT' ) ) {
-				define( 'DONOTCACHEOBJECT', true );
-			}
-
-			nocache_headers();
+			// No cache.
+			Core_Util::no_cache();
 
 			include self::$dirname . '/views/redirect-message.php';
 
