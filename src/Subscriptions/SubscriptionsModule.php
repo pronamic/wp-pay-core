@@ -213,7 +213,7 @@ class SubscriptionsModule {
 	/**
 	 * Create a new subscription payment.
 	 *
-	 * @param Subscription $subscription Subscription
+	 * @param Subscription $subscription Subscription.
 	 * @return Payment
 	 */
 	public function new_subscription_payment( Subscription $subscription ) {
@@ -259,8 +259,9 @@ class SubscriptionsModule {
 	/**
 	 * Start a recurring payment at the specified gateway for the specified subscription.
 	 *
-	 * @param Subscription                 $subscription The subscription to start a recurring payment for.
-	 * @param Gateway|null                 $gateway      The gateway to start the recurring payment at.
+	 * @param Subscription $subscription The subscription to start a recurring payment for.
+	 * @param Gateway|null $gateway      The gateway to start the recurring payment at.
+	 * @param bool         $recurring    Recurring.
 	 *
 	 * @throws \Exception Throws an Exception on incorrect date interval.
 	 *

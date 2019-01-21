@@ -182,7 +182,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 *
 	 * @link https://github.com/WordPress/WordPress/blob/5.0.3/wp-includes/post.php#L3724-L3736
 	 *
-	 * @param int     $post_ID Post ID.
+	 * @param int     $post_id Post ID.
 	 * @param WP_Post $post    Post object.
 	 * @param bool    $update  Whether this is an existing post being updated or not.
 	 */
