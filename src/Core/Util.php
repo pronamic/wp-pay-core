@@ -3,7 +3,7 @@
  * Util
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Core
  */
@@ -19,7 +19,7 @@ use WP_Error;
 /**
  * Title: WordPress utility class
  * Description:
- * Copyright: Copyright (c) 2005 - 2018
+ * Copyright: 2005-2019 Pronamic
  * Company: Pronamic
  *
  * @author Remco Tolsma
@@ -100,6 +100,62 @@ class Util {
 		libxml_use_internal_errors( $use_errors );
 
 		return $result;
+	}
+
+	/**
+	 * Compat function to mimic wp_doing_cron().
+	 *
+	 * @link  https://github.com/WordPress/WordPress/blob/4.9/wp-includes/load.php#L1066-L1082
+	 * @ignore
+	 * @since 2.1.2
+	 *
+	 * @return bool True if it's a WordPress cron request, false otherwise.
+	 */
+	public static function doing_cron() {
+		if ( function_exists( '\wp_doing_cron' ) ) {
+			return \wp_doing_cron();
+		}
+
+		/**
+		 * Filters whether the current request is a WordPress cron request.
+		 *
+		 * @since 4.8.0
+		 *
+		 * @param bool $wp_doing_cron Whether the current request is a WordPress cron request.
+		 */
+		return apply_filters( 'wp_doing_cron', defined( 'DOING_CRON' ) && DOING_CRON );
+	}
+
+	/**
+	 * Doing CLI.
+	 *
+	 * @return bool
+	 */
+	public static function doing_cli() {
+		return defined( 'WP_CLI' ) && WP_CLI;
+	}
+
+	/**
+	 * No cache.
+	 */
+	public static function no_cache() {
+		// @link https://github.com/woothemes/woocommerce/blob/2.3.11/includes/class-wc-cache-helper.php
+		// @link https://www.w3-edge.com/products/w3-total-cache/
+		$do_not_constants = array(
+			'DONOTCACHEPAGE',
+			'DONOTCACHEDB',
+			'DONOTMINIFY',
+			'DONOTCDN',
+			'DONOTCACHEOBJECT',
+		);
+
+		foreach ( $do_not_constants as $do_not_constant ) {
+			if ( ! defined( $do_not_constant ) ) {
+				define( $do_not_constant, true );
+			}
+		}
+
+		nocache_headers();
 	}
 
 	/**

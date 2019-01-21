@@ -3,7 +3,7 @@
  * Subscription Payment Data
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -107,7 +107,7 @@ class SubscriptionPaymentData extends PaymentData {
 		$item = new Item();
 		$item->set_number( $this->get_order_id() );
 		$item->set_description( $this->get_description() );
-		$item->set_price( $this->subscription->get_amount()->get_value() );
+		$item->set_price( $this->subscription->get_total_amount()->get_value() );
 		$item->set_quantity( 1 );
 
 		$items->add_item( $item );
@@ -121,7 +121,7 @@ class SubscriptionPaymentData extends PaymentData {
 	 * @return mixed
 	 */
 	public function get_currency_alphabetic_code() {
-		return $this->subscription->get_amount()->get_currency()->get_alphabetic_code();
+		return $this->subscription->get_total_amount()->get_currency()->get_alphabetic_code();
 	}
 
 	/**

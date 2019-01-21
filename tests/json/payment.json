@@ -1,5 +1,6 @@
 {
   "id":1,
+  "status":"Open",
   "total_amount":{
     "value":242,
     "currency":"EUR",
@@ -76,6 +77,6 @@
       }
     }
   ],
-  "ga_tracked":true,
-  "mode":"live"
+  "mode":"live",
+  "ga_tracked":true
 }

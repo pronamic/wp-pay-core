@@ -3,7 +3,7 @@
  * Payment Test Data
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -211,7 +211,7 @@ class PaymentTestData extends PaymentData {
 		$subscription->frequency       = $times;
 		$subscription->interval        = $interval;
 		$subscription->interval_period = Core_Util::to_period( $interval_period );
-		$subscription->set_amount( $this->get_amount() );
+		$subscription->set_total_amount( $this->get_amount() );
 
 		return $subscription;
 	}

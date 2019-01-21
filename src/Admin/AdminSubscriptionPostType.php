@@ -3,14 +3,13 @@
  * Subscription Post Type
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Admin
  */
 
 namespace Pronamic\WordPress\Pay\Admin;
 
-use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
@@ -56,12 +55,7 @@ class AdminSubscriptionPostType {
 
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 
-		add_action( 'save_post_' . self::POST_TYPE, array( $this, 'save_post' ) );
-
 		add_filter( 'post_row_actions', array( $this, 'post_row_actions' ), 10, 2 );
-
-		// Transition post status.
-		add_action( 'transition_post_status', array( $this, 'transition_post_status' ), 10, 3 );
 	}
 
 	/**
@@ -209,7 +203,7 @@ class AdminSubscriptionPostType {
 				}
 
 				if ( isset( $config_id ) && ! empty( $config_id ) ) {
-					echo get_the_title( $config_id );
+					echo esc_html( get_the_title( $config_id ) );
 				} else {
 					echo '—';
 				}
@@ -220,7 +214,7 @@ class AdminSubscriptionPostType {
 
 				break;
 			case 'pronamic_subscription_amount':
-				echo esc_html( $subscription->get_amount()->format_i18n() );
+				echo esc_html( $subscription->get_total_amount()->format_i18n() );
 
 				break;
 			case 'pronamic_subscription_recurring':
@@ -254,6 +248,15 @@ class AdminSubscriptionPostType {
 			'pronamic_subscription',
 			__( 'Subscription', 'pronamic_ideal' ),
 			array( $this, 'meta_box_info' ),
+			$post_type,
+			'normal',
+			'high'
+		);
+
+		add_meta_box(
+			'pronamic_payment_lines',
+			__( 'Payment Lines', 'pronamic_ideal' ),
+			array( $this, 'meta_box_lines' ),
 			$post_type,
 			'normal',
 			'high'
@@ -297,6 +300,19 @@ class AdminSubscriptionPostType {
 	 */
 	public function meta_box_info( $post ) {
 		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-subscription-info.php';
+	}
+
+	/**
+	 * Pronamic Pay payment lines meta box.
+	 *
+	 * @param WP_Post $post The object for the current post/page.
+	 */
+	public function meta_box_lines( $post ) {
+		$subscription = get_pronamic_subscription( $post->ID );
+
+		$lines = $subscription->get_lines();
+
+		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-payment-lines.php';
 	}
 
 	/**
@@ -349,126 +365,5 @@ class AdminSubscriptionPostType {
 		}
 
 		return $actions;
-	}
-
-	/**
-	 * Translate post status to meta status.
-	 *
-	 * @param string $post_status Post status.
-	 * @return string
-	 */
-	private function translate_post_status_to_meta_status( $post_status ) {
-		switch ( $post_status ) {
-			case 'subscr_pending':
-				return Statuses::OPEN;
-			case 'subscr_cancelled':
-				return Statuses::CANCELLED;
-			case 'subscr_expired':
-				return Statuses::EXPIRED;
-			case 'subscr_failed':
-				return Statuses::FAILURE;
-			case 'subscr_active':
-				return Statuses::ACTIVE;
-			case 'subscr_completed':
-				return Statuses::COMPLETED;
-		}
-	}
-
-	/**
-	 * Transition post status.
-	 *
-	 * @param string  $new_status New status.
-	 * @param string  $old_status Old status.
-	 * @param WP_Post $post       WordPress post.
-	 */
-	public function transition_post_status( $new_status, $old_status, $post ) {
-		if ( ! filter_has_var( INPUT_POST, 'pronamic_subscription_update_nonce' ) ) {
-			return;
-		}
-
-		if ( ! check_admin_referer( 'pronamic_subscription_update', 'pronamic_subscription_update_nonce' ) ) {
-			return;
-		}
-
-		if ( 'pronamic_pay_subscr' !== get_post_type( $post ) ) {
-			return;
-		}
-
-		$new_status_meta = $this->translate_post_status_to_meta_status( $new_status );
-
-		$subscription = new Subscription( $post->ID );
-		$subscription->set_status( $new_status_meta );
-
-		pronamic_pay_plugin()->subscriptions_data_store->update_meta_status( $subscription );
-	}
-
-	/**
-	 * When the post is saved, saves our custom data.
-	 *
-	 * @param int $post_id The ID of the post being saved.
-	 */
-	public function save_post( $post_id ) {
-		if ( ! filter_has_var( INPUT_POST, 'pronamic_subscription_update_nonce' ) ) {
-			return;
-		}
-
-		if ( ! check_admin_referer( 'pronamic_subscription_update', 'pronamic_subscription_update_nonce' ) ) {
-			return;
-		}
-
-		if ( 'pronamic_pay_subscr' !== get_post_type( $post_id ) ) {
-			return;
-		}
-
-		// If this is an autosave, our form has not been submitted, so we don't want to do anything.
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-			return;
-		}
-
-		// Check the user's permissions.
-		if ( ! current_user_can( 'edit_post', $post_id ) ) {
-			return;
-		}
-
-		/* OK, its safe for us to save the data now. */
-		$definition = array(
-			'amount' => 'sanitize_text_field',
-		);
-
-		$subscription = new Subscription( $post_id );
-
-		$update_meta = array();
-
-		foreach ( $definition as $meta => $function ) {
-			$meta_key   = pronamic_pay_plugin()->subscriptions_data_store->meta_key_prefix . $meta;
-			$meta_value = null;
-
-			if ( 'sanitize_text_field' === $function ) {
-				if ( isset( $_POST[ $meta_key ] ) ) { // WPCS: input var OK.
-					$meta_value = sanitize_text_field( wp_unslash( $_POST[ $meta_key ] ) ); // WPCS: input var OK.
-				}
-			} else {
-				$filter  = $function;
-				$options = null;
-
-				if ( is_array( $function ) && isset( $function['filter'] ) ) {
-					$filter  = $function['filter'];
-					$options = $function;
-				}
-
-				$meta_value = filter_input( INPUT_POST, $meta_key, $filter, $options );
-			}
-
-			// Convert user input amount to float.
-			if ( 'amount' === $meta ) {
-				$money_parser = new MoneyParser();
-
-				$meta_value = $money_parser->parse( $meta_value )->get_value();
-			}
-
-			$update_meta[ $meta ] = $meta_value;
-		}
-
-		$subscription->update_meta( $update_meta );
 	}
 }

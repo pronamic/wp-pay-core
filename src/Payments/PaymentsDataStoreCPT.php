@@ -3,7 +3,7 @@
  * Payments Data Store Custom Post Type
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -13,11 +13,12 @@ namespace Pronamic\WordPress\Pay\Payments;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\Customer;
 
 /**
  * Title: Payments data store CPT
  * Description:
- * Copyright: Copyright (c) 2005 - 2018
+ * Copyright: 2005-2019 Pronamic
  * Company: Pronamic
  *
  * @see     https://woocommerce.com/2017/04/woocommerce-3-0-release/
@@ -28,12 +29,174 @@ use Pronamic\WordPress\Pay\Core\Statuses;
  */
 class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
+	 * Payment.
+	 *
+	 * @var Payment
+	 */
+	private $payment;
+
+	/**
+	 * Payments.
+	 *
+	 * @var array
+	 */
+	private $payments;
+
+	/**
+	 * Status map.
+	 *
+	 * @var array
+	 */
+	private $status_map;
+
+	/**
 	 * Construct payments data store CPT object.
 	 */
 	public function __construct() {
 		$this->meta_key_prefix = '_pronamic_payment_';
 
 		$this->register_meta();
+
+		$this->payments = array();
+
+		$this->status_map = array(
+			Statuses::CANCELLED => 'payment_cancelled',
+			Statuses::EXPIRED   => 'payment_expired',
+			Statuses::FAILURE   => 'payment_failed',
+			Statuses::RESERVED  => 'payment_reserved',
+			Statuses::SUCCESS   => 'payment_completed',
+			Statuses::OPEN      => 'payment_pending',
+		);
+	}
+
+	/**
+	 * Setup.
+	 */
+	public function setup() {
+		add_filter( 'wp_insert_post_data', array( $this, 'insert_payment_post_data' ), 10, 2 );
+
+		add_action( 'save_post_pronamic_payment', array( $this, 'save_post_meta' ), 100, 3 );
+	}
+
+	/**
+	 * Get payment by ID.
+	 *
+	 * @param int $id Payment ID.
+	 * @return Payment
+	 */
+	private function get_payment( $id ) {
+		if ( ! isset( $this->payments[ $id ] ) ) {
+			$this->payments[ $id ] = get_pronamic_payment( $id );
+		}
+
+		return $this->payments[ $id ];
+	}
+
+	/**
+	 * Get post status from meta status.
+	 *
+	 * @param string $meta_status Meta status.
+	 * @return string|null
+	 */
+	private function get_post_status_from_meta_status( $meta_status ) {
+		if ( isset( $this->status_map[ $meta_status ] ) ) {
+			return $this->status_map[ $meta_status ];
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get meta status from post status.
+	 *
+	 * @param string $post_status Post status.
+	 * @return string|null
+	 */
+	private function get_meta_status_from_post_status( $post_status ) {
+		$key = array_search( $post_status, $this->status_map, true );
+
+		if ( false !== $key ) {
+			return $key;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Complement payment post data.
+	 *
+	 * @link https://github.com/WordPress/WordPress/blob/5.0.3/wp-includes/post.php#L3515-L3523
+	 *
+	 * @param array $data    An array of slashed post data.
+	 * @param array $postarr An array of sanitized, but otherwise unmodified post data.
+	 * @return array
+	 */
+	public function insert_payment_post_data( $data, $postarr ) {
+		$this->payment = null;
+
+		if ( isset( $postarr['pronamic_payment'] ) ) {
+			$this->payment = $postarr['pronamic_payment'];
+		} elseif ( isset( $postarr['ID'] ) ) {
+			$post_id = $postarr['ID'];
+
+			if ( 'pronamic_payment' === get_post_type( $post_id ) ) {
+				$this->payment = $this->get_payment( $post_id );
+			}
+		}
+
+		if ( $this->payment instanceof Payment ) {
+			// Update subscription from post array.
+			$this->update_payment_form_post_array( $this->payment, $postarr );
+
+			if ( ! isset( $data['post_status'] ) || 'trash' !== $data['post_status'] ) {
+				$data['post_status'] = $this->get_post_status_from_meta_status( $this->payment->get_status() );
+			}
+
+			// Data.
+			$data['post_content']   = wp_slash( wp_json_encode( $this->payment->get_json() ) );
+			$data['post_mime_type'] = 'application/json';
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Update payment from post array.
+	 *
+	 * @param Subscription $payment Payment.
+	 * @param array        $postarr Post data array.
+	 */
+	private function update_payment_form_post_array( $payment, $postarr ) {
+		if ( isset( $postarr['pronamic_payment_post_status'] ) ) {
+			$post_status = sanitize_text_field( wp_unslash( $postarr['pronamic_payment_post_status'] ) );
+			$meta_status = $this->get_meta_status_from_post_status( $post_status );
+
+			if ( null !== $meta_status ) {
+				$payment->set_status( $meta_status );
+			}
+		}
+	}
+
+	/**
+	 * Save post meta.
+	 *
+	 * @link https://github.com/WordPress/WordPress/blob/5.0.3/wp-includes/post.php#L3724-L3736
+	 *
+	 * @param int     $post_id Post ID.
+	 * @param WP_Post $post    Post object.
+	 * @param bool    $update  Whether this is an existing post being updated or not.
+	 */
+	public function save_post_meta( $post_id, $post, $update ) {
+		if ( $this->payment instanceof Payment ) {
+			if ( ! $update && null === $this->payment->get_id() ) {
+				$this->payment->set_id( $post_id );
+				$this->payment->post = $post;
+			}
+
+			$this->update_post_meta( $this->payment );
+		}
+
+		$this->payment = null;
 	}
 
 	/**
@@ -55,16 +218,13 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			);
 		}
 
-		$post_status = $this->get_post_status( $payment->status );
-
 		$result = wp_insert_post(
 			array(
-				'post_type'     => 'pronamic_payment',
-				'post_date_gmt' => $this->get_mysql_utc_date( $payment->date ),
-				'post_title'    => $title,
-				'post_content'  => wp_slash( wp_json_encode( $payment->get_json() ) ),
-				'post_status'   => empty( $post_status ) ? 'payment_pending' : null,
-				'post_author'   => null === $payment->get_customer() ? null : $payment->get_customer()->get_user_id(),
+				'post_type'        => 'pronamic_payment',
+				'post_date_gmt'    => $this->get_mysql_utc_date( $payment->date ),
+				'post_title'       => $title,
+				'post_author'      => null === $payment->get_customer() ? null : $payment->get_customer()->get_user_id(),
+				'pronamic_payment' => $payment,
 			),
 			true
 		);
@@ -72,11 +232,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		if ( is_wp_error( $result ) ) {
 			return false;
 		}
-
-		$payment->set_id( $result );
-		$payment->post = get_post( $result );
-
-		$this->update_post_meta( $payment );
 
 		do_action( 'pronamic_pay_new_payment', $payment );
 
@@ -98,23 +253,15 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		}
 
 		$data = array(
-			'ID'           => $id,
-			'post_content' => wp_slash( wp_json_encode( $payment->get_json() ) ),
+			'ID'               => $id,
+			'pronamic_payment' => $payment,
 		);
-
-		$post_status = $this->get_post_status( $payment->status );
-
-		if ( ! empty( $post_status ) ) {
-			$data['post_status'] = $post_status;
-		}
 
 		$result = wp_update_post( $data, true );
 
 		if ( is_wp_error( $result ) ) {
 			return false;
 		}
-
-		$this->update_post_meta( $payment );
 
 		return true;
 	}
@@ -147,10 +294,12 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @param Payment $payment The payment to read from this data store.
 	 */
 	public function read( Payment $payment ) {
-		$payment->post    = get_post( $payment->get_id() );
-		$payment->title   = get_the_title( $payment->get_id() );
-		$payment->date    = new DateTime( get_post_field( 'post_date_gmt', $payment->get_id(), 'raw' ), new DateTimeZone( 'UTC' ) );
-		$payment->user_id = get_post_field( 'post_author', $payment->get_id(), 'raw' );
+		$payment->post  = get_post( $payment->get_id() );
+		$payment->title = get_the_title( $payment->get_id() );
+		$payment->date  = new DateTime(
+			get_post_field( 'post_date_gmt', $payment->get_id(), 'raw' ),
+			new DateTimeZone( 'UTC' )
+		);
 
 		$content = get_post_field( 'post_content', $payment->post, 'raw' );
 
@@ -160,39 +309,20 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			Payment::from_json( $json, $payment );
 		}
 
-		$this->read_post_meta( $payment );
-	}
+		// Set user ID from `post_author` field if not set from payment JSON.
+		if ( null === $payment->get_customer() ) {
+			$customer = new Customer();
 
-	/**
-	 * Get post status.
-	 *
-	 * @param string $meta_status The meta status to get a WordPress post status for.
-	 *
-	 * @return string|null
-	 */
-	public function get_post_status( $meta_status ) {
-		switch ( $meta_status ) {
-			case Statuses::CANCELLED:
-				return 'payment_cancelled';
-
-			case Statuses::EXPIRED:
-				return 'payment_expired';
-
-			case Statuses::FAILURE:
-				return 'payment_failed';
-
-			case Statuses::RESERVED:
-				return 'payment_reserved';
-
-			case Statuses::SUCCESS:
-				return 'payment_completed';
-
-			case Statuses::OPEN:
-				return 'payment_pending';
-
-			default:
-				return null;
+			$payment->set_customer( $customer );
 		}
+
+		if ( null === $payment->get_customer()->get_user_id() ) {
+			$post_author = get_post_field( 'post_author', $payment->get_id(), 'raw' );
+
+			$payment->get_customer()->set_user_id( $post_author );
+		}
+
+		$this->read_post_meta( $payment );
 	}
 
 	/**
@@ -202,7 +332,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @return string|boolean
 	 */
 	public function get_meta_status_label( $meta_status ) {
-		$post_status = $this->get_post_status( $meta_status );
+		$post_status = $this->get_post_status_from_meta_status( $meta_status );
 
 		if ( empty( $post_status ) ) {
 			return false;
@@ -609,10 +739,16 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @param Payment $payment The payment to update.
 	 */
 	private function update_post_meta( $payment ) {
+		$id = $payment->get_id();
+
+		if ( empty( $id ) ) {
+			return;
+		}
+
 		$meta = $this->get_update_meta( $payment );
 
 		foreach ( $meta as $meta_key => $meta_value ) {
-			$this->update_meta( $payment->get_id(), $meta_key, $meta_value );
+			$this->update_meta( $id, $meta_key, $meta_value );
 		}
 
 		$this->update_meta_status( $payment );
@@ -625,6 +761,10 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 */
 	public function update_meta_status( $payment ) {
 		$id = $payment->get_id();
+
+		if ( empty( $id ) ) {
+			return;
+		}
 
 		$previous_status = $this->get_meta( $id, 'status' );
 

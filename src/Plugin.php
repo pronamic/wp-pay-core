@@ -3,7 +3,7 @@
  * Plugin
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -15,12 +15,12 @@ use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Core\Recurring;
 use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\Core\Util as Core_Util;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentData;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Payments\StatusChecker;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
-use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPaymentData;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
 use WP_Error;
 use WP_Query;
@@ -301,17 +301,36 @@ class Plugin {
 		$payment->save();
 
 		// Maybe redirect.
-		if ( defined( 'DOING_CRON' ) && ( empty( $payment->status ) || Statuses::OPEN === $payment->status ) ) {
-			$can_redirect = false;
+		if ( ! $can_redirect ) {
+			return;
 		}
 
-		if ( $can_redirect ) {
-			$url = $payment->get_return_redirect_url();
-
-			wp_redirect( $url );
-
-			exit;
+		/*
+		 * If WordPress is doing cron we can't redirect.
+		 *
+		 * @link https://github.com/pronamic/wp-pronamic-ideal/commit/bb967a3e7804ecfbd83dea110eb8810cbad097d7
+		 * @link https://github.com/pronamic/wp-pronamic-ideal/commit/3ab4a7c1fc2cef0b6f565f8205da42aa1203c3c5
+		 */
+		if ( Core_Util::doing_cron() ) {
+			return;
 		}
+
+		/*
+		 * If WordPress CLI is runnig we can't redirect.
+		 *
+		 * @link https://basecamp.com/1810084/projects/10966871/todos/346407847
+		 * @link https://github.com/woocommerce/woocommerce/blob/3.5.3/includes/class-woocommerce.php#L381-L383
+		 */
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			return;
+		}
+
+		// Redirect.
+		$url = $payment->get_return_redirect_url();
+
+		wp_redirect( $url );
+
+		exit;
 	}
 
 	/**
@@ -393,29 +412,8 @@ class Plugin {
 				exit;
 			}
 
-			// @link https://github.com/woothemes/woocommerce/blob/2.3.11/includes/class-wc-cache-helper.php
-			// @link https://www.w3-edge.com/products/w3-total-cache/
-			if ( ! defined( 'DONOTCACHEPAGE' ) ) {
-				define( 'DONOTCACHEPAGE', true );
-			}
-
-			if ( ! defined( 'DONOTCACHEDB' ) ) {
-				define( 'DONOTCACHEDB', true );
-			}
-
-			if ( ! defined( 'DONOTMINIFY' ) ) {
-				define( 'DONOTMINIFY', true );
-			}
-
-			if ( ! defined( 'DONOTCDN' ) ) {
-				define( 'DONOTCDN', true );
-			}
-
-			if ( ! defined( 'DONOTCACHEOBJECT' ) ) {
-				define( 'DONOTCACHEOBJECT', true );
-			}
-
-			nocache_headers();
+			// No cache.
+			Core_Util::no_cache();
 
 			include self::$dirname . '/views/redirect-message.php';
 
@@ -477,6 +475,9 @@ class Plugin {
 		// Data Stores.
 		$this->payments_data_store      = new Payments\PaymentsDataStoreCPT();
 		$this->subscriptions_data_store = new Subscriptions\SubscriptionsDataStoreCPT();
+
+		$this->payments_data_store->setup();
+		$this->subscriptions_data_store->setup();
 
 		// Post Types.
 		$this->gateway_post_type      = new GatewayPostType();
@@ -758,7 +759,6 @@ class Plugin {
 
 		/* translators: %s: payment data title */
 		$payment->title                  = sprintf( __( 'Payment for %s', 'pronamic_ideal' ), $data->get_title() );
-		$payment->user_id                = $data->get_user_id();
 		$payment->config_id              = $config_id;
 		$payment->order_id               = $data->get_order_id();
 		$payment->description            = $data->get_description();
@@ -777,10 +777,13 @@ class Plugin {
 
 		// Customer.
 		$customer = array(
-			'first_name' => $data->get_first_name(),
-			'last_name'  => $data->get_last_name(),
-			'email'      => $data->get_email(),
-			'phone'      => $data->get_telephone_number(),
+			'name'    => (object) array(
+				'first_name' => $data->get_first_name(),
+				'last_name'  => $data->get_last_name(),
+			),
+			'email'   => $data->get_email(),
+			'phone'   => $data->get_telephone_number(),
+			'user_id' => $data->get_user_id(),
 		);
 
 		$customer = array_filter( $customer );
@@ -840,21 +843,6 @@ class Plugin {
 
 		// Start payment.
 		return self::start_payment( $payment, $gateway );
-	}
-
-	/**
-	 * Start recurring payment.
-	 *
-	 * @param Subscription            $subscription Subscription.
-	 * @param Gateway                 $gateway      Gateway.
-	 * @param SubscriptionPaymentData $data         The subscription payment data.
-	 *
-	 * @throws \Exception Throws an Exception on incorrect date interval.
-	 *
-	 * @return Payment
-	 */
-	public static function start_recurring( $subscription, $gateway = null, $data = null ) {
-		return pronamic_pay_plugin()->subscriptions_module->start_recurring( $subscription, $gateway, $data );
 	}
 
 	/**

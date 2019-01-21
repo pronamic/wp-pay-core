@@ -3,7 +3,7 @@
  * Subscription Post Type
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Subscriptions
  */
@@ -79,6 +79,8 @@ class SubscriptionPostType {
 				'show_in_nav_menus'  => false,
 				'show_in_menu'       => false,
 				'show_in_admin_bar'  => false,
+				'show_in_rest'       => true,
+				'rest_base'          => 'pronamic-subscriptions',
 				'supports'           => false,
 				'rewrite'            => false,
 				'query_var'          => false,

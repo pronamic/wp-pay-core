@@ -3,7 +3,7 @@
  * Payment Post Type
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Admin
  */
@@ -75,9 +75,6 @@ class AdminPaymentPostType {
 		add_filter( 'default_hidden_columns', array( $this, 'default_hidden_columns' ) );
 
 		add_filter( 'post_updated_messages', array( $this, 'post_updated_messages' ) );
-
-		// Transition Post Status.
-		add_action( 'transition_post_status', array( $this, 'transition_post_status' ), 10, 3 );
 
 		// Bulk Actions.
 		new AdminPaymentBulkActions();
@@ -424,7 +421,7 @@ class AdminPaymentPostType {
 				$config_id = get_post_meta( $post_id, '_pronamic_payment_config_id', true );
 
 				if ( ! empty( $config_id ) ) {
-					echo get_the_title( $config_id );
+					echo esc_html( get_the_title( $config_id ) );
 				} else {
 					echo '—';
 				}
@@ -473,55 +470,57 @@ class AdminPaymentPostType {
 	 * @param string $post_type Post Type.
 	 */
 	public function add_meta_boxes( $post_type ) {
-		if ( self::POST_TYPE === $post_type ) {
-			add_meta_box(
-				'pronamic_payment',
-				__( 'Payment', 'pronamic_ideal' ),
-				array( $this, 'meta_box_info' ),
-				$post_type,
-				'normal',
-				'high'
-			);
-
-			add_meta_box(
-				'pronamic_payment_lines',
-				__( 'Payment Lines', 'pronamic_ideal' ),
-				array( $this, 'meta_box_lines' ),
-				$post_type,
-				'normal',
-				'high'
-			);
-
-			add_meta_box(
-				'pronamic_payment_subscription',
-				__( 'Subscription', 'pronamic_ideal' ),
-				array( $this, 'meta_box_subscription' ),
-				$post_type,
-				'normal',
-				'high'
-			);
-
-			add_meta_box(
-				'pronamic_payment_notes',
-				__( 'Notes', 'pronamic_ideal' ),
-				array( $this, 'meta_box_notes' ),
-				$post_type,
-				'normal',
-				'high'
-			);
-
-			add_meta_box(
-				'pronamic_payment_update',
-				__( 'Update', 'pronamic_ideal' ),
-				array( $this, 'meta_box_update' ),
-				$post_type,
-				'side',
-				'high'
-			);
-
-			// @link http://kovshenin.com/2012/how-to-remove-the-publish-box-from-a-post-type/.
-			remove_meta_box( 'submitdiv', $post_type, 'side' );
+		if ( self::POST_TYPE !== $post_type ) {
+			return;
 		}
+
+		add_meta_box(
+			'pronamic_payment',
+			__( 'Payment', 'pronamic_ideal' ),
+			array( $this, 'meta_box_info' ),
+			$post_type,
+			'normal',
+			'high'
+		);
+
+		add_meta_box(
+			'pronamic_payment_lines',
+			__( 'Payment Lines', 'pronamic_ideal' ),
+			array( $this, 'meta_box_lines' ),
+			$post_type,
+			'normal',
+			'high'
+		);
+
+		add_meta_box(
+			'pronamic_payment_subscription',
+			__( 'Subscription', 'pronamic_ideal' ),
+			array( $this, 'meta_box_subscription' ),
+			$post_type,
+			'normal',
+			'high'
+		);
+
+		add_meta_box(
+			'pronamic_payment_notes',
+			__( 'Notes', 'pronamic_ideal' ),
+			array( $this, 'meta_box_notes' ),
+			$post_type,
+			'normal',
+			'high'
+		);
+
+		add_meta_box(
+			'pronamic_payment_update',
+			__( 'Update', 'pronamic_ideal' ),
+			array( $this, 'meta_box_update' ),
+			$post_type,
+			'side',
+			'high'
+		);
+
+		// @link http://kovshenin.com/2012/how-to-remove-the-publish-box-from-a-post-type/.
+		remove_meta_box( 'submitdiv', $post_type, 'side' );
 	}
 
 	/**
@@ -596,64 +595,6 @@ class AdminPaymentPostType {
 		}
 
 		return $actions;
-	}
-
-	/**
-	 * Translate post status to meta status.
-	 *
-	 * @param string $post_status Post status.
-	 * @return string
-	 */
-	private function translate_post_status_to_meta_status( $post_status ) {
-		switch ( $post_status ) {
-			case 'payment_pending':
-				return Statuses::OPEN;
-
-			case 'payment_reserved':
-				return Statuses::RESERVED;
-
-			case 'payment_refunded':
-				return Statuses::REFUNDED;
-
-			case 'payment_on_hold':
-				return null;
-
-			case 'payment_completed':
-				return Statuses::SUCCESS;
-
-			case 'payment_cancelled':
-				return Statuses::CANCELLED;
-
-			case 'payment_failed':
-				return Statuses::FAILURE;
-
-			case 'payment_expired':
-				return Statuses::EXPIRED;
-		}
-	}
-
-	/**
-	 * Transition post status.
-	 *
-	 * @param string  $new_status New status.
-	 * @param string  $old_status Old status.
-	 * @param WP_Post $post       WordPress post.
-	 */
-	public function transition_post_status( $new_status, $old_status, $post ) {
-		if (
-			filter_has_var( INPUT_POST, 'pronamic_payment_update_nonce' )
-				&&
-			check_admin_referer( 'pronamic_payment_update', 'pronamic_payment_update_nonce' )
-				&&
-			'pronamic_payment' === get_post_type( $post )
-		) {
-			$new_status_meta = $this->translate_post_status_to_meta_status( $new_status );
-
-			$payment = new Payment( $post->ID );
-			$payment->set_status( $new_status_meta );
-
-			$this->plugin->payments_data_store->update_meta_status( $payment );
-		}
 	}
 
 	/**

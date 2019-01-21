@@ -3,7 +3,7 @@
  * Admin Module
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Admin
  */
@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Admin;
 
 use Pronamic\WordPress\Money\Parser as MoneyParser;
+use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\Plugin;
 
 /**
@@ -146,7 +147,7 @@ class AdminModule {
 				||
 			wp_doing_ajax()
 				||
-			defined( 'DOING_CRON' ) && DOING_CRON
+			Util::doing_cron()
 				||
 			is_network_admin()
 				||

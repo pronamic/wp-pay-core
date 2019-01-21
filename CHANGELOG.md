@@ -7,6 +7,12 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.1.3] - 2019-01-21
+- Fixed empty payment and subscription customer names.
+- Fixed missing user ID in payment customer.
+- Updated storing payments and subscriptions.
+- Allow manual subscription renewal also for gateways which support auto renewal.
+
 ## [2.1.2] - 2019-01-03
 - Fixed empty payments and subscriptions list tables with 'All' filter since WordPress 5.0.2.
 
@@ -144,7 +150,10 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.1.0...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.1.3...HEAD
+[2.1.3]: https://github.com/wp-pay/core/compare/2.1.2...2.1.3
+[2.1.2]: https://github.com/wp-pay/core/compare/2.1.1...2.1.2
+[2.1.1]: https://github.com/wp-pay/core/compare/2.1.0...2.1.1
 [2.1.0]: https://github.com/wp-pay/core/compare/2.0.8...2.1.0
 [2.0.8]: https://github.com/wp-pay/core/compare/2.0.7...2.0.8
 [2.0.7]: https://github.com/wp-pay/core/compare/2.0.6...2.0.7

@@ -1,6 +1,6 @@
 <?php
 /**
- * Payment
+ * Payment info
  *
  * @author    Pronamic <info@pronamic.eu>
  * @copyright 2005-2019 Pronamic
@@ -25,43 +25,36 @@ use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
 use WP_Post;
 
 /**
- * Payment
+ * Payment info
  *
  * @author  Remco Tolsma
  * @version 2.1.0
  * @since   1.0.0
  */
-class Payment extends LegacyPayment {
+abstract class PaymentInfo {
 	/**
-	 * The payment post object.
+	 * The post object.
 	 *
 	 * @var WP_Post|array
 	 */
 	public $post;
 
 	/**
-	 * The date of this payment.
+	 * The date of this payment info.
 	 *
 	 * @var DateTime
 	 */
 	public $date;
 
 	/**
-	 * The subscription.
-	 *
-	 * @var Subscription
-	 */
-	public $subscription;
-
-	/**
-	 * The unique ID of this payment.
+	 * The unique ID of this payment info.
 	 *
 	 * @var int
 	 */
 	protected $id;
 
 	/**
-	 * The title of this payment.
+	 * The title of this payment info.
 	 *
 	 * @var string
 	 */
@@ -75,14 +68,14 @@ class Payment extends LegacyPayment {
 	public $config_id;
 
 	/**
-	 * The key of this payment, used in URL's for security.
+	 * The key of this payment info, used in URL's for security.
 	 *
 	 * @var string
 	 */
 	public $key;
 
 	/**
-	 * Identifier for the source which started this payment.
+	 * Identifier for the source which started this payment info.
 	 * For example: 'woocommerce', 'gravityforms', 'easydigitaldownloads', etc.
 	 *
 	 * @var string
@@ -90,7 +83,7 @@ class Payment extends LegacyPayment {
 	public $source;
 
 	/**
-	 * Unique ID at the source which started this payment, for example:
+	 * Unique ID at the source which started this payment info, for example:
 	 * - WooCommerce order ID.
 	 * - Easy Digital Downloads payment ID.
 	 * - Gravity Forms entry ID.
@@ -98,21 +91,6 @@ class Payment extends LegacyPayment {
 	 * @var string
 	 */
 	public $source_id;
-
-	/**
-	 * The purchase ID.
-	 *
-	 * @todo Is this required/used?
-	 * @var string
-	 */
-	public $purchase_id;
-
-	/**
-	 * The transaction ID of this payment.
-	 *
-	 * @var string
-	 */
-	public $transaction_id;
 
 	/**
 	 * The order ID of this payment.
@@ -135,22 +113,6 @@ class Payment extends LegacyPayment {
 	 * @var Money|null
 	 */
 	private $shipping_amount;
-
-	/**
-	 * The expiration period of this payment.
-	 *
-	 * @todo Is this required/used?
-	 * @var string
-	 */
-	public $expiration_period;
-
-	/**
-	 * The entrance code of this payment.
-	 *
-	 * @todo Is this required/used?
-	 * @var string
-	 */
-	public $entrance_code;
 
 	/**
 	 * The description of this payment.
@@ -214,26 +176,11 @@ class Payment extends LegacyPayment {
 	public $ga_tracked;
 
 	/**
-	 * The status of this payment.
-	 *
-	 * @todo   Check constant?
-	 * @var string
-	 */
-	public $status;
-
-	/**
 	 * The email of the user who started this payment.
 	 *
 	 * @var string
 	 */
 	public $email;
-
-	/**
-	 * The action URL for this payment.
-	 *
-	 * @var string
-	 */
-	public $action_url;
 
 	/**
 	 * The payment method chosen by the user who started this payment.
@@ -248,58 +195,6 @@ class Payment extends LegacyPayment {
 	 * @var string
 	 */
 	public $issuer;
-
-	/**
-	 * Subscription ID.
-	 *
-	 * @todo Is this required?
-	 * @var int
-	 */
-	public $subscription_id;
-
-	/**
-	 * Subscription source ID.
-	 *
-	 * @var int
-	 */
-	public $subscription_source_id;
-
-	/**
-	 * Flag to indicate a recurring payment
-	 *
-	 * @todo Is this required?
-	 * @var boolean
-	 */
-	public $recurring;
-
-	/**
-	 * The recurring type.
-	 *
-	 * @todo Improve documentation, is this used?
-	 * @var string
-	 */
-	public $recurring_type;
-
-	/**
-	 * Meta.
-	 *
-	 * @var array
-	 */
-	public $meta;
-
-	/**
-	 * Start date if the payment is related to a specific period.
-	 *
-	 * @var DateTime
-	 */
-	public $start_date;
-
-	/**
-	 * End date if the payment is related to a specific period.
-	 *
-	 * @var DateTime
-	 */
-	public $end_date;
 
 	/**
 	 * Customer.
@@ -356,43 +251,47 @@ class Payment extends LegacyPayment {
 	 * @param integer $post_id A payment post ID or null.
 	 */
 	public function __construct( $post_id = null ) {
-		parent::__construct( $post_id );
-
+		$this->id   = $post_id;
+		$this->date = new DateTime();
 		$this->meta = array();
 
-		$this->set_status( Statuses::OPEN );
-
-		if ( null !== $post_id ) {
-			pronamic_pay_plugin()->payments_data_store->read( $this );
-		}
+		$this->set_total_amount( new TaxedMoney() );
 	}
 
 	/**
-	 * Save payment.
+	 * Get the ID of this payment.
 	 *
-	 * @return void
+	 * @return int
 	 */
-	public function save() {
-		pronamic_pay_plugin()->payments_data_store->save( $this );
+	public function get_id() {
+		return $this->id;
 	}
 
 	/**
-	 * Add a note to this payment.
+	 * Set the ID of this payment.
 	 *
-	 * @param string $note The note to add.
+	 * @param int $id Unique ID.
 	 */
-	public function add_note( $note ) {
-		$commentdata = array(
-			'comment_post_ID'  => $this->id,
-			'comment_content'  => $note,
-			'comment_type'     => 'payment_note',
-			'user_id'          => get_current_user_id(),
-			'comment_approved' => true,
-		);
+	public function set_id( $id ) {
+		$this->id = $id;
+	}
 
-		$comment_id = wp_insert_comment( $commentdata );
+	/**
+	 * Get payment date.
+	 *
+	 * @return DateTime
+	 */
+	public function get_date() {
+		return $this->date;
+	}
 
-		return $comment_id;
+	/**
+	 * Set payment date.
+	 *
+	 * @param DateTime $date Date.
+	 */
+	public function set_date( $date ) {
+		$this->date = $date;
 	}
 
 	/**
@@ -432,6 +331,60 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
+	 * Get the source identifier of this payment.
+	 *
+	 * @return string
+	 */
+	public function get_source() {
+		return $this->source;
+	}
+
+	/**
+	 * Set the source of this payment.
+	 *
+	 * @param string $source Source.
+	 */
+	public function set_source( $source ) {
+		$this->source = $source;
+	}
+
+	/**
+	 * Get the source ID of this payment.
+	 *
+	 * @return string
+	 */
+	public function get_source_id() {
+		return $this->source_id;
+	}
+
+	/**
+	 * Set the source ID of this payment.
+	 *
+	 * @param string|int $source_id Source ID.
+	 */
+	public function set_source_id( $source_id ) {
+		$this->source_id = $source_id;
+	}
+
+	/**
+	 * Get the config ID of this payment.
+	 *
+	 * @return string
+	 */
+	public function get_config_id() {
+		return $this->config_id;
+	}
+
+	/**
+	 * Set the config ID of this payment.
+	 *
+	 * @param string|int $config_id Config ID.
+	 */
+	public function set_config_id( $config_id ) {
+		$this->config_id = $config_id;
+	}
+
+	/**
 	 * Get the source text of this payment.
 	 *
 	 * @return string
@@ -446,67 +399,148 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
+	 * Get customer.
+	 *
+	 * @return Customer|null
+	 */
+	public function get_customer() {
+		return $this->customer;
+	}
+
+	/**
+	 * Set customer.
+	 *
+	 * @param Customer $customer Contact.
+	 */
+	public function set_customer( $customer ) {
+		$this->customer = $customer;
+	}
+
+	/**
+	 * Get billing address.
+	 *
+	 * @return Address|null
+	 */
+	public function get_billing_address() {
+		return $this->billing_address;
+	}
+
+	/**
+	 * Set billing address.
+	 *
+	 * @param Address $billing_address Billing address.
+	 */
+	public function set_billing_address( $billing_address ) {
+		$this->billing_address = $billing_address;
+	}
+
+	/**
+	 * Get shipping address.
+	 *
+	 * @return Address|null
+	 */
+	public function get_shipping_address() {
+		return $this->shipping_address;
+	}
+
+	/**
+	 * Set shipping address.
+	 *
+	 * @param Address $shipping_address Shipping address.
+	 */
+	public function set_shipping_address( $shipping_address ) {
+		$this->shipping_address = $shipping_address;
+	}
+
+	/**
+	 * Get payment lines.
+	 *
+	 * @return PaymentLines|null
+	 */
+	public function get_lines() {
+		return $this->lines;
+	}
+
+	/**
+	 * Set payment lines.
+	 *
+	 * @param PaymentLines|null $lines Payment lines.
+	 */
+	public function set_lines( PaymentLines $lines = null ) {
+		$this->lines = $lines;
+	}
+
+	/**
+	 * Get the order ID of this payment.
+	 *
+	 * @return string
+	 */
+	public function get_order_id() {
+		return $this->order_id;
+	}
+
+	/**
+	 * Get total amount.
+	 *
+	 * @return TaxedMoney
+	 */
+	public function get_total_amount() {
+		return $this->total_amount;
+	}
+
+	/**
+	 * Set total amount.
+	 *
+	 * @param TaxedMoney $total_amount Total amount.
+	 */
+	public function set_total_amount( TaxedMoney $total_amount ) {
+		$this->total_amount = $total_amount;
+	}
+
+	/**
+	 * Get the shipping amount.
+	 *
+	 * @return Money|null
+	 */
+	public function get_shipping_amount() {
+		return $this->shipping_amount;
+	}
+
+	/**
+	 * Set the shipping amount.
+	 *
+	 * @param Money|null $shipping_amount Money object.
+	 */
+	public function set_shipping_amount( Money $shipping_amount ) {
+		$this->shipping_amount = $shipping_amount;
+	}
+
+	/**
+	 * Get the payment method.
+	 *
+	 * @todo Constant?
+	 * @return string|null
+	 */
+	public function get_method() {
+		return $this->method;
+	}
+
+	/**
+	 * Get the payment issuer.
+	 *
+	 * @return string
+	 */
+	public function get_issuer() {
+		return $this->issuer;
+	}
+
+	/**
 	 * Get the payment description.
 	 *
 	 * @return string
 	 */
 	public function get_description() {
 		return $this->description;
-	}
-
-	/**
-	 * Set the transaction ID.
-	 *
-	 * @param string $transaction_id Transaction ID.
-	 */
-	public function set_transaction_id( $transaction_id ) {
-		$this->transaction_id = $transaction_id;
-	}
-
-	/**
-	 * Get the payment transaction ID.
-	 *
-	 * @return string
-	 */
-	public function get_transaction_id() {
-		return $this->transaction_id;
-	}
-
-	/**
-	 * Get the payment status.
-	 *
-	 * @todo Constant?
-	 * @return string
-	 */
-	public function get_status() {
-		return $this->status;
-	}
-
-	/**
-	 * Set the payment status.
-	 *
-	 * @param string $status Status.
-	 */
-	public function set_status( $status ) {
-		$this->status = $status;
-	}
-
-	/**
-	 * Is tracked in Google Analytics?
-	 *
-	 * @return bool
-	 */
-	public function get_ga_tracked() {
-		return (bool) $this->ga_tracked;
-	}
-
-	/**
-	 * Set if payment is tracked in Google Analytics.
-	 *
-	 * @param bool $tracked Tracked in Google Analytics.
-	 */
-	public function set_ga_tracked( $tracked ) {
-		$this->ga_tracked = $tracked;
 	}
 
 	/**
@@ -543,81 +577,6 @@ class Payment extends LegacyPayment {
 		$result = update_post_meta( $this->id, $key, $value );
 
 		return ( false !== $result );
-	}
-
-	/**
-	 * Get the pay redirect URL.
-	 *
-	 * @return string
-	 */
-	public function get_pay_redirect_url() {
-		return add_query_arg( 'payment_redirect', $this->id, home_url( '/' ) );
-	}
-
-	/**
-	 * Get the return URL for this payment. This URL is passed to the payment providers / gateways
-	 * so they know where they should return users to.
-	 *
-	 * @return string
-	 */
-	public function get_return_url() {
-		$url = add_query_arg(
-			array(
-				'payment' => $this->id,
-				'key'     => $this->key,
-			),
-			home_url( '/' )
-		);
-
-		return $url;
-	}
-
-	/**
-	 * Get action URL.
-	 *
-	 * @return string
-	 */
-	public function get_action_url() {
-		$action_url = $this->action_url;
-
-		$amount = $this->get_total_amount()->get_value();
-
-		if ( empty( $amount ) ) {
-			$status = $this->get_status();
-
-			$this->set_status( Statuses::SUCCESS );
-
-			$action_url = $this->get_return_redirect_url();
-
-			$this->set_status( $status );
-		}
-
-		return $action_url;
-	}
-
-	/**
-	 * Set the action URL.
-	 *
-	 * @param string $action_url Action URL.
-	 */
-	public function set_action_url( $action_url ) {
-		$this->action_url = $action_url;
-	}
-
-	/**
-	 * Get the return redirect URL for this payment. This URL is used after a user is returned
-	 * from a payment provider / gateway to WordPress. It allows WordPress payment extensions
-	 * to redirect users to the correct URL.
-	 *
-	 * @return string
-	 */
-	public function get_return_redirect_url() {
-		$url = home_url( '/' );
-
-		$url = apply_filters( 'pronamic_payment_redirect_url', $url, $this );
-		$url = apply_filters( 'pronamic_payment_redirect_url_' . $this->source, $url, $this );
-
-		return $url;
 	}
 
 	/**
@@ -807,15 +766,6 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
-	 * Get payment subscription ID.
-	 *
-	 * @return int
-	 */
-	public function get_subscription_id() {
-		return $this->subscription_id;
-	}
-
-	/**
 	 * Get reucrring.
 	 *
 	 * @return bool
@@ -825,29 +775,127 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
+	 * Set version.
+	 *
+	 * @param string|null $version Version.
+	 */
+	public function set_version( $version ) {
+		$this->version = $version;
+	}
+
+	/**
+	 * Get version.
+	 *
+	 * @return string|null
+	 */
+	public function get_version() {
+		return $this->version;
+	}
+
+	/**
+	 * Set mode.
+	 *
+	 * @param string|null $mode Mode.
+	 *
+	 * @throws InvalidArgumentException Throws invalid argument exception when mode is not a string or not one of the mode constants.
+	 */
+	public function set_mode( $mode ) {
+		if ( ! is_string( $mode ) ) {
+			throw new InvalidArgumentException( 'Mode must be a string.' );
+		}
+
+		if ( ! in_array( $mode, array( Gateway::MODE_TEST, Gateway::MODE_LIVE ), true ) ) {
+			throw new InvalidArgumentException( 'Invalid mode.' );
+		}
+
+		$this->mode = $mode;
+	}
+
+	/**
+	 * Get mode.
+	 *
+	 * @return string|null
+	 */
+	public function get_mode() {
+		return $this->mode;
+	}
+
+	/**
+	 * Is anonymized?
+	 *
+	 * @return bool
+	 */
+	public function is_anonymized() {
+		return ( true === $this->anonymized );
+	}
+
+	/**
+	 * Set anonymized.
+	 *
+	 * @param bool|null $anonymized Anonymized.
+	 */
+	public function set_anonymized( $anonymized ) {
+		$this->anonymized = $anonymized;
+	}
+
+	/**
 	 * Create payment from object.
 	 *
-	 * @param mixed        $json    JSON.
-	 * @param Payment|null $payment Payment.
+	 * @param mixed       $json JSON.
+	 * @param PaymentInfo $info Payment info.
 	 * @return Payment
 	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
-	public static function from_json( $json, $payment = null ) {
+	public static function from_json( $json, $info = null ) {
 		if ( ! is_object( $json ) ) {
 			throw new InvalidArgumentException( 'JSON value must be an object.' );
 		}
 
-		if ( ! $payment instanceof self ) {
-			$payment = new self();
+		if ( ! $info instanceof self ) {
+			throw new InvalidArgumentException( 'Info must be an object.' );
 		}
 
-		parent::from_json( $json, $payment );
-
-		if ( isset( $json->ga_tracked ) ) {
-			$payment->set_ga_tracked( $json->ga_tracked );
+		if ( isset( $json->id ) ) {
+			$info->set_id( $json->id );
 		}
 
-		return $payment;
+		if ( isset( $json->status ) ) {
+			$info->set_status( $json->status );
+		}
+
+		if ( isset( $json->total_amount ) ) {
+			$info->set_total_amount( TaxedMoneyJsonTransformer::from_json( $json->total_amount ) );
+		}
+
+		if ( isset( $json->shipping_amount ) ) {
+			$info->set_shipping_amount( MoneyJsonTransformer::from_json( $json->shipping_amount ) );
+		}
+
+		if ( isset( $json->customer ) ) {
+			$info->set_customer( Customer::from_json( $json->customer ) );
+		}
+
+		if ( isset( $json->billing_address ) ) {
+			$info->set_billing_address( Address::from_json( $json->billing_address ) );
+		}
+
+		if ( isset( $json->shipping_address ) ) {
+			$info->set_shipping_address( Address::from_json( $json->shipping_address ) );
+		}
+
+		if ( isset( $json->lines ) ) {
+			$info->set_lines( PaymentLines::from_json( $json->lines ) );
+		}
+
+		if ( isset( $json->mode ) ) {
+			$info->set_mode( $json->mode );
+		}
+
+		if ( isset( $json->anonymized ) ) {
+			$info->set_anonymized( $json->anonymized );
+		}
+
+		return $info;
 	}
 
 	/**
@@ -856,10 +904,44 @@ class Payment extends LegacyPayment {
 	 * @return object
 	 */
 	public function get_json() {
-		$object = parent::get_json();
+		$object = (object) array();
 
-		if ( null !== $this->get_ga_tracked() ) {
-			$object->ga_tracked = $this->get_ga_tracked();
+		if ( null !== $this->get_id() ) {
+			$object->id = $this->get_id();
+		}
+
+		if ( null !== $this->get_status() ) {
+			$object->status = $this->get_status();
+		}
+
+		$object->total_amount = TaxedMoneyJsonTransformer::to_json( $this->get_total_amount() );
+
+		if ( null !== $this->get_shipping_amount() ) {
+			$object->shipping_amount = MoneyJsonTransformer::to_json( $this->get_shipping_amount() );
+		}
+
+		if ( null !== $this->get_customer() ) {
+			$object->customer = $this->get_customer()->get_json();
+		}
+
+		if ( null !== $this->get_billing_address() ) {
+			$object->billing_address = $this->get_billing_address()->get_json();
+		}
+
+		if ( null !== $this->get_shipping_address() ) {
+			$object->shipping_address = $this->get_shipping_address()->get_json();
+		}
+
+		if ( null !== $this->get_lines() ) {
+			$object->lines = $this->get_lines()->get_json();
+		}
+
+		if ( null !== $this->get_mode() ) {
+			$object->mode = $this->get_mode();
+		}
+
+		if ( $this->is_anonymized() ) {
+			$object->anonymized = $this->is_anonymized();
 		}
 
 		return $object;

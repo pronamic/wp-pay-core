@@ -3,7 +3,7 @@
  * Contact name helper
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -47,13 +47,22 @@ class ContactNameHelper {
 
 			$initials = array_map(
 				function( $name ) {
-					return strtoupper( substr( $name, 0, 1 ) ) . '.';
+					return strtoupper( mb_substr( $name, 0, 1 ) ) . '.';
 				},
 				$names
 			);
 
 			$name->set_initials( implode( '', $initials ) );
 		}
+
+		/*
+		 * Parse full name.
+		 *
+		 * @link https://github.com/dschnelldavis/parse-full-name
+		 * @link https://github.com/joshfraser/PHP-Name-Parser
+		 * @link https://github.com/jasonpriem/HumanNameParser.php
+		 * @todo
+		 */
 	}
 
 	/**
@@ -62,6 +71,7 @@ class ContactNameHelper {
 	 * @param ContactName $name Contact name to anonymize.
 	 */
 	public static function anonymize_name( ContactName $name ) {
+		$name->set_full_name( PrivacyManager::anonymize_data( 'text', $name->get_full_name() ) );
 		$name->set_first_name( PrivacyManager::anonymize_data( 'text', $name->get_first_name() ) );
 		$name->set_middle_name( PrivacyManager::anonymize_data( 'text', $name->get_middle_name() ) );
 		$name->set_last_name( PrivacyManager::anonymize_data( 'text', $name->get_last_name() ) );

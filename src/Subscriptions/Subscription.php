@@ -3,7 +3,7 @@
  * Subscription
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Subscriptions
  */
@@ -17,6 +17,7 @@ use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Payments\Payment;
+use Pronamic\WordPress\Pay\Payments\PaymentInfo;
 use WP_Post;
 
 /**
@@ -26,21 +27,7 @@ use WP_Post;
  * @version 2.1.0
  * @since   1.0.0
  */
-class Subscription {
-	/**
-	 * The ID of this subscription.
-	 *
-	 * @var int
-	 */
-	protected $id;
-
-	/**
-	 * The date of this subscription.
-	 *
-	 * @var DateTime
-	 */
-	public $date;
-
+class Subscription extends LegacySubscription {
 	/**
 	 * The key of this subscription, used in URL's for security.
 	 *
@@ -54,13 +41,6 @@ class Subscription {
 	 * @var string
 	 */
 	public $title;
-
-	/**
-	 * The post author user ID of this subscription.
-	 *
-	 * @var string
-	 */
-	public $user_id;
 
 	/**
 	 * The frequency of this subscription, for example: `daily`, `weekly`, `monthly` or `annually`.
@@ -107,29 +87,6 @@ class Subscription {
 	public $interval_date_month;
 
 	/**
-	 * The transaction ID of this subscription.
-	 *
-	 * @todo Is this required within a transaction?
-	 * @var string
-	 */
-	public $transaction_id;
-
-	/**
-	 * The description of this subscription.
-	 *
-	 * @todo Is this required within a transaction?
-	 * @var string
-	 */
-	public $description;
-
-	/**
-	 * The amount of this subscription, for example 18.95.
-	 *
-	 * @var Money
-	 */
-	protected $amount;
-
-	/**
 	 * The status of this subscription, for example 'Success'.
 	 *
 	 * @todo How to reference to a class constant?
@@ -139,99 +96,11 @@ class Subscription {
 	public $status;
 
 	/**
-	 * Identifier for the source which started this subsription.
-	 * For example: 'woocommerce', 'gravityforms', 'easydigitaldownloads', etc.
-	 *
-	 * @var string
-	 */
-	public $source;
-
-	/**
-	 * Unique ID at the source which started this subscription, for example:
-	 * - WooCommerce order ID.
-	 * - Easy Digital Downloads payment ID.
-	 * - Gravity Forms entry ID.
-	 *
-	 * @var string
-	 */
-	public $source_id;
-
-	/**
-	 * The name of the consumer of this subscription.
-	 *
-	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string
-	 */
-	public $consumer_name;
-
-	/**
-	 * The IBAN of the consumer of this subscription.
-	 *
-	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string
-	 */
-	public $consumer_iban;
-
-	/**
-	 * The BIC of the consumer of this subscription.
-	 *
-	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string
-	 */
-	public $consumer_bic;
-
-	/**
-	 * The order ID of this subscription.
-	 *
-	 * @todo Is this required?
-	 * @var  string
-	 */
-	public $order_id;
-
-	/**
-	 * The gateway configuration ID to use with this subscription.
-	 *
-	 * @todo Should we improve the name of this var?
-	 * @var  integer
-	 */
-	public $config_id;
-
-	/**
-	 * The email of the consumer of this subscription.
-	 *
-	 * @todo Is this required?
-	 * @var  string
-	 */
-	public $email;
-
-	/**
-	 * The customer name of the consumer of this subscription.
-	 *
-	 * @todo Is this required?
-	 * @var  string
-	 */
-	public $customer_name;
-
-	/**
 	 * The payment method which was used to create this subscription.
 	 *
 	 * @var  string
 	 */
 	public $payment_method;
-
-	/**
-	 * The date when this subscirption started.
-	 *
-	 * @var DateTime|null
-	 */
-	public $start_date;
-
-	/**
-	 * The date when this subscirption will end, can be `null`.
-	 *
-	 * @var DateTime|null
-	 */
-	public $end_date;
 
 	/**
 	 * The end date of the last succesfull payment.
@@ -255,45 +124,18 @@ class Subscription {
 	public $meta;
 
 	/**
-	 * WordPress post object related to this subscription.
-	 *
-	 * @var WP_Post|array
-	 */
-	public $post;
-
-	/**
 	 * Construct and initialize subscription object.
 	 *
 	 * @param int $post_id A subscription post ID or null.
 	 */
 	public function __construct( $post_id = null ) {
-		$this->id   = $post_id;
-		$this->date = new DateTime();
-		$this->meta = array();
+		parent::__construct( $post_id );
 
-		$this->set_amount( new Money() );
+		$this->meta = array();
 
 		if ( ! empty( $post_id ) ) {
 			pronamic_pay_plugin()->subscriptions_data_store->read( $this );
 		}
-	}
-
-	/**
-	 * Get the ID of this subscription.
-	 *
-	 * @return int
-	 */
-	public function get_id() {
-		return $this->id;
-	}
-
-	/**
-	 * Set the ID of this subscription.
-	 *
-	 * @param int $id The ID of this subscription.
-	 */
-	public function set_id( $id ) {
-		$this->id = $id;
 	}
 
 	/**
@@ -303,33 +145,6 @@ class Subscription {
 	 */
 	public function get_key() {
 		return $this->key;
-	}
-
-	/**
-	 * Get the config ID of this subscription.
-	 *
-	 * @return string
-	 */
-	public function get_config_id() {
-		return $this->config_id;
-	}
-
-	/**
-	 * Get the source identifier of this subscription, for example: 'woocommerce', 'gravityforms', etc.
-	 *
-	 * @return string
-	 */
-	public function get_source() {
-		return $this->source;
-	}
-
-	/**
-	 * Get the source ID of this subscription, for example a WooCommerce order ID or a Gravity Forms entry ID.
-	 *
-	 * @return string
-	 */
-	public function get_source_id() {
-		return $this->source_id;
 	}
 
 	/**
@@ -409,62 +224,6 @@ class Subscription {
 	}
 
 	/**
-	 * Get the description of this subscription.
-	 *
-	 * @return string
-	 */
-	public function get_description() {
-		return $this->description;
-	}
-
-	/**
-	 * Get the currency alphabetic code of this subscription.
-	 *
-	 * @return string
-	 */
-	public function get_currency() {
-		return $this->get_amount()->get_currency()->get_alphabetic_code();
-	}
-
-	/**
-	 * Get the amount of this subscription.
-	 *
-	 * @return Money
-	 */
-	public function get_amount() {
-		return $this->amount;
-	}
-
-	/**
-	 * Set the amount of this subscription.
-	 *
-	 * @param Money $amount Money object.
-	 *
-	 * @return void
-	 */
-	public function set_amount( Money $amount ) {
-		$this->amount = $amount;
-	}
-
-	/**
-	 * Get the transaction ID of this subscription.
-	 *
-	 * @return string
-	 */
-	public function get_transaction_id() {
-		return $this->transaction_id;
-	}
-
-	/**
-	 * Set the transaction ID of this subscription.
-	 *
-	 * @param string $transaction_id A transaction ID.
-	 */
-	public function set_transaction_id( $transaction_id ) {
-		$this->transaction_id = $transaction_id;
-	}
-
-	/**
 	 * Get the status of this subscription.
 	 *
 	 * @todo   Check constant?
@@ -482,33 +241,6 @@ class Subscription {
 	 */
 	public function set_status( $status ) {
 		$this->status = $status;
-	}
-
-	/**
-	 * Set consumer name.
-	 *
-	 * @param string $name A name.
-	 */
-	public function set_consumer_name( $name ) {
-		$this->consumer_name = $name;
-	}
-
-	/**
-	 * Set consumer IBAN.
-	 *
-	 * @param string $iban A IBAN.
-	 */
-	public function set_consumer_iban( $iban ) {
-		$this->consumer_iban = $iban;
-	}
-
-	/**
-	 * Set consumer BIC.
-	 *
-	 * @param string $bic A BIC.
-	 */
-	public function set_consumer_bic( $bic ) {
-		$this->consumer_bic = $bic;
 	}
 
 	/**
@@ -694,42 +426,6 @@ class Subscription {
 	}
 
 	/**
-	 * Get the start date of this subscription.
-	 *
-	 * @return DateTime|null
-	 */
-	public function get_start_date() {
-		return $this->start_date;
-	}
-
-	/**
-	 * Set the start date of this subscription.
-	 *
-	 * @param DateTime $date Start date.
-	 */
-	public function set_start_date( DateTime $date ) {
-		$this->start_date = $date;
-	}
-
-	/**
-	 * Get the end date of this subscription.
-	 *
-	 * @return DateTime|null
-	 */
-	public function get_end_date() {
-		return $this->end_date;
-	}
-
-	/**
-	 * Set the end date of this subscription.
-	 *
-	 * @param DateTime|null $date End date.
-	 */
-	public function set_end_date( DateTime $date ) {
-		$this->end_date = $date;
-	}
-
-	/**
 	 * Get the expiry date of this subscription.
 	 *
 	 * @return DateTime
@@ -827,5 +523,38 @@ class Subscription {
 	 */
 	public function save() {
 		pronamic_pay_plugin()->subscriptions_data_store->save( $this );
+	}
+
+	/**
+	 * Create subscription from object.
+	 *
+	 * @param mixed             $json         JSON.
+	 * @param Subscription|null $subscription Subscription.
+	 * @return Subscription
+	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
+	 */
+	public static function from_json( $json, $subscription = null ) {
+		if ( ! is_object( $json ) ) {
+			throw new InvalidArgumentException( 'JSON value must be an object.' );
+		}
+
+		if ( ! $subscription instanceof self ) {
+			$subscription = new self();
+		}
+
+		parent::from_json( $json, $subscription );
+
+		return $subscription;
+	}
+
+	/**
+	 * Get JSON.
+	 *
+	 * @return object
+	 */
+	public function get_json() {
+		$object = parent::get_json();
+
+		return $object;
 	}
 }

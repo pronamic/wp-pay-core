@@ -3,13 +3,14 @@
  * Gateway
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Core
  */
 
 namespace Pronamic\WordPress\Pay\Core;
 
+use Pronamic\WordPress\Pay\Core\Util as Core_Util;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
@@ -20,7 +21,7 @@ use WP_Error;
 /**
  * Title: Gateway
  * Description:
- * Copyright: Copyright (c) 2005 - 2018
+ * Copyright: 2005-2019 Pronamic
  * Company: Pronamic
  *
  * @author  Remco Tolsma
@@ -467,29 +468,7 @@ abstract class Gateway {
 		if ( headers_sent() ) {
 			echo $this->get_form_html( $payment, true ); // WPCS: XSS ok.
 		} else {
-			// @link https://github.com/woothemes/woocommerce/blob/2.3.11/includes/class-wc-cache-helper.php.
-			// @link https://www.w3-edge.com/products/w3-total-cache/.
-			if ( ! defined( 'DONOTCACHEPAGE' ) ) {
-				define( 'DONOTCACHEPAGE', true );
-			}
-
-			if ( ! defined( 'DONOTCACHEDB' ) ) {
-				define( 'DONOTCACHEDB', true );
-			}
-
-			if ( ! defined( 'DONOTMINIFY' ) ) {
-				define( 'DONOTMINIFY', true );
-			}
-
-			if ( ! defined( 'DONOTCDN' ) ) {
-				define( 'DONOTCDN', true );
-			}
-
-			if ( ! defined( 'DONOTCACHEOBJECT' ) ) {
-				define( 'DONOTCACHEOBJECT', true );
-			}
-
-			nocache_headers();
+			Core_Util::no_cache();
 
 			include Plugin::$dirname . '/views/redirect-via-html.php';
 		}
