@@ -214,7 +214,7 @@ class SubscriptionsModule {
 	 * Create a new subscription payment.
 	 *
 	 * @param Subscription $subscription Subscription.
-	 * @return Payment
+	 * @return false|Payment
 	 */
 	public function new_subscription_payment( Subscription $subscription ) {
 		// Unset the next payment date if next payment date is after the subscription end date.
