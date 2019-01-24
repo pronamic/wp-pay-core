@@ -7,6 +7,9 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.1.4] - 2019-01-24
+- Improved locale to always includes a country.
+
 ## [2.1.3] - 2019-01-21
 - Fixed empty payment and subscription customer names.
 - Fixed missing user ID in payment customer.
@@ -150,7 +153,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.1.3...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.1.4...HEAD
+[2.1.4]: https://github.com/wp-pay/core/compare/2.1.3...2.1.4
 [2.1.3]: https://github.com/wp-pay/core/compare/2.1.2...2.1.3
 [2.1.2]: https://github.com/wp-pay/core/compare/2.1.1...2.1.2
 [2.1.1]: https://github.com/wp-pay/core/compare/2.1.0...2.1.1
