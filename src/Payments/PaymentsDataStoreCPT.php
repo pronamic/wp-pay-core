@@ -163,8 +163,8 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
 	 * Update payment from post array.
 	 *
-	 * @param Subscription $payment Payment.
-	 * @param array        $postarr Post data array.
+	 * @param Payment $payment Payment.
+	 * @param array   $postarr Post data array.
 	 */
 	private function update_payment_form_post_array( $payment, $postarr ) {
 		if ( isset( $postarr['pronamic_payment_post_status'] ) ) {
@@ -182,9 +182,9 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 *
 	 * @link https://github.com/WordPress/WordPress/blob/5.0.3/wp-includes/post.php#L3724-L3736
 	 *
-	 * @param int     $post_id Post ID.
-	 * @param WP_Post $post    Post object.
-	 * @param bool    $update  Whether this is an existing post being updated or not.
+	 * @param int      $post_id Post ID.
+	 * @param \WP_Post $post    Post object.
+	 * @param bool     $update  Whether this is an existing post being updated or not.
 	 */
 	public function save_post_meta( $post_id, $post, $update ) {
 		if ( $this->payment instanceof Payment ) {

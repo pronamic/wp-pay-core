@@ -84,7 +84,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 * Get subscription by ID.
 	 *
 	 * @param int $id Payment ID.
-	 * @return Payment
+	 * @return Subscription
 	 */
 	private function get_subscription( $id ) {
 		if ( ! isset( $this->subscriptions[ $id ] ) ) {
@@ -202,9 +202,9 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 *
 	 * @link https://github.com/WordPress/WordPress/blob/5.0.3/wp-includes/post.php#L3724-L3736
 	 *
-	 * @param int     $post_id Post ID.
-	 * @param WP_Post $post    Post object.
-	 * @param bool    $update  Whether this is an existing post being updated or not.
+	 * @param int      $post_id Post ID.
+	 * @param \WP_Post $post    Post object.
+	 * @param bool     $update  Whether this is an existing post being updated or not.
 	 */
 	public function save_post_meta( $post_id, $post, $update ) {
 		if ( $this->subscription instanceof Subscription ) {
