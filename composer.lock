@@ -1339,7 +1339,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/WordPress/WordPress/zipball/5.0.3",
-                "reference": null,
+                "reference": "5.0.3",
                 "shasum": null
             },
             "require": {
