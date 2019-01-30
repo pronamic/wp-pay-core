@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Payments;
 
 use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\ContactName;
 use Pronamic\WordPress\Pay\Customer;
@@ -70,7 +71,9 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	public function set_amount( Money $amount ) {
 		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::set_total_amount()' );
 
-		$this->set_total_amount( $amount );
+		$money = new TaxedMoney( $amount->get_value(), $amount->get_currency() );
+
+		$this->set_total_amount( $money );
 	}
 
 	/**
