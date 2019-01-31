@@ -50,6 +50,7 @@ class AdminSubscriptionPostType {
 
 		add_filter( 'manage_edit-' . self::POST_TYPE . '_columns', array( $this, 'columns' ) );
 		add_filter( 'manage_edit-' . self::POST_TYPE . '_sortable_columns', array( $this, 'sortable_columns' ) );
+		add_filter( 'list_table_primary_column', array( $this, 'primary_column' ), 10, 2 );
 
 		add_action( 'manage_' . self::POST_TYPE . '_posts_custom_column', array( $this, 'custom_columns' ), 10, 2 );
 
@@ -121,6 +122,22 @@ class AdminSubscriptionPostType {
 		$sortable_columns['pronamic_subscription_date']  = 'date';
 
 		return $sortable_columns;
+	}
+
+	/**
+	 * Primary column name.
+	 *
+	 * @param string $column_name Primary column name.
+	 * @param string $screen_id   Screen ID.
+	 *
+	 * @return string
+	 */
+	public function primary_column( $column_name, $screen_id ) {
+		if ( 'edit-pronamic_pay_subscr' !== $screen_id ) {
+			return $column_name;
+		}
+
+		return 'pronamic_subscription_title';
 	}
 
 	/**
@@ -361,7 +378,7 @@ class AdminSubscriptionPostType {
 	 */
 	public function post_row_actions( $actions, $post ) {
 		if ( self::POST_TYPE === $post->post_type ) {
-			$actions = array();
+			$actions = array( '' );
 		}
 
 		return $actions;
