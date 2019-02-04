@@ -7,6 +7,10 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.1.5] - 2019-02-04
+- Fixed fatal error PaymentInfo expecting taxed money.
+- Improved responsive admin tables for payments and subscriptions.
+
 ## [2.1.4] - 2019-01-24
 - Improved locale to always includes a country.
 
@@ -153,7 +157,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.1.4...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.1.5...HEAD
+[2.1.5]: https://github.com/wp-pay/core/compare/2.1.4...2.1.5
 [2.1.4]: https://github.com/wp-pay/core/compare/2.1.3...2.1.4
 [2.1.3]: https://github.com/wp-pay/core/compare/2.1.2...2.1.3
 [2.1.2]: https://github.com/wp-pay/core/compare/2.1.1...2.1.2
