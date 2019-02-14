@@ -504,7 +504,8 @@ class Plugin {
 		}
 
 		// Gateway Integrations.
-		$integrations = new GatewayIntegrations( self::$gateways );
+		$gateways     = apply_filters( 'pronamic_pay_gateways', self::$gateways );
+		$integrations = new GatewayIntegrations( $gateways );
 
 		$this->gateway_integrations = $integrations->register_integrations();
 
