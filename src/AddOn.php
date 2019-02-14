@@ -21,14 +21,14 @@ class AddOn {
 	/**
 	 * Add-on plugin file.
 	 *
-	 * @var $file
+	 * @var string
 	 */
 	private $file;
 
 	/**
 	 * Gateway integrations.
 	 *
-	 * @var $gateways
+	 * @var array
 	 */
 	private $gateways = array();
 
