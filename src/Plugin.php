@@ -10,7 +10,7 @@
 
 namespace Pronamic\WordPress\Pay;
 
-use DateTime;
+use Pronamic\WordPress\Pay\Admin\AdminModule;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Core\Recurring;
@@ -20,7 +20,6 @@ use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentData;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Payments\StatusChecker;
-use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
 use WP_Error;
 use WP_Query;
@@ -146,6 +145,13 @@ class Plugin {
 	 * @var PrivacyManager
 	 */
 	public $privacy_manager;
+
+	/**
+	 * Admin module.
+	 *
+	 * @var AdminModule
+	 */
+	public $admin;
 
 	/**
 	 * Forms module.
@@ -357,7 +363,7 @@ class Plugin {
 		}
 
 		if ( ! $valid_key ) {
-			wp_redirect( home_url() );
+			wp_safe_redirect( home_url() );
 
 			exit;
 		}
@@ -407,7 +413,7 @@ class Plugin {
 			$key = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_STRING );
 
 			if ( $key !== $payment->key ) {
-				wp_redirect( home_url() );
+				wp_safe_redirect( home_url() );
 
 				exit;
 			}
@@ -542,7 +548,7 @@ class Plugin {
 	 *
 	 * @param string $format Format.
 	 *
-	 * @return string|void
+	 * @return string
 	 */
 	public function datetime_format( $format ) {
 		$format = _x( 'D j M Y \a\t H:i', 'default datetime format', 'pronamic_ideal' );

@@ -43,7 +43,8 @@ class ConfigProvider {
 	 *
 	 * @param string $name    Name of a factory.
 	 * @param int    $post_id Configuration post ID.
-	 * @return Gateway|null
+	 *
+	 * @return GatewayConfig|null
 	 */
 	public static function get_config( $name, $post_id ) {
 		$config = null;
