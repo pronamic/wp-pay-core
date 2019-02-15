@@ -16,6 +16,7 @@ use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Core\Recurring;
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
+use Pronamic\WordPress\Pay\Gateways\Common\AbstractIntegration;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentData;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
@@ -184,7 +185,7 @@ class Plugin {
 	/**
 	 * Gateway integrations.
 	 *
-	 * @var array
+	 * @var AbstractIntegration[]
 	 */
 	public $gateway_integrations;
 

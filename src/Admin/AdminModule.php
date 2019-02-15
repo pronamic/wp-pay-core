@@ -419,7 +419,7 @@ class AdminModule {
 			admin_url( 'admin.php' )
 		);
 
-		wp_redirect( $url );
+		wp_safe_redirect( $url );
 
 		exit;
 	}
@@ -675,6 +675,8 @@ class AdminModule {
 	 * Gateway settings.
 	 *
 	 * @param array $classes Classes.
+	 *
+	 * @return array
 	 */
 	public function gateway_settings( $classes ) {
 		foreach ( $this->plugin->gateway_integrations as $integration ) {

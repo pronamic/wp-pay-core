@@ -23,7 +23,7 @@ class GatewayIntegrations {
 	/**
 	 * Integrations.
 	 *
-	 * @var array
+	 * @var AbstractIntegration[]
 	 */
 	private $integrations = array();
 
@@ -68,7 +68,7 @@ class GatewayIntegrations {
 	/**
 	 * Register gateway integrations.
 	 *
-	 * @return array
+	 * @return AbstractIntegration[]
 	 */
 	public function register_integrations() {
 		// Register config providers.

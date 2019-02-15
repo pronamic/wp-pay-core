@@ -174,6 +174,8 @@ class AdminGatewayPostType {
 	 *
 	 * @param array    $post_states Post states.
 	 * @param \WP_Post $post        Post.
+	 *
+	 * @return array
 	 */
 	public function display_post_states( $post_states, $post ) {
 		if ( self::POST_TYPE !== get_post_type( $post ) ) {
@@ -252,6 +254,8 @@ class AdminGatewayPostType {
 	 * When the post is saved, saves our custom data.
 	 *
 	 * @param int $post_id The ID of the post being saved.
+	 *
+	 * @return int
 	 */
 	public function save_post( $post_id ) {
 		// Nonce.
