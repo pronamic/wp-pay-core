@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use Pronamic\WordPress\Pay\Gateways\Common\AbstractIntegration;
+
 /**
  * Title: WordPress gateway integrations class.
  *
@@ -58,6 +60,8 @@ class GatewayIntegrations {
 			}
 
 			$this->integrations[ $integration->get_id() ] = $integration;
+
+			$this->maybe_add_provider( $integration );
 		}
 	}
 
@@ -73,5 +77,25 @@ class GatewayIntegrations {
 		}
 
 		return $this->integrations;
+	}
+
+	/**
+	 * Maybe add provider from gateway integration.
+	 *
+	 * @param AbstractIntegration $integration Gateway integration.
+	 */
+	public function maybe_add_provider( $integration ) {
+		global $pronamic_pay_providers;
+
+		$provider = $integration->get_provider();
+
+		if ( isset( $pronamic_pay_providers[ $provider ] ) ) {
+			return;
+		}
+
+		$pronamic_pay_providers[ $provider ] = array(
+			'name' => $integration->get_name(),
+			'url'  => $integration->get_url(),
+		);
 	}
 }

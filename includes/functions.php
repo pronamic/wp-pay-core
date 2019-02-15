@@ -239,9 +239,7 @@ function get_pronamic_subscriptions_by_meta( $meta_key, $meta_value ) {
 function bind_providers_and_gateways() {
 	global $pronamic_pay_providers;
 
-	global $pronamic_ideal;
-
-	foreach ( $pronamic_ideal->gateway_integrations as $integration ) {
+	foreach ( pronamic_pay_plugin()->gateway_integrations as $integration ) {
 		if ( isset( $pronamic_pay_providers[ $integration->provider ] ) ) {
 			$provider =& $pronamic_pay_providers[ $integration->provider ];
 
@@ -252,6 +250,14 @@ function bind_providers_and_gateways() {
 			$provider['integrations'][] = $integration;
 		}
 	}
+
+	// Sort by provider name.
+	usort(
+		$pronamic_pay_providers,
+		function( $a, $b ) {
+			return strcmp( $a['name'], $b['name'] );
+		}
+	);
 }
 
 /**

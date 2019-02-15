@@ -26,7 +26,7 @@ class AddOn {
 	private $file;
 
 	/**
-	 * Gateway integrations.
+	 * Gateways.
 	 *
 	 * @var array
 	 */
@@ -47,7 +47,7 @@ class AddOn {
 	 * Check Pronamic Pay.
 	 */
 	public function check_pronamic_pay() {
-		if ( null !== pronamic_pay_plugin()->get_version() ) {
+		if ( ! function_exists( 'pronamic_pay_plugin' ) ) {
 			return;
 		}
 
@@ -81,7 +81,7 @@ class AddOn {
 	}
 
 	/**
-	 * Add gateway integration.
+	 * Filter gateways.
 	 *
 	 * @param array $gateways Gateways.
 	 *
