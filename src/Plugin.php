@@ -654,16 +654,6 @@ class Plugin {
 
 		// Adjust config for specific gateways.
 		switch ( $gateway_id ) {
-			case 'abnamro-ideal-easy':
-			case 'abnamro-ideal-only-kassa':
-			case 'abnamro-internetkassa':
-				$config->form_action_url = sprintf(
-					'https://internetkassa.abnamro.nl/ncol/%s/orderstandard%s.asp',
-					Gateway::MODE_TEST === $mode ? 'test' : 'prod',
-					$is_utf8 ? '_utf8' : ''
-				);
-
-				break;
 			case 'abnamro-ideal-zelfbouw-v3':
 				$config->payment_server_url = 'https://abnamro.ideal-payment.de/ideal/iDEALv3';
 
