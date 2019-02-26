@@ -247,6 +247,9 @@ class Plugin {
 
 		// Default date time format.
 		add_filter( 'pronamic_datetime_default_format', array( $this, 'datetime_format' ), 10, 1 );
+
+		// Styles.
+		add_action( 'wp_loaded', array( $this, 'register_styles' ) );
 	}
 
 	/**
@@ -564,6 +567,20 @@ class Plugin {
 	 */
 	public static function get_default_error_message() {
 		return __( 'Something went wrong with the payment. Please try again later or pay another way.', 'pronamic_ideal' );
+	}
+
+	/**
+	 * Register styles.
+	 */
+	public function register_styles() {
+		$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
+		wp_register_style(
+			'pronamic-pay-redirect',
+			plugins_url( 'css/redirect' . $min . '.css', $this->get_file() ),
+			array(),
+			$this->get_version()
+		);
 	}
 
 	/**
