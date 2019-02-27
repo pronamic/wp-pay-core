@@ -520,7 +520,7 @@ class Plugin {
 		$this->gateway_integrations = $integrations->register_integrations();
 
 		// Maybes.
-		self::maybe_set_active_payment_methods();
+		PaymentMethods::maybe_update_active_payment_methods();
 	}
 
 	/**
@@ -617,21 +617,6 @@ class Plugin {
 		}
 
 		return $options;
-	}
-
-	/**
-	 * Maybe set active payment methods option.
-	 *
-	 * @since unreleased
-	 */
-	public static function maybe_set_active_payment_methods() {
-		$active_methods = get_option( 'pronamic_pay_active_payment_methods' );
-
-		if ( is_array( $active_methods ) ) {
-			return;
-		}
-
-		PaymentMethods::update_active_payment_methods();
 	}
 
 	/**
