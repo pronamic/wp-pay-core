@@ -241,15 +241,15 @@ class Plugin {
 		// Plugin locale.
 		add_filter( 'plugin_locale', array( $this, 'plugin_locale' ), 10, 2 );
 
+		// Register styles.
+		add_action( 'wp_loaded', array( $this, 'register_styles' ), 9 );
+
 		// If WordPress is loaded check on returns and maybe redirect requests.
-		add_action( 'wp_loaded', array( $this, 'handle_returns' ) );
-		add_action( 'wp_loaded', array( $this, 'maybe_redirect' ) );
+		add_action( 'wp_loaded', array( $this, 'handle_returns' ), 10 );
+		add_action( 'wp_loaded', array( $this, 'maybe_redirect' ), 10 );
 
 		// Default date time format.
 		add_filter( 'pronamic_datetime_default_format', array( $this, 'datetime_format' ), 10, 1 );
-
-		// Styles.
-		add_action( 'wp_loaded', array( $this, 'register_styles' ) );
 	}
 
 	/**
@@ -431,6 +431,10 @@ class Plugin {
 		}
 
 		$gateway = self::get_gateway( $payment->config_id );
+
+		if ( $gateway->supports( 'payment_redirect' ) ) {
+			$gateway->payment_redirect( $payment );
+		}
 
 		if ( $gateway && $gateway->is_html_form() ) {
 			$gateway->start( $payment );
