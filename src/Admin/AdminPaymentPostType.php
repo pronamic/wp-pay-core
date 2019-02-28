@@ -386,11 +386,16 @@ class AdminPaymentPostType {
 						$class = ' pronamic-pay-icon-recurring-first';
 					}
 
-					printf(
-						'<span class="pronamic-pay-tip pronamic-pay-icon %s" title="%s">%s</span>',
-						esc_attr( $class ),
-						esc_attr( $label ),
-						esc_attr( $label )
+					echo edit_post_link(
+						sprintf(
+							'<span class="pronamic-pay-tip pronamic-pay-icon %s" title="%s">%s</span>',
+							esc_attr( $class ),
+							esc_attr( $label ),
+							esc_attr( $label )
+						),
+						'',
+						'',
+						$subscription_id
 					);
 				}
 
