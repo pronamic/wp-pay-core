@@ -385,7 +385,7 @@ class Address {
 	}
 
 	/**
-	 * Get country code.
+	 * Get ISO 3166-1 alpha-2 country code.
 	 *
 	 * @return string|null
 	 */

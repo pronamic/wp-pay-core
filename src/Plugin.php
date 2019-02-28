@@ -643,7 +643,7 @@ class Plugin {
 	 *
 	 * @param string|integer|boolean $config_id A gateway configuration ID.
 	 *
-	 * @return mixed
+	 * @return null|Gateway
 	 */
 	public static function get_gateway( $config_id ) {
 		// Check if config is published.
