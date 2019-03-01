@@ -551,7 +551,15 @@ class Payment extends LegacyPayment {
 	 * @return string
 	 */
 	public function get_pay_redirect_url() {
-		return add_query_arg( 'payment_redirect', $this->id, home_url( '/' ) );
+		$url = add_query_arg(
+			array(
+				'payment_redirect' => $this->id,
+				'key'              => $this->key,
+			),
+			home_url( '/' )
+		);
+
+		return $url;
 	}
 
 	/**
