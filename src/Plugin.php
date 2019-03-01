@@ -424,21 +424,21 @@ class Plugin {
 
 		$gateway = self::get_gateway( $payment->config_id );
 
-		// Give gateway a chance to handle redirect.
-		if ( $gateway && $gateway->supports( 'payment_redirect' ) ) {
+		if ( $gateway ) {
+			// Give gateway a chance to handle redirect.
 			$gateway->payment_redirect( $payment );
-		}
 
-		// Handle HTML form redirect.
-		if ( $gateway && $gateway->is_html_form() ) {
-			$gateway->start( $payment );
+			// Handle HTML form redirect.
+			if ( $gateway->is_html_form() ) {
+				$gateway->start( $payment );
 
-			$error = $gateway->get_error();
+				$error = $gateway->get_error();
 
-			if ( is_wp_error( $error ) ) {
-				self::render_errors( $error );
-			} else {
-				$gateway->redirect( $payment );
+				if ( is_wp_error( $error ) ) {
+					self::render_errors( $error );
+				} else {
+					$gateway->redirect( $payment );
+				}
 			}
 		}
 
