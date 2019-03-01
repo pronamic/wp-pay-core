@@ -398,44 +398,46 @@ class Plugin {
 			return;
 		}
 
+		// Get payment.
 		$payment_id = filter_input( INPUT_GET, 'payment_redirect', FILTER_SANITIZE_NUMBER_INT );
 
 		$payment = get_pronamic_payment( $payment_id );
 
-		// HTML Answer.
-		$html_answer = $payment->get_meta( 'ogone_directlink_html_answer' );
-
-		if ( ! empty( $html_answer ) ) {
-			echo $html_answer; // WPCS: XSS ok.
-
-			exit;
+		if ( null === $payment->post ) {
+			return;
 		}
 
+		// Validate key.
+		if ( ! filter_has_var( INPUT_GET, 'key' ) ) {
+			return;
+		}
+
+		$key = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_STRING );
+
+		if ( $key !== $payment->key ) {
+			return;
+		}
+
+		// Don't cache.
+		Core_Util::no_cache();
+
+		// Handle redirect message from payment meta.
 		$redirect_message = $payment->get_meta( 'payment_redirect_message' );
 
 		if ( ! empty( $redirect_message ) ) {
-			$key = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_STRING );
-
-			if ( $key !== $payment->key ) {
-				wp_safe_redirect( home_url() );
-
-				exit;
-			}
-
-			// No cache.
-			Core_Util::no_cache();
-
-			include self::$dirname . '/views/redirect-message.php';
+			require self::$dirname . '/views/redirect-message.php';
 
 			exit;
 		}
 
 		$gateway = self::get_gateway( $payment->config_id );
 
-		if ( $gateway->supports( 'payment_redirect' ) ) {
+		// Give gateway a chance to handle redirect.
+		if ( $gateway && $gateway->supports( 'payment_redirect' ) ) {
 			$gateway->payment_redirect( $payment );
 		}
 
+		// Handle HTML form redirect.
 		if ( $gateway && $gateway->is_html_form() ) {
 			$gateway->start( $payment );
 
@@ -448,6 +450,7 @@ class Plugin {
 			}
 		}
 
+		// Redirect to payment action URL.
 		if ( ! empty( $payment->action_url ) ) {
 			wp_redirect( $payment->action_url );
 
