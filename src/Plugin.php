@@ -394,7 +394,7 @@ class Plugin {
 	 * Maybe redirect.
 	 */
 	public function maybe_redirect() {
-		if ( ! filter_has_var( INPUT_GET, 'payment_redirect' ) ) {
+		if ( ! filter_has_var( INPUT_GET, 'payment_redirect' ) || ! filter_has_var( INPUT_GET, 'key' ) ) {
 			return;
 		}
 
@@ -403,18 +403,10 @@ class Plugin {
 
 		$payment = get_pronamic_payment( $payment_id );
 
-		if ( null === $payment->post ) {
-			return;
-		}
-
 		// Validate key.
-		if ( ! filter_has_var( INPUT_GET, 'key' ) ) {
-			return;
-		}
-
 		$key = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_STRING );
 
-		if ( $key !== $payment->key ) {
+		if ( $key !== $payment->key || empty( $payment->key ) ) {
 			return;
 		}
 
