@@ -9,19 +9,12 @@
 	"line_1": "Burgemeester Wuiteweg 39b",
 	"line_2": "1e etage",
 	"street_name": "Burgemeester Wuiteweg",
-	"house_number": {
-		"value": "39b",
-		"base": "39",
-		"addition": "b"
-	},
+	"house_number": "39b",
+	"house_number_addition": "b",
 	"postal_code": "9203 KA",
 	"city": "Drachten",
-	"region": {
-		"value": "Friesland"
-	},
-	"country": {
-		"code": "NL",
-		"name": "Nederland"
-	},
-	"phone": "085 40 11 580"
+	"region": "Friesland",
+	"country_code": "NL",
+	"country_name": "Nederland",
+	"phone":"085 40 11 580"
 }

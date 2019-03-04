@@ -33,9 +33,13 @@
     "line_2":"1e etage",
     "postal_code":"9203 KA",
     "city":"Drachten",
-    "region":"Friesland",
-    "country_code":"NL",
-    "country_name":"Nederland",
+    "region":{
+      "value": "Friesland"
+    },
+    "country": {
+      "code": "NL",
+      "name": "Nederland"
+    },
     "phone":"085 40 11 580"
   },
   "shipping_address":{
@@ -50,9 +54,13 @@
     "line_2":"1e etage",
     "postal_code":"9203 KA",
     "city":"Drachten",
-    "region":"Friesland",
-    "country_code":"NL",
-    "country_name":"Nederland",
+    "region":{
+      "value": "Friesland"
+    },
+    "country": {
+      "code": "NL",
+      "name": "Nederland"
+    },
     "phone":"085 40 11 580"
   },
   "lines":[
