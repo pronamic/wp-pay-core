@@ -281,7 +281,7 @@ class Address {
 	 * @return string|null
 	 */
 	public function get_house_number_base() {
-		if ( null == $this->house_number ) {
+		if ( null === $this->house_number ) {
 			return null;
 		}
 
@@ -294,7 +294,7 @@ class Address {
 	 * @param string|null $house_number_base House number base.
 	 */
 	public function set_house_number_base( $house_number_base ) {
-		if ( null == $this->house_number ) {
+		if ( null === $this->house_number ) {
 			$this->house_number = new HouseNumber();
 		}
 
@@ -307,7 +307,7 @@ class Address {
 	 * @return string|null
 	 */
 	public function get_house_number_addition() {
-		if ( null == $this->house_number ) {
+		if ( null === $this->house_number ) {
 			return null;
 		}
 
@@ -320,7 +320,7 @@ class Address {
 	 * @param string|null $house_number_addition House number addition.
 	 */
 	public function set_house_number_addition( $house_number_addition ) {
-		if ( null == $this->house_number ) {
+		if ( null === $this->house_number ) {
 			$this->house_number = new HouseNumber();
 		}
 
@@ -409,7 +409,7 @@ class Address {
 	 * @return string|null
 	 */
 	public function get_country_code() {
-		if ( null == $this->country ) {
+		if ( null === $this->country ) {
 			return null;
 		}
 
@@ -424,7 +424,7 @@ class Address {
 	 * @param null|string $country_code Country code.
 	 */
 	public function set_country_code( $country_code ) {
-		if ( null == $this->country ) {
+		if ( null === $this->country ) {
 			$this->country = new Country();
 		}
 
@@ -437,7 +437,7 @@ class Address {
 	 * @return string|null
 	 */
 	public function get_country_name() {
-		if ( null == $this->country ) {
+		if ( null === $this->country ) {
 			return null;
 		}
 
@@ -450,7 +450,7 @@ class Address {
 	 * @param string|null $country_name Country name.
 	 */
 	public function set_country_name( $country_name ) {
-		if ( null == $this->country ) {
+		if ( null === $this->country ) {
 			$this->country = new Country();
 		}
 
@@ -556,7 +556,7 @@ class Address {
 			}
 
 			if ( isset( $json->house_number_addition ) ) {
-				$house_number->set_addition( $json->house_number_addition );	
+				$house_number->set_addition( $json->house_number_addition );
 			}
 
 			$address->set_house_number( $house_number );

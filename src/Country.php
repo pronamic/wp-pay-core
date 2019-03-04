@@ -47,6 +47,8 @@ class Country {
 	/**
 	 * Set code.
 	 *
+	 * @throws InvalidArgumentException Thrown when country code length is not equal to 2.
+	 *
 	 * @param string|null $code Code.
 	 */
 	public function set_code( $code ) {
