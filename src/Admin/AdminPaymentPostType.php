@@ -127,10 +127,14 @@ class AdminPaymentPostType {
 
 		$post_id = filter_input( INPUT_GET, 'post', FILTER_SANITIZE_NUMBER_INT );
 
+		$payment = get_pronamic_payment( $post_id );
+
+		if ( null === $payment ) {
+			return;
+		}
+
 		// Status check action.
 		if ( filter_has_var( INPUT_GET, 'pronamic_pay_check_status' ) && check_admin_referer( 'pronamic_payment_check_status_' . $post_id ) ) {
-			$payment = get_pronamic_payment( $post_id );
-
 			Plugin::update_payment( $payment, false );
 
 			$this->admin_notices[] = array(
@@ -141,8 +145,6 @@ class AdminPaymentPostType {
 
 		// Create invoice action.
 		if ( filter_has_var( INPUT_GET, 'pronamic_pay_create_invoice' ) && check_admin_referer( 'pronamic_payment_create_invoice_' . $post_id ) ) {
-			$payment = get_pronamic_payment( $post_id );
-
 			$gateway = Plugin::get_gateway( $payment->get_config_id() );
 
 			// Admin notice.
@@ -161,8 +163,6 @@ class AdminPaymentPostType {
 
 		// Cancel reservation action.
 		if ( filter_has_var( INPUT_GET, 'pronamic_pay_cancel_reservation' ) && check_admin_referer( 'pronamic_payment_cancel_reservation_' . $post_id ) ) {
-			$payment = get_pronamic_payment( $post_id );
-
 			$gateway = Plugin::get_gateway( $payment->get_config_id() );
 
 			// Admin notice.
@@ -181,8 +181,6 @@ class AdminPaymentPostType {
 
 		// Send to Google Analytics action.
 		if ( filter_has_var( INPUT_GET, 'pronamic_pay_ga_track' ) && check_admin_referer( 'pronamic_payment_ga_track_' . $post_id ) ) {
-			$payment = get_pronamic_payment( $post_id );
-
 			$ga_ecommerce = pronamic_pay_plugin()->google_analytics_ecommerce;
 
 			if ( ! $ga_ecommerce->valid_payment( $payment ) ) {
@@ -347,6 +345,10 @@ class AdminPaymentPostType {
 	 */
 	public function custom_columns( $column, $post_id ) {
 		$payment = get_pronamic_payment( $post_id );
+
+		if ( null === $payment ) {
+			return;
+		}
 
 		switch ( $column ) {
 			case 'pronamic_payment_status':
@@ -561,6 +563,10 @@ class AdminPaymentPostType {
 	 */
 	public function meta_box_lines( $post ) {
 		$payment = get_pronamic_payment( $post->ID );
+
+		if ( null === $payment ) {
+			return;
+		}
 
 		$lines = $payment->get_lines();
 

@@ -82,7 +82,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * Get payment by ID.
 	 *
 	 * @param int $id Payment ID.
-	 * @return Payment
+	 * @return Payment|null
 	 */
 	private function get_payment( $id ) {
 		if ( ! isset( $this->payments[ $id ] ) ) {
@@ -139,9 +139,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		} elseif ( isset( $postarr['ID'] ) ) {
 			$post_id = $postarr['ID'];
 
-			if ( 'pronamic_payment' === get_post_type( $post_id ) ) {
-				$this->payment = $this->get_payment( $post_id );
-			}
+			$this->payment = $this->get_payment( $post_id );
 		}
 
 		if ( $this->payment instanceof Payment ) {

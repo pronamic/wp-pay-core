@@ -8,6 +8,7 @@
  * @package   Pronamic\WordPress\Pay
  */
 
+use Pronamic\WordPress\Pay\Admin\AdminPaymentPostType;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 
@@ -24,9 +25,15 @@ function pronamic_pay_plugin() {
  * Get payment by specified post ID.
  *
  * @param int|string $post_id A payment post ID.
- * @return Payment
+ * @return Payment|null
  */
 function get_pronamic_payment( $post_id ) {
+	$post_type = get_post_type( $post_id );
+
+	if ( AdminPaymentPostType::POST_TYPE !== $post_type ) {
+		return null;
+	}
+
 	$payment = new Payment( $post_id );
 
 	return $payment;

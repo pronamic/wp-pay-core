@@ -355,6 +355,10 @@ class Plugin {
 
 		$payment = get_pronamic_payment( $payment_id );
 
+		if ( null === $payment ) {
+			return;
+		}
+
 		// Check if payment key is valid.
 		$valid_key = false;
 
@@ -402,6 +406,10 @@ class Plugin {
 		$payment_id = filter_input( INPUT_GET, 'payment_redirect', FILTER_SANITIZE_NUMBER_INT );
 
 		$payment = get_pronamic_payment( $payment_id );
+
+		if ( null === $payment ) {
+			return;
+		}
 
 		// Validate key.
 		$key = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_STRING );
