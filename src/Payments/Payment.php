@@ -110,7 +110,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * The transaction ID of this payment.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $transaction_id;
 
@@ -457,7 +457,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Set the transaction ID.
 	 *
-	 * @param string $transaction_id Transaction ID.
+	 * @param string|null $transaction_id Transaction ID.
 	 */
 	public function set_transaction_id( $transaction_id ) {
 		$this->transaction_id = $transaction_id;
@@ -466,7 +466,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Get the payment transaction ID.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_transaction_id() {
 		return $this->transaction_id;
