@@ -238,7 +238,7 @@ class Util {
 		$html = '';
 
 		foreach ( $attributes as $key => $value ) {
-			$html .= sprintf( '%s="%s"', $key, esc_attr( $value ) );
+			$html .= sprintf( '%s="%s" ', $key, esc_attr( $value ) );
 		}
 
 		$html = trim( $html );
