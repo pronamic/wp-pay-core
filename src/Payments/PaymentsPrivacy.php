@@ -185,7 +185,9 @@ class PaymentsPrivacy {
 					continue;
 				}
 
-				$privacy_manager->erase_meta( $payment_id, $meta_key, $meta_options['privacy_erasure'] );
+				$action = ( isset( $meta_options['privacy_erasure'] ) ? $meta_options['privacy_erasure'] : null );
+
+				$privacy_manager->erase_meta( $payment_id, $meta_key, $action );
 			}
 
 			// Customer.
