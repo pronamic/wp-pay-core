@@ -53,8 +53,6 @@ function get_pronamic_payment( $post_id ) {
 function get_pronamic_payment_by_meta( $meta_key, $meta_value ) {
 	global $wpdb;
 
-	$payment = null;
-
 	$db_query = $wpdb->prepare(
 		"
 		SELECT
@@ -73,13 +71,7 @@ function get_pronamic_payment_by_meta( $meta_key, $meta_value ) {
 
 	$post_id = $wpdb->get_var( $db_query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
 
-	if ( $post_id ) {
-		$payment = new Payment( $post_id );
-
-		if ( null === $payment->post ) {
-			$payment = null;
-		}
-	}
+	$payment = get_pronamic_payment( $post_id );
 
 	return $payment;
 }

@@ -98,10 +98,10 @@ class StatusChecker {
 	 * @internal param string $paymentId
 	 */
 	public function check_status( $payment_id = null, $seconds = null, $number_tries = 1 ) {
-		$payment = new Payment( $payment_id );
+		$payment = get_pronamic_payment( $payment_id );
 
 		// Empty payment.
-		if ( null === $payment->post ) {
+		if ( null === $payment ) {
 			// Clear scheduled hook for non-existing payment.
 			$args = array(
 				'payment_id'   => $payment_id,
