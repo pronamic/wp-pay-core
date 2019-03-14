@@ -25,6 +25,17 @@ use Pronamic\WordPress\Pay\Plugin;
  */
 class StatusChecker {
 	/**
+	 * Construct a status checker.
+	 */
+	public function __construct() {
+		// Payment status check events are scheduled when payments are started.
+		add_action( 'pronamic_pay_payment_status_check', array( $this, 'check_status' ), 10, 2 );
+
+		// Deprecated `pronamic_ideal_check_transaction_status` hooks got scheduled to request the payment status.
+		add_action( 'pronamic_ideal_check_transaction_status', array( $this, 'check_transaction_status' ), 10, 3 );
+	}
+
+	/**
 	 * Schedule event.
 	 *
 	 * @param Payment $payment The payment to schedule the status check event.
@@ -51,32 +62,56 @@ class StatusChecker {
 		 * the Cron View (http://wordpress.org/extend/plugins/cron-view/) page.
 		 */
 
-		$time = time();
+		// Bail if payment already has a final status (e.g. failed payments).
+		$status = $payment->get_status();
 
-		// 15 minutes after a transaction request is sent
-		$delay = 15 * MINUTE_IN_SECONDS;
+		if ( ! empty( $status ) && Statuses::OPEN !== $status ) {
+			return;
+		}
+
+		// Get delay seconds for first status check.
+		$delay = self::get_delay_seconds( 1, $payment->get_recurring() );
 
 		wp_schedule_single_event(
-			$time + $delay,
-			'pronamic_ideal_check_transaction_status',
+			time() + $delay,
+			'pronamic_pay_payment_status_check',
 			array(
 				'payment_id' => $payment->get_id(),
-				'seconds'    => $delay,
+				'try'        => 1,
 			)
 		);
 	}
 
 	/**
-	 * Get the delay seconds for the specified number of tries.
+	 * Get the delay seconds for the specified try.
 	 *
-	 * @param int $number_tries The number of tries to get the delay seconds for.
+	 * @param int  $try       Which try/round to get the delay seconds for.
+	 * @param bool $recurring Whether or not to use the delay scheme for recurring payments.
 	 *
 	 * @return int
 	 */
-	private function get_delay_seconds( $number_tries ) {
-		switch ( $number_tries ) {
-			case 0:
-				// 15 minutes after a transaction request is sent.
+	private static function get_delay_seconds( $try, $recurring = false ) {
+		// Delays for recurring payments.
+		if ( $recurring ) {
+			switch ( $try ) {
+				case 1:
+					return 15 * MINUTE_IN_SECONDS;
+
+				case 2:
+					return 5 * DAY_IN_SECONDS;
+
+				case 3:
+					return 10 * DAY_IN_SECONDS;
+
+				case 4:
+				default:
+					return 14 * DAY_IN_SECONDS;
+			}
+		}
+
+		// Delays for regular payments.
+		switch ( $try ) {
+			case 1:
 				return 15 * MINUTE_IN_SECONDS;
 
 			case 2:
@@ -92,68 +127,76 @@ class StatusChecker {
 	}
 
 	/**
-	 * Check status of the specified payment.
+	 * Backwards compatible transaction status check.
 	 *
 	 * @param integer $payment_id   The ID of a payment to check.
 	 * @param integer $seconds      The number of seconds this status check was delayed.
 	 * @param integer $number_tries The number of status check tries.
 	 *
 	 * @return void
+	 *
+	 * @deprecated 2.1.6 In favor of event `pronamic_pay_payment_status_check`.
 	 */
-	public function check_status( $payment_id = null, $seconds = null, $number_tries = 1 ) {
+	public function check_transaction_status( $payment_id = null, $seconds = null, $number_tries = 1 ) {
+		$this->check_status( $payment_id, $number_tries );
+	}
+
+	/**
+	 * Check status of the specified payment.
+	 *
+	 * @param integer $payment_id The payment ID to check.
+	 * @param integer $try        The try number for this status check.
+	 *
+	 * @return void
+	 */
+	public function check_status( $payment_id = null, $try = 1 ) {
 		$payment = get_pronamic_payment( $payment_id );
 
-		// Empty payment.
+		// No payment found, unable to check status.
 		if ( null === $payment ) {
-			// Clear scheduled hook for non-existing payment.
-			$args = array(
-				'payment_id'   => $payment_id,
-				'seconds'      => $seconds,
-				'number_tries' => $number_tries,
-			);
-
-			wp_clear_scheduled_hook( 'pronamic_ideal_check_transaction_status', $args );
-
-			// Payment with the specified ID could not be found, can't check the status.
 			return;
 		}
 
 		// http://pronamic.nl/wp-content/uploads/2011/12/iDEAL_Advanced_PHP_EN_V2.2.pdf (page 19)
 		// - No status request after a final status has been received for a transaction.
-		if ( empty( $payment->status ) || Statuses::OPEN === $payment->status ) {
-			// Add note.
-			$note = sprintf(
-				/* translators: %s: Pronamic Pay */
-				__( 'Payment status check at gateway by %s.', 'pronamic_ideal' ),
-				__( 'Pronamic Pay', 'pronamic_ideal' )
+		if ( ! empty( $payment->status ) && Statuses::OPEN !== $payment->status ) {
+			return;
+		}
+
+		// Add note.
+		$note = sprintf(
+			/* translators: %s: Pronamic Pay */
+			__( 'Payment status check at gateway by %s.', 'pronamic_ideal' ),
+			__( 'Pronamic Pay', 'pronamic_ideal' )
+		);
+
+		$payment->add_note( $note );
+
+		// Update payment.
+		Plugin::update_payment( $payment );
+
+		// Limit number of tries.
+		if ( 4 === $try ) {
+			return;
+		}
+
+		// Schedule check if no final status has been received.
+		$status = $payment->get_status();
+
+		if ( empty( $status ) || Statuses::OPEN === $status ) {
+			$next_try = ( $try + 1 );
+
+			// Get delay seconds for next status check.
+			$delay = self::get_delay_seconds( $next_try, $payment->get_recurring() );
+
+			wp_schedule_single_event(
+				time() + $delay,
+				'pronamic_pay_payment_status_check',
+				array(
+					'payment_id' => $payment->get_id(),
+					'try'        => $next_try,
+				)
 			);
-
-			$payment->add_note( $note );
-
-			// Update payment.
-			Plugin::update_payment( $payment );
-
-			// Limit number tries.
-			if ( 4 === $number_tries ) {
-				return;
-			}
-
-			// Schedule check if no final status has been received.
-			if ( empty( $payment->status ) || Statuses::OPEN === $payment->status ) {
-				$time = time();
-
-				$seconds = $this->get_delay_seconds( $number_tries );
-
-				wp_schedule_single_event(
-					$time + $seconds,
-					'pronamic_ideal_check_transaction_status',
-					array(
-						'payment_id'   => $payment->get_id(),
-						'seconds'      => $seconds,
-						'number_tries' => ++$number_tries,
-					)
-				);
-			}
 		}
 	}
 }

@@ -38,6 +38,13 @@ class PaymentsModule {
 	public $privacy;
 
 	/**
+	 * Status checker.
+	 *
+	 * @var StatusChecker
+	 */
+	public $status_checker;
+
+	/**
 	 * Construct and initialize a payments module object.
 	 *
 	 * @param Plugin $plugin The plugin.
@@ -58,10 +65,7 @@ class PaymentsModule {
 		add_action( 'pronamic_payment_status_update', array( $this, 'log_payment_status_update' ), 10, 4 );
 
 		// Payment Status Checker.
-		$status_checker = new StatusChecker();
-
-		// The 'pronamic_ideal_check_transaction_status' hook is scheduled to request the payment status.
-		add_action( 'pronamic_ideal_check_transaction_status', array( $status_checker, 'check_status' ), 10, 3 );
+		$this->status_checker = new StatusChecker();
 	}
 
 	/**
