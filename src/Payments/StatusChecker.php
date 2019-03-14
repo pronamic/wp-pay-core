@@ -28,6 +28,8 @@ class StatusChecker {
 	 * Schedule event.
 	 *
 	 * @param Payment $payment The payment to schedule the status check event.
+	 *
+	 * @return void
 	 */
 	public static function schedule_event( $payment ) {
 		/*
@@ -76,13 +78,14 @@ class StatusChecker {
 			case 0:
 				// 15 minutes after a transaction request is sent.
 				return 15 * MINUTE_IN_SECONDS;
-			case 1:
-				// Half-way through an expirationPeriod.
-				return 30 * MINUTE_IN_SECONDS;
+
 			case 2:
-				// Just after an expirationPeriod.
-				return HOUR_IN_SECONDS;
+				return 30 * MINUTE_IN_SECONDS;
+
 			case 3:
+				return HOUR_IN_SECONDS;
+
+			case 4:
 			default:
 				return DAY_IN_SECONDS;
 		}
@@ -95,7 +98,7 @@ class StatusChecker {
 	 * @param integer $seconds      The number of seconds this status check was delayed.
 	 * @param integer $number_tries The number of status check tries.
 	 *
-	 * @internal param string $paymentId
+	 * @return void
 	 */
 	public function check_status( $payment_id = null, $seconds = null, $number_tries = 1 ) {
 		$payment = get_pronamic_payment( $payment_id );
