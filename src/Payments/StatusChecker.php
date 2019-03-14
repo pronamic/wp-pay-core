@@ -33,6 +33,9 @@ class StatusChecker {
 
 		// Deprecated `pronamic_ideal_check_transaction_status` hooks got scheduled to request the payment status.
 		add_action( 'pronamic_ideal_check_transaction_status', array( $this, 'check_transaction_status' ), 10, 3 );
+
+		// Clear scheduled status check once payment reaches a final status.
+		add_action( 'pronamic_payment_status_update', array( $this, 'maybe_clear_scheduled_status_check' ), 10, 1 );
 	}
 
 	/**
@@ -197,6 +200,33 @@ class StatusChecker {
 					'try'        => $next_try,
 				)
 			);
+		}
+	}
+
+	/**
+	 * Maybe clear scheduled status check.
+	 *
+	 * @param Payment $payment Payment to maybe clear scheduled status checks for.
+	 *
+	 * @return void
+	 */
+	public function maybe_clear_scheduled_status_check( $payment ) {
+		$status = $payment->get_status();
+
+		// Bail if payment does not have a final payment status.
+		if ( empty( $status ) || Statuses::OPEN === $status ) {
+			return;
+		}
+
+		// Clear scheduled hooks for all 4 tries.
+		$args = array(
+			'payment_id' => $payment->get_id(),
+		);
+
+		foreach ( range( 1, 4 ) as $try ) {
+			$args['try'] = $try;
+
+			wp_clear_scheduled_hook( 'pronamic_pay_payment_status_check', $args );
 		}
 	}
 }
