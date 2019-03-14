@@ -28,6 +28,10 @@ function pronamic_pay_plugin() {
  * @return Payment|null
  */
 function get_pronamic_payment( $post_id ) {
+	if ( empty( $post_id ) ) {
+		return null;
+	}
+
 	$post_type = get_post_type( $post_id );
 
 	if ( AdminPaymentPostType::POST_TYPE !== $post_type ) {
