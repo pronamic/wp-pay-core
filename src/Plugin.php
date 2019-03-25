@@ -488,6 +488,7 @@ class Plugin {
 
 		// Settings.
 		$this->settings = new Settings( $this );
+		$this->webhook  = new Webhook();
 
 		// Data Stores.
 		$this->payments_data_store      = new Payments\PaymentsDataStoreCPT();
