@@ -347,10 +347,11 @@ class WebhookManager {
 	}
 
 	/**
-	 * Get icon.
+	 * Get icon HTML.
 	 *
-	 * @param array       $type Settings section.
-	 * @param null|string $type Restrict output of icon to a specific icon type.
+	 * @param int|string  $config_id       Gateway configuration ID.
+	 * @param bool        $requires_config Whether or not additional configuration is required for transaction feedback.
+	 * @param null|string $type            Restrict output of icon to a specific icon type.
 	 *
 	 * @return null|string
 	 */
