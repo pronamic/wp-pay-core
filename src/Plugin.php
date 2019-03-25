@@ -148,6 +148,13 @@ class Plugin {
 	public $privacy_manager;
 
 	/**
+	 * Webhook manager.
+	 *
+	 * @var WebhookManager
+	 */
+	public $webhook_manager;
+
+	/**
 	 * Admin module.
 	 *
 	 * @var AdminModule
@@ -488,7 +495,6 @@ class Plugin {
 
 		// Settings.
 		$this->settings = new Settings( $this );
-		$this->webhook  = new Webhook();
 
 		// Data Stores.
 		$this->payments_data_store      = new Payments\PaymentsDataStoreCPT();
@@ -507,6 +513,9 @@ class Plugin {
 
 		// Privacy Manager.
 		$this->privacy_manager = new PrivacyManager();
+
+		// Webhook Manager.
+		$this->webhook_manager = new WebhookManager();
 
 		// Modules.
 		$this->forms_module         = new Forms\FormsModule( $this );

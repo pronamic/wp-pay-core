@@ -1,6 +1,6 @@
 <?php
 /**
- * Webhook
+ * Webhook manager
  *
  * @author    Pronamic <info@pronamic.eu>
  * @copyright 2005-2019 Pronamic
@@ -17,13 +17,13 @@ use Pronamic\WordPress\Pay\Payments\Payment;
 use stdClass;
 
 /**
- * Webhook class
+ * Webhook manager class
  *
  * @author  Reüel van der Steege
  * @version 2.1.6
  * @since   2.1.6
  */
-class Webhook {
+class WebhookManager {
 	/**
 	 * Meta key for webhook log.
 	 *
