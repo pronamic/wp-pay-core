@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use Exception;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Pay\Core\Server;
@@ -147,25 +148,41 @@ class WebhookManager {
 			return;
 		}
 
-		$date = new DateTime( $log->date, new DateTimeZone( 'UTC' ) );
+		try {
+			$date = new DateTime( $log->date, new DateTimeZone( 'UTC' ) );
 
-		if ( isset( $log->payment_id ) ) {
-			$settings_field['html'] = sprintf(
-				/* translators: 1: formatted date, 2: payment edit url, 3: payment id */
-				__(
-					'Last webhook request processed on %1$s for <a href="%2$s" title="Payment %3$s">payment #%3$s</a>.',
-					'pronamic_ideal'
-				),
-				$date->format_i18n( _x( 'l j F Y \a\t H:i', 'full datetime format', 'pronamic_ideal' ) ),
-				get_edit_post_link( $log->payment_id ),
-				$log->payment_id
-			);
-		} else {
-			$settings_field['html'] = sprintf(
-				/* translators: 1: formatted date */
-				__( 'Last webhook request processed on %1$s.', 'pronamic_ideal' ),
-				$date->format_i18n( _x( 'l j F Y \a\t H:i', 'full datetime format', 'pronamic_ideal' ) )
-			);
+			if ( isset( $log->payment_id ) ) {
+				$settings_field['html'] = sprintf(
+					/* translators: 1: formatted date, 2: payment edit url, 3: payment id */
+					__(
+						'Last webhook request processed on %1$s for <a href="%2$s" title="Payment %3$s">payment #%3$s</a>.',
+						'pronamic_ideal'
+					),
+					$date->format_i18n( _x( 'l j F Y \a\t H:i', 'full datetime format', 'pronamic_ideal' ) ),
+					get_edit_post_link( $log->payment_id ),
+					$log->payment_id
+				);
+			} else {
+				$settings_field['html'] = sprintf(
+					/* translators: 1: formatted date */
+					__( 'Last webhook request processed on %1$s.', 'pronamic_ideal' ),
+					$date->format_i18n( _x( 'l j F Y \a\t H:i', 'full datetime format', 'pronamic_ideal' ) )
+				);
+			}
+		} catch ( Exception $e ) {
+			if ( isset( $log->payment_id ) ) {
+				$settings_field['html'] = sprintf(
+					/* translators: 1: payment edit url, 2: payment id */
+					__(
+						'Last webhook request processed for <a href="%1$s" title="Payment %2$s">payment #%2$s</a>.',
+						'pronamic_ideal'
+					),
+					get_edit_post_link( $log->payment_id ),
+					$log->payment_id
+				);
+			} else {
+				$settings_field['html'] = __( 'Webhook request has been processed.', 'pronamic_ideal' );
+			}
 		}
 	}
 
@@ -255,22 +272,41 @@ class WebhookManager {
 			}
 
 			// Replace field HTML with details about last processed webhook request.
-			$date = new DateTime( $log->date, new DateTimeZone( 'UTC' ) );
+			try {
+				$date = new DateTime( $log->date, new DateTimeZone( 'UTC' ) );
 
-			if ( isset( $log->payment_id ) ) {
-				$field['html'] = sprintf(
-					/* translators: 1: formatted date, 2: payment edit url, 3: payment id */
-					__( 'Last webhook request processed on %1$s for <a href="%2$s" title="Payment %3$s">payment #%3$s</a>.', 'pronamic_ideal' ),
-					$date->format_i18n( _x( 'l j F Y \a\t H:i', 'full datetime format', 'pronamic_ideal' ) ),
-					get_edit_post_link( $log->payment_id ),
-					$log->payment_id
-				);
-			} else {
-				$field['html'] = sprintf(
-					/* translators: 1: formatted date */
-					__( 'Last webhook request processed on %1$s.', 'pronamic_ideal' ),
-					$date->format_i18n( _x( 'l j F Y \a\t H:i', 'full datetime format', 'pronamic_ideal' ) )
-				);
+				if ( isset( $log->payment_id ) ) {
+					$field['html'] = sprintf(
+						/* translators: 1: formatted date, 2: payment edit url, 3: payment id */
+						__(
+							'Last webhook request processed on %1$s for <a href="%2$s" title="Payment %3$s">payment #%3$s</a>.',
+							'pronamic_ideal'
+						),
+						$date->format_i18n( _x( 'l j F Y \a\t H:i', 'full datetime format', 'pronamic_ideal' ) ),
+						get_edit_post_link( $log->payment_id ),
+						$log->payment_id
+					);
+				} else {
+					$field['html'] = sprintf(
+						/* translators: 1: formatted date */
+						__( 'Last webhook request processed on %1$s.', 'pronamic_ideal' ),
+						$date->format_i18n( _x( 'l j F Y \a\t H:i', 'full datetime format', 'pronamic_ideal' ) )
+					);
+				}
+			} catch ( Exception $e ) {
+				if ( isset( $log->payment_id ) ) {
+					$field['html'] = sprintf(
+						/* translators: 1: payment edit url, 2: payment id */
+						__(
+							'Last webhook request processed for <a href="%1$s" title="Payment %2$s">payment #%2$s</a>.',
+							'pronamic_ideal'
+						),
+						get_edit_post_link( $log->payment_id ),
+						$log->payment_id
+					);
+				} else {
+					$field['html'] = __( 'Webhook request has been processed.', 'pronamic_ideal' );
+				}
 			}
 
 			// Prefix icon to field title.
