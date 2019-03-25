@@ -84,8 +84,6 @@ class WebhookManager {
 	 * @param Payment $payment Payment.
 	 *
 	 * @return void
-	 *
-	 * @throws \Exception Throws Exception in case of an date error.
 	 */
 	public static function log_payment( Payment $payment ) {
 		$config_id = $payment->get_config_id();
@@ -97,14 +95,9 @@ class WebhookManager {
 			return;
 		}
 
-		// Date.
-		$now = new DateTime();
-
-		$now->setTimezone( new DateTimeZone( 'UTC' ) );
-
 		// Object.
 		$object             = new stdClass();
-		$object->date       = $now->format( DateTime::MYSQL );
+		$object->date       = gmdate( DateTime::MYSQL );
 		$object->payment_id = $payment->get_id();
 		$object->url        = sprintf(
 			'%s://%s%s',
