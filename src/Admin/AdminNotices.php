@@ -106,7 +106,7 @@ class AdminNotices {
 	 *
 	 * @param string $name Name.
 	 */
-	public function add_notice( $name ) {
+	public static function add_notice( $name ) {
 		$notices = get_option( 'pronamic_pay_admin_notices', array() );
 
 		$notices = is_array( $notices ) ? $notices : array();
@@ -121,7 +121,7 @@ class AdminNotices {
 	 *
 	 * @param string $name Name.
 	 */
-	public function remove_notice( $name ) {
+	public static function remove_notice( $name ) {
 		$notices = get_option( 'pronamic_pay_admin_notices', array() );
 
 		$notices = is_array( $notices ) ? $notices : array();
