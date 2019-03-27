@@ -17,7 +17,7 @@ use Pronamic\WordPress\Pay\Plugin;
  * WordPress admin reports
  *
  * @author  Remco Tolsma
- * @version 2.1.0
+ * @version 2.1.6
  * @since   1.0.0
  */
 class AdminReports {

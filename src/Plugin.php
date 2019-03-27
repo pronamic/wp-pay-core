@@ -29,7 +29,7 @@ use WP_Query;
  * Plugin
  *
  * @author  Remco Tolsma
- * @version 2.1.0
+ * @version 2.1.6
  * @since   2.0.1
  */
 class Plugin {
@@ -578,6 +578,8 @@ class Plugin {
 
 	/**
 	 * Register styles.
+	 *
+	 * @since 2.1.6
 	 */
 	public function register_styles() {
 		$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';

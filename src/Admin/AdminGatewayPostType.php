@@ -18,9 +18,9 @@ use WP_Post;
 /**
  * WordPress admin gateway post type
  *
- * @author Remco Tolsma
- * @version 3.8.0
- * @since ?
+ * @author  Remco Tolsma
+ * @version 2.1.6
+ * @since   ?
  */
 class AdminGatewayPostType {
 	/**

@@ -14,13 +14,10 @@ use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Plugin;
 
 /**
- * Title: WordPress payment status checker
- * Description:
- * Copyright: 2005-2019 Pronamic
- * Company: Pronamic
+ * Status Checker
  *
  * @author  Remco Tolsma
- * @version 2.0.5
+ * @version 2.1.6
  * @since   1.0.0
  */
 class StatusChecker {
