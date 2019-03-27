@@ -51,10 +51,10 @@
 		"phpcompatibility/phpcompatibility-wp": "^2.0",
 		"phpmd/phpmd": "^2.4",
 		"phpunit/phpunit": "^4.8",
-		"roots/wordpress": "^5.0",
+		"roots/wordpress": "^5.1",
 		"squizlabs/php_codesniffer": "^2.9",
 		"wp-coding-standards/wpcs": "^1.2",
-		"wp-phpunit/wp-phpunit": "^5.0"
+		"wp-phpunit/wp-phpunit": "^5.1"
 	},
 	"scripts": {
 		"coveralls": "vendor/bin/coveralls -v",
