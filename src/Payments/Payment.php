@@ -483,6 +483,15 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
+	 * Get payment status label.
+	 *
+	 * @return string|false
+	 */
+	public function get_status_label() {
+		return pronamic_pay_plugin()->payments_data_store->get_meta_status_label( $this->status );
+	}
+
+	/**
 	 * Set the payment status.
 	 *
 	 * @param string $status Status.
