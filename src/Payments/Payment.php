@@ -638,6 +638,25 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
+	 * Get edit payment URL.
+	 *
+	 * @link https://docs.woocommerce.com/wc-apidocs/source-class-WC_Order.html#1538-1546
+	 *
+	 * @return string
+	 */
+	public function get_edit_payment_url() {
+		$url = add_query_arg(
+			array(
+				'action' => 'edit',
+				'post'   => $this->get_id(),
+			),
+			admin_url( 'post.php' )
+		);
+
+		return $url;
+	}
+
+	/**
 	 * Get source description.
 	 *
 	 * @return string
