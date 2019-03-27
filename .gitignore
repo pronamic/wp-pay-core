@@ -2,6 +2,7 @@
 /build/
 
 # Composer
+/composer.lock
 /vendor/
 
 # Eclipse
