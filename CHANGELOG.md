@@ -8,7 +8,7 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 -
 
 ## [2.1.6] - 2019-03-28
-- Updated Tippy.js to version 4.2.1.
+- Updated Tippy.js to version 3.4.1.
 - Introduced a `$payment->get_edit_payment_url()` function to easy retrieve the edit payment URL.
 - Introduced a `$payment->get_status_label()` function to retrieve easier a user friendly (translated) status label.
 - Renamed status check event to `pronamic_pay_payment_status_check` without `seconds` argument and with different delays for recurring payments.
