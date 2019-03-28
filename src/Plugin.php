@@ -10,17 +10,17 @@
 
 namespace Pronamic\WordPress\Pay;
 
-use DateTime;
+use Pronamic\WordPress\Pay\Admin\AdminModule;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Core\Recurring;
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
+use Pronamic\WordPress\Pay\Gateways\Common\AbstractIntegration;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentData;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Payments\StatusChecker;
-use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
 use WP_Error;
 use WP_Query;
@@ -29,7 +29,7 @@ use WP_Query;
  * Plugin
  *
  * @author  Remco Tolsma
- * @version 2.1.0
+ * @version 2.1.6
  * @since   2.0.1
  */
 class Plugin {
@@ -148,6 +148,13 @@ class Plugin {
 	public $privacy_manager;
 
 	/**
+	 * Admin module.
+	 *
+	 * @var AdminModule
+	 */
+	public $admin;
+
+	/**
 	 * Forms module.
 	 *
 	 * @var Forms\FormsModule
@@ -178,7 +185,7 @@ class Plugin {
 	/**
 	 * Gateway integrations.
 	 *
-	 * @var array
+	 * @var AbstractIntegration[]
 	 */
 	public $gateway_integrations;
 
@@ -234,9 +241,12 @@ class Plugin {
 		// Plugin locale.
 		add_filter( 'plugin_locale', array( $this, 'plugin_locale' ), 10, 2 );
 
+		// Register styles.
+		add_action( 'wp_loaded', array( $this, 'register_styles' ), 9 );
+
 		// If WordPress is loaded check on returns and maybe redirect requests.
-		add_action( 'wp_loaded', array( $this, 'handle_returns' ) );
-		add_action( 'wp_loaded', array( $this, 'maybe_redirect' ) );
+		add_action( 'wp_loaded', array( $this, 'handle_returns' ), 10 );
+		add_action( 'wp_loaded', array( $this, 'maybe_redirect' ), 10 );
 
 		// Default date time format.
 		add_filter( 'pronamic_datetime_default_format', array( $this, 'datetime_format' ), 10, 1 );
@@ -345,6 +355,10 @@ class Plugin {
 
 		$payment = get_pronamic_payment( $payment_id );
 
+		if ( null === $payment ) {
+			return;
+		}
+
 		// Check if payment key is valid.
 		$valid_key = false;
 
@@ -357,7 +371,7 @@ class Plugin {
 		}
 
 		if ( ! $valid_key ) {
-			wp_redirect( home_url() );
+			wp_safe_redirect( home_url() );
 
 			exit;
 		}
@@ -384,56 +398,59 @@ class Plugin {
 	 * Maybe redirect.
 	 */
 	public function maybe_redirect() {
-		if ( ! filter_has_var( INPUT_GET, 'payment_redirect' ) ) {
+		if ( ! filter_has_var( INPUT_GET, 'payment_redirect' ) || ! filter_has_var( INPUT_GET, 'key' ) ) {
 			return;
 		}
 
+		// Get payment.
 		$payment_id = filter_input( INPUT_GET, 'payment_redirect', FILTER_SANITIZE_NUMBER_INT );
 
 		$payment = get_pronamic_payment( $payment_id );
 
-		// HTML Answer.
-		$html_answer = $payment->get_meta( 'ogone_directlink_html_answer' );
-
-		if ( ! empty( $html_answer ) ) {
-			echo $html_answer; // WPCS: XSS ok.
-
-			exit;
+		if ( null === $payment ) {
+			return;
 		}
 
+		// Validate key.
+		$key = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_STRING );
+
+		if ( $key !== $payment->key || empty( $payment->key ) ) {
+			return;
+		}
+
+		// Don't cache.
+		Core_Util::no_cache();
+
+		// Handle redirect message from payment meta.
 		$redirect_message = $payment->get_meta( 'payment_redirect_message' );
 
 		if ( ! empty( $redirect_message ) ) {
-			$key = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_STRING );
-
-			if ( $key !== $payment->key ) {
-				wp_redirect( home_url() );
-
-				exit;
-			}
-
-			// No cache.
-			Core_Util::no_cache();
-
-			include self::$dirname . '/views/redirect-message.php';
+			require self::$dirname . '/views/redirect-message.php';
 
 			exit;
 		}
 
 		$gateway = self::get_gateway( $payment->config_id );
 
-		if ( $gateway && $gateway->is_html_form() ) {
-			$gateway->start( $payment );
+		if ( $gateway ) {
+			// Give gateway a chance to handle redirect.
+			$gateway->payment_redirect( $payment );
 
-			$error = $gateway->get_error();
+			// Handle HTML form redirect.
+			if ( $gateway->is_html_form() ) {
+				$gateway->start( $payment );
 
-			if ( is_wp_error( $error ) ) {
-				self::render_errors( $error );
-			} else {
-				$gateway->redirect( $payment );
+				$error = $gateway->get_error();
+
+				if ( is_wp_error( $error ) ) {
+					self::render_errors( $error );
+				} else {
+					$gateway->redirect( $payment );
+				}
 			}
 		}
 
+		// Redirect to payment action URL.
 		if ( ! empty( $payment->action_url ) ) {
 			wp_redirect( $payment->action_url );
 
@@ -504,12 +521,13 @@ class Plugin {
 		}
 
 		// Gateway Integrations.
-		$integrations = new GatewayIntegrations( self::$gateways );
+		$gateways     = apply_filters( 'pronamic_pay_gateways', self::$gateways );
+		$integrations = new GatewayIntegrations( $gateways );
 
 		$this->gateway_integrations = $integrations->register_integrations();
 
 		// Maybes.
-		self::maybe_set_active_payment_methods();
+		PaymentMethods::maybe_update_active_payment_methods();
 	}
 
 	/**
@@ -541,7 +559,7 @@ class Plugin {
 	 *
 	 * @param string $format Format.
 	 *
-	 * @return string|void
+	 * @return string
 	 */
 	public function datetime_format( $format ) {
 		$format = _x( 'D j M Y \a\t H:i', 'default datetime format', 'pronamic_ideal' );
@@ -556,6 +574,22 @@ class Plugin {
 	 */
 	public static function get_default_error_message() {
 		return __( 'Something went wrong with the payment. Please try again later or pay another way.', 'pronamic_ideal' );
+	}
+
+	/**
+	 * Register styles.
+	 *
+	 * @since 2.1.6
+	 */
+	public function register_styles() {
+		$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
+		wp_register_style(
+			'pronamic-pay-redirect',
+			plugins_url( 'css/redirect' . $min . '.css', $this->get_file() ),
+			array(),
+			$this->get_version()
+		);
 	}
 
 	/**
@@ -595,21 +629,6 @@ class Plugin {
 	}
 
 	/**
-	 * Maybe set active payment methods option.
-	 *
-	 * @since unreleased
-	 */
-	public static function maybe_set_active_payment_methods() {
-		$active_methods = get_option( 'pronamic_pay_active_payment_methods' );
-
-		if ( is_array( $active_methods ) ) {
-			return;
-		}
-
-		PaymentMethods::update_active_payment_methods();
-	}
-
-	/**
 	 * Render errors.
 	 *
 	 * @param array|WP_Error $errors An array with errors to render.
@@ -629,7 +648,7 @@ class Plugin {
 	 *
 	 * @param string|integer|boolean $config_id A gateway configuration ID.
 	 *
-	 * @return mixed
+	 * @return null|Gateway
 	 */
 	public static function get_gateway( $config_id ) {
 		// Check if config is published.
@@ -646,16 +665,6 @@ class Plugin {
 
 		// Adjust config for specific gateways.
 		switch ( $gateway_id ) {
-			case 'abnamro-ideal-easy':
-			case 'abnamro-ideal-only-kassa':
-			case 'abnamro-internetkassa':
-				$config->form_action_url = sprintf(
-					'https://internetkassa.abnamro.nl/ncol/%s/orderstandard%s.asp',
-					Gateway::MODE_TEST === $mode ? 'test' : 'prod',
-					$is_utf8 ? '_utf8' : ''
-				);
-
-				break;
 			case 'abnamro-ideal-zelfbouw-v3':
 				$config->payment_server_url = 'https://abnamro.ideal-payment.de/ideal/iDEALv3';
 

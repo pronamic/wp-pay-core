@@ -12,6 +12,7 @@ namespace Pronamic\WordPress\Pay\Admin;
 
 use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Core\Util;
+use Pronamic\WordPress\Pay\Forms\FormPostType;
 use Pronamic\WordPress\Pay\Plugin;
 
 /**
@@ -95,6 +96,8 @@ class AdminModule {
 		add_action( 'load-post.php', array( $this, 'maybe_test_payment' ) );
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+
+		add_filter( 'parent_file', array( $this, 'admin_menu_parent_file' ) );
 
 		add_filter( 'pronamic_pay_gateway_settings', array( $this, 'gateway_settings' ) );
 
@@ -416,7 +419,7 @@ class AdminModule {
 			admin_url( 'admin.php' )
 		);
 
-		wp_redirect( $url );
+		wp_safe_redirect( $url );
 
 		exit;
 	}
@@ -454,7 +457,7 @@ class AdminModule {
 				'tippy.js',
 				plugins_url( 'assets/tippy.js/tippy.all' . $min . '.js', $this->plugin->get_file() ),
 				array(),
-				'3.3.0',
+				'3.4.1',
 				true
 			);
 
@@ -520,6 +523,27 @@ class AdminModule {
 				$gateway->redirect( $payment );
 			}
 		}
+	}
+
+	/**
+	 * Admin menu parent file.
+	 *
+	 * @param string $parent_file Parent file for admin menu.
+	 *
+	 * @return string
+	 */
+	public function admin_menu_parent_file( $parent_file ) {
+		$screen = get_current_screen();
+
+		switch ( $screen->id ) {
+			case FormPostType::POST_TYPE:
+			case AdminGatewayPostType::POST_TYPE:
+			case AdminPaymentPostType::POST_TYPE:
+			case AdminSubscriptionPostType::POST_TYPE:
+				return 'pronamic_ideal';
+		}
+
+		return $parent_file;
 	}
 
 	/**
@@ -651,6 +675,8 @@ class AdminModule {
 	 * Gateway settings.
 	 *
 	 * @param array $classes Classes.
+	 *
+	 * @return array
 	 */
 	public function gateway_settings( $classes ) {
 		foreach ( $this->plugin->gateway_integrations as $integration ) {

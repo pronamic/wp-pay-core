@@ -39,28 +39,28 @@
 	},
 	"require": {
 		"php": "^5.3",
+		"composer/installers": "^1.6",
 		"pronamic/wp-datetime": "^1.0",
 		"pronamic/wp-money": "^1.2",
-		"viison/address-splitter": "^0.3.2",
-		"composer/installers": "^1.6"
+		"viison/address-splitter": "^0.3.2"
 	},
 	"require-dev": {
-		"dealerdirect/phpcodesniffer-composer-installer": "^0.5.0",
-		"php-coveralls/php-coveralls": "^1.0",
+		"dealerdirect/phpcodesniffer-composer-installer": "^0.5",
+		"php-coveralls/php-coveralls": "^1.1",
+		"phpcompatibility/php-compatibility": "^9.1",
 		"phpcompatibility/phpcompatibility-wp": "^2.0",
 		"phpmd/phpmd": "^2.4",
-		"phpunit/phpunit": "^4.5",
-		"roots/wordpress": "^5.0",
+		"phpunit/phpunit": "^4.8",
+		"roots/wordpress": "^5.1",
 		"squizlabs/php_codesniffer": "^2.9",
-		"wimg/php-compatibility": "^9.0",
 		"wp-coding-standards/wpcs": "^1.2",
-		"wp-phpunit/wp-phpunit": "^5.0"
+		"wp-phpunit/wp-phpunit": "^5.1"
 	},
 	"scripts": {
 		"coveralls": "vendor/bin/coveralls -v",
-		"phpcbf":"vendor/bin/phpcbf", 
+		"phpcbf": "vendor/bin/phpcbf",
 		"phpcs": "vendor/bin/phpcs -s -v",
-		"phplint": "ls src/**/*.php tests/**/*.php | xargs -n 1 -P 4 php -l",
+		"phplint": "find src tests -name '*.php' | xargs -n 1 -P 4 php -l",
 		"phpmd": "vendor/bin/phpmd src,tests text phpmd.ruleset.xml --suffixes php",
 		"phpunit": "vendor/bin/phpunit"
 	}

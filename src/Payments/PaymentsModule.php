@@ -19,7 +19,7 @@ use Pronamic\WordPress\Pay\Core\Statuses;
  * @link    https://woocommerce.com/2017/04/woocommerce-3-0-release/
  * @link    https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
  * @author  Remco Tolsma
- * @version 2.0.4
+ * @version 2.1.6
  * @since   2.0.1
  */
 class PaymentsModule {
@@ -36,6 +36,13 @@ class PaymentsModule {
 	 * @var PaymentsPrivacy
 	 */
 	public $privacy;
+
+	/**
+	 * Status checker.
+	 *
+	 * @var StatusChecker
+	 */
+	public $status_checker;
 
 	/**
 	 * Construct and initialize a payments module object.
@@ -58,10 +65,7 @@ class PaymentsModule {
 		add_action( 'pronamic_payment_status_update', array( $this, 'log_payment_status_update' ), 10, 4 );
 
 		// Payment Status Checker.
-		$status_checker = new StatusChecker();
-
-		// The 'pronamic_ideal_check_transaction_status' hook is scheduled to request the payment status.
-		add_action( 'pronamic_ideal_check_transaction_status', array( $status_checker, 'check_status' ), 10, 3 );
+		$this->status_checker = new StatusChecker();
 	}
 
 	/**

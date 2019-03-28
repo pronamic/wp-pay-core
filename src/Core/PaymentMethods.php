@@ -398,7 +398,7 @@ class PaymentMethods {
 	 *
 	 * @return void
 	 */
-	private static function maybe_update_active_payment_methods() {
+	public static function maybe_update_active_payment_methods() {
 		$payment_methods = get_option( 'pronamic_pay_active_payment_methods' );
 
 		// Update active payment methods option if necessary.

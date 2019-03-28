@@ -7,6 +7,26 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.1.6] - 2019-03-28
+- Updated Tippy.js to version 3.4.1.
+- Introduced a `$payment->get_edit_payment_url()` function to easy retrieve the edit payment URL.
+- Introduced a `$payment->get_status_label()` function to retrieve easier a user friendly (translated) status label.
+- Renamed status check event to `pronamic_pay_payment_status_check` without `seconds` argument and with different delays for recurring payments.
+- Added space between HTML attributes when converting from array.
+- Allow transaction ID to be null.
+- Retrieving payments will now check on payment post type.
+- Introduced Country, HouseNumber and Region classes.
+- Simplify payment redirect (Ogone DirectLink answer moved to gateway).
+- Added `key` query argument to pay redirect URL.
+- Link recurring icon to subscription post edit.
+- Add support for payment redirect with custom views.
+- Register style `pronamic-pay-redirect` in plugin.
+- Removed ABN AMRO iDEAL Easy, iDEAL Only Kassa and Internetkassa gateways.
+- Keep main admin menu item active when editing payments/subscriptions/gateways/forms.
+- Added `pronamic_pay_gateways` filter.
+- Show Adyen and EMS gateway IDs in custom column.
+- Fixed empty admin reports.
+
 ## [2.1.5] - 2019-02-04
 - Fixed fatal error PaymentInfo expecting taxed money.
 - Improved responsive admin tables for payments and subscriptions.
@@ -157,7 +177,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.1.5...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.1.6...HEAD
+[2.1.6]: https://github.com/wp-pay/core/compare/2.1.5...2.1.6
 [2.1.5]: https://github.com/wp-pay/core/compare/2.1.4...2.1.5
 [2.1.4]: https://github.com/wp-pay/core/compare/2.1.3...2.1.4
 [2.1.3]: https://github.com/wp-pay/core/compare/2.1.2...2.1.3

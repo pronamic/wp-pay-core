@@ -28,7 +28,7 @@ use WP_Post;
  * Payment
  *
  * @author  Remco Tolsma
- * @version 2.1.0
+ * @version 2.1.6
  * @since   1.0.0
  */
 class Payment extends LegacyPayment {
@@ -110,7 +110,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * The transaction ID of this payment.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $transaction_id;
 
@@ -457,7 +457,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Set the transaction ID.
 	 *
-	 * @param string $transaction_id Transaction ID.
+	 * @param string|null $transaction_id Transaction ID.
 	 */
 	public function set_transaction_id( $transaction_id ) {
 		$this->transaction_id = $transaction_id;
@@ -466,7 +466,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Get the payment transaction ID.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_transaction_id() {
 		return $this->transaction_id;
@@ -480,6 +480,15 @@ class Payment extends LegacyPayment {
 	 */
 	public function get_status() {
 		return $this->status;
+	}
+
+	/**
+	 * Get payment status label.
+	 *
+	 * @return string|false
+	 */
+	public function get_status_label() {
+		return pronamic_pay_plugin()->payments_data_store->get_meta_status_label( $this->status );
 	}
 
 	/**
@@ -551,7 +560,15 @@ class Payment extends LegacyPayment {
 	 * @return string
 	 */
 	public function get_pay_redirect_url() {
-		return add_query_arg( 'payment_redirect', $this->id, home_url( '/' ) );
+		$url = add_query_arg(
+			array(
+				'payment_redirect' => $this->id,
+				'key'              => $this->key,
+			),
+			home_url( '/' )
+		);
+
+		return $url;
 	}
 
 	/**
@@ -616,6 +633,25 @@ class Payment extends LegacyPayment {
 
 		$url = apply_filters( 'pronamic_payment_redirect_url', $url, $this );
 		$url = apply_filters( 'pronamic_payment_redirect_url_' . $this->source, $url, $this );
+
+		return $url;
+	}
+
+	/**
+	 * Get edit payment URL.
+	 *
+	 * @link https://docs.woocommerce.com/wc-apidocs/source-class-WC_Order.html#1538-1546
+	 *
+	 * @return string
+	 */
+	public function get_edit_payment_url() {
+		$url = add_query_arg(
+			array(
+				'action' => 'edit',
+				'post'   => $this->get_id(),
+			),
+			admin_url( 'post.php' )
+		);
 
 		return $url;
 	}

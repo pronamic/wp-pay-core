@@ -18,9 +18,9 @@ use WP_Post;
 /**
  * WordPress admin gateway post type
  *
- * @author Remco Tolsma
- * @version 3.8.0
- * @since ?
+ * @author  Remco Tolsma
+ * @version 2.1.6
+ * @since   ?
  */
 class AdminGatewayPostType {
 	/**
@@ -108,6 +108,8 @@ class AdminGatewayPostType {
 			case 'pronamic_gateway_id':
 				$data = array_filter(
 					array(
+						get_post_meta( $post_id, '_pronamic_gateway_adyen_merchant_account', true ),
+						get_post_meta( $post_id, '_pronamic_gateway_ems_ecommerce_storename', true ),
 						get_post_meta( $post_id, '_pronamic_gateway_ideal_merchant_id', true ),
 						get_post_meta( $post_id, '_pronamic_gateway_omnikassa_merchant_id', true ),
 						get_post_meta( $post_id, '_pronamic_gateway_buckaroo_website_key', true ),
@@ -172,6 +174,8 @@ class AdminGatewayPostType {
 	 *
 	 * @param array    $post_states Post states.
 	 * @param \WP_Post $post        Post.
+	 *
+	 * @return array
 	 */
 	public function display_post_states( $post_states, $post ) {
 		if ( self::POST_TYPE !== get_post_type( $post ) ) {
@@ -250,6 +254,8 @@ class AdminGatewayPostType {
 	 * When the post is saved, saves our custom data.
 	 *
 	 * @param int $post_id The ID of the post being saved.
+	 *
+	 * @return int
 	 */
 	public function save_post( $post_id ) {
 		// Nonce.

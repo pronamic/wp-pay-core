@@ -310,6 +310,17 @@ abstract class Gateway {
 	}
 
 	/**
+	 * Custom payment redirect.
+	 * Intended to be overridden by gateway.
+	 *
+	 * @param Payment $payment Payment.
+	 *
+	 * @return void
+	 */
+	public function payment_redirect( Payment $payment ) {
+	}
+
+	/**
 	 * Get supported payment providers for gateway.
 	 * Intended to be overridden by gateway.
 	 *

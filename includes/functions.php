@@ -8,6 +8,7 @@
  * @package   Pronamic\WordPress\Pay
  */
 
+use Pronamic\WordPress\Pay\Admin\AdminPaymentPostType;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 
@@ -24,9 +25,19 @@ function pronamic_pay_plugin() {
  * Get payment by specified post ID.
  *
  * @param int|string $post_id A payment post ID.
- * @return Payment
+ * @return Payment|null
  */
 function get_pronamic_payment( $post_id ) {
+	if ( empty( $post_id ) ) {
+		return null;
+	}
+
+	$post_type = get_post_type( $post_id );
+
+	if ( AdminPaymentPostType::POST_TYPE !== $post_type ) {
+		return null;
+	}
+
 	$payment = new Payment( $post_id );
 
 	return $payment;
@@ -41,8 +52,6 @@ function get_pronamic_payment( $post_id ) {
  */
 function get_pronamic_payment_by_meta( $meta_key, $meta_value ) {
 	global $wpdb;
-
-	$payment = null;
 
 	$db_query = $wpdb->prepare(
 		"
@@ -62,13 +71,7 @@ function get_pronamic_payment_by_meta( $meta_key, $meta_value ) {
 
 	$post_id = $wpdb->get_var( $db_query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
 
-	if ( $post_id ) {
-		$payment = new Payment( $post_id );
-
-		if ( null === $payment->post ) {
-			$payment = null;
-		}
-	}
+	$payment = get_pronamic_payment( $post_id );
 
 	return $payment;
 }
@@ -239,9 +242,7 @@ function get_pronamic_subscriptions_by_meta( $meta_key, $meta_value ) {
 function bind_providers_and_gateways() {
 	global $pronamic_pay_providers;
 
-	global $pronamic_ideal;
-
-	foreach ( $pronamic_ideal->gateway_integrations as $integration ) {
+	foreach ( pronamic_pay_plugin()->gateway_integrations as $integration ) {
 		if ( isset( $pronamic_pay_providers[ $integration->provider ] ) ) {
 			$provider =& $pronamic_pay_providers[ $integration->provider ];
 
@@ -252,6 +253,14 @@ function bind_providers_and_gateways() {
 			$provider['integrations'][] = $integration;
 		}
 	}
+
+	// Sort by provider name.
+	usort(
+		$pronamic_pay_providers,
+		function( $a, $b ) {
+			return strcmp( $a['name'], $b['name'] );
+		}
+	);
 }
 
 /**

@@ -101,6 +101,15 @@ abstract class AbstractIntegration implements IntegrationInterface {
 	}
 
 	/**
+	 * Get provider.
+	 *
+	 * @return string
+	 */
+	public function get_provider() {
+		return $this->provider;
+	}
+
+	/**
 	 * Get required settings for this integration.
 	 *
 	 * @link https://github.com/wp-premium/gravityforms/blob/1.9.16/includes/fields/class-gf-field-multiselect.php#L21-L42
@@ -144,5 +153,14 @@ abstract class AbstractIntegration implements IntegrationInterface {
 		}
 
 		return $url;
+	}
+
+	/**
+	 * Get provider URL.
+	 *
+	 * @return string|false
+	 */
+	public function get_url() {
+		return $this->url;
 	}
 }

@@ -10,13 +10,14 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
+use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
 
 /**
  * WordPress admin reports
  *
  * @author  Remco Tolsma
- * @version 2.1.0
+ * @version 2.1.6
  * @since   1.0.0
  */
 class AdminReports {
@@ -311,23 +312,19 @@ class AdminReports {
 		$date_format = '%Y-%m';
 
 		// @codingStandardsIgnoreStart
-		$query = $wpdb->prepare( "
+		$query = $wpdb->prepare(
+			"
 				SELECT
 					DATE_FORMAT( post.post_date, %s ) AS month,
-					$function( meta_amount.meta_value ) AS value
+			  		post.ID
 				FROM
 					$wpdb->posts AS post
-						LEFT JOIN
-					$wpdb->postmeta AS meta_amount
-							ON post.ID = meta_amount.post_id AND meta_amount.meta_key = '_pronamic_payment_amount'
 				WHERE
 					post.post_type = 'pronamic_payment'
 						AND
 					post.post_date BETWEEN %s AND %s
 						AND
 					post.post_status = %s
-				GROUP BY
-					YEAR( post.post_date ), MONTH( post.post_date )
 				ORDER BY
 					post_date
 				;
@@ -339,7 +336,29 @@ class AdminReports {
 		);
 		// @codingStandardsIgnoreEnd
 
-		$data = $wpdb->get_results( $query, OBJECT_K ); // WPCS: unprepared SQL ok, db call ok, cache ok.
+		$results = $wpdb->get_results( $query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
+
+		$months = wp_list_pluck( $results, 'month' );
+
+		switch ( $function ) {
+			case 'COUNT':
+				$data = array_count_values( $months );
+
+				break;
+			case 'SUM':
+				$data = array_fill_keys(
+					$months,
+					0
+				);
+
+				foreach ( $results as $post ) {
+					$payment = new Payment( $post->ID );
+
+					$data[ $post->month ] += $payment->get_total_amount()->get_value();
+				}
+
+				break;
+		}
 
 		$report = array();
 
@@ -347,8 +366,9 @@ class AdminReports {
 			$key = $date->format( 'Y-m' );
 
 			$value = 0;
+
 			if ( isset( $data[ $key ] ) ) {
-				$value = (float) $data[ $key ]->value;
+				$value = (float) $data[ $key ];
 			}
 
 			$report[] = array(
