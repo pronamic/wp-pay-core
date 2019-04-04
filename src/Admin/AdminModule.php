@@ -162,28 +162,19 @@ class AdminModule {
 		}
 
 		/**
-		 * Update the `pronamic_pay_admin_redirect` transient value to `false`.
-		 * If this fails we will bail out so users will not get stuck in a 
-		 * redirect loop.
-		 *
-		 * @link https://developer.wordpress.org/reference/functions/set_transient/
-		 */
-		$result = set_transient( 'pronamic_pay_admin_redirect', false );
-
-		if ( false === $result ) {
-			return;
-		}
-
-		/**
 		 * Delete the `pronamic_pay_admin_redirect` transient.
-		 * If this fails we will bail out so users will not get stuck in a 
-		 * redirect loop.
+		 *
+		 * If we don't get the `true` confirmation we will bail out
+		 * so users will not get stuck in a redirect loop.
+		 *
+		 * We have had issues with this with caching plugins like
+		 * W3 Total Cache and on Savvii hosting environments.
 		 *
 		 * @link https://developer.wordpress.org/reference/functions/delete_transient/
 		 */
 		$result = delete_transient( 'pronamic_pay_admin_redirect' );
 
-		if ( false === $result ) {
+		if ( true !== $result ) {
 			return;
 		}
 
