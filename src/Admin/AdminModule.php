@@ -146,7 +146,7 @@ class AdminModule {
 
 		// Check.
 		if (
-			false === $redirect
+			empty( $redirect )
 				||
 			wp_doing_ajax()
 				||
@@ -161,13 +161,35 @@ class AdminModule {
 			return;
 		}
 
-		// Update.
-		set_transient( 'pronamic_pay_admin_redirect', false );
+		/**
+		 * Update the `pronamic_pay_admin_redirect` transient value to `false`.
+		 * If this fails we will bail out so users will not get stuck in a 
+		 * redirect loop.
+		 *
+		 * @link https://developer.wordpress.org/reference/functions/set_transient/
+		 */
+		$result = set_transient( 'pronamic_pay_admin_redirect', false );
 
-		// Delete.
-		delete_transient( 'pronamic_pay_admin_redirect' );
+		if ( false === $result ) {
+			return;
+		}
 
-		// Redirect.
+		/**
+		 * Delete the `pronamic_pay_admin_redirect` transient.
+		 * If this fails we will bail out so users will not get stuck in a 
+		 * redirect loop.
+		 *
+		 * @link https://developer.wordpress.org/reference/functions/delete_transient/
+		 */
+		$result = delete_transient( 'pronamic_pay_admin_redirect' );
+
+		if ( false === $result ) {
+			return;
+		}
+
+		/**
+		 * Redirect.
+		 */
 		wp_safe_redirect( $redirect );
 
 		exit;
