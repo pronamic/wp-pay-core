@@ -13,6 +13,7 @@ namespace Pronamic\WordPress\Pay;
 use Exception;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
+use Pronamic\WordPress\Pay\Admin\AdminNotices;
 use Pronamic\WordPress\Pay\Core\Server;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use stdClass;
@@ -32,6 +33,13 @@ class WebhookManager {
 	 * @var string
 	 */
 	const LOG_META_KEY = '_pronamic_gateway_webhook_log';
+
+	/**
+	 * Transient option name for outdated webhook URLs.
+	 *
+	 * @var string
+	 */
+	const OUTDATED_WEBHOOK_URLS_OPTION = 'pronamic_outdated_webhook_urls';
 
 	/**
 	 * Icon 'OK' class.
@@ -54,6 +62,9 @@ class WebhookManager {
 		// Filter gateway settings.
 		add_filter( 'pronamic_pay_gateway_sections', array( $this, 'settings_section_feedback_icon' ), PHP_INT_MAX );
 		add_filter( 'pronamic_pay_gateway_fields', array( $this, 'settings_field_feedback_icon' ), PHP_INT_MAX );
+
+		// Admin notices.
+		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 	}
 
 	/**
@@ -110,6 +121,9 @@ class WebhookManager {
 
 		// Update webhook log.
 		update_post_meta( $config_id, self::LOG_META_KEY, wp_json_encode( $object ) );
+
+		// Delete outdated webhook URLs transient.
+		delete_transient( self::OUTDATED_WEBHOOK_URLS_OPTION );
 	}
 
 	/**
@@ -418,5 +432,64 @@ class WebhookManager {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Admin notices.
+	 */
+	public function admin_notices() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		$outdated_urls = get_transient( self::OUTDATED_WEBHOOK_URLS_OPTION );
+
+		if ( false === $outdated_urls ) {
+			$outdated_urls = array();
+
+			// Get gateways for which a webhook log exists.
+			$query = new WP_Query(
+				array(
+					'post_type'  => 'pronamic_gateway',
+					'orderby'    => 'post_title',
+					'order'      => 'ASC',
+					'fields'     => 'ids',
+					'nopaging'   => true,
+					'meta_query' => array(
+						array(
+							'key' => '_pronamic_gateway_webhook_log',
+						),
+					),
+				)
+			);
+
+			// Loop gateways.
+			foreach ( $query->posts as $config_id ) {
+				$log = self::get_log( $config_id );
+
+				if ( self::valid_log_url( $log ) ) {
+					continue;
+				}
+
+				$gateway = Plugin::get_gateway( $config_id );
+
+				// Check if manual configuration is needed for webhook.
+				if ( $gateway && ! $gateway->supports( 'webhook_manual_config' ) ) {
+					continue;
+				}
+
+				$outdated_urls[] = $config_id;
+			}
+
+			if ( empty( $outdated_urls ) ) {
+				$outdated_urls = true;
+			}
+
+			set_transient( self::OUTDATED_WEBHOOK_URLS_OPTION, $outdated_urls, HOUR_IN_SECONDS );
+		}
+
+		if ( ! empty( $outdated_urls ) ) {
+			AdminNotices::add_notice( 'update_webhook_url' );
+		}
 	}
 }
