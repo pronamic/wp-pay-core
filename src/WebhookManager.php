@@ -16,6 +16,7 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Pay\Core\Server;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use stdClass;
+use WP_Query;
 
 /**
  * Webhook manager class
@@ -112,41 +113,74 @@ class WebhookManager {
 	}
 
 	/**
-	 * Callback for log settings field.
+	 * Get config ID for settings section or field.
 	 *
-	 * @param array $settings_field Settings field.
+	 * @param array $setting Settings section or field.
 	 *
-	 * @return void
-	 *
-	 * @throws \Exception Throws Exception in case of an date error.
+	 * @return int|null
 	 */
-	public static function settings_status( array $settings_field ) {
+	private static function get_setting_config_id( $setting ) {
 		$config_id = get_the_ID();
 
 		// Check gateway method with gateway being edited.
-		if ( isset( $settings_field['methods'] ) ) {
+		if ( isset( $setting['methods'] ) ) {
 			$gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 
-			if ( ! in_array( $gateway_id, $settings_field['methods'], true ) ) {
-				$config_id = null;
+			$gateway_ids = array(
+				str_replace( '-', '_', $gateway_id ),
+				str_replace( '_', '-', $gateway_id ),
+			);
+
+			$intersect = array_intersect( $gateway_ids, $setting['methods'] );
+
+			if ( empty( $intersect ) ) {
+				return null;
 			}
 		}
 
-		// Add space between field HTML content and webhook status notice.
-		if ( ! empty( $settings_field['html'] ) ) {
-			echo ' ';
+		return $config_id;
+	}
+
+	/**
+	 * Check if manual webhook configuration is needed for the gateway.
+	 *
+	 * @param array $features Supported gateway features.
+	 *
+	 * @return bool
+	 */
+	private static function is_manual_config_required( $features ) {
+		if ( is_array( $features ) ) {
+			return in_array( 'webhook_manual_config', $features, true );
 		}
 
+		return false;
+	}
+
+	/**
+	 * Callback for log settings field.
+	 *
+	 * @param array $field    Settings field.
+	 * @param array $features Supported gateway features.
+	 *
+	 * @return void
+	 */
+	public static function settings_status( array $field, $features = array() ) {
 		// Get log.
+		$config_id = self::get_setting_config_id( $field );
+
 		$log = self::get_log( $config_id );
 
 		if ( null === $log ) {
-			if ( null !== $config_id ) {
-				esc_html_e( 'No webhook request processed yet.', 'pronamic_ideal' );
-			}
+			esc_html_e( 'No webhook request processed yet.', 'pronamic_ideal' );
 
 			return;
 		}
+
+		// Prefix icon to field HTML.
+		printf(
+			'%s ',
+			self::get_field_feedback_icon_html( $field, $features ) // WPCS: xss ok.
+		);
 
 		try {
 			$date = new DateTime( $log->date, new DateTimeZone( 'UTC' ) );
@@ -187,45 +221,33 @@ class WebhookManager {
 	}
 
 	/**
-	 * Add icons to 'Transaction feedback' settings sections titles.
+	 * Add icons to transaction feedback settings sections titles.
 	 *
 	 * @param array $sections Settings sections.
 	 *
 	 * @return array
 	 */
 	public function settings_section_feedback_icon( array $sections ) {
-		$gateway_id = get_post_meta( get_the_ID(), '_pronamic_gateway_id', true );
-
-		$feedback_title = __( 'Transaction feedback', 'pronamic_ideal' );
-
-		foreach ( $sections as &$section ) {
+		foreach ( $sections as $id => &$section ) {
 			// Check section title.
-			if ( ! isset( $section['title'] ) || $section['title'] !== $feedback_title ) {
+			if ( '_feedback' !== substr( $id, -9 ) ) {
 				continue;
 			}
 
-			// Check section methods.
-			$config_id = get_the_ID();
-
-			if ( isset( $section['methods'] ) && ! in_array( $gateway_id, $section['methods'], true ) ) {
-				$config_id = null;
-			}
-
-			// Additional configuration required?
-			$requires_config = false;
-
-			if ( isset( $section['requires_config'] ) && $section['requires_config'] ) {
-				$requires_config = true;
-			}
-
 			// Prefix icon to section title.
-			$icon = self::get_section_feedback_icon_html( $config_id, $requires_config );
+			$features = array();
 
-			$section['title'] = sprintf(
-				'%s %s',
-				$icon,
-				$section['title']
-			);
+			if ( isset( $section['features'] ) ) {
+				$features = $section['features'];
+			}
+
+			$icon = self::get_section_feedback_icon_html( $section, $features );
+
+			if ( empty( $icon ) ) {
+				continue;
+			}
+
+			$section['title'] = $icon . ' ' . $section['title'];
 		}
 
 		return $sections;
@@ -240,8 +262,6 @@ class WebhookManager {
 	 * @return array
 	 */
 	public function settings_field_feedback_icon( array $fields ) {
-		$gateway_id = get_post_meta( get_the_ID(), '_pronamic_gateway_id', true );
-
 		$feedback_title = __( 'Transaction feedback', 'pronamic_ideal' );
 
 		foreach ( $fields as &$field ) {
@@ -250,25 +270,14 @@ class WebhookManager {
 				continue;
 			}
 
-			// Check field methods.
-			$config_id = get_the_ID();
-
-			if ( isset( $field['methods'] ) && ! in_array( $gateway_id, $field['methods'], true ) ) {
-				$config_id = null;
-			}
+			// Get config ID for settings field.
+			$config_id = self::get_setting_config_id( $field );
 
 			// Get log.
 			$log = self::get_log( $config_id );
 
 			if ( null === $log ) {
 				continue;
-			}
-
-			// Additional configuration required?
-			$requires_config = false;
-
-			if ( isset( $field['requires_config'] ) && $field['requires_config'] ) {
-				$requires_config = true;
 			}
 
 			// Replace field HTML with details about last processed webhook request.
@@ -309,14 +318,16 @@ class WebhookManager {
 				}
 			}
 
-			// Prefix icon to field title.
-			$icon = self::get_field_feedback_icon_html( $config_id, $requires_config );
+			// Prefix icon to field HTML.
+			$features = isset( $field['features'] ) ? $field['features'] : array();
 
-			$field['html'] = sprintf(
-				'%s %s',
-				$icon,
-				$field['html']
-			);
+			$icon = self::get_field_feedback_icon_html( $field, $features );
+
+			if ( empty( $icon ) ) {
+				continue;
+			}
+
+			$field['html'] = $icon . ' ' . $field['html'];
 		}
 
 		return $fields;
@@ -325,40 +336,42 @@ class WebhookManager {
 	/**
 	 * Get settings section title icon.
 	 *
-	 * @param int|string $config_id       Configuration ID.
-	 * @param bool       $requires_config Whether or not transaction feedback requires additional configuration.
+	 * @param array $section  Settings section.
+	 * @param array $features Supported gateway features.
 	 *
 	 * @return null|string
 	 */
-	public static function get_section_feedback_icon_html( $config_id, $requires_config ) {
-		return self::get_icon_html( $config_id, $requires_config, self::ICON_CLASS_WARNING );
+	public static function get_section_feedback_icon_html( $section, $features ) {
+		return self::get_icon_html( $section, $features, self::ICON_CLASS_WARNING );
 	}
 
 	/**
 	 * Get settings field icon.
 	 *
-	 * @param int|string $config_id       Configuration ID.
-	 * @param bool       $requires_config Whether or not transaction feedback requires additional configuration.
+	 * @param array $field    Settings field.
+	 * @param array $features Supported gateway features.
 	 *
 	 * @return null|string
 	 */
-	public static function get_field_feedback_icon_html( $config_id, $requires_config ) {
-		return self::get_icon_html( $config_id, $requires_config, self::ICON_CLASS_OK );
+	public static function get_field_feedback_icon_html( $field, $features ) {
+		return self::get_icon_html( $field, $features, self::ICON_CLASS_OK );
 	}
 
 	/**
 	 * Get icon HTML.
 	 *
-	 * @param int|string  $config_id       Gateway configuration ID.
-	 * @param bool        $requires_config Whether or not additional configuration is required for transaction feedback.
-	 * @param null|string $type            Restrict output of icon to a specific icon type.
+	 * @param array       $setting  Settings section or field.
+	 * @param array       $features Supported gateway features.
+	 * @param null|string $type     Restrict output of icon to a specific icon type.
 	 *
 	 * @return null|string
 	 */
-	public static function get_icon_html( $config_id, $requires_config, $type = null ) {
+	public static function get_icon_html( $setting, $features, $type = null ) {
 		$icon = self::ICON_CLASS_OK;
 
-		if ( $requires_config ) {
+		if ( self::is_manual_config_required( $features ) ) {
+			$config_id = self::get_setting_config_id( $setting );
+
 			$log = self::get_log( $config_id );
 
 			if ( null === $log || ! self::valid_log_url( $log ) ) {
@@ -397,9 +410,8 @@ class WebhookManager {
 			return false;
 		}
 
-		$scheme = is_ssl() ? 'https' : 'http';
-
-		$site_url = home_url( '/', $scheme );
+		// Check if current home URL is the same as in the logged URL.
+		$site_url = home_url( '/' );
 
 		if ( substr( $log->url, 0, strlen( $site_url ) ) !== $site_url ) {
 			return false;
