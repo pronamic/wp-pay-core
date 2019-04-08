@@ -395,6 +395,9 @@ class Plugin {
 		// Check if the request is an notify request.
 		// Sisow gatway will extend callback requests with querystring "notify=true".
 		if ( filter_has_var( INPUT_GET, 'notify' ) && filter_input( INPUT_GET, 'notify', FILTER_VALIDATE_BOOLEAN ) ) {
+			// Log webhook request.
+			WebhookManager::log_payment( $payment );
+
 			$should_redirect = false;
 		}
 
