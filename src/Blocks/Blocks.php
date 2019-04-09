@@ -1,6 +1,6 @@
 <?php
 /**
- * Gutenberg blocks.
+ * Editor Blocks.
  *
  * @author    Pronamic <info@pronamic.eu>
  * @copyright 2005-2018 Pronamic
@@ -11,15 +11,13 @@
 namespace Pronamic\WordPress\Pay\Blocks;
 
 use Pronamic\WordPress\Pay\Plugin;
-use WP_REST_Request;
-use WP_REST_Server;
 
 /**
  * Blocks
  *
  * @author  Reüel van der Steege
- * @since   x.x.x
- * @version x.x.x
+ * @since   2.1.7
+ * @version 2.1.7
  */
 class Blocks {
 	/**
@@ -27,7 +25,7 @@ class Blocks {
 	 *
 	 * @var Block[]
 	 */
-	private static $blocks;
+	private $blocks;
 
 	/**
 	 * Blocks constructor.
@@ -35,11 +33,16 @@ class Blocks {
 	 * @param Plugin $plugin Plugin.
 	 */
 	public function __construct( Plugin $plugin ) {
-		add_action( 'rest_api_init', array( $this, 'register_preview_route' ) );
-
 		// Register blocks.
-		self::register( new PaymentButtonBlock() );
-		self::register( new DonationBlock() );
+		add_action( 'init', array( $this, 'register_blocks' ) );
+	}
+
+	/**
+	 * Register blocks.
+	 */
+	public function register_blocks() {
+		// Register blocks.
+		$this->register( new FixedPricePaymentButtonBlock() );
 	}
 
 	/**
@@ -47,17 +50,15 @@ class Blocks {
 	 *
 	 * @param Block $block Gutenberg block.
 	 */
-	public static function register( Block $block ) {
+	public function register( Block $block ) {
 		$type = $block->get_type();
 
 		// Check if a block with this type is already registered.
-		if ( isset( self::$blocks[ $type ] ) ) {
-			return;
+		if ( ! $this->get( $type ) ) {
+			$this->blocks[] = $block;
+
+			$block->init();
 		}
-
-		self::$blocks[] = $block;
-
-		call_user_func( array( $block, 'init' ) );
 	}
 
 	/**
@@ -68,51 +69,10 @@ class Blocks {
 	 * @return bool|Block
 	 */
 	public function get( $type ) {
-		if ( isset( self::$blocks[ $type ] ) ) {
-			return self::$blocks[ $type ];
+		if ( isset( $this->blocks[ $type ] ) ) {
+			return $this->blocks[ $type ];
 		}
 
 		return false;
-	}
-
-	/**
-	 * Register REST API route to preview block.
-	 */
-	public function register_preview_route() {
-		register_rest_route(
-			'pronamic-pay/v1',
-			'/block/preview',
-			array(
-				array(
-					'methods'  => WP_REST_Server::READABLE,
-					'callback' => array( $this, 'get_block_preview' ),
-					'args'     => array(),
-				),
-			)
-		);
-	}
-
-	/**
-	 * Prepare for block preview.
-	 *
-	 * @param WP_REST_Request $request Full data about the request.
-	 */
-	public function get_block_preview( $request ) {
-		// Get request arguments.
-		$args = $request->get_params();
-
-		// Return error on error.
-		if ( 0 ) {
-			wp_send_json_error();
-		}
-
-		// Get preview HTML.
-		$html = self::get( $args['type'] ) ? self::get( $args['type'] )->preview_block( $args ) : false;
-
-		if ( $html ) {
-			wp_send_json_success( array( 'html' => trim( $html ) ) );
-		} else {
-			wp_send_json_error();
-		}
 	}
 }

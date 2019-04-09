@@ -78,7 +78,7 @@ class FormsModule {
 	 */
 	public function get_form_output( $id ) {
 		if ( is_array( $id ) ) {
-			$config_id     = $id['config_id'];
+			$config_id     = get_option( 'pronamic_pay_config_id' );
 			$button_text   = null;
 			$amount_method = FormPostType::AMOUNT_METHOD_INPUT_FIXED;
 			$amounts       = array( $id['amount'] );

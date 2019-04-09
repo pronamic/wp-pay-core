@@ -1,6 +1,6 @@
 <?php
 /**
- * Gutenberg block.
+ * Editor block.
  *
  * @author    Pronamic <info@pronamic.eu>
  * @copyright 2005-2018 Pronamic
@@ -14,8 +14,8 @@ namespace Pronamic\WordPress\Pay\Blocks;
  * Block
  *
  * @author  Reüel van der Steege
- * @since   x.x.x
- * @version x.x.x
+ * @since   2.1.7
+ * @version 2.1.7
  */
 class Block {
 	/**
@@ -31,10 +31,6 @@ class Block {
 	public function init() {
 		// Register block type.
 		$this->register_block_type();
-
-		// Actions.
-		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_scripts' ) );
-		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_styles' ) );
 	}
 
 	/**
@@ -54,104 +50,38 @@ class Block {
 			return;
 		}
 
-		register_block_type(
-			$this->get_type(),
+		// Block arguments.
+		$args = wp_parse_args(
 			array(
 				'render_callback' => array( $this, 'render_block' ),
-			)
+			),
+			$this->register_block()
+		);
+
+		// Register block type.
+		register_block_type(
+			$this->get_type(),
+			$args
 		);
 	}
 
 	/**
-	 * Enqueque scripts.
-	 */
-	public function enqueue_scripts() {
-		// Get scripts.
-		$scripts = $this->scripts();
-
-		// Make sure scripts is an array.
-		if ( ! is_array( $scripts ) ) {
-			return;
-		}
-
-		$defaults = array(
-			'handle'       => null,
-			'src'          => false,
-			'dependencies' => array(),
-			'version'      => pronamic_pay_plugin()->get_version(),
-			'in_footer'    => false,
-			'callback'     => null,
-		);
-
-		// Loop scripts.
-		foreach ( $scripts as $script ) {
-			$args = wp_parse_args( $script, $defaults );
-
-			// Enqueue script.
-			wp_enqueue_script( $args['handle'], $args['src'], $args['dependencies'], $args['version'], $args['in_footer'] );
-
-			// Callback.
-			if ( is_callable( $args['callback'] ) ) {
-				call_user_func( $args['callback'], $args );
-			}
-		}
-	}
-
-	/**
-	 * Scripts.
+	 * Register block scripts and styles and return array for `register_block_type` arguments.
 	 *
 	 * @return array
 	 */
-	public function scripts() {
+	public function register_block() {
 		return array();
 	}
 
 	/**
-	 * Enqueque styles.
-	 */
-	public function enqueue_styles() {
-		// Get styles.
-		$styles = $this->styles();
-
-		// Make sure styles is an array.
-		if ( ! is_array( $styles ) ) {
-			return;
-		}
-
-		$defaults = array(
-			'handle'       => null,
-			'src'          => false,
-			'dependencies' => array(),
-			'version'      => pronamic_pay_plugin()->get_version(),
-			'media'        => 'all',
-		);
-
-		// Loop styles.
-		foreach ( $styles as $style ) {
-			$args = wp_parse_args( $style, $defaults );
-
-			// Enqueue style.
-			wp_enqueue_style( $args['handle'], $args['src'], $args['dependencies'], $args['version'], $args['media'] );
-		}
-	}
-
-	/**
-	 * Styles.
+	 * Render block.
 	 *
-	 * @return array
-	 */
-	public function styles() {
-		return array();
-	}
-
-	/**
-	 * Render block on frontend.
-	 *
-	 * @param array $args Arguments.
+	 * @param array $attributes Attributes.
 	 *
 	 * @return string
 	 */
-	public function render_block( $args = array() ) {
+	public function render_block( $attributes = array() ) {
 		return '';
 	}
 
@@ -163,6 +93,6 @@ class Block {
 	 * @return string
 	 */
 	public function preview_block( $args = array() ) {
-		return '';
+		return $this->render_block( $args );
 	}
 }
