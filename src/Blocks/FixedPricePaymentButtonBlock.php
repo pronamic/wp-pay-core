@@ -25,7 +25,7 @@ class FixedPricePaymentButtonBlock extends Block {
 	 *
 	 * @var string
 	 */
-	protected $type = 'pronamic-pay/payment-button';
+	protected $type = 'pronamic-pay/fixed-price-payment-button';
 
 	/**
 	 * Register block.
