@@ -24,6 +24,21 @@ use \Pronamic\WordPress\Pay\Payments\PaymentData;
  */
 class PaymentFormData extends PaymentData {
 	/**
+	 * Source id.
+	 *
+	 * @var string
+	 */
+	private $source_id;
+
+	/**
+	 * Payment form data constructor.
+	 *
+	 * @param string $source_id Source ID.
+	 */
+	public function __construct( $source_id ) {
+		$this->source_id = $source_id;
+	}
+	/**
 	 * Get source indicator.
 	 *
 	 * @see Pronamic_Pay_PaymentDataInterface::get_source()
@@ -39,7 +54,7 @@ class PaymentFormData extends PaymentData {
 	 * @return string
 	 */
 	public function get_source_id() {
-		return filter_input( INPUT_POST, 'pronamic_pay_form_id', FILTER_VALIDATE_INT );
+		return $this->source_id;
 	}
 
 	/**
@@ -83,7 +98,7 @@ class PaymentFormData extends PaymentData {
 			$money_parser = new MoneyParser();
 
 			$amount = $money_parser->parse( $amount )->get_value();
-		} elseif ( in_array( $amount_method, array( FormPostType::AMOUNT_METHOD_CHOICES_ONLY, FormPostType::AMOUNT_METHOD_CHOICES_AND_INPUT ), true ) ) {
+		} elseif ( empty( $amount_method ) || in_array( $amount_method, array( FormPostType::AMOUNT_METHOD_CHOICES_ONLY, FormPostType::AMOUNT_METHOD_CHOICES_AND_INPUT ), true ) ) {
 			$amount /= 100;
 		}
 
@@ -117,6 +132,24 @@ class PaymentFormData extends PaymentData {
 	 */
 	public function get_email() {
 		return filter_input( INPUT_POST, 'pronamic_pay_email', FILTER_SANITIZE_EMAIL );
+	}
+
+	/**
+	 * Get first name.
+	 *
+	 * @return mixed|string
+	 */
+	public function get_first_name() {
+		return filter_input( INPUT_POST, 'pronamic_pay_first_name', FILTER_SANITIZE_STRING );
+	}
+
+	/**
+	 * Get last name.
+	 *
+	 * @return mixed|string
+	 */
+	public function get_last_name() {
+		return filter_input( INPUT_POST, 'pronamic_pay_last_name', FILTER_SANITIZE_STRING );
 	}
 
 	/**
