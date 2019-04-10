@@ -33,27 +33,25 @@
 		]
 	},
 	"config": {
-		"platform": {
-			"php": "5.3.3"
-		}
+		"sort-packages": true
 	},
 	"require": {
-		"php": "^5.3",
+		"php": ">=5.6.0",
 		"composer/installers": "^1.6",
 		"pronamic/wp-datetime": "^1.0",
 		"pronamic/wp-money": "^1.2",
 		"viison/address-splitter": "^0.3.2"
 	},
 	"require-dev": {
-		"dealerdirect/phpcodesniffer-composer-installer": "^0.5",
-		"php-coveralls/php-coveralls": "^1.1",
+		"dealerdirect/phpcodesniffer-composer-installer": "^0.5.0",
+		"php-coveralls/php-coveralls": "^2.1",
 		"phpcompatibility/php-compatibility": "^9.1",
 		"phpcompatibility/phpcompatibility-wp": "^2.0",
-		"phpmd/phpmd": "^2.4",
-		"phpunit/phpunit": "^4.8",
+		"phpmd/phpmd": "^2.6",
+		"phpunit/phpunit": "^5.7",
 		"roots/wordpress": "^5.1",
-		"squizlabs/php_codesniffer": "^2.9",
-		"wp-coding-standards/wpcs": "^1.2",
+		"squizlabs/php_codesniffer": "^3.4",
+		"wp-coding-standards/wpcs": "^2.1",
 		"wp-phpunit/wp-phpunit": "^5.1"
 	},
 	"scripts": {
