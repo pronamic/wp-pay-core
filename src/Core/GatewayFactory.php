@@ -26,7 +26,7 @@ class GatewayFactory {
 	 *
 	 * @var array
 	 */
-	static protected $gateways = array();
+	protected static $gateways = array();
 
 	/**
 	 * Create gateway.
