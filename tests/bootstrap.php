@@ -10,8 +10,28 @@
 
 putenv( 'WP_PHPUNIT__TESTS_CONFIG=tests/wp-config.php' );
 
+/**
+ * Composer.
+ */
 require_once __DIR__ . '/../vendor/autoload.php';
 
+/**
+ * WP CLI.
+ *
+ * @link https://polevaultweb.com/2016/11/unit-testing-custom-wp-cli-commands/
+ * @link https://github.com/polevaultweb/phpunit-wp-cli-runner
+ */
+if ( ! defined( 'WP_CLI_ROOT' ) ) {
+	define( 'WP_CLI_ROOT', __DIR__ . '/../vendor/wp-cli/wp-cli' );
+}
+
+include WP_CLI_ROOT . '/php/class-wp-cli.php';
+
+/**
+ * WP PHPUnit.
+ *
+ * @link https://github.com/wp-phpunit/wp-phpunit
+ */
 require_once getenv( 'WP_PHPUNIT__DIR' ) . '/includes/functions.php';
 
 /**
