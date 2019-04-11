@@ -35,6 +35,10 @@ class TaxedMoneyJsonTransformer {
 
 		$object = MoneyJsonTransformer::to_json( $money );
 
+		if ( null === $object ) {
+			return null;
+		}
+
 		if ( null !== $money->get_tax_value() ) {
 			$object->tax_value = $money->get_tax_value();
 		}
