@@ -129,7 +129,7 @@ class Util {
 	 * @param int    $interval The interval number.
 	 * @param string $period   The period indicator.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public static function format_interval( $interval, $period ) {
 		switch ( $period ) {
