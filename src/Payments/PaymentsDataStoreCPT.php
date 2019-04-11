@@ -216,12 +216,14 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			);
 		}
 
+		$customer = $payment->get_customer();
+
 		$result = wp_insert_post(
 			array(
 				'post_type'        => 'pronamic_payment',
 				'post_date_gmt'    => $this->get_mysql_utc_date( $payment->date ),
 				'post_title'       => $title,
-				'post_author'      => null === $payment->get_customer() ? null : $payment->get_customer()->get_user_id(),
+				'post_author'      => null === $customer ? null : $customer->get_user_id(),
 				'pronamic_payment' => $payment,
 			),
 			true
@@ -308,16 +310,18 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		}
 
 		// Set user ID from `post_author` field if not set from payment JSON.
-		if ( null === $payment->get_customer() ) {
+		$customer = $payment->get_customer();
+
+		if ( null === $customer ) {
 			$customer = new Customer();
 
 			$payment->set_customer( $customer );
 		}
 
-		if ( null === $payment->get_customer()->get_user_id() ) {
+		if ( null === $customer->get_user_id() ) {
 			$post_author = get_post_field( 'post_author', $payment->get_id(), 'raw' );
 
-			$payment->get_customer()->set_user_id( $post_author );
+			$customer->set_user_id( $post_author );
 		}
 
 		$this->read_post_meta( $payment );
