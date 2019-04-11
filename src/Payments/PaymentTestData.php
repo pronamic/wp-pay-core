@@ -81,7 +81,7 @@ class PaymentTestData extends PaymentData {
 	 * @return string
 	 */
 	public function get_order_id() {
-		return time();
+		return strval( time() );
 	}
 
 	/**

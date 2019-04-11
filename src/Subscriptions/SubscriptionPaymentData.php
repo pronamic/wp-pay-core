@@ -43,7 +43,7 @@ class SubscriptionPaymentData extends PaymentData {
 	/**
 	 * Get config id.
 	 *
-	 * @return int
+	 * @return int|null
 	 */
 	public function get_config_id() {
 		return $this->subscription->config_id;
@@ -63,7 +63,7 @@ class SubscriptionPaymentData extends PaymentData {
 	/**
 	 * Get source.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_source() {
 		return $this->subscription->source;
@@ -72,7 +72,7 @@ class SubscriptionPaymentData extends PaymentData {
 	/**
 	 * Get source id.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_source_id() {
 		return $this->subscription->source_id;

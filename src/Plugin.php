@@ -653,11 +653,16 @@ class Plugin {
 	/**
 	 * Get gateway.
 	 *
-	 * @param string|integer|boolean $config_id A gateway configuration ID.
+	 * @param string|integer|boolean|null $config_id A gateway configuration ID.
 	 *
 	 * @return null|Gateway
 	 */
 	public static function get_gateway( $config_id ) {
+		// Check for 0, false, null and other empty values.
+		if ( empty( $config ) ) {
+			return null;
+		}
+
 		// Check if config is published.
 		if ( 'publish' !== get_post_status( $config_id ) ) {
 			return null;
@@ -767,7 +772,7 @@ class Plugin {
 	/**
 	 * Start a payment.
 	 *
-	 * @param string      $config_id      A gateway configuration ID.
+	 * @param int         $config_id      A gateway configuration ID.
 	 * @param Gateway     $gateway        The gateway to start the payment at.
 	 * @param PaymentData $data           A payment data interface object with all the required payment info.
 	 * @param string|null $payment_method The payment method to use to start the payment.

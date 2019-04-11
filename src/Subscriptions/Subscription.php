@@ -32,21 +32,21 @@ class Subscription extends LegacySubscription {
 	/**
 	 * The key of this subscription, used in URL's for security.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $key;
 
 	/**
 	 * The title of this subscription.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $title;
 
 	/**
 	 * The frequency of this subscription, for example: `daily`, `weekly`, `monthly` or `annually`.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $frequency;
 
@@ -55,7 +55,7 @@ class Subscription extends LegacySubscription {
 	 *
 	 * @todo Improve documentation?
 	 *
-	 * @var  int
+	 * @var int|null
 	 */
 	public $interval;
 
@@ -64,7 +64,7 @@ class Subscription extends LegacySubscription {
 	 *
 	 * @todo Improve documentation?
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $interval_period;
 
@@ -95,7 +95,7 @@ class Subscription extends LegacySubscription {
 	 * @todo How to reference to a class constant?
 	 * @see  Statuses
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $status;
 
@@ -130,7 +130,7 @@ class Subscription extends LegacySubscription {
 	/**
 	 * Construct and initialize subscription object.
 	 *
-	 * @param int $post_id A subscription post ID or null.
+	 * @param int|null $post_id A subscription post ID or null.
 	 */
 	public function __construct( $post_id = null ) {
 		parent::__construct( $post_id );
@@ -145,7 +145,7 @@ class Subscription extends LegacySubscription {
 	/**
 	 * Get the unique key of this subscription.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_key() {
 		return $this->key;
@@ -154,7 +154,7 @@ class Subscription extends LegacySubscription {
 	/**
 	 * Get the frequency of this subscription, for example: 'daily', 'weekly', 'monthly' or 'annually'.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_frequency() {
 		return $this->frequency;
@@ -166,7 +166,7 @@ class Subscription extends LegacySubscription {
 	 * - Repeat every *1* months
 	 * - Repeat every *2* year
 	 *
-	 * @return int
+	 * @return int|null
 	 */
 	public function get_interval() {
 		return $this->interval;
@@ -175,8 +175,9 @@ class Subscription extends LegacySubscription {
 	/**
 	 * Get the interval period, for example 'D', 'M', 'Y', etc.
 	 *
-	 * @see    http://php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters
-	 * @return string
+	 * @link http://php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters
+	 *
+	 * @return string|null
 	 */
 	public function get_interval_period() {
 		return $this->interval_period;
@@ -230,8 +231,9 @@ class Subscription extends LegacySubscription {
 	/**
 	 * Get the status of this subscription.
 	 *
-	 * @todo   Check constant?
-	 * @return string
+	 * @todo Check constant?
+	 *
+	 * @return string|null
 	 */
 	public function get_status() {
 		return $this->status;
@@ -240,8 +242,9 @@ class Subscription extends LegacySubscription {
 	/**
 	 * Set the status of this subscription.
 	 *
-	 * @todo  Check constant?
-	 * @param string $status A status string.
+	 * @todo Check constant?
+	 *
+	 * @param string|null $status A status string.
 	 * @return void
 	 */
 	public function set_status( $status ) {

@@ -32,7 +32,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	/**
 	 * Subscription.
 	 *
-	 * @var Subscription
+	 * @var Subscription|null
 	 */
 	private $subscription;
 
@@ -480,7 +480,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 			return;
 		}
 
-		$subscription->config_id       = $this->get_meta( $id, 'config_id' );
+		$subscription->config_id       = $this->get_meta_int( $id, 'config_id' );
 		$subscription->key             = $this->get_meta( $id, 'key' );
 		$subscription->source          = $this->get_meta( $id, 'source' );
 		$subscription->source_id       = $this->get_meta( $id, 'source_id' );

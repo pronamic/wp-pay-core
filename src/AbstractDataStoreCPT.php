@@ -127,6 +127,24 @@ abstract class AbstractDataStoreCPT {
 	}
 
 	/**
+	 * Get int from meta.
+	 *
+	 * @param int    $id  Post ID.
+	 * @param string $key Key.
+	 *
+	 * @return int|null
+	 */
+	public function get_meta_int( $id, $key ) {
+		$value = $this->get_meta( $id, $key );
+
+		if ( empty( $value ) ) {
+			return null;
+		}
+
+		return intval( $value );
+	}
+
+	/**
 	 * Update meta.
 	 *
 	 * @param int    $id    Post ID.

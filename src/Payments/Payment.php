@@ -70,14 +70,14 @@ class Payment extends LegacyPayment {
 	/**
 	 * The configuration ID.
 	 *
-	 * @var int
+	 * @var int|null
 	 */
 	public $config_id;
 
 	/**
 	 * The key of this payment, used in URL's for security.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $key;
 
@@ -85,7 +85,7 @@ class Payment extends LegacyPayment {
 	 * Identifier for the source which started this payment.
 	 * For example: 'woocommerce', 'gravityforms', 'easydigitaldownloads', etc.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $source;
 
@@ -95,7 +95,7 @@ class Payment extends LegacyPayment {
 	 * - Easy Digital Downloads payment ID.
 	 * - Gravity Forms entry ID.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $source_id;
 
@@ -103,7 +103,7 @@ class Payment extends LegacyPayment {
 	 * The purchase ID.
 	 *
 	 * @todo Is this required/used?
-	 * @var string
+	 * @var string|null
 	 */
 	public $purchase_id;
 
@@ -118,7 +118,7 @@ class Payment extends LegacyPayment {
 	 * The order ID of this payment.
 	 *
 	 * @todo Is this required/used?
-	 * @var string
+	 * @var string|null
 	 */
 	public $order_id;
 
@@ -148,14 +148,14 @@ class Payment extends LegacyPayment {
 	 * The entrance code of this payment.
 	 *
 	 * @todo Is this required/used?
-	 * @var string
+	 * @var string|null
 	 */
 	public $entrance_code;
 
 	/**
 	 * The description of this payment.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $description;
 
@@ -163,7 +163,7 @@ class Payment extends LegacyPayment {
 	 * The name of the consumer of this payment.
 	 *
 	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string
+	 * @var  string|null
 	 */
 	public $consumer_name;
 
@@ -171,7 +171,7 @@ class Payment extends LegacyPayment {
 	 * The account number of the consumer of this payment.
 	 *
 	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string
+	 * @var  string|null
 	 */
 	public $consumer_account_number;
 
@@ -179,7 +179,7 @@ class Payment extends LegacyPayment {
 	 * The IBAN of the consumer of this payment.
 	 *
 	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string
+	 * @var  string|null
 	 */
 	public $consumer_iban;
 
@@ -187,7 +187,7 @@ class Payment extends LegacyPayment {
 	 * The BIC of the consumer of this payment.
 	 *
 	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string
+	 * @var  string|null
 	 */
 	public $consumer_bic;
 
@@ -195,7 +195,7 @@ class Payment extends LegacyPayment {
 	 * The city of the consumer of this payment.
 	 *
 	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string
+	 * @var  string|null
 	 */
 	public $consumer_city;
 
@@ -224,14 +224,14 @@ class Payment extends LegacyPayment {
 	/**
 	 * The email of the user who started this payment.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $email;
 
 	/**
 	 * The action URL for this payment.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $action_url;
 
@@ -245,7 +245,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * The issuer chosen by the user who started this payment.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $issuer;
 
@@ -253,14 +253,14 @@ class Payment extends LegacyPayment {
 	 * Subscription ID.
 	 *
 	 * @todo Is this required?
-	 * @var int
+	 * @var int|null
 	 */
 	public $subscription_id;
 
 	/**
 	 * Subscription source ID.
 	 *
-	 * @var int
+	 * @var int|null
 	 */
 	public $subscription_source_id;
 
@@ -268,7 +268,7 @@ class Payment extends LegacyPayment {
 	 * Flag to indicate a recurring payment
 	 *
 	 * @todo Is this required?
-	 * @var boolean
+	 * @var boolean|null
 	 */
 	public $recurring;
 
@@ -276,7 +276,7 @@ class Payment extends LegacyPayment {
 	 * The recurring type.
 	 *
 	 * @todo Improve documentation, is this used?
-	 * @var string
+	 * @var string|null
 	 */
 	public $recurring_type;
 
