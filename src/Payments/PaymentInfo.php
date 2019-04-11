@@ -63,7 +63,7 @@ abstract class PaymentInfo {
 	/**
 	 * The configuration ID.
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	public $config_id;
 
@@ -374,7 +374,7 @@ abstract class PaymentInfo {
 	/**
 	 * Get the config ID of this payment.
 	 *
-	 * @return string
+	 * @return int
 	 */
 	public function get_config_id() {
 		return $this->config_id;

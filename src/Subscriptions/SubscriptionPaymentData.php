@@ -52,7 +52,9 @@ class SubscriptionPaymentData extends PaymentData {
 	/**
 	 * Get user id.
 	 *
-	 * @return int
+	 * @link https://github.com/WordPress/WordPress/blob/5.1/wp-includes/class-wp-post.php#L31-L39
+	 *
+	 * @return int|string|null
 	 */
 	public function get_user_id() {
 		return $this->subscription->post->post_author;
@@ -105,8 +107,8 @@ class SubscriptionPaymentData extends PaymentData {
 
 		// Item.
 		$item = new Item();
-		$item->set_number( $this->get_order_id() );
-		$item->set_description( $this->get_description() );
+		$item->set_number( strval( $this->get_order_id() ) );
+		$item->set_description( strval( $this->get_description() ) );
 		$item->set_price( $this->subscription->get_total_amount()->get_value() );
 		$item->set_quantity( 1 );
 

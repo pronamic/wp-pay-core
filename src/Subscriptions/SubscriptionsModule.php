@@ -12,6 +12,7 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DateInterval;
 use DatePeriod;
+use Exception;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Pay\Address;
@@ -23,6 +24,7 @@ use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
+use UnexpectedValueException;
 use WP_CLI;
 use WP_Query;
 
@@ -296,7 +298,8 @@ class SubscriptionsModule {
 	 * @param Payment      $payment Payment.
 	 * @param Gateway|null $gateway Gateway to start the recurring payment at.
 	 *
-	 * @throws \Exception Throws an Exception on incorrect date interval.
+	 * @throws Exception                Throws an Exception on incorrect date interval.
+	 * @throws UnexpectedValueException Throw unexpected value exception when no subscription was found in payment.
 	 *
 	 * @return Payment
 	 */
@@ -307,6 +310,10 @@ class SubscriptionsModule {
 		}
 
 		$subscription = $payment->get_subscription();
+
+		if ( is_bool( $subscription ) ) {
+			throw new UnexpectedValueException( 'No subscription object found in payment.' );
+		}
 
 		// Calculate payment start and end dates.
 		$start_date = new DateTime();
@@ -764,10 +771,15 @@ class SubscriptionsModule {
 
 			$gateway = Plugin::get_gateway( $subscription->config_id );
 
+			// If gateway is null we continue to next subscription.
+			if ( null === $gateway ) {
+				continue;
+			}
+
 			// Start payment.
 			$payment = $this->start_recurring( $subscription, $gateway );
 
-			if ( $payment ) {
+			if ( is_object( $payment ) ) {
 				// Update payment.
 				Plugin::update_payment( $payment, false );
 			}

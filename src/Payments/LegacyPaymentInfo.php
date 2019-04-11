@@ -36,7 +36,7 @@ use Pronamic\WordPress\Pay\Customer;
  * @property string $zip
  * @property string $city
  * @property string $address
- * @property string|null $user_id
+ * @property int|string|null $user_id
  */
 abstract class LegacyPaymentInfo extends PaymentInfo {
 	/**

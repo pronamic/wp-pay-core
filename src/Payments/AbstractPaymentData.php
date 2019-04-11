@@ -49,7 +49,10 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Get user ID.
 	 *
-	 * @return string
+	 * @link https://developer.wordpress.org/reference/functions/get_current_user_id/
+	 * @link https://github.com/WordPress/WordPress/blob/5.1/wp-includes/class-wp-post.php#L31-L39
+	 *
+	 * @return int|string|null
 	 */
 	public function get_user_id() {
 		return get_current_user_id();
@@ -83,14 +86,14 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Get description.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	abstract public function get_description();
 
 	/**
 	 * Get order ID.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	abstract public function get_order_id();
 
@@ -116,7 +119,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Get email.
 	 *
-	 * @return null
+	 * @return string|null
 	 */
 	public function get_email() {
 		return null;
@@ -134,7 +137,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Get customer name.
 	 *
-	 * @return null
+	 * @return string|null
 	 */
 	public function get_customer_name() {
 		return null;

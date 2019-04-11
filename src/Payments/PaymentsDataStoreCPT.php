@@ -31,7 +31,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
 	 * Payment.
 	 *
-	 * @var Payment
+	 * @var Payment|null
 	 */
 	private $payment;
 

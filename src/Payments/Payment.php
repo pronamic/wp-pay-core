@@ -70,7 +70,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * The configuration ID.
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	public $config_id;
 
@@ -290,14 +290,14 @@ class Payment extends LegacyPayment {
 	/**
 	 * Start date if the payment is related to a specific period.
 	 *
-	 * @var DateTime
+	 * @var DateTime|null
 	 */
 	public $start_date;
 
 	/**
 	 * End date if the payment is related to a specific period.
 	 *
-	 * @var DateTime
+	 * @var DateTime|null
 	 */
 	public $end_date;
 
