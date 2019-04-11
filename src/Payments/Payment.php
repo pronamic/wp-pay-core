@@ -202,7 +202,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * The Google Analytics client ID of the user who started this payment.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $analytics_client_id;
 
@@ -809,7 +809,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Get Google Analytics client ID.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_analytics_client_id() {
 		return $this->analytics_client_id;

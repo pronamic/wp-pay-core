@@ -117,7 +117,7 @@ abstract class PaymentInfo {
 	/**
 	 * The description of this payment.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $description;
 
@@ -125,7 +125,8 @@ abstract class PaymentInfo {
 	 * The name of the consumer of this payment.
 	 *
 	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string
+	 *
+	 * @var string
 	 */
 	public $consumer_name;
 
@@ -133,7 +134,8 @@ abstract class PaymentInfo {
 	 * The account number of the consumer of this payment.
 	 *
 	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string
+	 *
+	 * @var string
 	 */
 	public $consumer_account_number;
 
@@ -141,7 +143,8 @@ abstract class PaymentInfo {
 	 * The IBAN of the consumer of this payment.
 	 *
 	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string
+	 *
+	 * @var string
 	 */
 	public $consumer_iban;
 
@@ -149,7 +152,8 @@ abstract class PaymentInfo {
 	 * The BIC of the consumer of this payment.
 	 *
 	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string
+	 *
+	 * @var string
 	 */
 	public $consumer_bic;
 
@@ -157,7 +161,8 @@ abstract class PaymentInfo {
 	 * The city of the consumer of this payment.
 	 *
 	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string
+	 *
+	 * @var string
 	 */
 	public $consumer_city;
 
@@ -171,14 +176,14 @@ abstract class PaymentInfo {
 	/**
 	 * Google Analytics e-commerce tracked.
 	 *
-	 * @var bool
+	 * @var bool|null
 	 */
 	public $ga_tracked;
 
 	/**
 	 * The email of the user who started this payment.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $email;
 

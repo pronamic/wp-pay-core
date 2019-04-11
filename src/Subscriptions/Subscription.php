@@ -54,6 +54,7 @@ class Subscription extends LegacySubscription {
 	 * The interval of this subscription, for example: 1, 2, 3, etc.
 	 *
 	 * @todo Improve documentation?
+	 *
 	 * @var  int
 	 */
 	public $interval;
@@ -62,28 +63,29 @@ class Subscription extends LegacySubscription {
 	 * The interval period of this subscription.
 	 *
 	 * @todo Improve documentation?
-	 * @var  string
+	 *
+	 * @var string
 	 */
 	public $interval_period;
 
 	/**
 	 * The interval date of this subscription.
 	 *
-	 * @var  int|null
+	 * @var int|null
 	 */
 	public $interval_date;
 
 	/**
 	 * The interval date day of this subscription.
 	 *
-	 * @var  int|null
+	 * @var int|null
 	 */
 	public $interval_date_day;
 
 	/**
 	 * The interval date month of this subscription.
 	 *
-	 * @var  int|null
+	 * @var int|null
 	 */
 	public $interval_date_month;
 
@@ -92,14 +94,15 @@ class Subscription extends LegacySubscription {
 	 *
 	 * @todo How to reference to a class constant?
 	 * @see  Statuses
-	 * @var  string
+	 *
+	 * @var string
 	 */
 	public $status;
 
 	/**
 	 * The payment method which was used to create this subscription.
 	 *
-	 * @var  string
+	 * @var string|null
 	 */
 	public $payment_method;
 
@@ -248,8 +251,10 @@ class Subscription extends LegacySubscription {
 	/**
 	 * Add the specified note to this subscription.
 	 *
+	 * @link https://developer.wordpress.org/reference/functions/wp_insert_comment/
+	 *
 	 * @param string $note A Note.
-	 * @return void
+	 * @return int|false The new comment's ID on success, false on failure.
 	 */
 	public function add_note( $note ) {
 		$commentdata = array(
@@ -441,6 +446,7 @@ class Subscription extends LegacySubscription {
 	 * Set the expiry date of this subscription.
 	 *
 	 * @param DateTime|null $date Expiry date.
+	 * @return void
 	 */
 	public function set_expiry_date( DateTime $date = null ) {
 		$this->expiry_date = $date;
@@ -450,6 +456,7 @@ class Subscription extends LegacySubscription {
 	 * Set the next payment date of this subscription.
 	 *
 	 * @param DateTime|null $date Next payment date.
+	 * @return void
 	 */
 	public function set_next_payment_date( DateTime $date = null ) {
 		$this->next_payment = $date;
@@ -469,6 +476,7 @@ class Subscription extends LegacySubscription {
 	 *
 	 * @todo  Not sure how and when this function is used.
 	 * @param array $meta The meta data to update.
+	 * @return void
 	 */
 	public function update_meta( $meta ) {
 		if ( ! is_array( $meta ) || count( $meta ) === 0 ) {

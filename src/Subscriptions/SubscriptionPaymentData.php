@@ -79,7 +79,7 @@ class SubscriptionPaymentData extends PaymentData {
 	/**
 	 * Get description.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_description() {
 		return $this->subscription->description;
@@ -88,7 +88,7 @@ class SubscriptionPaymentData extends PaymentData {
 	/**
 	 * Get order id.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_order_id() {
 		$this->subscription->order_id;
@@ -118,7 +118,7 @@ class SubscriptionPaymentData extends PaymentData {
 	/**
 	 * Get currency alphabetic code.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_currency_alphabetic_code() {
 		return $this->subscription->get_total_amount()->get_currency()->get_alphabetic_code();
@@ -127,7 +127,7 @@ class SubscriptionPaymentData extends PaymentData {
 	/**
 	 * Get customer name.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_customer_name() {
 		return $this->subscription->customer_name;
@@ -136,7 +136,7 @@ class SubscriptionPaymentData extends PaymentData {
 	/**
 	 * Get email.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_email() {
 		return $this->subscription->email;

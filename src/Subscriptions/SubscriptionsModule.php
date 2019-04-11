@@ -390,18 +390,26 @@ class SubscriptionsModule {
 			return;
 		}
 
-		// Customer name.
+		// Customer.
+		$user_id       = null;
 		$customer_name = null;
 
-		if ( null !== $payment->get_customer() && null !== $payment->get_customer()->get_name() ) {
-			$customer_name = strval( $payment->get_customer()->get_name() );
+		$customer = $payment->get_customer();
+
+		if ( null !== $customer ) {
+			$user_id = $customer->get_user_id();
+			$name    = $customer->get_name();
+
+			if ( null !== $name ) {
+				$customer_name = strval( $name );		
+			}
 		}
 
 		// New subscription.
 		$subscription = new Subscription();
 
 		$subscription->config_id = $payment->config_id;
-		$subscription->user_id   = ( null !== $payment->get_customer() ? $payment->get_customer()->get_user_id() : null );
+		$subscription->user_id   = $user_id;
 		$subscription->title     = sprintf(
 			/* translators: %s: payment title */
 			__( 'Subscription for %s', 'pronamic_ideal' ),
@@ -563,6 +571,10 @@ class SubscriptionsModule {
 		// Check if the payment is connected to a subscription.
 		$subscription = $payment->get_subscription();
 
+		if ( is_bool( $subscription ) ) {
+			return;
+		}
+
 		if ( empty( $subscription ) || null === $subscription->get_id() ) {
 			// Payment not connected to a subscription, nothing to do.
 			return;
@@ -653,6 +665,11 @@ class SubscriptionsModule {
 			$subscription = new Subscription( $post->ID );
 
 			$expiry_date = $subscription->get_expiry_date();
+
+			// If expirary date is null we continue, subscription is not expiring.
+			if ( null === $expiry_date ) {
+				continue;
+			}
 
 			$sent_date_string = get_post_meta( $post->ID, '_pronamic_subscription_renewal_sent_1week', true );
 

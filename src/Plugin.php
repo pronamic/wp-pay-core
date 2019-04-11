@@ -905,21 +905,27 @@ class Plugin {
 		}
 
 		// Complements.
-		if ( null !== $payment->get_customer() ) {
-			CustomerHelper::complement_customer( $payment->get_customer() );
+		$customer = $payment->get_customer();
+
+		if ( null !== $customer ) {
+			CustomerHelper::complement_customer( $customer );
 
 			// Email.
 			if ( null === $payment->get_email() ) {
-				$payment->email = $payment->get_customer()->get_email();
+				$payment->email = $customer->get_email();
 			}
 		}
 
-		if ( null !== $payment->get_billing_address() ) {
-			AddressHelper::complement_address( $payment->get_billing_address() );
+		$billing_address = $payment->get_billing_address();
+
+		if ( null !== $billing_address ) {
+			AddressHelper::complement_address( $billing_address );
 		}
 
-		if ( null !== $payment->get_shipping_address() ) {
-			AddressHelper::complement_address( $payment->get_shipping_address() );
+		$shipping_address = $payment->get_shipping_address();
+
+		if ( null !== $shipping_address ) {
+			AddressHelper::complement_address( $shipping_address );
 		}
 
 		// Version.
@@ -1004,11 +1010,11 @@ class Plugin {
 		$payment->save();
 
 		// Update subscription status for failed payments.
-		if ( false === $result && $payment->get_subscription() ) {
+		$subscription = $payment->get_subscription();
+
+		if ( false === $result && is_object( $subscription)  ) {
 			// Reload payment, so subscription is available.
 			$payment = new Payment( $payment->get_id() );
-
-			$subscription = $payment->get_subscription();
 
 			if ( Recurring::FIRST === $payment->recurring_type ) {
 				// First payment - cancel subscription to prevent unwanted recurring payments
