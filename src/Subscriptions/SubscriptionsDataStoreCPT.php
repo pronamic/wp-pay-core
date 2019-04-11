@@ -73,6 +73,8 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 
 	/**
 	 * Setup.
+	 *
+	 * @return void
 	 */
 	public function setup() {
 		add_filter( 'wp_insert_post_data', array( $this, 'insert_subscription_post_data' ), 10, 2 );
@@ -205,6 +207,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 * @param int      $post_id Post ID.
 	 * @param \WP_Post $post    Post object.
 	 * @param bool     $update  Whether this is an existing post being updated or not.
+	 * @return void
 	 */
 	public function save_post_meta( $post_id, $post, $update ) {
 		if ( $this->subscription instanceof Subscription ) {
@@ -225,7 +228,6 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L47-L76
 	 *
 	 * @param Subscription $subscription Create the specified subscription in this data store.
-	 *
 	 * @return bool
 	 */
 	public function create( $subscription ) {
@@ -261,7 +263,6 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
 	 *
 	 * @param Subscription $subscription The subscription to update in this data store.
-	 *
 	 * @return bool
 	 */
 	public function update( $subscription ) {
@@ -306,7 +307,9 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L78-L111
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L81-L136
+	 *
 	 * @param Subscription $subscription The subscription to read the additional data for.
+	 * @return void
 	 */
 	public function read( $subscription ) {
 		$subscription->post    = get_post( $subscription->get_id() );
@@ -466,7 +469,9 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 * Read post meta.
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-data.php#L462-L507
+	 *
 	 * @param Subscription $subscription The subscription to read the post meta for.
+	 * @return void
 	 */
 	protected function read_post_meta( $subscription ) {
 		$id = $subscription->get_id();

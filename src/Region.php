@@ -169,10 +169,13 @@ class Region {
 			return $this->value;
 		}
 
-		return sprintf(
-			'%s - %s',
+		$values = array(
 			$this->code,
-			$this->name
+			$this->name,
 		);
+
+		$values = array_filter( $values );
+
+		return implode( ' - ', $values );
 	}
 }

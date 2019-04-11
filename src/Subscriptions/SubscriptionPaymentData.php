@@ -61,7 +61,7 @@ class SubscriptionPaymentData extends PaymentData {
 	/**
 	 * Get source.
 	 *
-	 * @return mixed
+	 * @return string
 	 */
 	public function get_source() {
 		return $this->subscription->source;
@@ -70,7 +70,7 @@ class SubscriptionPaymentData extends PaymentData {
 	/**
 	 * Get source id.
 	 *
-	 * @return mixed
+	 * @return string
 	 */
 	public function get_source_id() {
 		return $this->subscription->source_id;
@@ -79,7 +79,7 @@ class SubscriptionPaymentData extends PaymentData {
 	/**
 	 * Get description.
 	 *
-	 * @return mixed
+	 * @return string
 	 */
 	public function get_description() {
 		return $this->subscription->description;
@@ -88,7 +88,7 @@ class SubscriptionPaymentData extends PaymentData {
 	/**
 	 * Get order id.
 	 *
-	 * @return mixed
+	 * @return string
 	 */
 	public function get_order_id() {
 		$this->subscription->order_id;
@@ -97,7 +97,7 @@ class SubscriptionPaymentData extends PaymentData {
 	/**
 	 * Get items.
 	 *
-	 * @return mixed
+	 * @return Items
 	 */
 	public function get_items() {
 		// Items.
@@ -118,7 +118,7 @@ class SubscriptionPaymentData extends PaymentData {
 	/**
 	 * Get currency alphabetic code.
 	 *
-	 * @return mixed
+	 * @return string
 	 */
 	public function get_currency_alphabetic_code() {
 		return $this->subscription->get_total_amount()->get_currency()->get_alphabetic_code();

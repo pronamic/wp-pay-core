@@ -108,6 +108,8 @@ class SubscriptionPostType {
 
 	/**
 	 * Register our custom post statuses, used for order status.
+	 *
+	 * @return void
 	 */
 	public function register_post_status() {
 		/**

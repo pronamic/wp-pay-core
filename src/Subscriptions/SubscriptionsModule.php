@@ -356,6 +356,8 @@ class SubscriptionsModule {
 
 	/**
 	 * Maybe schedule subscription payments.
+	 *
+	 * @return void
 	 */
 	public function maybe_schedule_subscription_payments() {
 		if ( wp_next_scheduled( 'pronamic_pay_update_subscription_payments' ) ) {
@@ -369,7 +371,7 @@ class SubscriptionsModule {
 	 * Maybe create subscription for the specified payment.
 	 *
 	 * @param Payment $payment The new payment.
-	 *
+	 * @return void
 	 * @throws \Exception Throws an Exception on incorrect date interval.
 	 */
 	public function maybe_create_subscription( $payment ) {
@@ -555,6 +557,7 @@ class SubscriptionsModule {
 	 * Payment status update.
 	 *
 	 * @param Payment $payment The status updated payment.
+	 * @return void
 	 */
 	public function payment_status_update( $payment ) {
 		// Check if the payment is connected to a subscription.
@@ -633,6 +636,8 @@ class SubscriptionsModule {
 	 * @link https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/license-renewals.php#L652-L712
 	 * @link https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/license-renewals.php#L715-L746
 	 * @link https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/classes/class-sl-emails.php#L41-L126
+	 *
+	 * @return void
 	 */
 	public function send_subscription_renewal_notices() {
 		$interval = new DateInterval( 'P1W' ); // 1 week
@@ -694,6 +699,7 @@ class SubscriptionsModule {
 	 * Update subscription payments.
 	 *
 	 * @param bool $cli_test Whether or not this a CLI test.
+	 * @return void
 	 */
 	public function update_subscription_payments( $cli_test = false ) {
 		$this->send_subscription_renewal_notices();

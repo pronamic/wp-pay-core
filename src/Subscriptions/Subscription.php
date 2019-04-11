@@ -239,6 +239,7 @@ class Subscription extends LegacySubscription {
 	 *
 	 * @todo  Check constant?
 	 * @param string $status A status string.
+	 * @return void
 	 */
 	public function set_status( $status ) {
 		$this->status = $status;
@@ -248,6 +249,7 @@ class Subscription extends LegacySubscription {
 	 * Add the specified note to this subscription.
 	 *
 	 * @param string $note A Note.
+	 * @return void
 	 */
 	public function add_note( $note ) {
 		$commentdata = array(
@@ -429,7 +431,7 @@ class Subscription extends LegacySubscription {
 	/**
 	 * Get the expiry date of this subscription.
 	 *
-	 * @return DateTime
+	 * @return DateTime|null
 	 */
 	public function get_expiry_date() {
 		return $this->expiry_date;
@@ -438,25 +440,25 @@ class Subscription extends LegacySubscription {
 	/**
 	 * Set the expiry date of this subscription.
 	 *
-	 * @param DateTime $date Expiry date.
+	 * @param DateTime|null $date Expiry date.
 	 */
-	public function set_expiry_date( DateTime $date ) {
+	public function set_expiry_date( DateTime $date = null ) {
 		$this->expiry_date = $date;
 	}
 
 	/**
 	 * Set the next payment date of this subscription.
 	 *
-	 * @param DateTime $date Next payment date.
+	 * @param DateTime|null $date Next payment date.
 	 */
-	public function set_next_payment_date( DateTime $date ) {
+	public function set_next_payment_date( DateTime $date = null ) {
 		$this->next_payment = $date;
 	}
 
 	/**
 	 * Get the next payment date of this subscription.
 	 *
-	 * @return DateTime
+	 * @return DateTime|null
 	 */
 	public function get_next_payment_date() {
 		return $this->next_payment;

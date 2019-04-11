@@ -345,6 +345,8 @@ class Plugin {
 
 	/**
 	 * Handle returns.
+	 *
+	 * @return void
 	 */
 	public function handle_returns() {
 		if ( ! filter_has_var( INPUT_GET, 'payment' ) ) {
@@ -396,6 +398,8 @@ class Plugin {
 
 	/**
 	 * Maybe redirect.
+	 *
+	 * @return void
 	 */
 	public function maybe_redirect() {
 		if ( ! filter_has_var( INPUT_GET, 'payment_redirect' ) || ! filter_has_var( INPUT_GET, 'key' ) ) {
@@ -461,7 +465,7 @@ class Plugin {
 	/**
 	 * Get number payments.
 	 *
-	 * @return int
+	 * @return int|false
 	 */
 	public static function get_number_payments() {
 		$number = false;
@@ -665,6 +669,10 @@ class Plugin {
 		$is_utf8    = strcasecmp( get_bloginfo( 'charset' ), 'UTF-8' ) === 0;
 
 		$config = Core\ConfigProvider::get_config( $gateway_id, $config_id );
+
+		if ( null === $config ) {
+			return null;
+		}
 
 		// Adjust config for specific gateways.
 		switch ( $gateway_id ) {

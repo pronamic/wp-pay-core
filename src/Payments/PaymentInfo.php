@@ -410,7 +410,7 @@ abstract class PaymentInfo {
 	/**
 	 * Set customer.
 	 *
-	 * @param Customer $customer Contact.
+	 * @param Customer|null $customer Contact.
 	 */
 	public function set_customer( $customer ) {
 		$this->customer = $customer;
@@ -428,7 +428,7 @@ abstract class PaymentInfo {
 	/**
 	 * Set billing address.
 	 *
-	 * @param Address $billing_address Billing address.
+	 * @param Address|null $billing_address Billing address.
 	 */
 	public function set_billing_address( $billing_address ) {
 		$this->billing_address = $billing_address;
@@ -446,7 +446,7 @@ abstract class PaymentInfo {
 	/**
 	 * Set shipping address.
 	 *
-	 * @param Address $shipping_address Shipping address.
+	 * @param Address|null $shipping_address Shipping address.
 	 */
 	public function set_shipping_address( $shipping_address ) {
 		$this->shipping_address = $shipping_address;
