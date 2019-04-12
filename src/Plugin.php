@@ -659,7 +659,7 @@ class Plugin {
 	 */
 	public static function get_gateway( $config_id ) {
 		// Check for 0, false, null and other empty values.
-		if ( empty( $config ) ) {
+		if ( empty( $config_id ) ) {
 			return null;
 		}
 
