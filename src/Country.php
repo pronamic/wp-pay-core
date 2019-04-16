@@ -106,7 +106,7 @@ class Country {
 	 * Create from object.
 	 *
 	 * @param mixed $json JSON.
-	 * @return Address
+	 * @return Country
 	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
 	public static function from_json( $json ) {

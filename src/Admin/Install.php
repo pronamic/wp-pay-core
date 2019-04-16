@@ -30,6 +30,13 @@ class Install {
 	private $plugin;
 
 	/**
+	 * Admin.
+	 *
+	 * @var AdminModule
+	 */
+	private $admin;
+
+	/**
 	 * Database updates.
 	 *
 	 * @var array
