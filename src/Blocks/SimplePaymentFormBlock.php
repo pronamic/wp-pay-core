@@ -54,8 +54,8 @@ class SimplePaymentFormBlock {
 				'editor_script' => 'pronamic-simple-payment-form-editor',
 				'attributes'    => array(
 					'amount' => array(
-						'type'    => 'int',
-						'default' => 0,
+						'type'    => 'string',
+						'default' => '0',
 					),
 				),
 			)
