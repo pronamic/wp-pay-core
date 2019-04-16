@@ -519,10 +519,14 @@ class Plugin {
 		$this->privacy_manager = new PrivacyManager();
 
 		// Modules.
-		$this->blocks_module        = new Blocks\BlocksModule( $this );
 		$this->forms_module         = new Forms\FormsModule( $this );
 		$this->payments_module      = new Payments\PaymentsModule( $this );
 		$this->subscriptions_module = new Subscriptions\SubscriptionsModule( $this );
+
+		// Blocks module.
+		if ( function_exists( 'register_block_type' ) ) {
+			$this->blocks_module = new Blocks\BlocksModule( $this );
+		}
 
 		// Google Analytics Ecommerce.
 		$this->google_analytics_ecommerce = new GoogleAnalyticsEcommerce();
