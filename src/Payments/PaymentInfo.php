@@ -850,7 +850,7 @@ abstract class PaymentInfo {
 	 *
 	 * @param mixed       $json JSON.
 	 * @param PaymentInfo $info Payment info.
-	 * @return Payment
+	 * @return PaymentInfo
 	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
 	public static function from_json( $json, $info = null ) {

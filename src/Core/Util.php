@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Core;
 
+use InvalidArgumentException;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Util as Pay_Util;
@@ -69,9 +70,13 @@ class Util {
 	/**
 	 * SimpleXML load string.
 	 *
-	 * @param string $string The XML string to convert to a SimpleXMLElement object.
+	 * @link https://akrabat.com/throw-an-exception-when-simplexml_load_string-fails/
+	 * @link https://www.php.net/manual/en/class.invalidargumentexception.php
+	 * @link https://www.php.net/manual/en/class.libxmlerror.php
 	 *
-	 * @return SimpleXMLElement|WP_Error
+	 * @param string $string The XML string to convert to a SimpleXMLElement object.
+	 * @return SimpleXMLElement
+	 * @throws InvalidArgumentException If string could not be loaded in to a SimpleXMLElement object.
 	 */
 	public static function simplexml_load_string( $string ) {
 		$result = false;
@@ -82,24 +87,38 @@ class Util {
 		// Load.
 		$xml = simplexml_load_string( $string );
 
+		// Check result.
 		if ( false !== $xml ) {
-			$result = $xml;
-		} else {
-			$error = new WP_Error( 'simplexml_load_error', __( 'Could not load the XML string.', 'pronamic_ideal' ) );
+			// Set back to previous value.
+			libxml_use_internal_errors( $use_errors );
 
-			foreach ( libxml_get_errors() as $e ) {
-				$error->add( 'libxml_error', $e->message, $e );
-			}
-
-			libxml_clear_errors();
-
-			$result = $error;
+			return $xml;
 		}
+
+		// Error message.
+		$messages = array(
+			__( 'Could not load the XML string.', 'pronamic_ideal' ),
+		);
+
+		foreach ( libxml_get_errors() as $error ) {
+			$messages[] = sprintf(
+				'%s on line: %s, column: %s',
+				$error->message,
+				$error->line,
+				$error->column
+			);
+		}
+
+		// Clear errors.
+		libxml_clear_errors();
 
 		// Set back to previous value.
 		libxml_use_internal_errors( $use_errors );
 
-		return $result;
+		// Throw exception.
+		$message = implode( PHP_EOL, $messages );
+
+		throw new InvalidArgumentException( $message );
 	}
 
 	/**
@@ -165,7 +184,7 @@ class Util {
 	 *
 	 * @deprecated 2.0.9 Use \Pronamic\WordPress\Money\Money::get_cents() instead.
 	 *
-	 * @return int
+	 * @return float
 	 */
 	public static function amount_to_cents( $amount ) {
 		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Money\Money::get_cents()' );
