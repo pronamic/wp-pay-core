@@ -21,13 +21,6 @@ use Pronamic\WordPress\Pay\Plugin;
  */
 class BlocksModule {
 	/**
-	 * Blocks.
-	 *
-	 * @var Block[]
-	 */
-	private $blocks;
-
-	/**
 	 * Blocks constructor.
 	 *
 	 * @param Plugin $plugin Plugin.
@@ -41,38 +34,7 @@ class BlocksModule {
 	 * Register blocks.
 	 */
 	public function register_blocks() {
-		// Register blocks.
-		$this->register( new FixedPricePaymentButtonBlock() );
-	}
-
-	/**
-	 * Register block.
-	 *
-	 * @param Block $block Gutenberg block.
-	 */
-	public function register( Block $block ) {
-		$type = $block->get_type();
-
-		// Check if a block with this type is already registered.
-		if ( ! $this->get( $type ) ) {
-			$this->blocks[] = $block;
-
-			$block->init();
-		}
-	}
-
-	/**
-	 * Get block by type.
-	 *
-	 * @param string $type Block type.
-	 *
-	 * @return bool|Block
-	 */
-	public function get( $type ) {
-		if ( isset( $this->blocks[ $type ] ) ) {
-			return $this->blocks[ $type ];
-		}
-
-		return false;
+		// Simple payment form.
+		new SimplePaymentFormBlock();
 	}
 }
