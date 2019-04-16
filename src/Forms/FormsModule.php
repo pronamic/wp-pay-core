@@ -29,6 +29,34 @@ class FormsModule {
 	private $plugin;
 
 	/**
+	 * Form post type.
+	 *
+	 * @var FormPostType
+	 */
+	private $form_post_type;
+
+	/**
+	 * Form processor.
+	 *
+	 * @var FormProcessor
+	 */
+	private $processor;
+
+	/**
+	 * Form scripts.
+	 *
+	 * @var FormScripts
+	 */
+	private $scripts;
+
+	/**
+	 * Form shortcode.
+	 *
+	 * @var FormShortcode
+	 */
+	private $shortcode;
+
+	/**
 	 * Constructs and initalize a forms module object.
 	 *
 	 * @param Plugin $plugin Plugin.

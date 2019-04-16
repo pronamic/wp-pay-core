@@ -38,6 +38,13 @@ class AdminGatewayPostType {
 	private $plugin;
 
 	/**
+	 * Admin.
+	 *
+	 * @var AdminModule
+	 */
+	private $admin;
+
+	/**
 	 * Constructs and initializes an admin gateway post type object.
 	 *
 	 * @param Plugin      $plugin Plugin.

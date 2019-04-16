@@ -14,6 +14,7 @@ use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\Forms\FormPostType;
 use Pronamic\WordPress\Pay\Plugin;
+use WP_Error;
 
 /**
  * WordPress Pay admin
@@ -80,6 +81,13 @@ class AdminModule {
 	public $install;
 
 	/**
+	 * Gateway settings.
+	 *
+	 * @var GatewaySettings|null
+	 */
+	public $gateway_settings;
+
+	/**
 	 * Constructs and initalize an admin object.
 	 *
 	 * @param Plugin $plugin Plugin.
@@ -112,6 +120,8 @@ class AdminModule {
 
 	/**
 	 * Admin initialize.
+	 *
+	 * @return void
 	 */
 	public function admin_init() {
 		global $pronamic_ideal_errors;
@@ -140,6 +150,8 @@ class AdminModule {
 	 *
 	 * @link https://github.com/woothemes/woocommerce/blob/2.4.4/includes/admin/class-wc-admin.php#L29
 	 * @link https://github.com/woothemes/woocommerce/blob/2.4.4/includes/admin/class-wc-admin.php#L96-L122
+	 *
+	 * @return void
 	 */
 	public function maybe_redirect() {
 		$redirect = get_transient( 'pronamic_pay_admin_redirect' );
@@ -190,6 +202,7 @@ class AdminModule {
 	 * Input checkbox.
 	 *
 	 * @param array $args Arguments.
+	 * @return void
 	 */
 	public static function input_checkbox( $args ) {
 		$defaults = array(
@@ -245,7 +258,7 @@ class AdminModule {
 	 * Configurations dropdown.
 	 *
 	 * @param array $args Arguments.
-	 * @return string
+	 * @return string|null
 	 */
 	public static function dropdown_configs( $args ) {
 		$defaults = array(
@@ -275,7 +288,7 @@ class AdminModule {
 			esc_attr( $name )
 		);
 
-		$options = \Pronamic\WordPress\Pay\Plugin::get_config_select_options( $args['payment_method'] );
+		$options = Plugin::get_config_select_options( $args['payment_method'] );
 
 		foreach ( $options as $value => $name ) {
 			$output .= sprintf(
@@ -301,6 +314,7 @@ class AdminModule {
 	 *
 	 * @param array  $pages   Page.
 	 * @param string $parent Parent post ID.
+	 * @return void
 	 */
 	private function create_pages( $pages, $parent = null ) {
 		foreach ( $pages as $page ) {
@@ -339,6 +353,8 @@ class AdminModule {
 
 	/**
 	 * Maybe create pages.
+	 *
+	 * @return void
 	 */
 	public function maybe_create_pages() {
 		if ( ! filter_has_var( INPUT_POST, 'pronamic_pay_create_pages' ) ) {
@@ -438,15 +454,44 @@ class AdminModule {
 	}
 
 	/**
-	 * Enqueue admin scripts.
+	 * Check if scripts should be enqueued based on the hook and current screen.
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/get_current_screen/
+	 * @link https://developer.wordpress.org/reference/classes/wp_screen/
 	 *
 	 * @param string $hook Hook.
+	 * @return bool True if scripts should be enqueued, false otherwise.
 	 */
-	public function enqueue_scripts( $hook ) {
+	private function should_enqueue_scripts( $hook ) {
+		// Check if the hook contains the value 'pronamic_pay'.
+		if ( false !== strpos( $hook, 'pronamic_pay' ) ) {
+			return true;
+		}
+
+		// Check if the hook contains the value 'pronamic_ideal'.
+		if ( false !== strpos( $hook, 'pronamic_ideal' ) ) {
+			return true;
+		}
+
+		// Check current screen for some values related to Pronamic Pay.
 		$screen = get_current_screen();
 
-		$enqueue  = false;
-		$enqueue |= in_array(
+		if ( null === $screen ) {
+			return false;
+		}
+
+		// Current screen is dashboard.
+		if ( 'dashboard' === $screen->id ) {
+			return true;
+		}
+
+		// Gravity Forms.
+		if ( 'toplevel_page_gf_edit_forms' === $screen->id ) {
+			return true;
+		}
+
+		// CHeck if current screen post type is related to Pronamic Pay.
+		if ( in_array(
 			$screen->post_type,
 			array(
 				'pronamic_gateway',
@@ -456,93 +501,113 @@ class AdminModule {
 				'pronamic_pay_subscr',
 			),
 			true
-		);
-		$enqueue |= 'dashboard' === $screen->id;
-		$enqueue |= strpos( $hook, 'pronamic_pay' ) !== false;
-		$enqueue |= strpos( $hook, 'pronamic_ideal' ) !== false;
-		$enqueue |= 'toplevel_page_gf_edit_forms' === $screen->id;
-
-		if ( $enqueue ) {
-			$min = SCRIPT_DEBUG ? '' : '.min';
-
-			// Tippy.js - https://atomiks.github.io/tippyjs/.
-			wp_register_script(
-				'tippy.js',
-				plugins_url( 'assets/tippy.js/tippy.all' . $min . '.js', $this->plugin->get_file() ),
-				array(),
-				'3.4.1',
-				true
-			);
-
-			// Pronamic.
-			wp_register_style(
-				'pronamic-pay-icons',
-				plugins_url( 'fonts/pronamic-pay-icons.css', $this->plugin->get_file() ),
-				array(),
-				$this->plugin->get_version()
-			);
-
-			wp_register_style(
-				'pronamic-pay-admin',
-				plugins_url( 'css/admin' . $min . '.css', $this->plugin->get_file() ),
-				array( 'pronamic-pay-icons' ),
-				$this->plugin->get_version()
-			);
-
-			wp_register_script(
-				'pronamic-pay-admin',
-				plugins_url( 'js/admin' . $min . '.js', $this->plugin->get_file() ),
-				array( 'jquery', 'tippy.js' ),
-				$this->plugin->get_version(),
-				true
-			);
-
-			// Enqueue.
-			wp_enqueue_style( 'pronamic-pay-admin' );
-			wp_enqueue_script( 'pronamic-pay-admin' );
+		) ) {
+			return true;
 		}
+
+		// Other.
+		return false;
+	}
+
+	/**
+	 * Enqueue admin scripts.
+	 *
+	 * @param string $hook Hook.
+	 * @return void
+	 */
+	public function enqueue_scripts( $hook ) {
+		if ( ! $this->should_enqueue_scripts( $hook ) ) {
+			return;
+		}
+
+		$min = SCRIPT_DEBUG ? '' : '.min';
+
+		// Tippy.js - https://atomiks.github.io/tippyjs/.
+		wp_register_script(
+			'tippy.js',
+			plugins_url( 'assets/tippy.js/tippy.all' . $min . '.js', $this->plugin->get_file() ),
+			array(),
+			'3.4.1',
+			true
+		);
+
+		// Pronamic.
+		wp_register_style(
+			'pronamic-pay-icons',
+			plugins_url( 'fonts/pronamic-pay-icons.css', $this->plugin->get_file() ),
+			array(),
+			$this->plugin->get_version()
+		);
+
+		wp_register_style(
+			'pronamic-pay-admin',
+			plugins_url( 'css/admin' . $min . '.css', $this->plugin->get_file() ),
+			array( 'pronamic-pay-icons' ),
+			$this->plugin->get_version()
+		);
+
+		wp_register_script(
+			'pronamic-pay-admin',
+			plugins_url( 'js/admin' . $min . '.js', $this->plugin->get_file() ),
+			array( 'jquery', 'tippy.js' ),
+			$this->plugin->get_version(),
+			true
+		);
+
+		// Enqueue.
+		wp_enqueue_style( 'pronamic-pay-admin' );
+		wp_enqueue_script( 'pronamic-pay-admin' );
 	}
 
 	/**
 	 * Maybe test payment.
+	 *
+	 * @return void
 	 */
 	public function maybe_test_payment() {
-		if ( filter_has_var( INPUT_POST, 'test_pay_gateway' ) && check_admin_referer( 'test_pay_gateway', 'pronamic_pay_test_nonce' ) ) {
-			$id = filter_input( INPUT_POST, 'post_ID', FILTER_SANITIZE_NUMBER_INT );
-
-			$gateway = \Pronamic\WordPress\Pay\Plugin::get_gateway( $id );
-
-			if ( $gateway ) {
-				$string = filter_input( INPUT_POST, 'test_amount', FILTER_SANITIZE_STRING );
-
-				$money_parser = new MoneyParser();
-
-				$amount = $money_parser->parse( $string )->get_value();
-
-				$data = new \Pronamic\WordPress\Pay\Payments\PaymentTestData( wp_get_current_user(), $amount );
-
-				$payment_method = filter_input( INPUT_POST, 'pronamic_pay_test_payment_method', FILTER_SANITIZE_STRING );
-
-				$payment = \Pronamic\WordPress\Pay\Plugin::start( $id, $gateway, $data, $payment_method );
-
-				$error = $gateway->get_error();
-
-				if ( is_wp_error( $error ) ) {
-					\Pronamic\WordPress\Pay\Plugin::render_errors( $error );
-
-					exit;
-				}
-
-				$gateway->redirect( $payment );
-			}
+		if ( ! filter_has_var( INPUT_POST, 'test_pay_gateway' ) ) {
+			return;
 		}
+
+		if ( ! check_admin_referer( 'test_pay_gateway', 'pronamic_pay_test_nonce' ) ) {
+			return;
+		}
+
+		$id = filter_input( INPUT_POST, 'post_ID', FILTER_SANITIZE_NUMBER_INT );
+
+		$gateway = Plugin::get_gateway( $id );
+
+		if ( empty( $gateway ) ) {
+			return;
+		}
+
+		$string = filter_input( INPUT_POST, 'test_amount', FILTER_SANITIZE_STRING );
+
+		$money_parser = new MoneyParser();
+
+		$amount = $money_parser->parse( $string )->get_value();
+
+		$data = new \Pronamic\WordPress\Pay\Payments\PaymentTestData( wp_get_current_user(), $amount );
+
+		$payment_method = filter_input( INPUT_POST, 'pronamic_pay_test_payment_method', FILTER_SANITIZE_STRING );
+
+		$payment = Plugin::start( $id, $gateway, $data, $payment_method );
+
+		$error = $gateway->get_error();
+
+		if ( $error instanceof WP_Error ) {
+			Plugin::render_errors( $error );
+
+			exit;
+		}
+
+		$gateway->redirect( $payment );
 	}
 
 	/**
 	 * Admin menu parent file.
 	 *
 	 * @param string $parent_file Parent file for admin menu.
-	 *
 	 * @return string
 	 */
 	public function admin_menu_parent_file( $parent_file ) {
@@ -561,6 +626,8 @@ class AdminModule {
 
 	/**
 	 * Create the admin menu.
+	 *
+	 * @return void
 	 */
 	public function admin_menu() {
 		// @link https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin-menus.php#L145
@@ -645,23 +712,35 @@ class AdminModule {
 
 	/**
 	 * Page dashboard.
+	 *
+	 * @link https://github.com/WordPress/WordPress/blob/5.1/wp-admin/admin.php#L236-L253
+	 *
+	 * @return void
 	 */
 	public function page_dashboard() {
-		return $this->render_page( 'dashboard' );
+		$this->render_page( 'dashboard' );
 	}
 
 	/**
 	 * Page settings.
+	 *
+	 * @link https://github.com/WordPress/WordPress/blob/5.1/wp-admin/admin.php#L236-L253
+	 *
+	 * @return void
 	 */
 	public function page_settings() {
-		return $this->render_page( 'settings' );
+		$this->render_page( 'settings' );
 	}
 
 	/**
 	 * Page tools.
+	 *
+	 * @link https://github.com/WordPress/WordPress/blob/5.1/wp-admin/admin.php#L236-L253
+	 *
+	 * @return void
 	 */
 	public function page_tools() {
-		return $this->render_page( 'tools' );
+		$this->render_page( 'tools' );
 	}
 
 	/**
@@ -688,7 +767,6 @@ class AdminModule {
 	 * Gateway settings.
 	 *
 	 * @param array $classes Classes.
-	 *
 	 * @return array
 	 */
 	public function gateway_settings( $classes ) {
