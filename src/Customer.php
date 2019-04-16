@@ -121,7 +121,7 @@ class Customer {
 	/**
 	 * Set gender.
 	 *
-	 * @param string $gender Gender.
+	 * @param string|null $gender Gender.
 	 */
 	public function set_gender( $gender ) {
 		$this->gender = $gender;

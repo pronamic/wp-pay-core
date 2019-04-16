@@ -69,7 +69,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Get source ID.
 	 *
-	 * @return string|null
+	 * @return string|int|null
 	 */
 	public function get_source_id() {
 		return $this->get_order_id();
@@ -94,7 +94,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Get order ID.
 	 *
-	 * @return string|null
+	 * @return string|int|null
 	 */
 	abstract public function get_order_id();
 

@@ -327,6 +327,10 @@ class AdminSubscriptionPostType {
 	public function meta_box_lines( $post ) {
 		$subscription = get_pronamic_subscription( $post->ID );
 
+		if ( empty( $subscription ) ) {
+			return;
+		}
+
 		$lines = $subscription->get_lines();
 
 		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-payment-lines.php';

@@ -308,9 +308,11 @@ class Plugin {
 		$gateway->update_status( $payment );
 
 		// Add gateway errors as payment notes.
-		if ( $gateway->has_error() ) {
-			foreach ( $gateway->error->get_error_codes() as $code ) {
-				$payment->add_note( sprintf( '%s: %s', $code, $gateway->error->get_error_message( $code ) ) );
+		$error = $gateway->get_error();
+
+		if ( $error instanceof WP_Error ) {
+			foreach ( $error->get_error_codes() as $code ) {
+				$payment->add_note( sprintf( '%s: %s', $code, $error->get_error_message( $code ) ) );
 			}
 		}
 
@@ -1009,9 +1011,11 @@ class Plugin {
 		$result = $gateway->start( $payment );
 
 		// Add gateway errors as payment notes.
-		if ( $gateway->has_error() ) {
-			foreach ( $gateway->error->get_error_codes() as $code ) {
-				$payment->add_note( sprintf( '%s: %s', $code, $gateway->error->get_error_message( $code ) ) );
+		$error = $gateway->get_error();
+
+		if ( $error instanceof WP_Error ) {
+			foreach ( $error->get_error_codes() as $code ) {
+				$payment->add_note( sprintf( '%s: %s', $code, $error->get_error_message( $code ) ) );
 			}
 		}
 

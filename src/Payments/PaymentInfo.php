@@ -88,7 +88,7 @@ abstract class PaymentInfo {
 	 * - Easy Digital Downloads payment ID.
 	 * - Gravity Forms entry ID.
 	 *
-	 * @var string|null
+	 * @var string|int|null
 	 */
 	public $source_id;
 
@@ -252,6 +252,13 @@ abstract class PaymentInfo {
 	private $anonymized;
 
 	/**
+	 * Credit card
+	 *
+	 * @var CreditCard|null
+	 */
+	private $credit_card;
+
+	/**
 	 * Construct and initialize payment object.
 	 *
 	 * @param integer $post_id A payment post ID or null.
@@ -267,7 +274,7 @@ abstract class PaymentInfo {
 	/**
 	 * Get the ID of this payment.
 	 *
-	 * @return int
+	 * @return int|null
 	 */
 	public function get_id() {
 		return $this->id;
@@ -339,7 +346,7 @@ abstract class PaymentInfo {
 	/**
 	 * Get the source identifier of this payment.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_source() {
 		return $this->source;
@@ -357,7 +364,7 @@ abstract class PaymentInfo {
 	/**
 	 * Get the source ID of this payment.
 	 *
-	 * @return string|null
+	 * @return string|int|null
 	 */
 	public function get_source_id() {
 		return $this->source_id;
@@ -366,7 +373,7 @@ abstract class PaymentInfo {
 	/**
 	 * Set the source ID of this payment.
 	 *
-	 * @param string|int $source_id Source ID.
+	 * @param string|int|null $source_id Source ID.
 	 */
 	public function set_source_id( $source_id ) {
 		$this->source_id = $source_id;
@@ -584,51 +591,6 @@ abstract class PaymentInfo {
 		$result = update_post_meta( $this->id, $key, $value );
 
 		return ( false !== $result );
-	}
-
-	/**
-	 * Get source description.
-	 *
-	 * @return string
-	 */
-	public function get_source_description() {
-		$description = $this->source;
-
-		$description = apply_filters( 'pronamic_payment_source_description', $description, $this );
-		$description = apply_filters( 'pronamic_payment_source_description_' . $this->source, $description, $this );
-
-		return $description;
-	}
-
-	/**
-	 * Get the source link for this payment.
-	 *
-	 * @return string|null
-	 */
-	public function get_source_link() {
-		$url = null;
-
-		$url = apply_filters( 'pronamic_payment_source_url', $url, $this );
-		$url = apply_filters( 'pronamic_payment_source_url_' . $this->source, $url, $this );
-
-		return $url;
-	}
-
-	/**
-	 * Get provider link for this payment.
-	 *
-	 * @return string|null
-	 */
-	public function get_provider_link() {
-		$url = null;
-
-		$config_id  = get_post_meta( $this->id, '_pronamic_payment_config_id', true );
-		$gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
-
-		$url = apply_filters( 'pronamic_payment_provider_url', $url, $this );
-		$url = apply_filters( 'pronamic_payment_provider_url_' . $gateway_id, $url, $this );
-
-		return $url;
 	}
 
 	/**

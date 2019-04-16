@@ -150,7 +150,7 @@ class PaymentTestData extends PaymentData {
 	 * @since 1.2.1
 	 * @link https://github.com/woothemes/woocommerce/blob/v2.1.3/includes/abstracts/abstract-wc-payment-gateway.php#L52
 	 * @link https://github.com/wp-premium/woocommerce-subscriptions/blob/2.0.18/includes/class-wc-subscriptions-renewal-order.php#L371-L398
-	 * @return string|bool
+	 * @return Subscription|false
 	 */
 	public function get_subscription() {
 		$test_subscription = filter_input( INPUT_POST, 'pronamic_pay_test_subscription', FILTER_VALIDATE_BOOLEAN );

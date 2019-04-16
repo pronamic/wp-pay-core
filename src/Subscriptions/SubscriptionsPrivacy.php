@@ -99,7 +99,13 @@ class SubscriptionsPrivacy {
 		foreach ( $subscriptions as $subscription ) {
 			$export_data = array();
 
-			$subscription_meta = get_post_meta( $subscription->get_id() );
+			$id = $subscription->get_id();
+
+			if ( empty( $id ) ) {
+				continue;
+			}
+
+			$subscription_meta = get_post_meta( $id );
 
 			// Get subscription meta.
 			foreach ( $meta_keys as $meta_key => $meta_options ) {
@@ -118,7 +124,7 @@ class SubscriptionsPrivacy {
 				$items[] = array(
 					'group_id'    => 'pronamic-pay-subscriptions',
 					'group_label' => __( 'Subscriptions', 'pronamic_ideal' ),
-					'item_id'     => 'pronamic-pay-subscription-' . $subscription->get_id(),
+					'item_id'     => 'pronamic-pay-subscription-' . $id,
 					'data'        => $export_data,
 				);
 			}
@@ -173,6 +179,10 @@ class SubscriptionsPrivacy {
 		// Loop subscriptions.
 		foreach ( $subscriptions as $subscription ) {
 			$subscription_id = $subscription->get_id();
+
+			if ( empty( $subscription_id ) ) {
+				continue;
+			}
 
 			$subscription_meta = get_post_meta( $subscription_id );
 

@@ -38,10 +38,14 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	private function get_contact_name_from_legacy_meta( $payment ) {
 		$id = $payment->get_id();
 
+		if ( empty( $id ) ) {
+			return;
+		}
+
 		$data = array(
-			'full_name'  => $this->get_meta( $id, 'customer_name' ),
-			'first_name' => $this->get_meta( $id, 'first_name' ),
-			'last_name'  => $this->get_meta( $id, 'last_name' ),
+			'full_name'  => $this->get_meta_string( $id, 'customer_name' ),
+			'first_name' => $this->get_meta_string( $id, 'first_name' ),
+			'last_name'  => $this->get_meta_string( $id, 'last_name' ),
 		);
 
 		$data = array_map( 'trim', $data );
@@ -77,16 +81,20 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	private function maybe_create_customer_from_legacy_meta( $payment ) {
 		$id = $payment->get_id();
 
+		if ( empty( $id ) ) {
+			return;
+		}
+
 		$data = array(
-			'full_name'  => $this->get_meta( $id, 'customer_name' ),
-			'first_name' => $this->get_meta( $id, 'first_name' ),
-			'last_name'  => $this->get_meta( $id, 'last_name' ),
-			'email'      => $this->get_meta( $id, 'email' ),
-			'phone'      => $this->get_meta( $id, 'telephone_number' ),
-			'ip_address' => $this->get_meta( $id, 'user_ip' ),
-			'user_agent' => $this->get_meta( $id, 'user_agent' ),
-			'language'   => $this->get_meta( $id, 'language' ),
-			'locale'     => $this->get_meta( $id, 'locale' ),
+			'full_name'  => $this->get_meta_string( $id, 'customer_name' ),
+			'first_name' => $this->get_meta_string( $id, 'first_name' ),
+			'last_name'  => $this->get_meta_string( $id, 'last_name' ),
+			'email'      => $this->get_meta_string( $id, 'email' ),
+			'phone'      => $this->get_meta_string( $id, 'telephone_number' ),
+			'ip_address' => $this->get_meta_string( $id, 'user_ip' ),
+			'user_agent' => $this->get_meta_string( $id, 'user_agent' ),
+			'language'   => $this->get_meta_string( $id, 'language' ),
+			'locale'     => $this->get_meta_string( $id, 'locale' ),
 		);
 
 		$data = array_map( 'trim', $data );
@@ -149,13 +157,17 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 
 		$id = $payment->get_id();
 
+		if ( empty( $id ) ) {
+			return;
+		}
+
 		$data = array(
-			'line_1'      => $this->get_meta( $id, 'address' ),
-			'postal_code' => $this->get_meta( $id, 'zip' ),
-			'city'        => $this->get_meta( $id, 'city' ),
-			'country'     => $this->get_meta( $id, 'country' ),
-			'email'       => $this->get_meta( $id, 'email' ),
-			'phone'       => $this->get_meta( $id, 'telephone_number' ),
+			'line_1'      => $this->get_meta_string( $id, 'address' ),
+			'postal_code' => $this->get_meta_string( $id, 'zip' ),
+			'city'        => $this->get_meta_string( $id, 'city' ),
+			'country'     => $this->get_meta_string( $id, 'country' ),
+			'email'       => $this->get_meta_string( $id, 'email' ),
+			'phone'       => $this->get_meta_string( $id, 'telephone_number' ),
 		);
 
 		$data = array_map( 'trim', $data );

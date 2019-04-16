@@ -95,7 +95,7 @@ class Payment extends LegacyPayment {
 	 * - Easy Digital Downloads payment ID.
 	 * - Gravity Forms entry ID.
 	 *
-	 * @var string|null
+	 * @var string|int|null
 	 */
 	public $source_id;
 
@@ -260,7 +260,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Subscription source ID.
 	 *
-	 * @var int|null
+	 * @var string|int|null
 	 */
 	public $subscription_source_id;
 
@@ -396,42 +396,6 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
-	 * Get start date.
-	 *
-	 * @return DateTime
-	 */
-	public function get_start_date() {
-		return $this->start_date;
-	}
-
-	/**
-	 * Set start date.
-	 *
-	 * @param DateTime $start_date Start date.
-	 */
-	public function set_start_date( $start_date ) {
-		$this->start_date = $start_date;
-	}
-
-	/**
-	 * Get end date.
-	 *
-	 * @return DateTime
-	 */
-	public function get_end_date() {
-		return $this->end_date;
-	}
-
-	/**
-	 * Set end date.
-	 *
-	 * @param DateTime $end_date End date.
-	 */
-	public function set_end_date( $end_date ) {
-		$this->end_date = $end_date;
-	}
-
-	/**
 	 * Get the source text of this payment.
 	 *
 	 * @return string
@@ -448,7 +412,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Get the payment description.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_description() {
 		return $this->description;
@@ -592,7 +556,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Get action URL.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_action_url() {
 		$action_url = $this->action_url;
@@ -659,7 +623,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Get source description.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_source_description() {
 		$description = $this->source;
@@ -704,7 +668,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Get subscription.
 	 *
-	 * @return Subscription|bool
+	 * @return Subscription|false
 	 */
 	public function get_subscription() {
 		if ( is_object( $this->subscription ) ) {
@@ -753,54 +717,9 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
-	 * Set consumer name.
-	 *
-	 * @param string $name Name.
-	 */
-	public function set_consumer_name( $name ) {
-		$this->consumer_name = $name;
-	}
-
-	/**
-	 * Set consumer account number.
-	 *
-	 * @param string $account_number Account number.
-	 */
-	public function set_consumer_account_number( $account_number ) {
-		$this->consumer_account_number = $account_number;
-	}
-
-	/**
-	 * Set consumer IBAN.
-	 *
-	 * @param string $iban IBAN.
-	 */
-	public function set_consumer_iban( $iban ) {
-		$this->consumer_iban = $iban;
-	}
-
-	/**
-	 * Set consumer BIC.
-	 *
-	 * @param string $bic BIC.
-	 */
-	public function set_consumer_bic( $bic ) {
-		$this->consumer_bic = $bic;
-	}
-
-	/**
-	 * Set consumer city.
-	 *
-	 * @param string $city City.
-	 */
-	public function set_consumer_city( $city ) {
-		$this->consumer_city = $city;
-	}
-
-	/**
 	 * Get payment email.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_email() {
 		return $this->email;
@@ -818,34 +737,16 @@ class Payment extends LegacyPayment {
 	/**
 	 * Get entrance code.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_entrance_code() {
 		return $this->entrance_code;
 	}
 
 	/**
-	 * Set the credit card to use for this payment.
-	 *
-	 * @param CreditCard $credit_card Credit Card.
-	 */
-	public function set_credit_card( $credit_card ) {
-		$this->credit_card = $credit_card;
-	}
-
-	/**
-	 * Get the credit card to use for this payment.
-	 *
-	 * @return CreditCard|null
-	 */
-	public function get_credit_card() {
-		return $this->credit_card;
-	}
-
-	/**
 	 * Get payment subscription ID.
 	 *
-	 * @return int
+	 * @return int|null
 	 */
 	public function get_subscription_id() {
 		return $this->subscription_id;
@@ -854,7 +755,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Get reucrring.
 	 *
-	 * @return bool
+	 * @return bool|null
 	 */
 	public function get_recurring() {
 		return $this->recurring;

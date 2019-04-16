@@ -277,7 +277,7 @@ class Subscription extends LegacySubscription {
 	 * Get meta by the specified meta key.
 	 *
 	 * @param string $key A meta key.
-	 * @return string
+	 * @return string|false
 	 */
 	public function get_meta( $key ) {
 		$key = '_pronamic_subscription_' . $key;
@@ -291,7 +291,7 @@ class Subscription extends LegacySubscription {
 	 * @param  string $key   A meta key.
 	 * @param  mixed  $value A meta value.
 	 *
-	 * @return boolean        True on successful update, false on failure.
+	 * @return int|bool The new meta field ID if a field with the given key didn't exist and was therefore added, true on successful update, false on failure.
 	 */
 	public function set_meta( $key, $value = false ) {
 		$key = '_pronamic_subscription_' . $key;

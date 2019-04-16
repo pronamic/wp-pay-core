@@ -26,6 +26,7 @@ use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
 use UnexpectedValueException;
 use WP_CLI;
+use WP_Error;
 use WP_Query;
 
 /**
@@ -144,7 +145,7 @@ class SubscriptionsModule {
 
 					$error = $gateway->get_error();
 
-					if ( $gateway->has_error() && is_wp_error( $error ) ) {
+					if ( $error instanceof WP_Error ) {
 						Plugin::render_errors( $error );
 
 						exit;

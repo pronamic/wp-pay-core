@@ -72,7 +72,7 @@ class SubscriptionPaymentData extends PaymentData {
 	/**
 	 * Get source id.
 	 *
-	 * @return string|null
+	 * @return string|int|null
 	 */
 	public function get_source_id() {
 		return $this->subscription->source_id;
