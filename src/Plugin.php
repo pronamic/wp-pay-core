@@ -155,6 +155,13 @@ class Plugin {
 	public $admin;
 
 	/**
+	 * Blocks module.
+	 *
+	 * @var Blocks\BlocksModule
+	 */
+	public $blocks_module;
+
+	/**
 	 * Forms module.
 	 *
 	 * @var Forms\FormsModule
@@ -512,12 +519,10 @@ class Plugin {
 		$this->privacy_manager = new PrivacyManager();
 
 		// Modules.
+		$this->blocks_module        = new Blocks\BlocksModule( $this );
 		$this->forms_module         = new Forms\FormsModule( $this );
 		$this->payments_module      = new Payments\PaymentsModule( $this );
 		$this->subscriptions_module = new Subscriptions\SubscriptionsModule( $this );
-
-		// Gutenberg blocks.
-		$this->blocks = new Blocks\Blocks( $this );
 
 		// Google Analytics Ecommerce.
 		$this->google_analytics_ecommerce = new GoogleAnalyticsEcommerce();

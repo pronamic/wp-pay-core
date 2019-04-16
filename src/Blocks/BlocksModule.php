@@ -19,7 +19,7 @@ use Pronamic\WordPress\Pay\Plugin;
  * @since   2.1.7
  * @version 2.1.7
  */
-class Blocks {
+class BlocksModule {
 	/**
 	 * Blocks.
 	 *
