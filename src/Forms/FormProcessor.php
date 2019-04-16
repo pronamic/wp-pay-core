@@ -10,6 +10,12 @@
 
 namespace Pronamic\WordPress\Pay\Forms;
 
+use Pronamic\WordPress\Money\Parser as MoneyParser;
+use Pronamic\WordPress\Money\TaxedMoney;
+use Pronamic\WordPress\Pay\Address;
+use Pronamic\WordPress\Pay\Customer;
+use Pronamic\WordPress\Pay\Payments\Payment;
+use Pronamic\WordPress\Pay\Payments\PaymentLines;
 use Pronamic\WordPress\Pay\Plugin;
 use WP_Error;
 use WP_User;
@@ -94,10 +100,108 @@ class FormProcessor {
 			return;
 		}
 
-		// Data.
-		$data = new PaymentFormData( $source_id );
+		/*
+		 * Start payment.
+		 */
+		$first_name = filter_input( INPUT_POST, 'pronamic_pay_first_name', FILTER_SANITIZE_STRING );
+		$last_name  = filter_input( INPUT_POST, 'pronamic_pay_last_name', FILTER_SANITIZE_STRING );
+		$email      = filter_input( INPUT_POST, 'pronamic_pay_email', FILTER_VALIDATE_EMAIL );
+		$order_id   = time();
 
-		$payment = Plugin::start( $config_id, $gateway, $data );
+		$description = sprintf(
+			/* translators: %s: order id */
+			__( 'Payment Form %s', 'pronamic_ideal' ),
+			$order_id
+		);
+
+		$payment = new Payment();
+
+		$payment->title = sprintf(
+			/* translators: %s: payment data title */
+			__( 'Payment for %s', 'pronamic_ideal' ),
+			$description
+		);
+
+		$payment->description = $description;
+		$payment->config_id   = $config_id;
+		$payment->order_id    = $order_id;
+		$payment->source      = 'payment_form';
+		$payment->source_id   = $source_id;
+
+		// Customer.
+		$customer = array(
+			'name'    => (object) array(
+				'first_name' => $first_name,
+				'last_name'  => $last_name,
+			),
+			'email'   => $email,
+		);
+
+		$customer = array_filter( $customer );
+
+		if ( ! empty( $customer ) ) {
+			$customer = Customer::from_json( (object) $customer );
+
+			$payment->set_customer( $customer );
+		}
+
+		// Billing address.
+		$billing_address = array(
+			'name'  => ( $customer instanceof Customer ? $customer->get_name() : null ),
+			'email' => ( $customer instanceof Customer ? $customer->get_email() : null ),
+		);
+
+		$billing_address = array_filter( $billing_address );
+
+		if ( ! empty( $billing_address ) ) {
+			$address = new Address();
+
+			if ( isset( $billing_address['name'] ) ) {
+				$address->set_name( $billing_address['name'] );
+			}
+
+			if ( isset( $billing_address['email'] ) ) {
+				$address->set_email( $billing_address['email'] );
+			}
+
+			$payment->set_billing_address( $address );
+		}
+
+		// Amount.
+		$amount_method = get_post_meta( $source_id, '_pronamic_payment_form_amount_method', true );
+		$amount        = filter_input( INPUT_POST, 'pronamic_pay_amount', FILTER_SANITIZE_STRING );
+
+		if ( 'other' === $amount ) {
+			$amount = filter_input( INPUT_POST, 'pronamic_pay_amount_other', FILTER_SANITIZE_STRING );
+
+			$money_parser = new MoneyParser();
+
+			$amount = $money_parser->parse( $amount )->get_value();
+		} elseif ( empty( $amount_method ) || in_array( $amount_method, array( FormPostType::AMOUNT_METHOD_CHOICES_ONLY, FormPostType::AMOUNT_METHOD_CHOICES_AND_INPUT ), true ) ) {
+			$amount /= 100;
+		}
+
+		$payment->set_total_amount(
+			new TaxedMoney(
+				$amount,
+				'EUR'
+			)
+		);
+
+		// Payment lines.
+		$payment->lines = new PaymentLines();
+
+		$line = $payment->lines->new_line();
+
+		// Set line properties.
+		$line->set_id( $order_id );
+		$line->set_name( $description );
+		$line->set_quantity( 1 );
+		$line->set_unit_price( $payment->get_total_amount() );
+		$line->set_total_amount( $payment->get_total_amount() );
+
+		// Start payment.
+		$payment = Plugin::start_payment( $payment, $gateway );
 
 		$error = $gateway->get_error();
 
@@ -109,10 +213,6 @@ class FormProcessor {
 
 		// @link https://github.com/WordImpress/Give/blob/1.1/includes/payments/functions.php#L172-L178.
 		// @link https://github.com/woothemes/woocommerce/blob/2.4.3/includes/wc-user-functions.php#L36-L118.
-		$first_name = filter_input( INPUT_POST, 'pronamic_pay_first_name', FILTER_SANITIZE_STRING );
-		$last_name  = filter_input( INPUT_POST, 'pronamic_pay_last_name', FILTER_SANITIZE_STRING );
-		$email      = filter_input( INPUT_POST, 'pronamic_pay_email', FILTER_VALIDATE_EMAIL );
-
 		$user = get_user_by( 'email', $email );
 
 		if ( ! empty( $email ) && ! $user ) {
