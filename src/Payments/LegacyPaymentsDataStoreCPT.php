@@ -48,6 +48,7 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			'last_name'  => $this->get_meta_string( $id, 'last_name' ),
 		);
 
+		$data = array_filter( $data );
 		$data = array_map( 'trim', $data );
 		$data = array_filter( $data );
 
@@ -97,6 +98,7 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			'locale'     => $this->get_meta_string( $id, 'locale' ),
 		);
 
+		$data = array_filter( $data );
 		$data = array_map( 'trim', $data );
 		$data = array_filter( $data );
 
@@ -170,6 +172,7 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			'phone'       => $this->get_meta_string( $id, 'telephone_number' ),
 		);
 
+		$data = array_filter( $data );
 		$data = array_map( 'trim', $data );
 		$data = array_filter( $data );
 

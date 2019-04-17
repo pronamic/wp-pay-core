@@ -19,6 +19,7 @@ use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentInfo;
+use Pronamic\WordPress\Pay\Payments\PaymentInfoHelper;
 use WP_Post;
 
 /**
@@ -559,11 +560,15 @@ class Subscription extends LegacySubscription {
 			throw new InvalidArgumentException( 'JSON value must be an object.' );
 		}
 
-		if ( ! $subscription instanceof self ) {
-			$subscription = new self();
+		if ( null === $subscription ) {
+			$subscription = new self();	
 		}
 
-		parent::from_json( $json, $subscription );
+		PaymentInfoHelper::from_json( $json, $subscription );
+
+		if ( isset( $json->status ) ) {
+			$subscription->set_status( $json->status );
+		}
 
 		return $subscription;
 	}
@@ -574,7 +579,11 @@ class Subscription extends LegacySubscription {
 	 * @return object
 	 */
 	public function get_json() {
-		$object = parent::get_json();
+		$object = PaymentInfoHelper::to_json( $this );
+
+		if ( null !== $this->get_status() ) {
+			$object->status = $this->get_status();
+		}
 
 		return $object;
 	}

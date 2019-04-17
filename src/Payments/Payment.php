@@ -760,11 +760,15 @@ class Payment extends LegacyPayment {
 			throw new InvalidArgumentException( 'JSON value must be an object.' );
 		}
 
-		if ( ! $payment instanceof self ) {
+		if ( null === $payment ) {
 			$payment = new self();
 		}
 
-		parent::from_json( $json, $payment );
+		PaymentInfoHelper::from_json( $json, $payment );
+
+		if ( isset( $json->status ) ) {
+			$payment->set_status( $json->status );
+		}
 
 		if ( isset( $json->ga_tracked ) ) {
 			$payment->set_ga_tracked( $json->ga_tracked );
@@ -779,7 +783,11 @@ class Payment extends LegacyPayment {
 	 * @return object
 	 */
 	public function get_json() {
-		$object = parent::get_json();
+		$object = PaymentInfoHelper::to_json( $this );
+
+		if ( null !== $this->get_status() ) {
+			$object->status = $this->get_status();
+		}
 
 		if ( null !== $this->get_ga_tracked() ) {
 			$object->ga_tracked = $this->get_ga_tracked();

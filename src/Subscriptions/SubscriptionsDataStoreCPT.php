@@ -99,10 +99,14 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	/**
 	 * Get post status from meta status.
 	 *
-	 * @param string $meta_status Meta status.
+	 * @param string|null $meta_status Meta status.
 	 * @return string|null
 	 */
 	private function get_post_status_from_meta_status( $meta_status ) {
+		if ( null === $meta_status ) {
+			return null;
+		}
+
 		if ( isset( $this->status_map[ $meta_status ] ) ) {
 			return $this->status_map[ $meta_status ];
 		}
@@ -331,7 +335,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	/**
 	 * Get meta status label.
 	 *
-	 * @param string $meta_status The subscription meta status to get the status label for.
+	 * @param string|null $meta_status The subscription meta status to get the status label for.
 	 * @return string|boolean
 	 */
 	public function get_meta_status_label( $meta_status ) {
