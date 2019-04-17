@@ -79,8 +79,6 @@ class Util {
 	 * @throws InvalidArgumentException If string could not be loaded in to a SimpleXMLElement object.
 	 */
 	public static function simplexml_load_string( $string ) {
-		$result = false;
-
 		// Suppress all XML errors.
 		$use_errors = libxml_use_internal_errors( true );
 

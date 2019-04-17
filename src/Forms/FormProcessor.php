@@ -130,11 +130,11 @@ class FormProcessor {
 
 		// Customer.
 		$customer = array(
-			'name'    => (object) array(
+			'name'  => (object) array(
 				'first_name' => $first_name,
 				'last_name'  => $last_name,
 			),
-			'email'   => $email,
+			'email' => $email,
 		);
 
 		$customer = array_filter( $customer );

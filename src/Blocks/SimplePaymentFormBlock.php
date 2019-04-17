@@ -51,8 +51,8 @@ class SimplePaymentFormBlock {
 			'pronamic-pay/simple-payment-form',
 			array(
 				'render_callback' => array( $this, 'render_block' ),
-				'editor_script' => 'pronamic-simple-payment-form-editor',
-				'attributes'    => array(
+				'editor_script'   => 'pronamic-simple-payment-form-editor',
+				'attributes'      => array(
 					'amount' => array(
 						'type'    => 'string',
 						'default' => '0',

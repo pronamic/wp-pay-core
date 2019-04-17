@@ -499,7 +499,7 @@ class Subscription extends LegacySubscription {
 			$current_value = $this->get_meta( $key );
 
 			// Convert string to amount for comparison.
-			if ( 'amount' === $key ) {
+			if ( 'amount' === $key && false !== $current_value ) {
 				$money_parser = new MoneyParser();
 
 				$current_value = $money_parser->parse( $current_value )->get_value();
