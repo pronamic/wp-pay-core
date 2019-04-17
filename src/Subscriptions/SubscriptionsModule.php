@@ -15,19 +15,26 @@ use DatePeriod;
 use Exception;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
+use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Address;
+use Pronamic\WordPress\Pay\Admin\AdminModule;
+use Pronamic\WordPress\Pay\ContactName;
 use Pronamic\WordPress\Pay\Core\Gateway;
+use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Core\Recurring;
 use Pronamic\WordPress\Pay\Core\Server;
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\Customer;
+use Pronamic\WordPress\Pay\Extensions\WooCommerce\DirectDebitIDealGateway;
+use Pronamic\WordPress\Pay\Extensions\WooCommerce\WooCommerce;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
 use UnexpectedValueException;
 use WP_CLI;
 use WP_Error;
 use WP_Query;
+use WP_User;
 
 /**
  * Title: Subscriptions module
@@ -72,6 +79,8 @@ class SubscriptionsModule {
 
 		add_action( 'plugins_loaded', array( $this, 'maybe_schedule_subscription_payments' ), 6 );
 
+		add_action( 'pronamic_pay_admin_menu', array( $this, 'admin_menu' ) );
+
 		// Exclude subscription notes.
 		add_filter( 'comments_clauses', array( $this, 'exclude_subscription_comment_notes' ), 10, 2 );
 
@@ -93,6 +102,249 @@ class SubscriptionsModule {
 		if ( Util::doing_cli() ) {
 			WP_CLI::add_command( 'pay subscriptions test', array( $this, 'cli_subscriptions_test' ) );
 		}
+	}
+
+	/**
+	 * Add pages to the admin menu.
+	 */
+	public function admin_menu() {
+		add_submenu_page(
+			null,
+			__( 'Import', 'pronamic_ideal' ),
+			__( 'Import', 'pronamic_ideal' ),
+			'manage_options',
+			'pronamic_pay_subscriptions_import',
+			array( $this, 'page_import' )
+		);
+	}
+
+	/**
+	 * Page reports.
+	 */
+	public function page_import() {
+		global $pronamic_pay_import_results;
+
+		if ( ! isset( $this->plugin->admin ) ) {
+			return false;
+		}
+
+		if ( ! ( $this->plugin->admin instanceof AdminModule ) ) {
+			return false;
+		}
+
+		// File upload.
+		$data = $this->maybe_process_import_file_upload();
+
+		if ( $data ) {
+			$pronamic_pay_import_results = $this->import_data( $data );
+		}
+
+		return $this->plugin->admin->render_page( 'subscriptions-import' );
+	}
+
+	/**
+	 * Import data.
+	 *
+	 * @param array $data Data to import.
+	 *
+	 * @return array
+	 */
+	private function import_data( array $data ) {
+		$result = array();
+
+		// Keys.
+		$keys = array_shift( $data );
+
+		$user_id_key                = array_search( 'user_id', $keys, true );
+		$config_id_key              = array_search( 'config_id', $keys, true );
+		$source_key                 = array_search( 'source', $keys, true );
+		$source_id_key              = array_search( 'source_id', $keys, true );
+		$mollie_customer_id_key     = array_search( 'mollie_customer_id', $keys, true );
+		$subscription_source_id_key = array_search( 'subscription_source_id', $keys, true );
+
+		// Defaults.
+		$config_id = get_option( 'pronamic_pay_config_id' );
+
+		// Loop data.
+		foreach ( $data as $item ) {
+			// User.
+			$user = new WP_User( $item[ $user_id_key ] );
+
+			if ( ! $user ) {
+				$result[] = sprintf(
+				/* translators: 1: subscription id, 2: source, 3: source id, 4: user id */
+					__( 'User #%1$s does not exist, skipping.', 'pronamic_ideal' ),
+					$item[ $user_id_key ]
+				);
+
+				continue;
+			}
+
+			// Customer name.
+			$name = new ContactName();
+
+			$name->set_first_name( $user->first_name );
+			$name->set_last_name( $user->last_name );
+
+			if ( empty( $user->first_name ) && empty( $user->last_name ) ) {
+				$name->set_first_name( $user->get( 'display_name' ) );
+			}
+
+			// Payment.
+			$payment      = new Payment();
+			$subscription = new Subscription();
+
+			$customer = new Customer();
+			$customer->set_name( $name );
+			$customer->set_user_id( $item[ $user_id_key ] );
+			$customer->set_email( $user->get( 'user_email' ) );
+
+			$payment->set_config_id( ( false === $config_id_key ? $config_id : $item[ $config_id_key ] ) );
+			$payment->method = PaymentMethods::DIRECT_DEBIT_IDEAL;
+			$payment->set_source( $item[ $source_key ] );
+			$payment->set_source_id( $item[ $source_id_key ] );
+			$payment->set_customer( $customer );
+			// $payment->email = $customer->get_email();
+
+			$subscription_source_id = $item[ $subscription_source_id_key ];
+
+			switch ( $payment->get_source() ) {
+				case 'woocommerce':
+					$payment->subscription_source_id = $subscription_source_id;
+					$subscription->interval          = get_post_meta(
+						$subscription_source_id,
+						'_billing_interval',
+						true
+					);
+					$subscription->interval_period   = Util::to_period(
+						get_post_meta( $subscription_source_id, '_billing_period', true )
+					);
+
+					// Start date.
+					$payment->date = new DateTime( get_the_date( DATE_ATOM, $subscription_source_id ) );
+
+					// Description.
+					$payment->description = sprintf(
+						'WooCommerce Subscription #%s',
+						$subscription_source_id
+					);
+
+					// Amount.
+					$subscription->set_total_amount(
+						new TaxedMoney(
+							get_post_meta( $subscription_source_id, '_order_total', true ),
+							WooCommerce::get_currency()
+						)
+					);
+
+					// Update WooCommerce Subscription payment method.
+					update_post_meta( $subscription_source_id, '_payment_method', DirectDebitIDealGateway::ID );
+					update_post_meta(
+						$subscription_source_id,
+						'_payment_method_title',
+						PaymentMethods::get_name(
+							$subscription->payment_method,
+							__( 'Pronamic', 'pronamic_ideal' )
+						)
+					);
+					delete_post_meta( $subscription_source_id, '_requires_manual_renewal' );
+
+					// Set WooCommerce subscription post parent.
+					wp_update_post(
+						array(
+							'ID'          => $subscription_source_id,
+							'post_parent' => $item[ $source_id_key ],
+						)
+					);
+
+					$payment->subscription = $subscription;
+
+					break;
+				default:
+					$result[] = sprintf(
+					/* translators: %s: source name */
+						__( 'Source `%1$s` is unsupported, skipping.', 'pronamic_ideal' ),
+						$payment->get_source()
+					);
+			}
+
+			// Check if subscription has been set by source case, otherwise go to next item.
+			if ( empty( $payment->subscription ) ) {
+				continue;
+			}
+
+			// Set payment amount.
+			$payment->set_total_amount(
+				new TaxedMoney(
+					$subscription->get_total_amount()->get_value(),
+					$subscription->get_total_amount()->get_currency()
+				)
+			);
+
+			// Save.
+			$payment->set_status( Statuses::SUCCESS );
+			$payment->save();
+
+			$subscription = $payment->get_subscription();
+
+			// Add user meta Mollie customer ID.
+			if ( ! empty( $mollie_customer_id_key ) ) {
+				update_user_meta(
+					$customer->get_user_id(),
+					'_pronamic_pay_mollie_customer_id',
+					$item[ $mollie_customer_id_key ]
+				);
+
+				$subscription->set_meta( 'mollie_customer_id', $item[ $mollie_customer_id_key ] );
+			}
+
+			$subscription->set_status( Statuses::ACTIVE );
+			$subscription->save();
+
+			$result[] = sprintf(
+			/* translators: 1: subscription id, 2: source, 3: source id, 4: user id */
+				__( 'Subscription %1$s created for %2$s #%3$s, user #%4$s.', 'pronamic_ideal' ),
+				$subscription->get_id(),
+				$subscription->get_source(),
+				$subscription->get_source_id(),
+				$subscription->user_id
+			);
+		}
+
+		$result[] = __( 'Done', 'pronamic_ideal' );
+
+		return $result;
+	}
+
+	/**
+	 * Maybe process import file upload.
+	 *
+	 * @return bool|string
+	 */
+	public function maybe_process_import_file_upload() {
+		$name = 'pronamic_subscriptions_import_file';
+
+		if ( ! isset( $_FILES[ $name ] ) || UPLOAD_ERR_OK !== $_FILES[ $name ]['error'] ) { // WPCS: input var okay.
+			return false;
+		}
+
+		if ( ! is_readable( $_FILES[ $name ]['tmp_name'] ) ) { // WPCS: input var okay. // WPCS: sanitization ok.
+			return false;
+		}
+
+		$file = file(
+			$_FILES[ $name ]['tmp_name'],
+			FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES
+		); // WPCS: input var okay. // WPCS: sanitization ok.
+
+		// Parse the CSV file into an array.
+		$delimiter = ( false === strpos( $file[0], ',' ) ? ';' : ',' );
+
+		$delimiters = array_fill( 0, count( $file ), $delimiter );
+
+		$data = array_map( 'str_getcsv', $file, $delimiters );
+
+		return $data;
 	}
 
 	/**
