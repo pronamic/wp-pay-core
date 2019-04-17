@@ -148,7 +148,7 @@ class AdminPaymentPostType {
 			$gateway = Plugin::get_gateway( $payment->get_config_id() );
 
 			// Admin notice.
-			if ( is_callable( array( $gateway, 'create_invoice' ) ) && $gateway->create_invoice( $payment ) ) {
+			if ( null !== $gateway && is_callable( array( $gateway, 'create_invoice' ) ) && $gateway->create_invoice( $payment ) ) {
 				$this->admin_notices[] = array(
 					'type'    => 'info',
 					'message' => __( 'Invoice created.', 'pronamic_ideal' ),
@@ -166,7 +166,7 @@ class AdminPaymentPostType {
 			$gateway = Plugin::get_gateway( $payment->get_config_id() );
 
 			// Admin notice.
-			if ( is_callable( array( $gateway, 'cancel_reservation' ) ) && $gateway->cancel_reservation( $payment ) ) {
+			if ( null !== $gateway && is_callable( array( $gateway, 'cancel_reservation' ) ) && $gateway->cancel_reservation( $payment ) ) {
 				$this->admin_notices[] = array(
 					'type'    => 'info',
 					'message' => __( 'Reservation cancelled.', 'pronamic_ideal' ),
@@ -407,7 +407,7 @@ class AdminPaymentPostType {
 				$source_id          = $payment->get_source_id();
 				$source_description = $payment->get_source_description();
 
-				$source_id_text = '#' . $source_id;
+				$source_id_text = '#' . strval( $source_id );
 
 				$source_link = $payment->get_source_link();
 
@@ -428,7 +428,7 @@ class AdminPaymentPostType {
 							esc_url( get_edit_post_link( $post_id ) ),
 							esc_html( $post_id )
 						),
-						$source_description,
+						strval( $source_description ),
 						$source_id_text
 					),
 					array(
@@ -480,8 +480,10 @@ class AdminPaymentPostType {
 
 				break;
 			case 'pronamic_payment_customer':
-				if ( null !== $payment->get_customer() ) {
-					echo esc_html( $payment->get_customer()->get_name() );
+				$customer = $payment->get_customer();
+
+				if ( null !== $customer ) {
+					echo esc_html( $customer->get_name() );
 				}
 
 				break;

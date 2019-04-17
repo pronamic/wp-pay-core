@@ -49,19 +49,29 @@ class ConfigProvider {
 	public static function get_config( $name, $post_id ) {
 		$config = null;
 
-		if ( isset( self::$factories[ $name ] ) ) {
-			$class_name = self::$factories[ $name ];
-
-			if ( class_exists( $class_name ) ) {
-				$factory = new $class_name();
-
-				if ( $factory instanceof GatewayConfigFactory ) {
-					$config = $factory->get_config( $post_id );
-
-					$config->id = $post_id;
-				}
-			}
+		if ( ! isset( self::$factories[ $name ] ) ) {
+			return null;
 		}
+
+		$class_name = self::$factories[ $name ];
+
+		if ( ! class_exists( $class_name ) ) {
+			return null;
+		}
+
+		$factory = new $class_name();
+
+		if ( ! $factory instanceof GatewayConfigFactory ) {
+			return null;
+		}
+
+		$config = $factory->get_config( $post_id );
+
+		if ( null === $config ) {
+			return null;
+		}
+
+		$config->id = $post_id;
 
 		return $config;
 	}

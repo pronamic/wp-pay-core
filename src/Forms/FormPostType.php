@@ -181,6 +181,7 @@ class FormPostType {
 	 */
 	public function custom_columns( $column, $post_id ) {
 		global $post;
+		global $wpdb;
 
 		switch ( $column ) {
 			case 'pronamic_payment_form_gateway':
@@ -194,8 +195,6 @@ class FormPostType {
 
 				break;
 			case 'pronamic_payment_form_payments':
-				global $wpdb;
-
 				$query = $wpdb->prepare(
 					"
 					SELECT
@@ -231,8 +230,6 @@ class FormPostType {
 
 				break;
 			case 'pronamic_payment_form_earnings':
-				global $wpdb;
-
 				$query = $wpdb->prepare(
 					"
 					SELECT

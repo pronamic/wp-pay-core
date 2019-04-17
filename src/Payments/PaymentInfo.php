@@ -259,6 +259,27 @@ abstract class PaymentInfo {
 	private $credit_card;
 
 	/**
+	 * Start date if the payment is related to a specific period.
+	 *
+	 * @var DateTime|null
+	 */
+	public $start_date;
+
+	/**
+	 * End date if the payment is related to a specific period.
+	 *
+	 * @var DateTime|null
+	 */
+	public $end_date;
+
+	/**
+	 * Meta.
+	 *
+	 * @var array
+	 */
+	public $meta;
+
+	/**
 	 * Construct and initialize payment object.
 	 *
 	 * @param integer $post_id A payment post ID or null.
@@ -395,20 +416,6 @@ abstract class PaymentInfo {
 	 */
 	public function set_config_id( $config_id ) {
 		$this->config_id = $config_id;
-	}
-
-	/**
-	 * Get the source text of this payment.
-	 *
-	 * @return string
-	 */
-	public function get_source_text() {
-		$text = $this->get_source() . '<br />' . $this->get_source_id();
-
-		$text = apply_filters( 'pronamic_payment_source_text_' . $this->get_source(), $text, $this );
-		$text = apply_filters( 'pronamic_payment_source_text', $text, $this );
-
-		return $text;
 	}
 
 	/**

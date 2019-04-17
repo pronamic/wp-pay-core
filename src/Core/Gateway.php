@@ -96,7 +96,7 @@ abstract class Gateway {
 	 * Payment method to use on this gateway.
 	 *
 	 * @since 1.2.3
-	 * @var string
+	 * @var string|null
 	 */
 	private $payment_method;
 

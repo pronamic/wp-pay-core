@@ -126,6 +126,10 @@ class GatewaySettings {
 	public function gateway_payment_methods() {
 		$gateway = Plugin::get_gateway( get_the_ID() );
 
+		if ( null === $gateway ) {
+			return;
+		}
+
 		$supported = $gateway->get_supported_payment_methods();
 		$available = $gateway->get_transient_available_payment_methods();
 

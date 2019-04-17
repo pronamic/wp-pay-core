@@ -118,7 +118,7 @@ class Payment extends LegacyPayment {
 	 * The order ID of this payment.
 	 *
 	 * @todo Is this required/used?
-	 * @var string|null
+	 * @var string|int|null
 	 */
 	public $order_id;
 
@@ -281,27 +281,6 @@ class Payment extends LegacyPayment {
 	public $recurring_type;
 
 	/**
-	 * Meta.
-	 *
-	 * @var array
-	 */
-	public $meta;
-
-	/**
-	 * Start date if the payment is related to a specific period.
-	 *
-	 * @var DateTime|null
-	 */
-	public $start_date;
-
-	/**
-	 * End date if the payment is related to a specific period.
-	 *
-	 * @var DateTime|null
-	 */
-	public $end_date;
-
-	/**
 	 * Customer.
 	 *
 	 * @var Customer|null
@@ -358,8 +337,6 @@ class Payment extends LegacyPayment {
 	public function __construct( $post_id = null ) {
 		parent::__construct( $post_id );
 
-		$this->meta = array();
-
 		$this->set_status( Statuses::OPEN );
 
 		if ( null !== $post_id ) {
@@ -401,7 +378,14 @@ class Payment extends LegacyPayment {
 	 * @return string
 	 */
 	public function get_source_text() {
-		$text = $this->get_source() . '<br />' . $this->get_source_id();
+		$pieces = array(
+			$this->get_source(),
+			$this->get_source_id(),	
+		);
+
+		$pieces = array_filter( $pieces );
+
+		$text = implode( '<br />', $pieces );
 
 		$text = apply_filters( 'pronamic_payment_source_text_' . $this->get_source(), $text, $this );
 		$text = apply_filters( 'pronamic_payment_source_text', $text, $this );

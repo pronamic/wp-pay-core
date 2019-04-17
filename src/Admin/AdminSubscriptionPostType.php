@@ -143,11 +143,17 @@ class AdminSubscriptionPostType {
 	/**
 	 * Custom columns.
 	 *
+	 * @link https://github.com/WordPress/WordPress/blob/5.1/wp-admin/includes/class-wp-posts-list-table.php#L1183-L1193
+	 *
 	 * @param string $column  Column.
-	 * @param string $post_id Post ID.
+	 * @param int    $post_id Post ID.
 	 */
 	public function custom_columns( $column, $post_id ) {
 		$subscription = get_pronamic_subscription( $post_id );
+
+		if ( null === $subscription ) {
+			return;
+		}
 
 		switch ( $column ) {
 			case 'pronamic_subscription_status':
@@ -178,7 +184,7 @@ class AdminSubscriptionPostType {
 				$source_id          = $subscription->get_source_id();
 				$source_description = $subscription->get_source_description();
 
-				$source_id_text = '#' . $source_id;
+				$source_id_text = '#' . strval( $source_id );
 
 				$source_link = $subscription->get_source_link();
 
@@ -241,7 +247,9 @@ class AdminSubscriptionPostType {
 
 				break;
 			case 'pronamic_subscription_date':
-				echo esc_html( $subscription->date->format_i18n() );
+				if ( null !== $subscription->date ) {
+					echo esc_html( $subscription->date->format_i18n() );
+				}
 
 				break;
 			case 'pronamic_subscription_customer':

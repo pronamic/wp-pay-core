@@ -260,21 +260,22 @@ class AdminGatewayPostType {
 	/**
 	 * When the post is saved, saves our custom data.
 	 *
-	 * @param int $post_id The ID of the post being saved.
+	 * @link https://github.com/WordPress/WordPress/blob/5.1/wp-includes/post.php#L3928-L3951
 	 *
-	 * @return int
+	 * @param int $post_id The ID of the post being saved.
+	 * @return void
 	 */
 	public function save_post( $post_id ) {
 		// Nonce.
 		if ( ! filter_has_var( INPUT_POST, 'pronamic_pay_nonce' ) ) {
-			return $post_id;
+			return;
 		}
 
 		check_admin_referer( 'pronamic_pay_save_gateway', 'pronamic_pay_nonce' );
 
 		// If this is an autosave, our form has not been submitted, so we don't want to do anything.
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-			return $post_id;
+			return;
 		}
 
 		// OK, its safe for us to save the data now.

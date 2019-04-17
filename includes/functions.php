@@ -46,8 +46,8 @@ function get_pronamic_payment( $post_id ) {
 /**
  * Get payment by specified meta key and value.
  *
- * @param string $meta_key   The meta key to query for.
- * @param string $meta_value The Meta value to query for.
+ * @param string     $meta_key   The meta key to query for.
+ * @param string|int $meta_value The Meta value to query for.
  * @return Payment|null
  */
 function get_pronamic_payment_by_meta( $meta_key, $meta_value ) {

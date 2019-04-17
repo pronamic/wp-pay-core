@@ -264,7 +264,7 @@ class SubscriptionsModule {
 					$result[] = sprintf(
 					/* translators: %s: source name */
 						__( 'Source `%1$s` is unsupported, skipping.', 'pronamic_ideal' ),
-						$payment->get_source()
+						strval( $payment->get_source() )
 					);
 			}
 
@@ -304,10 +304,10 @@ class SubscriptionsModule {
 			$result[] = sprintf(
 			/* translators: 1: subscription id, 2: source, 3: source id, 4: user id */
 				__( 'Subscription %1$s created for %2$s #%3$s, user #%4$s.', 'pronamic_ideal' ),
-				$subscription->get_id(),
-				$subscription->get_source(),
-				$subscription->get_source_id(),
-				$subscription->user_id
+				strval( $subscription->get_id() ),
+				strval( $subscription->get_source() ),
+				strval( $subscription->get_source_id() ),
+				strval( $subscription->user_id )
 			);
 		}
 

@@ -313,7 +313,14 @@ class Subscription extends LegacySubscription {
 	 * @return string
 	 */
 	public function get_source_text() {
-		$default_text = $this->get_source() . '<br />' . $this->get_source_id();
+		$pieces = array(
+			$this->get_source(),
+			$this->get_source_id(),	
+		);
+
+		$pieces = array_filter( $pieces );
+
+		$default_text = implode( '<br />', $pieces );
 
 		$text = apply_filters( 'pronamic_subscription_source_text_' . $this->get_source(), $default_text, $this );
 		$text = apply_filters( 'pronamic_subscription_source_text', $text, $this );
