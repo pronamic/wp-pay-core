@@ -142,19 +142,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	}
 
 	/**
-	 * Get the redirect URL for this payment.
-	 *
-	 * @deprecated 4.1.2 Use get_return_redirect_url()
-	 *
-	 * @return string
-	 */
-	public function get_redirect_url() {
-		_deprecated_function( __FUNCTION__, '4.1.2', 'get_return_redirect_url()' );
-
-		return $this->get_return_redirect_url();
-	}
-
-	/**
 	 * Get first name.
 	 *
 	 * @deprecated 2.0.9 Use Payment::get_customer()->get_name()->get_first_name() instead.

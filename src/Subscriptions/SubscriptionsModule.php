@@ -265,16 +265,14 @@ class SubscriptionsModule {
 	 * @param Subscription $subscription The subscription to start a recurring payment for.
 	 * @param Gateway|null $gateway      The gateway to start the recurring payment at.
 	 * @param bool         $recurring    Recurring.
-	 *
+	 * @return Payment|null
 	 * @throws \Exception Throws an Exception on incorrect date interval.
-	 *
-	 * @return Payment|bool
 	 */
 	public function start_recurring( Subscription $subscription, $gateway = null, $recurring = true ) {
 		$payment = $this->new_subscription_payment( $subscription );
 
 		if ( empty( $payment ) ) {
-			return;
+			return null;
 		}
 
 		$payment->recurring = $recurring;
@@ -286,7 +284,7 @@ class SubscriptionsModule {
 
 		if ( false === $payment->get_recurring() && ( ! $gateway || ! $gateway->supports( 'recurring' ) ) ) {
 			// @todo
-			return false;
+			return null;
 		}
 
 		// Start payment.

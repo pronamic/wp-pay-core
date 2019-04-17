@@ -261,14 +261,18 @@ class Payment extends LegacyPayment {
 	 * Flag to indicate a recurring payment
 	 *
 	 * @todo Is this required?
+	 *
 	 * @var boolean|null
 	 */
 	public $recurring;
 
 	/**
-	 * The recurring type.
+	 * The recurring type:
+	 * - 'first'
+	 * - 'recurring'
 	 *
 	 * @todo Improve documentation, is this used?
+	 *
 	 * @var string|null
 	 */
 	public $recurring_type;

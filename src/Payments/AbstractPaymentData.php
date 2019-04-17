@@ -36,7 +36,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	 *
 	 * @todo Is this used?
 	 *
-	 * @var TODO
+	 * @var bool|null
 	 */
 	protected $recurring;
 
@@ -339,7 +339,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Is this a recurring (not first) payment?
 	 *
-	 * @return boolean|null
+	 * @return bool|null
 	 */
 	public function get_recurring() {
 		return $this->recurring;
@@ -348,7 +348,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Set recurring.
 	 *
-	 * @param boolean|null $recurring Boolean flag which indicates recurring.
+	 * @param bool|null $recurring Boolean flag which indicates recurring.
 	 */
 	public function set_recurring( $recurring ) {
 		$this->recurring = $recurring;

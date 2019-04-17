@@ -43,6 +43,33 @@ abstract class GatewayConfig {
 	public $mode;
 
 	/**
+	 * Payment server URL.
+	 *
+	 * @todo Move to correct gateway integration library.
+	 *
+	 * @var string|null
+	 */
+	public $payment_server_url;
+
+	/**
+	 * URL.
+	 *
+	 * @todo Move to correct gateway integration library.
+	 *
+	 * @var string|null
+	 */
+	public $url;
+
+	/**
+	 * Certificates.
+	 *
+	 * @todo Move to correct gateway integration library.
+	 *
+	 * @var array|null
+	 */
+	public $certificates;
+
+	/**
 	 * Get gateway class.
 	 *
 	 * @return string

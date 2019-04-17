@@ -45,9 +45,14 @@ class Subscription extends LegacySubscription {
 	public $title;
 
 	/**
-	 * The frequency of this subscription, for example: `daily`, `weekly`, `monthly` or `annually`.
+	 * The frequency of this subscription, also known as `times` or `product length`.
+	 * If the frequency is `2` then there will be in total `3` payments for the
+	 * subscription. One (`1`) at the start of the subscription and `2` follow-up
+	 * payments.
 	 *
-	 * @var string|null
+	 * @link https://docs.mollie.com/reference/v2/subscriptions-api/create-subscription
+	 *
+	 * @var int|null
 	 */
 	public $frequency;
 
@@ -153,9 +158,9 @@ class Subscription extends LegacySubscription {
 	}
 
 	/**
-	 * Get the frequency of this subscription, for example: 'daily', 'weekly', 'monthly' or 'annually'.
+	 * Get the frequency of this subscription.
 	 *
-	 * @return string|null
+	 * @return int|null
 	 */
 	public function get_frequency() {
 		return $this->frequency;
@@ -292,7 +297,7 @@ class Subscription extends LegacySubscription {
 	 * @param  string $key   A meta key.
 	 * @param  mixed  $value A meta value.
 	 *
-	 * @return int|bool The new meta field ID if a field with the given key didn't exist and was therefore added, true on successful update, false on failure.
+	 * @return bool True on successful update, false on failure.
 	 */
 	public function set_meta( $key, $value = false ) {
 		$key = '_pronamic_subscription_' . $key;
@@ -305,7 +310,9 @@ class Subscription extends LegacySubscription {
 			return delete_post_meta( $this->id, $key );
 		}
 
-		return update_post_meta( $this->id, $key, $value );
+		$result = update_post_meta( $this->id, $key, $value );
+
+		return ( false !== $result );
 	}
 
 	/**

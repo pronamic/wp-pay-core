@@ -688,8 +688,8 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$payment->status              = $this->get_meta_string( $id, 'status' );
 		$payment->analytics_client_id = $this->get_meta_string( $id, 'analytics_client_id' );
 		$payment->subscription_id     = $this->get_meta_int( $id, 'subscription_id' );
-		$payment->recurring_type      = $this->get_meta( $id, 'recurring_type' );
-		$payment->recurring           = $this->get_meta( $id, 'recurring' );
+		$payment->recurring_type      = $this->get_meta_string( $id, 'recurring_type' );
+		$payment->recurring           = $this->get_meta_bool( $id, 'recurring' );
 		$payment->start_date          = $this->get_meta_date( $id, 'start_date' );
 		$payment->end_date            = $this->get_meta_date( $id, 'end_date' );
 

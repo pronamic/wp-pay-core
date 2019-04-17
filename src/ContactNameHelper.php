@@ -43,7 +43,15 @@ class ContactNameHelper {
 
 		// Initials.
 		if ( null === $name->get_initials() ) {
-			$names = explode( ' ', trim( $name->get_first_name() . ' ' . $name->get_middle_name() ) );
+			// First and middle name could contain multiple names.
+			$names = array(
+				$name->get_first_name(),
+				$name->get_middle_name(),
+			);
+
+			$names = array_filter( $names );
+
+			$names = explode( ' ', implode( ' ', $names ) );
 
 			$initials = array_map(
 				function( $name ) {

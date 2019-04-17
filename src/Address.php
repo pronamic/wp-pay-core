@@ -482,18 +482,18 @@ class Address {
 	 */
 	public function get_json() {
 		$data = array(
-			'name'         => ( null === $this->get_name() ) ? null : $this->get_name()->get_json(),
+			'name'         => ( null === $this->name ) ? null : $this->name->get_json(),
 			'email'        => $this->get_email(),
 			'company_name' => $this->get_company_name(),
 			'coc_number'   => $this->get_coc_number(),
 			'line_1'       => $this->get_line_1(),
 			'line_2'       => $this->get_line_2(),
 			'street_name'  => $this->get_street_name(),
-			'house_number' => ( null === $this->get_house_number() ) ? null : $this->get_house_number()->get_json(),
+			'house_number' => ( null === $this->house_number ) ? null : $this->house_number->get_json(),
 			'postal_code'  => $this->get_postal_code(),
 			'city'         => $this->get_city(),
-			'region'       => ( null === $this->get_region() ) ? null : $this->get_region()->get_json(),
-			'country'      => ( null === $this->get_country() ) ? null : $this->get_country()->get_json(),
+			'region'       => ( null === $this->region ) ? null : $this->region->get_json(),
+			'country'      => ( null === $this->country ) ? null : $this->country->get_json(),
 			'phone'        => $this->get_phone(),
 		);
 

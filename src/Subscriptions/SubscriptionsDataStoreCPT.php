@@ -488,7 +488,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 		$subscription->key             = $this->get_meta_string( $id, 'key' );
 		$subscription->source          = $this->get_meta_string( $id, 'source' );
 		$subscription->source_id       = $this->get_meta_string( $id, 'source_id' );
-		$subscription->frequency       = $this->get_meta( $id, 'frequency' );
+		$subscription->frequency       = $this->get_meta_int( $id, 'frequency' );
 		$subscription->interval        = $this->get_meta( $id, 'interval' );
 		$subscription->interval_period = $this->get_meta( $id, 'interval_period' );
 		$subscription->transaction_id  = $this->get_meta_string( $id, 'transaction_id' );

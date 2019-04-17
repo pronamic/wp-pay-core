@@ -163,6 +163,58 @@ abstract class AbstractDataStoreCPT {
 	}
 
 	/**
+	 * Get bool from meta.
+	 *
+	 * Please note:
+	 *
+	 * ```
+	 * update_post_meta( 1, '_test_bool', false );
+	 * $test = get_post_meta( 1, 'test_bool', true );
+	 * var_dump( $test );
+	 * // string(0) ""
+	 * ```
+	 *
+	 * ```
+	 * delete_post_meta( 1, '_test_bool' );
+	 * $test = get_post_meta( 1, 'test_bool', true );
+	 * var_dump( $test );
+	 * // string(0) ""
+	 * ```
+	 *
+	 * ```
+	 * delete_post_meta( 1, '_test_bool' );
+	 * $test = get_post_meta( 1, 'test_bool' );
+	 * var_dump( $test );
+	 * // array(0) { }
+	 * ```
+	 *
+	 * ```
+	 * update_post_meta( 1, '_test_bool', true );
+	 * $test = get_post_meta( 1, 'test_bool' );
+	 * var_dump( $test );
+	 * // array(1) { [0]=> string(0) "" }
+	 * ```
+	 *
+	 * @param int    $id  Post ID.
+	 * @param string $key Key.
+	 *
+	 * @return bool|null
+	 */
+	public function get_meta_bool( $id, $key ) {
+		$meta_key = $this->get_meta_key( $key );
+
+		$value = get_post_meta( $id, $meta_key );
+
+		if ( empty( $value ) ) {
+			return null;
+		}
+
+		$value = get_post_meta( $id, $meta_key, true );
+
+		return boolval( $value );
+	}
+
+	/**
 	 * Update meta.
 	 *
 	 * @param int    $id    Post ID.

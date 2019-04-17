@@ -588,7 +588,7 @@ abstract class PaymentInfo {
 	 * @param  string $key   A meta key.
 	 * @param  mixed  $value A meta value.
 	 *
-	 * @return boolean        True on successful update, false on failure.
+	 * @return bool True on successful update, false on failure.
 	 */
 	public function set_meta( $key, $value ) {
 		$key = '_pronamic_payment_' . $key;
