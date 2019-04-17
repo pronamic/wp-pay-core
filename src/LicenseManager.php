@@ -102,6 +102,7 @@ class LicenseManager {
 	 */
 	public function license_check_event() {
 		$license = get_option( 'pronamic_pay_license_key' );
+		$license = strval( $license );
 
 		$this->check_license( $license );
 	}
@@ -150,7 +151,7 @@ class LicenseManager {
 	/**
 	 * Check license.
 	 *
-	 * @param string|boolean $license License.
+	 * @param string $license License.
 	 */
 	public function check_license( $license ) {
 		$status = $this->request_license_status( $license );

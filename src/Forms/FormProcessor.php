@@ -194,7 +194,7 @@ class FormProcessor {
 		$line = $payment->lines->new_line();
 
 		// Set line properties.
-		$line->set_id( $order_id );
+		$line->set_id( strval( $order_id ) );
 		$line->set_name( $description );
 		$line->set_quantity( 1 );
 		$line->set_unit_price( $payment->get_total_amount() );

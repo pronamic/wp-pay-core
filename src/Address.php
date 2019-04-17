@@ -606,7 +606,7 @@ class Address {
 			$this->get_name(),
 			$this->get_line_1(),
 			$this->get_line_2(),
-			$this->get_postal_code() . ' ' . $this->get_city(),
+			strval( $this->get_postal_code() ) . ' ' . strval( $this->get_city() ),
 			$this->get_country_code(),
 			$this->get_phone(),
 			$this->get_email(),

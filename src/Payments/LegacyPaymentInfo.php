@@ -26,16 +26,17 @@ use Pronamic\WordPress\Pay\Customer;
  * @version 2.1.0
  * @since   2.1.0
  *
- * @property string $language
- * @property string $locale
- * @property string $email
- * @property string $first_name
- * @property string $last_name
- * @property string $telephone_number
- * @property string $country
- * @property string $zip
- * @property string $city
- * @property string $address
+ * @property string|null $language
+ * @property string|null $locale
+ * @property string|null $email
+ * @property string|null $first_name
+ * @property string|null $last_name
+ * @property string|null $customer_name
+ * @property string|null $telephone_number
+ * @property string|null $country
+ * @property string|null $zip
+ * @property string|null $city
+ * @property string|null $address
  * @property int|string|null $user_id
  */
 abstract class LegacyPaymentInfo extends PaymentInfo {

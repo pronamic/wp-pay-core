@@ -95,10 +95,14 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
 	 * Get post status from meta status.
 	 *
-	 * @param string $meta_status Meta status.
+	 * @param string|null $meta_status Meta status.
 	 * @return string|null
 	 */
 	private function get_post_status_from_meta_status( $meta_status ) {
+		if ( null === $meta_status ) {
+			return null;
+		}
+
 		if ( isset( $this->status_map[ $meta_status ] ) ) {
 			return $this->status_map[ $meta_status ];
 		}
@@ -330,14 +334,14 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
 	 * Get meta status label.
 	 *
-	 * @param string $meta_status The payment meta status to get the status label for.
-	 * @return string|false
+	 * @param string|null $meta_status The payment meta status to get the status label for.
+	 * @return string|null
 	 */
 	public function get_meta_status_label( $meta_status ) {
 		$post_status = $this->get_post_status_from_meta_status( $meta_status );
 
 		if ( empty( $post_status ) ) {
-			return false;
+			return null;
 		}
 
 		$status_object = get_post_status_object( $post_status );
@@ -346,7 +350,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			return $status_object->label;
 		}
 
-		return false;
+		return null;
 	}
 
 	/**

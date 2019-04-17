@@ -75,7 +75,7 @@ class PaymentInfoHelper {
 		}
 
 		if ( $payment_info->is_anonymized() ) {
-			$object->anonymized = $this->is_anonymized();
+			$object->anonymized = $payment_info->is_anonymized();
 		}
 
 		return $object;

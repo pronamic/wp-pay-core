@@ -133,10 +133,13 @@ class Country {
 	 * @return string
 	 */
 	public function __toString() {
-		return sprintf(
-			'%s - %s',
+		$values = array(
 			$this->code,
-			$this->name
+			$this->name,
 		);
+
+		$values = array_filter( $values );
+
+		return implode( ' - ', $values );
 	}
 }

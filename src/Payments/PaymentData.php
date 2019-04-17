@@ -213,7 +213,7 @@ abstract class PaymentData extends AbstractPaymentData {
 	 * Get subscription ID.
 	 *
 	 * @link https://github.com/woothemes/woocommerce/blob/v2.1.3/includes/abstracts/abstract-wc-payment-gateway.php#L52
-	 * @return string|null
+	 * @return int|null
 	 */
 	public function get_subscription_id() {
 		if ( ! $this->get_subscription() ) {

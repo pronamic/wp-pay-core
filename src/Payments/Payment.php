@@ -49,7 +49,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * The subscription.
 	 *
-	 * @var Subscription
+	 * @var Subscription|null
 	 */
 	public $subscription;
 
@@ -106,13 +106,6 @@ class Payment extends LegacyPayment {
 	 * @var string|null
 	 */
 	public $purchase_id;
-
-	/**
-	 * The transaction ID of this payment.
-	 *
-	 * @var string|null
-	 */
-	public $transaction_id;
 
 	/**
 	 * The order ID of this payment.
@@ -217,7 +210,7 @@ class Payment extends LegacyPayment {
 	 * The status of this payment.
 	 *
 	 * @todo   Check constant?
-	 * @var string
+	 * @var string|null
 	 */
 	public $status;
 
@@ -424,7 +417,7 @@ class Payment extends LegacyPayment {
 	 * Get the payment status.
 	 *
 	 * @todo Constant?
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_status() {
 		return $this->status;
@@ -433,7 +426,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Get payment status label.
 	 *
-	 * @return string|false
+	 * @return string|null
 	 */
 	public function get_status_label() {
 		return pronamic_pay_plugin()->payments_data_store->get_meta_status_label( $this->status );
@@ -442,7 +435,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Set the payment status.
 	 *
-	 * @param string $status Status.
+	 * @param string|null $status Status.
 	 */
 	public function set_status( $status ) {
 		$this->status = $status;
@@ -652,7 +645,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Get subscription.
 	 *
-	 * @return Subscription|false
+	 * @return Subscription|null
 	 */
 	public function get_subscription() {
 		if ( is_object( $this->subscription ) ) {
@@ -660,7 +653,7 @@ class Payment extends LegacyPayment {
 		}
 
 		if ( empty( $this->subscription_id ) ) {
-			return false;
+			return null;
 		}
 
 		$this->subscription = new Subscription( $this->subscription_id );

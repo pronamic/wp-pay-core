@@ -426,6 +426,10 @@ class Subscription extends LegacySubscription {
 	 * @return array
 	 */
 	public function get_payments() {
+		if ( null === $this->id ) {
+			return array();
+		}
+
 		return get_pronamic_payments_by_meta( '_pronamic_payment_subscription_id', $this->id );
 	}
 

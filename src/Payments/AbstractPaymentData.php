@@ -323,10 +323,10 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Subscription.
 	 *
-	 * @return Subscription|false
+	 * @return Subscription|null
 	 */
 	public function get_subscription() {
-		return false;
+		return null;
 	}
 
 	/**

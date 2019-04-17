@@ -79,8 +79,8 @@ function get_pronamic_payment_by_meta( $meta_key, $meta_value ) {
 /**
  * Get payments by specified meta key and value.
  *
- * @param string $meta_key   The meta key to query for.
- * @param string $meta_value The Meta value to query for.
+ * @param string     $meta_key   The meta key to query for.
+ * @param string|int $meta_value The Meta value to query for.
  * @return Payment[]
  */
 function get_pronamic_payments_by_meta( $meta_key, $meta_value ) {

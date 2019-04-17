@@ -101,6 +101,13 @@ abstract class PaymentInfo {
 	public $order_id;
 
 	/**
+	 * The transaction ID of this payment.
+	 *
+	 * @var string|null
+	 */
+	public $transaction_id;
+
+	/**
 	 * The total amount of this payment.
 	 *
 	 * @var TaxedMoney
@@ -597,25 +604,6 @@ abstract class PaymentInfo {
 		$result = update_post_meta( $this->id, $key, $value );
 
 		return ( false !== $result );
-	}
-
-	/**
-	 * Get subscription.
-	 *
-	 * @return Subscription|false
-	 */
-	public function get_subscription() {
-		if ( is_object( $this->subscription ) ) {
-			return $this->subscription;
-		}
-
-		if ( empty( $this->subscription_id ) ) {
-			return false;
-		}
-
-		$this->subscription = new Subscription( $this->subscription_id );
-
-		return $this->subscription;
 	}
 
 	/**
