@@ -331,7 +331,7 @@ abstract class PaymentInfo {
 	/**
 	 * Get start date.
 	 *
-	 * @return DateTime
+	 * @return DateTime|null
 	 */
 	public function get_start_date() {
 		return $this->start_date;
@@ -340,7 +340,7 @@ abstract class PaymentInfo {
 	/**
 	 * Set start date.
 	 *
-	 * @param DateTime $start_date Start date.
+	 * @param DateTime|null $start_date Start date.
 	 */
 	public function set_start_date( $start_date ) {
 		$this->start_date = $start_date;
@@ -349,7 +349,7 @@ abstract class PaymentInfo {
 	/**
 	 * Get end date.
 	 *
-	 * @return DateTime
+	 * @return DateTime|null
 	 */
 	public function get_end_date() {
 		return $this->end_date;
@@ -358,7 +358,7 @@ abstract class PaymentInfo {
 	/**
 	 * Set end date.
 	 *
-	 * @param DateTime $end_date End date.
+	 * @param DateTime|null $end_date End date.
 	 */
 	public function set_end_date( $end_date ) {
 		$this->end_date = $end_date;

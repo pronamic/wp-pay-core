@@ -128,9 +128,7 @@ class FormsModule {
 		}
 
 		// Button text.
-		if ( empty( $button_text ) ) {
-			$button_text = empty( $button_text ) ? __( 'Pay Now', 'pronamic_ideal' ) : $button_text;
-		}
+		$button_text = empty( $button_text ) ? __( 'Pay Now', 'pronamic_ideal' ) : $button_text;
 
 		// Load template.
 		$file = plugin_dir_path( $this->plugin->get_file() ) . 'templates/form.php';
@@ -157,7 +155,7 @@ class FormsModule {
 		$text .= sprintf(
 			'<a href="%s">%s</a>',
 			get_edit_post_link( $payment->source_id ),
-			$payment->source_id
+			strval( $payment->source_id )
 		);
 
 		return $text;
