@@ -693,10 +693,12 @@ class Payment extends LegacyPayment {
 	 * @return string
 	 */
 	public function format_string( $string ) {
+		$id = $this->get_id();
+
 		// Replacements definition.
 		$replacements = array(
 			'{order_id}'   => $this->get_order_id(),
-			'{payment_id}' => $this->get_id(),
+			'{payment_id}' => $id,
 		);
 
 		// Find and replace.
@@ -709,8 +711,8 @@ class Payment extends LegacyPayment {
 
 		// Make sure there is an dynamic part in the order ID.
 		// @link https://secure.ogone.com/ncol/param_cookbook.asp.
-		if ( 0 === $count ) {
-			$string .= $this->get_id();
+		if ( 0 === $count && null !== $id ) {
+			$string .= $id;
 		}
 
 		return $string;

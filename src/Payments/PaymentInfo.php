@@ -524,7 +524,7 @@ abstract class PaymentInfo {
 	 *
 	 * @param Money|null $shipping_amount Money object.
 	 */
-	public function set_shipping_amount( Money $shipping_amount ) {
+	public function set_shipping_amount( Money $shipping_amount = null ) {
 		$this->shipping_amount = $shipping_amount;
 	}
 
@@ -610,38 +610,6 @@ abstract class PaymentInfo {
 		$this->subscription = new Subscription( $this->subscription_id );
 
 		return $this->subscription;
-	}
-
-	/**
-	 * Format string
-	 *
-	 * @link https://github.com/woocommerce/woocommerce/blob/v2.2.3/includes/abstracts/abstract-wc-email.php#L187-L195
-	 *
-	 * @param string $string The string to format.
-	 * @return string
-	 */
-	public function format_string( $string ) {
-		// Replacements definition.
-		$replacements = array(
-			'{order_id}'   => $this->get_order_id(),
-			'{payment_id}' => $this->get_id(),
-		);
-
-		// Find and replace.
-		$string = str_replace(
-			array_keys( $replacements ),
-			array_values( $replacements ),
-			$string,
-			$count
-		);
-
-		// Make sure there is an dynamic part in the order ID.
-		// @link https://secure.ogone.com/ncol/param_cookbook.asp.
-		if ( 0 === $count ) {
-			$string .= $this->get_id();
-		}
-
-		return $string;
 	}
 
 	/**
@@ -885,28 +853,40 @@ abstract class PaymentInfo {
 
 		$object->total_amount = TaxedMoneyJsonTransformer::to_json( $this->get_total_amount() );
 
-		if ( null !== $this->get_shipping_amount() ) {
-			$object->shipping_amount = MoneyJsonTransformer::to_json( $this->get_shipping_amount() );
+		$shipping_amount = $this->get_shipping_amount();
+
+		if ( null !== $shipping_amount ) {
+			$object->shipping_amount = MoneyJsonTransformer::to_json( $shipping_amount );
 		}
 
-		if ( null !== $this->get_customer() ) {
-			$object->customer = $this->get_customer()->get_json();
+		$customer = $this->get_customer();
+
+		if ( null !== $customer ) {
+			$object->customer = $customer->get_json();
 		}
 
-		if ( null !== $this->get_billing_address() ) {
-			$object->billing_address = $this->get_billing_address()->get_json();
+		$billing_address = $this->get_billing_address();
+
+		if ( null !== $billing_address ) {
+			$object->billing_address = $billing_address->get_json();
 		}
 
-		if ( null !== $this->get_shipping_address() ) {
-			$object->shipping_address = $this->get_shipping_address()->get_json();
+		$shipping_address = $this->get_shipping_address();
+
+		if ( null !== $shipping_address ) {
+			$object->shipping_address = $shipping_address->get_json();
 		}
 
-		if ( null !== $this->get_lines() ) {
-			$object->lines = $this->get_lines()->get_json();
+		$lines = $this->get_lines();
+
+		if ( null !== $lines ) {
+			$object->lines = $lines->get_json();
 		}
 
-		if ( null !== $this->get_mode() ) {
-			$object->mode = $this->get_mode();
+		$mode = $this->get_mode();
+
+		if ( null !== $mode ) {
+			$object->mode = $mode;
 		}
 
 		if ( $this->is_anonymized() ) {

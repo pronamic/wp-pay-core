@@ -614,12 +614,12 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 
 		if ( $previous_status !== $subscription->status ) {
 			$old = $previous_status;
-			$old = strtolower( $old );
 			$old = empty( $old ) ? 'unknown' : $old;
+			$old = strtolower( $old );
 
 			$new = $subscription->status;
-			$new = strtolower( $new );
 			$new = empty( $new ) ? 'unknown' : $new;
+			$new = strtolower( $new );
 
 			$can_redirect = false;
 

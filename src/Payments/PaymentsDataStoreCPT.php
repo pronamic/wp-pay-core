@@ -780,12 +780,12 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		if ( $previous_status !== $payment->status ) {
 			$old = $previous_status;
-			$old = strtolower( $old );
 			$old = empty( $old ) ? 'unknown' : $old;
+			$old = strtolower( $old );
 
 			$new = $payment->status;
-			$new = strtolower( $new );
 			$new = empty( $new ) ? 'unknown' : $new;
+			$new = strtolower( $new );
 
 			$can_redirect = false;
 

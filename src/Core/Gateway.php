@@ -617,7 +617,7 @@ abstract class Gateway {
 	 * Get the payment method to use on this gateway.
 	 *
 	 * @since 1.2.3
-	 * @return string One of the PaymentMethods constants.
+	 * @return string|null One of the PaymentMethods constants.
 	 */
 	public function get_payment_method() {
 		return $this->payment_method;
@@ -628,7 +628,7 @@ abstract class Gateway {
 	 *
 	 * @since 1.2.3
 	 *
-	 * @param string $payment_method One of the PaymentMethods constants.
+	 * @param string|null $payment_method One of the PaymentMethods constants.
 	 */
 	public function set_payment_method( $payment_method ) {
 		$this->payment_method = $payment_method;

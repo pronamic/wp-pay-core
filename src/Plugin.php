@@ -831,47 +831,55 @@ class Plugin {
 		}
 
 		// Billing address.
-		$billing_address = array(
-			'name'         => ( $customer instanceof Customer ? $customer->get_name() : null ),
-			'line_1'       => $data->get_address(),
-			'postal_code'  => $data->get_zip(),
-			'city'         => $data->get_city(),
-			'country_name' => $data->get_country(),
-			'email'        => $data->get_email(),
-			'phone'        => $data->get_telephone_number(),
+		$name         = ( $customer instanceof Customer ? $customer->get_name() : null );
+		$line_1       = $data->get_address();
+		$postal_code  = $data->get_zip();
+		$city         = $data->get_city();
+		$country_name = $data->get_country();
+		$email        = $data->get_email();
+		$phone        = $data->get_telephone_number();
+
+		$parts = array(
+			$name,
+			$line_1,
+			$postal_code,
+			$city,
+			$country_name,
+			$email,
+			$phone,
 		);
 
-		$billing_address = array_filter( $billing_address );
+		$parts = array_filter( $parts );
 
-		if ( ! empty( $billing_address ) ) {
+		if ( ! empty( $parts ) ) {
 			$address = new Address();
 
-			if ( isset( $billing_address['name'] ) ) {
-				$address->set_name( $billing_address['name'] );
+			if ( ! empty( $name ) ) {
+				$address->set_name( $name );
 			}
 
-			if ( isset( $billing_address['line_1'] ) ) {
-				$address->set_line_1( $billing_address['line_1'] );
+			if ( ! empty( $line_1 ) ) {
+				$address->set_line_1( $line_1 );
 			}
 
-			if ( isset( $billing_address['postal_code'] ) ) {
-				$address->set_postal_code( $billing_address['postal_code'] );
+			if ( ! empty( $postal_code ) ) {
+				$address->set_postal_code( $postal_code );
 			}
 
-			if ( isset( $billing_address['city'] ) ) {
-				$address->set_city( $billing_address['city'] );
+			if ( ! empty( $city ) ) {
+				$address->set_city( $city );
 			}
 
-			if ( isset( $billing_address['country_name'] ) ) {
-				$address->set_country_name( $billing_address['country_name'] );
+			if ( ! empty( $country_name ) ) {
+				$address->set_country_name( $country_name );
 			}
 
-			if ( isset( $billing_address['email'] ) ) {
-				$address->set_email( $billing_address['email'] );
+			if ( ! empty( $email ) ) {
+				$address->set_email( $email );
 			}
 
-			if ( isset( $billing_address['phone'] ) ) {
-				$address->set_phone( $billing_address['phone'] );
+			if ( ! empty( $phone ) ) {
+				$address->set_phone( $phone );
 			}
 
 			$payment->set_billing_address( $address );
