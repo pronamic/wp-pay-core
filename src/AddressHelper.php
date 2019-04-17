@@ -86,7 +86,7 @@ class AddressHelper {
 		$address->set_house_number_base( PrivacyManager::anonymize_data( 'text', $address->get_house_number_base() ) );
 		$address->set_house_number_addition( PrivacyManager::anonymize_data( 'text', $address->get_house_number_addition() ) );
 		$address->set_postal_code( PrivacyManager::anonymize_data( 'text', $address->get_postal_code() ) );
-		$address->set_city( PrivacyManager::anonymize_data( 'text', $address->get_postal_code() ) );
+		$address->set_city( PrivacyManager::anonymize_data( 'text', $address->get_city() ) );
 		$address->set_region( PrivacyManager::anonymize_data( 'text', $address->get_region() ) );
 		$address->set_country_name( PrivacyManager::anonymize_data( 'text', $address->get_country_name() ) );
 		$address->set_phone( PrivacyManager::anonymize_data( 'phone', $address->get_phone() ) );
