@@ -15,7 +15,6 @@ use DatePeriod;
 use Exception;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
-use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\Admin\AdminModule;
@@ -248,16 +247,16 @@ class SubscriptionsModule {
 					);
 
 					// Amount.
-					$subscription->set_amount(
-						new Money(
+					$subscription->set_total_amount(
+						new TaxedMoney(
 							get_post_meta( $subscription_source_id, '_order_total', true ),
 							WooCommerce::get_currency()
 						)
 					);
 
 					// Update WooCommerce Subscription payment method.
-					update_post_meta( $subscription_source_id, '_payment_method', $payment_method );
-					update_post_meta( $subscription_source_id, '_payment_method_title', PaymentMethods::get_name( $payment->method, __( 'Pronamic', 'pronamic_ideal' ) ) );
+					update_post_meta( $subscription_source_id, '_payment_method', $subscription->payment_method );
+					update_post_meta( $subscription_source_id, '_payment_method_title', PaymentMethods::get_name( $subscription->payment_method, __( 'Pronamic', 'pronamic_ideal' ) ) );
 					delete_post_meta( $subscription_source_id, '_requires_manual_renewal' );
 
 					// Set WooCommerce subscription post parent.
@@ -287,8 +286,8 @@ class SubscriptionsModule {
 			// Set payment amount.
 			$payment->set_total_amount(
 				new TaxedMoney(
-					$subscription->get_amount()->get_amount(),
-					$subscription->get_amount()->get_currency()
+					$subscription->get_total_amount()->get_value(),
+					$subscription->get_total_amount()->get_currency()
 				)
 			);
 
