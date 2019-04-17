@@ -203,7 +203,7 @@ abstract class PaymentData extends AbstractPaymentData {
 	/**
 	 * Get subscription source ID.
 	 *
-	 * @return string
+	 * @return string|int|null
 	 */
 	public function get_subscription_source_id() {
 		return $this->get_source_id();

@@ -481,24 +481,24 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 		}
 
 		$subscription->config_id       = $this->get_meta_int( $id, 'config_id' );
-		$subscription->key             = $this->get_meta( $id, 'key' );
-		$subscription->source          = $this->get_meta( $id, 'source' );
-		$subscription->source_id       = $this->get_meta( $id, 'source_id' );
+		$subscription->key             = $this->get_meta_string( $id, 'key' );
+		$subscription->source          = $this->get_meta_string( $id, 'source' );
+		$subscription->source_id       = $this->get_meta_string( $id, 'source_id' );
 		$subscription->frequency       = $this->get_meta( $id, 'frequency' );
 		$subscription->interval        = $this->get_meta( $id, 'interval' );
 		$subscription->interval_period = $this->get_meta( $id, 'interval_period' );
-		$subscription->transaction_id  = $this->get_meta( $id, 'transaction_id' );
-		$subscription->status          = $this->get_meta( $id, 'status' );
-		$subscription->description     = $this->get_meta( $id, 'description' );
-		$subscription->email           = $this->get_meta( $id, 'email' );
-		$subscription->customer_name   = $this->get_meta( $id, 'customer_name' );
-		$subscription->payment_method  = $this->get_meta( $id, 'payment_method' );
+		$subscription->transaction_id  = $this->get_meta_string( $id, 'transaction_id' );
+		$subscription->status          = $this->get_meta_string( $id, 'status' );
+		$subscription->description     = $this->get_meta_string( $id, 'description' );
+		$subscription->email           = $this->get_meta_string( $id, 'email' );
+		$subscription->customer_name   = $this->get_meta_string( $id, 'customer_name' );
+		$subscription->payment_method  = $this->get_meta_string( $id, 'payment_method' );
 
 		// Amount.
 		$total_amount = $subscription->get_total_amount();
 
 		$total_amount->set_value( $this->get_meta( $id, 'amount' ) );
-		$total_amount->set_currency( $this->get_meta( $id, 'currency' ) );
+		$total_amount->set_currency( $this->get_meta_string( $id, 'currency' ) );
 
 		// First Payment.
 		$first_payment = $subscription->get_first_payment();

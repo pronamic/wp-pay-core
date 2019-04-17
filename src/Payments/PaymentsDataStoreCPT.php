@@ -331,7 +331,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * Get meta status label.
 	 *
 	 * @param string $meta_status The payment meta status to get the status label for.
-	 * @return string|boolean
+	 * @return string|false
 	 */
 	public function get_meta_status_label( $meta_status ) {
 		$post_status = $this->get_post_status_from_meta_status( $meta_status );
@@ -665,27 +665,31 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	protected function read_post_meta( $payment ) {
 		$id = $payment->get_id();
 
-		$payment->config_id           = $this->get_meta( $id, 'config_id' );
-		$payment->key                 = $this->get_meta( $id, 'key' );
-		$payment->method              = $this->get_meta( $id, 'method' );
-		$payment->issuer              = $this->get_meta( $id, 'issuer' );
-		$payment->order_id            = $this->get_meta( $id, 'order_id' );
-		$payment->transaction_id      = $this->get_meta( $id, 'transaction_id' );
-		$payment->entrance_code       = $this->get_meta( $id, 'entrance_code' );
-		$payment->action_url          = $this->get_meta( $id, 'action_url' );
-		$payment->source              = $this->get_meta( $id, 'source' );
-		$payment->source_id           = $this->get_meta( $id, 'source_id' );
-		$payment->description         = $this->get_meta( $id, 'description' );
-		$payment->email               = $this->get_meta( $id, 'email' );
-		$payment->status              = $this->get_meta( $id, 'status' );
-		$payment->analytics_client_id = $this->get_meta( $id, 'analytics_client_id' );
-		$payment->subscription_id     = $this->get_meta( $id, 'subscription_id' );
+		if ( empty( $id ) ) {
+			return;
+		}
+
+		$payment->config_id           = $this->get_meta_int( $id, 'config_id' );
+		$payment->key                 = $this->get_meta_string( $id, 'key' );
+		$payment->method              = $this->get_meta_string( $id, 'method' );
+		$payment->issuer              = $this->get_meta_string( $id, 'issuer' );
+		$payment->order_id            = $this->get_meta_string( $id, 'order_id' );
+		$payment->transaction_id      = $this->get_meta_string( $id, 'transaction_id' );
+		$payment->entrance_code       = $this->get_meta_string( $id, 'entrance_code' );
+		$payment->action_url          = $this->get_meta_string( $id, 'action_url' );
+		$payment->source              = $this->get_meta_string( $id, 'source' );
+		$payment->source_id           = $this->get_meta_string( $id, 'source_id' );
+		$payment->description         = $this->get_meta_string( $id, 'description' );
+		$payment->email               = $this->get_meta_string( $id, 'email' );
+		$payment->status              = $this->get_meta_string( $id, 'status' );
+		$payment->analytics_client_id = $this->get_meta_string( $id, 'analytics_client_id' );
+		$payment->subscription_id     = $this->get_meta_int( $id, 'subscription_id' );
 		$payment->recurring_type      = $this->get_meta( $id, 'recurring_type' );
 		$payment->recurring           = $this->get_meta( $id, 'recurring' );
 		$payment->start_date          = $this->get_meta_date( $id, 'start_date' );
 		$payment->end_date            = $this->get_meta_date( $id, 'end_date' );
 
-		$payment->set_version( $this->get_meta( $id, 'version' ) );
+		$payment->set_version( $this->get_meta_string( $id, 'version' ) );
 
 		// Legacy.
 		parent::read_post_meta( $payment );
@@ -700,6 +704,8 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @return array
 	 */
 	protected function get_update_meta( $payment, $meta = array() ) {
+		$customer = $payment->get_customer();
+
 		$meta = array(
 			'config_id'               => $payment->config_id,
 			'key'                     => $payment->key,
@@ -717,7 +723,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			'consumer_city'           => $payment->consumer_city,
 			'source'                  => $payment->source,
 			'source_id'               => $payment->source_id,
-			'email'                   => ( null === $payment->get_customer() ? null : $payment->get_customer()->get_email() ),
+			'email'                   => ( null === $customer ? null : $customer->get_email() ),
 			'analytics_client_id'     => $payment->analytics_client_id,
 			'subscription_id'         => $payment->subscription_id,
 			'recurring_type'          => $payment->recurring_type,

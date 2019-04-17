@@ -95,8 +95,10 @@ class CustomerHelper {
 		}
 
 		// Language.
-		if ( null === $customer->get_language() && null !== $customer->get_locale() ) {
-			$language = substr( $customer->get_locale(), 0, 2 );
+		$locale = $customer->get_locale();
+
+		if ( null === $customer->get_language() && null !== $locale ) {
+			$language = substr( $locale, 0, 2 );
 
 			$customer->set_language( $language );
 		}

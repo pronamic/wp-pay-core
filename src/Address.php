@@ -86,7 +86,7 @@ class Address {
 	/**
 	 * House number.
 	 *
-	 * @var string|null
+	 * @var HouseNumber|null
 	 */
 	private $house_number;
 

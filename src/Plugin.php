@@ -155,6 +155,13 @@ class Plugin {
 	public $admin;
 
 	/**
+	 * Blocks module.
+	 *
+	 * @var Blocks\BlocksModule
+	 */
+	public $blocks_module;
+
+	/**
 	 * Forms module.
 	 *
 	 * @var Forms\FormsModule
@@ -301,9 +308,11 @@ class Plugin {
 		$gateway->update_status( $payment );
 
 		// Add gateway errors as payment notes.
-		if ( $gateway->has_error() ) {
-			foreach ( $gateway->error->get_error_codes() as $code ) {
-				$payment->add_note( sprintf( '%s: %s', $code, $gateway->error->get_error_message( $code ) ) );
+		$error = $gateway->get_error();
+
+		if ( $error instanceof WP_Error ) {
+			foreach ( $error->get_error_codes() as $code ) {
+				$payment->add_note( sprintf( '%s: %s', $code, $error->get_error_message( $code ) ) );
 			}
 		}
 
@@ -446,7 +455,7 @@ class Plugin {
 
 				$error = $gateway->get_error();
 
-				if ( is_wp_error( $error ) ) {
+				if ( $error instanceof WP_Error ) {
 					self::render_errors( $error );
 				} else {
 					$gateway->redirect( $payment );
@@ -516,8 +525,10 @@ class Plugin {
 		$this->payments_module      = new Payments\PaymentsModule( $this );
 		$this->subscriptions_module = new Subscriptions\SubscriptionsModule( $this );
 
-		// Gutenberg blocks.
-		$this->blocks = new Blocks\Blocks( $this );
+		// Blocks module.
+		if ( function_exists( 'register_block_type' ) ) {
+			$this->blocks_module = new Blocks\BlocksModule( $this );
+		}
 
 		// Google Analytics Ecommerce.
 		$this->google_analytics_ecommerce = new GoogleAnalyticsEcommerce();
@@ -1000,9 +1011,11 @@ class Plugin {
 		$result = $gateway->start( $payment );
 
 		// Add gateway errors as payment notes.
-		if ( $gateway->has_error() ) {
-			foreach ( $gateway->error->get_error_codes() as $code ) {
-				$payment->add_note( sprintf( '%s: %s', $code, $gateway->error->get_error_message( $code ) ) );
+		$error = $gateway->get_error();
+
+		if ( $error instanceof WP_Error ) {
+			foreach ( $error->get_error_codes() as $code ) {
+				$payment->add_note( sprintf( '%s: %s', $code, $error->get_error_message( $code ) ) );
 			}
 		}
 

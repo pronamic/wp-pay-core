@@ -27,14 +27,14 @@ interface PaymentDataInterface {
 	/**
 	 * Get the title of the payment.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_title();
 
 	/**
 	 * Get credit card object.
 	 *
-	 * @return CreditCard
+	 * @return CreditCard|null
 	 */
 	public function get_credit_card();
 
