@@ -1,0 +1,20 @@
+{
+	"name": {
+		"first_name": "Remco",
+		"last_name": "Tolsma"
+	},
+	"email": "info@pronamic.nl",
+	"company_name": "Pronamic",
+	"coc_number": "01108446",
+	"line_1": "Burgemeester Wuiteweg 39b",
+	"line_2": "1e etage",
+	"street_name": "Burgemeester Wuiteweg",
+	"house_number": "39b",
+	"house_number_addition": "b",
+	"postal_code": "9203 KA",
+	"city": "Drachten",
+	"region": "Friesland",
+	"country_code": "NL",
+	"country_name": "Nederland",
+	"phone":"085 40 11 580"
+}

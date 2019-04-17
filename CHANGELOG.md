@@ -7,6 +7,56 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.1.6] - 2019-03-28
+- Updated Tippy.js to version 3.4.1.
+- Introduced a `$payment->get_edit_payment_url()` function to easy retrieve the edit payment URL.
+- Introduced a `$payment->get_status_label()` function to retrieve easier a user friendly (translated) status label.
+- Renamed status check event to `pronamic_pay_payment_status_check` without `seconds` argument and with different delays for recurring payments.
+- Added space between HTML attributes when converting from array.
+- Allow transaction ID to be null.
+- Retrieving payments will now check on payment post type.
+- Introduced Country, HouseNumber and Region classes.
+- Simplify payment redirect (Ogone DirectLink answer moved to gateway).
+- Added `key` query argument to pay redirect URL.
+- Link recurring icon to subscription post edit.
+- Add support for payment redirect with custom views.
+- Register style `pronamic-pay-redirect` in plugin.
+- Removed ABN AMRO iDEAL Easy, iDEAL Only Kassa and Internetkassa gateways.
+- Keep main admin menu item active when editing payments/subscriptions/gateways/forms.
+- Added `pronamic_pay_gateways` filter.
+- Show Adyen and EMS gateway IDs in custom column.
+- Fixed empty admin reports.
+
+## [2.1.5] - 2019-02-04
+- Fixed fatal error PaymentInfo expecting taxed money.
+- Improved responsive admin tables for payments and subscriptions.
+
+## [2.1.4] - 2019-01-24
+- Improved locale to always includes a country.
+
+## [2.1.3] - 2019-01-21
+- Fixed empty payment and subscription customer names.
+- Fixed missing user ID in payment customer.
+- Updated storing payments and subscriptions.
+- Allow manual subscription renewal also for gateways which support auto renewal.
+
+## [2.1.2] - 2019-01-03
+- Fixed empty payments and subscriptions list tables with 'All' filter since WordPress 5.0.2.
+
+## [2.1.1] - 2018-12-19
+- Fixed incomplete payment customer from legacy meta.
+
+## [2.1.0] - 2018-12-10
+- Added support for payment lines.
+- Store payment data as JSON.
+- Added support for customer data in payment.
+- Added support for billing and shipping address in payment.
+- Added support for AfterPay payment methods.
+- Added Capayable.
+- Updated Tippy.js to version 3.3.0.
+- Removed unused payment processing status.
+- Added new WordPress 5.0 post type labels.
+
 ## [2.0.8] - 2018-09-28
 - Added `get_meta()` method to core gateway config factory.
 - Updated Tippy.js from 2.6.0 to 3.0.2.
@@ -127,7 +177,14 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.0.8...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.1.6...HEAD
+[2.1.6]: https://github.com/wp-pay/core/compare/2.1.5...2.1.6
+[2.1.5]: https://github.com/wp-pay/core/compare/2.1.4...2.1.5
+[2.1.4]: https://github.com/wp-pay/core/compare/2.1.3...2.1.4
+[2.1.3]: https://github.com/wp-pay/core/compare/2.1.2...2.1.3
+[2.1.2]: https://github.com/wp-pay/core/compare/2.1.1...2.1.2
+[2.1.1]: https://github.com/wp-pay/core/compare/2.1.0...2.1.1
+[2.1.0]: https://github.com/wp-pay/core/compare/2.0.8...2.1.0
 [2.0.8]: https://github.com/wp-pay/core/compare/2.0.7...2.0.8
 [2.0.7]: https://github.com/wp-pay/core/compare/2.0.6...2.0.7
 [2.0.6]: https://github.com/wp-pay/core/compare/2.0.5...2.0.6

@@ -3,7 +3,7 @@
  * Address helper
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -17,8 +17,8 @@ use VIISON\AddressSplitter\AddressSplitter;
  * Address helper
  *
  * @author  Remco Tolsma
- * @version 2.0.8
- * @since   2.0.8
+ * @version 2.1.0
+ * @since   2.1.0
  */
 class AddressHelper {
 	/**
@@ -88,10 +88,13 @@ class AddressHelper {
 		$address->set_postal_code( PrivacyManager::anonymize_data( 'text', $address->get_postal_code() ) );
 		$address->set_city( PrivacyManager::anonymize_data( 'text', $address->get_postal_code() ) );
 		$address->set_region( PrivacyManager::anonymize_data( 'text', $address->get_region() ) );
-		$address->set_country_code( PrivacyManager::anonymize_data( 'text', $address->get_country_code() ) );
 		$address->set_country_name( PrivacyManager::anonymize_data( 'text', $address->get_country_name() ) );
 		$address->set_phone( PrivacyManager::anonymize_data( 'phone', $address->get_phone() ) );
 
+		// Country code only accepts ISO 3166-1 alpha-2 strings and null.
+		$address->set_country_code( null );
+
+		// Anonymize name.
 		$name = $address->get_name();
 
 		if ( null !== $name ) {

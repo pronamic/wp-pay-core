@@ -3,7 +3,7 @@
  * Payments Module
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Subscriptions
  */
@@ -19,7 +19,7 @@ use Pronamic\WordPress\Pay\Core\Statuses;
  * @link    https://woocommerce.com/2017/04/woocommerce-3-0-release/
  * @link    https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
  * @author  Remco Tolsma
- * @version 2.0.4
+ * @version 2.1.6
  * @since   2.0.1
  */
 class PaymentsModule {
@@ -36,6 +36,13 @@ class PaymentsModule {
 	 * @var PaymentsPrivacy
 	 */
 	public $privacy;
+
+	/**
+	 * Status checker.
+	 *
+	 * @var StatusChecker
+	 */
+	public $status_checker;
 
 	/**
 	 * Construct and initialize a payments module object.
@@ -58,10 +65,7 @@ class PaymentsModule {
 		add_action( 'pronamic_payment_status_update', array( $this, 'log_payment_status_update' ), 10, 4 );
 
 		// Payment Status Checker.
-		$status_checker = new StatusChecker();
-
-		// The 'pronamic_ideal_check_transaction_status' hook is scheduled to request the payment status.
-		add_action( 'pronamic_ideal_check_transaction_status', array( $status_checker, 'check_status' ), 10, 3 );
+		$this->status_checker = new StatusChecker();
 	}
 
 	/**
@@ -143,18 +147,21 @@ class PaymentsModule {
 	 * @return void
 	 */
 	public function log_payment_status_update( $payment, $can_redirect, $old_status, $new_status ) {
+		$old_label = $this->plugin->payments_data_store->get_meta_status_label( $old_status );
+		$new_label = $this->plugin->payments_data_store->get_meta_status_label( $new_status );
+
 		$note = sprintf(
 			/* translators: 1: old status, 2: new status */
 			__( 'Payment status changed from "%1$s" to "%2$s".', 'pronamic_ideal' ),
-			esc_html( $this->plugin->payments_data_store->get_meta_status_label( $old_status ) ),
-			esc_html( $this->plugin->payments_data_store->get_meta_status_label( $new_status ) )
+			esc_html( false === $old_label ? $old_status : $old_label ),
+			esc_html( false === $new_label ? $new_status : $new_label )
 		);
 
 		if ( null === $old_status ) {
 			$note = sprintf(
 				/* translators: 1: new status */
 				__( 'Payment created with status "%1$s".', 'pronamic_ideal' ),
-				esc_html( $this->plugin->payments_data_store->get_meta_status_label( $new_status ) )
+				esc_html( false === $new_label ? $new_status : $new_label )
 			);
 		}
 

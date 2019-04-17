@@ -3,7 +3,7 @@
  * Customer helper
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -18,8 +18,8 @@ use Pronamic\WordPress\Pay\Core\Util as Core_Util;
  * Customer helper
  *
  * @author  Remco Tolsma
- * @version 2.0.8
- * @since   2.0.8
+ * @version 2.1.0
+ * @since   2.1.0
  */
 class CustomerHelper {
 	/**
@@ -67,7 +67,18 @@ class CustomerHelper {
 
 			// Locale based on ACCEPT_LANGUAGE header.
 			if ( function_exists( 'locale_accept_from_http' ) ) {
-				$locales[] = locale_accept_from_http( Server::get( 'HTTP_ACCEPT_LANGUAGE' ) );
+				$http_locale = locale_accept_from_http( Server::get( 'HTTP_ACCEPT_LANGUAGE' ) );
+
+				// Make sure locale includes a country (i.e. Firefox sets `nl` as accepted language).
+				if ( false === strpos( $http_locale, '_' ) ) {
+					$http_locale = sprintf(
+						'%1$s_%2$s',
+						$http_locale,
+						strtoupper( $http_locale )
+					);
+				}
+
+				$locales[] = $http_locale;
 			}
 
 			// Site locale.
@@ -84,8 +95,10 @@ class CustomerHelper {
 		}
 
 		// Language.
-		if ( null === $customer->get_language() && null !== $customer->get_locale() ) {
-			$language = substr( $customer->get_locale(), 0, 2 );
+		$locale = $customer->get_locale();
+
+		if ( null === $customer->get_language() && null !== $locale ) {
+			$language = substr( $locale, 0, 2 );
 
 			$customer->set_language( $language );
 		}

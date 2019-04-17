@@ -3,7 +3,7 @@
  * Gateway Post Type
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Admin
  */
@@ -18,9 +18,9 @@ use WP_Post;
 /**
  * WordPress admin gateway post type
  *
- * @author Remco Tolsma
- * @version 3.8.0
- * @since ?
+ * @author  Remco Tolsma
+ * @version 2.1.6
+ * @since   ?
  */
 class AdminGatewayPostType {
 	/**
@@ -36,6 +36,13 @@ class AdminGatewayPostType {
 	 * @var Plugin
 	 */
 	private $plugin;
+
+	/**
+	 * Admin.
+	 *
+	 * @var AdminModule
+	 */
+	private $admin;
 
 	/**
 	 * Constructs and initializes an admin gateway post type object.
@@ -108,6 +115,8 @@ class AdminGatewayPostType {
 			case 'pronamic_gateway_id':
 				$data = array_filter(
 					array(
+						get_post_meta( $post_id, '_pronamic_gateway_adyen_merchant_account', true ),
+						get_post_meta( $post_id, '_pronamic_gateway_ems_ecommerce_storename', true ),
 						get_post_meta( $post_id, '_pronamic_gateway_ideal_merchant_id', true ),
 						get_post_meta( $post_id, '_pronamic_gateway_omnikassa_merchant_id', true ),
 						get_post_meta( $post_id, '_pronamic_gateway_buckaroo_website_key', true ),
@@ -172,6 +181,8 @@ class AdminGatewayPostType {
 	 *
 	 * @param array    $post_states Post states.
 	 * @param \WP_Post $post        Post.
+	 *
+	 * @return array
 	 */
 	public function display_post_states( $post_states, $post ) {
 		if ( self::POST_TYPE !== get_post_type( $post ) ) {
@@ -249,19 +260,22 @@ class AdminGatewayPostType {
 	/**
 	 * When the post is saved, saves our custom data.
 	 *
+	 * @link https://github.com/WordPress/WordPress/blob/5.1/wp-includes/post.php#L3928-L3951
+	 *
 	 * @param int $post_id The ID of the post being saved.
+	 * @return void
 	 */
 	public function save_post( $post_id ) {
 		// Nonce.
 		if ( ! filter_has_var( INPUT_POST, 'pronamic_pay_nonce' ) ) {
-			return $post_id;
+			return;
 		}
 
 		check_admin_referer( 'pronamic_pay_save_gateway', 'pronamic_pay_nonce' );
 
 		// If this is an autosave, our form has not been submitted, so we don't want to do anything.
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-			return $post_id;
+			return;
 		}
 
 		// OK, its safe for us to save the data now.

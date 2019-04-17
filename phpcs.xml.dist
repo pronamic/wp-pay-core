@@ -3,13 +3,13 @@
 <ruleset name="WordPress Pay: Core rules">
 	<config name="minimum_supported_wp_version" value="4.7" />
 
-	<config name="testVersion" value="5.3-99.0"/>
+	<config name="testVersion" value="5.3-" />
 
 	<file>.</file>
 
 	<arg name="colors"/>
 	<arg name="extensions" value="php" />
-    <arg value="sp" />
+	<arg value="sp" />
 
 	<exclude-pattern>includes/xmlseclibs/*</exclude-pattern>
 	<exclude-pattern>node_modules/*</exclude-pattern>
@@ -17,6 +17,7 @@
 	<exclude-pattern>tests/wp-config.php</exclude-pattern>
 	<exclude-pattern>vendor/*</exclude-pattern>
 	<exclude-pattern>wordpress/*</exclude-pattern>
+	<exclude-pattern type="relative">^wp-content/*</exclude-pattern>
 
 	<rule ref="WordPress">
 		<exclude name="Generic.Files.LowercasedFilename.NotFound" />

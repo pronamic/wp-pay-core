@@ -3,7 +3,7 @@
  * Google Analytics E-Commerce
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -19,7 +19,7 @@ use Pronamic\WordPress\Pay\Payments\Payment;
  * Pronamic Pay Google Analytics e-commerce
  *
  * @author  Reüel van der Steege
- * @version 2.0.5
+ * @version 2.1.0
  * @since   2.0.1
  */
 class GoogleAnalyticsEcommerce {
@@ -41,9 +41,9 @@ class GoogleAnalyticsEcommerce {
 	/**
 	 * Anonymous client ID.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
-	private $client_id = '';
+	private $client_id;
 
 	/**
 	 * Constructs an analytics e-commerce object.
@@ -132,7 +132,7 @@ class GoogleAnalyticsEcommerce {
 		$transaction = wp_parse_args(
 			array(
 				't'  => 'transaction',
-				'tr' => sprintf( '%F', $payment->get_total_amount()->get_amount() ),
+				'tr' => sprintf( '%F', $payment->get_total_amount()->get_value() ),
 			),
 			$defaults
 		);
@@ -149,14 +149,16 @@ class GoogleAnalyticsEcommerce {
 		}
 
 		// Shipping.
-		if ( null !== $payment->get_shipping_amount() ) {
+		$shipping_amount = $payment->get_shipping_amount();
+
+		if ( null !== $shipping_amount ) {
 			/*
 			 * Transaction Shipping
 			 * Optional.
 			 * Specifies the total shipping cost of the transaction.
 			 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ts
 			 */
-			$transaction['ts'] = sprintf( '%F', $payment->get_shipping_amount()->get_amount() );
+			$transaction['ts'] = sprintf( '%F', $shipping_amount->get_value() );
 		}
 
 		// Tax.
@@ -167,7 +169,7 @@ class GoogleAnalyticsEcommerce {
 			 * Specifies the total tax of the transaction.
 			 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#tt
 			 */
-			$transaction['tt'] = sprintf( '%F', $payment->get_total_amount()->get_tax_amount() );
+			$transaction['tt'] = sprintf( '%F', $payment->get_total_amount()->get_tax_value() );
 		}
 
 		wp_remote_post(

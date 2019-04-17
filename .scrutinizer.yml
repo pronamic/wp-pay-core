@@ -8,6 +8,17 @@ build:
   project_setup:
     before:
       - mysql -e "CREATE DATABASE wp_phpunit_tests"
+  dependencies:
+    override:
+      - composer install --ignore-platform-reqs --no-interaction
+  nodes:
+    coverage:
+      tests:
+        override:
+          - command: ./vendor/bin/phpunit
+            coverage:
+              file: build/logs/clover.xml
+              format: clover
 
 filter:
   excluded_paths:
@@ -20,6 +31,9 @@ checks:
       name: WordPress
     code_rating: true
     duplication: true
+
+build_failure_conditions:
+  - 'issues.label("bug").exists'
 
 coding_style:
     php:

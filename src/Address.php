@@ -3,7 +3,7 @@
  * Address.
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -30,8 +30,8 @@ use stdClass;
  * @link   https://epayments-api.developer-ingenico.com/s2sapi/v1/en_US/java/payments/create.html#payments-create-payload
  *
  * @author  Remco Tolsma
- * @version 2.0.8
- * @since   2.0.8
+ * @version 2.1.6
+ * @since   2.1.0
  */
 class Address {
 	/**
@@ -86,23 +86,9 @@ class Address {
 	/**
 	 * House number.
 	 *
-	 * @var string|null
+	 * @var HouseNumber|null
 	 */
 	private $house_number;
-
-	/**
-	 * House number base (exclusive addition/extension).
-	 *
-	 * @var string|null
-	 */
-	private $house_number_base;
-
-	/**
-	 * House number addition.
-	 *
-	 * @var string|null
-	 */
-	private $house_number_addition;
 
 	/**
 	 * Postal Code.
@@ -123,25 +109,16 @@ class Address {
 	 *
 	 * Alias: `region`, `county`, `state`, `province`, `stateOrProvince`, `stateCode`.
 	 *
-	 * @var string|null
+	 * @var Region|null
 	 */
 	private $region;
 
 	/**
-	 * Country code.
+	 * Country.
 	 *
-	 * Alias: `country` or `country_code`.
-	 *
-	 * @var string|null
+	 * @var Country|null
 	 */
-	private $country_code;
-
-	/**
-	 * Country name.
-	 *
-	 * @var string|null
-	 */
-	private $country_name;
+	private $country;
 
 	/**
 	 * Phone.
@@ -279,7 +256,7 @@ class Address {
 	/**
 	 * Get house number.
 	 *
-	 * @return string|null
+	 * @return HouseNumber|null
 	 */
 	public function get_house_number() {
 		return $this->house_number;
@@ -288,9 +265,13 @@ class Address {
 	/**
 	 * Set house number.
 	 *
-	 * @param string|null $house_number House number.
+	 * @param string|HouseNumber|null $house_number House number.
 	 */
 	public function set_house_number( $house_number ) {
+		if ( is_string( $house_number ) ) {
+			$house_number = new HouseNumber( $house_number );
+		}
+
 		$this->house_number = $house_number;
 	}
 
@@ -300,7 +281,11 @@ class Address {
 	 * @return string|null
 	 */
 	public function get_house_number_base() {
-		return $this->house_number_base;
+		if ( null === $this->house_number ) {
+			return null;
+		}
+
+		return $this->house_number->get_base();
 	}
 
 	/**
@@ -309,7 +294,11 @@ class Address {
 	 * @param string|null $house_number_base House number base.
 	 */
 	public function set_house_number_base( $house_number_base ) {
-		$this->house_number_base = $house_number_base;
+		if ( null === $this->house_number ) {
+			$this->house_number = new HouseNumber();
+		}
+
+		$this->house_number->set_base( $house_number_base );
 	}
 
 	/**
@@ -318,7 +307,11 @@ class Address {
 	 * @return string|null
 	 */
 	public function get_house_number_addition() {
-		return $this->house_number_addition;
+		if ( null === $this->house_number ) {
+			return null;
+		}
+
+		return $this->house_number->get_addition();
 	}
 
 	/**
@@ -327,7 +320,11 @@ class Address {
 	 * @param string|null $house_number_addition House number addition.
 	 */
 	public function set_house_number_addition( $house_number_addition ) {
-		$this->house_number_addition = $house_number_addition;
+		if ( null === $this->house_number ) {
+			$this->house_number = new HouseNumber();
+		}
+
+		$this->house_number->set_addition( $house_number_addition );
 	}
 
 	/**
@@ -369,7 +366,7 @@ class Address {
 	/**
 	 * Get region.
 	 *
-	 * @return string|null
+	 * @return Region|null
 	 */
 	public function get_region() {
 		return $this->region;
@@ -378,19 +375,45 @@ class Address {
 	/**
 	 * Set region.
 	 *
-	 * @param string|null $region Region.
+	 * @param string|Region|null $region Region.
 	 */
 	public function set_region( $region ) {
+		if ( is_string( $region ) ) {
+			$region = new Region( $region );
+		}
+
 		$this->region = $region;
 	}
 
 	/**
-	 * Get country code.
+	 * Get country.
+	 *
+	 * @return Country|null
+	 */
+	public function get_country() {
+		return $this->country;
+	}
+
+	/**
+	 * Set country.
+	 *
+	 * @param Country|null $country Country.
+	 */
+	public function set_country( $country ) {
+		$this->country = $country;
+	}
+
+	/**
+	 * Get ISO 3166-1 alpha-2 country code.
 	 *
 	 * @return string|null
 	 */
 	public function get_country_code() {
-		return $this->country_code;
+		if ( null === $this->country ) {
+			return null;
+		}
+
+		return $this->country->get_code();
 	}
 
 	/**
@@ -398,19 +421,14 @@ class Address {
 	 *
 	 * @throws InvalidArgumentException Thrown when country code length is not equal to 2.
 	 *
-	 * @param string $country_code Country code.
+	 * @param null|string $country_code Country code.
 	 */
 	public function set_country_code( $country_code ) {
-		if ( null !== $country_code && 2 !== strlen( $country_code ) ) {
-			throw new InvalidArgumentException(
-				sprintf(
-					'Given country code `%s` not ISO 3166-1 alpha-2 value.',
-					$country_code
-				)
-			);
+		if ( null === $this->country ) {
+			$this->country = new Country();
 		}
 
-		$this->country_code = $country_code;
+		$this->country->set_code( $country_code );
 	}
 
 	/**
@@ -419,7 +437,11 @@ class Address {
 	 * @return string|null
 	 */
 	public function get_country_name() {
-		return $this->country_name;
+		if ( null === $this->country ) {
+			return null;
+		}
+
+		return $this->country->get_name();
 	}
 
 	/**
@@ -428,7 +450,11 @@ class Address {
 	 * @param string|null $country_name Country name.
 	 */
 	public function set_country_name( $country_name ) {
-		$this->country_name = $country_name;
+		if ( null === $this->country ) {
+			$this->country = new Country();
+		}
+
+		$this->country->set_name( $country_name );
 	}
 
 	/**
@@ -456,21 +482,19 @@ class Address {
 	 */
 	public function get_json() {
 		$data = array(
-			'name'                  => ( null === $this->get_name() ) ? null : $this->get_name()->get_json(),
-			'email'                 => $this->get_email(),
-			'company_name'          => $this->get_company_name(),
-			'coc_number'            => $this->get_coc_number(),
-			'line_1'                => $this->get_line_1(),
-			'line_2'                => $this->get_line_2(),
-			'street_name'           => $this->get_street_name(),
-			'house_number'          => $this->get_house_number(),
-			'house_number_addition' => $this->get_house_number_addition(),
-			'postal_code'           => $this->get_postal_code(),
-			'city'                  => $this->get_city(),
-			'region'                => $this->get_region(),
-			'country_code'          => $this->get_country_code(),
-			'country_name'          => $this->get_country_name(),
-			'phone'                 => $this->get_phone(),
+			'name'         => ( null === $this->get_name() ) ? null : $this->get_name()->get_json(),
+			'email'        => $this->get_email(),
+			'company_name' => $this->get_company_name(),
+			'coc_number'   => $this->get_coc_number(),
+			'line_1'       => $this->get_line_1(),
+			'line_2'       => $this->get_line_2(),
+			'street_name'  => $this->get_street_name(),
+			'house_number' => ( null === $this->get_house_number() ) ? null : $this->get_house_number()->get_json(),
+			'postal_code'  => $this->get_postal_code(),
+			'city'         => $this->get_city(),
+			'region'       => ( null === $this->get_region() ) ? null : $this->get_region()->get_json(),
+			'country'      => ( null === $this->get_country() ) ? null : $this->get_country()->get_json(),
+			'phone'        => $this->get_phone(),
 		);
 
 		$data = array_filter( $data );
@@ -496,16 +520,76 @@ class Address {
 
 		$address = new self();
 
-		foreach ( $json as $key => $value ) {
-			$method = sprintf( 'set_%s', $key );
+		if ( isset( $json->name ) ) {
+			$address->set_name( ContactName::from_json( $json->name ) );
+		}
 
-			if ( is_callable( array( $address, $method ) ) ) {
-				if ( 'name' === $key ) {
-					$value = ContactName::from_json( $value );
-				}
+		if ( isset( $json->email ) ) {
+			$address->set_email( $json->email );
+		}
 
-				call_user_func( array( $address, $method ), $value );
+		if ( isset( $json->company_name ) ) {
+			$address->set_company_name( $json->company_name );
+		}
+
+		if ( isset( $json->coc_number ) ) {
+			$address->set_coc_number( $json->coc_number );
+		}
+
+		if ( isset( $json->line_1 ) ) {
+			$address->set_line_1( $json->line_1 );
+		}
+
+		if ( isset( $json->line_2 ) ) {
+			$address->set_line_2( $json->line_2 );
+		}
+
+		if ( isset( $json->street_name ) ) {
+			$address->set_street_name( $json->street_name );
+		}
+
+		if ( isset( $json->house_number ) || isset( $json->house_number_base ) || isset( $json->house_number_addition ) ) {
+			$house_number = HouseNumber::from_json( $json->house_number );
+
+			if ( isset( $json->house_number_base ) ) {
+				$house_number->set_base( $json->house_number_base );
 			}
+
+			if ( isset( $json->house_number_addition ) ) {
+				$house_number->set_addition( $json->house_number_addition );
+			}
+
+			$address->set_house_number( $house_number );
+		}
+
+		if ( isset( $json->postal_code ) ) {
+			$address->set_postal_code( $json->postal_code );
+		}
+
+		if ( isset( $json->city ) ) {
+			$address->set_city( $json->city );
+		}
+
+		if ( isset( $json->region ) ) {
+			$address->set_region( Region::from_json( $json->region ) );
+		}
+
+		if ( isset( $json->country ) || isset( $json->country_code ) || isset( $json->country_name ) ) {
+			$country = isset( $json->country ) ? Country::from_json( $json->country ) : new Country();
+
+			if ( isset( $json->country_code ) ) {
+				$country->set_code( $json->country_code );
+			}
+
+			if ( isset( $json->country_name ) ) {
+				$country->set_name( $json->country_name );
+			}
+
+			$address->set_country( $country );
+		}
+
+		if ( isset( $json->phone ) ) {
+			$address->set_phone( $json->phone );
 		}
 
 		return $address;

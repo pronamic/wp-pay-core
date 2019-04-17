@@ -3,7 +3,7 @@
  * Subscriptions Data Store CPT
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Subscriptions
  */
@@ -12,6 +12,8 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DatePeriod;
 use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Money\Parser as MoneyParser;
+use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\AbstractDataStoreCPT;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
@@ -23,10 +25,31 @@ use Pronamic\WordPress\Pay\Core\Statuses;
  * @link https://woocommerce.com/2017/04/woocommerce-3-0-release/
  * @link https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
  * @author  Remco Tolsma
- * @version 2.0.6
+ * @version 2.1.0
  * @since   2.0.1
  */
-class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
+class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
+	/**
+	 * Subscription.
+	 *
+	 * @var Subscription|null
+	 */
+	private $subscription;
+
+	/**
+	 * Subscriptions.
+	 *
+	 * @var array
+	 */
+	private $subscriptions;
+
+	/**
+	 * Status map.
+	 *
+	 * @var array
+	 */
+	private $status_map;
+
 	/**
 	 * Construct subscriptions data store CPT object.
 	 */
@@ -34,6 +57,169 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		$this->meta_key_prefix = '_pronamic_subscription_';
 
 		$this->register_meta();
+
+		$this->subscriptions = array();
+
+		$this->status_map = array(
+			Statuses::CANCELLED => 'subscr_cancelled',
+			Statuses::EXPIRED   => 'subscr_expired',
+			Statuses::FAILURE   => 'subscr_failed',
+			Statuses::ACTIVE    => 'subscr_active',
+			Statuses::SUCCESS   => 'subscr_active',
+			Statuses::OPEN      => 'subscr_pending',
+			Statuses::COMPLETED => 'subscr_completed',
+		);
+	}
+
+	/**
+	 * Setup.
+	 *
+	 * @return void
+	 */
+	public function setup() {
+		add_filter( 'wp_insert_post_data', array( $this, 'insert_subscription_post_data' ), 10, 2 );
+
+		add_action( 'save_post_pronamic_pay_subscr', array( $this, 'save_post_meta' ), 100, 3 );
+	}
+
+	/**
+	 * Get subscription by ID.
+	 *
+	 * @param int $id Payment ID.
+	 * @return Subscription
+	 */
+	private function get_subscription( $id ) {
+		if ( ! isset( $this->subscriptions[ $id ] ) ) {
+			$this->subscriptions[ $id ] = get_pronamic_subscription( $id );
+		}
+
+		return $this->subscriptions[ $id ];
+	}
+
+	/**
+	 * Get post status from meta status.
+	 *
+	 * @param string $meta_status Meta status.
+	 * @return string|null
+	 */
+	private function get_post_status_from_meta_status( $meta_status ) {
+		if ( isset( $this->status_map[ $meta_status ] ) ) {
+			return $this->status_map[ $meta_status ];
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get meta status from post status.
+	 *
+	 * @param string $post_status Post status.
+	 * @return string|null
+	 */
+	private function get_meta_status_from_post_status( $post_status ) {
+		$key = array_search( $post_status, $this->status_map, true );
+
+		if ( false !== $key ) {
+			return $key;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Complement subscription post data.
+	 *
+	 * @link https://github.com/WordPress/WordPress/blob/5.0.3/wp-includes/post.php#L3515-L3523
+	 *
+	 * @param array $data    An array of slashed post data.
+	 * @param array $postarr An array of sanitized, but otherwise unmodified post data.
+	 * @return array
+	 */
+	public function insert_subscription_post_data( $data, $postarr ) {
+		$this->subscription = null;
+
+		if ( isset( $postarr['pronamic_subscription'] ) ) {
+			$this->subscription = $postarr['pronamic_subscription'];
+		} elseif ( isset( $postarr['ID'] ) ) {
+			$post_id = $postarr['ID'];
+
+			if ( 'pronamic_pay_subscr' === get_post_type( $post_id ) ) {
+				$this->subscription = $this->get_subscription( $post_id );
+			}
+		}
+
+		if ( $this->subscription instanceof Subscription ) {
+			// Update subscription from post array.
+			$this->update_subscription_form_post_array( $this->subscription, $postarr );
+
+			if ( ! isset( $data['post_status'] ) || 'trash' !== $data['post_status'] ) {
+				$data['post_status'] = $this->get_post_status_from_meta_status( $this->subscription->get_status() );
+			}
+
+			// Data.
+			$data['post_content']   = wp_slash( wp_json_encode( $this->subscription->get_json() ) );
+			$data['post_mime_type'] = 'application/json';
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Update subscription from post array.
+	 *
+	 * @param Subscription $subscription Subscription.
+	 * @param array        $postarr      Post data array.
+	 */
+	private function update_subscription_form_post_array( $subscription, $postarr ) {
+		if ( isset( $postarr['pronamic_subscription_post_status'] ) ) {
+			$post_status = sanitize_text_field( wp_unslash( $postarr['pronamic_subscription_post_status'] ) );
+			$meta_status = $this->get_meta_status_from_post_status( $post_status );
+
+			if ( null !== $meta_status ) {
+				$subscription->set_status( $meta_status );
+			}
+		}
+
+		if ( ! isset( $postarr['pronamic_subscription_update_nonce'] ) ) {
+			return;
+		}
+
+		if ( ! check_admin_referer( 'pronamic_subscription_update', 'pronamic_subscription_update_nonce' ) ) {
+			return;
+		}
+
+		if ( isset( $postarr['pronamic_subscription_amount'] ) ) {
+			$amount = sanitize_text_field( wp_unslash( $postarr['pronamic_subscription_amount'] ) );
+
+			$money_parser = new MoneyParser();
+
+			$value = $money_parser->parse( $amount )->get_value();
+
+			$subscription->get_total_amount()->set_value( $value );
+		}
+	}
+
+	/**
+	 * Save post meta.
+	 *
+	 * @link https://github.com/WordPress/WordPress/blob/5.0.3/wp-includes/post.php#L3724-L3736
+	 *
+	 * @param int      $post_id Post ID.
+	 * @param \WP_Post $post    Post object.
+	 * @param bool     $update  Whether this is an existing post being updated or not.
+	 * @return void
+	 */
+	public function save_post_meta( $post_id, $post, $update ) {
+		if ( $this->subscription instanceof Subscription ) {
+			if ( ! $update && null === $this->subscription->get_id() ) {
+				$this->subscription->set_id( $post_id );
+				$this->subscription->post = $post;
+			}
+
+			$this->update_post_meta( $this->subscription );
+		}
+
+		$this->subscription = null;
 	}
 
 	/**
@@ -42,22 +228,19 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L47-L76
 	 *
 	 * @param Subscription $subscription Create the specified subscription in this data store.
-	 *
 	 * @return bool
 	 */
 	public function create( $subscription ) {
-		$post_status = $this->get_post_status( $subscription->get_status() );
-
 		$result = wp_insert_post(
 			array(
-				'post_type'     => 'pronamic_pay_subscr',
-				'post_date_gmt' => $this->get_mysql_utc_date( $subscription->date ),
-				'post_title'    => sprintf(
+				'post_type'             => 'pronamic_pay_subscr',
+				'post_date_gmt'         => $this->get_mysql_utc_date( $subscription->date ),
+				'post_title'            => sprintf(
 					'Subscription – %s',
 					date_i18n( _x( 'M d, Y @ h:i A', 'Subscription title date format parsed by `date_i18n`.', 'pronamic_ideal' ) )
 				),
-				'post_status'   => empty( $post_status ) ? 'subscr_pending' : $post_status,
-				'post_author'   => $subscription->user_id,
+				'post_author'           => $subscription->user_id,
+				'pronamic_subscription' => $subscription,
 			),
 			true
 		);
@@ -65,9 +248,6 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		if ( is_wp_error( $result ) ) {
 			return false;
 		}
-
-		$subscription->set_id( $result );
-		$subscription->post = get_post( $result );
 
 		$this->update_post_meta( $subscription );
 
@@ -83,7 +263,6 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
 	 *
 	 * @param Subscription $subscription The subscription to update in this data store.
-	 *
 	 * @return bool
 	 */
 	public function update( $subscription ) {
@@ -94,22 +273,15 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		}
 
 		$data = array(
-			'ID' => $id,
+			'ID'                    => $id,
+			'pronamic_subscription' => $subscription,
 		);
-
-		$post_status = $this->get_post_status( $subscription->get_status() );
-
-		if ( ! empty( $post_status ) ) {
-			$data['post_status'] = $post_status;
-		}
 
 		$result = wp_update_post( $data, true );
 
 		if ( is_wp_error( $result ) ) {
 			return false;
 		}
-
-		$this->update_post_meta( $subscription );
 
 		return true;
 	}
@@ -135,7 +307,9 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L78-L111
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L81-L136
+	 *
 	 * @param Subscription $subscription The subscription to read the additional data for.
+	 * @return void
 	 */
 	public function read( $subscription ) {
 		$subscription->post    = get_post( $subscription->get_id() );
@@ -143,34 +317,15 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		$subscription->date    = new DateTime( get_post_field( 'post_date_gmt', $subscription->get_id(), 'raw' ), new DateTimeZone( 'UTC' ) );
 		$subscription->user_id = get_post_field( 'post_author', $subscription->get_id(), 'raw' );
 
-		$this->read_post_meta( $subscription );
-	}
+		$content = get_post_field( 'post_content', $subscription->post, 'raw' );
 
-	/**
-	 * Get post status.
-	 *
-	 * @param string $meta_status The subscription meta status to get the post status for.
-	 *
-	 * @return string|null
-	 */
-	public function get_post_status( $meta_status ) {
-		switch ( $meta_status ) {
-			case Statuses::CANCELLED:
-				return 'subscr_cancelled';
-			case Statuses::EXPIRED:
-				return 'subscr_expired';
-			case Statuses::FAILURE:
-				return 'subscr_failed';
-			case Statuses::ACTIVE:
-			case Statuses::SUCCESS:
-				return 'subscr_active';
-			case Statuses::OPEN:
-				return 'subscr_pending';
-			case Statuses::COMPLETED:
-				return 'subscr_completed';
-			default:
-				return null;
+		$json = json_decode( $content );
+
+		if ( is_object( $json ) ) {
+			Subscription::from_json( $json, $subscription );
 		}
+
+		$this->read_post_meta( $subscription );
 	}
 
 	/**
@@ -180,7 +335,7 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 	 * @return string|boolean
 	 */
 	public function get_meta_status_label( $meta_status ) {
-		$post_status = $this->get_post_status( $meta_status );
+		$post_status = $this->get_post_status_from_meta_status( $meta_status );
 
 		if ( empty( $post_status ) ) {
 			return false;
@@ -314,33 +469,38 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 	 * Read post meta.
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-data.php#L462-L507
+	 *
 	 * @param Subscription $subscription The subscription to read the post meta for.
+	 * @return void
 	 */
-	private function read_post_meta( $subscription ) {
+	protected function read_post_meta( $subscription ) {
 		$id = $subscription->get_id();
 
-		$subscription->config_id       = $this->get_meta( $id, 'config_id' );
-		$subscription->key             = $this->get_meta( $id, 'key' );
-		$subscription->source          = $this->get_meta( $id, 'source' );
-		$subscription->source_id       = $this->get_meta( $id, 'source_id' );
+		if ( empty( $id ) ) {
+			return;
+		}
+
+		$subscription->config_id       = $this->get_meta_int( $id, 'config_id' );
+		$subscription->key             = $this->get_meta_string( $id, 'key' );
+		$subscription->source          = $this->get_meta_string( $id, 'source' );
+		$subscription->source_id       = $this->get_meta_string( $id, 'source_id' );
 		$subscription->frequency       = $this->get_meta( $id, 'frequency' );
 		$subscription->interval        = $this->get_meta( $id, 'interval' );
 		$subscription->interval_period = $this->get_meta( $id, 'interval_period' );
-		$subscription->transaction_id  = $this->get_meta( $id, 'transaction_id' );
-		$subscription->status          = $this->get_meta( $id, 'status' );
-		$subscription->description     = $this->get_meta( $id, 'description' );
-		$subscription->email           = $this->get_meta( $id, 'email' );
-		$subscription->customer_name   = $this->get_meta( $id, 'customer_name' );
-		$subscription->payment_method  = $this->get_meta( $id, 'payment_method' );
+		$subscription->transaction_id  = $this->get_meta_string( $id, 'transaction_id' );
+		$subscription->status          = $this->get_meta_string( $id, 'status' );
+		$subscription->description     = $this->get_meta_string( $id, 'description' );
+		$subscription->email           = $this->get_meta_string( $id, 'email' );
+		$subscription->customer_name   = $this->get_meta_string( $id, 'customer_name' );
+		$subscription->payment_method  = $this->get_meta_string( $id, 'payment_method' );
 
 		// Amount.
-		$subscription->set_amount(
-			new Money(
-				$this->get_meta( $id, 'amount' ),
-				$this->get_meta( $id, 'currency' )
-			)
-		);
+		$total_amount = $subscription->get_total_amount();
 
+		$total_amount->set_value( $this->get_meta( $id, 'amount' ) );
+		$total_amount->set_currency( $this->get_meta_string( $id, 'currency' ) );
+
+		// First Payment.
 		$first_payment = $subscription->get_first_payment();
 
 		if ( is_object( $first_payment ) ) {
@@ -397,6 +557,9 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 
 		// Next Payment Date.
 		$subscription->next_payment = $this->get_meta_date( $id, 'next_payment' );
+
+		// Legacy.
+		parent::read_post_meta( $subscription );
 	}
 
 	/**
@@ -408,6 +571,10 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 	private function update_post_meta( $subscription ) {
 		$id = $subscription->get_id();
 
+		if ( empty( $id ) ) {
+			return;
+		}
+
 		$this->update_meta( $id, 'config_id', $subscription->config_id );
 		$this->update_meta( $id, 'key', $subscription->key );
 		$this->update_meta( $id, 'source', $subscription->source );
@@ -415,9 +582,8 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 		$this->update_meta( $id, 'frequency', $subscription->frequency );
 		$this->update_meta( $id, 'interval', $subscription->interval );
 		$this->update_meta( $id, 'interval_period', $subscription->interval_period );
-		$this->update_meta( $id, 'currency', $subscription->get_currency() );
-		$this->update_meta( $id, 'amount', $subscription->get_amount()->get_amount() );
-		$this->update_meta( $id, 'transaction_id', $subscription->transaction_id );
+		$this->update_meta( $id, 'currency', $subscription->get_total_amount()->get_currency()->get_alphabetic_code() );
+		$this->update_meta( $id, 'amount', $subscription->get_total_amount()->get_value() );
 		$this->update_meta( $id, 'description', $subscription->description );
 		$this->update_meta( $id, 'email', $subscription->email );
 		$this->update_meta( $id, 'customer_name', $subscription->customer_name );
@@ -438,18 +604,22 @@ class SubscriptionsDataStoreCPT extends AbstractDataStoreCPT {
 	public function update_meta_status( $subscription ) {
 		$id = $subscription->get_id();
 
+		if ( empty( $id ) ) {
+			return;
+		}
+
 		$previous_status = $this->get_meta( $id, 'status' );
 
 		$this->update_meta( $id, 'status', $subscription->status );
 
 		if ( $previous_status !== $subscription->status ) {
 			$old = $previous_status;
-			$old = strtolower( $old );
 			$old = empty( $old ) ? 'unknown' : $old;
+			$old = strtolower( $old );
 
 			$new = $subscription->status;
-			$new = strtolower( $new );
 			$new = empty( $new ) ? 'unknown' : $new;
+			$new = strtolower( $new );
 
 			$can_redirect = false;
 

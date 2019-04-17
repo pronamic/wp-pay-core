@@ -3,7 +3,7 @@
  * Gateway Settings
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Admin
  */
@@ -125,6 +125,10 @@ class GatewaySettings {
 	 */
 	public function gateway_payment_methods() {
 		$gateway = Plugin::get_gateway( get_the_ID() );
+
+		if ( null === $gateway ) {
+			return;
+		}
 
 		$supported = $gateway->get_supported_payment_methods();
 		$available = $gateway->get_transient_available_payment_methods();

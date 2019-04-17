@@ -3,11 +3,12 @@
  * Functions
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
 
+use Pronamic\WordPress\Pay\Admin\AdminPaymentPostType;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 
@@ -23,10 +24,20 @@ function pronamic_pay_plugin() {
 /**
  * Get payment by specified post ID.
  *
- * @param int|string $post_id A payment post ID.
- * @return Payment
+ * @param int|string|null $post_id A payment post ID.
+ * @return Payment|null
  */
 function get_pronamic_payment( $post_id ) {
+	if ( empty( $post_id ) ) {
+		return null;
+	}
+
+	$post_type = get_post_type( $post_id );
+
+	if ( AdminPaymentPostType::POST_TYPE !== $post_type ) {
+		return null;
+	}
+
 	$payment = new Payment( $post_id );
 
 	return $payment;
@@ -35,14 +46,12 @@ function get_pronamic_payment( $post_id ) {
 /**
  * Get payment by specified meta key and value.
  *
- * @param string $meta_key   The meta key to query for.
- * @param string $meta_value The Meta value to query for.
+ * @param string     $meta_key   The meta key to query for.
+ * @param string|int $meta_value The Meta value to query for.
  * @return Payment|null
  */
 function get_pronamic_payment_by_meta( $meta_key, $meta_value ) {
 	global $wpdb;
-
-	$payment = null;
 
 	$db_query = $wpdb->prepare(
 		"
@@ -62,13 +71,7 @@ function get_pronamic_payment_by_meta( $meta_key, $meta_value ) {
 
 	$post_id = $wpdb->get_var( $db_query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
 
-	if ( $post_id ) {
-		$payment = new Payment( $post_id );
-
-		if ( null === $payment->post ) {
-			$payment = null;
-		}
-	}
+	$payment = get_pronamic_payment( $post_id );
 
 	return $payment;
 }
@@ -239,9 +242,7 @@ function get_pronamic_subscriptions_by_meta( $meta_key, $meta_value ) {
 function bind_providers_and_gateways() {
 	global $pronamic_pay_providers;
 
-	global $pronamic_ideal;
-
-	foreach ( $pronamic_ideal->gateway_integrations as $integration ) {
+	foreach ( pronamic_pay_plugin()->gateway_integrations as $integration ) {
 		if ( isset( $pronamic_pay_providers[ $integration->provider ] ) ) {
 			$provider =& $pronamic_pay_providers[ $integration->provider ];
 
@@ -252,6 +253,14 @@ function bind_providers_and_gateways() {
 			$provider['integrations'][] = $integration;
 		}
 	}
+
+	// Sort by provider name.
+	usort(
+		$pronamic_pay_providers,
+		function( $a, $b ) {
+			return strcmp( $a['name'], $b['name'] );
+		}
+	);
 }
 
 /**
@@ -287,48 +296,6 @@ function pronamic_pay_let_to_num( $size ) {
 	}
 
 	return intval( $ret );
-}
-
-/**
- * Return the thousand separator.
- *
- * @return string
- */
-function pronamic_pay_get_thousands_separator() {
-	global $wp_locale;
-
-	// Seperator.
-	$separator = get_option( 'pronamic_pay_thousands_sep' );
-
-	// WordPress.
-	if ( false === $separator ) {
-		// WordPress locale number format was introduced in WordPress version 2.3.
-		// @link https://github.com/WordPress/WordPress/blob/2.3/wp-includes/locale.php#L90-L100.
-		$separator = $wp_locale->number_format['thousands_sep'];
-	}
-
-	return $separator;
-}
-
-/**
- * Return the decimal separator.
- *
- * @return string
- */
-function pronamic_pay_get_decimal_separator() {
-	global $wp_locale;
-
-	// Seperator.
-	$separator = get_option( 'pronamic_pay_decimal_sep' );
-
-	// WordPress.
-	if ( false === $separator ) {
-		// WordPress locale number format was introduced in WordPress version 2.3.
-		// @link https://github.com/WordPress/WordPress/blob/2.3/wp-includes/locale.php#L90-L100.
-		$separator = $wp_locale->number_format['decimal_point'];
-	}
-
-	return $separator ? $separator : '.';
 }
 
 /**

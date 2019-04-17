@@ -3,7 +3,7 @@
  * Legacy Payments Data Store Custom Post Type
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -19,28 +19,33 @@ use Pronamic\WordPress\Pay\ContactName;
 /**
  * Title: Payments data store CPT
  * Description:
- * Copyright: Copyright (c) 2005 - 2018
+ * Copyright: 2005-2019 Pronamic
  * Company: Pronamic
  *
  * @see     https://woocommerce.com/2017/04/woocommerce-3-0-release/
  * @see     https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
  * @author  Remco Tolsma
- * @version 2.0.8
- * @since   3.7.0
+ * @version 2.1.0
+ * @since   2.1.0
  */
 class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	/**
 	 * Get contact name from legeacy meta.
 	 *
-	 * @param Payment $payment The payment to read.
+	 * @param PaymentInfo $payment The payment info to read.
 	 * @return ContactName|null
 	 */
 	private function get_contact_name_from_legacy_meta( $payment ) {
 		$id = $payment->get_id();
 
+		if ( empty( $id ) ) {
+			return;
+		}
+
 		$data = array(
-			'first_name' => $this->get_meta( $id, 'first_name' ),
-			'last_name'  => $this->get_meta( $id, 'last_name' ),
+			'full_name'  => $this->get_meta_string( $id, 'customer_name' ),
+			'first_name' => $this->get_meta_string( $id, 'first_name' ),
+			'last_name'  => $this->get_meta_string( $id, 'last_name' ),
 		);
 
 		$data = array_map( 'trim', $data );
@@ -52,6 +57,10 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		}
 
 		$name = new ContactName();
+
+		if ( isset( $data['full_name'] ) ) {
+			$name->set_full_name( $data['full_name'] );
+		}
 
 		if ( isset( $data['first_name'] ) ) {
 			$name->set_first_name( $data['first_name'] );
@@ -67,23 +76,25 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	/**
 	 * Maybe create customer from legeacy meta.
 	 *
-	 * @param Payment $payment The payment to read.
+	 * @param PaymentInfo $payment The payment to read.
 	 */
 	private function maybe_create_customer_from_legacy_meta( $payment ) {
-		if ( null !== $payment->get_customer() ) {
-			// Bail out if there is already a customer.
+		$id = $payment->get_id();
+
+		if ( empty( $id ) ) {
 			return;
 		}
 
-		$id = $payment->get_id();
-
 		$data = array(
-			'email'      => $this->get_meta( $id, 'email' ),
-			'phone'      => $this->get_meta( $id, 'telephone_number' ),
-			'ip_address' => $this->get_meta( $id, 'user_ip' ),
-			'user_agent' => $this->get_meta( $id, 'user_agent' ),
-			'language'   => $this->get_meta( $id, 'language' ),
-			'locale'     => $this->get_meta( $id, 'locale' ),
+			'full_name'  => $this->get_meta_string( $id, 'customer_name' ),
+			'first_name' => $this->get_meta_string( $id, 'first_name' ),
+			'last_name'  => $this->get_meta_string( $id, 'last_name' ),
+			'email'      => $this->get_meta_string( $id, 'email' ),
+			'phone'      => $this->get_meta_string( $id, 'telephone_number' ),
+			'ip_address' => $this->get_meta_string( $id, 'user_ip' ),
+			'user_agent' => $this->get_meta_string( $id, 'user_agent' ),
+			'language'   => $this->get_meta_string( $id, 'language' ),
+			'locale'     => $this->get_meta_string( $id, 'locale' ),
 		);
 
 		$data = array_map( 'trim', $data );
@@ -95,34 +106,40 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		}
 
 		// Build customer from legacy meta data.
-		$customer = new Customer();
+		$customer = $payment->get_customer();
+
+		if ( null === $customer ) {
+			$customer = new Customer();
+		}
 
 		$payment->set_customer( $customer );
 
 		// Customer name.
-		$customer->set_name( $this->get_contact_name_from_legacy_meta( $payment ) );
+		if ( null === $customer->get_name() ) {
+			$customer->set_name( $this->get_contact_name_from_legacy_meta( $payment ) );
+		}
 
-		if ( isset( $data['email'] ) ) {
+		if ( null === $customer->get_email() && isset( $data['email'] ) ) {
 			$customer->set_email( $data['email'] );
 		}
 
-		if ( isset( $data['phone'] ) ) {
+		if ( null === $customer->get_phone() && isset( $data['phone'] ) ) {
 			$customer->set_phone( $data['phone'] );
 		}
 
-		if ( isset( $data['ip_address'] ) ) {
+		if ( null === $customer->get_ip_address() && isset( $data['ip_address'] ) ) {
 			$customer->set_ip_address( $data['ip_address'] );
 		}
 
-		if ( isset( $data['user_agent'] ) ) {
+		if ( null === $customer->get_user_agent() && isset( $data['user_agent'] ) ) {
 			$customer->set_user_agent( $data['user_agent'] );
 		}
 
-		if ( isset( $data['language'] ) ) {
+		if ( null === $customer->get_language() && isset( $data['language'] ) ) {
 			$customer->set_language( $data['language'] );
 		}
 
-		if ( isset( $data['locale'] ) ) {
+		if ( null === $customer->get_locale() && isset( $data['locale'] ) ) {
 			$customer->set_locale( $data['locale'] );
 		}
 	}
@@ -130,7 +147,7 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	/**
 	 * Maybe create billing address from legeacy meta.
 	 *
-	 * @param Payment $payment The payment to read.
+	 * @param PaymentInfo $payment The payment to read.
 	 */
 	private function maybe_create_billing_address_from_legacy_meta( $payment ) {
 		if ( null !== $payment->get_billing_address() ) {
@@ -140,13 +157,17 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 
 		$id = $payment->get_id();
 
+		if ( empty( $id ) ) {
+			return;
+		}
+
 		$data = array(
-			'line_1'      => $this->get_meta( $id, 'address' ),
-			'postal_code' => $this->get_meta( $id, 'zip' ),
-			'city'        => $this->get_meta( $id, 'city' ),
-			'country'     => $this->get_meta( $id, 'country' ),
-			'email'       => $this->get_meta( $id, 'email' ),
-			'phone'       => $this->get_meta( $id, 'telephone_number' ),
+			'line_1'      => $this->get_meta_string( $id, 'address' ),
+			'postal_code' => $this->get_meta_string( $id, 'zip' ),
+			'city'        => $this->get_meta_string( $id, 'city' ),
+			'country'     => $this->get_meta_string( $id, 'country' ),
+			'email'       => $this->get_meta_string( $id, 'email' ),
+			'phone'       => $this->get_meta_string( $id, 'telephone_number' ),
 		);
 
 		$data = array_map( 'trim', $data );
@@ -196,7 +217,7 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	 * Read post meta.
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-data.php#L462-L507
-	 * @param Payment $payment The payment to read.
+	 * @param PaymentInfo $payment The payment to read.
 	 */
 	protected function read_post_meta( $payment ) {
 		$this->maybe_create_customer_from_legacy_meta( $payment );
@@ -218,8 +239,8 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	/**
 	 * Get update meta.
 	 *
-	 * @param Payment $payment The payment to update.
-	 * @param array   $meta    Meta array.
+	 * @param PaymentInfo $payment The payment to update.
+	 * @param array       $meta    Meta array.
 	 *
 	 * @return array
 	 */

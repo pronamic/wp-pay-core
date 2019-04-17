@@ -3,7 +3,7 @@
  * Payment line
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -19,8 +19,9 @@ use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
 /**
  * Payment line.
  *
- * @author Remco Tolsma
- * @version 1.0
+ * @author  Remco Tolsma
+ * @version 2.1.0
+ * @since   2.1.0
  */
 class PaymentLine {
 	/**
@@ -209,7 +210,7 @@ class PaymentLine {
 	/**
 	 * Get the quantity of this payment line.
 	 *
-	 * @return int
+	 * @return int|null
 	 */
 	public function get_quantity() {
 		return $this->quantity;
@@ -218,7 +219,7 @@ class PaymentLine {
 	/**
 	 * Set the quantity of this payment line.
 	 *
-	 * @param int $quantity Quantity.
+	 * @param int|null $quantity Quantity.
 	 */
 	public function set_quantity( $quantity ) {
 		$this->quantity = $quantity;
@@ -227,7 +228,7 @@ class PaymentLine {
 	/**
 	 * Get unit price.
 	 *
-	 * @return TaxedMoney
+	 * @return TaxedMoney|null
 	 */
 	public function get_unit_price() {
 		return $this->unit_price;
@@ -236,7 +237,7 @@ class PaymentLine {
 	/**
 	 * Set unit price.
 	 *
-	 * @param TaxedMoney $price Unit price.
+	 * @param TaxedMoney|null $price Unit price.
 	 */
 	public function set_unit_price( TaxedMoney $price = null ) {
 		$this->unit_price = ( null === $price ? null : $price );
@@ -267,7 +268,7 @@ class PaymentLine {
 	 */
 	public function get_tax_amount() {
 		return new Money(
-			$this->get_total_amount()->get_tax_amount(),
+			$this->get_total_amount()->get_tax_value(),
 			$this->get_total_amount()->get_currency()
 		);
 	}

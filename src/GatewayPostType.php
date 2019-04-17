@@ -3,7 +3,7 @@
  * Gateway Post Type
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -53,21 +53,31 @@ class GatewayPostType {
 			array(
 				'label'              => __( 'Payment Gateway Configurations', 'pronamic_ideal' ),
 				'labels'             => array(
-					'name'                  => __( 'Payment Gateway Configurations', 'pronamic_ideal' ),
-					'singular_name'         => __( 'Payment Gateway Configuration', 'pronamic_ideal' ),
-					'add_new'               => __( 'Add New', 'pronamic_ideal' ),
-					'add_new_item'          => __( 'Add New Payment Gateway Configuration', 'pronamic_ideal' ),
-					'edit_item'             => __( 'Edit Payment Gateway Configuration', 'pronamic_ideal' ),
-					'new_item'              => __( 'New Payment Gateway Configuration', 'pronamic_ideal' ),
-					'all_items'             => __( 'All Payment Gateway Configurations', 'pronamic_ideal' ),
-					'view_item'             => __( 'View Payment Gateway Configuration', 'pronamic_ideal' ),
-					'search_items'          => __( 'Search Payment Gateway Configurations', 'pronamic_ideal' ),
-					'not_found'             => __( 'No payment gateway configurations found.', 'pronamic_ideal' ),
-					'not_found_in_trash'    => __( 'No payment gateway configurations found in Trash.', 'pronamic_ideal' ),
-					'menu_name'             => __( 'Configurations', 'pronamic_ideal' ),
-					'filter_items_list'     => __( 'Filter payment gateway configurations list', 'pronamic_ideal' ),
-					'items_list_navigation' => __( 'Payment gateway configurations list navigation', 'pronamic_ideal' ),
-					'items_list'            => __( 'Payment gateway configurations list', 'pronamic_ideal' ),
+					'name'                     => __( 'Payment Gateway Configurations', 'pronamic_ideal' ),
+					'singular_name'            => __( 'Payment Gateway Configuration', 'pronamic_ideal' ),
+					'add_new'                  => __( 'Add New', 'pronamic_ideal' ),
+					'add_new_item'             => __( 'Add New Payment Gateway Configuration', 'pronamic_ideal' ),
+					'edit_item'                => __( 'Edit Payment Gateway Configuration', 'pronamic_ideal' ),
+					'new_item'                 => __( 'New Payment Gateway Configuration', 'pronamic_ideal' ),
+					'all_items'                => __( 'All Payment Gateway Configurations', 'pronamic_ideal' ),
+					'view_item'                => __( 'View Payment Gateway Configuration', 'pronamic_ideal' ),
+					'search_items'             => __( 'Search Payment Gateway Configurations', 'pronamic_ideal' ),
+					'not_found'                => __( 'No payment gateway configurations found.', 'pronamic_ideal' ),
+					'not_found_in_trash'       => __( 'No payment gateway configurations found in Trash.', 'pronamic_ideal' ),
+					'menu_name'                => __( 'Configurations', 'pronamic_ideal' ),
+					'filter_items_list'        => __( 'Filter payment gateway configurations list', 'pronamic_ideal' ),
+					'items_list_navigation'    => __( 'Payment gateway configurations list navigation', 'pronamic_ideal' ),
+					'items_list'               => __( 'Payment gateway configurations list', 'pronamic_ideal' ),
+
+					/*
+					 * New Post Type Labels in 5.0.
+					 * @link https://make.wordpress.org/core/2018/12/05/new-post-type-labels-in-5-0/
+					 */
+					'item_published'           => __( 'Payment gateway configuration published.', 'pronamic_ideal' ),
+					'item_published_privately' => __( 'Payment gateway configuration published privately.', 'pronamic_ideal' ),
+					'item_reverted_to_draft'   => __( 'Payment gateway configuration reverted to draft.', 'pronamic_ideal' ),
+					'item_scheduled'           => __( 'Payment gateway configuration scheduled.', 'pronamic_ideal' ),
+					'item_updated'             => __( 'Payment gateway configuration updated.', 'pronamic_ideal' ),
 				),
 				'public'             => false,
 				'publicly_queryable' => false,

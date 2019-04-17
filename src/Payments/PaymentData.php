@@ -3,7 +3,7 @@
  * Payment Data
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -61,7 +61,7 @@ abstract class PaymentData extends AbstractPaymentData {
 	/**
 	 * Get email.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_email() {
 		$email = null;
@@ -76,7 +76,7 @@ abstract class PaymentData extends AbstractPaymentData {
 	/**
 	 * Get first name.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_first_name() {
 		if ( is_user_logged_in() ) {
@@ -87,7 +87,7 @@ abstract class PaymentData extends AbstractPaymentData {
 	/**
 	 * Get last name.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_last_name() {
 		if ( is_user_logged_in() ) {
@@ -98,7 +98,7 @@ abstract class PaymentData extends AbstractPaymentData {
 	/**
 	 * Get customer name.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_customer_name() {
 		$parts = array(
@@ -120,7 +120,7 @@ abstract class PaymentData extends AbstractPaymentData {
 	/**
 	 * Get Google Analytics client ID.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_analytics_client_id() {
 		return GoogleAnalyticsEcommerce::get_cookie_client_id();
@@ -203,7 +203,7 @@ abstract class PaymentData extends AbstractPaymentData {
 	/**
 	 * Get subscription source ID.
 	 *
-	 * @return string
+	 * @return string|int|null
 	 */
 	public function get_subscription_source_id() {
 		return $this->get_source_id();

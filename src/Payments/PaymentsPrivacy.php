@@ -3,7 +3,7 @@
  * Payments privacy exporters and erasers.
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -17,7 +17,7 @@ use Pronamic\WordPress\Pay\CustomerHelper;
  * Payments Privacy class.
  *
  * @author  Reüel van der Steege
- * @version 2.0.2
+ * @version 2.1.0
  * @since   2.0.2
  */
 class PaymentsPrivacy {
@@ -100,7 +100,13 @@ class PaymentsPrivacy {
 		foreach ( $payments as $payment ) {
 			$export_data = array();
 
-			$payment_meta = get_post_meta( $payment->get_id() );
+			$id = $payment->get_id();
+
+			if ( empty( $id ) ) {
+				continue;
+			}
+
+			$payment_meta = get_post_meta( $id );
 
 			// Get payment meta.
 			foreach ( $meta_keys as $meta_key => $meta_options ) {
@@ -119,7 +125,7 @@ class PaymentsPrivacy {
 				$items[] = array(
 					'group_id'    => 'pronamic-pay-payments',
 					'group_label' => __( 'Payments', 'pronamic_ideal' ),
-					'item_id'     => 'pronamic-pay-payment-' . $payment->get_id(),
+					'item_id'     => 'pronamic-pay-payment-' . $id,
 					'data'        => $export_data,
 				);
 			}
@@ -175,6 +181,10 @@ class PaymentsPrivacy {
 		foreach ( $payments as $payment ) {
 			$payment_id = $payment->get_id();
 
+			if ( empty( $payment_id ) ) {
+				continue;
+			}
+
 			$payment_meta = get_post_meta( $payment_id );
 
 			// Get payment meta.
@@ -185,7 +195,9 @@ class PaymentsPrivacy {
 					continue;
 				}
 
-				$privacy_manager->erase_meta( $payment_id, $meta_key, $meta_options['privacy_erasure'] );
+				$action = ( isset( $meta_options['privacy_erasure'] ) ? $meta_options['privacy_erasure'] : null );
+
+				$privacy_manager->erase_meta( $payment_id, $meta_key, $action );
 			}
 
 			// Customer.

@@ -3,7 +3,7 @@
  * Money JSON transformer
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -17,14 +17,16 @@ use Pronamic\WordPress\Money\Money;
  * Money JSON transformer
  *
  * @author  Remco Tolsma
- * @version 2.0.8
- * @since   2.0.8
+ * @version 2.1.0
+ * @since   2.1.0
  */
 class MoneyJsonTransformer {
 	/**
 	 * Convert money object to JSON.
 	 *
 	 * @param Money|null $money Money.
+	 *
+	 * @return null|object
 	 */
 	public static function to_json( Money $money = null ) {
 		if ( null === $money ) {
@@ -33,9 +35,9 @@ class MoneyJsonTransformer {
 
 		$object = (object) array();
 
-		$object->amount = $money->get_amount();
+		$object->value = $money->get_value();
 
-		if ( null !== $money->get_currency() ) {
+		if ( null !== $money->get_currency()->get_alphabetic_code() ) {
 			$object->currency = $money->get_currency()->get_alphabetic_code();
 		}
 
@@ -56,8 +58,8 @@ class MoneyJsonTransformer {
 
 		$money = new Money();
 
-		if ( property_exists( $json, 'amount' ) ) {
-			$money->set_amount( $json->amount );
+		if ( property_exists( $json, 'value' ) ) {
+			$money->set_value( $json->value );
 		}
 
 		if ( property_exists( $json, 'currency' ) ) {

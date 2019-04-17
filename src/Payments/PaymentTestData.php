@@ -3,7 +3,7 @@
  * Payment Test Data
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -21,9 +21,9 @@ use WP_User;
 /**
  * WordPress payment test data
  *
- * @author Remco Tolsma
- * @version 2.0.2
- * @since 2.0.1
+ * @author  Remco Tolsma
+ * @version 2.1.0
+ * @since   2.0.1
  */
 class PaymentTestData extends PaymentData {
 	/**
@@ -81,7 +81,7 @@ class PaymentTestData extends PaymentData {
 	 * @return string
 	 */
 	public function get_order_id() {
-		return time();
+		return strval( time() );
 	}
 
 	/**
@@ -150,7 +150,7 @@ class PaymentTestData extends PaymentData {
 	 * @since 1.2.1
 	 * @link https://github.com/woothemes/woocommerce/blob/v2.1.3/includes/abstracts/abstract-wc-payment-gateway.php#L52
 	 * @link https://github.com/wp-premium/woocommerce-subscriptions/blob/2.0.18/includes/class-wc-subscriptions-renewal-order.php#L371-L398
-	 * @return string|bool
+	 * @return Subscription|false
 	 */
 	public function get_subscription() {
 		$test_subscription = filter_input( INPUT_POST, 'pronamic_pay_test_subscription', FILTER_VALIDATE_BOOLEAN );
@@ -211,7 +211,7 @@ class PaymentTestData extends PaymentData {
 		$subscription->frequency       = $times;
 		$subscription->interval        = $interval;
 		$subscription->interval_period = Core_Util::to_period( $interval_period );
-		$subscription->set_amount( $this->get_amount() );
+		$subscription->set_total_amount( $this->get_amount() );
 
 		return $subscription;
 	}

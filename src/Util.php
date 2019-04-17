@@ -3,7 +3,7 @@
  * Util
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -19,7 +19,7 @@ use WP_Error;
  * WordPress utility class
  *
  * @author  Remco Tolsma
- * @version 2.0.2
+ * @version 2.1.0
  * @since   2.0.1
  */
 class Util {
@@ -129,7 +129,7 @@ class Util {
 	 * @param int    $interval The interval number.
 	 * @param string $period   The period indicator.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public static function format_interval( $interval, $period ) {
 		switch ( $period ) {
@@ -238,7 +238,7 @@ class Util {
 		$html = '';
 
 		foreach ( $attributes as $key => $value ) {
-			$html .= sprintf( '%s="%s"', $key, esc_attr( $value ) );
+			$html .= sprintf( '%s="%s" ', $key, esc_attr( $value ) );
 		}
 
 		$html = trim( $html );

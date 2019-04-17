@@ -3,7 +3,7 @@
  * Subscriptions privacy exporters and erasers.
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Subscriptions
  */
@@ -16,7 +16,7 @@ use Pronamic\WordPress\Pay\Core\Statuses;
  * Subscriptions Privacy class.
  *
  * @author  Reüel van der Steege
- * @version 2.0.3
+ * @version 2.1.0
  * @since   2.0.2
  */
 class SubscriptionsPrivacy {
@@ -99,7 +99,13 @@ class SubscriptionsPrivacy {
 		foreach ( $subscriptions as $subscription ) {
 			$export_data = array();
 
-			$subscription_meta = get_post_meta( $subscription->get_id() );
+			$id = $subscription->get_id();
+
+			if ( empty( $id ) ) {
+				continue;
+			}
+
+			$subscription_meta = get_post_meta( $id );
 
 			// Get subscription meta.
 			foreach ( $meta_keys as $meta_key => $meta_options ) {
@@ -118,7 +124,7 @@ class SubscriptionsPrivacy {
 				$items[] = array(
 					'group_id'    => 'pronamic-pay-subscriptions',
 					'group_label' => __( 'Subscriptions', 'pronamic_ideal' ),
-					'item_id'     => 'pronamic-pay-subscription-' . $subscription->get_id(),
+					'item_id'     => 'pronamic-pay-subscription-' . $id,
 					'data'        => $export_data,
 				);
 			}
@@ -174,6 +180,10 @@ class SubscriptionsPrivacy {
 		foreach ( $subscriptions as $subscription ) {
 			$subscription_id = $subscription->get_id();
 
+			if ( empty( $subscription_id ) ) {
+				continue;
+			}
+
 			$subscription_meta = get_post_meta( $subscription_id );
 
 			$subscription_status = null;
@@ -197,7 +207,9 @@ class SubscriptionsPrivacy {
 						continue;
 					}
 
-					$privacy_manager->erase_meta( $subscription_id, $meta_key, $meta_options['privacy_erasure'] );
+					$action = ( isset( $meta_options['privacy_erasure'] ) ? $meta_options['privacy_erasure'] : null );
+
+					$privacy_manager->erase_meta( $subscription_id, $meta_key, $action );
 				}
 
 				$items_removed = true;

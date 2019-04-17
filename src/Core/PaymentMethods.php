@@ -3,7 +3,7 @@
  * Payment methods
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Core
  */
@@ -16,12 +16,12 @@ use WP_Query;
 /**
  * Title: WordPress pay payment methods
  * Description:
- * Copyright: Copyright (c) 2005 - 2018
+ * Copyright: 2005-2019 Pronamic
  * Company: Pronamic
  *
- * @author Remco Tolsma
- * @version 2.0.0
- * @since 1.0.1
+ * @author  Remco Tolsma
+ * @version 2.1.0
+ * @since   1.0.1
  */
 class PaymentMethods {
 	/**
@@ -398,7 +398,7 @@ class PaymentMethods {
 	 *
 	 * @return void
 	 */
-	private static function maybe_update_active_payment_methods() {
+	public static function maybe_update_active_payment_methods() {
 		$payment_methods = get_option( 'pronamic_pay_active_payment_methods' );
 
 		// Update active payment methods option if necessary.

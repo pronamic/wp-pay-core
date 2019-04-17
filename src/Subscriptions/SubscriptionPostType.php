@@ -3,7 +3,7 @@
  * Subscription Post Type
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Subscriptions
  */
@@ -16,8 +16,8 @@ use Pronamic\WordPress\Pay\Payments\PaymentPostType;
  * Title: WordPress iDEAL post types
  *
  * @author  Remco Tolsma
- * @version 2.0.5
- * @since   3.7.0
+ * @version 2.1.0
+ * @since   1.0.0
  */
 class SubscriptionPostType {
 	/**
@@ -47,21 +47,31 @@ class SubscriptionPostType {
 			array(
 				'label'              => __( 'Subscriptions', 'pronamic_ideal' ),
 				'labels'             => array(
-					'name'                  => __( 'Subscriptions', 'pronamic_ideal' ),
-					'singular_name'         => __( 'Subscription', 'pronamic_ideal' ),
-					'add_new'               => __( 'Add New', 'pronamic_ideal' ),
-					'add_new_item'          => __( 'Add New Subscription', 'pronamic_ideal' ),
-					'edit_item'             => __( 'Edit Subscription', 'pronamic_ideal' ),
-					'new_item'              => __( 'New Subscription', 'pronamic_ideal' ),
-					'all_items'             => __( 'All Subscriptions', 'pronamic_ideal' ),
-					'view_item'             => __( 'View Subscription', 'pronamic_ideal' ),
-					'search_items'          => __( 'Search Subscriptions', 'pronamic_ideal' ),
-					'not_found'             => __( 'No subscriptions found.', 'pronamic_ideal' ),
-					'not_found_in_trash'    => __( 'No subscriptions found in Trash.', 'pronamic_ideal' ),
-					'menu_name'             => __( 'Subscriptions', 'pronamic_ideal' ),
-					'filter_items_list'     => __( 'Filter subscriptions list', 'pronamic_ideal' ),
-					'items_list_navigation' => __( 'Subscriptions list navigation', 'pronamic_ideal' ),
-					'items_list'            => __( 'Subscriptions list', 'pronamic_ideal' ),
+					'name'                     => __( 'Subscriptions', 'pronamic_ideal' ),
+					'singular_name'            => __( 'Subscription', 'pronamic_ideal' ),
+					'add_new'                  => __( 'Add New', 'pronamic_ideal' ),
+					'add_new_item'             => __( 'Add New Subscription', 'pronamic_ideal' ),
+					'edit_item'                => __( 'Edit Subscription', 'pronamic_ideal' ),
+					'new_item'                 => __( 'New Subscription', 'pronamic_ideal' ),
+					'all_items'                => __( 'All Subscriptions', 'pronamic_ideal' ),
+					'view_item'                => __( 'View Subscription', 'pronamic_ideal' ),
+					'search_items'             => __( 'Search Subscriptions', 'pronamic_ideal' ),
+					'not_found'                => __( 'No subscriptions found.', 'pronamic_ideal' ),
+					'not_found_in_trash'       => __( 'No subscriptions found in Trash.', 'pronamic_ideal' ),
+					'menu_name'                => __( 'Subscriptions', 'pronamic_ideal' ),
+					'filter_items_list'        => __( 'Filter subscriptions list', 'pronamic_ideal' ),
+					'items_list_navigation'    => __( 'Subscriptions list navigation', 'pronamic_ideal' ),
+					'items_list'               => __( 'Subscriptions list', 'pronamic_ideal' ),
+
+					/*
+					 * New Post Type Labels in 5.0.
+					 * @link https://make.wordpress.org/core/2018/12/05/new-post-type-labels-in-5-0/
+					 */
+					'item_published'           => __( 'Subscription published.', 'pronamic_ideal' ),
+					'item_published_privately' => __( 'Subscription published privately.', 'pronamic_ideal' ),
+					'item_reverted_to_draft'   => __( 'Subscription reverted to draft.', 'pronamic_ideal' ),
+					'item_scheduled'           => __( 'Subscription scheduled.', 'pronamic_ideal' ),
+					'item_updated'             => __( 'Subscription updated.', 'pronamic_ideal' ),
 				),
 				'public'             => false,
 				'publicly_queryable' => false,
@@ -69,6 +79,8 @@ class SubscriptionPostType {
 				'show_in_nav_menus'  => false,
 				'show_in_menu'       => false,
 				'show_in_admin_bar'  => false,
+				'show_in_rest'       => true,
+				'rest_base'          => 'pronamic-subscriptions',
 				'supports'           => false,
 				'rewrite'            => false,
 				'query_var'          => false,
@@ -96,6 +108,8 @@ class SubscriptionPostType {
 
 	/**
 	 * Register our custom post statuses, used for order status.
+	 *
+	 * @return void
 	 */
 	public function register_post_status() {
 		/**

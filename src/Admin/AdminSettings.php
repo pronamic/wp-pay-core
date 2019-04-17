@@ -3,7 +3,7 @@
  * Admin Settings
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Admin
  */
@@ -16,8 +16,9 @@ use Pronamic\WordPress\Pay\Util;
 /**
  * WordPress iDEAL admin
  *
- * @author Remco Tolsma
- * @version 1.0.0
+ * @author  Remco Tolsma
+ * @version 2.1.0
+ * @since   1.0.0
  */
 class AdminSettings {
 	/**

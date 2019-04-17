@@ -3,7 +3,7 @@
  * Taxed money JSON transformer
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -33,18 +33,14 @@ class TaxedMoneyJsonTransformer {
 			return null;
 		}
 
-		$object = (object) array();
+		$object = MoneyJsonTransformer::to_json( $money );
 
-		if ( null !== $money->get_amount() ) {
-			$object->amount = $money->get_amount();
+		if ( null === $object ) {
+			return null;
 		}
 
-		if ( null !== $money->get_currency()->get_alphabetic_code() ) {
-			$object->currency = $money->get_currency()->get_alphabetic_code();
-		}
-
-		if ( null !== $money->get_tax_amount() ) {
-			$object->tax_amount = $money->get_tax_amount();
+		if ( null !== $money->get_tax_value() ) {
+			$object->tax_value = $money->get_tax_value();
 		}
 
 		if ( null !== $money->get_tax_percentage() ) {
@@ -69,28 +65,28 @@ class TaxedMoneyJsonTransformer {
 		}
 
 		// Default arguments.
-		$amount         = 0;
+		$value          = 0;
 		$currency       = null;
-		$tax_amount     = null;
+		$tax_value      = null;
 		$tax_percentage = null;
 
-		if ( property_exists( $json, 'amount' ) ) {
-			$amount = $json->amount;
+		if ( property_exists( $json, 'value' ) ) {
+			$value = $json->value;
 		}
 
 		if ( property_exists( $json, 'currency' ) ) {
 			$currency = $json->currency;
 		}
 
-		if ( property_exists( $json, 'tax_amount' ) ) {
-			$tax_amount = $json->tax_amount;
+		if ( property_exists( $json, 'tax_value' ) ) {
+			$tax_value = $json->tax_value;
 		}
 
 		if ( property_exists( $json, 'tax_percentage' ) ) {
 			$tax_percentage = $json->tax_percentage;
 		}
 
-		$money = new TaxedMoney( $amount, $currency, $tax_amount, $tax_percentage );
+		$money = new TaxedMoney( $value, $currency, $tax_value, $tax_percentage );
 
 		return $money;
 	}

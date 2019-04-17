@@ -3,7 +3,7 @@
  * Abstract Data Store Custom Post Type
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -88,7 +88,7 @@ abstract class AbstractDataStoreCPT {
 	 *
 	 * @param int    $id  Post ID.
 	 * @param string $key Key.
-	 * @return string|null
+	 * @return string|null|false
 	 */
 	public function get_meta( $id, $key ) {
 		$meta_key = $this->get_meta_key( $key );
@@ -124,6 +124,42 @@ abstract class AbstractDataStoreCPT {
 		}
 
 		return $date;
+	}
+
+	/**
+	 * Get string from meta.
+	 *
+	 * @param int    $id  Post ID.
+	 * @param string $key Key.
+	 *
+	 * @return string|null
+	 */
+	public function get_meta_string( $id, $key ) {
+		$value = $this->get_meta( $id, $key );
+
+		if ( empty( $value ) ) {
+			return null;
+		}
+
+		return strval( $value );
+	}
+
+	/**
+	 * Get int from meta.
+	 *
+	 * @param int    $id  Post ID.
+	 * @param string $key Key.
+	 *
+	 * @return int|null
+	 */
+	public function get_meta_int( $id, $key ) {
+		$value = $this->get_meta( $id, $key );
+
+		if ( empty( $value ) ) {
+			return null;
+		}
+
+		return intval( $value );
 	}
 
 	/**

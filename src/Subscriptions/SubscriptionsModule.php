@@ -3,7 +3,7 @@
  * Subscriptions Module
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Subscriptions
  */
@@ -12,6 +12,7 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DateInterval;
 use DatePeriod;
+use Exception;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Money\Money;
@@ -33,20 +34,22 @@ use Pronamic\WordPress\Pay\Extensions\WooCommerce\DirectDebitSofortGateway;
 use Pronamic\WordPress\Pay\Extensions\WooCommerce\WooCommerce;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
+use UnexpectedValueException;
 use WP_CLI;
+use WP_Error;
 use WP_Query;
 use WP_User;
 
 /**
  * Title: Subscriptions module
  * Description:
- * Copyright: Copyright (c) 2005 - 2018
+ * Copyright: 2005-2019 Pronamic
  * Company: Pronamic
  *
  * @link https://woocommerce.com/2017/04/woocommerce-3-0-release/
  * @link https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
  * @author  Remco Tolsma
- * @version 2.0.2
+ * @version 2.1.0
  * @since   2.0.1
  */
 class SubscriptionsModule {
@@ -78,7 +81,7 @@ class SubscriptionsModule {
 		// Actions.
 		add_action( 'wp_loaded', array( $this, 'handle_subscription' ) );
 
-		add_action( 'plugins_loaded', array( $this, 'maybe_schedule_subscription_payments' ), 5 );
+		add_action( 'plugins_loaded', array( $this, 'maybe_schedule_subscription_payments' ), 6 );
 
 		add_action( 'pronamic_pay_admin_menu', array( $this, 'admin_menu' ) );
 
@@ -100,7 +103,7 @@ class SubscriptionsModule {
 		// @link https://github.com/woocommerce/woocommerce/blob/3.3.1/includes/class-woocommerce.php#L365-L369.
 		// @link https://github.com/woocommerce/woocommerce/blob/3.3.1/includes/class-wc-cli.php.
 		// @link https://make.wordpress.org/cli/handbook/commands-cookbook/.
-		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+		if ( Util::doing_cli() ) {
 			WP_CLI::add_command( 'pay subscriptions test', array( $this, 'cli_subscriptions_test' ) );
 		}
 	}
@@ -359,23 +362,7 @@ class SubscriptionsModule {
 			return;
 		}
 
-		// @link https://github.com/woothemes/woocommerce/blob/2.3.11/includes/class-wc-cache-helper.php
-		// @link https://www.w3-edge.com/products/w3-total-cache/
-		$do_not_constants = array(
-			'DONOTCACHEPAGE',
-			'DONOTCACHEDB',
-			'DONOTMINIFY',
-			'DONOTCDN',
-			'DONOTCACHEOBJECT',
-		);
-
-		foreach ( $do_not_constants as $do_not_constant ) {
-			if ( ! defined( $do_not_constant ) ) {
-				define( $do_not_constant, true );
-			}
-		}
-
-		nocache_headers();
+		Util::no_cache();
 
 		$subscription_id = filter_input( INPUT_GET, 'subscription', FILTER_SANITIZE_STRING );
 		$action          = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
@@ -398,8 +385,10 @@ class SubscriptionsModule {
 				if ( Statuses::CANCELLED !== $subscription->get_status() ) {
 					$subscription->set_status( Statuses::CANCELLED );
 
-					$this->update_subscription( $subscription, $should_redirect );
+					$subscription->save();
 				}
+
+				wp_safe_redirect( home_url() );
 
 				break;
 			case 'renew':
@@ -407,18 +396,12 @@ class SubscriptionsModule {
 
 				$html = __( 'The subscription can not be renewed.', 'pronamic_ideal' );
 
-				if ( $gateway && $gateway->supports( 'recurring' ) && Statuses::ACTIVE === $subscription->get_status() ) {
-					$html = __( 'The subscription is already active.', 'pronamic_ideal' );
-				} elseif ( $gateway && 'POST' === Server::get( 'REQUEST_METHOD' ) ) {
-					$data = new SubscriptionPaymentData( $subscription );
-
-					$data->set_recurring( false );
-
-					$payment = $this->start_recurring( $subscription, $gateway, $data );
+				if ( $gateway && 'POST' === Server::get( 'REQUEST_METHOD' ) ) {
+					$payment = $this->start_recurring( $subscription, $gateway, false );
 
 					$error = $gateway->get_error();
 
-					if ( $gateway->has_error() && is_wp_error( $error ) ) {
+					if ( $error instanceof WP_Error ) {
 						Plugin::render_errors( $error );
 
 						exit;
@@ -454,7 +437,7 @@ class SubscriptionsModule {
 					}
 
 					$form_inner = sprintf(
-						'<h1>%14s</h1> <p>%2$s</p> <hr /> <p><strong>%3$s:</strong> %4$s</p> <p><strong>%5$s:</strong> %6$s</p>',
+						'<h1>%1$s</h1> <p>%2$s</p> <hr /> <p><strong>%3$s:</strong> %4$s</p> <p><strong>%5$s:</strong> %6$s</p>',
 						esc_html__( 'Subscription Renewal', 'pronamic_ideal' ),
 						sprintf(
 							/* translators: %s: expiry date */
@@ -464,7 +447,7 @@ class SubscriptionsModule {
 						esc_html__( 'Subscription length', 'pronamic_ideal' ),
 						esc_html( $length ),
 						esc_html__( 'Amount', 'pronamic_ideal' ),
-						esc_html( $subscription->get_amount()->format_i18n() )
+						esc_html( $subscription->get_total_amount()->format_i18n() )
 					);
 
 					$form_inner .= $gateway->get_input_html();
@@ -487,116 +470,70 @@ class SubscriptionsModule {
 	}
 
 	/**
-	 * Start a recurring payment at the specified gateway for the specified subscription.
+	 * Create a new subscription payment.
 	 *
-	 * @param Subscription                 $subscription The subscription to start a recurring payment for.
-	 * @param Gateway|null                 $gateway      The gateway to start the recurring payment at.
-	 * @param SubscriptionPaymentData|null $data         The subscription payment data.
-	 *
-	 * @throws \Exception Throws an Exception on incorrect date interval.
-	 *
-	 * @return Payment|bool
+	 * @param Subscription $subscription Subscription.
+	 * @return false|Payment
 	 */
-	public function start_recurring( Subscription $subscription, $gateway = null, $data = null ) {
-		// Make sure there's payment data to process.
-		if ( null === $data ) {
-			$data = new SubscriptionPaymentData( $subscription );
+	public function new_subscription_payment( Subscription $subscription ) {
+		// Unset the next payment date if next payment date is after the subscription end date.
+		if ( isset( $subscription->end_date, $subscription->next_payment ) && $subscription->next_payment > $subscription->end_date ) {
+			$subscription->next_payment = null;
+		}
+
+		// Set the subscription status to `completed` if there is no next payment date.
+		if ( empty( $subscription->next_payment ) ) {
+			$subscription->status      = Statuses::COMPLETED;
+			$subscription->expiry_date = $subscription->end_date;
+
+			$subscription->save();
+
+			return false;
 		}
 
 		// Create payment.
 		$payment = new Payment();
 
-		$payment->user_id         = $data->get_user_id();
 		$payment->config_id       = $subscription->get_config_id();
-		$payment->order_id        = $data->get_order_id();
-		$payment->description     = $data->get_description();
-		$payment->source          = $data->get_source();
-		$payment->source_id       = $data->get_source_id();
-		$payment->email           = $data->get_email();
+		$payment->order_id        = $subscription->get_order_id();
+		$payment->description     = $subscription->description;
+		$payment->source          = $subscription->get_source();
+		$payment->source_id       = $subscription->get_source_id();
+		$payment->email           = $subscription->get_email();
 		$payment->method          = $subscription->payment_method;
-		$payment->recurring       = ( false === $data->get_recurring() ? false : true );
+		$payment->issuer          = $subscription->issuer;
+		$payment->recurring       = true;
 		$payment->subscription    = $subscription;
 		$payment->subscription_id = $subscription->get_id();
-		$payment->set_total_amount( $data->get_amount() );
 
-		// Set payment method from payment data if available.
-		if ( method_exists( $data, 'get_payment_method' ) ) {
-			$payment->method = $data->get_payment_method();
+		$payment->set_total_amount( $subscription->get_total_amount() );
+		$payment->set_customer( $subscription->get_customer() );
+		$payment->set_billing_address( $subscription->get_billing_address() );
+		$payment->set_shipping_address( $subscription->get_shipping_address() );
+		$payment->set_lines( $subscription->get_lines() );
+
+		return $payment;
+	}
+
+	/**
+	 * Start a recurring payment at the specified gateway for the specified subscription.
+	 *
+	 * @param Subscription $subscription The subscription to start a recurring payment for.
+	 * @param Gateway|null $gateway      The gateway to start the recurring payment at.
+	 * @param bool         $recurring    Recurring.
+	 *
+	 * @throws \Exception Throws an Exception on incorrect date interval.
+	 *
+	 * @return Payment|bool
+	 */
+	public function start_recurring( Subscription $subscription, $gateway = null, $recurring = true ) {
+		$payment = $this->new_subscription_payment( $subscription );
+
+		if ( empty( $payment ) ) {
+			return;
 		}
 
-		// Set issuer for manual renewal.
-		if ( ! $payment->get_recurring() ) {
-			$payment->issuer = $data->get_issuer_id();
-		}
-
-		// Customer.
-		$customer = array(
-			'first_name' => $data->get_first_name(),
-			'last_name'  => $data->get_last_name(),
-			'email'      => $data->get_email(),
-			'phone'      => $data->get_telephone_number(),
-		);
-
-		$customer = array_filter( $customer );
-
-		if ( ! empty( $customer ) ) {
-			$customer = Customer::from_json( (object) $customer );
-
-			$payment->set_customer( $customer );
-		}
-
-		// Billing address.
-		$billing_address = array(
-			'name'         => ( $customer instanceof Customer ? $customer->get_name() : null ),
-			'line_1'       => $data->get_address(),
-			'postal_code'  => $data->get_zip(),
-			'city'         => $data->get_city(),
-			'country_name' => $data->get_country(),
-			'email'        => $data->get_email(),
-			'phone'        => $data->get_telephone_number(),
-		);
-
-		$billing_address = array_filter( $billing_address );
-
-		if ( ! empty( $billing_address ) ) {
-			$address = new Address();
-
-			if ( isset( $billing_address['name'] ) ) {
-				$address->set_name( $billing_address['name'] );
-			}
-
-			if ( isset( $billing_address['line_1'] ) ) {
-				$address->set_line_1( $billing_address['line_1'] );
-			}
-
-			if ( isset( $billing_address['postal_code'] ) ) {
-				$address->set_postal_code( $billing_address['postal_code'] );
-			}
-
-			if ( isset( $billing_address['city'] ) ) {
-				$address->set_city( $billing_address['city'] );
-			}
-
-			if ( isset( $billing_address['country_name'] ) ) {
-				$address->set_country_name( $billing_address['country_name'] );
-			}
-
-			if ( isset( $billing_address['email'] ) ) {
-				$address->set_email( $billing_address['email'] );
-			}
-
-			if ( isset( $billing_address['phone'] ) ) {
-				$address->set_phone( $billing_address['phone'] );
-			}
-
-			$payment->set_billing_address( $address );
-		}
-
-		// Maybe complete subscription for manual renewal.
-		if ( $this->maybe_complete_manual_renewal_subscription( $payment ) ) {
-			// @todo
-			return false;
-		}
+		$payment->recurring = $recurring;
 
 		// Make sure to only start payments for supported gateways.
 		if ( null === $gateway ) {
@@ -618,7 +555,8 @@ class SubscriptionsModule {
 	 * @param Payment      $payment Payment.
 	 * @param Gateway|null $gateway Gateway to start the recurring payment at.
 	 *
-	 * @throws \Exception Throws an Exception on incorrect date interval.
+	 * @throws Exception                Throws an Exception on incorrect date interval.
+	 * @throws UnexpectedValueException Throw unexpected value exception when no subscription was found in payment.
 	 *
 	 * @return Payment
 	 */
@@ -629,6 +567,10 @@ class SubscriptionsModule {
 		}
 
 		$subscription = $payment->get_subscription();
+
+		if ( is_bool( $subscription ) ) {
+			throw new UnexpectedValueException( 'No subscription object found in payment.' );
+		}
 
 		// Calculate payment start and end dates.
 		$start_date = new DateTime();
@@ -659,30 +601,6 @@ class SubscriptionsModule {
 	}
 
 	/**
-	 * Update the specified subscription and redirect if allowed.
-	 *
-	 * @param Subscription $subscription The updated subscription.
-	 * @param boolean      $can_redirect Flag to redirect or not.
-	 */
-	public function update_subscription( $subscription = null, $can_redirect = true ) {
-		if ( empty( $subscription ) ) {
-			return;
-		}
-
-		$subscription->save();
-
-		if ( defined( 'DOING_CRON' ) && empty( $subscription->status ) ) {
-			$can_redirect = false;
-		}
-
-		if ( $can_redirect ) {
-			wp_safe_redirect( home_url() );
-
-			exit;
-		}
-	}
-
-	/**
 	 * Comments clauses.
 	 *
 	 * @param array             $clauses The database query clauses.
@@ -701,42 +619,9 @@ class SubscriptionsModule {
 	}
 
 	/**
-	 * Maybe complete manual renewal subscription.
-	 *
-	 * @param Payment $payment Payment.
-	 *
-	 * @return bool
-	 */
-	public function maybe_complete_manual_renewal_subscription( Payment $payment ) {
-		/**
-		 * Check if this is a manual renewal payment.
-		 *
-		 * @see SubscriptionsModule::handle_subscription()
-		 */
-		if ( false !== $payment->get_recurring() ) {
-			return false;
-		}
-
-		$subscription = $payment->get_subscription();
-
-		// Unset the next payment date if next payment date is after the subscription end date.
-		if ( isset( $subscription->end_date, $subscription->next_payment ) && $subscription->end_date <= $subscription->next_payment ) {
-			$subscription->next_payment = null;
-		}
-
-		// Set the subscription status to `completed` if there is no next payment date.
-		if ( empty( $subscription->next_payment ) ) {
-			$subscription->status      = Statuses::COMPLETED;
-			$subscription->expiry_date = $subscription->end_date;
-
-			$subscription->save();
-
-			return true;
-		}
-	}
-
-	/**
 	 * Maybe schedule subscription payments.
+	 *
+	 * @return void
 	 */
 	public function maybe_schedule_subscription_payments() {
 		if ( wp_next_scheduled( 'pronamic_pay_update_subscription_payments' ) ) {
@@ -750,7 +635,7 @@ class SubscriptionsModule {
 	 * Maybe create subscription for the specified payment.
 	 *
 	 * @param Payment $payment The new payment.
-	 *
+	 * @return void
 	 * @throws \Exception Throws an Exception on incorrect date interval.
 	 */
 	public function maybe_create_subscription( $payment ) {
@@ -769,20 +654,31 @@ class SubscriptionsModule {
 			return;
 		}
 
-		// Customer name.
+		// Customer.
+		$user_id       = null;
 		$customer_name = null;
 
-		if ( null !== $payment->get_customer() && null !== $payment->get_customer()->get_name() ) {
-			$customer_name = strval( $payment->get_customer()->get_name() );
+		$customer = $payment->get_customer();
+
+		if ( null !== $customer ) {
+			$user_id = $customer->get_user_id();
+			$name    = $customer->get_name();
+
+			if ( null !== $name ) {
+				$customer_name = strval( $name );		
+			}
 		}
 
 		// New subscription.
 		$subscription = new Subscription();
 
 		$subscription->config_id = $payment->config_id;
-		$subscription->user_id   = $payment->user_id;
-		/* translators: %s: payment title */
-		$subscription->title           = sprintf( __( 'Subscription for %s', 'pronamic_ideal' ), $payment->title );
+		$subscription->user_id   = $user_id;
+		$subscription->title     = sprintf(
+			/* translators: %s: payment title */
+			__( 'Subscription for %s', 'pronamic_ideal' ),
+			$payment->title
+		);
 		$subscription->frequency       = $subscription_data->get_frequency();
 		$subscription->interval        = $subscription_data->get_interval();
 		$subscription->interval_period = $subscription_data->get_interval_period();
@@ -794,7 +690,7 @@ class SubscriptionsModule {
 		$subscription->customer_name   = $customer_name;
 		$subscription->payment_method  = $payment->method;
 		$subscription->status          = Statuses::OPEN;
-		$subscription->set_amount( $subscription_data->get_amount() );
+		$subscription->set_total_amount( $subscription_data->get_total_amount() );
 
 		// @todo
 		// Calculate dates
@@ -933,10 +829,15 @@ class SubscriptionsModule {
 	 * Payment status update.
 	 *
 	 * @param Payment $payment The status updated payment.
+	 * @return void
 	 */
 	public function payment_status_update( $payment ) {
 		// Check if the payment is connected to a subscription.
 		$subscription = $payment->get_subscription();
+
+		if ( is_bool( $subscription ) ) {
+			return;
+		}
 
 		if ( empty( $subscription ) || null === $subscription->get_id() ) {
 			// Payment not connected to a subscription, nothing to do.
@@ -1011,6 +912,8 @@ class SubscriptionsModule {
 	 * @link https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/license-renewals.php#L652-L712
 	 * @link https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/license-renewals.php#L715-L746
 	 * @link https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/classes/class-sl-emails.php#L41-L126
+	 *
+	 * @return void
 	 */
 	public function send_subscription_renewal_notices() {
 		$interval = new DateInterval( 'P1W' ); // 1 week
@@ -1026,6 +929,11 @@ class SubscriptionsModule {
 			$subscription = new Subscription( $post->ID );
 
 			$expiry_date = $subscription->get_expiry_date();
+
+			// If expirary date is null we continue, subscription is not expiring.
+			if ( null === $expiry_date ) {
+				continue;
+			}
 
 			$sent_date_string = get_post_meta( $post->ID, '_pronamic_subscription_renewal_sent_1week', true );
 
@@ -1072,6 +980,7 @@ class SubscriptionsModule {
 	 * Update subscription payments.
 	 *
 	 * @param bool $cli_test Whether or not this a CLI test.
+	 * @return void
 	 */
 	public function update_subscription_payments( $cli_test = false ) {
 		$this->send_subscription_renewal_notices();
@@ -1119,10 +1028,15 @@ class SubscriptionsModule {
 
 			$gateway = Plugin::get_gateway( $subscription->config_id );
 
+			// If gateway is null we continue to next subscription.
+			if ( null === $gateway ) {
+				continue;
+			}
+
 			// Start payment.
 			$payment = $this->start_recurring( $subscription, $gateway );
 
-			if ( $payment ) {
+			if ( is_object( $payment ) ) {
 				// Update payment.
 				Plugin::update_payment( $payment, false );
 			}

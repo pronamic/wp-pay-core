@@ -3,7 +3,7 @@
  * Personal Name
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -16,11 +16,19 @@ use stdClass;
 /**
  * Personal Name
  *
- * @link   https://en.wikipedia.org/wiki/Personal_name
- * @author Remco Tolsma
- * @since  1.4.0
+ * @link    https://en.wikipedia.org/wiki/Personal_name
+ * @author  Remco Tolsma
+ * @version 2.1.0
+ * @since   1.4.0
  */
 class ContactName {
+	/**
+	 * Full Name.
+	 *
+	 * @var string|null
+	 */
+	private $full_name;
+
 	/**
 	 * Prefix.
 	 *
@@ -78,6 +86,24 @@ class ContactName {
 	 * @link https://en.wikipedia.org/wiki/Suffix_(name)
 	 */
 	private $suffix;
+
+	/**
+	 * Get full name.
+	 *
+	 * @return string|null
+	 */
+	public function get_full_name() {
+		return $this->full_name;
+	}
+
+	/**
+	 * Set full name.
+	 *
+	 * @param string|null $full_name Full name.
+	 */
+	public function set_full_name( $full_name ) {
+		$this->full_name = $full_name;
+	}
 
 	/**
 	 * Get prefix.
@@ -194,6 +220,7 @@ class ContactName {
 	 */
 	public function get_json() {
 		$data = array(
+			'full_name'   => $this->get_full_name(),
 			'prefix'      => $this->get_prefix(),
 			'initials'    => $this->get_initials(),
 			'first_name'  => $this->get_first_name(),
@@ -224,6 +251,10 @@ class ContactName {
 		}
 
 		$name = new self();
+
+		if ( property_exists( $json, 'full_name' ) ) {
+			$name->set_full_name( $json->full_name );
+		}
 
 		if ( property_exists( $json, 'prefix' ) ) {
 			$name->set_prefix( $json->prefix );
@@ -271,6 +302,10 @@ class ContactName {
 		$pieces = array_filter( $pieces );
 
 		$string = implode( ' ', $pieces );
+
+		if ( empty( $string ) ) {
+			$string = (string) $this->get_full_name();
+		}
 
 		return $string;
 	}

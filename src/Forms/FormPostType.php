@@ -3,7 +3,7 @@
  * Form Post Type
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Forms
  */
@@ -19,8 +19,8 @@ use WP_Post;
  * Form Post Type
  *
  * @author  Remco Tolsma
- * @version 2.0.5
- * @since   3.7.0
+ * @version 2.1.0
+ * @since   1.0.0
  */
 class FormPostType {
 	/**
@@ -29,6 +29,13 @@ class FormPostType {
 	 * @var string
 	 */
 	const POST_TYPE = 'pronamic_pay_form';
+
+	/**
+	 * Amount method input fixed.
+	 *
+	 * @var string
+	 */
+	const AMOUNT_METHOD_INPUT_FIXED = 'fixed';
 
 	/**
 	 * Amount method input only.
@@ -100,21 +107,31 @@ class FormPostType {
 			array(
 				'label'              => __( 'Payment Forms', 'pronamic_ideal' ),
 				'labels'             => array(
-					'name'                  => __( 'Payment Forms', 'pronamic_ideal' ),
-					'singular_name'         => __( 'Payment Form', 'pronamic_ideal' ),
-					'add_new'               => __( 'Add New', 'pronamic_ideal' ),
-					'add_new_item'          => __( 'Add New Payment Form', 'pronamic_ideal' ),
-					'edit_item'             => __( 'Edit Payment Form', 'pronamic_ideal' ),
-					'new_item'              => __( 'New Payment Form', 'pronamic_ideal' ),
-					'all_items'             => __( 'All Payment Forms', 'pronamic_ideal' ),
-					'view_item'             => __( 'View Payment Form', 'pronamic_ideal' ),
-					'search_items'          => __( 'Search Payment Forms', 'pronamic_ideal' ),
-					'not_found'             => __( 'No payment forms found.', 'pronamic_ideal' ),
-					'not_found_in_trash'    => __( 'No payment forms found in Trash.', 'pronamic_ideal' ),
-					'menu_name'             => __( 'Payment Forms', 'pronamic_ideal' ),
-					'filter_items_list'     => __( 'Filter payment forms list', 'pronamic_ideal' ),
-					'items_list_navigation' => __( 'Payment forms list navigation', 'pronamic_ideal' ),
-					'items_list'            => __( 'Payment forms list', 'pronamic_ideal' ),
+					'name'                     => __( 'Payment Forms', 'pronamic_ideal' ),
+					'singular_name'            => __( 'Payment Form', 'pronamic_ideal' ),
+					'add_new'                  => __( 'Add New', 'pronamic_ideal' ),
+					'add_new_item'             => __( 'Add New Payment Form', 'pronamic_ideal' ),
+					'edit_item'                => __( 'Edit Payment Form', 'pronamic_ideal' ),
+					'new_item'                 => __( 'New Payment Form', 'pronamic_ideal' ),
+					'all_items'                => __( 'All Payment Forms', 'pronamic_ideal' ),
+					'view_item'                => __( 'View Payment Form', 'pronamic_ideal' ),
+					'search_items'             => __( 'Search Payment Forms', 'pronamic_ideal' ),
+					'not_found'                => __( 'No payment forms found.', 'pronamic_ideal' ),
+					'not_found_in_trash'       => __( 'No payment forms found in Trash.', 'pronamic_ideal' ),
+					'menu_name'                => __( 'Payment Forms', 'pronamic_ideal' ),
+					'filter_items_list'        => __( 'Filter payment forms list', 'pronamic_ideal' ),
+					'items_list_navigation'    => __( 'Payment forms list navigation', 'pronamic_ideal' ),
+					'items_list'               => __( 'Payment forms list', 'pronamic_ideal' ),
+
+					/*
+					 * New Post Type Labels in 5.0.
+					 * @link https://make.wordpress.org/core/2018/12/05/new-post-type-labels-in-5-0/
+					 */
+					'item_published'           => __( 'Payment form published.', 'pronamic_ideal' ),
+					'item_published_privately' => __( 'Payment form published privately.', 'pronamic_ideal' ),
+					'item_reverted_to_draft'   => __( 'Payment form reverted to draft.', 'pronamic_ideal' ),
+					'item_scheduled'           => __( 'Payment form scheduled.', 'pronamic_ideal' ),
+					'item_updated'             => __( 'Payment form updated.', 'pronamic_ideal' ),
 				),
 				'public'             => true,
 				'publicly_queryable' => true,
@@ -164,21 +181,20 @@ class FormPostType {
 	 */
 	public function custom_columns( $column, $post_id ) {
 		global $post;
+		global $wpdb;
 
 		switch ( $column ) {
 			case 'pronamic_payment_form_gateway':
 				$config_id = get_post_meta( $post_id, '_pronamic_payment_form_config_id', true );
 
 				if ( ! empty( $config_id ) ) {
-					echo get_the_title( $config_id );
+					echo esc_html( get_the_title( $config_id ) );
 				} else {
 					echo '—';
 				}
 
 				break;
 			case 'pronamic_payment_form_payments':
-				global $wpdb;
-
 				$query = $wpdb->prepare(
 					"
 					SELECT
@@ -214,8 +230,6 @@ class FormPostType {
 
 				break;
 			case 'pronamic_payment_form_earnings':
-				global $wpdb;
-
 				$query = $wpdb->prepare(
 					"
 					SELECT
@@ -371,7 +385,7 @@ class FormPostType {
 
 	<input id="pronamic-pay-shortcode" class="pronamic-pay-shortcode-input" onClick="this.setSelectionRange( 0, this.value.length )" type="text" class="shortcode-input" readonly value="<?php echo esc_attr( $this->get_shortcode() ); ?>" />
 </div>
-<?php
+		<?php
 	}
 
 	/**

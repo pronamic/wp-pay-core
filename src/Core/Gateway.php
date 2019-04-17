@@ -3,13 +3,14 @@
  * Gateway
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Core
  */
 
 namespace Pronamic\WordPress\Pay\Core;
 
+use Pronamic\WordPress\Pay\Core\Util as Core_Util;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
@@ -20,11 +21,11 @@ use WP_Error;
 /**
  * Title: Gateway
  * Description:
- * Copyright: Copyright (c) 2005 - 2018
+ * Copyright: 2005-2019 Pronamic
  * Company: Pronamic
  *
  * @author  Remco Tolsma
- * @version 2.0.8
+ * @version 2.1.0
  * @since   1.0.0
  */
 abstract class Gateway {
@@ -95,7 +96,7 @@ abstract class Gateway {
 	 * Payment method to use on this gateway.
 	 *
 	 * @since 1.2.3
-	 * @var string
+	 * @var string|null
 	 */
 	private $payment_method;
 
@@ -309,6 +310,17 @@ abstract class Gateway {
 	}
 
 	/**
+	 * Custom payment redirect.
+	 * Intended to be overridden by gateway.
+	 *
+	 * @param Payment $payment Payment.
+	 *
+	 * @return void
+	 */
+	public function payment_redirect( Payment $payment ) {
+	}
+
+	/**
 	 * Get supported payment providers for gateway.
 	 * Intended to be overridden by gateway.
 	 *
@@ -467,29 +479,7 @@ abstract class Gateway {
 		if ( headers_sent() ) {
 			echo $this->get_form_html( $payment, true ); // WPCS: XSS ok.
 		} else {
-			// @link https://github.com/woothemes/woocommerce/blob/2.3.11/includes/class-wc-cache-helper.php.
-			// @link https://www.w3-edge.com/products/w3-total-cache/.
-			if ( ! defined( 'DONOTCACHEPAGE' ) ) {
-				define( 'DONOTCACHEPAGE', true );
-			}
-
-			if ( ! defined( 'DONOTCACHEDB' ) ) {
-				define( 'DONOTCACHEDB', true );
-			}
-
-			if ( ! defined( 'DONOTMINIFY' ) ) {
-				define( 'DONOTMINIFY', true );
-			}
-
-			if ( ! defined( 'DONOTCDN' ) ) {
-				define( 'DONOTCDN', true );
-			}
-
-			if ( ! defined( 'DONOTCACHEOBJECT' ) ) {
-				define( 'DONOTCACHEOBJECT', true );
-			}
-
-			nocache_headers();
+			Core_Util::no_cache();
 
 			include Plugin::$dirname . '/views/redirect-via-html.php';
 		}
@@ -627,7 +617,7 @@ abstract class Gateway {
 	 * Get the payment method to use on this gateway.
 	 *
 	 * @since 1.2.3
-	 * @return string One of the PaymentMethods constants.
+	 * @return string|null One of the PaymentMethods constants.
 	 */
 	public function get_payment_method() {
 		return $this->payment_method;
@@ -638,7 +628,7 @@ abstract class Gateway {
 	 *
 	 * @since 1.2.3
 	 *
-	 * @param string $payment_method One of the PaymentMethods constants.
+	 * @param string|null $payment_method One of the PaymentMethods constants.
 	 */
 	public function set_payment_method( $payment_method ) {
 		$this->payment_method = $payment_method;

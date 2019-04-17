@@ -3,7 +3,7 @@
  * Payment Post Type
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Admin
  */
@@ -21,7 +21,7 @@ use WP_Query;
  * WordPress admin payment post type
  *
  * @author  Remco Tolsma
- * @version 2.0.3
+ * @version 2.1.6
  * @since   1.0.0
  */
 class AdminPaymentPostType {
@@ -58,6 +58,7 @@ class AdminPaymentPostType {
 
 		add_filter( 'manage_edit-' . self::POST_TYPE . '_columns', array( $this, 'columns' ) );
 		add_filter( 'manage_edit-' . self::POST_TYPE . '_sortable_columns', array( $this, 'sortable_columns' ) );
+		add_filter( 'list_table_primary_column', array( $this, 'primary_column' ), 10, 2 );
 
 		add_action( 'manage_' . self::POST_TYPE . '_posts_custom_column', array( $this, 'custom_columns' ), 10, 2 );
 
@@ -76,9 +77,6 @@ class AdminPaymentPostType {
 
 		add_filter( 'post_updated_messages', array( $this, 'post_updated_messages' ) );
 
-		// Transition Post Status.
-		add_action( 'transition_post_status', array( $this, 'transition_post_status' ), 10, 3 );
-
 		// Bulk Actions.
 		new AdminPaymentBulkActions();
 	}
@@ -94,13 +92,19 @@ class AdminPaymentPostType {
 	public function request( $vars ) {
 		$screen = get_current_screen();
 
-		if ( self::POST_TYPE === $screen->post_type ) {
-			if ( ! isset( $vars['post_status'] ) ) {
-				$vars['post_status'] = array_keys( PaymentPostType::get_payment_states() );
-
-				$vars['post_status'][] = 'publish';
-			}
+		// Check payment post type.
+		if ( self::POST_TYPE !== $screen->post_type ) {
+			return $vars;
 		}
+
+		// Check post status var.
+		if ( isset( $vars['post_status'] ) && ! empty( $vars['post_status'] ) ) {
+			return $vars;
+		}
+
+		// Set request post status from payment states.
+		$vars['post_status']   = array_keys( PaymentPostType::get_payment_states() );
+		$vars['post_status'][] = 'publish';
 
 		return $vars;
 	}
@@ -123,10 +127,14 @@ class AdminPaymentPostType {
 
 		$post_id = filter_input( INPUT_GET, 'post', FILTER_SANITIZE_NUMBER_INT );
 
+		$payment = get_pronamic_payment( $post_id );
+
+		if ( null === $payment ) {
+			return;
+		}
+
 		// Status check action.
 		if ( filter_has_var( INPUT_GET, 'pronamic_pay_check_status' ) && check_admin_referer( 'pronamic_payment_check_status_' . $post_id ) ) {
-			$payment = get_pronamic_payment( $post_id );
-
 			Plugin::update_payment( $payment, false );
 
 			$this->admin_notices[] = array(
@@ -137,12 +145,10 @@ class AdminPaymentPostType {
 
 		// Create invoice action.
 		if ( filter_has_var( INPUT_GET, 'pronamic_pay_create_invoice' ) && check_admin_referer( 'pronamic_payment_create_invoice_' . $post_id ) ) {
-			$payment = get_pronamic_payment( $post_id );
-
 			$gateway = Plugin::get_gateway( $payment->get_config_id() );
 
 			// Admin notice.
-			if ( is_callable( array( $gateway, 'create_invoice' ) ) && $gateway->create_invoice( $payment ) ) {
+			if ( null !== $gateway && is_callable( array( $gateway, 'create_invoice' ) ) && $gateway->create_invoice( $payment ) ) {
 				$this->admin_notices[] = array(
 					'type'    => 'info',
 					'message' => __( 'Invoice created.', 'pronamic_ideal' ),
@@ -157,12 +163,10 @@ class AdminPaymentPostType {
 
 		// Cancel reservation action.
 		if ( filter_has_var( INPUT_GET, 'pronamic_pay_cancel_reservation' ) && check_admin_referer( 'pronamic_payment_cancel_reservation_' . $post_id ) ) {
-			$payment = get_pronamic_payment( $post_id );
-
 			$gateway = Plugin::get_gateway( $payment->get_config_id() );
 
 			// Admin notice.
-			if ( is_callable( array( $gateway, 'cancel_reservation' ) ) && $gateway->cancel_reservation( $payment ) ) {
+			if ( null !== $gateway && is_callable( array( $gateway, 'cancel_reservation' ) ) && $gateway->cancel_reservation( $payment ) ) {
 				$this->admin_notices[] = array(
 					'type'    => 'info',
 					'message' => __( 'Reservation cancelled.', 'pronamic_ideal' ),
@@ -177,8 +181,6 @@ class AdminPaymentPostType {
 
 		// Send to Google Analytics action.
 		if ( filter_has_var( INPUT_GET, 'pronamic_pay_ga_track' ) && check_admin_referer( 'pronamic_payment_ga_track_' . $post_id ) ) {
-			$payment = get_pronamic_payment( $post_id );
-
 			$ga_ecommerce = pronamic_pay_plugin()->google_analytics_ecommerce;
 
 			if ( ! $ga_ecommerce->valid_payment( $payment ) ) {
@@ -320,6 +322,22 @@ class AdminPaymentPostType {
 	}
 
 	/**
+	 * Primary column name.
+	 *
+	 * @param string $column_name Primary column name.
+	 * @param string $screen_id   Screen ID.
+	 *
+	 * @return string
+	 */
+	public function primary_column( $column_name, $screen_id ) {
+		if ( 'edit-pronamic_payment' !== $screen_id ) {
+			return $column_name;
+		}
+
+		return 'pronamic_payment_title';
+	}
+
+	/**
 	 * Custom columns.
 	 *
 	 * @param string $column  Column.
@@ -327,6 +345,10 @@ class AdminPaymentPostType {
 	 */
 	public function custom_columns( $column, $post_id ) {
 		$payment = get_pronamic_payment( $post_id );
+
+		if ( null === $payment ) {
+			return;
+		}
 
 		switch ( $column ) {
 			case 'pronamic_payment_status':
@@ -366,11 +388,16 @@ class AdminPaymentPostType {
 						$class = ' pronamic-pay-icon-recurring-first';
 					}
 
-					printf(
-						'<span class="pronamic-pay-tip pronamic-pay-icon %s" title="%s">%s</span>',
-						esc_attr( $class ),
-						esc_attr( $label ),
-						esc_attr( $label )
+					edit_post_link(
+						sprintf(
+							'<span class="pronamic-pay-tip pronamic-pay-icon %s" title="%s">%s</span>',
+							esc_attr( $class ),
+							esc_attr( $label ),
+							esc_attr( $label )
+						),
+						'',
+						'',
+						$subscription_id
 					);
 				}
 
@@ -380,7 +407,7 @@ class AdminPaymentPostType {
 				$source_id          = $payment->get_source_id();
 				$source_description = $payment->get_source_description();
 
-				$source_id_text = '#' . $source_id;
+				$source_id_text = '#' . strval( $source_id );
 
 				$source_link = $payment->get_source_link();
 
@@ -401,7 +428,7 @@ class AdminPaymentPostType {
 							esc_url( get_edit_post_link( $post_id ) ),
 							esc_html( $post_id )
 						),
-						$source_description,
+						strval( $source_description ),
 						$source_id_text
 					),
 					array(
@@ -418,7 +445,7 @@ class AdminPaymentPostType {
 				$config_id = get_post_meta( $post_id, '_pronamic_payment_config_id', true );
 
 				if ( ! empty( $config_id ) ) {
-					echo get_the_title( $config_id );
+					echo esc_html( get_the_title( $config_id ) );
 				} else {
 					echo '—';
 				}
@@ -453,8 +480,10 @@ class AdminPaymentPostType {
 
 				break;
 			case 'pronamic_payment_customer':
-				if ( null !== $payment->get_customer() ) {
-					echo esc_html( $payment->get_customer()->get_name() );
+				$customer = $payment->get_customer();
+
+				if ( null !== $customer ) {
+					echo esc_html( $customer->get_name() );
 				}
 
 				break;
@@ -467,55 +496,57 @@ class AdminPaymentPostType {
 	 * @param string $post_type Post Type.
 	 */
 	public function add_meta_boxes( $post_type ) {
-		if ( self::POST_TYPE === $post_type ) {
-			add_meta_box(
-				'pronamic_payment',
-				__( 'Payment', 'pronamic_ideal' ),
-				array( $this, 'meta_box_info' ),
-				$post_type,
-				'normal',
-				'high'
-			);
-
-			add_meta_box(
-				'pronamic_payment_lines',
-				__( 'Payment Lines', 'pronamic_ideal' ),
-				array( $this, 'meta_box_lines' ),
-				$post_type,
-				'normal',
-				'high'
-			);
-
-			add_meta_box(
-				'pronamic_payment_subscription',
-				__( 'Subscription', 'pronamic_ideal' ),
-				array( $this, 'meta_box_subscription' ),
-				$post_type,
-				'normal',
-				'high'
-			);
-
-			add_meta_box(
-				'pronamic_payment_notes',
-				__( 'Notes', 'pronamic_ideal' ),
-				array( $this, 'meta_box_notes' ),
-				$post_type,
-				'normal',
-				'high'
-			);
-
-			add_meta_box(
-				'pronamic_payment_update',
-				__( 'Update', 'pronamic_ideal' ),
-				array( $this, 'meta_box_update' ),
-				$post_type,
-				'side',
-				'high'
-			);
-
-			// @link http://kovshenin.com/2012/how-to-remove-the-publish-box-from-a-post-type/.
-			remove_meta_box( 'submitdiv', $post_type, 'side' );
+		if ( self::POST_TYPE !== $post_type ) {
+			return;
 		}
+
+		add_meta_box(
+			'pronamic_payment',
+			__( 'Payment', 'pronamic_ideal' ),
+			array( $this, 'meta_box_info' ),
+			$post_type,
+			'normal',
+			'high'
+		);
+
+		add_meta_box(
+			'pronamic_payment_lines',
+			__( 'Payment Lines', 'pronamic_ideal' ),
+			array( $this, 'meta_box_lines' ),
+			$post_type,
+			'normal',
+			'high'
+		);
+
+		add_meta_box(
+			'pronamic_payment_subscription',
+			__( 'Subscription', 'pronamic_ideal' ),
+			array( $this, 'meta_box_subscription' ),
+			$post_type,
+			'normal',
+			'high'
+		);
+
+		add_meta_box(
+			'pronamic_payment_notes',
+			__( 'Notes', 'pronamic_ideal' ),
+			array( $this, 'meta_box_notes' ),
+			$post_type,
+			'normal',
+			'high'
+		);
+
+		add_meta_box(
+			'pronamic_payment_update',
+			__( 'Update', 'pronamic_ideal' ),
+			array( $this, 'meta_box_update' ),
+			$post_type,
+			'side',
+			'high'
+		);
+
+		// @link http://kovshenin.com/2012/how-to-remove-the-publish-box-from-a-post-type/.
+		remove_meta_box( 'submitdiv', $post_type, 'side' );
 	}
 
 	/**
@@ -534,6 +565,10 @@ class AdminPaymentPostType {
 	 */
 	public function meta_box_lines( $post ) {
 		$payment = get_pronamic_payment( $post->ID );
+
+		if ( null === $payment ) {
+			return;
+		}
 
 		$lines = $payment->get_lines();
 
@@ -586,67 +621,10 @@ class AdminPaymentPostType {
 	 */
 	public function post_row_actions( $actions, $post ) {
 		if ( self::POST_TYPE === $post->post_type ) {
-			return array();
+			return array( '' );
 		}
 
 		return $actions;
-	}
-
-	/**
-	 * Translate post status to meta status.
-	 *
-	 * @param string $post_status Post status.
-	 * @return string
-	 */
-	private function translate_post_status_to_meta_status( $post_status ) {
-		switch ( $post_status ) {
-			case 'payment_pending':
-			case 'payment_processing':
-			case 'payment_reserved':
-				return Statuses::OPEN;
-
-			case 'payment_refunded':
-				return Statuses::REFUNDED;
-
-			case 'payment_on_hold':
-				return null;
-
-			case 'payment_completed':
-				return Statuses::SUCCESS;
-
-			case 'payment_cancelled':
-				return Statuses::CANCELLED;
-
-			case 'payment_failed':
-				return Statuses::FAILURE;
-
-			case 'payment_expired':
-				return Statuses::EXPIRED;
-		}
-	}
-
-	/**
-	 * Transition post status.
-	 *
-	 * @param string  $new_status New status.
-	 * @param string  $old_status Old status.
-	 * @param WP_Post $post       WordPress post.
-	 */
-	public function transition_post_status( $new_status, $old_status, $post ) {
-		if (
-			filter_has_var( INPUT_POST, 'pronamic_payment_update_nonce' )
-				&&
-			check_admin_referer( 'pronamic_payment_update', 'pronamic_payment_update_nonce' )
-				&&
-			'pronamic_payment' === get_post_type( $post )
-		) {
-			$new_status_meta = $this->translate_post_status_to_meta_status( $new_status );
-
-			$payment = new Payment( $post->ID );
-			$payment->set_status( $new_status_meta );
-
-			$this->plugin->payments_data_store->update_meta_status( $payment );
-		}
 	}
 
 	/**

@@ -3,7 +3,7 @@
  * Address test
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -16,7 +16,8 @@ use WP_UnitTestCase;
  * Address test
  *
  * @author Remco Tolsma
- * @version 1.0
+ * @version 2.1.0
+ * @since   2.1.0
  */
 class AddressTest extends WP_UnitTestCase {
 	/**
@@ -128,5 +129,32 @@ class AddressTest extends WP_UnitTestCase {
 		$this->assertEquals( wp_json_encode( $json_data, JSON_PRETTY_PRINT ), $json_string );
 
 		$this->assertJsonStringEqualsJsonFile( $json_file, $json_string );
+	}
+
+	/**
+	 * Test from object.
+	 */
+	public function test_legacy() {
+		$json_file = __DIR__ . '/../json/address-legacy.json';
+
+		$json_data = json_decode( file_get_contents( $json_file, true ) );
+
+		$address = Address::from_json( $json_data );
+
+		// House number.
+		$this->assertEquals( '39b', $address->get_house_number()->get_value() );
+		$this->assertEquals( '39b', (string) $address->get_house_number() );
+		$this->assertEquals( 'b', (string) $address->get_house_number()->get_addition() );
+		$this->assertEquals( null, (string) $address->get_house_number()->get_base() );
+
+		// Country.
+		$this->assertEquals( 'NL', $address->get_country_code() );
+		$this->assertEquals( 'Nederland', $address->get_country_name() );
+		$this->assertEquals( 'NL', $address->get_country()->get_code() );
+		$this->assertEquals( 'Nederland', $address->get_country()->get_name() );
+
+		// Region.
+		$this->assertEquals( 'Friesland', $address->get_region()->get_value() );
+		$this->assertEquals( 'Friesland', (string) $address->get_region() );
 	}
 }

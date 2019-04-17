@@ -3,7 +3,7 @@
  * Contact.
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -17,8 +17,8 @@ use Pronamic\WordPress\DateTime\DateTime;
  * Contact.
  *
  * @author  Reüel van der Steege.
- * @since   2.0.8
- * @version 2.0.8
+ * @since   2.1.0
+ * @version 2.1.0
  */
 class Customer {
 	/**
@@ -121,7 +121,7 @@ class Customer {
 	/**
 	 * Set gender.
 	 *
-	 * @param string $gender Gender.
+	 * @param string|null $gender Gender.
 	 */
 	public function set_gender( $gender ) {
 		$this->gender = $gender;
@@ -287,6 +287,7 @@ class Customer {
 			'user_agent' => $this->get_user_agent(),
 			'language'   => $this->get_language(),
 			'locale'     => $this->get_locale(),
+			'user_id'    => $this->get_user_id(),
 		);
 
 		$data = array_filter( $data );

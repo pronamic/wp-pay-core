@@ -3,13 +3,14 @@
  * Util
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Core
  */
 
 namespace Pronamic\WordPress\Pay\Core;
 
+use InvalidArgumentException;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Util as Pay_Util;
@@ -19,7 +20,7 @@ use WP_Error;
 /**
  * Title: WordPress utility class
  * Description:
- * Copyright: Copyright (c) 2005 - 2018
+ * Copyright: 2005-2019 Pronamic
  * Company: Pronamic
  *
  * @author Remco Tolsma
@@ -69,37 +70,109 @@ class Util {
 	/**
 	 * SimpleXML load string.
 	 *
-	 * @param string $string The XML string to convert to a SimpleXMLElement object.
+	 * @link https://akrabat.com/throw-an-exception-when-simplexml_load_string-fails/
+	 * @link https://www.php.net/manual/en/class.invalidargumentexception.php
+	 * @link https://www.php.net/manual/en/class.libxmlerror.php
 	 *
-	 * @return SimpleXMLElement|WP_Error
+	 * @param string $string The XML string to convert to a SimpleXMLElement object.
+	 * @return SimpleXMLElement
+	 * @throws InvalidArgumentException If string could not be loaded in to a SimpleXMLElement object.
 	 */
 	public static function simplexml_load_string( $string ) {
-		$result = false;
-
 		// Suppress all XML errors.
 		$use_errors = libxml_use_internal_errors( true );
 
 		// Load.
 		$xml = simplexml_load_string( $string );
 
+		// Check result.
 		if ( false !== $xml ) {
-			$result = $xml;
-		} else {
-			$error = new WP_Error( 'simplexml_load_error', __( 'Could not load the XML string.', 'pronamic_ideal' ) );
+			// Set back to previous value.
+			libxml_use_internal_errors( $use_errors );
 
-			foreach ( libxml_get_errors() as $e ) {
-				$error->add( 'libxml_error', $e->message, $e );
-			}
-
-			libxml_clear_errors();
-
-			$result = $error;
+			return $xml;
 		}
+
+		// Error message.
+		$messages = array(
+			__( 'Could not load the XML string.', 'pronamic_ideal' ),
+		);
+
+		foreach ( libxml_get_errors() as $error ) {
+			$messages[] = sprintf(
+				'%s on line: %s, column: %s',
+				$error->message,
+				$error->line,
+				$error->column
+			);
+		}
+
+		// Clear errors.
+		libxml_clear_errors();
 
 		// Set back to previous value.
 		libxml_use_internal_errors( $use_errors );
 
-		return $result;
+		// Throw exception.
+		$message = implode( PHP_EOL, $messages );
+
+		throw new InvalidArgumentException( $message );
+	}
+
+	/**
+	 * Compat function to mimic wp_doing_cron().
+	 *
+	 * @link  https://github.com/WordPress/WordPress/blob/4.9/wp-includes/load.php#L1066-L1082
+	 * @ignore
+	 * @since 2.1.2
+	 *
+	 * @return bool True if it's a WordPress cron request, false otherwise.
+	 */
+	public static function doing_cron() {
+		if ( function_exists( '\wp_doing_cron' ) ) {
+			return \wp_doing_cron();
+		}
+
+		/**
+		 * Filters whether the current request is a WordPress cron request.
+		 *
+		 * @since 4.8.0
+		 *
+		 * @param bool $wp_doing_cron Whether the current request is a WordPress cron request.
+		 */
+		return apply_filters( 'wp_doing_cron', defined( 'DOING_CRON' ) && DOING_CRON );
+	}
+
+	/**
+	 * Doing CLI.
+	 *
+	 * @return bool
+	 */
+	public static function doing_cli() {
+		return defined( 'WP_CLI' ) && WP_CLI;
+	}
+
+	/**
+	 * No cache.
+	 */
+	public static function no_cache() {
+		// @link https://github.com/woothemes/woocommerce/blob/2.3.11/includes/class-wc-cache-helper.php
+		// @link https://www.w3-edge.com/products/w3-total-cache/
+		$do_not_constants = array(
+			'DONOTCACHEPAGE',
+			'DONOTCACHEDB',
+			'DONOTMINIFY',
+			'DONOTCDN',
+			'DONOTCACHEOBJECT',
+		);
+
+		foreach ( $do_not_constants as $do_not_constant ) {
+			if ( ! defined( $do_not_constant ) ) {
+				define( $do_not_constant, true );
+			}
+		}
+
+		nocache_headers();
 	}
 
 	/**
@@ -109,7 +182,7 @@ class Util {
 	 *
 	 * @deprecated 2.0.9 Use \Pronamic\WordPress\Money\Money::get_cents() instead.
 	 *
-	 * @return int
+	 * @return float
 	 */
 	public static function amount_to_cents( $amount ) {
 		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Money\Money::get_cents()' );
@@ -148,7 +221,7 @@ class Util {
 
 		$money_parser = new MoneyParser();
 
-		$amount = $money_parser->parse( $value )->get_amount();
+		$amount = $money_parser->parse( $value )->get_value();
 
 		return $amount;
 	}
@@ -265,7 +338,7 @@ class Util {
 	 * Get remote address.
 	 *
 	 * @link https://github.com/WordPress/WordPress/blob/4.9.8/wp-admin/includes/class-wp-community-events.php#L210-L274
-	 *
+	 * @since 2.1.0
 	 * @return mixed|null
 	 */
 	public static function get_remote_address() {

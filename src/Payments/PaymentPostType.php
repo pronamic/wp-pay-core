@@ -3,7 +3,7 @@
  * Payment Post Type
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -13,7 +13,7 @@ namespace Pronamic\WordPress\Pay\Payments;
 /**
  * Title: WordPress iDEAL post types
  * Description:
- * Copyright: Copyright (c) 2005 - 2018
+ * Copyright: 2005-2019 Pronamic
  * Company: Pronamic
  *
  * @author  Remco Tolsma
@@ -48,21 +48,31 @@ class PaymentPostType {
 			array(
 				'label'              => __( 'Payments', 'pronamic_ideal' ),
 				'labels'             => array(
-					'name'                  => __( 'Payments', 'pronamic_ideal' ),
-					'singular_name'         => __( 'Payment', 'pronamic_ideal' ),
-					'add_new'               => __( 'Add New', 'pronamic_ideal' ),
-					'add_new_item'          => __( 'Add New Payment', 'pronamic_ideal' ),
-					'edit_item'             => __( 'Edit Payment', 'pronamic_ideal' ),
-					'new_item'              => __( 'New Payment', 'pronamic_ideal' ),
-					'all_items'             => __( 'All Payments', 'pronamic_ideal' ),
-					'view_item'             => __( 'View Payment', 'pronamic_ideal' ),
-					'search_items'          => __( 'Search Payments', 'pronamic_ideal' ),
-					'not_found'             => __( 'No payments found.', 'pronamic_ideal' ),
-					'not_found_in_trash'    => __( 'No payments found in Trash.', 'pronamic_ideal' ),
-					'menu_name'             => __( 'Payments', 'pronamic_ideal' ),
-					'filter_items_list'     => __( 'Filter payments list', 'pronamic_ideal' ),
-					'items_list_navigation' => __( 'Payments list navigation', 'pronamic_ideal' ),
-					'items_list'            => __( 'Payments list', 'pronamic_ideal' ),
+					'name'                     => __( 'Payments', 'pronamic_ideal' ),
+					'singular_name'            => __( 'Payment', 'pronamic_ideal' ),
+					'add_new'                  => __( 'Add New', 'pronamic_ideal' ),
+					'add_new_item'             => __( 'Add New Payment', 'pronamic_ideal' ),
+					'edit_item'                => __( 'Edit Payment', 'pronamic_ideal' ),
+					'new_item'                 => __( 'New Payment', 'pronamic_ideal' ),
+					'all_items'                => __( 'All Payments', 'pronamic_ideal' ),
+					'view_item'                => __( 'View Payment', 'pronamic_ideal' ),
+					'search_items'             => __( 'Search Payments', 'pronamic_ideal' ),
+					'not_found'                => __( 'No payments found.', 'pronamic_ideal' ),
+					'not_found_in_trash'       => __( 'No payments found in Trash.', 'pronamic_ideal' ),
+					'menu_name'                => __( 'Payments', 'pronamic_ideal' ),
+					'filter_items_list'        => __( 'Filter payments list', 'pronamic_ideal' ),
+					'items_list_navigation'    => __( 'Payments list navigation', 'pronamic_ideal' ),
+					'items_list'               => __( 'Payments list', 'pronamic_ideal' ),
+
+					/*
+					 * New Post Type Labels in 5.0.
+					 * @link https://make.wordpress.org/core/2018/12/05/new-post-type-labels-in-5-0/
+					 */
+					'item_published'           => __( 'Payment published.', 'pronamic_ideal' ),
+					'item_published_privately' => __( 'Payment published privately.', 'pronamic_ideal' ),
+					'item_reverted_to_draft'   => __( 'Payment reverted to draft.', 'pronamic_ideal' ),
+					'item_scheduled'           => __( 'Payment scheduled.', 'pronamic_ideal' ),
+					'item_updated'             => __( 'Payment updated.', 'pronamic_ideal' ),
 				),
 				'public'             => false,
 				'publicly_queryable' => false,
@@ -70,6 +80,8 @@ class PaymentPostType {
 				'show_in_nav_menus'  => false,
 				'show_in_menu'       => false,
 				'show_in_admin_bar'  => false,
+				'show_in_rest'       => true,
+				'rest_base'          => 'pronamic-payments',
 				'supports'           => false,
 				'rewrite'            => false,
 				'query_var'          => false,
@@ -86,15 +98,14 @@ class PaymentPostType {
 	 */
 	public static function get_payment_states() {
 		return array(
-			'payment_pending'    => _x( 'Pending', 'Payment status', 'pronamic_ideal' ),
-			'payment_reserved'   => _x( 'Reserved', 'Payment status', 'pronamic_ideal' ),
-			'payment_processing' => _x( 'Processing', 'Payment status', 'pronamic_ideal' ),
-			'payment_on_hold'    => _x( 'On Hold', 'Payment status', 'pronamic_ideal' ),
-			'payment_completed'  => _x( 'Completed', 'Payment status', 'pronamic_ideal' ),
-			'payment_cancelled'  => _x( 'Cancelled', 'Payment status', 'pronamic_ideal' ),
-			'payment_refunded'   => _x( 'Refunded', 'Payment status', 'pronamic_ideal' ),
-			'payment_failed'     => _x( 'Failed', 'Payment status', 'pronamic_ideal' ),
-			'payment_expired'    => _x( 'Expired', 'Payment status', 'pronamic_ideal' ),
+			'payment_pending'   => _x( 'Pending', 'Payment status', 'pronamic_ideal' ),
+			'payment_reserved'  => _x( 'Reserved', 'Payment status', 'pronamic_ideal' ),
+			'payment_on_hold'   => _x( 'On Hold', 'Payment status', 'pronamic_ideal' ),
+			'payment_completed' => _x( 'Completed', 'Payment status', 'pronamic_ideal' ),
+			'payment_cancelled' => _x( 'Cancelled', 'Payment status', 'pronamic_ideal' ),
+			'payment_refunded'  => _x( 'Refunded', 'Payment status', 'pronamic_ideal' ),
+			'payment_failed'    => _x( 'Failed', 'Payment status', 'pronamic_ideal' ),
+			'payment_expired'   => _x( 'Expired', 'Payment status', 'pronamic_ideal' ),
 		);
 	}
 
@@ -128,19 +139,6 @@ class PaymentPostType {
 				'show_in_admin_status_list' => true,
 				/* translators: %s: count value */
 				'label_count'               => _n_noop( 'Reserved <span class="count">(%s)</span>', 'Reserved <span class="count">(%s)</span>', 'pronamic_ideal' ),
-			)
-		);
-
-		register_post_status(
-			'payment_processing',
-			array(
-				'label'                     => _x( 'Processing', 'Payment status', 'pronamic_ideal' ),
-				'public'                    => false,
-				'exclude_from_search'       => false,
-				'show_in_admin_all_list'    => true,
-				'show_in_admin_status_list' => true,
-				/* translators: %s: count value */
-				'label_count'               => _n_noop( 'Processing <span class="count">(%s)</span>', 'Processing <span class="count">(%s)</span>', 'pronamic_ideal' ),
 			)
 		);
 

@@ -3,7 +3,7 @@
  * Admin Dashboard
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Admin
  */
@@ -45,15 +45,35 @@ class AdminDashboard {
 
 	/**
 	 * Setup.
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/wp_add_dashboard_widget/
 	 */
 	public function setup() {
-		if ( current_user_can( 'manage_options' ) ) {
-			wp_add_dashboard_widget(
-				'pronamic_pay_dashboard_status',
-				__( 'Pronamic Pay Status', 'pronamic_ideal' ),
-				array( $this, 'status_widget' )
-			);
+		/**
+		 * Currently we only add dashboard widgets if the
+		 * current user can manage options.
+		 */
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
 		}
+
+		/**
+		 * The `wp_add_dashboard_widget` function should exist at 
+		 * this point. To make tools like Psalm happy we do check
+		 * if the function exists.
+		 */
+		if ( ! function_exists( 'wp_add_dashboard_widget' ) ) {
+			return;
+		}
+
+		/**
+		 * Ok, add the dashboard widget.
+		 */
+		wp_add_dashboard_widget(
+			'pronamic_pay_dashboard_status',
+			__( 'Pronamic Pay Status', 'pronamic_ideal' ),
+			array( $this, 'status_widget' )
+		);
 	}
 
 	/**

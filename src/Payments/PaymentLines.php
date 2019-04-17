@@ -3,7 +3,7 @@
  * Payment lines
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -21,7 +21,8 @@ use stdClass;
  * Payment lines
  *
  * @author  Remco Tolsma
- * @version 2.0.6
+ * @version 2.1.0
+ * @since   2.1.0
  */
 class PaymentLines implements Countable, IteratorAggregate {
 	/**
@@ -42,6 +43,8 @@ class PaymentLines implements Countable, IteratorAggregate {
 	 * Get iterator.
 	 *
 	 * @see IteratorAggregate::getIterator()
+	 *
+	 * @return ArrayIterator<int, PaymentLine>
 	 */
 	public function getIterator() {
 		return new ArrayIterator( $this->lines );
@@ -60,6 +63,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 	 * Add line.
 	 *
 	 * @param PaymentLine $line The line to add.
+	 * @return void
 	 */
 	public function add_line( PaymentLine $line ) {
 		$this->lines[] = $line;
@@ -119,8 +123,14 @@ class PaymentLines implements Countable, IteratorAggregate {
 	 */
 	public function get_json() {
 		$objects = array_map(
-			function( $line ) {
-					return $line->get_json();
+			/**
+			 * Get JSON for payment line.
+			 *
+			 * @param PaymentLine $line Payment line.
+			 * @return object
+			 */
+			function( PaymentLine $line ) {
+				return $line->get_json();
 			},
 			$this->lines
 		);
@@ -143,8 +153,14 @@ class PaymentLines implements Countable, IteratorAggregate {
 		$object = new self();
 
 		$lines = array_map(
+			/**
+			 * Get payment line from object.
+			 *
+			 * @param object $object Object.
+			 * @return PaymentLine
+			 */
 			function( $object ) {
-					return PaymentLine::from_json( $object );
+				return PaymentLine::from_json( $object );
 			},
 			$json
 		);

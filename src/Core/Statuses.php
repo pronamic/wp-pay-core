@@ -3,7 +3,7 @@
  * Statuses
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2018 Pronamic
+ * @copyright 2005-2019 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Core
  */
@@ -13,12 +13,12 @@ namespace Pronamic\WordPress\Pay\Core;
 /**
  * Title: WordPress pay statuses constants
  * Description:
- * Copyright: Copyright (c) 2005 - 2018
+ * Copyright: 2005-2019 Pronamic
  * Company: Pronamic
  *
- * @author Remco Tolsma
- * @version 2.0.0
- * @since 1.0.0
+ * @author  Remco Tolsma
+ * @version 2.1.0
+ * @since   1.0.0
  */
 class Statuses {
 	/**
