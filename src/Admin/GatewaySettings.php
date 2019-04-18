@@ -143,8 +143,6 @@ class GatewaySettings {
 				'name'      => $name,
 				'available' => in_array( $payment_method, $available, true ),
 			);
-
-			$sort[ $payment_method ] = $name;
 		}
 
 		usort(

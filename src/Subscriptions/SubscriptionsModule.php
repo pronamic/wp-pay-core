@@ -452,7 +452,7 @@ class SubscriptionsModule {
 		switch ( $subscription->interval_period ) {
 			case 'W':
 				if ( is_numeric( $interval_date_day ) ) {
-					$days_delta = $interval_date_day - $next_date->format( 'w' );
+					$days_delta = (int) $interval_date_day - (int) $next_date->format( 'w' );
 
 					$next_date->modify( sprintf( '+%s days', $days_delta ) );
 					$next_date->setTime( 0, 0 );

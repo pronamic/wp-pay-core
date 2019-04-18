@@ -279,82 +279,87 @@ class AdminGatewayPostType {
 		}
 
 		// OK, its safe for us to save the data now.
-		$fields = $this->admin->gateway_settings->get_fields();
+		$gateway_settings = $this->admin->gateway_settings;
 
-		$definition = array(
-			// General.
-			'_pronamic_gateway_id' => FILTER_SANITIZE_STRING,
-		);
+		if ( null !== $gateway_settings ) {
+			$fields = $gateway_settings->get_fields();
 
-		foreach ( $fields as $field ) {
-			if ( isset( $field['meta_key'], $field['filter'] ) ) {
-				$name   = $field['meta_key'];
-				$filter = $field['filter'];
+			$definition = array(
+				// General.
+				'_pronamic_gateway_id' => FILTER_SANITIZE_STRING,
+			);
 
-				$definition[ $name ] = $filter;
-			}
-		}
+			foreach ( $fields as $field ) {
+				if ( isset( $field['meta_key'], $field['filter'] ) ) {
+					$name = $field['meta_key'];
+					$filter = $field['filter'];
 
-		$data = filter_input_array( INPUT_POST, $definition );
-
-		if ( ! empty( $data['_pronamic_gateway_id'] ) ) {
-			$integrations = $this->plugin->gateway_integrations;
-
-			if ( isset( $integrations[ $data['_pronamic_gateway_id'] ] ) ) {
-				$integration = $integrations[ $data['_pronamic_gateway_id'] ];
+					$definition[ $name ] = $filter;
+				}
 			}
 
-			if ( $integration ) {
-				$settings = $integration->get_settings();
+			$data = filter_input_array( INPUT_POST, $definition );
 
-				foreach ( $fields as $field ) {
-					if ( isset( $field['default'], $field['meta_key'], $data[ $field['meta_key'] ] ) ) {
-						// Remove default value if not applicable to the selected gateway.
-						if ( isset( $field['methods'] ) ) {
-							$clean_default = array_intersect( $settings, $field['methods'] );
+			if ( ! empty( $data['_pronamic_gateway_id'] ) ) {
+				$integrations = $this->plugin->gateway_integrations;
 
-							if ( empty( $clean_default ) ) {
-								$meta_value = get_post_meta( $post_id, $field['meta_key'], true );
+				if ( isset( $integrations[ $data['_pronamic_gateway_id'] ] ) ) {
+					$integration = $integrations[ $data['_pronamic_gateway_id'] ];
 
-								// Only remove value if not saved before.
-								if ( empty( $meta_value ) ) {
-									$data[ $field['meta_key'] ] = null;
+					$settings = $integration->get_settings();
 
-									continue;
+					foreach ( $fields as $field ) {
+						if ( isset( $field['default'], $field['meta_key'], $data[ $field['meta_key'] ] ) ) {
+							// Remove default value if not applicable to the selected gateway.
+							if ( isset( $field['methods'] ) ) {
+								$clean_default = array_intersect( $settings, $field['methods'] );
+
+								if ( empty( $clean_default ) ) {
+									$meta_value = get_post_meta( $post_id, $field['meta_key'], true );
+
+									// Only remove value if not saved before.
+									if ( empty( $meta_value ) ) {
+										$data[ $field['meta_key'] ] = null;
+
+										continue;
+									}
+								}
+							}
+
+							// Set the default value if empty.
+							if ( empty( $data[ $field['meta_key'] ] ) ) {
+								$default = $field['default'];
+
+								if ( is_array( $default ) && 2 === count( $default ) && Util::class_method_exists(
+										$default[0],
+										$default[1]
+									) ) {
+									$data[ $field['meta_key'] ] = call_user_func( $default, $field );
+								} else {
+									$data[ $field['meta_key'] ] = $default;
 								}
 							}
 						}
+					}
 
-						// Set the default value if empty.
-						if ( empty( $data[ $field['meta_key'] ] ) ) {
-							$default = $field['default'];
+					// Filter data through gateway integration settings.
+					$settings_classes = $integration->get_settings_class();
 
-							if ( is_array( $default ) && 2 === count( $default ) && Util::class_method_exists( $default[0], $default[1] ) ) {
-								$data[ $field['meta_key'] ] = call_user_func( $default, $field );
-							} else {
-								$data[ $field['meta_key'] ] = $default;
-							}
-						}
+					if ( ! is_array( $settings_classes ) ) {
+						$settings_classes = array( $settings_classes );
+					}
+
+					foreach ( $settings_classes as $settings_class ) {
+						$settings = new $settings_class();
+
+						$data = $settings->save_post( $data );
 					}
 				}
-
-				// Filter data through gateway integration settings.
-				$settings_classes = $integration->get_settings_class();
-
-				if ( ! is_array( $settings_classes ) ) {
-					$settings_classes = array( $settings_classes );
-				}
-
-				foreach ( $settings_classes as $settings_class ) {
-					$gateway_settings = new $settings_class();
-
-					$data = $gateway_settings->save_post( $data );
-				}
 			}
-		}
 
-		// Update post meta data.
-		pronamic_pay_update_post_meta_data( $post_id, $data );
+			// Update post meta data.
+			pronamic_pay_update_post_meta_data( $post_id, $data );
+		}
 
 		// Transient.
 		delete_transient( 'pronamic_pay_issuers_' . $post_id );

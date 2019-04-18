@@ -106,6 +106,10 @@ class AdminPaymentBulkActions {
 			// Make sure gateway supports `payment_status_request` feature.
 			$config_id = $payment->config_id;
 
+			if ( null === $config_id ) {
+				continue;
+			}
+
 			if ( ! isset( $gateways[ $config_id ] ) ) {
 				$gateways[ $config_id ] = \Pronamic\WordPress\Pay\Plugin::get_gateway( $config_id );
 

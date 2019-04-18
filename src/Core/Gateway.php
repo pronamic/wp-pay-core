@@ -345,7 +345,7 @@ abstract class Gateway {
 	 * Get the payment methods transient
 	 *
 	 * @since 1.3.0
-	 * @return array|null
+	 * @return array
 	 */
 	public function get_transient_available_payment_methods() {
 		// Transient name. Expected to not be SQL-escaped. Should be 45 characters or less in length.
@@ -359,6 +359,10 @@ abstract class Gateway {
 			if ( is_array( $methods ) ) {
 				set_transient( $transient, $methods, DAY_IN_SECONDS );
 			}
+		}
+
+		if ( empty( $methods ) ) {
+			return array();
 		}
 
 		return $methods;
