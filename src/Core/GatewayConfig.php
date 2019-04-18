@@ -77,8 +77,16 @@ abstract class GatewayConfig {
 	public function get_gateway_class() {
 		$class = get_class( $this );
 
-		$namespace = substr( $class, 0, strrpos( $class, '\\' ) );
+		$gateway_class = 'Gateway';
 
-		return $namespace . '\Gateway';
+		$length = strrpos( $class, '\\' );
+
+		if ( false !== $length ) {
+			$namespace = substr( $class, 0, $length );
+
+			$gateway_class = sprintf( '%s\%s', $namespace, $gateway_class );
+		}
+
+		return $gateway_class;
 	}
 }

@@ -85,8 +85,8 @@ class StatusChecker {
 	/**
 	 * Get the delay seconds for the specified try.
 	 *
-	 * @param int  $try       Which try/round to get the delay seconds for.
-	 * @param bool $recurring Whether or not to use the delay scheme for recurring payments.
+	 * @param int       $try       Which try/round to get the delay seconds for.
+	 * @param bool|null $recurring Whether or not to use the delay scheme for recurring payments.
 	 *
 	 * @return int
 	 */
