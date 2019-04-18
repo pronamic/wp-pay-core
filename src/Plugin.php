@@ -72,9 +72,9 @@ class Plugin {
 	/**
 	 * Instance.
 	 *
-	 * @var Plugin
+	 * @var Plugin|null
 	 */
-	protected static $instance = null;
+	protected static $instance;
 
 	/**
 	 * Instance.
@@ -600,7 +600,7 @@ class Plugin {
 	 * @since 2.1.6
 	 */
 	public function register_styles() {
-		$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		$min = SCRIPT_DEBUG ? '' : '.min';
 
 		wp_register_style(
 			'pronamic-pay-redirect',
