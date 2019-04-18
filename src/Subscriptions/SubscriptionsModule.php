@@ -310,7 +310,7 @@ class SubscriptionsModule {
 
 		$subscription = $payment->get_subscription();
 
-		if ( is_bool( $subscription ) ) {
+		if ( empty( $subscription ) ) {
 			throw new UnexpectedValueException( 'No subscription object found in payment.' );
 		}
 
@@ -321,8 +321,14 @@ class SubscriptionsModule {
 			$start_date = clone $subscription->next_payment;
 		}
 
+		$interval = $subscription->get_date_interval();
+
+		if ( null === $interval ) {
+			throw new UnexpectedValueException( 'Cannot start a follow-up payment for payment because the subscription does not have a valid date interval.' );
+		}
+
 		$end_date = clone $start_date;
-		$end_date->add( $subscription->get_date_interval() );
+		$end_date->add( $interval );
 
 		if ( 'last' === $subscription->get_interval_date() ) {
 			$end_date->modify( 'last day of ' . $end_date->format( 'F Y' ) );
@@ -438,6 +444,10 @@ class SubscriptionsModule {
 		// Calculate dates
 		// @link https://github.com/pronamic/wp-pronamic-ideal/blob/4.7.0/classes/Pronamic/WP/Pay/Plugin.php#L883-L964
 		$interval = $subscription->get_date_interval();
+
+		if ( null === $interval ) {
+			throw new UnexpectedValueException( 'Cannot create a subscription for payment because the subscription does not have a valid date interval.' );
+		}
 
 		$start_date  = clone $payment->date;
 		$expiry_date = clone $start_date;
