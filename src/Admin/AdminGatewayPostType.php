@@ -291,7 +291,7 @@ class AdminGatewayPostType {
 
 			foreach ( $fields as $field ) {
 				if ( isset( $field['meta_key'], $field['filter'] ) ) {
-					$name = $field['meta_key'];
+					$name   = $field['meta_key'];
 					$filter = $field['filter'];
 
 					$definition[ $name ] = $filter;
@@ -330,10 +330,7 @@ class AdminGatewayPostType {
 							if ( empty( $data[ $field['meta_key'] ] ) ) {
 								$default = $field['default'];
 
-								if ( is_array( $default ) && 2 === count( $default ) && Util::class_method_exists(
-										$default[0],
-										$default[1]
-									) ) {
+								if ( is_array( $default ) && 2 === count( $default ) && Util::class_method_exists( $default[0], $default[1] ) ) {
 									$data[ $field['meta_key'] ] = call_user_func( $default, $field );
 								} else {
 									$data[ $field['meta_key'] ] = $default;
