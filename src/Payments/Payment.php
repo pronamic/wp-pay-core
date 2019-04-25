@@ -377,7 +377,7 @@ class Payment extends LegacyPayment {
 	public function get_source_text() {
 		$pieces = array(
 			$this->get_source(),
-			$this->get_source_id(),	
+			$this->get_source_id(),
 		);
 
 		$pieces = array_filter( $pieces );

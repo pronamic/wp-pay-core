@@ -323,7 +323,7 @@ class Subscription extends LegacySubscription {
 	public function get_source_text() {
 		$pieces = array(
 			$this->get_source(),
-			$this->get_source_id(),	
+			$this->get_source_id(),
 		);
 
 		$pieces = array_filter( $pieces );
@@ -572,7 +572,7 @@ class Subscription extends LegacySubscription {
 		}
 
 		if ( null === $subscription ) {
-			$subscription = new self();	
+			$subscription = new self();
 		}
 
 		PaymentInfoHelper::from_json( $json, $subscription );

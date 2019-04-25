@@ -304,9 +304,11 @@ class AdminModule {
 		// Output.
 		if ( $args['echo'] ) {
 			echo $output; // WPCS: XSS ok.
-		} else {
-			return $output;
+
+			return null;
 		}
+
+		return $output;
 	}
 
 	/**

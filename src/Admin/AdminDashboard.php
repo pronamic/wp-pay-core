@@ -58,7 +58,7 @@ class AdminDashboard {
 		}
 
 		/**
-		 * The `wp_add_dashboard_widget` function should exist at 
+		 * The `wp_add_dashboard_widget` function should exist at
 		 * this point. To make tools like Psalm happy we do check
 		 * if the function exists.
 		 */

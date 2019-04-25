@@ -154,6 +154,8 @@ class Util {
 				/* translators: %s: interval */
 				return sprintf( _n( 'Every %s year', 'Every %s years', $interval, 'pronamic_ideal' ), $interval );
 		}
+
+		return null;
 	}
 
 	/**

@@ -39,7 +39,7 @@ class FormScripts {
 		 * We register the form style in the 'init' action so the style
 		 * is available on the front end and admin pages. This is
 		 * important for the block editor to work. According to the
-		 * `_wp_scripts_maybe_doing_it_wrong` function it is allowed 
+		 * `_wp_scripts_maybe_doing_it_wrong` function it is allowed
 		 * to register scripts in the 'init' action.
 		 *
 		 * @link https://codex.wordpress.org/Plugin_API/Action_Reference/admin_enqueue_scripts

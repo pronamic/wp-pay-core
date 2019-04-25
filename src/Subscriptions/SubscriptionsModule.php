@@ -297,7 +297,6 @@ class SubscriptionsModule {
 	 * @param Payment      $payment Payment.
 	 * @param Gateway|null $gateway Gateway to start the recurring payment at.
 	 *
-	 * @throws Exception                Throws an Exception on incorrect date interval.
 	 * @throws UnexpectedValueException Throw unexpected value exception when no subscription was found in payment.
 	 *
 	 * @return Payment
@@ -383,8 +382,10 @@ class SubscriptionsModule {
 	 * Maybe create subscription for the specified payment.
 	 *
 	 * @param Payment $payment The new payment.
+	 *
 	 * @return void
-	 * @throws \Exception Throws an Exception on incorrect date interval.
+	 *
+	 * @throws UnexpectedValueException Throw unexpected value exception if the subscription does not have a valid date interval.
 	 */
 	public function maybe_create_subscription( $payment ) {
 		// Check if there is already subscription attached to the payment.
@@ -413,7 +414,7 @@ class SubscriptionsModule {
 			$name    = $customer->get_name();
 
 			if ( null !== $name ) {
-				$customer_name = strval( $name );		
+				$customer_name = strval( $name );
 			}
 		}
 
