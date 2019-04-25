@@ -10,7 +10,7 @@ build:
       - mysql -e "CREATE DATABASE wp_phpunit_tests"
   dependencies:
     override:
-      - composer install --ignore-platform-reqs --no-interaction
+      - composer install --no-interaction
   nodes:
     coverage:
       tests:
