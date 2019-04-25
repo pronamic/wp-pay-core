@@ -145,28 +145,6 @@ class FormProcessor {
 			$payment->set_customer( $customer );
 		}
 
-		// Billing address.
-		$billing_address = array(
-			'name'  => ( $customer instanceof Customer ? $customer->get_name() : null ),
-			'email' => ( $customer instanceof Customer ? $customer->get_email() : null ),
-		);
-
-		$billing_address = array_filter( $billing_address );
-
-		if ( ! empty( $billing_address ) ) {
-			$address = new Address();
-
-			if ( isset( $billing_address['name'] ) ) {
-				$address->set_name( $billing_address['name'] );
-			}
-
-			if ( isset( $billing_address['email'] ) ) {
-				$address->set_email( $billing_address['email'] );
-			}
-
-			$payment->set_billing_address( $address );
-		}
-
 		// Amount.
 		$amount_method = get_post_meta( $source_id, '_pronamic_payment_form_amount_method', true );
 		$amount        = filter_input( INPUT_POST, 'pronamic_pay_amount', FILTER_SANITIZE_STRING );
