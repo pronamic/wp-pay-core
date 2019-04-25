@@ -33,7 +33,8 @@ class SimplePaymentFormBlock {
 			'pronamic-simple-payment-form-editor',
 			plugins_url( '/js/block-payment-button' . $min . '.js', pronamic_pay_plugin()->get_file() ),
 			array( 'wp-blocks', 'wp-components', 'wp-editor', 'wp-element' ),
-			pronamic_pay_plugin()->get_version()
+			pronamic_pay_plugin()->get_version(),
+			false
 		);
 
 		// Localize script.
@@ -52,6 +53,7 @@ class SimplePaymentFormBlock {
 			array(
 				'render_callback' => array( $this, 'render_block' ),
 				'editor_script'   => 'pronamic-simple-payment-form-editor',
+				'style'           => array( 'pronamic-pay-forms' ),
 				'attributes'      => array(
 					'amount' => array(
 						'type'    => 'string',
