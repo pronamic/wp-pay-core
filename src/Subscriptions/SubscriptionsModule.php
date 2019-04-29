@@ -614,6 +614,17 @@ class SubscriptionsModule {
 
 				break;
 			case Statuses::FAILURE:
+				/**
+				 * Subscription status for failed payment.
+				 *
+				 * @todo Determine update status based on reason of failed payment. Use `failure` for now as that is usually the desired status.
+				 *
+				 * @link https://www.europeanpaymentscouncil.eu/document-library/guidance-documents/guidance-reason-codes-sepa-direct-debit-r-transactions
+				 * @link https://github.com/pronamic/wp-pronamic-ideal/commit/48449417eac49eb6a93480e3b523a396c7db9b3d#diff-6712c698c6b38adfa7190a4be983a093
+				 */
+				$status_update = Statuses::FAILURE;
+
+				break;
 			case Statuses::CANCELLED:
 			case Statuses::EXPIRED:
 				$status_update = Statuses::CANCELLED;
