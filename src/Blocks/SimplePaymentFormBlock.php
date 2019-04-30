@@ -31,7 +31,7 @@ class SimplePaymentFormBlock {
 		// Register editor script.
 		wp_register_script(
 			'pronamic-simple-payment-form-editor',
-			plugins_url( '/js/block-payment-button' . $min . '.js', pronamic_pay_plugin()->get_file() ),
+			plugins_url( '/js/block-simple-payment-form' . $min . '.js', pronamic_pay_plugin()->get_file() ),
 			array( 'wp-blocks', 'wp-components', 'wp-editor', 'wp-element' ),
 			pronamic_pay_plugin()->get_version(),
 			false
