@@ -13,7 +13,7 @@ namespace Pronamic\WordPress\Pay\Blocks;
 use Pronamic\WordPress\Money\Parser;
 
 /**
- * DonationBlock.php
+ * Simple payment form block.
  *
  * @author  Reüel van der Steege
  * @since   2.1.7
@@ -74,13 +74,23 @@ class SimplePaymentFormBlock {
 	public function render_block( $attributes = array() ) {
 		ob_start();
 
+		// Amount.
 		$money_parser = new Parser();
 
-		$settings = array(
-			'amount' => $money_parser->parse( $attributes['amount'] )->get_cents(),
+		$amount = $money_parser->parse( $attributes['amount'] );
+
+		// Form settings.
+		$args  = array(
+			'source'        => 'block-simple-payment-form',
+			'amount'        => $amount->get_cents(),
+			'button_text'   => sprintf(
+				/* translators: %s: formatted amount */
+				__( 'Pay %s', 'pronamic_ideal' ),
+				$amount->format_i18n()
+			),
 		);
 
-		echo pronamic_pay_plugin()->forms_module->get_form_output( $settings ); // WPCS: XSS ok.
+		echo pronamic_pay_plugin()->forms_module->get_form_output( $args ); // WPCS: XSS ok.
 
 		$html = ob_get_contents();
 

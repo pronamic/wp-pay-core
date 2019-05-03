@@ -55,9 +55,7 @@ class FormShortcode {
 			'pronamic_payment_form'
 		);
 
-		$id = $atts['id'];
-
-		return $this->forms_module->get_form_output( $id );
+		return $this->forms_module->get_form_output_by_id( $atts['id'] );
 	}
 
 	/**
