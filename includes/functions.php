@@ -24,7 +24,7 @@ function pronamic_pay_plugin() {
 /**
  * Get payment by specified post ID.
  *
- * @param int|string|null $post_id A payment post ID.
+ * @param bool|int|string|null $post_id A payment post ID.
  * @return Payment|null
  */
 function get_pronamic_payment( $post_id ) {

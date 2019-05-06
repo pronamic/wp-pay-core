@@ -93,7 +93,7 @@ class FormsModule {
 	 */
 	public function maybe_add_form_to_content( $content ) {
 		if ( is_singular( 'pronamic_pay_form' ) && 'pronamic_pay_form' === get_post_type() ) {
-			$content .= $this->get_form_output_by_id( get_the_ID() );
+			$content .= $this->get_form_output_by_id( (int) get_the_ID() );
 		}
 
 		return $content;
@@ -102,7 +102,7 @@ class FormsModule {
 	/**
 	 * Get form output.
 	 *
-	 * @param string|array $id Form ID or form settings.
+	 * @param int $id Form ID or form settings.
 	 *
 	 * @return string
 	 */
