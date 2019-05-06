@@ -237,10 +237,12 @@ class AdminModule {
 			esc_html( $args['label'] )
 		);
 
-		printf( // WPCS: XSS ok.
+		printf(
+			/* phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped */
 			'<fieldset>%s %s</fieldset>',
 			$legend,
 			$label
+			/* phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped */
 		);
 	}
 
@@ -303,7 +305,19 @@ class AdminModule {
 
 		// Output.
 		if ( $args['echo'] ) {
-			echo $output; // WPCS: XSS ok.
+			echo wp_kses(
+				$output,
+				array(
+					'select' => array(
+						'id'   => array(),
+						'name' => array(),
+					),
+					'option' => array(
+						'value'    => array(),
+						'selected' => array(),
+					),
+				),
+			);
 
 			return null;
 		}
@@ -708,7 +722,8 @@ class AdminModule {
 		global $submenu;
 
 		if ( isset( $submenu['pronamic_ideal'] ) ) {
-			$submenu['pronamic_ideal'][0][0] = __( 'Dashboard', 'pronamic_ideal' ); // WPCS: override ok.
+			/* phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited */
+			$submenu['pronamic_ideal'][0][0] = __( 'Dashboard', 'pronamic_ideal' );
 		}
 	}
 

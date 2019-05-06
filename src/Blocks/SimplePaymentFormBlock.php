@@ -90,7 +90,8 @@ class SimplePaymentFormBlock {
 			),
 		);
 
-		echo pronamic_pay_plugin()->forms_module->get_form_output( $args ); // WPCS: XSS ok.
+		/* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */
+		echo pronamic_pay_plugin()->forms_module->get_form_output( $args );
 
 		$html = ob_get_contents();
 

@@ -53,23 +53,24 @@ function get_pronamic_payment( $post_id ) {
 function get_pronamic_payment_by_meta( $meta_key, $meta_value ) {
 	global $wpdb;
 
-	$db_query = $wpdb->prepare(
-		"
-		SELECT
-			post_id
-		FROM
-			$wpdb->postmeta
-		WHERE
-			meta_key = %s
-				AND
-			meta_value = %s
-			;
-	",
-		$meta_key,
-		$meta_value
+	/* phpcs:ignore WordPress.DB.DirectDatabaseQuery */
+	$post_id = $wpdb->get_var(
+		$wpdb->prepare(
+			"
+			SELECT
+				post_id
+			FROM
+				$wpdb->postmeta
+			WHERE
+				meta_key = %s
+					AND
+				meta_value = %s
+				;
+			",
+			$meta_key,
+			$meta_value
+		)
 	);
-
-	$post_id = $wpdb->get_var( $db_query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
 
 	$payment = get_pronamic_payment( $post_id );
 
@@ -88,25 +89,26 @@ function get_pronamic_payments_by_meta( $meta_key, $meta_value ) {
 
 	$payments = array();
 
-	$db_query = $wpdb->prepare(
-		"
-		SELECT
-			post_id
-		FROM
-			$wpdb->postmeta
-		WHERE
-			meta_key = %s
-				AND
-			meta_value = %s
-		ORDER BY
-			meta_id ASC
-			;
-	",
-		$meta_key,
-		$meta_value
+	/* phpcs:ignore WordPress.DB.DirectDatabaseQuery */
+	$results = $wpdb->get_results(
+		$wpdb->prepare(
+			"
+			SELECT
+				post_id
+			FROM
+				$wpdb->postmeta
+			WHERE
+				meta_key = %s
+					AND
+				meta_value = %s
+			ORDER BY
+				meta_id ASC
+				;
+			",
+			$meta_key,
+			$meta_value
+		)
 	);
-
-	$results = $wpdb->get_results( $db_query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
 
 	foreach ( $results as $result ) {
 		$payment = new Payment( $result->post_id );
@@ -172,23 +174,24 @@ function get_pronamic_subscription_by_meta( $meta_key, $meta_value ) {
 
 	$subscription = null;
 
-	$db_query = $wpdb->prepare(
-		"
-		SELECT
-			post_id
-		FROM
-			$wpdb->postmeta
-		WHERE
-			meta_key = %s
-				AND
-			meta_value = %s
-			;
-	",
-		$meta_key,
-		$meta_value
+	/* phpcs:ignore WordPress.DB.DirectDatabaseQuery */
+	$post_id = $wpdb->get_var(
+		$wpdb->prepare(
+			"
+			SELECT
+				post_id
+			FROM
+				$wpdb->postmeta
+			WHERE
+				meta_key = %s
+					AND
+				meta_value = %s
+				;
+			",
+			$meta_key,
+			$meta_value
+		)
 	);
-
-	$post_id = $wpdb->get_var( $db_query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
 
 	if ( $post_id ) {
 		$subscription = new Subscription( $post_id );
@@ -209,25 +212,26 @@ function get_pronamic_subscriptions_by_meta( $meta_key, $meta_value ) {
 
 	$subscriptions = array();
 
-	$db_query = $wpdb->prepare(
-		"
-		SELECT
-			post_id
-		FROM
-			$wpdb->postmeta
-		WHERE
-			meta_key = %s
-				AND
-			meta_value = %s
-		ORDER BY
-			meta_id ASC
-			;
-	",
-		$meta_key,
-		$meta_value
+	/* phpcs:ignore WordPress.DB.DirectDatabaseQuery */
+	$results = $wpdb->get_results(
+		$wpdb->prepare(
+			"
+			SELECT
+				post_id
+			FROM
+				$wpdb->postmeta
+			WHERE
+				meta_key = %s
+					AND
+				meta_value = %s
+			ORDER BY
+				meta_id ASC
+				;
+			",
+			$meta_key,
+			$meta_value
+		)
 	);
-
-	$results = $wpdb->get_results( $db_query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
 
 	foreach ( $results as $result ) {
 		$subscriptions[] = new Subscription( $result->post_id );

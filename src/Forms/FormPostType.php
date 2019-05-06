@@ -195,71 +195,75 @@ class FormPostType {
 
 				break;
 			case 'pronamic_payment_form_payments':
-				$query = $wpdb->prepare(
-					"
-					SELECT
-						COUNT( post.ID ) AS value
-					FROM
-						$wpdb->posts AS post
-							LEFT JOIN
-						$wpdb->postmeta AS meta_amount
-								ON post.ID = meta_amount.post_id AND meta_amount.meta_key = '_pronamic_payment_amount'
-							LEFT JOIN
-						$wpdb->postmeta AS meta_source
-								ON post.ID = meta_source.post_id AND meta_source.meta_key = '_pronamic_payment_source'
-							LEFT JOIN
-						$wpdb->postmeta AS meta_source_id
-								ON post.ID = meta_source_id.post_id AND meta_source_id.meta_key = '_pronamic_payment_source_id'
-					WHERE
-						post.post_type = 'pronamic_payment'
-							AND
-						post.post_status = 'payment_completed'
-							AND
-						meta_source.meta_value = 'payment_form'
-							AND
-						meta_source_id.meta_value = %s
-					GROUP BY
-						post.ID
-					;",
-					$post_id
+				/* phpcs:ignore WordPress.DB.DirectDatabaseQuery */
+				$value = $wpdb->get_var(
+					$wpdb->prepare(
+						"
+						SELECT
+							COUNT( post.ID ) AS value
+						FROM
+							$wpdb->posts AS post
+								LEFT JOIN
+							$wpdb->postmeta AS meta_amount
+									ON post.ID = meta_amount.post_id AND meta_amount.meta_key = '_pronamic_payment_amount'
+								LEFT JOIN
+							$wpdb->postmeta AS meta_source
+									ON post.ID = meta_source.post_id AND meta_source.meta_key = '_pronamic_payment_source'
+								LEFT JOIN
+							$wpdb->postmeta AS meta_source_id
+									ON post.ID = meta_source_id.post_id AND meta_source_id.meta_key = '_pronamic_payment_source_id'
+						WHERE
+							post.post_type = 'pronamic_payment'
+								AND
+							post.post_status = 'payment_completed'
+								AND
+							meta_source.meta_value = 'payment_form'
+								AND
+							meta_source_id.meta_value = %s
+						GROUP BY
+							post.ID
+						;
+						",
+						$post_id
+					)
 				);
-
-				$value = $wpdb->get_var( $query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
 
 				echo esc_html( number_format_i18n( $value ) );
 
 				break;
 			case 'pronamic_payment_form_earnings':
-				$query = $wpdb->prepare(
-					"
-					SELECT
-						SUM( meta_amount.meta_value ) AS value
-					FROM
-						$wpdb->posts AS post
-							LEFT JOIN
-						$wpdb->postmeta AS meta_amount
-								ON post.ID = meta_amount.post_id AND meta_amount.meta_key = '_pronamic_payment_amount'
-							LEFT JOIN
-						$wpdb->postmeta AS meta_source
-								ON post.ID = meta_source.post_id AND meta_source.meta_key = '_pronamic_payment_source'
-							LEFT JOIN
-						$wpdb->postmeta AS meta_source_id
-								ON post.ID = meta_source_id.post_id AND meta_source_id.meta_key = '_pronamic_payment_source_id'
-					WHERE
-						post.post_type = 'pronamic_payment'
-							AND
-						post.post_status = 'payment_completed'
-							AND
-						meta_source.meta_value = 'payment_form'
-							AND
-						meta_source_id.meta_value = %s
-					GROUP BY
-						post.ID
-					;",
-					$post_id
+				/* phpcs:ignore WordPress.DB.DirectDatabaseQuery */
+				$value = $wpdb->get_var(
+					$wpdb->prepare(
+						"
+						SELECT
+							SUM( meta_amount.meta_value ) AS value
+						FROM
+							$wpdb->posts AS post
+								LEFT JOIN
+							$wpdb->postmeta AS meta_amount
+									ON post.ID = meta_amount.post_id AND meta_amount.meta_key = '_pronamic_payment_amount'
+								LEFT JOIN
+							$wpdb->postmeta AS meta_source
+									ON post.ID = meta_source.post_id AND meta_source.meta_key = '_pronamic_payment_source'
+								LEFT JOIN
+							$wpdb->postmeta AS meta_source_id
+									ON post.ID = meta_source_id.post_id AND meta_source_id.meta_key = '_pronamic_payment_source_id'
+						WHERE
+							post.post_type = 'pronamic_payment'
+								AND
+							post.post_status = 'payment_completed'
+								AND
+							meta_source.meta_value = 'payment_form'
+								AND
+							meta_source_id.meta_value = %s
+						GROUP BY
+							post.ID
+						;
+						",
+						$post_id
+					)
 				);
-
-				$value = $wpdb->get_var( $query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
 
 				$money = new Money( $value, 'EUR' );
 

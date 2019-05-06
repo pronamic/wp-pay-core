@@ -311,9 +311,10 @@ class AdminReports {
 
 		$date_format = '%Y-%m';
 
-		// @codingStandardsIgnoreStart
-		$query = $wpdb->prepare(
-			"
+		/* phpcs:ignore WordPress.DB.DirectDatabaseQuery */
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"
 				SELECT
 					DATE_FORMAT( post.post_date, %s ) AS month,
 			  		post.ID
@@ -328,15 +329,13 @@ class AdminReports {
 				ORDER BY
 					post_date
 				;
-			",
-			$date_format,
-			$start->format( 'Y-m-d' ),
-			$end->format( 'Y-m-d' ),
-			$status
+				",
+				$date_format,
+				$start->format( 'Y-m-d' ),
+				$end->format( 'Y-m-d' ),
+				$status
+			)
 		);
-		// @codingStandardsIgnoreEnd
-
-		$results = $wpdb->get_results( $query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
 
 		$months = wp_list_pluck( $results, 'month' );
 

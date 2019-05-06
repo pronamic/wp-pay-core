@@ -82,10 +82,10 @@ class AdminNotices {
 				);
 			}
 
-			printf( // WPCS: XSS ok.
+			printf(
 				'<div class="%s"><p>%s</p></div>',
 				esc_attr( $class ),
-				$notice
+				wp_kses_post( $notice )
 			);
 		}
 

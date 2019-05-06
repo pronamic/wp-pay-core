@@ -51,7 +51,8 @@ class Util {
 		 * @link https://github.com/WordPress/WordPress/blob/4.1/wp-includes/class-http.php#L528-L529
 		 * @link https://github.com/WordPress/WordPress/blob/4.0/wp-includes/class-http.php#L527
 		 */
-		if ( wp_remote_retrieve_response_code( $result ) == $required_response_code ) { // WPCS: loose comparison ok.
+		/* phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison */
+		if ( wp_remote_retrieve_response_code( $result ) == $required_response_code ) {
 			return wp_remote_retrieve_body( $result );
 		}
 
