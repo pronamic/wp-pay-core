@@ -73,27 +73,22 @@ class FormProcessor {
 			return;
 		}
 
-		// Gateway.
-		$id = filter_input( INPUT_POST, 'pronamic_pay_form_id', FILTER_VALIDATE_INT );
+		// Source.
+		$source    = filter_input( INPUT_POST, 'pronamic_pay_source', FILTER_SANITIZE_STRING );
+		$source_id = filter_input( INPUT_POST, 'pronamic_pay_source_id', FILTER_SANITIZE_STRING );
 
-		$config_id = get_post_meta( $id, '_pronamic_payment_form_config_id', true );
-
-		$encoded_id = filter_input( INPUT_POST, 'pronamic_pay_form_id', FILTER_SANITIZE_STRING );
-
-		$source_id = $id;
-
-		if ( false === $id && false !== strpos( $encoded_id, '-' ) ) {
-			$id_parts = explode( '-', $encoded_id );
-
-			$form_atts = base64_decode( $id_parts[1] );
-
-			$form_atts = json_decode( $form_atts );
-
-			$config_id = $form_atts->config_id;
-
-			$source_id = $id_parts[0];
+		if ( ! FormsSource::is_valid( $source ) ) {
+			return;
 		}
 
+		// Config ID.
+		$config_id = filter_input( INPUT_POST, 'pronamic_pay_config_id', FILTER_SANITIZE_STRING );
+
+		if ( FormsSource::PAYMENT_FORM === $source ) {
+			$config_id = get_post_meta( $source_id, '_pronamic_payment_form_config_id', true );
+		}
+
+		// Gateway.
 		$gateway = Plugin::get_gateway( $config_id );
 
 		if ( ! $gateway ) {
@@ -125,7 +120,7 @@ class FormProcessor {
 		$payment->description = $description;
 		$payment->config_id   = $config_id;
 		$payment->order_id    = $order_id;
-		$payment->source      = 'payment_form';
+		$payment->source      = $source;
 		$payment->source_id   = $source_id;
 
 		// Customer.
@@ -234,13 +229,6 @@ class FormProcessor {
 	 */
 	private function validate() {
 		global $pronamic_pay_errors;
-
-		// Needs validation?
-		$form_id = filter_input( INPUT_POST, 'pronamic_pay_form_id', FILTER_SANITIZE_STRING );
-
-		if ( false !== strpos( $form_id, '-' ) ) {
-			return true;
-		}
 
 		// First Name.
 		$first_name = filter_input( INPUT_POST, 'pronamic_pay_first_name', FILTER_SANITIZE_STRING );
