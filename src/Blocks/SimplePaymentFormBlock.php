@@ -81,13 +81,13 @@ class SimplePaymentFormBlock {
 
 		// Form settings.
 		$args = array(
-				'source'      => 'block-simple-payment-form',
-				'amount'      => $amount->get_cents(),
-				'button_text' => sprintf(
-					/* translators: %s: formatted amount */
-					__( 'Pay %s', 'pronamic_ideal' ),
-					$amount->format_i18n()
-				),
+			'source'      => 'block-simple-payment-form',
+			'amount'      => $amount->get_cents(),
+			'button_text' => sprintf(
+				/* translators: %s: formatted amount */
+				__( 'Pay %s', 'pronamic_ideal' ),
+				$amount->format_i18n()
+			),
 		);
 
 		echo pronamic_pay_plugin()->forms_module->get_form_output( $args ); // WPCS: XSS ok.
