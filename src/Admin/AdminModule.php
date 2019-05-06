@@ -316,7 +316,7 @@ class AdminModule {
 						'value'    => array(),
 						'selected' => array(),
 					),
-				),
+				)
 			);
 
 			return null;
