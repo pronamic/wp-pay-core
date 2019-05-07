@@ -82,6 +82,10 @@ class WebhookManager {
 		// Get log from gateway meta.
 		$meta = get_post_meta( $config_id, self::LOG_META_KEY, true );
 
+		if ( false === $meta ) {
+			return null;
+		}
+
 		$object = json_decode( $meta );
 
 		if ( is_object( $object ) ) {
@@ -120,7 +124,7 @@ class WebhookManager {
 		);
 
 		// Update webhook log.
-		update_post_meta( $config_id, self::LOG_META_KEY, wp_json_encode( $object ) );
+		update_post_meta( (int) $config_id, self::LOG_META_KEY, wp_json_encode( $object ) );
 
 		// Delete outdated webhook URLs transient.
 		delete_transient( self::OUTDATED_WEBHOOK_URLS_OPTION );
@@ -135,6 +139,11 @@ class WebhookManager {
 	 */
 	private static function get_setting_config_id( $setting ) {
 		$config_id = get_the_ID();
+
+		// Check valid ID.
+		if ( false === $config_id ) {
+			return null;
+		}
 
 		// Check gateway method with gateway being edited.
 		if ( isset( $setting['methods'] ) ) {
@@ -193,7 +202,14 @@ class WebhookManager {
 		// Prefix icon to field HTML.
 		printf(
 			'%s ',
-			self::get_field_feedback_icon_html( $field, $features ) // WPCS: xss ok.
+			wp_kses(
+				self::get_field_feedback_icon_html( $field, $features ),
+				array(
+					'span' => array(
+						'class' => array(),
+					),
+				)
+			)
 		);
 
 		try {
@@ -202,9 +218,17 @@ class WebhookManager {
 			if ( isset( $log->payment_id ) ) {
 				printf(
 					/* translators: 1: formatted date, 2: payment edit url, 3: payment id */
-					__(
-						'Last webhook request processed on %1$s for <a href="%2$s" title="Payment %3$s">payment #%3$s</a>.',
-						'pronamic_ideal'
+					wp_kses(
+						__(
+							'Last webhook request processed on %1$s for <a href="%2$s" title="Payment %3$s">payment #%3$s</a>.',
+							'pronamic_ideal'
+						),
+						array(
+							'a' => array(
+								'href'  => array(),
+								'title' => array(),
+							),
+						)
 					),
 					esc_html( $date->format_i18n( _x( 'l j F Y \a\t H:i', 'full datetime format', 'pronamic_ideal' ) ) ),
 					esc_url( get_edit_post_link( $log->payment_id ) ),
@@ -213,7 +237,7 @@ class WebhookManager {
 			} else {
 				printf(
 					/* translators: 1: formatted date */
-					__( 'Last webhook request processed on %1$s.', 'pronamic_ideal' ),
+					esc_html( __( 'Last webhook request processed on %1$s.', 'pronamic_ideal' ) ),
 					esc_html( $date->format_i18n( _x( 'l j F Y \a\t H:i', 'full datetime format', 'pronamic_ideal' ) ) )
 				);
 			}
