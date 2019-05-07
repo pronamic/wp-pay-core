@@ -217,8 +217,8 @@ class WebhookManager {
 
 			if ( isset( $log->payment_id ) ) {
 				printf(
-					/* translators: 1: formatted date, 2: payment edit url, 3: payment id */
 					wp_kses(
+						/* translators: 1: formatted date, 2: payment edit url, 3: payment id */
 						__(
 							'Last webhook request processed on %1$s for <a href="%2$s" title="Payment %3$s">payment #%3$s</a>.',
 							'pronamic_ideal'
