@@ -244,10 +244,18 @@ class WebhookManager {
 		} catch ( Exception $e ) {
 			if ( isset( $log->payment_id ) ) {
 				printf(
-					/* translators: 1: payment edit url, 2: payment id */
-					__(
-						'Last webhook request processed for <a href="%1$s" title="Payment %2$s">payment #%2$s</a>.',
-						'pronamic_ideal'
+					wp_kses(
+						/* translators: 1: payment edit url, 2: payment id */
+						__(
+							'Last webhook request processed for <a href="%1$s" title="Payment %2$s">payment #%2$s</a>.',
+							'pronamic_ideal'
+						),
+						array(
+							'a' => array(
+								'href'  => array(),
+								'title' => array(),
+							),
+						)
 					),
 					esc_url( get_edit_post_link( $log->payment_id ) ),
 					esc_html( $log->payment_id )
