@@ -1,6 +1,6 @@
 <?php
 /**
- * Simple payment form block.
+ * Payment form block.
  *
  * @author    Pronamic <info@pronamic.eu>
  * @copyright 2005-2018 Pronamic
@@ -15,13 +15,13 @@ use Pronamic\WordPress\Pay\Forms\FormsSource;
 use Pronamic\WordPress\Pay\Payments\Payment;
 
 /**
- * Simple payment form block.
+ * Payment form block.
  *
  * @author  Reüel van der Steege
  * @since   2.1.7
  * @version 2.1.7
  */
-class SimplePaymentFormBlock {
+class PaymentFormBlock {
 	/**
 	 * Register block.
 	 *
@@ -29,16 +29,16 @@ class SimplePaymentFormBlock {
 	 */
 	public function __construct() {
 		// Source text and description.
-		add_filter( 'pronamic_payment_source_url_' . FormsSource::BLOCK_SIMPLE_PAYMENT_FORM, array( $this, 'source_url' ), 10, 2 );
-		add_filter( 'pronamic_payment_source_text_' . FormsSource::BLOCK_SIMPLE_PAYMENT_FORM, array( $this, 'source_text' ), 10, 2 );
-		add_filter( 'pronamic_payment_source_description_' . FormsSource::BLOCK_SIMPLE_PAYMENT_FORM, array( $this, 'source_description' ), 10, 2 );
+		add_filter( 'pronamic_payment_source_url_' . FormsSource::BLOCK_PAYMENT_FORM, array( $this, 'source_url' ), 10, 2 );
+		add_filter( 'pronamic_payment_source_text_' . FormsSource::BLOCK_PAYMENT_FORM, array( $this, 'source_text' ), 10, 2 );
+		add_filter( 'pronamic_payment_source_description_' . FormsSource::BLOCK_PAYMENT_FORM, array( $this, 'source_description' ), 10, 2 );
 
 		// Register editor script.
 		$min = SCRIPT_DEBUG ? '' : '.min';
 
 		wp_register_script(
-			'pronamic-simple-payment-form-editor',
-			plugins_url( '/js/block-simple-payment-form' . $min . '.js', pronamic_pay_plugin()->get_file() ),
+			'pronamic-payment-form-editor',
+			plugins_url( '/js/block-payment-form' . $min . '.js', pronamic_pay_plugin()->get_file() ),
 			array( 'wp-blocks', 'wp-components', 'wp-editor', 'wp-element' ),
 			pronamic_pay_plugin()->get_version(),
 			false
@@ -46,20 +46,20 @@ class SimplePaymentFormBlock {
 
 		// Localize script.
 		wp_localize_script(
-			'pronamic-simple-payment-form-editor',
-			'pronamic_simple_payment_form',
+			'pronamic-payment-form-editor',
+			'pronamic_payment_form',
 			array(
-				'title'        => __( 'Simple Payment Form', 'pronamic_ideal' ),
+				'title'        => __( 'Payment Form', 'pronamic_ideal' ),
 				'label_amount' => __( 'Amount', 'pronamic_ideal' ),
 			)
 		);
 
 		// Return block registration arguments.
 		register_block_type(
-			'pronamic-pay/simple-payment-form',
+			'pronamic-pay/payment-form',
 			array(
 				'render_callback' => array( $this, 'render_block' ),
-				'editor_script'   => 'pronamic-simple-payment-form-editor',
+				'editor_script'   => 'pronamic-payment-form-editor',
 				'style'           => array( 'pronamic-pay-forms' ),
 				'attributes'      => array(
 					'amount' => array(
@@ -89,13 +89,8 @@ class SimplePaymentFormBlock {
 		// Form settings.
 		$args = array(
 			'amount'      => $amount->get_cents(),
-			'button_text' => sprintf(
-				/* translators: %s: formatted amount */
-				__( 'Pay %s', 'pronamic_ideal' ),
-				$amount->format_i18n()
-			),
-			'html_id'     => sprintf( 'pronamic-pay-simple-payment-form-%s', get_the_ID() ),
-			'source'      => FormsSource::BLOCK_SIMPLE_PAYMENT_FORM,
+			'html_id'     => sprintf( 'pronamic-pay-payment-form-%s', get_the_ID() ),
+			'source'      => FormsSource::BLOCK_PAYMENT_FORM,
 			'source_id'   => get_the_ID(),
 		);
 
@@ -118,7 +113,7 @@ class SimplePaymentFormBlock {
 	 * @return string
 	 */
 	public function source_text( $text, Payment $payment ) {
-		$text = __( 'Simple Payment Form Block', 'pronamic_ideal' ) . '<br />';
+		$text = __( 'Payment Form Block', 'pronamic_ideal' ) . '<br />';
 
 		$text .= sprintf(
 			'<a href="%s">%s</a>',
@@ -138,7 +133,7 @@ class SimplePaymentFormBlock {
 	 * @return string
 	 */
 	public function source_description( $text, Payment $payment ) {
-		$text = __( 'Simple Payment Form Block', 'pronamic_ideal' ) . '<br />';
+		$text = __( 'Payment Form Block', 'pronamic_ideal' ) . '<br />';
 
 		return $text;
 	}

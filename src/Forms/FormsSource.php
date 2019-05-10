@@ -26,11 +26,11 @@ class FormsSource {
 	const PAYMENT_FORM = 'payment_form';
 
 	/**
-	 * Block simple payment form.
+	 * Block payment form.
 	 *
 	 * @var string
 	 */
-	const BLOCK_SIMPLE_PAYMENT_FORM = 'block_simple_payment_form';
+	const BLOCK_PAYMENT_FORM = 'block_payment_form';
 
 	/**
 	 * Is valid source?
@@ -41,7 +41,7 @@ class FormsSource {
 	 */
 	public static function is_valid( $source ) {
 		$sources = array(
-			self::BLOCK_SIMPLE_PAYMENT_FORM,
+			self::BLOCK_PAYMENT_FORM,
 			self::PAYMENT_FORM,
 		);
 
