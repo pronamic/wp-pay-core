@@ -34,7 +34,7 @@ class BlocksModule {
 	 * Register blocks.
 	 */
 	public function register_blocks() {
-		// Simple payment form.
-		new SimplePaymentFormBlock();
+		// Payment form.
+		new PaymentFormBlock();
 	}
 }
