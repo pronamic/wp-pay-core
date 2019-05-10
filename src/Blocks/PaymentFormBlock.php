@@ -88,10 +88,10 @@ class PaymentFormBlock {
 
 		// Form settings.
 		$args = array(
-			'amount'      => $amount->get_cents(),
-			'html_id'     => sprintf( 'pronamic-pay-payment-form-%s', get_the_ID() ),
-			'source'      => FormsSource::BLOCK_PAYMENT_FORM,
-			'source_id'   => get_the_ID(),
+			'amount'    => $amount->get_cents(),
+			'html_id'   => sprintf( 'pronamic-pay-payment-form-%s', get_the_ID() ),
+			'source'    => FormsSource::BLOCK_PAYMENT_FORM,
+			'source_id' => get_the_ID(),
 		);
 
 		/* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */
