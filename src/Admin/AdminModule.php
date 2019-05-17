@@ -629,6 +629,10 @@ class AdminModule {
 	public function admin_menu_parent_file( $parent_file ) {
 		$screen = get_current_screen();
 
+		if ( null === $screen ) {
+			return $parent_file;
+		}
+
 		switch ( $screen->id ) {
 			case FormPostType::POST_TYPE:
 			case AdminGatewayPostType::POST_TYPE:

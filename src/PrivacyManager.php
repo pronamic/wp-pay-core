@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use Exception;
+
 /**
  * Class PrivacyManager
  *
@@ -266,6 +268,8 @@ class PrivacyManager {
 	 * @param string $data      Original data.
 	 *
 	 * @return string Anonymized string.
+	 *
+	 * @throws Exception When error occurs anonymize phone.
 	 */
 	public static function anonymize_custom_data_types( $anonymous, $type, $data ) {
 		switch ( $type ) {
@@ -275,6 +279,10 @@ class PrivacyManager {
 				break;
 			case 'phone':
 				$anonymous = preg_replace( '/\d/u', '0', $data );
+
+				if ( null === $anonymous ) {
+					throw new Exception( 'Could not anonymize phone number.' );
+				}
 
 				break;
 		}

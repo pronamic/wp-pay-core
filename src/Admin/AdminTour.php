@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
+use Exception;
 use Pronamic\WordPress\Pay\Plugin;
 
 /**
@@ -103,6 +104,7 @@ class AdminTour {
 	 *
 	 * @param string $file File.
 	 * @return string
+	 * @throws Exception When output buffering is not active.
 	 */
 	private function get_content( $file ) {
 		$content = '';
@@ -115,6 +117,10 @@ class AdminTour {
 			include $path;
 
 			$content = ob_get_contents();
+
+			if ( false === $content ) {
+				throw new Exception( 'Output buffering is not active.' );
+			}
 
 			ob_end_clean();
 		}
@@ -133,72 +139,74 @@ class AdminTour {
 		$page   = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
 		$screen = get_current_screen();
 
-		switch ( $screen->id ) {
-			case 'toplevel_page_pronamic_ideal':
-				$pointers = array(
-					array(
-						// @link https://github.com/WordPress/WordPress/blob/4.7/wp-admin/edit.php#L321
-						'selector' => '.wrap .wp-header-end',
-						'options'  => (object) array(
-							'content'      => $this->get_content( 'pointer-dashboard' ),
-							'position'     => (object) array(
-								'edge'  => 'top',
-								'align' => ( is_rtl() ) ? 'left' : 'right',
+		if ( null !== $screen ) {
+			switch ( $screen->id ) {
+				case 'toplevel_page_pronamic_ideal':
+					$pointers = array(
+						array(
+							// @link https://github.com/WordPress/WordPress/blob/4.7/wp-admin/edit.php#L321
+							'selector' => '.wrap .wp-header-end',
+							'options'  => (object) array(
+								'content'      => $this->get_content( 'pointer-dashboard' ),
+								'position'     => (object) array(
+									'edge'  => 'top',
+									'align' => ( is_rtl() ) ? 'left' : 'right',
+								),
+								'pointerWidth' => 450,
 							),
-							'pointerWidth' => 450,
 						),
-					),
-				);
+					);
 
-				break;
-			case 'edit-pronamic_payment':
-				$pointers = array(
-					array(
-						'selector' => '.wrap .wp-header-end',
-						'options'  => (object) array(
-							'content'      => $this->get_content( 'pointer-payments' ),
-							'position'     => (object) array(
-								'edge'  => 'top',
-								'align' => ( is_rtl() ) ? 'left' : 'right',
+					break;
+				case 'edit-pronamic_payment':
+					$pointers = array(
+						array(
+							'selector' => '.wrap .wp-header-end',
+							'options'  => (object) array(
+								'content'      => $this->get_content( 'pointer-payments' ),
+								'position'     => (object) array(
+									'edge'  => 'top',
+									'align' => ( is_rtl() ) ? 'left' : 'right',
+								),
+								'pointerWidth' => 450,
 							),
-							'pointerWidth' => 450,
 						),
-					),
-				);
+					);
 
-				break;
-			case 'edit-pronamic_gateway':
-				$pointers = array(
-					array(
-						'selector' => '.wrap .wp-header-end',
-						'options'  => (object) array(
-							'content'      => $this->get_content( 'pointer-gateways' ),
-							'position'     => (object) array(
-								'edge'  => 'top',
-								'align' => ( is_rtl() ) ? 'left' : 'right',
+					break;
+				case 'edit-pronamic_gateway':
+					$pointers = array(
+						array(
+							'selector' => '.wrap .wp-header-end',
+							'options'  => (object) array(
+								'content'      => $this->get_content( 'pointer-gateways' ),
+								'position'     => (object) array(
+									'edge'  => 'top',
+									'align' => ( is_rtl() ) ? 'left' : 'right',
+								),
+								'pointerWidth' => 450,
 							),
-							'pointerWidth' => 450,
 						),
-					),
-				);
+					);
 
-				break;
-			case 'edit-pronamic_pay_form':
-				$pointers = array(
-					array(
-						'selector' => '.wrap .wp-header-end',
-						'options'  => (object) array(
-							'content'      => $this->get_content( 'pointer-forms' ),
-							'position'     => (object) array(
-								'edge'  => 'top',
-								'align' => ( is_rtl() ) ? 'left' : 'right',
+					break;
+				case 'edit-pronamic_pay_form':
+					$pointers = array(
+						array(
+							'selector' => '.wrap .wp-header-end',
+							'options'  => (object) array(
+								'content'      => $this->get_content( 'pointer-forms' ),
+								'position'     => (object) array(
+									'edge'  => 'top',
+									'align' => ( is_rtl() ) ? 'left' : 'right',
+								),
+								'pointerWidth' => 450,
 							),
-							'pointerWidth' => 450,
 						),
-					),
-				);
+					);
 
-				break;
+					break;
+			}
 		}
 
 		switch ( $page ) {

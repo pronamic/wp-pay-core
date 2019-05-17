@@ -527,7 +527,7 @@ class Plugin {
 
 		// Blocks module.
 		if ( function_exists( 'register_block_type' ) ) {
-			$this->blocks_module = new Blocks\BlocksModule( $this );
+			$this->blocks_module = new Blocks\BlocksModule();
 		}
 
 		// Google Analytics Ecommerce.
@@ -673,6 +673,8 @@ class Plugin {
 		if ( empty( $config_id ) ) {
 			return null;
 		}
+
+		$config_id = intval( $config_id );
 
 		// Check if config is published.
 		if ( 'publish' !== get_post_status( $config_id ) ) {

@@ -370,7 +370,7 @@ class FormPostType {
 	private function get_shortcode( $post_id = null ) {
 		$post_id = ( null === $post_id ) ? get_the_ID() : $post_id;
 
-		$shortcode = sprintf( '[pronamic_payment_form id="%s"]', esc_attr( $post_id ) );
+		$shortcode = sprintf( '[pronamic_payment_form id="%s"]', esc_attr( strval( $post_id ) ) );
 
 		return $shortcode;
 	}

@@ -4,3 +4,5 @@ parameters:
 	bootstrap: tests/bootstrap.php
 	paths:
 		- src
+	dynamicConstantNames:
+		- SCRIPT_DEBUG

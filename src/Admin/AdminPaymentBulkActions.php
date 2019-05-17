@@ -38,6 +38,10 @@ class AdminPaymentBulkActions {
 		// Screen.
 		$screen = get_current_screen();
 
+		if ( null === $screen ) {
+			return;
+		}
+
 		if ( 'edit-pronamic_payment' !== $screen->id ) {
 			return;
 		}

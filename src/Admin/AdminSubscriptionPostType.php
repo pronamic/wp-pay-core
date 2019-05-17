@@ -70,6 +70,10 @@ class AdminSubscriptionPostType {
 	public function request( $vars ) {
 		$screen = get_current_screen();
 
+		if ( null === $screen ) {
+			return $vars;
+		}
+
 		// Check payment post type.
 		if ( self::POST_TYPE !== $screen->post_type ) {
 			return $vars;

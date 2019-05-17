@@ -92,6 +92,10 @@ class AdminPaymentPostType {
 	public function request( $vars ) {
 		$screen = get_current_screen();
 
+		if ( null === $screen ) {
+			return $vars;
+		}
+
 		// Check payment post type.
 		if ( self::POST_TYPE !== $screen->post_type ) {
 			return $vars;
@@ -120,6 +124,10 @@ class AdminPaymentPostType {
 
 		// Screen.
 		$screen = get_current_screen();
+
+		if ( null === $screen ) {
+			return;
+		}
 
 		if ( ! ( 'post' === $screen->base && 'pronamic_payment' === $screen->post_type ) ) {
 			return;

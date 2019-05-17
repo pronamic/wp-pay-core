@@ -22,10 +22,8 @@ use Pronamic\WordPress\Pay\Plugin;
 class BlocksModule {
 	/**
 	 * Blocks constructor.
-	 *
-	 * @param Plugin $plugin Plugin.
 	 */
-	public function __construct( Plugin $plugin ) {
+	public function __construct() {
 		// Register blocks.
 		add_action( 'init', array( $this, 'register_blocks' ) );
 	}
