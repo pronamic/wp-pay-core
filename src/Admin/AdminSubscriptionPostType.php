@@ -15,6 +15,7 @@ use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
 use WP_Post;
+use WP_Query;
 
 /**
  * WordPress admin subscription post type
@@ -57,6 +58,8 @@ class AdminSubscriptionPostType {
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 
 		add_filter( 'post_row_actions', array( $this, 'post_row_actions' ), 10, 2 );
+
+		add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
 	}
 
 	/**
@@ -92,6 +95,32 @@ class AdminSubscriptionPostType {
 	}
 
 	/**
+	 * Pre get posts.
+	 *
+	 * @param WP_Query $query WordPress query.
+	 */
+	public function pre_get_posts( $query ) {
+		$map = array(
+			'pronamic_subscription_amount'   => '_pronamic_subscription_amount',
+			'pronamic_subscription_customer' => '_pronamic_subscription_customer_name',
+		);
+
+		$orderby = $query->get( 'orderby' );
+
+		if ( ! isset( $map[ $orderby ] ) ) {
+			return;
+		}
+
+		$query->set( 'meta_key', $map[ $orderby ] );
+		$query->set( 'orderby', $map[ $orderby ] );
+
+		// Set query meta key.
+		if ( 'pronamic_subscription_amount' === $orderby ) {
+			$query->set( 'orderby', 'meta_value_num' );
+		}
+	}
+
+	/**
 	 * Columns.
 	 *
 	 * @param array $columns Columns.
@@ -122,8 +151,10 @@ class AdminSubscriptionPostType {
 	 * @return array
 	 */
 	public function sortable_columns( $sortable_columns ) {
-		$sortable_columns['pronamic_subscription_title'] = 'ID';
-		$sortable_columns['pronamic_subscription_date']  = 'date';
+		$sortable_columns['pronamic_subscription_title']    = 'ID';
+		$sortable_columns['pronamic_subscription_amount']   = 'pronamic_subscription_amount';
+		$sortable_columns['pronamic_subscription_customer'] = 'pronamic_subscription_customer_name';
+		$sortable_columns['pronamic_subscription_date']     = 'date';
 
 		return $sortable_columns;
 	}

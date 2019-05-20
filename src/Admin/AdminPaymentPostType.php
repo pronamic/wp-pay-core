@@ -265,8 +265,23 @@ class AdminPaymentPostType {
 	 * @param WP_Query $query WordPress query.
 	 */
 	public function pre_get_posts( $query ) {
-		if ( 'pronamic_payment_amount' === $query->get( 'orderby' ) ) {
-			$query->set( 'meta_key', '_pronamic_payment_amount' );
+		$map = array(
+			'pronamic_payment_amount'      => '_pronamic_payment_amount',
+			'pronamic_payment_customer'    => '_pronamic_payment_customer_name',
+			'pronamic_payment_transaction' => '_pronamic_payment_transaction_id',
+		);
+
+		$orderby = $query->get( 'orderby' );
+
+		if ( ! isset( $map[ $orderby ] ) ) {
+			return;
+		}
+
+		$query->set( 'meta_key', $map[ $orderby ] );
+		$query->set( 'orderby', $map[ $orderby ] );
+
+		// Set query meta key.
+		if ( 'pronamic_payment_amount' === $orderby ) {
 			$query->set( 'orderby', 'meta_value_num' );
 		}
 	}
@@ -322,9 +337,11 @@ class AdminPaymentPostType {
 	 * @return array
 	 */
 	public function sortable_columns( $sortable_columns ) {
-		$sortable_columns['pronamic_payment_title']  = 'ID';
-		$sortable_columns['pronamic_payment_amount'] = 'pronamic_payment_amount';
-		$sortable_columns['pronamic_payment_date']   = 'date';
+		$sortable_columns['pronamic_payment_title']       = 'ID';
+		$sortable_columns['pronamic_payment_transaction'] = 'pronamic_payment_transaction';
+		$sortable_columns['pronamic_payment_customer']    = 'pronamic_payment_customer';
+		$sortable_columns['pronamic_payment_amount']      = 'pronamic_payment_amount';
+		$sortable_columns['pronamic_payment_date']        = 'date';
 
 		return $sortable_columns;
 	}
