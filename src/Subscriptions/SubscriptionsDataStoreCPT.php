@@ -587,7 +587,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 		$this->update_meta( $id, 'interval', $subscription->interval );
 		$this->update_meta( $id, 'interval_period', $subscription->interval_period );
 		$this->update_meta( $id, 'currency', $subscription->get_total_amount()->get_currency()->get_alphabetic_code() );
-		$this->update_meta( $id, 'amount', $subscription->get_total_amount()->get_value() );
+		$this->update_meta( $id, 'amount', $subscription->get_total_amount()->format() );
 		$this->update_meta( $id, 'description', $subscription->description );
 		$this->update_meta( $id, 'email', $subscription->email );
 		$this->update_meta( $id, 'customer_name', $subscription->customer_name );
