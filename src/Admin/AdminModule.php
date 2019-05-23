@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
+use Exception;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\Forms\FormPostType;
@@ -589,6 +590,7 @@ class AdminModule {
 			return;
 		}
 
+		// Gateway.
 		$id = filter_input( INPUT_POST, 'post_ID', FILTER_SANITIZE_NUMBER_INT );
 
 		$gateway = Plugin::get_gateway( $id );
@@ -597,27 +599,37 @@ class AdminModule {
 			return;
 		}
 
+		// Amount.
 		$string = filter_input( INPUT_POST, 'test_amount', FILTER_SANITIZE_STRING );
 
 		$money_parser = new MoneyParser();
 
 		$amount = $money_parser->parse( $string )->get_value();
 
-		$data = new \Pronamic\WordPress\Pay\Payments\PaymentTestData( wp_get_current_user(), $amount );
+		// Start.
+		try {
+			$data = new \Pronamic\WordPress\Pay\Payments\PaymentTestData( wp_get_current_user(), $amount );
 
-		$payment_method = filter_input( INPUT_POST, 'pronamic_pay_test_payment_method', FILTER_SANITIZE_STRING );
+			$payment_method = filter_input( INPUT_POST, 'pronamic_pay_test_payment_method', FILTER_SANITIZE_STRING );
 
-		$payment = Plugin::start( $id, $gateway, $data, $payment_method );
+			$payment = Plugin::start( $id, $gateway, $data, $payment_method );
 
-		$error = $gateway->get_error();
+			$error = array( $gateway->get_error() );
 
-		if ( $error instanceof WP_Error ) {
+			if ( ! $gateway->has_error() ) {
+				$gateway->redirect( $payment );
+			}
+		} catch ( Exception $e ) {
+			$error[] = new WP_Error( 'pay_error', $e->getMessage() );
+		}
+
+		$error = array_filter( $error );
+
+		if ( ! empty( $error ) ) {
 			Plugin::render_errors( $error );
 
 			exit;
 		}
-
-		$gateway->redirect( $payment );
 	}
 
 	/**
