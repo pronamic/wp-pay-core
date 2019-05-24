@@ -329,8 +329,8 @@ class AdminModule {
 	/**
 	 * Create pages.
 	 *
-	 * @param array  $pages   Page.
-	 * @param string $parent Parent post ID.
+	 * @param array    $pages   Page.
+	 * @param int|null $parent Parent post ID.
 	 * @return void
 	 */
 	private function create_pages( $pages, $parent = null ) {
@@ -350,20 +350,22 @@ class AdminModule {
 
 			$result = wp_insert_post( $post, true );
 
-			if ( ! is_wp_error( $result ) ) {
-				if ( isset( $page['post_meta'] ) ) {
-					foreach ( $page['post_meta'] as $key => $value ) {
-						update_post_meta( $result, $key, $value );
-					}
-				}
+			if ( $result instanceof WP_Error ) {
+				throw new Exception( $result->get_error_message() );
+			}
 
-				if ( isset( $page['option_name'] ) ) {
-					update_option( $page['option_name'], $result );
+			if ( isset( $page['post_meta'] ) ) {
+				foreach ( $page['post_meta'] as $key => $value ) {
+					update_post_meta( $result, $key, $value );
 				}
+			}
 
-				if ( isset( $page['children'] ) ) {
-					$this->create_pages( $page['children'], $result );
-				}
+			if ( isset( $page['option_name'] ) ) {
+				update_option( $page['option_name'], $result );
+			}
+
+			if ( isset( $page['children'] ) ) {
+				$this->create_pages( $page['children'], $result );
 			}
 		}
 	}

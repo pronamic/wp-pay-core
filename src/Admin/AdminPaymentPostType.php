@@ -442,6 +442,21 @@ class AdminPaymentPostType {
 				$source_id          = $payment->get_source_id();
 				$source_description = $payment->get_source_description();
 
+				$text = sprintf(
+					'<strong>#%s</strong>',
+					esc_html( strval( $post_id ) )
+				);
+
+				$link = get_edit_post_link( $post_id );
+
+				if ( null !== $link ) {
+					$text = sprintf(
+						'<a href="%s" class="row-title">%s</a>',
+						esc_url( $link ),
+						$text
+					);
+				}
+
 				$source_id_text = '#' . strval( $source_id );
 
 				$source_link = $payment->get_source_link();
@@ -458,11 +473,7 @@ class AdminPaymentPostType {
 					sprintf(
 						/* translators: 1: Payment edit post link with post ID, 2: Payment source description, 3: Payment source ID text */
 						__( '%1$s for %2$s %3$s', 'pronamic_ideal' ),
-						sprintf(
-							'<a href="%s" class="row-title"><strong>#%s</strong></a>',
-							esc_url( get_edit_post_link( $post_id ) ),
-							esc_html( $post_id )
-						),
+						$text,
 						strval( $source_description ),
 						$source_id_text
 					),
@@ -518,7 +529,7 @@ class AdminPaymentPostType {
 				$customer = $payment->get_customer();
 
 				if ( null !== $customer ) {
-					echo esc_html( $customer->get_name() );
+					echo esc_html( strval( $customer->get_name() ) );
 				}
 
 				break;

@@ -749,4 +749,31 @@ abstract class Gateway {
 
 		return PayUtil::html_hidden_fields( $fields );
 	}
+
+	/**
+	 * Update status of the specified payment
+	 *
+	 * @param Payment $payment Payment.
+	 */
+	public function update_status( Payment $payment ) {
+
+	}
+
+	/**
+	 * Create invoice.
+	 *
+	 * @param Payment $payment Payment.
+	 */
+	public function create_invoice( $payment ) {
+
+	}
+
+	/**
+	 * Cancel reservation.
+	 *
+	 * @param Payment $payment Payment.
+	 */
+	public function cancel_reservation( $payment ) {
+
+	}
 }

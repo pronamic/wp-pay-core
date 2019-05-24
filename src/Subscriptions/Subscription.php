@@ -523,7 +523,7 @@ class Subscription extends LegacySubscription {
 		$add_note = false;
 
 		foreach ( $meta as $key => $value ) {
-			$current_value = $this->get_meta( $key );
+			$current_value = $this->get_meta( strval( $key ) );
 
 			// Convert string to amount for comparison.
 			if ( 'amount' === $key && false !== $current_value ) {
@@ -538,7 +538,7 @@ class Subscription extends LegacySubscription {
 
 			$add_note = true;
 
-			$this->set_meta( $key, $value );
+			$this->set_meta( strval( $key ), $value );
 
 			if ( $value instanceof DateTime ) {
 				$value = date_i18n( __( 'l jS \o\f F Y, h:ia', 'pronamic_ideal' ), $value->getTimestamp() );

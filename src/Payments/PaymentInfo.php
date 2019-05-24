@@ -678,15 +678,6 @@ abstract class PaymentInfo {
 	}
 
 	/**
-	 * Get entrance code.
-	 *
-	 * @return string|null
-	 */
-	public function get_entrance_code() {
-		return $this->entrance_code;
-	}
-
-	/**
 	 * Set the credit card to use for this payment.
 	 *
 	 * @param CreditCard|null $credit_card Credit Card.
@@ -702,15 +693,6 @@ abstract class PaymentInfo {
 	 */
 	public function get_credit_card() {
 		return $this->credit_card;
-	}
-
-	/**
-	 * Get reucrring.
-	 *
-	 * @return bool|null
-	 */
-	public function get_recurring() {
-		return $this->recurring;
 	}
 
 	/**

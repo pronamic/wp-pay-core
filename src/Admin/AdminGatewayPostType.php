@@ -165,20 +165,20 @@ class AdminGatewayPostType {
 						$content[] = sprintf(
 							'<a href="%s" target="_blank">%s</a>',
 							esc_attr( $url ),
-							esc_html( ucfirst( $name ) )
+							esc_html( ucfirst( strval( $name ) ) )
 						);
 					}
 
-					echo implode(
-						' | ',
-						wp_kses(
-							$content,
-							array(
-								'a' => array(
-									'href'   => array(),
-									'target' => array(),
-								),
-							)
+					echo wp_kses(
+						implode(
+							' | ',
+							$content
+						),
+						array(
+							'a' => array(
+								'href'   => array(),
+								'target' => array(),
+							),
 						)
 					);
 				}

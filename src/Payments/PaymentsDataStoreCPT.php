@@ -179,7 +179,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 */
 	private function update_payment_form_post_array( $payment, $postarr ) {
 		if ( isset( $postarr['pronamic_payment_post_status'] ) ) {
-			$post_status = sanitize_text_field( wp_unslash( $postarr['pronamic_payment_post_status'] ) );
+			$post_status = sanitize_text_field( stripslashes( $postarr['pronamic_payment_post_status'] ) );
 			$meta_status = $this->get_meta_status_from_post_status( $post_status );
 
 			if ( null !== $meta_status ) {

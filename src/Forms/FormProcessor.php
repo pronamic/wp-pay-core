@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Forms;
 
+use Exception;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Address;
@@ -193,7 +194,7 @@ class FormProcessor {
 			$password = wp_generate_password( 10 );
 
 			// Make a user with the username as the email.
-			$user_id = wp_insert_user(
+			$result = wp_insert_user(
 				array(
 					'user_login' => $email,
 					'user_pass'  => $password,
@@ -204,14 +205,18 @@ class FormProcessor {
 				)
 			);
 
+			if ( $result instanceof WP_Error ) {
+				throw new Exception( $result->get_error_message() );
+			}
+
 			// User.
-			$user = new WP_User( $user_id );
+			$user = new WP_User( $result );
 		}
 
 		if ( is_object( $user ) ) {
 			wp_update_post(
 				array(
-					'ID'          => $payment->post->ID,
+					'ID'          => $payment->get_id(),
 					'post_author' => $user->ID,
 				)
 			);

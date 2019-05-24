@@ -82,7 +82,11 @@ class Item {
 
 			_deprecated_function( esc_html( __CLASS__ . '::' . $old_method ), '2.0.1', esc_html( __CLASS__ . '::' . $new_method ) );
 
-			return call_user_func_array( array( $this, $new_method ), $arguments );
+			$callable = array( $this, $new_method );
+
+			if ( is_callable( $callable ) ) {
+				return call_user_func_array( $callable, $arguments );
+			}
 		}
 
 		trigger_error( esc_html( 'Call to undefined method ' . __CLASS__ . '::' . $name . '()' ), E_USER_ERROR );

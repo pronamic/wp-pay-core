@@ -183,7 +183,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 */
 	private function update_subscription_form_post_array( $subscription, $postarr ) {
 		if ( isset( $postarr['pronamic_subscription_post_status'] ) ) {
-			$post_status = sanitize_text_field( wp_unslash( $postarr['pronamic_subscription_post_status'] ) );
+			$post_status = sanitize_text_field( stripslashes( $postarr['pronamic_subscription_post_status'] ) );
 			$meta_status = $this->get_meta_status_from_post_status( $post_status );
 
 			if ( null !== $meta_status ) {
@@ -200,7 +200,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 		}
 
 		if ( isset( $postarr['pronamic_subscription_amount'] ) ) {
-			$amount = sanitize_text_field( wp_unslash( $postarr['pronamic_subscription_amount'] ) );
+			$amount = sanitize_text_field( stripslashes( $postarr['pronamic_subscription_amount'] ) );
 
 			$money_parser = new MoneyParser();
 
@@ -503,8 +503,8 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 		$subscription->source          = $this->get_meta_string( $id, 'source' );
 		$subscription->source_id       = $this->get_meta_string( $id, 'source_id' );
 		$subscription->frequency       = $this->get_meta_int( $id, 'frequency' );
-		$subscription->interval        = $this->get_meta( $id, 'interval' );
-		$subscription->interval_period = $this->get_meta( $id, 'interval_period' );
+		$subscription->interval        = $this->get_meta_int( $id, 'interval' );
+		$subscription->interval_period = $this->get_meta_string( $id, 'interval_period' );
 		$subscription->transaction_id  = $this->get_meta_string( $id, 'transaction_id' );
 		$subscription->status          = $this->get_meta_string( $id, 'status' );
 		$subscription->description     = $this->get_meta_string( $id, 'description' );
@@ -540,6 +540,9 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 			}
 		}
 
+		// Date interval.
+		$date_interval = $subscription->get_date_interval();
+
 		// Start Date.
 		$start_date = $this->get_meta_date( $id, 'start_date' );
 
@@ -553,11 +556,9 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 		// End Date.
 		$end_date = $this->get_meta_date( $id, 'end_date' );
 
-		if ( empty( $end_date ) && $subscription->frequency ) {
-			$interval = $subscription->get_date_interval();
-
+		if ( empty( $end_date ) && $subscription->frequency && null !== $date_interval ) {
 			// @link https://stackoverflow.com/a/10818981/6411283
-			$period = new DatePeriod( $start_date, $interval, $subscription->frequency );
+			$period = new DatePeriod( $start_date, $date_interval, $subscription->frequency );
 
 			$dates = iterator_to_array( $period );
 
@@ -569,11 +570,11 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 		// Expiry Date.
 		$expiry_date = $this->get_meta_date( $id, 'expiry_date' );
 
-		if ( empty( $expiry_date ) ) {
+		if ( empty( $expiry_date ) && null !== $date_interval ) {
 			// If no meta expiry date is set, use start date + 1 interval period.
 			$expiry_date = clone $start_date;
 
-			$expiry_date->add( $subscription->get_date_interval() );
+			$expiry_date->add( $date_interval );
 		}
 
 		$subscription->expiry_date = $expiry_date;

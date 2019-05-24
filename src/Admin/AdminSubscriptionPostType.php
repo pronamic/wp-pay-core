@@ -12,6 +12,7 @@ namespace Pronamic\WordPress\Pay\Admin;
 
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Plugin;
+use Pronamic\WordPress\Pay\Util;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
 use WP_Post;
@@ -219,6 +220,21 @@ class AdminSubscriptionPostType {
 				$source_id          = $subscription->get_source_id();
 				$source_description = $subscription->get_source_description();
 
+				$text = sprintf(
+					'<strong>#%s</strong>',
+					esc_html( strval( $post_id ) )
+				);
+
+				$link = get_edit_post_link( $post_id );
+
+				if ( null !== $link ) {
+					$text = sprintf(
+						'<a href="%s" class="row-title">%s</a>',
+						esc_url( $link ),
+						$text
+					);
+				}
+
 				$source_id_text = '#' . strval( $source_id );
 
 				$source_link = $subscription->get_source_link();
@@ -235,11 +251,7 @@ class AdminSubscriptionPostType {
 					sprintf(
 						/* translators: 1: Subscription edit post link with post ID, 2: Subscription source description, 3: Subscription source ID text */
 						__( '%1$s for %2$s %3$s', 'pronamic_ideal' ),
-						sprintf(
-							'<a href="%s" class="row-title"><strong>#%s</strong></a>',
-							esc_url( get_edit_post_link( $post_id ) ),
-							esc_html( $post_id )
-						),
+						$text,
 						$source_description,
 						$source_id_text
 					),
@@ -256,15 +268,17 @@ class AdminSubscriptionPostType {
 			case 'pronamic_subscription_gateway':
 				$payment = get_pronamic_payment_by_meta( '_pronamic_payment_subscription_id', $post_id );
 
+				$config_id = null;
+
 				if ( $payment ) {
-					$config_id = get_post_meta( $payment->get_id(), '_pronamic_payment_config_id', true );
+					$payment_id = $payment->get_id();
+
+					if ( null !== $payment_id ) {
+						$config_id = get_post_meta( $payment_id, '_pronamic_payment_config_id', true );
+					}
 				}
 
-				if ( isset( $config_id ) && ! empty( $config_id ) ) {
-					echo esc_html( get_the_title( $config_id ) );
-				} else {
-					echo '—';
-				}
+				echo empty( $config_id ) ? '—' : esc_html( get_the_title( $config_id ) );
 
 				break;
 			case 'pronamic_subscription_description':
@@ -276,9 +290,19 @@ class AdminSubscriptionPostType {
 
 				break;
 			case 'pronamic_subscription_recurring':
-				echo esc_html( \Pronamic\WordPress\Pay\Util::format_interval( $subscription->get_interval(), $subscription->get_interval_period() ) );
+				$interval        = $subscription->get_interval();
+				$interval_period = $subscription->get_interval_period();
+				$frequency       = $subscription->get_frequency();
+
+				if ( null !== $interval && null !== $interval_period ) {
+					echo esc_html( strval( Util::format_interval( $interval, $interval_period ) ) );
+				}
+
 				echo '<br />';
-				echo esc_html( \Pronamic\WordPress\Pay\Util::format_frequency( $subscription->get_frequency() ) );
+
+				if ( null !== $frequency ) {
+					echo esc_html( strval( Util::format_frequency( $frequency ) ) );
+				}
 
 				break;
 			case 'pronamic_subscription_date':

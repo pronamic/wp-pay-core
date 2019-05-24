@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
+use WP_Query;
+
 /**
  * WordPress admin payment bulk actions
  *
@@ -184,12 +186,20 @@ class AdminPaymentBulkActions {
 			if ( '' !== $unsupported ) {
 				$gateways = explode( ',', $unsupported );
 
-				foreach ( $gateways as $index => $config_id ) {
-					$gateways[ $index ] = get_the_title( $config_id );
-				}
+				$query = new WP_Query( array(
+					'post_type'              => 'pronamic_gateway',
+					'post__in'               => $gateways,
+					'nopaging'               => true,
+					'ignore_sticky_posts'    => true,
+					'no_found_rows'          => true,
+					'update_post_meta_cache' => false,
+					'update_post_term_cache' => false,
+				) );
+
+				$titles = wp_list_pluck( $query->posts, 'post_title' );
 
 				/* translators: %s: gateways lists */
-				$message = sprintf( __( 'Requesting the current payment status is unsupported by %s.', 'pronamic_ideal' ), implode( ', ', $gateways ) );
+				$message = sprintf( __( 'Requesting the current payment status is unsupported by %s.', 'pronamic_ideal' ), implode( ', ', $titles ) );
 
 				printf(
 					'<div class="notice notice-error"><p>%s</p></div>',

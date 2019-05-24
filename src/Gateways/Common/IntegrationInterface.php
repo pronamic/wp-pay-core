@@ -46,7 +46,7 @@ interface IntegrationInterface {
 	/**
 	 * Get settings class.
 	 *
-	 * @return string
+	 * @return null|string|array
 	 */
 	public function get_settings_class();
 }

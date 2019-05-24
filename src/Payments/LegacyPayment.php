@@ -38,16 +38,5 @@ use Pronamic\WordPress\Pay\Customer;
  * @property int|null $user_id
  */
 abstract class LegacyPayment extends LegacyPaymentInfo {
-	/**
-	 * Get the redirect URL for this payment.
-	 *
-	 * @deprecated 4.1.2 Use get_return_redirect_url()
-	 *
-	 * @return string
-	 */
-	public function get_redirect_url() {
-		_deprecated_function( __FUNCTION__, '4.1.2', 'get_return_redirect_url()' );
 
-		return $this->get_return_redirect_url();
-	}
 }
