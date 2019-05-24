@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
+use Exception;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Pay\Core\Statuses;
@@ -131,6 +132,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * Complement payment post data.
 	 *
 	 * @link https://github.com/WordPress/WordPress/blob/5.0.3/wp-includes/post.php#L3515-L3523
+	 * @link https://developer.wordpress.org/reference/functions/wp_json_encode/
 	 *
 	 * @param array $data    An array of slashed post data.
 	 * @param array $postarr An array of sanitized, but otherwise unmodified post data.
@@ -156,7 +158,13 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			}
 
 			// Data.
-			$data['post_content']   = wp_slash( wp_json_encode( $this->payment->get_json() ) );
+			$json_string = wp_json_encode( $this->payment->get_json() ) ;
+
+			if ( false === $json_string ) {
+				throw new Exception( 'Error inserting payment post data as JSON.' );
+			}
+
+			$data['post_content']   = wp_slash( $json_string );
 			$data['post_mime_type'] = 'application/json';
 		}
 
@@ -299,10 +307,16 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @param Payment $payment The payment to read from this data store.
 	 */
 	public function read( Payment $payment ) {
-		$payment->post  = get_post( $payment->get_id() );
-		$payment->title = get_the_title( $payment->get_id() );
+		$id = $payment->get_id();
+
+		if ( empty( $id ) ) {
+			return;
+		}
+
+		$payment->post  = get_post( $id );
+		$payment->title = get_the_title( $id );
 		$payment->date  = new DateTime(
-			get_post_field( 'post_date_gmt', $payment->get_id(), 'raw' ),
+			get_post_field( 'post_date_gmt', $id, 'raw' ),
 			new DateTimeZone( 'UTC' )
 		);
 
@@ -324,7 +338,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		}
 
 		if ( null === $customer->get_user_id() ) {
-			$post_author = get_post_field( 'post_author', $payment->get_id(), 'raw' );
+			$post_author = get_post_field( 'post_author', $id, 'raw' );
 
 			$customer->set_user_id( $post_author );
 		}

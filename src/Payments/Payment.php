@@ -202,7 +202,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Google Analytics e-commerce tracked.
 	 *
-	 * @var bool
+	 * @var bool|null
 	 */
 	public $ga_tracked;
 
@@ -448,16 +448,16 @@ class Payment extends LegacyPayment {
 	/**
 	 * Is tracked in Google Analytics?
 	 *
-	 * @return bool
+	 * @return bool|null
 	 */
 	public function get_ga_tracked() {
-		return (bool) $this->ga_tracked;
+		return $this->ga_tracked;
 	}
 
 	/**
 	 * Set if payment is tracked in Google Analytics.
 	 *
-	 * @param bool $tracked Tracked in Google Analytics.
+	 * @param bool|null $tracked Tracked in Google Analytics.
 	 */
 	public function set_ga_tracked( $tracked ) {
 		$this->ga_tracked = $tracked;

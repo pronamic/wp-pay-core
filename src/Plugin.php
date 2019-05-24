@@ -474,6 +474,8 @@ class Plugin {
 	/**
 	 * Get number payments.
 	 *
+	 * @link https://developer.wordpress.org/reference/functions/wp_count_posts/
+	 *
 	 * @return int|false
 	 */
 	public static function get_number_payments() {
@@ -481,7 +483,7 @@ class Plugin {
 
 		$count = wp_count_posts( 'pronamic_payment' );
 
-		if ( isset( $count, $count->payment_completed ) ) {
+		if ( isset( $count->payment_completed ) ) {
 			$number = intval( $count->payment_completed );
 		}
 
@@ -489,7 +491,10 @@ class Plugin {
 	}
 
 	/**
-	 * Setup, creates or updates database tables. Will only run when version changes.
+	 * Plugins loaded.
+	 *
+	 * @link https://developer.wordpress.org/reference/hooks/plugins_loaded/
+	 * @link https://developer.wordpress.org/reference/functions/load_plugin_textdomain/
 	 */
 	public function plugins_loaded() {
 		// Load plugin text domain.
@@ -967,8 +972,10 @@ class Plugin {
 		}
 
 		// Mode.
-		if ( null === $payment->get_mode() ) {
-			$mode = get_post_meta( $payment->get_config_id(), '_pronamic_gateway_mode', true );
+		$config_id = $payment->get_config_id();
+
+		if ( null === $payment->get_mode() && null !== $config_id ) {
+			$mode = get_post_meta( $config_id, '_pronamic_gateway_mode', true );
 
 			$payment->set_mode( $mode );
 		}

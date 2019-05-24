@@ -39,7 +39,7 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$id = $payment->get_id();
 
 		if ( empty( $id ) ) {
-			return;
+			return null;
 		}
 
 		$data = array(
@@ -54,7 +54,7 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 
 		if ( empty( $data ) ) {
 			// Bail out if there is no name data.
-			return;
+			return null;
 		}
 
 		$name = new ContactName();

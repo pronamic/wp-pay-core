@@ -203,6 +203,10 @@ class LicenseManager {
 			)
 		);
 
+		if ( $response instanceof WP_Error ) {
+			return;
+		}
+
 		$data = json_decode( wp_remote_retrieve_body( $response ) );
 
 		if ( $data ) {

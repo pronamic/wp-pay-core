@@ -153,15 +153,15 @@ class PaymentsModule {
 		$note = sprintf(
 			/* translators: 1: old status, 2: new status */
 			__( 'Payment status changed from "%1$s" to "%2$s".', 'pronamic_ideal' ),
-			esc_html( false === $old_label ? $old_status : $old_label ),
-			esc_html( false === $new_label ? $new_status : $new_label )
+			esc_html( empty( $old_label ) ? $old_status : $old_label ),
+			esc_html( empty( $new_label ) ? $new_status : $new_label )
 		);
 
 		if ( null === $old_status ) {
 			$note = sprintf(
 				/* translators: 1: new status */
 				__( 'Payment created with status "%1$s".', 'pronamic_ideal' ),
-				esc_html( false === $new_label ? $new_status : $new_label )
+				esc_html( empty( $new_label ) ? $new_status : $new_label )
 			);
 		}
 

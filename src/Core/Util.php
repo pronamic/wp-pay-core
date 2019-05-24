@@ -40,7 +40,7 @@ class Util {
 	public static function remote_get_body( $url, $required_response_code = 200, array $args = array() ) {
 		$result = wp_remote_request( $url, $args );
 
-		if ( is_wp_error( $result ) ) {
+		if ( $result instanceof WP_Error ) {
 			return $result;
 		}
 

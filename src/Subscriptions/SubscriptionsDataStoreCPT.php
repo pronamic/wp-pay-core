@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DatePeriod;
+use Exception;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Money\TaxedMoney;
@@ -161,7 +162,13 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 			}
 
 			// Data.
-			$data['post_content']   = wp_slash( wp_json_encode( $this->subscription->get_json() ) );
+			$json_string = wp_json_encode( $this->subscription->get_json() ) ;
+
+			if ( false === $json_string ) {
+				throw new Exception( 'Error inserting subscription post data as JSON.' );
+			}
+
+			$data['post_content']   = wp_slash( $json_string );
 			$data['post_mime_type'] = 'application/json';
 		}
 
@@ -316,10 +323,16 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 * @return void
 	 */
 	public function read( $subscription ) {
-		$subscription->post    = get_post( $subscription->get_id() );
-		$subscription->title   = get_the_title( $subscription->get_id() );
-		$subscription->date    = new DateTime( get_post_field( 'post_date_gmt', $subscription->get_id(), 'raw' ), new DateTimeZone( 'UTC' ) );
-		$subscription->user_id = get_post_field( 'post_author', $subscription->get_id(), 'raw' );
+		$id = $subscription->get_id();
+
+		if ( empty( $id ) ) {
+			return;
+		}
+
+		$subscription->post    = get_post( $id );
+		$subscription->title   = get_the_title( $id );
+		$subscription->date    = new DateTime( get_post_field( 'post_date_gmt', $id, 'raw' ), new DateTimeZone( 'UTC' ) );
+		$subscription->user_id = get_post_field( 'post_author', $id, 'raw' );
 
 		$content = get_post_field( 'post_content', $subscription->post, 'raw' );
 

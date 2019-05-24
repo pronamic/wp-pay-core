@@ -218,6 +218,8 @@ class AdminPaymentPostType {
 
 	/**
 	 * Maybe display anonymized notice.
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/get_current_screen/
 	 */
 	public function maybe_display_anonymized_notice() {
 		// Current user.
@@ -228,7 +230,7 @@ class AdminPaymentPostType {
 		// Screen.
 		$screen = get_current_screen();
 
-		if ( ! ( 'post' === $screen->base && 'pronamic_payment' === $screen->post_type ) ) {
+		if ( null === $screen || 'post' !== $screen->base || 'pronamic_payment' !== $screen->post_type ) {
 			return;
 		}
 
@@ -365,8 +367,12 @@ class AdminPaymentPostType {
 	/**
 	 * Custom columns.
 	 *
+	 * @link https://codex.wordpress.org/Plugin_API/Action_Reference/manage_$post_type_posts_custom_column
+	 * @link https://developer.wordpress.org/reference/functions/get_post_status/
+	 * @link https://developer.wordpress.org/reference/functions/get_post_status_object/
+	 *
 	 * @param string $column  Column.
-	 * @param string $post_id Post ID.
+	 * @param int    $post_id Post ID.
 	 */
 	public function custom_columns( $column, $post_id ) {
 		$payment = get_pronamic_payment( $post_id );
@@ -378,6 +384,10 @@ class AdminPaymentPostType {
 		switch ( $column ) {
 			case 'pronamic_payment_status':
 				$post_status = get_post_status( $post_id );
+
+				if ( false === $post_status ) {
+					break;
+				}
 
 				$label = __( 'Unknown', 'pronamic_ideal' );
 
