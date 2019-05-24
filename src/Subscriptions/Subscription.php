@@ -286,6 +286,10 @@ class Subscription extends LegacySubscription {
 	 * @return string|false
 	 */
 	public function get_meta( $key ) {
+		if ( null === $this->id ) {
+			return false;
+		}
+
 		$key = '_pronamic_subscription_' . $key;
 
 		return get_post_meta( $this->id, $key, true );
@@ -300,6 +304,10 @@ class Subscription extends LegacySubscription {
 	 * @return bool True on successful update, false on failure.
 	 */
 	public function set_meta( $key, $value = false ) {
+		if ( null === $this->id ) {
+			return false;
+		}
+
 		$key = '_pronamic_subscription_' . $key;
 
 		if ( $value instanceof \DateTime ) {
@@ -536,8 +544,8 @@ class Subscription extends LegacySubscription {
 				$value = date_i18n( __( 'l jS \o\f F Y, h:ia', 'pronamic_ideal' ), $value->getTimestamp() );
 			}
 
-			$note .= sprintf( '<dt>%s</dt>', esc_html( $key ) );
-			$note .= sprintf( '<dd>%s</dd>', esc_html( $value ) );
+			$note .= sprintf( '<dt>%s</dt>', esc_html( strval( $key ) ) );
+			$note .= sprintf( '<dd>%s</dd>', esc_html( strval( $value ) ) );
 		}
 
 		$note .= '</dl>';

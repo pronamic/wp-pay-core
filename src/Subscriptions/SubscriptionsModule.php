@@ -121,96 +121,70 @@ class SubscriptionsModule {
 			exit;
 		}
 
-		// Check if we should redirect.
-		$should_redirect = true;
-
+		// Handle action.
 		switch ( $action ) {
 			case 'cancel':
-				if ( Statuses::CANCELLED !== $subscription->get_status() ) {
-					$subscription->set_status( Statuses::CANCELLED );
-
-					$subscription->save();
-				}
-
-				wp_safe_redirect( home_url() );
-
-				break;
+				return $this->handle_subscription_cancel( $subscription );
 			case 'renew':
-				$gateway = Plugin::get_gateway( $subscription->config_id );
+				return $this->handle_subscription_renew( $subscription );
+		}
+	}
 
-				$html = __( 'The subscription can not be renewed.', 'pronamic_ideal' );
+	/**
+	 * Handle cancel subscription action request.
+	 *
+	 * @param Subscription $subscription Subscription to cancel.
+	 */
+	private function handle_subscription_cancel( Subscription $subscription ) {
+		if ( Statuses::CANCELLED !== $subscription->get_status() ) {
+			$subscription->set_status( Statuses::CANCELLED );
 
-				if ( $gateway && 'POST' === Server::get( 'REQUEST_METHOD' ) ) {
-					$payment = $this->start_recurring( $subscription, $gateway, false );
+			$subscription->save();
+		}
 
-					$error = $gateway->get_error();
+		wp_safe_redirect( home_url() );
 
-					if ( $error instanceof WP_Error ) {
-						Plugin::render_errors( $error );
+		exit;
+	}
 
-						exit;
-					}
+	/**
+	 * Handle renew subscription action request.
+	 *
+	 * @param Subscription $subscription Subscription to renew.
+	 */
+	private function handle_subscription_renew( Subscription $subscription ) {
+		$gateway = Plugin::get_gateway( $subscription->config_id );
 
-					if ( $payment ) {
-						$gateway->redirect( $payment );
-					}
-				} elseif ( $gateway ) {
-					// Payment method input HTML.
-					$gateway->set_payment_method( $subscription->payment_method );
+		if ( empty( $gateway ) ) {
+			require dirname( __FILE__ ) . '/../../views/subscription-renew-failed.php';
 
-					// Format subscription length.
-					$length = $subscription->get_interval() . ' ';
+			exit;
+		}
 
-					switch ( $subscription->get_interval_period() ) {
-						case 'D':
-							$length .= _n( 'day', 'days', $subscription->get_interval(), 'pronamic_ideal' );
+		if ( 'POST' === Server::get( 'REQUEST_METHOD' ) ) {
+			$payment = $this->start_recurring( $subscription, $gateway, false );
 
-							break;
-						case 'W':
-							$length .= _n( 'week', 'weeks', $subscription->get_interval(), 'pronamic_ideal' );
+			$error = $gateway->get_error();
 
-							break;
-						case 'M':
-							$length .= _n( 'month', 'months', $subscription->get_interval(), 'pronamic_ideal' );
-
-							break;
-						case 'Y':
-							$length .= _n( 'year', 'years', $subscription->get_interval(), 'pronamic_ideal' );
-
-							break;
-					}
-
-					$form_inner = sprintf(
-						'<h1>%1$s</h1> <p>%2$s</p> <hr /> <p><strong>%3$s:</strong> %4$s</p> <p><strong>%5$s:</strong> %6$s</p>',
-						esc_html__( 'Subscription Renewal', 'pronamic_ideal' ),
-						sprintf(
-							/* translators: %s: expiry date */
-							__( 'The subscription epxires at %s.', 'pronamic_ideal' ),
-							$subscription->get_expiry_date()->format_i18n()
-						),
-						esc_html__( 'Subscription length', 'pronamic_ideal' ),
-						esc_html( $length ),
-						esc_html__( 'Amount', 'pronamic_ideal' ),
-						esc_html( $subscription->get_total_amount()->format_i18n() )
-					);
-
-					$form_inner .= $gateway->get_input_html();
-
-					$form_inner .= sprintf(
-						'<p><input class="pronamic-pay-btn" type="submit" name="pay" value="%s" /></p>',
-						__( 'Pay', 'pronamic_ideal' )
-					);
-
-					$html = sprintf(
-						'<form id="pronamic_ideal_form" name="pronamic_ideal_form" method="post">%s</form>',
-						$form_inner
-					);
-				}
-
-				require Plugin::$dirname . '/views/subscription-renew.php';
+			if ( $error instanceof WP_Error ) {
+				Plugin::render_errors( $error );
 
 				exit;
+			}
+
+			if ( $payment ) {
+				$gateway->redirect( $payment );
+			}
+
+			return;
 		}
+
+		// Payment method input HTML.
+		$gateway->set_payment_method( $subscription->payment_method );
+
+		require dirname( __FILE__ ) . '/../../views/subscription-renew.php';
+
+		exit;
 	}
 
 	/**

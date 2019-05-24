@@ -116,13 +116,11 @@ class AdminTour {
 
 			include $path;
 
-			$content = ob_get_contents();
+			$content = ob_get_clean();
 
 			if ( false === $content ) {
 				throw new Exception( 'Output buffering is not active.' );
 			}
-
-			ob_end_clean();
 		}
 
 		return $content;

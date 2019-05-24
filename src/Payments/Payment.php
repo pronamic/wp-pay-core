@@ -33,71 +33,11 @@ use WP_Post;
  */
 class Payment extends LegacyPayment {
 	/**
-	 * The payment post object.
-	 *
-	 * @var WP_Post|array
-	 */
-	public $post;
-
-	/**
-	 * The date of this payment.
-	 *
-	 * @var DateTime
-	 */
-	public $date;
-
-	/**
 	 * The subscription.
 	 *
 	 * @var Subscription|null
 	 */
 	public $subscription;
-
-	/**
-	 * The unique ID of this payment.
-	 *
-	 * @var int
-	 */
-	protected $id;
-
-	/**
-	 * The title of this payment.
-	 *
-	 * @var string
-	 */
-	public $title;
-
-	/**
-	 * The configuration ID.
-	 *
-	 * @var int|null
-	 */
-	public $config_id;
-
-	/**
-	 * The key of this payment, used in URL's for security.
-	 *
-	 * @var string|null
-	 */
-	public $key;
-
-	/**
-	 * Identifier for the source which started this payment.
-	 * For example: 'woocommerce', 'gravityforms', 'easydigitaldownloads', etc.
-	 *
-	 * @var string|null
-	 */
-	public $source;
-
-	/**
-	 * Unique ID at the source which started this payment, for example:
-	 * - WooCommerce order ID.
-	 * - Easy Digital Downloads payment ID.
-	 * - Gravity Forms entry ID.
-	 *
-	 * @var string|int|null
-	 */
-	public $source_id;
 
 	/**
 	 * The purchase ID.
@@ -464,42 +404,6 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
-	 * Get the meta value of this specified meta key.
-	 *
-	 * @param string $key Meta key.
-	 * @return mixed
-	 */
-	public function get_meta( $key ) {
-		$key = '_pronamic_payment_' . $key;
-
-		return get_post_meta( $this->id, $key, true );
-	}
-
-	/**
-	 * Set meta data.
-	 *
-	 * @param  string $key   A meta key.
-	 * @param  mixed  $value A meta value.
-	 *
-	 * @return boolean        True on successful update, false on failure.
-	 */
-	public function set_meta( $key, $value ) {
-		$key = '_pronamic_payment_' . $key;
-
-		if ( $value instanceof \DateTime ) {
-			$value = $value->format( 'Y-m-d H:i:s' );
-		}
-
-		if ( empty( $value ) ) {
-			return delete_post_meta( $this->id, $key );
-		}
-
-		$result = update_post_meta( $this->id, $key, $value );
-
-		return ( false !== $result );
-	}
-
-	/**
 	 * Get the pay redirect URL.
 	 *
 	 * @return string
@@ -637,10 +541,24 @@ class Payment extends LegacyPayment {
 	public function get_provider_link() {
 		$url = null;
 
-		$config_id  = get_post_meta( $this->id, '_pronamic_payment_config_id', true );
-		$gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
-
 		$url = apply_filters( 'pronamic_payment_provider_url', $url, $this );
+
+		if ( null === $this->id ) {
+			return $url;
+		}
+
+		$config_id = get_post_meta( $this->id, '_pronamic_payment_config_id', true );
+
+		if ( empty( $config_id ) ) {
+			return $url;
+		}
+
+		$gateway_id = get_post_meta( intval( $config_id ), '_pronamic_gateway_id', true );
+
+		if ( empty( $gateway_id ) ) {
+			return $url;
+		}
+
 		$url = apply_filters( 'pronamic_payment_provider_url_' . $gateway_id, $url, $this );
 
 		return $url;

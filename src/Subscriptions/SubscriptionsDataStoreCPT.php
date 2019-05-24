@@ -318,6 +318,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L78-L111
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L81-L136
+	 * @link https://developer.wordpress.org/reference/functions/get_post_field/
 	 *
 	 * @param Subscription $subscription The subscription to read the additional data for.
 	 * @return void
@@ -334,7 +335,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 		$subscription->date    = new DateTime( get_post_field( 'post_date_gmt', $id, 'raw' ), new DateTimeZone( 'UTC' ) );
 		$subscription->user_id = get_post_field( 'post_author', $id, 'raw' );
 
-		$content = get_post_field( 'post_content', $subscription->post, 'raw' );
+		$content = get_post_field( 'post_content', $id, 'raw' );
 
 		$json = json_decode( $content );
 
@@ -515,7 +516,12 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 		$total_amount = $subscription->get_total_amount();
 
 		$total_amount->set_value( $this->get_meta( $id, 'amount' ) );
-		$total_amount->set_currency( $this->get_meta_string( $id, 'currency' ) );
+
+		$currency = $this->get_meta_string( $id, 'currency' );
+
+		if ( null !== $currency ) {
+			$total_amount->set_currency( $currency );
+		}
 
 		// First Payment.
 		$first_payment = $subscription->get_first_payment();

@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Forms;
 
+use Exception;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
 
@@ -130,7 +131,7 @@ class FormsModule {
 	 */
 	public function get_form_output( $args ) {
 		if ( ! is_array( $args ) ) {
-			return;
+			return '';
 		}
 
 		// Amount(s).
@@ -166,6 +167,10 @@ class FormsModule {
 
 		$output = ob_get_clean();
 
+		if ( false === $output ) {
+			throw new Exception( 'Output buffering is not active.' );
+		}
+
 		return $output;
 	}
 
@@ -177,12 +182,24 @@ class FormsModule {
 	 * @return string
 	 */
 	public function source_text( $text, Payment $payment ) {
-		$text = __( 'Payment Form', 'pronamic_ideal' ) . '<br />';
+		$text = __( 'Payment Form', 'pronamic_ideal' );
+
+		if ( empty( $payment->source_id ) ) {
+			return $text;
+		}
+
+		$link = get_edit_post_link( intval( $payment->source_id ) );
+
+		if ( null === $Link ) {
+			return $text;
+		}
+
+		$text .= '<br />';
 
 		$text .= sprintf(
 			'<a href="%s">%s</a>',
-			get_edit_post_link( $payment->source_id ),
-			strval( $payment->source_id )
+			esc_url( $link ),
+			esc_html( strval( $payment->source_id ) )
 		);
 
 		return $text;
@@ -204,12 +221,24 @@ class FormsModule {
 	/**
 	 * Source URL.
 	 *
+	 * @link https://developer.wordpress.org/reference/functions/get_edit_post_link/
+	 *
 	 * @param string  $url     Source URL.
 	 * @param Payment $payment Payment.
 	 *
 	 * @return string
 	 */
 	public function source_url( $url, Payment $payment ) {
-		return get_edit_post_link( $payment->source_id );
+		if ( empty( $payment->source_id ) ) {
+			return $url;
+		}
+
+		$link = get_edit_post_link( $payment->source_id );
+
+		if ( null === $link ) {
+			return $url;
+		}
+
+		return $link;
 	}
 }

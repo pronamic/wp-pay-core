@@ -34,7 +34,7 @@ abstract class PaymentInfo {
 	/**
 	 * The post object.
 	 *
-	 * @var WP_Post|null
+	 * @var WP_Post|array|null
 	 */
 	public $post;
 
@@ -577,6 +577,10 @@ abstract class PaymentInfo {
 	 * @return mixed
 	 */
 	public function get_meta( $key ) {
+		if ( null === $this->id ) {
+			return null;
+		}
+
 		$key = '_pronamic_payment_' . $key;
 
 		return get_post_meta( $this->id, $key, true );
@@ -591,6 +595,10 @@ abstract class PaymentInfo {
 	 * @return bool True on successful update, false on failure.
 	 */
 	public function set_meta( $key, $value ) {
+		if ( null === $this->id ) {
+			return false;
+		}
+
 		$key = '_pronamic_payment_' . $key;
 
 		if ( $value instanceof \DateTime ) {

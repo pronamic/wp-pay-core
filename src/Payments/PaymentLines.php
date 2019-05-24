@@ -44,7 +44,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 	 *
 	 * @see IteratorAggregate::getIterator()
 	 *
-	 * @return ArrayIterator<int, PaymentLine>
+	 * @return ArrayIterator
 	 */
 	public function getIterator() {
 		return new ArrayIterator( $this->lines );

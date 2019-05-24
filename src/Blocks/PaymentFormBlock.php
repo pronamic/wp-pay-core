@@ -99,13 +99,11 @@ class PaymentFormBlock {
 		/* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */
 		echo pronamic_pay_plugin()->forms_module->get_form_output( $args );
 
-		$html = ob_get_contents();
+		$html = ob_get_clean();
 
 		if ( false === $html ) {
 			throw new Exception( 'Output buffering is not active.' );
 		}
-
-		ob_end_clean();
 
 		return $html;
 	}
@@ -119,12 +117,24 @@ class PaymentFormBlock {
 	 * @return string
 	 */
 	public function source_text( $text, Payment $payment ) {
-		$text = __( 'Payment Form Block', 'pronamic_ideal' ) . '<br />';
+		$text = __( 'Payment Form Block', 'pronamic_ideal' );
+
+		if ( empty( $payment->source_id ) ) {
+			return $text;
+		}
+
+		$link = get_edit_post_link( intval( $payment->source_id ) );
+
+		if ( null === $Link ) {
+			return $text;
+		}
+
+		$text .= '<br />';
 
 		$text .= sprintf(
 			'<a href="%s">%s</a>',
-			get_edit_post_link( $payment->source_id ),
-			strval( $payment->source_id )
+			esc_url( $link ),
+			esc_html( strval( $payment->source_id ) )
 		);
 
 		return $text;
@@ -153,6 +163,16 @@ class PaymentFormBlock {
 	 * @return string
 	 */
 	public function source_url( $url, Payment $payment ) {
-		return get_edit_post_link( $payment->source_id );
+		if ( empty( $payment->source_id ) ) {
+			return $url;
+		}
+
+		$link = get_edit_post_link( $payment->source_id );
+
+		if ( null === $link ) {
+			return $url;
+		}
+
+		return $link;
 	}
 }
