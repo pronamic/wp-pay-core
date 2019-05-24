@@ -125,7 +125,7 @@ class PaymentFormBlock {
 
 		$link = get_edit_post_link( intval( $payment->source_id ) );
 
-		if ( null === $Link ) {
+		if ( null === $link ) {
 			return $text;
 		}
 
@@ -167,7 +167,7 @@ class PaymentFormBlock {
 			return $url;
 		}
 
-		$link = get_edit_post_link( $payment->source_id );
+		$link = get_edit_post_link( intval( $payment->source_id ) );
 
 		if ( null === $link ) {
 			return $url;

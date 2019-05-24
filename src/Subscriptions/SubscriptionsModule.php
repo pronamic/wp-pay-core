@@ -562,10 +562,6 @@ class SubscriptionsModule {
 		// Check if the payment is connected to a subscription.
 		$subscription = $payment->get_subscription();
 
-		if ( is_bool( $subscription ) ) {
-			return;
-		}
-
 		if ( empty( $subscription ) || null === $subscription->get_id() ) {
 			// Payment not connected to a subscription, nothing to do.
 			return;
@@ -616,6 +612,33 @@ class SubscriptionsModule {
 	}
 
 	/**
+	 * Get subscription status update note.
+	 *
+	 * @param string|null $old_status   Old meta status.
+	 * @param string      $new_status   New meta status.
+	 * @return string
+	 */
+	private function get_subscription_status_update_note( $old_status, $new_status ) {
+		$old_label = $this->plugin->subscriptions_data_store->get_meta_status_label( $old_status );
+		$new_label = $this->plugin->subscriptions_data_store->get_meta_status_label( $new_status );
+
+		if ( null === $old_status ) {
+			return sprintf(
+				/* translators: 1: new status */
+				__( 'Subscription created with status "%1$s".', 'pronamic_ideal' ),
+				esc_html( empty( $new_label ) ? $new_status : $new_label )
+			);
+		}
+
+		return sprintf(
+			/* translators: 1: old status, 2: new status */
+			__( 'Subscription status changed from "%1$s" to "%2$s".', 'pronamic_ideal' ),
+			esc_html( empty( $old_label ) ? $old_status : $old_label ),
+			esc_html( empty( $new_label ) ? $new_status : $new_label )
+		);
+	}
+
+	/**
 	 * Subscription status update.
 	 *
 	 * @param Subscription $subscription The status updated subscription.
@@ -626,20 +649,7 @@ class SubscriptionsModule {
 	 * @return void
 	 */
 	public function log_subscription_status_update( $subscription, $can_redirect, $old_status, $new_status ) {
-		$note = sprintf(
-			/* translators: 1: old status, 2: new status */
-			__( 'Subscription status changed from "%1$s" to "%2$s".', 'pronamic_ideal' ),
-			esc_html( $this->plugin->subscriptions_data_store->get_meta_status_label( $old_status ) ),
-			esc_html( $this->plugin->subscriptions_data_store->get_meta_status_label( $new_status ) )
-		);
-
-		if ( null === $old_status ) {
-			$note = sprintf(
-				/* translators: 1: new status */
-				__( 'Subscription created with status "%1$s".', 'pronamic_ideal' ),
-				esc_html( $this->plugin->subscriptions_data_store->get_meta_status_label( $new_status ) )
-			);
-		}
+		$note = $this->get_subscription_status_update_note( $old_status, $new_status );
 
 		$subscription->add_note( $note );
 	}

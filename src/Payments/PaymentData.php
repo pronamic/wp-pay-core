@@ -220,7 +220,13 @@ abstract class PaymentData extends AbstractPaymentData {
 			return null;
 		}
 
-		$subscription = get_pronamic_subscription_by_meta( '_pronamic_subscription_source_id', $this->get_subscription_source_id() );
+		$source_id = $this->get_subscription_source_id();
+
+		if ( null === $source_id ) {
+			return null;
+		}
+
+		$subscription = get_pronamic_subscription_by_meta( '_pronamic_subscription_source_id', strval( $source_id ) );
 
 		if ( empty( $subscription ) ) {
 			return null;

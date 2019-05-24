@@ -350,7 +350,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 * Get meta status label.
 	 *
 	 * @param string|null $meta_status The subscription meta status to get the status label for.
-	 * @return string|boolean
+	 * @return string|false
 	 */
 	public function get_meta_status_label( $meta_status ) {
 		$post_status = $this->get_post_status_from_meta_status( $meta_status );
