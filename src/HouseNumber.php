@@ -167,4 +167,15 @@ class HouseNumber {
 	public function __toString() {
 		return strval( $this->value );
 	}
+
+	/**
+	 * Anonymize.
+	 *
+	 * @return void
+	 */
+	public function anonymize() {
+		$this->set_value( PrivacyManager::anonymize_data( 'text', $this->get_value() ) );
+		$this->set_base( PrivacyManager::anonymize_data( 'text', $this->get_base() ) );
+		$this->set_addition( PrivacyManager::anonymize_data( 'text', $this->get_addition() ) );
+	}
 }

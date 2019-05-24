@@ -137,6 +137,33 @@ class PaymentsModule {
 	}
 
 	/**
+	 * Get payment status update note.
+	 *
+	 * @param string|null $old_status   Old meta status.
+	 * @param string      $new_status   New meta status.
+	 * @return string
+	 */
+	private function get_payment_status_update_note( $old_status, $new_status ) {
+		$old_label = $this->plugin->payments_data_store->get_meta_status_label( $old_status );
+		$new_label = $this->plugin->payments_data_store->get_meta_status_label( $new_status );
+
+		if ( null === $old_status ) {
+			return sprintf(
+				/* translators: 1: new status */
+				__( 'Payment created with status "%1$s".', 'pronamic_ideal' ),
+				esc_html( empty( $new_label ) ? $new_status : $new_label )
+			);
+		}
+
+		return sprintf(
+			/* translators: 1: old status, 2: new status */
+			__( 'Payment status changed from "%1$s" to "%2$s".', 'pronamic_ideal' ),
+			esc_html( empty( $old_label ) ? $old_status : $old_label ),
+			esc_html( empty( $new_label ) ? $new_status : $new_label )
+		);
+	}
+
+	/**
 	 * Payment status update.
 	 *
 	 * @param Payment     $payment      The status updated payment.
@@ -147,23 +174,7 @@ class PaymentsModule {
 	 * @return void
 	 */
 	public function log_payment_status_update( $payment, $can_redirect, $old_status, $new_status ) {
-		$old_label = $this->plugin->payments_data_store->get_meta_status_label( $old_status );
-		$new_label = $this->plugin->payments_data_store->get_meta_status_label( $new_status );
-
-		$note = sprintf(
-			/* translators: 1: old status, 2: new status */
-			__( 'Payment status changed from "%1$s" to "%2$s".', 'pronamic_ideal' ),
-			esc_html( empty( $old_label ) ? $old_status : $old_label ),
-			esc_html( empty( $new_label ) ? $new_status : $new_label )
-		);
-
-		if ( null === $old_status ) {
-			$note = sprintf(
-				/* translators: 1: new status */
-				__( 'Payment created with status "%1$s".', 'pronamic_ideal' ),
-				esc_html( empty( $new_label ) ? $new_status : $new_label )
-			);
-		}
+		$note = $this->get_payment_status_update_note( $old_status, $new_status );
 
 		$payment->add_note( $note );
 	}

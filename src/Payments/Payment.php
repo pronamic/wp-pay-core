@@ -782,13 +782,17 @@ class Payment extends LegacyPayment {
 	public function get_json() {
 		$object = PaymentInfoHelper::to_json( $this );
 
+		$properties = (array) $object;
+
 		if ( null !== $this->get_status() ) {
-			$object->status = $this->get_status();
+			$properties['status'] = $this->get_status();
 		}
 
 		if ( null !== $this->get_ga_tracked() ) {
-			$object->ga_tracked = $this->get_ga_tracked();
+			$properties['ga_tracked'] = $this->get_ga_tracked();
 		}
+
+		$object = (object) $properties;
 
 		return $object;
 	}

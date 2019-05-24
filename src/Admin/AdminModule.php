@@ -666,7 +666,8 @@ class AdminModule {
 		$counts = wp_count_posts( 'pronamic_payment' );
 
 		$badge = '';
-		if ( isset( $counts, $counts->payment_pending ) && $counts->payment_pending > 0 ) {
+
+		if ( isset( $counts->payment_pending ) && $counts->payment_pending > 0 ) {
 			$badge = sprintf(
 				' <span class="awaiting-mod update-plugins count-%s"><span class="processing-count">%s</span></span>',
 				$counts->payment_pending,

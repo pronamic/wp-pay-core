@@ -33,13 +33,15 @@ class MoneyJsonTransformer {
 			return null;
 		}
 
-		$object = (object) array();
-
-		$object->value = $money->get_value();
+		$properties = array(
+			'value' => $money->get_value(),
+		);
 
 		if ( null !== $money->get_currency()->get_alphabetic_code() ) {
-			$object->currency = $money->get_currency()->get_alphabetic_code();
+			$properties['currency'] = $money->get_currency()->get_alphabetic_code();
 		}
+
+		$object = (object) $properties;
 
 		return $object;
 	}

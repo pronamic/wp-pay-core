@@ -39,13 +39,17 @@ class TaxedMoneyJsonTransformer {
 			return null;
 		}
 
+		$properties = (array) $object;
+
 		if ( null !== $money->get_tax_value() ) {
-			$object->tax_value = $money->get_tax_value();
+			$properties['tax_value'] = $money->get_tax_value();
 		}
 
 		if ( null !== $money->get_tax_percentage() ) {
-			$object->tax_percentage = $money->get_tax_percentage();
+			$properties['tax_percentage'] = $money->get_tax_percentage();
 		}
+
+		$object = (object) $properties;
 
 		return $object;
 	}

@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Blocks;
 
+use Exception;
 use Pronamic\WordPress\Money\Parser;
 use Pronamic\WordPress\Pay\Forms\FormsSource;
 use Pronamic\WordPress\Pay\Payments\Payment;
@@ -99,6 +100,10 @@ class PaymentFormBlock {
 		echo pronamic_pay_plugin()->forms_module->get_form_output( $args );
 
 		$html = ob_get_contents();
+
+		if ( false === $html ) {
+			throw new Exception( 'Output buffering is not active.' );
+		}
 
 		ob_end_clean();
 

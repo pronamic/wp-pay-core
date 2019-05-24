@@ -549,7 +549,11 @@ class Address {
 		}
 
 		if ( isset( $json->house_number ) || isset( $json->house_number_base ) || isset( $json->house_number_addition ) ) {
-			$house_number = HouseNumber::from_json( $json->house_number );
+			$house_number = new HouseNumber();
+
+			if ( isset( $json->house_number ) ) {
+				$house_number->set_value( $json->house_number );
+			}
 
 			if ( isset( $json->house_number_base ) ) {
 				$house_number->set_base( $json->house_number_base );

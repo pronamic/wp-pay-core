@@ -181,4 +181,15 @@ class Region {
 
 		return implode( ' - ', $values );
 	}
+
+	/**
+	 * Anonymize.
+	 *
+	 * @return void
+	 */
+	public function anonymize() {
+		$this->set_value( PrivacyManager::anonymize_data( 'text', $this->get_value() ) );
+		$this->set_code( PrivacyManager::anonymize_data( 'text', $this->get_code() ) );
+		$this->set_name( PrivacyManager::anonymize_data( 'text', $this->get_name() ) );
+	}
 }

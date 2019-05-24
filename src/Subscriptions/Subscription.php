@@ -592,9 +592,13 @@ class Subscription extends LegacySubscription {
 	public function get_json() {
 		$object = PaymentInfoHelper::to_json( $this );
 
+		$properties = (array) $object;
+
 		if ( null !== $this->get_status() ) {
-			$object->status = $this->get_status();
+			$properties['status'] = $this->get_status();
 		}
+
+		$object = (object) $properties;
 
 		return $object;
 	}
