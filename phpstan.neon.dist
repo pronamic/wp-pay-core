@@ -6,3 +6,10 @@ parameters:
 		- src
 	dynamicConstantNames:
 		- SCRIPT_DEBUG
+	ignoreErrors:
+		-
+			message: '#Function shortcode_ui_register_for_shortcode not found\.#'
+			path: %currentWorkingDirectory%/src/Forms/FormShortcode.php
+		-
+			message: '#Function wp_add_dashboard_widget not found\.#'
+			path: %currentWorkingDirectory%/src/Admin/AdminDashboard.php
