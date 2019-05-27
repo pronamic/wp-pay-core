@@ -185,6 +185,12 @@ class AdminPaymentBulkActions {
 
 			if ( '' !== $unsupported ) {
 				$gateways = explode( ',', $unsupported );
+				$gateways = array_filter( $gateways );
+				$gateways = array_unique( $gateways );
+
+				if ( empty( $gateways ) ) {
+					return;
+				}
 
 				$query = new WP_Query(
 					array(
