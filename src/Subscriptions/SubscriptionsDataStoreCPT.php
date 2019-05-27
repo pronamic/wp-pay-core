@@ -139,6 +139,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 * @param array $data    An array of slashed post data.
 	 * @param array $postarr An array of sanitized, but otherwise unmodified post data.
 	 * @return array
+	 * @throws Exception When inserting subscription post data JSON string fails.
 	 */
 	public function insert_subscription_post_data( $data, $postarr ) {
 		$this->subscription = null;

@@ -137,6 +137,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @param array $data    An array of slashed post data.
 	 * @param array $postarr An array of sanitized, but otherwise unmodified post data.
 	 * @return array
+	 * @throws Exception When inserting payment post data JSON string fails.
 	 */
 	public function insert_payment_post_data( $data, $postarr ) {
 		$this->payment = null;

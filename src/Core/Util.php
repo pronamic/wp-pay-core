@@ -361,7 +361,7 @@ class Util {
 				 * addresses. The first one is the original client. It can't be
 				 * trusted for authenticity, but we don't need to for this purpose.
 				 */
-				$addresses = explode( ',', sanitize_text_field( stripslashes( $_SERVER[ $header ] ) ) );
+				$addresses = explode( ',', filter_var( wp_unslash( $_SERVER[ $header ] ) ) );
 
 				$addresses = array_slice( $addresses, 0, 1 );
 

@@ -332,6 +332,7 @@ class AdminModule {
 	 * @param array    $pages   Page.
 	 * @param int|null $parent Parent post ID.
 	 * @return void
+	 * @throws Exception When creating page fails.
 	 */
 	private function create_pages( $pages, $parent = null ) {
 		foreach ( $pages as $page ) {

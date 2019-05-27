@@ -112,10 +112,13 @@ class CustomerHelper {
 			$customer->set_language( $language );
 		}
 
-		// User Agent.
-		if ( null === $customer->get_user_agent() ) {
-			// User Agent (@link https://github.com/WordPress/WordPress/blob/4.9.4/wp-includes/comment.php#L1962-L1965).
-			$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( stripslashes( $_SERVER['HTTP_USER_AGENT'] ) ) : null; // WPCS: input var ok.
+		/**
+		 * User Agent.
+		 *
+		 * @link https://github.com/WordPress/WordPress/blob/4.9.4/wp-includes/comment.php#L1962-L1965
+		 */
+		if ( null === $customer->get_user_agent() && isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
+			$user_agent = filter_var( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) );
 
 			$customer->set_user_agent( $user_agent );
 		}
@@ -123,11 +126,9 @@ class CustomerHelper {
 		// User IP.
 		if ( null === $customer->get_ip_address() ) {
 			// IP (@link https://github.com/WordPress/WordPress/blob/4.9.4/wp-includes/comment.php#L1957-L1960).
-			$remote_address = Core_Util::get_remote_address();
+			$ip_address = Core_Util::get_remote_address();
 
-			if ( ! empty( $remote_address ) ) {
-				$ip_address = sanitize_text_field( stripslashes( $remote_address ) );
-
+			if ( ! empty( $ip_address ) ) {
 				$customer->set_ip_address( $ip_address );
 			}
 		}

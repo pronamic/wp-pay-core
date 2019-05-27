@@ -79,6 +79,8 @@ class PaymentFormBlock {
 	 * @param array $attributes Attributes.
 	 *
 	 * @return string|null
+	 *
+	 * @throws Exception When output buffering is not working as expected.
 	 */
 	public function render_block( $attributes = array() ) {
 		ob_start();

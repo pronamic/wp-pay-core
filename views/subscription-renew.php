@@ -56,18 +56,22 @@
 
 								switch ( $subscription->get_interval_period() ) {
 									case 'D':
+										/* translators: %s: interval */
 										echo esc_html( _n( '%s day', '%s days', $interval, 'pronamic_ideal' ) );
 
 										break;
 									case 'W':
+										/* translators: %s: interval */
 										echo esc_html( _n( '%s week', '%s weeks', $interval, 'pronamic_ideal' ) );
 
 										break;
 									case 'M':
+										/* translators: %s: interval */
 										echo esc_html( _n( '%s month', '%s months', $interval, 'pronamic_ideal' ) );
 
 										break;
 									case 'Y':
+										/* translators: %s: interval */
 										echo esc_html( _n( '%s year', '%s years', $interval, 'pronamic_ideal' ) );
 
 										break;
@@ -88,7 +92,8 @@
 
 					<?php
 
-					echo $gateway->get_input_html(); // WPCS: XSS ok.
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Complex input HTML.
+					echo $gateway->get_input_html();
 
 					?>
 				</form>

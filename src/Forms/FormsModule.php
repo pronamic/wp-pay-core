@@ -128,6 +128,8 @@ class FormsModule {
 	 * @param array $args Form settings.
 	 *
 	 * @return string
+	 *
+	 * @throws Exception When output buffering is not working as expected.
 	 */
 	public function get_form_output( $args ) {
 		if ( ! is_array( $args ) ) {

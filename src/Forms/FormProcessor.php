@@ -50,6 +50,8 @@ class FormProcessor {
 
 	/**
 	 * Initialize.
+	 *
+	 * @throws Exception When processing form fails on creating WordPress user.
 	 */
 	public function init() {
 		global $pronamic_pay_errors;
