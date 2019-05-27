@@ -60,7 +60,7 @@ before_install:
   # Add Composer global vendor/bin to path.
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   # PHPStan
-  - if [ "$PHPSTAN" == "1" ]; then composer global require phpstan/phpstan; fi
+  - if [ "$PHPSTAN" == "1" ]; then composer global require phpstan/phpstan szepeviktor/phpstan-wordpress; fi
   # Psalm
   - if [ "$PSALM" == "1" ]; then composer global require vimeo/psalm; fi
 
