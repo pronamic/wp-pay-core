@@ -13,6 +13,11 @@ build:
     override:
       - composer install --no-interaction
   nodes:
+    analysis:
+      tests:
+        override:
+          - php-scrutinizer-run
+
     coverage:
       tests:
         override:
