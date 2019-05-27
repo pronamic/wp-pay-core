@@ -97,23 +97,13 @@ class PaymentLines implements Countable, IteratorAggregate {
 	 * @return Money
 	 */
 	public function get_amount() {
-		$amount = 0;
-
-		$use_bcmath = extension_loaded( 'bcmath' );
+		$amount = new Money();
 
 		foreach ( $this->lines as $line ) {
-			if ( $use_bcmath ) {
-				// Use non-locale aware float value.
-				// @link http://php.net/sprintf.
-				$line_amount = sprintf( '%F', $line->get_total_amount() );
-
-				$amount = bcadd( $amount, $line_amount, 8 );
-			} else {
-				$amount += $line->get_total_amount();
-			}
+			$amount = $amount->add( $line->get_total_amount() );
 		}
 
-		return new Money( $amount );
+		return $amount;
 	}
 
 	/**

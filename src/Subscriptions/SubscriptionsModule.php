@@ -676,10 +676,17 @@ class SubscriptionsModule {
 		foreach ( $expiring_subscription_posts as $post ) {
 			$subscription = new Subscription( $post->ID );
 
+			// If expirary date is null we continue, subscription is not expiring.
 			$expiry_date = $subscription->get_expiry_date();
 
-			// If expirary date is null we continue, subscription is not expiring.
 			if ( null === $expiry_date ) {
+				continue;
+			}
+
+			// Date interval.
+			$date_interval = $subscription->get_date_interval();
+
+			if ( null === $date_interval ) {
 				continue;
 			}
 
@@ -687,7 +694,7 @@ class SubscriptionsModule {
 
 			if ( $sent_date_string ) {
 				$first_date = clone $expiry_date;
-				$first_date->sub( $subscription->get_date_interval() );
+				$first_date->sub( $date_interval );
 
 				$sent_date = new DateTime( $sent_date_string, new DateTimeZone( 'UTC' ) );
 

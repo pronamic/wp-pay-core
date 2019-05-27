@@ -267,8 +267,14 @@ class PaymentLine {
 	 * @return Money|null
 	 */
 	public function get_tax_amount() {
+		$tax_value = $this->get_total_amount()->get_tax_value();
+
+		if ( null === $tax_value ) {
+			return null;
+		}
+
 		return new Money(
-			$this->get_total_amount()->get_tax_value(),
+			$tax_value,
 			$this->get_total_amount()->get_currency()
 		);
 	}

@@ -341,11 +341,7 @@ class AdminGatewayPostType {
 							if ( empty( $data[ $field['meta_key'] ] ) ) {
 								$default = $field['default'];
 
-								if ( is_array( $default ) && 2 === count( $default ) && Util::class_method_exists( $default[0], $default[1] ) ) {
-									$data[ $field['meta_key'] ] = call_user_func( $default, $field );
-								} else {
-									$data[ $field['meta_key'] ] = $default;
-								}
+								$data[ $field['meta_key'] ] = is_callable( $default ) ? call_user_func( $default, $field ) : $default;
 							}
 						}
 					}

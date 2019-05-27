@@ -313,10 +313,14 @@ class Customer {
 
 		$customer = new self();
 
-		foreach ( $json as $key => $value ) {
+		$properties = (array) $json;
+
+		foreach ( $properties as $key => $value ) {
 			$method = sprintf( 'set_%s', $key );
 
-			if ( is_callable( array( $customer, $method ) ) ) {
+			$callable = array( $customer, $method );
+
+			if ( is_callable( $callable ) ) {
 				if ( 'name' === $key ) {
 					$value = ContactName::from_json( $value );
 				}
@@ -325,7 +329,7 @@ class Customer {
 					$value = new DateTime( $value );
 				}
 
-				call_user_func( array( $customer, $method ), $value );
+				call_user_func( $callable, $value );
 			}
 		}
 

@@ -77,21 +77,21 @@ class Subscription extends LegacySubscription {
 	/**
 	 * The interval date of this subscription.
 	 *
-	 * @var int|null
+	 * @var string|null
 	 */
 	public $interval_date;
 
 	/**
 	 * The interval date day of this subscription.
 	 *
-	 * @var int|null
+	 * @var string|null
 	 */
 	public $interval_date_day;
 
 	/**
 	 * The interval date month of this subscription.
 	 *
-	 * @var int|null
+	 * @var string|null
 	 */
 	public $interval_date_month;
 
