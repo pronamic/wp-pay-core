@@ -1,5 +1,6 @@
 build:
   environment:
+    php: 7.3.0
     variables:
       WP_TESTS_DB_NAME: 'wp_phpunit_tests'
       WP_TESTS_DB_USER: 'root'
