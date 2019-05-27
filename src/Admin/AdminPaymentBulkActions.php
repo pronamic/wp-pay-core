@@ -186,15 +186,17 @@ class AdminPaymentBulkActions {
 			if ( '' !== $unsupported ) {
 				$gateways = explode( ',', $unsupported );
 
-				$query = new WP_Query( array(
-					'post_type'              => 'pronamic_gateway',
-					'post__in'               => $gateways,
-					'nopaging'               => true,
-					'ignore_sticky_posts'    => true,
-					'no_found_rows'          => true,
-					'update_post_meta_cache' => false,
-					'update_post_term_cache' => false,
-				) );
+				$query = new WP_Query(
+					array(
+						'post_type'              => 'pronamic_gateway',
+						'post__in'               => $gateways,
+						'nopaging'               => true,
+						'ignore_sticky_posts'    => true,
+						'no_found_rows'          => true,
+						'update_post_meta_cache' => false,
+						'update_post_term_cache' => false,
+					)
+				);
 
 				$titles = wp_list_pluck( $query->posts, 'post_title' );
 

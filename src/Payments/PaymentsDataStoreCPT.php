@@ -158,7 +158,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			}
 
 			// Data.
-			$json_string = wp_json_encode( $this->payment->get_json() ) ;
+			$json_string = wp_json_encode( $this->payment->get_json() );
 
 			if ( false === $json_string ) {
 				throw new Exception( 'Error inserting payment post data as JSON.' );

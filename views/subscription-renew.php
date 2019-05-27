@@ -45,7 +45,8 @@
 
 						$interval = $subscription->get_interval();
 
-						if ( null !== $interval ) : ?>
+						if ( null !== $interval ) :
+							?>
 
 							<dt>
 								<?php esc_html_e( 'Subscription Length:', 'pronamic_ideal' ); ?>

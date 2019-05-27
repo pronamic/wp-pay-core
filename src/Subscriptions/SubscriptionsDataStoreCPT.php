@@ -162,7 +162,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 			}
 
 			// Data.
-			$json_string = wp_json_encode( $this->subscription->get_json() ) ;
+			$json_string = wp_json_encode( $this->subscription->get_json() );
 
 			if ( false === $json_string ) {
 				throw new Exception( 'Error inserting subscription post data as JSON.' );
