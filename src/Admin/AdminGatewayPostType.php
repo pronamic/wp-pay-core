@@ -108,7 +108,7 @@ class AdminGatewayPostType {
 				if ( isset( $integration ) ) {
 					echo esc_html( $integration->get_name() );
 				} else {
-					echo esc_html( $id );
+					echo esc_html( strval( $id ) );
 				}
 
 				break;
@@ -377,7 +377,11 @@ class AdminGatewayPostType {
 	 *
 	 * @link https://codex.wordpress.org/Function_Reference/register_post_type
 	 * @link https://github.com/WordPress/WordPress/blob/4.4.2/wp-admin/edit-form-advanced.php#L134-L173
+	 * @link https://github.com/WordPress/WordPress/blob/5.2.1/wp-admin/edit-form-advanced.php#L164-L203
 	 * @link https://github.com/woothemes/woocommerce/blob/2.5.5/includes/admin/class-wc-admin-post-types.php#L111-L168
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.6.4/includes/admin/class-wc-admin-post-types.php#L110-L180
+	 * @link https://developer.wordpress.org/reference/hooks/post_updated_messages/
+	 *
 	 * @param array $messages Messages.
 	 * @return array
 	 */
@@ -399,7 +403,7 @@ class AdminGatewayPostType {
 			// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352801&filters[translation_id]=37947231
 			/* phpcs:disable WordPress.Security.NonceVerification.Recommended */
 			/* translators: %s: date and time of the revision */
-			5  => isset( $_GET['revision'] ) ? sprintf( __( 'Configuration restored to revision from %s.', 'pronamic_ideal' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+			5  => isset( $_GET['revision'] ) ? sprintf( __( 'Configuration restored to revision from %s.', 'pronamic_ideal' ), strval( wp_post_revision_title( (int) $_GET['revision'], false ) ) ) : false,
 			/* phpcs:enable WordPress.Security.NonceVerification.Recommended */
 			// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352802&filters[translation_id]=37949178
 			6  => __( 'Configuration published.', 'pronamic_ideal' ),

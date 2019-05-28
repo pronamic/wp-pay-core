@@ -411,6 +411,7 @@ class AdminPaymentPostType {
 				break;
 			case 'pronamic_payment_subscription':
 				$subscription_id = get_post_meta( $post_id, '_pronamic_payment_subscription_id', true );
+				$subscription_id = intval( $subscription_id );
 
 				if ( $subscription_id ) {
 					$label = __( 'Recurring payment', 'pronamic_ideal' );
@@ -489,6 +490,7 @@ class AdminPaymentPostType {
 				break;
 			case 'pronamic_payment_gateway':
 				$config_id = get_post_meta( $post_id, '_pronamic_payment_config_id', true );
+				$condig_id = intval( $condig_id );
 
 				if ( ! empty( $config_id ) ) {
 					echo esc_html( get_the_title( $config_id ) );
@@ -499,6 +501,7 @@ class AdminPaymentPostType {
 				break;
 			case 'pronamic_payment_transaction':
 				$transaction_id = get_post_meta( $post_id, '_pronamic_payment_transaction_id', true );
+				$transaction_id = strval( $transaction_id );
 
 				$url = $payment->get_provider_link();
 
@@ -700,7 +703,7 @@ class AdminPaymentPostType {
 			// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352801&filters[translation_id]=37947231.
 			/* phpcs:disable WordPress.Security.NonceVerification.Recommended */
 			/* translators: %s: date and time of the revision */
-			5  => isset( $_GET['revision'] ) ? sprintf( __( 'Payment restored to revision from %s.', 'pronamic_ideal' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+			5  => isset( $_GET['revision'] ) ? sprintf( __( 'Payment restored to revision from %s.', 'pronamic_ideal' ), strval( wp_post_revision_title( (int) $_GET['revision'], false ) ) ) : false,
 			/* phpcs:enable WordPress.Security.NonceVerification.Recommended */
 			// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352802&filters[translation_id]=37949178.
 			6  => __( 'Payment published.', 'pronamic_ideal' ),

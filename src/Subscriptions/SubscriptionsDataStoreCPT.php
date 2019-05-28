@@ -557,7 +557,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 		// End Date.
 		$end_date = $this->get_meta_date( $id, 'end_date' );
 
-		if ( empty( $end_date ) && $subscription->frequency && null !== $date_interval ) {
+		if ( empty( $end_date ) && null !== $subscription->frequency && null !== $date_interval ) {
 			// @link https://stackoverflow.com/a/10818981/6411283
 			$period = new DatePeriod( $start_date, $date_interval, $subscription->frequency );
 

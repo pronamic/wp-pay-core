@@ -479,7 +479,7 @@ class SubscriptionsModule {
 
 		$end_date = null;
 
-		if ( $subscription_data->frequency ) {
+		if ( null !== $subscription_data->frequency ) {
 			// @link https://stackoverflow.com/a/10818981/6411283
 			$period = new DatePeriod( $start_date, $interval, $subscription_data->frequency );
 
