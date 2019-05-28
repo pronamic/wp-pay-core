@@ -163,7 +163,7 @@ class FormsModule {
 		// Load template.
 		ob_start();
 
-		include dirname( __FILE__ ) . '/../../views/form.php';
+		include __DIR__ . '/../../views/form.php';
 
 		$output = ob_get_clean();
 

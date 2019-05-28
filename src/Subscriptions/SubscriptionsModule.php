@@ -156,7 +156,7 @@ class SubscriptionsModule {
 		$gateway = Plugin::get_gateway( $subscription->config_id );
 
 		if ( empty( $gateway ) ) {
-			require dirname( __FILE__ ) . '/../../views/subscription-renew-failed.php';
+			require __DIR__ . '/../../views/subscription-renew-failed.php';
 
 			exit;
 		}
@@ -182,7 +182,7 @@ class SubscriptionsModule {
 		// Payment method input HTML.
 		$gateway->set_payment_method( $subscription->payment_method );
 
-		require dirname( __FILE__ ) . '/../../views/subscription-renew.php';
+		require __DIR__ . '/../../views/subscription-renew.php';
 
 		exit;
 	}
