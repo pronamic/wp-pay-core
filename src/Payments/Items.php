@@ -25,7 +25,7 @@ class Items implements IteratorAggregate {
 	/**
 	 * The items.
 	 *
-	 * @var array
+	 * @var Item[]
 	 */
 	private $items;
 
