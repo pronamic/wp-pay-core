@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
+use Pronamic\WordPress\Money\Money;
+
 /**
  * Item.
  *
@@ -171,6 +173,10 @@ class Item {
 	 * @return float
 	 */
 	public function get_amount() {
-		return $this->price * $this->quantity;
+		$money = new Money( $this->get_price() );
+
+		$amount = $money->multiply( $this->get_quantity() );
+
+		return $amount;
 	}
 }
