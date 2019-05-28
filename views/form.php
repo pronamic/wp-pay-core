@@ -161,7 +161,8 @@ if ( null === $gateway ) {
 							<select id="<?php echo esc_attr( $field['id'] ); ?>" name="<?php echo esc_attr( $field['name'] ); ?>">
 								<?php
 
-								echo Util::select_options_grouped( $field['choices'] ); // WPCS: XSS ok.
+								// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+								echo Util::select_options_grouped( $field['choices'] );
 
 								?>
 							</select>
@@ -179,10 +180,10 @@ if ( null === $gateway ) {
 
 			<div class="pronamic-pay-errors">
 
-				<?php foreach ( $pronamic_pay_errors as $error ) : ?>
+				<?php foreach ( $pronamic_pay_errors as $e ) : ?>
 
 					<p class="pronamic-pay-error">
-						<strong><?php esc_html_e( 'Error', 'pronamic_ideal' ); ?></strong>: <?php echo esc_html( $error ); ?>
+						<strong><?php esc_html_e( 'Error', 'pronamic_ideal' ); ?></strong>: <?php echo esc_html( $e ); ?>
 					</p>
 
 				<?php endforeach; ?>
@@ -206,7 +207,7 @@ if ( null === $gateway ) {
 				$fields['pronamic_pay_config_id'] = $settings['config_id'];
 			}
 
-			/* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo Util::html_hidden_fields( $fields );
 
 			?>
