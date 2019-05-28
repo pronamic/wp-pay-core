@@ -101,8 +101,6 @@ class BlocksModule {
 	 * @throws Exception When output buffering is not working as expected.
 	 */
 	public function render_payment_form_block( $attributes = array() ) {
-		ob_start();
-
 		// Amount.
 		$money_parser = new Parser();
 
@@ -116,16 +114,7 @@ class BlocksModule {
 			'source_id' => get_the_ID(),
 		);
 
-		/* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */
-		echo pronamic_pay_plugin()->forms_module->get_form_output( $args );
-
-		$html = ob_get_clean();
-
-		if ( false === $html ) {
-			throw new Exception( 'Output buffering is not active.' );
-		}
-
-		return $html;
+		return pronamic_pay_plugin()->forms_module->get_form_output( $args );
 	}
 
 	/**
