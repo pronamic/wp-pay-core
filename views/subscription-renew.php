@@ -56,23 +56,43 @@
 
 								switch ( $subscription->get_interval_period() ) {
 									case 'D':
-										/* translators: %s: interval */
-										echo esc_html( _n( '%s day', '%s days', $interval, 'pronamic_ideal' ) );
+										echo esc_html(
+											sprintf(
+												/* translators: %s: interval */
+												_n( '%s day', '%s days', $interval, 'pronamic_ideal' ),
+												number_format_i18n( $interval )
+											)
+										);
 
 										break;
 									case 'W':
-										/* translators: %s: interval */
-										echo esc_html( _n( '%s week', '%s weeks', $interval, 'pronamic_ideal' ) );
+										echo esc_html(
+											sprintf(
+												/* translators: %s: interval */
+												_n( '%s week', '%s weeks', $interval, 'pronamic_ideal' ),
+												number_format_i18n( $interval )
+											)
+										);
 
 										break;
 									case 'M':
-										/* translators: %s: interval */
-										echo esc_html( _n( '%s month', '%s months', $interval, 'pronamic_ideal' ) );
+										echo esc_html(
+											sprintf(
+												/* translators: %s: interval */
+												_n( '%s month', '%s months', $interval, 'pronamic_ideal' ),
+												number_format_i18n( $interval )
+											)
+										);
 
 										break;
 									case 'Y':
-										/* translators: %s: interval */
-										echo esc_html( _n( '%s year', '%s years', $interval, 'pronamic_ideal' ) );
+										echo esc_html(
+											sprintf(
+												/* translators: %s: interval */
+												_n( '%s year', '%s years', $interval, 'pronamic_ideal' ),
+												number_format_i18n( $interval )
+											)
+										);
 
 										break;
 								}
