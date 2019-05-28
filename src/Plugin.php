@@ -533,6 +533,7 @@ class Plugin {
 		// Blocks module.
 		if ( function_exists( 'register_block_type' ) ) {
 			$this->blocks_module = new Blocks\BlocksModule();
+			$this->blocks_module->setup();
 		}
 
 		// Google Analytics Ecommerce.
