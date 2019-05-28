@@ -104,11 +104,15 @@ class BlocksModule {
 		// Amount.
 		$money_parser = new Parser();
 
-		$amount = $money_parser->parse( $attributes['amount'] );
+		$amount = '';
+
+		if ( ! empty( $attributes['amount'] ) ) {
+			$amount = $money_parser->parse( $attributes['amount'] );
+		}
 
 		// Form settings.
 		$args = array(
-			'amount'    => $amount->get_cents(),
+			'amount'    => $amount,
 			'html_id'   => sprintf( 'pronamic-pay-payment-form-%s', get_the_ID() ),
 			'source'    => FormsSource::BLOCK_PAYMENT_FORM,
 			'source_id' => get_the_ID(),
