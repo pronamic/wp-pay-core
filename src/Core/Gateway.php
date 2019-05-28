@@ -272,7 +272,7 @@ abstract class Gateway {
 		if ( is_wp_error( $result ) || false === $result ) {
 			$issuers = $this->get_issuers();
 
-			if ( $issuers ) {
+			if ( ! empty( $issuers ) ) {
 				// 60 * 60 * 24 = 24 hours = 1 day
 				set_transient( $transient, $issuers, 60 * 60 * 24 );
 			}
