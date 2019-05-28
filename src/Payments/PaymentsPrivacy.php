@@ -131,12 +131,10 @@ class PaymentsPrivacy {
 			}
 		}
 
-		$done = true;
-
 		// Return export data.
 		return array(
 			'data' => $items,
-			'done' => $done,
+			'done' => true,
 		);
 	}
 
@@ -159,7 +157,6 @@ class PaymentsPrivacy {
 		$items_removed  = false;
 		$items_retained = false;
 		$messages       = array();
-		$done           = false;
 
 		// Get payments.
 		// @todo use paging.
@@ -237,14 +234,12 @@ class PaymentsPrivacy {
 			$items_removed = true;
 		}
 
-		$done = true;
-
 		// Return results.
 		return array(
 			'items_removed'  => $items_removed,
 			'items_retained' => $items_retained,
 			'messages'       => $messages,
-			'done'           => $done,
+			'done'           => true,
 		);
 	}
 

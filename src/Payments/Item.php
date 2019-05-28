@@ -53,7 +53,7 @@ class Item {
 		$this->number      = '';
 		$this->description = '';
 		$this->quantity    = 1;
-		$this->price       = 0;
+		$this->price       = 0.0;
 	}
 
 	/**

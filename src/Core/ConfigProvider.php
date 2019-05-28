@@ -47,8 +47,6 @@ class ConfigProvider {
 	 * @return GatewayConfig|null
 	 */
 	public static function get_config( $name, $post_id ) {
-		$config = null;
-
 		if ( ! isset( self::$factories[ $name ] ) ) {
 			return null;
 		}

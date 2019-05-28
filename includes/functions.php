@@ -337,7 +337,7 @@ function pronamic_pay_update_post_meta_data( $post_id, array $data ) {
 	 * upon being stored, so you will need to be careful when passing
 	 * in values such as JSON that might include \ escaped characters.
 	 */
-	$data = wp_slash( $data );
+	$data = (array) wp_slash( $data );
 
 	// Meta.
 	foreach ( $data as $key => $value ) {

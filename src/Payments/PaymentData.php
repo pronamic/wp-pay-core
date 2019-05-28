@@ -129,6 +129,8 @@ abstract class PaymentData extends AbstractPaymentData {
 	/**
 	 * Get URL for the specified name.
 	 *
+	 * @link https://developer.wordpress.org/reference/functions/get_permalink/
+	 *
 	 * @param string $name The name to get the URL for.
 	 * @return string
 	 */
@@ -137,7 +139,7 @@ abstract class PaymentData extends AbstractPaymentData {
 
 		$permalink = get_permalink( pronamic_pay_get_page_id( $name ) );
 
-		if ( $permalink ) {
+		if ( false !== $permalink ) {
 			$url = $permalink;
 		}
 

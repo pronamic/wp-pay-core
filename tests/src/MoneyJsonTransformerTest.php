@@ -43,7 +43,7 @@ class MoneyJsonTransformerTest extends TestCase {
 
 		$this->assertEquals( wp_json_encode( $json_data, JSON_PRETTY_PRINT ), $json_string );
 
-		$this->assertJsonStringEqualsJsonFile( $json_file, $json_string );
+		$this->assertJsonStringEqualsJsonFile( $json_file, strval( $json_string ) );
 	}
 
 	/**

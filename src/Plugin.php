@@ -630,7 +630,7 @@ class Plugin {
 			'nopaging'  => true,
 		);
 
-		if ( $payment_method ) {
+		if ( null !== $payment_method ) {
 			$args['post__in'] = PaymentMethods::get_config_ids( $payment_method );
 		}
 
@@ -689,7 +689,6 @@ class Plugin {
 		// Get config.
 		$gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 		$mode       = get_post_meta( $config_id, '_pronamic_gateway_mode', true );
-		$is_utf8    = strcasecmp( get_bloginfo( 'charset' ), 'UTF-8' ) === 0;
 
 		$config = Core\ConfigProvider::get_config( $gateway_id, $config_id );
 
