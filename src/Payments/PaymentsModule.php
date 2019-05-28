@@ -11,7 +11,9 @@
 namespace Pronamic\WordPress\Pay\Payments;
 
 use Pronamic\WordPress\Pay\Plugin;
+use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Core\Statuses;
+use WP_REST_Request;
 
 /**
  * Payments Module
@@ -63,6 +65,9 @@ class PaymentsModule {
 
 		// Listen to payment status changes so we can log these in a note.
 		add_action( 'pronamic_payment_status_update', array( $this, 'log_payment_status_update' ), 10, 4 );
+
+		// REST API.
+		add_action( 'rest_api_init', array( $this, 'rest_api_init' ) );
 
 		// Payment Status Checker.
 		$this->status_checker = new StatusChecker();
@@ -177,5 +182,121 @@ class PaymentsModule {
 		$note = $this->get_payment_status_update_note( $old_status, $new_status );
 
 		$payment->add_note( $note );
+	}
+
+	/**
+	 * REST API init.
+	 *
+	 * @link https://developer.wordpress.org/rest-api/extending-the-rest-api/adding-custom-endpoints/
+	 * @link https://developer.wordpress.org/reference/hooks/rest_api_init/
+	 *
+	 * @return void
+	 */
+	public function rest_api_init() {
+		register_rest_route(
+			'pronamic-pay/v1',
+			'/gateways/(?P<config_id>\d+)',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $this, 'rest_api_gateway' ),
+				'permission_callback' => function() {
+					return current_user_can( 'manage_options' );
+				},
+				'args'                => array(
+					'config_id'    => array(
+						'description' => __( 'Gateway configuration ID.', 'pronamic_ideal' ),
+						'type'        => 'integer',
+					),
+					'gateway_id'   => array(
+						'description' => __( 'Gateway ID.', 'pronamic_ideal' ),
+						'type'        => 'string',
+					),
+					'gateway_mode' => array(
+						'description' => __( 'Gateway mode.', 'pronamic_ideal' ),
+						'type'        => 'string',
+					),
+				),
+			)
+		);
+	}
+
+	/**
+	 * REST API gateway.
+	 *
+	 * @param WP_REST_Request $request Request.
+	 * @return object
+	 */
+	public function rest_api_gateway( WP_REST_Request $request ) {
+		$config_id    = $request->get_param( 'config_id' );
+		$gateway_id   = $request->get_param( 'gateway_id' );
+		$gateway_mode = $request->get_param( 'gateway_mode' );
+
+		// Gateway.
+		$gateway = Plugin::get_gateway( $config_id, array(
+			'gateway_id'   => $gateway_id,
+			'gateway_mode' => $gateway_mode,
+		) );
+
+		if ( empty( $gateway ) ) {
+			return new WP_Error(
+				'pronamic-pay-gateway-not-found',
+				sprintf(
+					/* translators: %s: Gateway configuration ID */
+					__( 'Could not found gateway with ID `%s`.', 'pronamic_ideal' ),
+					$config_id
+				),
+				$config_id
+			);
+		}
+
+		// Payment Methods.
+		$supported = $gateway->get_supported_payment_methods();
+		$available = $gateway->get_transient_available_payment_methods();
+
+		$payment_methods = array();
+
+		foreach ( $supported as $payment_method ) {
+			$name = PaymentMethods::get_name( $payment_method );
+
+			$payment_methods[] = (object) array(
+				'id'        => $payment_method,
+				'name'      => $name,
+				'available' => in_array( $payment_method, $available, true ),
+			);
+		}
+
+		usort(
+			$payment_methods,
+			function( $a, $b ) {
+				return strnatcasecmp( $a->name, $b->name );
+			}
+		);
+
+		ob_start();
+
+		include __DIR__ . '/../../views/meta-box-gateway-payment-methods.php';
+
+		$meta_box_payment_methods = ob_get_clean();
+
+		// Webhook Log.
+
+		ob_start();
+
+		include __DIR__ . '/../../views/meta-box-gateway-webhook-log.php';
+
+		$meta_box_webhook_log = ob_get_clean();
+
+		// Object.
+		return (object) array(
+			'config_id'       => $config_id,
+			'gateway_id'      => $gateway_id,
+			'gateway_mode'    => $gateway_mode,
+			'payment_methods' => $payment_methods,
+			'meta_boxes'      => (object) array(
+				'settings'        => '',
+				'payment_methods' => $meta_box_payment_methods,
+				'webhook_log'     => $meta_box_webhook_log,
+			),
+		);
 	}
 }

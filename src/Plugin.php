@@ -671,10 +671,11 @@ class Plugin {
 	 * Get gateway.
 	 *
 	 * @param string|integer|boolean|null $config_id A gateway configuration ID.
+	 * @param array $args Extra arguments.
 	 *
 	 * @return null|Gateway
 	 */
-	public static function get_gateway( $config_id ) {
+	public static function get_gateway( $config_id, $args = array() ) {
 		// Check for 0, false, null and other empty values.
 		if ( empty( $config_id ) ) {
 			return null;
@@ -687,9 +688,15 @@ class Plugin {
 			return null;
 		}
 
+		// Arguments.
+		$args = wp_parse_args( $args, array(
+			'gateway_id' => get_post_meta( $config_id, '_pronamic_gateway_id', true ),
+			'mode'       => get_post_meta( $config_id, '_pronamic_gateway_mode', true ),
+		) );
+
 		// Get config.
-		$gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
-		$mode       = get_post_meta( $config_id, '_pronamic_gateway_mode', true );
+		$gateway_id = $args['gateway_id'];
+		$mode       = $args['mode'];
 
 		$config = Core\ConfigProvider::get_config( $gateway_id, $config_id );
 

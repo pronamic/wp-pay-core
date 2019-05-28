@@ -56,29 +56,6 @@ class GatewaySettings {
 
 		$sections = apply_filters( 'pronamic_pay_gateway_sections', $sections );
 
-		// Payment methods section.
-		$config_id = get_the_ID();
-
-		if ( empty( $config_id ) ) {
-			return $sections;
-		}
-
-		$gateway = Plugin::get_gateway( $config_id );
-
-		if ( $gateway ) {
-			$gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
-
-			// Payment methods.
-			$sections['payment_methods'] = array(
-				'title'       => __( 'Payment Methods', 'pronamic_ideal' ),
-				'methods'     => array(
-					$gateway_id,
-					str_replace( '-', '_', $gateway_id ),
-				),
-				'description' => __( 'Overview of supported payment methods. A green checkmark icon indicates that the payment method seems to be activated for your account.', 'pronamic_ideal' ),
-			);
-		}
-
 		return $sections;
 	}
 
@@ -109,49 +86,6 @@ class GatewaySettings {
 			),
 		);
 
-		// Payment methods.
-		$fields[] = array(
-			'section'  => 'payment_methods',
-			'type'     => 'html',
-			'callback' => array( $this, 'gateway_payment_methods' ),
-		);
-
 		return apply_filters( 'pronamic_pay_gateway_fields', $fields );
-	}
-
-
-	/**
-	 * Available payment methods overview.
-	 */
-	public function gateway_payment_methods() {
-		$gateway = Plugin::get_gateway( get_the_ID() );
-
-		if ( null === $gateway ) {
-			return;
-		}
-
-		$supported = $gateway->get_supported_payment_methods();
-		$available = $gateway->get_transient_available_payment_methods();
-
-		$payment_methods = array();
-
-		foreach ( $supported as $payment_method ) {
-			$name = PaymentMethods::get_name( $payment_method );
-
-			$payment_methods[ $payment_method ] = array(
-				'id'        => $payment_method,
-				'name'      => $name,
-				'available' => in_array( $payment_method, $available, true ),
-			);
-		}
-
-		usort(
-			$payment_methods,
-			function( $a, $b ) {
-				return strnatcasecmp( $a['name'], $b['name'] );
-			}
-		);
-
-		require Plugin::$dirname . '/admin/meta-box-gateway-config-payment-methods.php';
 	}
 }
