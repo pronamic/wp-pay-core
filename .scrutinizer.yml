@@ -16,7 +16,6 @@ build:
     analysis:
       tests:
         override:
-          - php-scrutinizer-run
           -
             command: phpcs-run
             use_website_config: false
@@ -24,7 +23,7 @@ build:
     coverage:
       tests:
         override:
-          - command: ./vendor/bin/phpunit
+          - command: vendor/bin/phpunit
             coverage:
               file: build/logs/clover.xml
               format: clover
