@@ -161,11 +161,9 @@ class FormsModule {
 		$settings = wp_parse_args( $args, $defaults );
 
 		// Load template.
-		$file = plugin_dir_path( $this->plugin->get_file() ) . 'templates/form.php';
-
 		ob_start();
 
-		include $file;
+		include dirname( __FILE__ ) . '/../../views/form.php';
 
 		$output = ob_get_clean();
 
