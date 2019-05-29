@@ -278,6 +278,14 @@ class PaymentsModule {
 
 		$meta_box_payment_methods = ob_get_clean();
 
+		// Settings.
+
+		ob_start();
+
+		include __DIR__ . '/../../views/meta-box-gateway-settings.php';
+
+		$meta_box_settings = ob_get_clean();		
+
 		// Webhook Log.
 
 		ob_start();
@@ -293,7 +301,7 @@ class PaymentsModule {
 			'gateway_mode'    => $gateway_mode,
 			'payment_methods' => $payment_methods,
 			'meta_boxes'      => (object) array(
-				'settings'        => '',
+				'settings'        => $meta_box_settings,
 				'payment_methods' => $meta_box_payment_methods,
 				'webhook_log'     => $meta_box_webhook_log,
 			),

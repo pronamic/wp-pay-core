@@ -292,7 +292,11 @@ class AdminGatewayPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 */
 	public function meta_box_settings( $post ) {
-		
+		?>
+		<div id="pronamic-pay-gateway-settings">
+
+		</div>
+		<?php
 	}
 
 
@@ -370,6 +374,19 @@ class AdminGatewayPostType {
 						$( '#pronamic-pay-gateway-webhook-log' ).html( response.meta_boxes.webhook_log );
 
 						$( '#pronamic-pay-gateway-payment-methods' ).html( response.meta_boxes.payment_methods );
+
+						$( '#pronamic-pay-gateway-settings' ).html( response.meta_boxes.settings );
+
+						$( '#pronamic-pay-gateway-settings .pronamic-pay-tabs' ).pronamicPayTabs();
+
+						// Tooltip
+						$( '#pronamic-pay-gateway-settings .pronamic-pay-tip' ).each( function() {
+							tippy( this, {
+								content: $( this ).attr( 'title' ),
+								arrow: true,
+								theme: 'pronamic-pay'
+							} );
+						} );
 
 						console.log( response );
 					} );
