@@ -69,7 +69,7 @@ foreach ( $fields as $id => $field ) {
 
 	$section = $gateway_sections[ $section_id ];
 
-	$section->fields[] = (object) $field;
+	$section->fields[] = $field;
 }
 
 if ( empty( $gateway_sections ) ) {
@@ -111,201 +111,221 @@ if ( empty( $gateway_sections ) ) {
 
 			<table class="form-table">
 
-				<?php foreach ( $section->fields as $field ) : ?>
+				<?php foreach ( $section->fields as $field ) :
 
-					<?php if ( 'html' === $field->type ) : ?>
+					$classes = array();
+					if ( isset( $field['methods'] ) ) {
+						// $classes[] = 'pronamic-pay-cloack';
+						// $classes[] = 'extra-settings';
 
-						<td colspan="2">
+						foreach ( $field['methods'] as $method ) {
+							$classes[] = 'setting-' . $method;
+						}
+					}
 
-						</td>
+					if ( isset( $field['group'] ) ) {
+						$classes[] = $field['group'];
+					}
 
-					<?php else : ?>
+					if ( isset( $field['id'] ) ) {
+						$id = $field['id'];
+					} elseif ( isset( $field['meta_key'] ) ) {
+						$id = $field['meta_key'];
+					} else {
+						$id = uniqid();
+					}
 
-						<tr>
-							<th scope="row">
-								<label for="<?php echo esc_attr( $id ); ?>">
-									<?php echo esc_html( $field->title ); ?>
-								</label>
+					?>
+					<tr class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>">
 
-								<?php
+						<?php if ( 'html' !== $field['type'] ) { ?>
 
-								if ( isset( $field->tooltip ) && ! empty( $field->tooltip ) ) {
+						<th scope="row">
+							<label for="<?php echo esc_attr( $id ); ?>">
+								<?php echo esc_html( $field['title'] ); ?>
+							</label>
+
+							<?php
+
+							if ( isset( $field['tooltip'] ) && ! empty( $field['tooltip'] ) ) {
+								printf(
+									'<span class="dashicons dashicons-editor-help pronamic-pay-tip" title="%s"></span>',
+									esc_attr( $field['tooltip'] )
+								);
+							}
+
+							?>
+						</th>
+
+						<?php } ?>
+
+						<td <?php if ( 'html' === $field['type'] ) : ?>colspan="2"<?php endif; ?>>
+						<td>
+							<?php
+
+							$field = (array) $field;
+
+							$attributes         = array();
+							$attributes['id']   = $id;
+							$attributes['name'] = $id;
+
+							$classes = array();
+							if ( isset( $field['classes'] ) ) {
+								$classes = $field['classes'];
+							}
+
+							if ( isset( $field['readonly'] ) && $field['readonly'] ) {
+								$attributes['readonly'] = 'readonly';
+
+								$classes[] = 'readonly';
+							}
+
+							if ( isset( $field['size'] ) ) {
+								$attributes['size'] = $field['size'];
+							}
+
+							if ( in_array( $field['type'], array( 'text', 'password', 'textarea', 'select' ), true ) ) {
+								$classes[] = 'pronamic-pay-form-control';
+							}
+
+							if ( in_array( $field['type'], array( 'textarea' ), true ) ) {
+								$classes[] = 'pronamic-pay-form-control-lg';
+							}
+
+							if ( ! empty( $classes ) ) {
+								$attributes['class'] = implode( ' ', $classes );
+							}
+
+							$value = '';
+							if ( isset( $field['meta_key'] ) ) {
+								$attributes['name'] = $field['meta_key'];
+
+								$value = get_post_meta( $config_id, $field['meta_key'], true );
+							} elseif ( isset( $field['value'] ) ) {
+								$value = $field['value'];
+							}
+
+							// Set default.
+							if ( empty( $value ) && isset( $field['default'] ) ) {
+								$value = $field['default'];
+							}
+
+							switch ( $field['type'] ) {
+								case 'text':
+								case 'password':
+									$attributes['type']  = $field['type'];
+									$attributes['value'] = $value;
+
 									printf(
-										'<span class="dashicons dashicons-editor-help pronamic-pay-tip" title="%s"></span>',
-										esc_attr( $field->tooltip )
+										'<input %s />',
+										// @codingStandardsIgnoreStart
+										Util::array_to_html_attributes( $attributes )
+										// @codingStandardsIgnoreEnd
 									);
-								}
 
-								?>
-							</th>
-							<td>
-								<?php
+									break;
+								case 'checkbox':
+									$attributes['type']  = $field['type'];
+									$attributes['value'] = '1';
 
-								$field = (array) $field;
+									printf(
+										'<input %s %s />',
+										// @codingStandardsIgnoreStart
+										Util::array_to_html_attributes( $attributes ),
+										// @codingStandardsIgnoreEnd
+										checked( $value, true, false )
+									);
 
-								$attributes         = array();
-								$attributes['id']   = $id;
-								$attributes['name'] = $id;
+									printf( ' ' );
 
-								$classes = array();
-								if ( isset( $field['classes'] ) ) {
-									$classes = $field['classes'];
-								}
+									printf(
+										'<label for="%s">%s</label>',
+										esc_attr( $attributes['id'] ),
+										esc_html( $field['label'] )
+									);
 
-								if ( isset( $field['readonly'] ) && $field['readonly'] ) {
-									$attributes['readonly'] = 'readonly';
+									break;
+								case 'textarea':
+									$attributes['rows'] = 4;
+									$attributes['cols'] = 65;
 
-									$classes[] = 'readonly';
-								}
+									printf(
+										'<textarea %s>%s</textarea>',
+										// @codingStandardsIgnoreStart
+										Util::array_to_html_attributes( $attributes ),
+										// @codingStandardsIgnoreEnd
+										esc_textarea( $value )
+									);
 
-								if ( isset( $field['size'] ) ) {
-									$attributes['size'] = $field['size'];
-								}
+									break;
+								case 'file':
+									$attributes['type'] = 'file';
 
-								if ( in_array( $field['type'], array( 'text', 'password', 'textarea', 'select' ), true ) ) {
-									$classes[] = 'pronamic-pay-form-control';
-								}
+									printf(
+										'<input %s />',
+										// @codingStandardsIgnoreStart
+										Util::array_to_html_attributes( $attributes )
+										// @codingStandardsIgnoreEnd
+									);
 
-								if ( in_array( $field['type'], array( 'textarea' ), true ) ) {
-									$classes[] = 'pronamic-pay-form-control-lg';
-								}
+									break;
+								case 'select':
+									printf(
+										'<select %s>%s</select>',
+										// @codingStandardsIgnoreStart
+										Util::array_to_html_attributes( $attributes ),
+										Util::select_options_grouped( $field['options'], $value )
+										// @codingStandardsIgnoreEnd
+									);
 
-								if ( ! empty( $classes ) ) {
-									$attributes['class'] = implode( ' ', $classes );
-								}
+									break;
+								case 'optgroup':
+									printf( '<fieldset>' );
+									printf( '<legend class="screen-reader-text">%s</legend>', esc_html( $field['title'] ) );
 
-								$value = '';
-								if ( isset( $field['meta_key'] ) ) {
-									$attributes['name'] = $field['meta_key'];
-
-									$value = get_post_meta( $config_id, $field['meta_key'], true );
-								} elseif ( isset( $field['value'] ) ) {
-									$value = $field['value'];
-								}
-
-								// Set default.
-								if ( empty( $value ) && isset( $field['default'] ) ) {
-									$value = $field['default'];
-								}
-
-								switch ( $field['type'] ) {
-									case 'text':
-									case 'password':
-										$attributes['type']  = $field['type'];
-										$attributes['value'] = $value;
-
+									foreach ( $field['options'] as $key => $label ) {
 										printf(
-											'<input %s />',
-											// @codingStandardsIgnoreStart
-											Util::array_to_html_attributes( $attributes )
-											// @codingStandardsIgnoreEnd
-										);
-
-										break;
-									case 'checkbox':
-										$attributes['type']  = $field['type'];
-										$attributes['value'] = '1';
-
-										printf(
-											'<input %s %s />',
-											// @codingStandardsIgnoreStart
-											Util::array_to_html_attributes( $attributes ),
-											// @codingStandardsIgnoreEnd
-											checked( $value, true, false )
-										);
-
-										printf( ' ' );
-
-										printf(
-											'<label for="%s">%s</label>',
-											esc_attr( $attributes['id'] ),
-											esc_html( $field['label'] )
-										);
-
-										break;
-									case 'textarea':
-										$attributes['rows'] = 4;
-										$attributes['cols'] = 65;
-
-										printf(
-											'<textarea %s>%s</textarea>',
-											// @codingStandardsIgnoreStart
-											Util::array_to_html_attributes( $attributes ),
-											// @codingStandardsIgnoreEnd
-											esc_textarea( $value )
-										);
-
-										break;
-									case 'file':
-										$attributes['type'] = 'file';
-
-										printf(
-											'<input %s />',
-											// @codingStandardsIgnoreStart
-											Util::array_to_html_attributes( $attributes )
-											// @codingStandardsIgnoreEnd
-										);
-
-										break;
-									case 'select':
-										printf(
-											'<select %s>%s</select>',
-											// @codingStandardsIgnoreStart
-											Util::array_to_html_attributes( $attributes ),
-											Util::select_options_grouped( $field['options'], $value )
-											// @codingStandardsIgnoreEnd
-										);
-
-										break;
-									case 'optgroup':
-										printf( '<fieldset>' );
-										printf( '<legend class="screen-reader-text">%s</legend>', esc_html( $field['title'] ) );
-
-										foreach ( $field['options'] as $key => $label ) {
-											printf(
-												'<label>%s %s</label><br />',
-												sprintf(
-													'<input type="radio" value="%s" name="%s" %s />',
-													esc_attr( $key ),
-													esc_attr( $attributes['name'] ),
-													checked( $value, $key, false )
-												),
-												esc_html( $label )
-											);
-										}
-
-										break;
-								}
-
-								if ( isset( $field['html'] ) ) {
-									if ( 'description' !== $field['type'] && isset( $field['title'] ) && ! empty( $field['title'] ) ) {
-										printf(
-											'<strong>%s</strong><br>',
-											esc_html( $field['title'] )
+											'<label>%s %s</label><br />',
+											sprintf(
+												'<input type="radio" value="%s" name="%s" %s />',
+												esc_attr( $key ),
+												esc_attr( $attributes['name'] ),
+												checked( $value, $key, false )
+											),
+											esc_html( $label )
 										);
 									}
 
-									echo $field['html']; // WPCS: XSS ok.
-								}
+									break;
+							}
 
-								if ( isset( $field['description'] ) ) {
-									printf( // WPCS: XSS ok.
-										'<p class="pronamic-pay-description description">%s</p>',
-										$field['description']
+							if ( isset( $field['html'] ) ) {
+								if ( 'description' !== $field['type'] && isset( $field['title'] ) && ! empty( $field['title'] ) ) {
+									printf(
+										'<strong>%s</strong><br>',
+										esc_html( $field['title'] )
 									);
 								}
 
-								if ( isset( $field['callback'] ) ) {
-									$callback = $field['callback'];
+								echo $field['html']; // WPCS: XSS ok.
+							}
 
-									call_user_func( $callback, $field );
-								}
+							if ( isset( $field['description'] ) ) {
+								printf( // WPCS: XSS ok.
+									'<p class="pronamic-pay-description description">%s</p>',
+									$field['description']
+								);
+							}
 
-								?>
-							</td>
-						</tr>
+							if ( isset( $field['callback'] ) ) {
+								$callback = $field['callback'];
 
-					<?php endif; ?>
+								call_user_func( $callback, $field );
+							}
+
+							?>
+						</td>
+					</tr>
 
 				<?php endforeach; ?>
 
