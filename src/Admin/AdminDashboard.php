@@ -102,6 +102,6 @@ class AdminDashboard {
 			admin_url( 'edit.php' )
 		);
 
-		include \Pronamic\WordPress\Pay\Plugin::$dirname . '/admin/widget-payments-status-list.php';
+		include __DIR__ . '/../../views/widget-payments-status-list.php';
 	}
 }

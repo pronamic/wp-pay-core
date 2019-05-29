@@ -791,7 +791,7 @@ class AdminModule {
 	public function render_page( $name ) {
 		$result = false;
 
-		$file = plugin_dir_path( $this->plugin->get_file() ) . 'admin/page-' . $name . '.php';
+		$file = __DIR__ . '/../../views/page-' . $name . '.php';
 
 		if ( is_readable( $file ) ) {
 			include $file;

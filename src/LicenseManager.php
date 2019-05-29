@@ -53,7 +53,7 @@ class LicenseManager {
 		$data = get_transient( 'pronamic_pay_license_data' );
 
 		if ( $data ) {
-			include $this->plugin->get_plugin_dir_path() . 'admin/notice-license.php';
+			include __DIR__ . '/../views/notice-license.php';
 
 			delete_transient( 'pronamic_pay_license_data' );
 		}
