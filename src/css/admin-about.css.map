@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAGA,mBAAoB;EACnB,gBAAgB,ECsEC,OAAO;EDrExB,gBAAgB,EAAE,oDAAoD;EAEtE,KAAK,EAAE,OAAkC;;;AAIzC,wBAAoB;EACnB,gBAAgB,EAAE,oDAAoD",
+"sources": ["../sass/admin-about.scss","../sass/admin/_variables.scss"],
+"names": [],
+"file": "admin-about.css"
+}
