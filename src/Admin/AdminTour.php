@@ -68,7 +68,7 @@ class AdminTour {
 		// Pointers.
 		wp_register_style(
 			'proanmic-pay-admin-tour',
-			plugins_url( 'css/admin-tour' . $min . '.css', $this->plugin->get_file() ),
+			plugins_url( '../../css/admin-tour' . $min . '.css', __FILE__ ),
 			array(
 				'wp-pointer',
 			),
@@ -77,7 +77,7 @@ class AdminTour {
 
 		wp_register_script(
 			'proanmic-pay-admin-tour',
-			plugins_url( 'js/admin-tour' . $min . '.js', $this->plugin->get_file() ),
+			plugins_url( '../../js/admin-tour' . $min . '.js', __FILE__ ),
 			array(
 				'jquery',
 				'wp-pointer',
@@ -109,7 +109,7 @@ class AdminTour {
 	private function get_content( $file ) {
 		$content = '';
 
-		$path = plugin_dir_path( $this->plugin->get_file() ) . 'admin/' . $file . '.php';
+		$path = __DIR__ . '/../../views/' . $file . '.php';
 
 		if ( is_readable( $path ) ) {
 			ob_start();
