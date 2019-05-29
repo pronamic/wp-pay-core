@@ -15,6 +15,3 @@ if ( ! $gateway->supports( 'webhook-log' ) ) {
 if ( $gateway->supports( 'webhook-log' ) ) {
 	esc_html_e( 'This gateway supports webhook logging.', 'pronamic_ideal' );
 }
-
-/* phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump */
-var_dump( $gateway );
