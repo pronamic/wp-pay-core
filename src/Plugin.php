@@ -671,7 +671,7 @@ class Plugin {
 	 * Get gateway.
 	 *
 	 * @param string|integer|boolean|null $config_id A gateway configuration ID.
-	 * @param array $args Extra arguments.
+	 * @param array                       $args      Extra arguments.
 	 *
 	 * @return null|Gateway
 	 */
@@ -689,10 +689,13 @@ class Plugin {
 		}
 
 		// Arguments.
-		$args = wp_parse_args( $args, array(
-			'gateway_id' => get_post_meta( $config_id, '_pronamic_gateway_id', true ),
-			'mode'       => get_post_meta( $config_id, '_pronamic_gateway_mode', true ),
-		) );
+		$args = wp_parse_args(
+			$args,
+			array(
+				'gateway_id' => get_post_meta( $config_id, '_pronamic_gateway_id', true ),
+				'mode'       => get_post_meta( $config_id, '_pronamic_gateway_mode', true ),
+			)
+		);
 
 		// Get config.
 		$gateway_id = $args['gateway_id'];

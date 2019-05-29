@@ -170,7 +170,7 @@ class Item {
 	/**
 	 * Get the amount.
 	 *
-	 * @return float
+	 * @return Money
 	 */
 	public function get_amount() {
 		$money = new Money( $this->get_price() );

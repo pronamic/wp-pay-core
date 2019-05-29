@@ -13,6 +13,7 @@ namespace Pronamic\WordPress\Pay\Payments;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Core\Statuses;
+use WP_Error;
 use WP_REST_Request;
 
 /**
@@ -232,10 +233,13 @@ class PaymentsModule {
 		$gateway_mode = $request->get_param( 'gateway_mode' );
 
 		// Gateway.
-		$gateway = Plugin::get_gateway( $config_id, array(
-			'gateway_id'   => $gateway_id,
-			'gateway_mode' => $gateway_mode,
-		) );
+		$gateway = Plugin::get_gateway(
+			$config_id,
+			array(
+				'gateway_id'   => $gateway_id,
+				'gateway_mode' => $gateway_mode,
+			)
+		);
 
 		if ( empty( $gateway ) ) {
 			return new WP_Error(

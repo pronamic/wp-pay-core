@@ -299,7 +299,6 @@ class AdminGatewayPostType {
 		<?php
 	}
 
-
 	/**
 	 * Pronamic Pay gateway payment methods meta box.
 	 *
