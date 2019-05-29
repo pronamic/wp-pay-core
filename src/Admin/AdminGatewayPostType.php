@@ -283,7 +283,7 @@ class AdminGatewayPostType {
 	public function meta_box_config( $post ) {
 		wp_nonce_field( 'pronamic_pay_save_gateway', 'pronamic_pay_nonce' );
 
-		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-gateway-config.php';
+		include __DIR__ . '/../../views/meta-box-gateway-config.php';
 	}
 
 	/**
@@ -406,7 +406,7 @@ class AdminGatewayPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 */
 	public function meta_box_test( $post ) {
-		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-gateway-test.php';
+		include __DIR__ . '/../../views/meta-box-gateway-test.php';
 	}
 
 	/**

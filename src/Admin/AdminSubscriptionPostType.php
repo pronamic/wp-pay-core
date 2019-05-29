@@ -383,7 +383,7 @@ class AdminSubscriptionPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 */
 	public function meta_box_info( $post ) {
-		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-subscription-info.php';
+		include __DIR__ . '/../../views/meta-box-subscription-info.php';
 	}
 
 	/**
@@ -400,7 +400,7 @@ class AdminSubscriptionPostType {
 
 		$lines = $subscription->get_lines();
 
-		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-payment-lines.php';
+		include __DIR__ . '/../../views/meta-box-payment-lines.php';
 	}
 
 	/**
@@ -417,7 +417,7 @@ class AdminSubscriptionPostType {
 			)
 		);
 
-		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-notes.php';
+		include __DIR__ . '/../../views/meta-box-notes.php';
 	}
 
 	/**
@@ -426,7 +426,7 @@ class AdminSubscriptionPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 */
 	public function meta_box_payments( $post ) {
-		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-subscription-payments.php';
+		include __DIR__ . '/../../views/meta-box-subscription-payments.php';
 	}
 
 	/**
@@ -437,7 +437,7 @@ class AdminSubscriptionPostType {
 	public function meta_box_update( $post ) {
 		wp_nonce_field( 'pronamic_subscription_update', 'pronamic_subscription_update_nonce' );
 
-		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-subscription-update.php';
+		include __DIR__ . '/../../views/meta-box-subscription-update.php';
 	}
 
 	/**

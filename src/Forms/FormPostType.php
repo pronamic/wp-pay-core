@@ -304,7 +304,7 @@ class FormPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 */
 	public function meta_box_form_options( $post ) {
-		include plugin_dir_path( $this->plugin->get_file() ) . '/admin/meta-box-form-options.php';
+		include __DIR__ . '/../../views/meta-box-form-options.php';
 	}
 
 	/**

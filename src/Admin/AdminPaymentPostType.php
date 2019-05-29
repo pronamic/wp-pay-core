@@ -604,7 +604,7 @@ class AdminPaymentPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 */
 	public function meta_box_info( $post ) {
-		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-payment-info.php';
+		include __DIR__ . '/../../views/meta-box-payment-info.php';
 	}
 
 	/**
@@ -621,7 +621,7 @@ class AdminPaymentPostType {
 
 		$lines = $payment->get_lines();
 
-		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-payment-lines.php';
+		include __DIR__ . '/../../views/meta-box-payment-lines.php';
 	}
 
 	/**
@@ -638,7 +638,7 @@ class AdminPaymentPostType {
 			)
 		);
 
-		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-notes.php';
+		include __DIR__ . '/../../views/meta-box-notes.php';
 	}
 
 	/**
@@ -647,7 +647,7 @@ class AdminPaymentPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 */
 	public function meta_box_subscription( $post ) {
-		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-payment-subscription.php';
+		include __DIR__ . '/../../views/meta-box-payment-subscription.php';
 	}
 
 	/**
@@ -658,7 +658,7 @@ class AdminPaymentPostType {
 	public function meta_box_update( $post ) {
 		wp_nonce_field( 'pronamic_payment_update', 'pronamic_payment_update_nonce' );
 
-		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-payment-update.php';
+		include __DIR__ . '/../../views/meta-box-payment-update.php';
 	}
 
 	/**
