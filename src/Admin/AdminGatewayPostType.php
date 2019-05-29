@@ -293,7 +293,7 @@ class AdminGatewayPostType {
 	 */
 	public function meta_box_settings( $post ) {
 		?>
-		<div id="pronamic-pay-gateway-settings">
+		<div id="pronamic-pay-gateway-settings" style="padding-top: 5px;">
 
 		</div>
 		<?php
