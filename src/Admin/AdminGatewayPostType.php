@@ -292,9 +292,7 @@ class AdminGatewayPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 */
 	public function meta_box_settings( $post ) {
-		
 	}
-
 
 	/**
 	 * Pronamic Pay gateway payment methods meta box.
