@@ -82,13 +82,6 @@ class AdminModule {
 	public $install;
 
 	/**
-	 * Gateway settings.
-	 *
-	 * @var GatewaySettings|null
-	 */
-	public $gateway_settings;
-
-	/**
 	 * Constructs and initalize an admin object.
 	 *
 	 * @param Plugin $plugin Plugin.
@@ -107,8 +100,6 @@ class AdminModule {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
 		add_filter( 'parent_file', array( $this, 'admin_menu_parent_file' ) );
-
-		add_filter( 'pronamic_pay_gateway_settings', array( $this, 'gateway_settings' ) );
 
 		// Modules.
 		$this->settings  = new AdminSettings( $plugin );
@@ -800,32 +791,6 @@ class AdminModule {
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Gateway settings.
-	 *
-	 * @param array $classes Classes.
-	 * @return array
-	 */
-	public function gateway_settings( $classes ) {
-		foreach ( $this->plugin->gateway_integrations as $integration ) {
-			$class = $integration->get_settings_class();
-
-			if ( null === $class ) {
-				continue;
-			}
-
-			if ( is_array( $class ) ) {
-				foreach ( $class as $c ) {
-					$classes[ $c ] = $c;
-				}
-			} else {
-				$classes[ $class ] = $class;
-			}
-		}
-
-		return $classes;
 	}
 
 	/**

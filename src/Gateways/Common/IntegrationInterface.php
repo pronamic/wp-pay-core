@@ -42,11 +42,4 @@ interface IntegrationInterface {
 	 * @return string
 	 */
 	public function get_config_factory_class();
-
-	/**
-	 * Get settings class.
-	 *
-	 * @return null|string|array
-	 */
-	public function get_settings_class();
 }

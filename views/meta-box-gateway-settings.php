@@ -2,85 +2,49 @@
 
 use Pronamic\WordPress\Pay\Util;
 
-global $gateway_integrations;
+$integrations = $this->plugin->gateway_integrations;
 
-$gateway_integrations = $this->plugin->gateway_integrations;
-
-add_filter( 'pronamic_pay_gateway_settings', function( $classes ) {
-	global $gateway_integrations;
-
-	foreach ( $gateway_integrations as $integration ) {
-		$class = $integration->get_settings_class();
-
-		if ( null === $class ) {
-			continue;
-		}
-
-		if ( is_array( $class ) ) {
-			foreach ( $class as $c ) {
-				$classes[ $c ] = $c;
-			}
-		} else {
-			$classes[ $class ] = $class;
-		}
-	}
-
-	return $classes;
-} );
-
-$gateway_settings = new Pronamic\WordPress\Pay\Admin\GatewaySettings();
-
-if ( ! array_key_exists( $gateway_id, $gateway_integrations ) ) {
+if ( ! array_key_exists( $gateway_id, $integrations ) ) {
 	return;
 }
 
-$sections    = $gateway_settings->get_sections();
-$fields      = $gateway_settings->get_fields();
-$integration = $gateway_integrations[ $gateway_id ];
-$settings    = $integration->get_settings();
+$integration = $integrations[ $gateway_id ];
+$fields      = $integration->get_settings_fields();
 
-$gateway_sections = array();
-$gateway_fields   = array();
-
-foreach ( $sections as $id => $section ) {
-	if ( array_key_exists( 'methods', $section ) ) {
-		$methods = $section['methods'];
-
-		$intersect = array_intersect( $methods, $settings );
-
-		if ( ! empty( $intersect ) ) {
-			$section['fields'] = array();
-
-			$gateway_sections[ $id ] = (object) $section;
-		}
-	}
-}
+$sections = array(
+	'general'  => (object) array(
+		'title'  => __( 'General', 'pronamic-ideal' ),
+		'fields' => array(),
+	),
+	'advanced' => (object) array(
+		'title'  => __( 'Advanced', 'pronamic-ideal' ),
+		'fields' => array(),
+	),
+	'feedback' => (object) array(
+		'title'  => __( 'Feedback', 'pronamic-ideal' ),
+		'fields' => array(),
+	),
+);
 
 foreach ( $fields as $id => $field ) {
-	if ( ! array_key_exists( 'section', $field ) ) {
-		continue;
+	$section = 'general';
+
+	if ( array_key_exists( 'section', $field ) ) {
+		$section = $field['section'];
 	}
 
-	$section_id = $field['section'];
-
-	if ( ! array_key_exists( $section_id, $gateway_sections ) ) {
-		continue;
+	if ( ! array_key_exists( $section, $sections ) ) {
+		$section = 'general';
 	}
 
-	$section = $gateway_sections[ $section_id ];
-
-	$section->fields[] = $field;
-}
-
-if ( empty( $gateway_sections ) ) {
-	return;
+	$sections[ $section ]->fields[] = $field;
 }
 
 ?>
 <div class="pronamic-pay-tabs">
 	<ul class="pronamic-pay-tabs-items">
 		
-		<?php foreach ( $gateway_sections as $section ) : ?>
+		<?php foreach ( $sections as $section ) : ?>
 
 			<li>
 				<?php echo esc_html( $section->title ); ?>
@@ -90,7 +54,7 @@ if ( empty( $gateway_sections ) ) {
 
 	</ul>
 
-	<?php foreach ( $gateway_sections as $section ) : ?>
+	<?php foreach ( $sections as $section ) : ?>
 
 		<div class="pronamic-pay-tab">
 			<div class="pronamic-pay-tab-block gateway-config-section-header">

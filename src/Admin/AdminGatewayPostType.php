@@ -431,79 +431,20 @@ class AdminGatewayPostType {
 		}
 
 		// OK, its safe for us to save the data now.
-		$gateway_settings = $this->admin->gateway_settings;
+		if ( ! filter_has_var( INPUT_POST, '_pronamic_gateway_id' ) ) {
+			return;
+		}
 
-		if ( null !== $gateway_settings ) {
-			$fields = $gateway_settings->get_fields();
+		// Gateway.
+		$gateway_id = filter_input( INPUT_POST, '_pronamic_gateway_id', FILTER_SANITIZE_STRING );
 
-			$definition = array(
-				// General.
-				'_pronamic_gateway_id' => FILTER_SANITIZE_STRING,
-			);
+		update_post_meta( $post_id, '_pronamic_gateway_id', $gateway_id );
 
-			foreach ( $fields as $field ) {
-				if ( isset( $field['meta_key'], $field['filter'] ) ) {
-					$name   = $field['meta_key'];
-					$filter = $field['filter'];
+		// Mode.
+		if ( filter_has_var( INPUT_POST, '_pronamic_gateway_mode' ) ) {
+			$gateway_mode = filter_input( INPUT_POST, '_pronamic_gateway_mode', FILTER_SANITIZE_STRING );
 
-					$definition[ $name ] = $filter;
-				}
-			}
-
-			$data = filter_input_array( INPUT_POST, $definition );
-
-			if ( ! empty( $data['_pronamic_gateway_id'] ) ) {
-				$integrations = $this->plugin->gateway_integrations;
-
-				if ( isset( $integrations[ $data['_pronamic_gateway_id'] ] ) ) {
-					$integration = $integrations[ $data['_pronamic_gateway_id'] ];
-
-					$settings = $integration->get_settings();
-
-					foreach ( $fields as $field ) {
-						if ( isset( $field['default'], $field['meta_key'], $data[ $field['meta_key'] ] ) ) {
-							// Remove default value if not applicable to the selected gateway.
-							if ( isset( $field['methods'] ) ) {
-								$clean_default = array_intersect( $settings, $field['methods'] );
-
-								if ( empty( $clean_default ) ) {
-									$meta_value = get_post_meta( $post_id, $field['meta_key'], true );
-
-									// Only remove value if not saved before.
-									if ( empty( $meta_value ) ) {
-										$data[ $field['meta_key'] ] = null;
-
-										continue;
-									}
-								}
-							}
-
-							// Set the default value if empty.
-							if ( empty( $data[ $field['meta_key'] ] ) ) {
-								$default = $field['default'];
-
-								$data[ $field['meta_key'] ] = is_callable( $default ) ? call_user_func( $default, $field ) : $default;
-							}
-						}
-					}
-
-					// Filter data through gateway integration settings.
-					$settings_classes = $integration->get_settings_class();
-
-					if ( ! is_array( $settings_classes ) ) {
-						$settings_classes = array( $settings_classes );
-					}
-
-					foreach ( $settings_classes as $settings_class ) {
-						$settings = new $settings_class();
-
-						$data = $settings->save_post( $data );
-					}
-				}
-			}
-
-			// Update post meta data.
-			pronamic_pay_update_post_meta_data( $post_id, $data );
+			update_post_meta( $post_id, '_pronamic_gateway_mode', $gateway_mode );
 		}
 
 		// Transient.
@@ -511,6 +452,34 @@ class AdminGatewayPostType {
 		delete_transient( 'pronamic_gateway_payment_methods_' . $post_id );
 
 		PaymentMethods::update_active_payment_methods();
+
+		// Gatway fields.
+		if ( empty( $gateway_id ) ) {
+			return;
+		}
+
+		$integrations = $this->plugin->gateway_integrations;
+
+		if ( ! array_key_exists( $gateway_id, $integrations ) ) {
+			return;
+		}
+
+		$integration = $integrations[ $gateway_id ];
+
+		$fields = $integration->get_settings_fields();
+
+		foreach ( $fields as $field ) {
+			if ( isset( $field['meta_key'], $field['filter'] ) ) {
+				$name   = $field['meta_key'];
+				$filter = $field['filter'];
+
+				if ( filter_has_var( INPUT_POST, $name ) ) {
+					$value = filter_input( INPUT_POST, $name, $filter );
+
+					update_post_meta( $post_id, $name, $value );
+				}
+			}
+		}
 	}
 
 	/**
