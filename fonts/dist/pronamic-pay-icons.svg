@@ -2,8 +2,8 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
 <metadata>
-Created by FontForge 20170718 at Tue May 28 16:27:54 2019
- By Reüel
+Created by FontForge 20190413 at Fri May 31 11:50:21 2019
+ By Remco Tolsma
 </metadata>
 <defs>
 <font id="pronamic-pay-icons" horiz-adv-x="1024" >
@@ -17,7 +17,7 @@ Created by FontForge 20170718 at Tue May 28 16:27:54 2019
     descent="-64"
     bbox="-0.430108 -336.025 1024.12 704.429"
     underline-thickness="38"
-    underline-position="-115"
+    underline-position="-76"
     unicode-range="U+F101-F10B"
   />
 <missing-glyph horiz-adv-x="276" 

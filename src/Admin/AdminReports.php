@@ -120,7 +120,7 @@ class AdminReports {
 		// Reports.
 		wp_register_script(
 			'proanmic-pay-admin-reports',
-			plugins_url( '../../js/admin-reports' . $min . '.js', __FILE__ ),
+			plugins_url( '../../js/dist/admin-reports' . $min . '.js', __FILE__ ),
 			array(
 				'jquery',
 				'flot',

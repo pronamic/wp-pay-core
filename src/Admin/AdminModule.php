@@ -545,7 +545,7 @@ class AdminModule {
 		// Pronamic.
 		wp_register_style(
 			'pronamic-pay-icons',
-			plugins_url( '../../fonts/pronamic-pay-icons.css', __FILE__ ),
+			plugins_url( '../../fonts/dist/pronamic-pay-icons.css', __FILE__ ),
 			array(),
 			$this->plugin->get_version()
 		);
@@ -559,7 +559,7 @@ class AdminModule {
 
 		wp_register_script(
 			'pronamic-pay-admin',
-			plugins_url( '../../js/admin' . $min . '.js', __FILE__ ),
+			plugins_url( '../../js/dist/admin' . $min . '.js', __FILE__ ),
 			array( 'jquery', 'tippy.js' ),
 			$this->plugin->get_version(),
 			true

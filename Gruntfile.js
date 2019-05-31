@@ -22,9 +22,9 @@ module.exports = function( grunt ) {
 					files: [
 						{ // JS.
 							expand: true,
-							cwd: 'js/',
+							cwd: 'js/src/',
 							src: '**',
-							dest: 'dist/js/'
+							dest: 'js/dist/'
 						}
 					]
 				},
@@ -64,7 +64,7 @@ module.exports = function( grunt ) {
 				build: {
 					files: [ {
 						expand: true,
-						cwd: 'sass',
+						cwd: 'scss',
 						src: '*.scss',
 						dest: 'css',
 						ext: '.css'
@@ -88,7 +88,7 @@ module.exports = function( grunt ) {
 						expand: true,
 						cwd: 'css/',
 						src: '*.css',
-						dest: 'dist/css/'
+						dest: 'css/'
 					} ]
 				},
 				min: {
@@ -100,12 +100,12 @@ module.exports = function( grunt ) {
 					},
 					files: [ {
 						expand: true,
-						cwd: 'dist/css/',
+						cwd: 'css/',
 						src: [
 							'*.css',
 							'!*.min.css'
 						],
-						dest: 'dist/css/',
+						dest: 'css/',
 						ext: '.min.css'
 					} ]
 				}
@@ -116,9 +116,9 @@ module.exports = function( grunt ) {
 				scripts: {
 					files: {
 						// Pronamic Pay.
-						'dist/js/admin.min.js': 'dist/js/admin.js',
-						'dist/js/admin-reports.min.js': 'dist/js/admin-reports.js',
-						'dist/js/admin-tour.min.js': 'dist/js/admin-tour.js',
+						'js/dist/admin.min.js': 'js/dist/admin.js',
+						'js/dist/admin-reports.min.js': 'js/dist/admin-reports.js',
+						'js/dist/admin-tour.min.js': 'js/dist/admin-tour.js',
 						// Accounting.
 						'assets/accounting/accounting.min.js': 'assets/accounting/accounting.js',
 						// Flot.
@@ -138,7 +138,7 @@ module.exports = function( grunt ) {
 						'assets',
 						'css',
 						'images',
-						'js'
+						'js/dist'
 					]
 				}
 			},
@@ -146,8 +146,8 @@ module.exports = function( grunt ) {
 			// Webfont.
 			webfont: {
 				icons: {
-					src: 'fonts/images/*.svg',
-					dest: 'dist/fonts',
+					src: 'fonts/src/images/*.svg',
+					dest: 'fonts/dist',
 					options: {
 						font: 'pronamic-pay-icons',
 						fontFamilyName: 'Pronamic Pay Icons',
@@ -160,8 +160,8 @@ module.exports = function( grunt ) {
 						types: [ 'eot', 'woff2', 'woff', 'ttf', 'svg' ],
 						fontHeight: 768,
 						customOutputs: [ {
-							template: 'src/fonts/templates/variables.scss',
-							dest: 'src/fonts/_variables.scss'
+							template: 'fonts/src/templates/variables.scss',
+							dest: 'fonts/src/_variables.scss'
 						} ]
 					}
 				}

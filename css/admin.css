@@ -26,13 +26,18 @@
 }
 .pronamci-pay-chart-legend li {
   border-right: 5px solid #aaa;
-  box-shadow: inset 0 -1px 0 0 #e5e5e5;
+  -webkit-box-shadow: inset 0 -1px 0 0 #e5e5e5;
+          box-shadow: inset 0 -1px 0 0 #e5e5e5;
   color: #aaa;
   display: block;
   margin: 0;
   padding: 1em;
-  transition-duration: .5s;
+  -webkit-transition-duration: 0.5s;
+          transition-duration: 0.5s;
+  -webkit-transition-property: border, padding, -webkit-box-shadow;
+  transition-property: border, padding, -webkit-box-shadow;
   transition-property: border, box-shadow, padding;
+  transition-property: border, box-shadow, padding, -webkit-box-shadow;
 }
 .pronamci-pay-chart-legend li.completed-count {
   border-right-color: #dbe1e3;
@@ -54,7 +59,8 @@
 }
 .pronamci-pay-chart-legend li:hover {
   border-right-color: #23282f;
-  box-shadow: inset 0 -1px 0 0 #e5e5e5, inset 300px 0 0 #f9f9f9;
+  -webkit-box-shadow: inset 0 -1px 0 0 #e5e5e5, inset 300px 0 0 #f9f9f9;
+          box-shadow: inset 0 -1px 0 0 #e5e5e5, inset 300px 0 0 #f9f9f9;
   padding-left: 1.5em;
 }
 .pronamci-pay-chart-legend strong {
@@ -75,7 +81,8 @@
 }
 .pronamic-pay-status-list li {
   border-top: 1px solid #eee;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   color: #aaa;
   float: left;
   margin: 0;
@@ -88,7 +95,8 @@
   font-size: 12px;
   padding: 9px 12px;
   position: relative;
-  transition: color ease .5s;
+  -webkit-transition: color ease 0.5s;
+  transition: color ease 0.5s;
 }
 .pronamic-pay-status-list li a strong {
   color: #0073aa;
@@ -124,7 +132,7 @@ body.post-type-pronamic_payment #post-body-content, body.post-type-pronamic_pay_
   width: 100%;
 }
 
-.pronamic-pay-form-control-file-button [type='file'] {
+.pronamic-pay-form-control-file-button [type=file] {
   border: 0;
   clip: rect(0, 0, 0, 0);
   margin: -1px;
@@ -144,7 +152,7 @@ body.post-type-pronamic_payment #post-body-content, body.post-type-pronamic_pay_
 .pronamic-pay-icon::after {
   content: "";
   display: block;
-  font-family: 'Pronamic Pay Icons';
+  font-family: "Pronamic Pay Icons";
   position: absolute;
   top: 0;
   left: 0;
@@ -205,7 +213,7 @@ body.post-type-pronamic_payment #post-body-content, body.post-type-pronamic_pay_
 }
 .pronamic-pay-payment-methods li .pronamic-pay-icon {
   display: inline-block;
-  padding-right: .8em;
+  padding-right: 0.8em;
 }
 .pronamic-pay-payment-methods li .pronamic-pay-icon::after {
   color: #ededed;
@@ -215,16 +223,6 @@ body.post-type-pronamic_payment #post-body-content, body.post-type-pronamic_pay_
 }
 .pronamic-pay-payment-methods li.available .pronamic-pay-icon::after {
   color: #73a724;
-}
-
-#pronamic-pay-gateway-config-editor .dashicons.dashicons-yes {
-  color: #008000;
-}
-#pronamic-pay-gateway-config-editor .dashicons.dashicons-no {
-  color: #f00;
-}
-#pronamic-pay-gateway-config-editor .dashicons.dashicons-warning {
-  color: #ffa500;
 }
 
 .gateway-config-section-header h4 {
@@ -390,10 +388,22 @@ body.post-type-pronamic_payment #post-body-content, body.post-type-pronamic_pay_
 }
 @media only screen and (max-width: 782px) {
   .pronamic-pay-tab .form-table th,
-  .pronamic-pay-tab .form-table td {
+.pronamic-pay-tab .form-table td {
     padding: 11px;
   }
 }
+.pronamic-pay-text-success {
+  color: #008000;
+}
+
+.pronamic-pay-text-danger {
+  color: #f00;
+}
+
+.pronamic-pay-text-warning {
+  color: #ffa500;
+}
+
 *:not(a).pronamic-pay-tip {
   color: #777;
   cursor: help;
@@ -406,5 +416,3 @@ body.post-type-pronamic_payment #post-body-content, body.post-type-pronamic_pay_
 .pronamic-pay-cloack {
   display: none;
 }
-
-/*# sourceMappingURL=admin.css.map */

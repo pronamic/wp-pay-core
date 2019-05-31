@@ -77,7 +77,7 @@ class AdminTour {
 
 		wp_register_script(
 			'proanmic-pay-admin-tour',
-			plugins_url( '../../js/admin-tour' . $min . '.js', __FILE__ ),
+			plugins_url( '../../js/dist/admin-tour' . $min . '.js', __FILE__ ),
 			array(
 				'jquery',
 				'wp-pointer',
