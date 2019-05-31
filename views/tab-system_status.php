@@ -416,7 +416,11 @@ if ( ! $data ) {
 
 				<?php $alternate = ! $alternate; ?>
 
-				<tr<?php if ( $alternate ) : ?> class="alternate"<?php endif; ?>>
+				<tr
+				<?php
+				if ( $alternate ) :
+					?>
+					 class="alternate"<?php endif; ?>>
 					<td>
 						<small><?php echo esc_html( $status->issuer_id ); ?></small>
 

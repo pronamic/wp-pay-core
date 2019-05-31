@@ -40,9 +40,12 @@ foreach ( $fields as $id => $field ) {
 	$sections[ $section ]->fields[] = $field;
 }
 
-$sections = array_filter( $sections, function( $section ) {
-	return ! empty( $section->fields );
-} );
+$sections = array_filter(
+	$sections,
+	function( $section ) {
+		return ! empty( $section->fields );
+	}
+);
 
 ?>
 <div class="pronamic-pay-tabs">
@@ -79,7 +82,8 @@ $sections = array_filter( $sections, function( $section ) {
 
 			<table class="form-table">
 
-				<?php foreach ( $section->fields as $field ) :
+				<?php
+				foreach ( $section->fields as $field ) :
 
 					$classes = array();
 					if ( isset( $field['methods'] ) ) {
@@ -127,7 +131,11 @@ $sections = array_filter( $sections, function( $section ) {
 
 						<?php } ?>
 
-						<td <?php if ( 'html' === $field['type'] ) : ?>colspan="2"<?php endif; ?>>
+						<td 
+						<?php
+						if ( 'html' === $field['type'] ) :
+							?>
+							colspan="2"<?php endif; ?>>
 						<td>
 							<?php
 

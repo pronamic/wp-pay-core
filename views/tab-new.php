@@ -67,12 +67,12 @@ the session of the visitor, which allows you to use visitor revenue in Google An
 		<p>
 			<?php
 
-esc_html_e(
-	'Pronamic Pay includes support for subscriptions to receive recurring payments. This version includes
+			esc_html_e(
+				'Pronamic Pay includes support for subscriptions to receive recurring payments. This version includes
 improvements based on user feedback. Switching between subscriptions with WooCommerce
 Subscriptions is now supported for example, and payment dates information has been extended and is more reliable.',
-	'pronamic_ideal'
-);
+				'pronamic_ideal'
+			);
 
 			?>
 		</p>
@@ -114,12 +114,12 @@ supported with s2Member (new shortcodes can be created with the included generat
 		<p>
 			<?php
 
-esc_html_e(
-	'The payments list got a visual refresh. Most noticeable are the new status icons and updated default columns
+			esc_html_e(
+				'The payments list got a visual refresh. Most noticeable are the new status icons and updated default columns
 to make the overview a lot cleaner and easier to use. Additional columns can be displayed by enabling them in the
 "Screen Options" at the right top of the page.',
-	'pronamic_ideal'
-);
+				'pronamic_ideal'
+			);
 
 			?>
 		</p>

@@ -94,7 +94,10 @@
 
 										</tr>
 
-										<?php while ( $query->have_posts() ) : $query->the_post(); ?>
+										<?php
+										while ( $query->have_posts() ) :
+											$query->the_post();
+											?>
 
 											<tr class="type-<?php echo esc_attr( $payments_post_type ); ?>">
 												<?php

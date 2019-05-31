@@ -288,7 +288,7 @@ class PaymentsModule {
 
 		include __DIR__ . '/../../views/meta-box-gateway-settings.php';
 
-		$meta_box_settings = ob_get_clean();		
+		$meta_box_settings = ob_get_clean();
 
 		// Webhook Log.
 
