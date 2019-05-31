@@ -27,6 +27,11 @@ $sections = array(
 );
 
 if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_no_config' ) ) {
+	$sections['feedback']->title = sprintf(
+		'⚠️ %s',
+		$sections['feedback']->title
+	);
+
 	$fields[] = array(
 		'section' => 'general',
 		'title'   => __( 'Transaction feedback', 'pronamic_ideal' ),
