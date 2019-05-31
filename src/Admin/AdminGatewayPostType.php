@@ -13,6 +13,7 @@ namespace Pronamic\WordPress\Pay\Admin;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\Plugin;
+use Pronamic\WordPress\Pay\WebhookManager;
 use WP_Post;
 
 /**
@@ -450,6 +451,7 @@ class AdminGatewayPostType {
 		// Transient.
 		delete_transient( 'pronamic_pay_issuers_' . $post_id );
 		delete_transient( 'pronamic_gateway_payment_methods_' . $post_id );
+		delete_transient( WebhookManager::OUTDATED_WEBHOOK_URLS_OPTION );
 
 		PaymentMethods::update_active_payment_methods();
 

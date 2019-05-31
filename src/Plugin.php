@@ -148,6 +148,13 @@ class Plugin {
 	public $privacy_manager;
 
 	/**
+	 * Webhook manager.
+	 *
+	 * @var WebhookManager
+	 */
+	public $webhook_manager;
+
+	/**
 	 * Admin module.
 	 *
 	 * @var AdminModule
@@ -399,6 +406,9 @@ class Plugin {
 		// Check if the request is an notify request.
 		// Sisow gatway will extend callback requests with querystring "notify=true".
 		if ( filter_has_var( INPUT_GET, 'notify' ) && filter_input( INPUT_GET, 'notify', FILTER_VALIDATE_BOOLEAN ) ) {
+			// Log webhook request.
+			WebhookManager::log_payment( $payment );
+
 			$should_redirect = false;
 		}
 
@@ -524,6 +534,9 @@ class Plugin {
 
 		// Privacy Manager.
 		$this->privacy_manager = new PrivacyManager();
+
+		// Webhook Manager.
+		$this->webhook_manager = new WebhookManager();
 
 		// Modules.
 		$this->forms_module         = new Forms\FormsModule( $this );
