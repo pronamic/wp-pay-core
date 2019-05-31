@@ -40,6 +40,10 @@ foreach ( $fields as $id => $field ) {
 	$sections[ $section ]->fields[] = $field;
 }
 
+$sections = array_filter( $sections, function( $section ) {
+	return ! empty( $section->fields );
+} );
+
 ?>
 <div class="pronamic-pay-tabs">
 	<ul class="pronamic-pay-tabs-items">
