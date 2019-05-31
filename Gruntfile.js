@@ -22,9 +22,9 @@ module.exports = function( grunt ) {
 					files: [
 						{ // JS.
 							expand: true,
-							cwd: 'src/js/',
+							cwd: 'js/',
 							src: '**',
-							dest: 'js/'
+							dest: 'dist/js/'
 						}
 					]
 				},
@@ -64,9 +64,9 @@ module.exports = function( grunt ) {
 				build: {
 					files: [ {
 						expand: true,
-						cwd: 'src/sass',
+						cwd: 'sass',
 						src: '*.scss',
-						dest: 'src/css',
+						dest: 'css',
 						ext: '.css'
 					} ]
 				}
@@ -86,9 +86,9 @@ module.exports = function( grunt ) {
 					},
 					files: [ {
 						expand: true,
-						cwd: 'src/css/',
+						cwd: 'css/',
 						src: '*.css',
-						dest: 'css/'
+						dest: 'dist/css/'
 					} ]
 				},
 				min: {
@@ -100,12 +100,12 @@ module.exports = function( grunt ) {
 					},
 					files: [ {
 						expand: true,
-						cwd: 'css/',
+						cwd: 'dist/css/',
 						src: [
 							'*.css',
 							'!*.min.css'
 						],
-						dest: 'css/',
+						dest: 'dist/css/',
 						ext: '.min.css'
 					} ]
 				}
@@ -116,9 +116,9 @@ module.exports = function( grunt ) {
 				scripts: {
 					files: {
 						// Pronamic Pay.
-						'js/admin.min.js': 'src/js/admin.js',
-						'js/admin-reports.min.js': 'src/js/admin-reports.js',
-						'js/admin-tour.min.js': 'src/js/admin-tour.js',
+						'dist/js/admin.min.js': 'dist/js/admin.js',
+						'dist/js/admin-reports.min.js': 'dist/js/admin-reports.js',
+						'dist/js/admin-tour.min.js': 'dist/js/admin-tour.js',
 						// Accounting.
 						'assets/accounting/accounting.min.js': 'assets/accounting/accounting.js',
 						// Flot.
@@ -146,8 +146,8 @@ module.exports = function( grunt ) {
 			// Webfont.
 			webfont: {
 				icons: {
-					src: 'src/fonts/images/*.svg',
-					dest: 'fonts',
+					src: 'fonts/images/*.svg',
+					dest: 'dist/fonts',
 					options: {
 						font: 'pronamic-pay-icons',
 						fontFamilyName: 'Pronamic Pay Icons',
@@ -173,7 +173,7 @@ module.exports = function( grunt ) {
 					configFile: '.sass-lint.yml'
 				},
 				target: [
-					'src/sass/**/*.scss'
+					'scss/**/*.scss'
 				]
 			},
 
