@@ -65,6 +65,13 @@ abstract class AbstractIntegration implements IntegrationInterface {
 	public $provider;
 
 	/**
+	 * Supported features.
+	 *
+	 * @var array
+	 */
+	protected $supports = array();
+
+	/**
 	 * Get ID.
 	 *
 	 * @return string
@@ -162,5 +169,15 @@ abstract class AbstractIntegration implements IntegrationInterface {
 	 */
 	public function get_url() {
 		return $this->url;
+	}
+
+	/**
+	 * Check if this intengration supports a given feature.
+	 *
+	 * @param string $feature The feature to check.
+	 * @return bool True if supported, false otherwise.
+	 */
+	public function supports( $feature ) {
+		return in_array( $feature, $this->supports, true );
 	}
 }

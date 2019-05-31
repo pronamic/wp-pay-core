@@ -11,6 +11,21 @@ if ( ! array_key_exists( $gateway_id, $integrations ) ) {
 $integration = $integrations[ $gateway_id ];
 $fields      = $integration->get_settings_fields();
 
+if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_no_config' ) ) {
+	$fields[] = array(
+		'section' => 'general',
+		'title'   => __( 'Transaction feedback', 'pronamic_ideal' ),
+		'type'    => 'description',
+		'html'    => sprintf(
+			'<span class="dashicons dashicons-warning pronamic-pay-text-warning"></span> %s',
+			__(
+				'Receiving payment status updates needs additional configuration, if not yet completed.',
+				'pronamic_ideal'
+			)
+		),
+	);
+}
+
 $sections = array(
 	'general'  => (object) array(
 		'title'  => __( 'General', 'pronamic-ideal' ),
