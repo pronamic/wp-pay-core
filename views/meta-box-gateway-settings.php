@@ -26,7 +26,7 @@ $sections = array(
 	),
 );
 
-if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_no_config' ) ) {
+if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_no_config' ) && ! $integration->supports( 'payment_status_request' ) ) {
 	$sections['feedback']->title = sprintf(
 		'⚠️ %s',
 		$sections['feedback']->title
@@ -42,6 +42,18 @@ if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_n
 				'Receiving payment status updates needs additional configuration, if not yet completed.',
 				'pronamic_ideal'
 			)
+		),
+	);
+}
+
+if ( $integration->supports( 'payment_status_request' ) ) {
+	$fields[] = array(
+		'section'  => 'general',
+		'title'   => __( 'Transaction feedback', 'pronamic_ideal' ),
+		'type'    => 'description',
+		'html'    => sprintf(
+			'<span class="dashicons dashicons-yes pronamic-pay-text-success"></span> %s',
+			__( 'Payment status updates will be processed without any additional configuration.', 'pronamic_ideal' )
 		),
 	);
 }
