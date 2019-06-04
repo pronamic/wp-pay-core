@@ -685,6 +685,8 @@ class Plugin {
 	/**
 	 * Get gateway.
 	 *
+	 * @link https://wordpress.org/support/article/post-status/#default-statuses
+	 *
 	 * @param string|integer|boolean|null $config_id A gateway configuration ID.
 	 * @param array                       $args      Extra arguments.
 	 *
@@ -698,8 +700,8 @@ class Plugin {
 
 		$config_id = intval( $config_id );
 
-		// Check if config is published.
-		if ( 'publish' !== get_post_status( $config_id ) ) {
+		// Check if config is trashed.
+		if ( 'trash' === get_post_status( $config_id ) ) {
 			return null;
 		}
 
