@@ -10,6 +10,9 @@
 
 namespace Pronamic\WordPress\Pay\Webhooks;
 
+use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\Pay\Plugin;
+
 /**
  * Webhook logger class
  *
@@ -23,7 +26,12 @@ class WebhookLogger {
 	}
 
 	public function log_payment( $payment ) {
-		$request_info = new WebhookRequestInfo();
+		$request_info = new WebhookRequestInfo(
+			new DateTime(),
+			( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'],
+			file_get_contents( 'php://input' )
+		);
+
 		$request_info->set_payment( $payment );
 
 		$this->log_request( $request_info );
@@ -45,6 +53,6 @@ class WebhookLogger {
 		}
 
 		// Update webhook log.
-		update_post_meta( $config_id, '_pronamic_gateway_webhook_log', $request_info->get_json() );
+		update_post_meta( $config_id, '_pronamic_gateway_webhook_log', wp_slash( wp_json_encode( $request_info ) ) );
 	}
 }

@@ -10,6 +10,9 @@
 
 namespace Pronamic\WordPress\Pay\Webhooks;
 
+use InvalidArgumentException;
+use JsonSerializable;
+use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Pay\Payments\Payment;
 
 /**
@@ -19,7 +22,7 @@ use Pronamic\WordPress\Pay\Payments\Payment;
  * @version 2.1.6
  * @since   2.1.6
  */
-class WebhookRequestInfo {
+class WebhookRequestInfo implements JsonSerializable {
 	/**
 	 * Date.
 	 *
@@ -51,10 +54,14 @@ class WebhookRequestInfo {
 	/**
 	 * Construct webhook request info object.
 	 */
-	public function __construct() {
-		$this->request_date = new DateTime();
-		$this->request_url  = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-		$this->post_data    = file_get_contents( 'php://input' );
+	public function __construct( $request_date, $request_url, $post_data ) {
+		$this->request_date = $request_date;
+		$this->request_url  = $request_url;
+		$this->post_data    = $post_data;
+	}
+
+	public function get_request_date() {
+		return $this->request_date;
 	}
 
 	public function get_payment() {
@@ -84,5 +91,41 @@ class WebhookRequestInfo {
 		$object = (object) $properties;
 
 		return $object;
+	}
+
+	/**
+	 * JSON serialize.
+	 *
+	 * @link https://www.php.net/manual/en/jsonserializable.jsonserialize.php
+	 *
+	 * @return object
+	 */
+	public function jsonSerialize() {
+		return $this->get_json();
+	}
+
+	/**
+	 * Create webhook request info from object.
+	 *
+	 * @param mixed $json JSON.
+	 * @return Payment
+	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
+	 */
+	public static function from_json( $json ) {
+		if ( ! is_object( $json ) ) {
+			throw new InvalidArgumentException( 'JSON value must be an object.' );
+		}
+
+		$request_date = new DateTime( $json->request_date );
+
+		$webhook_request_info = new WebhookRequestInfo( $request_date, $json->request_url, $json->post_data );
+
+		if ( isset( $json->payment_id ) ) {
+			$payment = get_pronamic_payment( $json->payment_id );
+
+			$webhook_request_info->set_payment( $payment );
+		}
+
+		return $webhook_request_info;
 	}
 }
