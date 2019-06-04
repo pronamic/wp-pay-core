@@ -774,16 +774,6 @@ class Plugin {
 				}
 
 				break;
-			case 'postcode-ideal':
-				$config->payment_server_url = 'https://ideal.postcode.nl/ideal';
-
-				if ( Gateway::MODE_TEST === $mode ) {
-					$config->payment_server_url = 'https://ideal-test.postcode.nl/ideal';
-				}
-
-				$config->certificates = array();
-
-				break;
 			case 'rabobank-ideal-professional-v3':
 				$config->payment_server_url = 'https://ideal.rabobank.nl/ideal/iDEALv3';
 
