@@ -742,10 +742,6 @@ class Plugin {
 				$config->certificates = array();
 
 				break;
-			case 'ideal-simulator-ideal-basic':
-				$config->url = 'https://www.ideal-simulator.nl/lite/';
-
-				break;
 			case 'ideal-simulator-ideal-advanced-v3':
 				$config->payment_server_url = 'https://www.ideal-checkout.nl/simulator/';
 
