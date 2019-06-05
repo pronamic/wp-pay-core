@@ -560,10 +560,9 @@ class Plugin {
 		}
 
 		// Gateway Integrations.
-		$gateways     = apply_filters( 'pronamic_pay_gateways', self::$gateways );
-		$integrations = new GatewayIntegrations( $gateways );
+		$gateways = apply_filters( 'pronamic_pay_gateways', self::$gateways );
 
-		$this->gateway_integrations = $integrations->register_integrations();
+		$this->gateway_integrations = new GatewayIntegrations( $gateways );
 
 		// Maybes.
 		PaymentMethods::maybe_update_active_payment_methods();
@@ -718,7 +717,13 @@ class Plugin {
 		$gateway_id = $args['gateway_id'];
 		$mode       = $args['mode'];
 
-		$config = Core\ConfigProvider::get_config( $gateway_id, $config_id );
+		$integration = pronamic_pay_plugin()->gateway_integrations->get_integration( $gateway_id );
+
+		if ( null === $integration ) {
+			return null;
+		}
+
+		$config = $integration->get_config( $config_id );
 
 		if ( null === $config ) {
 			return null;

@@ -129,9 +129,7 @@ class AdminModule {
 		new AdminPaymentPostType( $this->plugin );
 		new AdminSubscriptionPostType( $this->plugin );
 
-		// Gateway settings.
-		$this->gateway_settings = new GatewaySettings();
-
+		// License check.
 		if ( ! wp_next_scheduled( 'pronamic_pay_license_check' ) ) {
 			wp_schedule_event( time(), 'daily', 'pronamic_pay_license_check' );
 		}

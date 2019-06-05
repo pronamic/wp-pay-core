@@ -21,7 +21,7 @@ namespace Pronamic\WordPress\Pay\Gateways\Common;
  * @since   1.0.0
  * @link    https://github.com/thephpleague/omnipay-common/blob/master/src/Omnipay/Common/AbstractGateway.php
  */
-abstract class AbstractIntegration implements IntegrationInterface {
+abstract class AbstractIntegration {
 	/**
 	 * ID.
 	 *
@@ -179,5 +179,38 @@ abstract class AbstractIntegration implements IntegrationInterface {
 	 */
 	public function supports( $feature ) {
 		return in_array( $feature, $this->supports, true );
+	}
+
+	/**
+	 * Get meta value.
+	 *
+	 * @since 2.0.8
+	 *
+	 * @param string|int $post_id Post ID.
+	 * @param string     $key     Shortened meta key.
+	 *
+	 * @return string
+	 */
+	protected function get_meta( $post_id, $key ) {
+		if ( empty( $post_id ) || empty( $key ) ) {
+			return '';
+		}
+
+		$post_id = intval( $post_id );
+
+		$meta_key = sprintf( '_pronamic_gateway_%s', $key );
+
+		// Get post meta.
+		$meta_value = get_post_meta( $post_id, $meta_key, true );
+
+		if ( false === $meta_value ) {
+			$meta_value = '';
+		}
+
+		return $meta_value;
+	}
+
+	public function get_config( $post_id ) {
+		return null;
 	}
 }

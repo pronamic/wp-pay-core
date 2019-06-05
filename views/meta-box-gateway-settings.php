@@ -2,14 +2,9 @@
 
 use Pronamic\WordPress\Pay\Util;
 
-$integrations = $this->plugin->gateway_integrations;
+$integration = $this->plugin->gateway_integrations->get_integration( $gateway_id );
 
-if ( ! array_key_exists( $gateway_id, $integrations ) ) {
-	return;
-}
-
-$integration = $integrations[ $gateway_id ];
-$fields      = $integration->get_settings_fields();
+$fields = $integration->get_settings_fields();
 
 $sections = array(
 	'general'  => (object) array(

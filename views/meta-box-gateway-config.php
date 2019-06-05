@@ -10,29 +10,10 @@
 
 use Pronamic\WordPress\Pay\Util;
 
-$sections = $this->admin->gateway_settings->get_sections();
-$fields   = $this->admin->gateway_settings->get_fields();
-
-$sections_fields = array();
-
-foreach ( $sections as $id => $section ) {
-	$sections_fields[ $id ] = array();
-}
-
-foreach ( $fields as $id => $field ) {
-	$section = $field['section'];
-
-	$sections_fields[ $section ][ $id ] = $field;
-}
+$integrations = $this->plugin->gateway_integrations;
 
 // Sections.
 $variant_id = get_post_meta( get_the_ID(), '_pronamic_gateway_id', true );
-
-$options = array();
-
-global $pronamic_pay_providers;
-
-bind_providers_and_gateways();
 
 ?>
 <div id="pronamic-pay-gateway-config-editor">
@@ -49,79 +30,71 @@ bind_providers_and_gateways();
 
 					<?php
 
-					foreach ( $pronamic_pay_providers as $provider ) {
-						if ( isset( $provider['integrations'] ) && is_array( $provider['integrations'] ) ) {
-							printf( '<optgroup label="%s">', esc_attr( $provider['name'] ) );
+					foreach ( $integrations as $integration ) {
+						$id          = $integration->get_id();
+						$name        = $integration->get_name();
+						$classes     = array();
+						$description = '';
+						$links       = array();
 
-							foreach ( $provider['integrations'] as $integration ) {
-								$id          = $integration->get_id();
-								$name        = $integration->get_name();
-								$classes     = array();
-								$description = '';
-								$links       = array();
+						if ( isset( $integration->deprecated ) && $integration->deprecated ) {
+							$classes[] = 'deprecated';
 
-								if ( isset( $integration->deprecated ) && $integration->deprecated ) {
-									$classes[] = 'deprecated';
+							/* translators: %s: Integration name */
+							$name = sprintf( __( '%s (obsoleted)', 'pronamic_ideal' ), $name );
 
-									/* translators: %s: Integration name */
-									$name = sprintf( __( '%s (obsoleted)', 'pronamic_ideal' ), $name );
+							if ( $variant_id !== $id ) {
+								continue;
+							}
+						}
 
-									if ( $variant_id !== $id ) {
-										continue;
-									}
-								}
+						// Dashboard links.
+						$dashboards = $integration->get_dashboard_url();
 
-								// Dashboard links.
-								$dashboards = $integration->get_dashboard_url();
+						if ( 1 === count( $dashboards ) ) {
+							$links[] = sprintf(
+								'<a href="%s" title="%s">%2$s</a>',
+								esc_attr( $dashboards[0] ),
+								__( 'Dashboard', 'pronamic_ideal' )
+							);
+						} elseif ( count( $dashboards ) > 1 ) {
+							$dashboard_urls = array();
 
-								if ( 1 === count( $dashboards ) ) {
-									$links[] = sprintf(
-										'<a href="%s" title="%s">%2$s</a>',
-										esc_attr( $dashboards[0] ),
-										__( 'Dashboard', 'pronamic_ideal' )
-									);
-								} elseif ( count( $dashboards ) > 1 ) {
-									$dashboard_urls = array();
-
-									foreach ( $dashboards as $dashboard_name => $dashboard_url ) {
-										$dashboard_urls[] = sprintf(
-											'<a href="%s" title="%s">%2$s</a>',
-											esc_attr( $dashboard_url ),
-											esc_html( ucfirst( $dashboard_name ) )
-										);
-									}
-
-									$links[] = sprintf(
-										'%s: %s',
-										__( 'Dashboards', 'pronamic_ideal' ),
-										strtolower( implode( ', ', $dashboard_urls ) )
-									);
-								}
-
-								// Product link.
-								if ( $integration->get_product_url() ) {
-									$links[] = sprintf(
-										'<a href="%s" target="_blank" title="%s">%2$s</a>',
-										$integration->get_product_url(),
-										__( 'Product information', 'pronamic_ideal' )
-									);
-								}
-
-								$description = implode( ' | ', $links );
-
-								printf(
-									'<option data-gateway-description="%s" data-pronamic-pay-settings="%s" value="%s" %s class="%s">%s</option>',
-									esc_attr( $description ),
-									esc_attr( wp_json_encode( $integration->get_settings() ) ),
-									esc_attr( $id ),
-									selected( $variant_id, $id, false ),
-									esc_attr( implode( ' ', $classes ) ),
-									esc_attr( $name )
+							foreach ( $dashboards as $dashboard_name => $dashboard_url ) {
+								$dashboard_urls[] = sprintf(
+									'<a href="%s" title="%s">%2$s</a>',
+									esc_attr( $dashboard_url ),
+									esc_html( ucfirst( $dashboard_name ) )
 								);
 							}
 
-							printf( '</optgroup>' );
+							$links[] = sprintf(
+								'%s: %s',
+								__( 'Dashboards', 'pronamic_ideal' ),
+								strtolower( implode( ', ', $dashboard_urls ) )
+							);
 						}
+
+						// Product link.
+						if ( $integration->get_product_url() ) {
+							$links[] = sprintf(
+								'<a href="%s" target="_blank" title="%s">%2$s</a>',
+								$integration->get_product_url(),
+								__( 'Product information', 'pronamic_ideal' )
+							);
+						}
+
+						$description = implode( ' | ', $links );
+
+						printf(
+							'<option data-gateway-description="%s" data-pronamic-pay-settings="%s" value="%s" %s class="%s">%s</option>',
+							esc_attr( $description ),
+							esc_attr( wp_json_encode( $integration->get_settings() ) ),
+							esc_attr( $id ),
+							selected( $variant_id, $id, false ),
+							esc_attr( implode( ' ', $classes ) ),
+							esc_attr( $name )
+						);
 					}
 
 					?>
