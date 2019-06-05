@@ -10,7 +10,11 @@
 
 use Pronamic\WordPress\Pay\Util;
 
-$integrations = $this->plugin->gateway_integrations;
+$integrations = iterator_to_array( $this->plugin->gateway_integrations );
+
+usort( $integrations, function( $integration_a, $integration_b ) {
+	return strcasecmp( $integration_a->get_name(), $integration_b->get_name() );
+} );
 
 // Sections.
 $variant_id = get_post_meta( get_the_ID(), '_pronamic_gateway_id', true );
