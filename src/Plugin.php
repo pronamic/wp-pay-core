@@ -63,14 +63,6 @@ class Plugin {
 	const TIMEZONE = 'UTC';
 
 	/**
-	 * Gateway integrations.
-	 *
-	 * @since 2.0.3
-	 * @var array
-	 */
-	public static $gateways;
-
-	/**
 	 * Instance.
 	 *
 	 * @var Plugin|null
@@ -216,7 +208,6 @@ class Plugin {
 				'file'       => null,
 				'version'    => null,
 				'extensions' => array(),
-				'gateways'   => array(),
 			)
 		);
 
@@ -225,7 +216,6 @@ class Plugin {
 		// Backward compatibility.
 		self::$file     = $args['file'];
 		self::$dirname  = dirname( self::$file );
-		self::$gateways = $args['gateways'];
 
 		// Bootstrap the add-ons.
 		$extensions = $args['extensions'];
@@ -560,7 +550,7 @@ class Plugin {
 		}
 
 		// Gateway Integrations.
-		$gateways = apply_filters( 'pronamic_pay_gateways', self::$gateways );
+		$gateways = apply_filters( 'pronamic_pay_gateways', array() );
 
 		$this->gateway_integrations = new GatewayIntegrations( $gateways );
 
