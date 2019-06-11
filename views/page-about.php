@@ -50,28 +50,28 @@ if ( ! defined( 'WPINC' ) ) {
 	<h2 class="nav-tab-wrapper">
 		<?php
 
-		$tabs = array(
+		$nav_tabs = array(
 			'new'             => __( 'What is new', 'pronamic_ideal' ),
 			'getting-started' => __( 'Getting started', 'pronamic_ideal' ),
 		);
 
 		$current_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
-		$current_tab = empty( $current_tab ) ? key( $tabs ) : $current_tab;
+		$current_tab = empty( $current_tab ) ? key( $nav_tabs ) : $current_tab;
 
-		foreach ( $tabs as $tab => $title ) {
+		foreach ( $nav_tabs as $tab_id => $tab_title ) {
 			$classes = array( 'nav-tab' );
 
-			if ( $current_tab === $tab ) {
+			if ( $current_tab === $tab_id ) {
 				$classes[] = 'nav-tab-active';
 			}
 
-			$url = add_query_arg( 'tab', $tab );
+			$url = add_query_arg( 'tab', $tab_id );
 
 			printf(
 				'<a class="nav-tab %s" href="%s">%s</a>',
 				esc_attr( implode( ' ', $classes ) ),
 				esc_attr( $url ),
-				esc_html( $title )
+				esc_html( $tab_title )
 			);
 		}
 

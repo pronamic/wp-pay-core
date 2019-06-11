@@ -200,20 +200,20 @@ if ( empty( $lines ) ) : ?>
 
 							if ( ! empty( $product_url ) ) {
 								// Product URL with or without description.
-								$title = $line->get_name();
+								$line_title = $line->get_name();
 
 								$classes = array();
 
 								if ( ! empty( $description ) ) {
-									$title     = $line->get_description();
-									$classes[] = 'pronamic-pay-tip';
+									$line_title = $line->get_description();
+									$classes[]  = 'pronamic-pay-tip';
 								}
 
 								printf(
 									'<a class="%1$s" href="%2$s" title="%3$s">%4$s<a/>',
 									esc_attr( implode( ' ', $classes ) ),
 									esc_url( $line->get_product_url() ),
-									esc_attr( $title ),
+									esc_attr( $line_title ),
 									esc_html( $line->get_name() )
 								);
 							} elseif ( ! empty( $description ) ) {

@@ -612,19 +612,19 @@ $providers = array(
 
 <table class="pronamic-pay-table wp-list-table widefat" cellspacing="0">
 
-	<?php foreach ( array( 'thead', 'tfoot' ) as $tag ) : ?>
+	<?php foreach ( array( 'thead', 'tfoot' ) as $html_tag ) : ?>
 
-		<<?php echo esc_html( $tag ); ?>>
+		<<?php echo esc_html( $html_tag ); ?>>
 			<tr>
 				<th scope="col" class="manage-column"><?php esc_html_e( 'Title', 'pronamic_ideal' ); ?></th>
 				<th scope="col" class="manage-column"><?php esc_html_e( 'Date', 'pronamic_ideal' ); ?></th>
 				<th scope="col" class="manage-column"><?php esc_html_e( 'Version', 'pronamic_ideal' ); ?></th>
 			</tr>
-		</<?php echo esc_html( $tag ); ?>>
+		</<?php echo esc_html( $html_tag ); ?>>
 
 	<?php endforeach; ?>
 
-	<tobdy>
+	<tbody>
 
 		<?php foreach ( $providers as $provider ) : ?>
 
@@ -690,5 +690,5 @@ $providers = array(
 
 		<?php endforeach; ?>
 
-	</tobdy>
+	</tbody>
 </table>

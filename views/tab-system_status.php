@@ -29,9 +29,9 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 			<td>
 				<?php
 
-				$status = get_option( 'pronamic_pay_license_status' );
+				$license_status = get_option( 'pronamic_pay_license_status' );
 
-				switch ( $status ) {
+				switch ( $license_status ) {
 					case 'valid':
 						esc_html_e( 'Valid', 'pronamic_ideal' );
 
@@ -45,7 +45,7 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 
 						break;
 					default:
-						echo esc_html( $status );
+						echo esc_html( $license_status );
 
 						break;
 				}
@@ -412,30 +412,26 @@ if ( ! $data ) {
 
 			<?php $alternate = true; ?>
 
-			<?php foreach ( $data as $status ) : ?>
+			<?php foreach ( $data as $issuer ) : ?>
 
 				<?php $alternate = ! $alternate; ?>
 
-				<tr
-				<?php
-				if ( $alternate ) :
-					?>
-					 class="alternate"<?php endif; ?>>
+				<tr<?php echo ( $alternate ? ' class="alternate"' : null ); ?>>
 					<td>
-						<small><?php echo esc_html( $status->issuer_id ); ?></small>
+						<small><?php echo esc_html( $issuer->issuer_id ); ?></small>
 
 						–
 
-						<?php echo esc_html( $status->issuer_name ); ?>
+						<?php echo esc_html( $issuer->issuer_name ); ?>
 					</td>
 					<td>
-						<?php echo esc_html( number_format( $status->rate_success * 100, 1, ',', '.' ) ); ?>%
+						<?php echo esc_html( number_format( $issuer->rate_success * 100, 1, ',', '.' ) ); ?>%
 					</td>
 					<td>
-						<?php echo esc_html( number_format( $status->rate_failure * 100, 1, ',', '.' ) ); ?>%
+						<?php echo esc_html( number_format( $issuer->rate_failure * 100, 1, ',', '.' ) ); ?>%
 					</td>
 					<td>
-						<?php echo esc_html( $status->datetime ); ?>
+						<?php echo esc_html( $issuer->datetime ); ?>
 					</td>
 				</tr>
 

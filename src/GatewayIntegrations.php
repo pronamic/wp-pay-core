@@ -40,6 +40,13 @@ class GatewayIntegrations implements IteratorAggregate {
 		}
 	}
 
+	/**
+	 * Get integration by ID.
+	 *
+	 * @param string $id Integration ID.
+	 *
+	 * @return AbstractIntegration|null
+	 */
 	public function get_integration( $id ) {
 		if ( array_key_exists( $id, $this->integrations ) ) {
 			return $this->integrations[ $id ];

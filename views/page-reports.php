@@ -29,6 +29,8 @@ use Pronamic\WordPress\Pay\Util;
 
 						<?php foreach ( $this->reports->get_reports() as $i => $serie ) : ?>
 
+                            <?php // phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- Flot data object. ?>
+
 							<li class="<?php echo esc_attr( $serie->class ); ?>" data-pronamic-pay-highlight-serie="<?php echo esc_attr( $i ); ?>">
 								<?php
 
@@ -48,6 +50,8 @@ use Pronamic\WordPress\Pay\Util;
 
 								?>
 							</li>
+
+							<?php // phpcs:enable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- Flot data object. ?>
 
 						<?php endforeach; ?>
 

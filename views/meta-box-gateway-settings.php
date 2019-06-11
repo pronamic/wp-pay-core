@@ -1,4 +1,12 @@
 <?php
+/**
+ * Meta Box Gateway Settings
+ *
+ * @author    Pronamic <info@pronamic.eu>
+ * @copyright 2005-2019 Pronamic
+ * @license   GPL-3.0-or-later
+ * @package   Pronamic\WordPress\Pay
+ */
 
 use Pronamic\WordPress\Pay\Util;
 
@@ -43,7 +51,7 @@ if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_n
 
 if ( $integration->supports( 'payment_status_request' ) ) {
 	$fields[] = array(
-		'section'  => 'general',
+		'section' => 'general',
 		'title'   => __( 'Transaction feedback', 'pronamic_ideal' ),
 		'type'    => 'description',
 		'html'    => sprintf(
@@ -53,7 +61,7 @@ if ( $integration->supports( 'payment_status_request' ) ) {
 	);
 }
 
-foreach ( $fields as $id => $field ) {
+foreach ( $fields as $field_id => $field ) {
 	$section = 'general';
 
 	if ( array_key_exists( 'section', $field ) ) {
@@ -77,7 +85,7 @@ $sections = array_filter(
 ?>
 <div class="pronamic-pay-tabs">
 	<ul class="pronamic-pay-tabs-items">
-		
+
 		<?php foreach ( $sections as $section ) : ?>
 
 			<li>
@@ -86,6 +94,7 @@ $sections = array_filter(
 				if ( isset( $section->icon ) ) {
 					printf(
 						'<span class="%s"></span>',
+						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 						$section->icon
 					);
 
@@ -112,7 +121,8 @@ $sections = array_filter(
 					<p>
 						<?php
 
-						echo $section->description; // WPCS: XSS ok.
+						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						echo $section->description;
 
 						?>
 					</p>
@@ -123,13 +133,12 @@ $sections = array_filter(
 			<table class="form-table">
 
 				<?php
+
 				foreach ( $section->fields as $field ) :
 
 					$classes = array();
-					if ( isset( $field['methods'] ) ) {
-						// $classes[] = 'pronamic-pay-cloack';
-						// $classes[] = 'extra-settings';
 
+					if ( isset( $field['methods'] ) ) {
 						foreach ( $field['methods'] as $method ) {
 							$classes[] = 'setting-' . $method;
 						}
@@ -140,11 +149,11 @@ $sections = array_filter(
 					}
 
 					if ( isset( $field['id'] ) ) {
-						$id = $field['id'];
+						$field_id = $field['id'];
 					} elseif ( isset( $field['meta_key'] ) ) {
-						$id = $field['meta_key'];
+						$field_id = $field['meta_key'];
 					} else {
-						$id = uniqid();
+						$field_id = uniqid();
 					}
 
 					?>
@@ -153,7 +162,7 @@ $sections = array_filter(
 						<?php if ( 'html' !== $field['type'] ) { ?>
 
 						<th scope="row">
-							<label for="<?php echo esc_attr( $id ); ?>">
+							<label for="<?php echo esc_attr( $field_id ); ?>">
 								<?php echo esc_html( $field['title'] ); ?>
 							</label>
 
@@ -182,8 +191,8 @@ $sections = array_filter(
 							$field = (array) $field;
 
 							$attributes         = array();
-							$attributes['id']   = $id;
-							$attributes['name'] = $id;
+							$attributes['id']   = $field_id;
+							$attributes['name'] = $field_id;
 
 							$classes = array();
 							if ( isset( $field['classes'] ) ) {
@@ -323,12 +332,14 @@ $sections = array_filter(
 									);
 								}
 
-								echo $field['html']; // WPCS: XSS ok.
+								// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+								echo $field['html'];
 							}
 
 							if ( isset( $field['description'] ) ) {
-								printf( // WPCS: XSS ok.
+								printf(
 									'<p class="pronamic-pay-description description">%s</p>',
+									// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 									$field['description']
 								);
 							}

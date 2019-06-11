@@ -34,11 +34,11 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 		<select id="pronamic-payment-status" name="pronamic_payment_post_status" class="medium-text">
 			<?php
 
-			foreach ( $states as $status => $label ) {
+			foreach ( $states as $payment_status => $label ) {
 				printf(
 					'<option value="%s" %s>%s</option>',
-					esc_attr( $status ),
-					selected( $status, $post->post_status, false ),
+					esc_attr( $payment_status ),
+					selected( $payment_status, $post->post_status, false ),
 					esc_html( $label )
 				);
 			}

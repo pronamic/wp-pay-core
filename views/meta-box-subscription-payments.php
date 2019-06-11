@@ -8,15 +8,13 @@
  * @package   Pronamic\WordPress\Pay
  */
 
-$post_id = get_the_ID();
+$subscription_id = get_the_ID();
 
-if ( empty( $post_id ) ) {
+if ( empty( $subscription_id ) ) {
 	return;
 }
 
-$post_type = get_post_type( $post_id );
-
-$subscription = get_pronamic_subscription( $post_id );
+$subscription = get_pronamic_subscription( $subscription_id );
 
 $payments = $subscription->get_payments();
 
@@ -49,26 +47,26 @@ $payments = $subscription->get_payments();
 
 				<?php
 
-				$payment_id = $payment->get_id();
-				$post_type  = get_post_type( $payment_id );
+				$payment_id         = $payment->get_id();
+				$payments_post_type = get_post_type( $payment_id );
 
 				?>
 
 				<tr>
 					<td>
-						<?php do_action( 'manage_' . $post_type . '_posts_custom_column', 'pronamic_payment_status', $payment_id ); ?>
+						<?php do_action( 'manage_' . $payments_post_type . '_posts_custom_column', 'pronamic_payment_status', $payment_id ); ?>
 					</td>
 					<td>
-						<?php do_action( 'manage_' . $post_type . '_posts_custom_column', 'pronamic_payment_title', $payment_id ); ?>
+						<?php do_action( 'manage_' . $payments_post_type . '_posts_custom_column', 'pronamic_payment_title', $payment_id ); ?>
 					</td>
 					<td>
-						<?php do_action( 'manage_' . $post_type . '_posts_custom_column', 'pronamic_payment_transaction', $payment_id ); ?>
+						<?php do_action( 'manage_' . $payments_post_type . '_posts_custom_column', 'pronamic_payment_transaction', $payment_id ); ?>
 					</td>
 					<td>
-						<?php do_action( 'manage_' . $post_type . '_posts_custom_column', 'pronamic_payment_amount', $payment_id ); ?>
+						<?php do_action( 'manage_' . $payments_post_type . '_posts_custom_column', 'pronamic_payment_amount', $payment_id ); ?>
 					</td>
 					<td>
-						<?php do_action( 'manage_' . $post_type . '_posts_custom_column', 'pronamic_payment_date', $payment_id ); ?>
+						<?php do_action( 'manage_' . $payments_post_type . '_posts_custom_column', 'pronamic_payment_date', $payment_id ); ?>
 					</td>
 					<td>
 						<?php echo empty( $payment->start_date ) ? '—' : esc_html( $payment->start_date->format_i18n() ); ?>

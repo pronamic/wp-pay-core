@@ -10,13 +10,13 @@
 
 use Pronamic\WordPress\Pay\Util;
 
-$post_id = get_the_ID();
+$payment_id = get_the_ID();
 
-if ( empty( $post_id ) ) {
+if ( empty( $payment_id ) ) {
 	return;
 }
 
-$payment = get_pronamic_payment( $post_id );
+$payment = get_pronamic_payment( $payment_id );
 
 if ( null === $payment ) {
 	return;
@@ -96,7 +96,8 @@ if ( $subscription ) : ?>
 			<td>
 				<?php
 
-				echo $subscription->get_source_text(); // WPCS: XSS ok.
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo $subscription->get_source_text();
 
 				?>
 			</td>

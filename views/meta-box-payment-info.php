@@ -11,13 +11,13 @@
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Gender;
 
-$post_id = get_the_ID();
+$payment_id = get_the_ID();
 
-if ( empty( $post_id ) ) {
+if ( empty( $payment_id ) ) {
 	return;
 }
 
-$post_type = 'pronamic_payment';
+$payments_post_type = \Pronamic\WordPress\Pay\Admin\AdminPaymentPostType::POST_TYPE;
 
 $payment = get_pronamic_payment( $post_id );
 
@@ -25,7 +25,7 @@ if ( null === $payment ) {
 	return;
 }
 
-$purchase_id = get_post_meta( $post_id, '_pronamic_payment_purchase_id', true );
+$purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true );
 
 ?>
 <table class="form-table">
@@ -42,7 +42,7 @@ $purchase_id = get_post_meta( $post_id, '_pronamic_payment_purchase_id', true );
 			<?php esc_html_e( 'ID', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
-			<?php echo esc_html( $post_id ); ?>
+			<?php echo esc_html( $payment_id ); ?>
 		</td>
 	</tr>
 	<tr>
@@ -50,7 +50,7 @@ $purchase_id = get_post_meta( $post_id, '_pronamic_payment_purchase_id', true );
 			<?php esc_html_e( 'Order ID', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
-			<?php echo esc_html( get_post_meta( $post_id, '_pronamic_payment_order_id', true ) ); ?>
+			<?php echo esc_html( get_post_meta( $payment_id, '_pronamic_payment_order_id', true ) ); ?>
 		</td>
 	</tr>
 	<tr>
@@ -58,7 +58,7 @@ $purchase_id = get_post_meta( $post_id, '_pronamic_payment_purchase_id', true );
 			<?php esc_html_e( 'Description', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
-			<?php echo esc_html( get_post_meta( $post_id, '_pronamic_payment_description', true ) ); ?>
+			<?php echo esc_html( get_post_meta( $payment_id, '_pronamic_payment_description', true ) ); ?>
 		</td>
 	</tr>
 	<tr>
@@ -78,7 +78,7 @@ $purchase_id = get_post_meta( $post_id, '_pronamic_payment_purchase_id', true );
 			<?php esc_html_e( 'Transaction ID', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
-			<?php do_action( 'manage_' . $post_type . '_posts_custom_column', 'pronamic_payment_transaction', $post_id ); ?>
+			<?php do_action( 'manage_' . $payments_post_type . '_posts_custom_column', 'pronamic_payment_transaction', $post_id ); ?>
 		</td>
 	</tr>
 
@@ -132,7 +132,7 @@ $purchase_id = get_post_meta( $post_id, '_pronamic_payment_purchase_id', true );
 		<td>
 			<?php
 
-			$url = get_post_meta( $post_id, '_pronamic_payment_action_url', true );
+			$url = get_post_meta( $payment_id, '_pronamic_payment_action_url', true );
 
 			printf(
 				'<a href="%s" target="_blank">%s</a>',
@@ -186,7 +186,7 @@ $purchase_id = get_post_meta( $post_id, '_pronamic_payment_purchase_id', true );
 		<td>
 			<?php
 
-			$status_object = get_post_status_object( get_post_status( $post_id ) );
+			$status_object = get_post_status_object( get_post_status( $payment_id ) );
 
 			if ( isset( $status_object, $status_object->label ) ) {
 				echo esc_html( $status_object->label );
@@ -289,7 +289,7 @@ $purchase_id = get_post_meta( $post_id, '_pronamic_payment_purchase_id', true );
 
 	<?php
 
-	$account_holder = get_post_meta( $post_id, '_pronamic_payment_consumer_name', true );
+	$account_holder = get_post_meta( $payment_id, '_pronamic_payment_consumer_name', true );
 
 	if ( ! empty( $account_holder ) ) :
 		?>
@@ -307,7 +307,7 @@ $purchase_id = get_post_meta( $post_id, '_pronamic_payment_purchase_id', true );
 
 	<?php
 
-	$account_holder_city = get_post_meta( $post_id, '_pronamic_payment_consumer_city', true );
+	$account_holder_city = get_post_meta( $payment_id, '_pronamic_payment_consumer_city', true );
 
 	if ( ! empty( $account_holder_city ) ) :
 		?>
@@ -325,7 +325,7 @@ $purchase_id = get_post_meta( $post_id, '_pronamic_payment_purchase_id', true );
 
 	<?php
 
-	$account_number = get_post_meta( $post_id, '_pronamic_payment_consumer_account_number', true );
+	$account_number = get_post_meta( $payment_id, '_pronamic_payment_consumer_account_number', true );
 
 	if ( ! empty( $account_number ) ) :
 		?>
@@ -343,7 +343,7 @@ $purchase_id = get_post_meta( $post_id, '_pronamic_payment_purchase_id', true );
 
 	<?php
 
-	$iban = get_post_meta( $post_id, '_pronamic_payment_consumer_iban', true );
+	$iban = get_post_meta( $payment_id, '_pronamic_payment_consumer_iban', true );
 
 	if ( ! empty( $iban ) ) :
 		?>
@@ -369,7 +369,7 @@ $purchase_id = get_post_meta( $post_id, '_pronamic_payment_purchase_id', true );
 
 	<?php
 
-	$bic = get_post_meta( $post_id, '_pronamic_payment_consumer_bic', true );
+	$bic = get_post_meta( $payment_id, '_pronamic_payment_consumer_bic', true );
 
 	if ( ! empty( $bic ) ) :
 		?>
@@ -438,7 +438,8 @@ $purchase_id = get_post_meta( $post_id, '_pronamic_payment_purchase_id', true );
 		<td>
 			<?php
 
-			echo $payment->get_source_text(); // WPCS: XSS ok.
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $payment->get_source_text();
 
 			?>
 		</td>

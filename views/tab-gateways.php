@@ -80,7 +80,7 @@ bind_providers_and_gateways();
 						);
 					}
 
-					printf( // WPCS: XSS ok.
+					printf( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 						'<tr%s>
 							<td>%s</td>
 							<td>%s</td>
@@ -89,7 +89,16 @@ bind_providers_and_gateways();
 						( $alternate ? ' class="alternate"' : null ),
 						esc_html( $provider ),
 						esc_html( $name ),
-						$site
+						wp_kses(
+							$site,
+							array(
+								'a' => array(
+									'href'   => true,
+									'target' => true,
+									'title'  => true,
+								),
+							)
+						)
 					);
 
 				endforeach;

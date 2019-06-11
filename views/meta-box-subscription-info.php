@@ -12,13 +12,13 @@ use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Util;
 
-$post_id = get_the_ID();
+$subscription_id = get_the_ID();
 
-if ( empty( $post_id ) ) {
+if ( empty( $subscription_id ) ) {
 	return;
 }
 
-$subscription = get_pronamic_subscription( $post_id );
+$subscription = get_pronamic_subscription( $subscription_id );
 
 ?>
 <table class="form-table">
@@ -35,7 +35,7 @@ $subscription = get_pronamic_subscription( $post_id );
 			<?php esc_html_e( 'ID', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
-			<?php echo esc_html( $post_id ); ?>
+			<?php echo esc_html( $subscription_id ); ?>
 		</td>
 	</tr>
 	<tr>
@@ -45,7 +45,7 @@ $subscription = get_pronamic_subscription( $post_id );
 		<td>
 			<?php
 
-			$status_object = get_post_status_object( get_post_status( $post_id ) );
+			$status_object = get_post_status_object( get_post_status( $subscription_id ) );
 
 			if ( isset( $status_object, $status_object->label ) ) {
 				echo esc_html( $status_object->label );
@@ -87,7 +87,7 @@ $subscription = get_pronamic_subscription( $post_id );
 		<td>
 			<?php
 
-			if ( current_user_can( 'edit_post', $post_id ) && apply_filters( 'pronamic_pay_subscription_amount_editable_' . $subscription->get_source(), false ) ) {
+			if ( current_user_can( 'edit_post', $subscription_id ) && apply_filters( 'pronamic_pay_subscription_amount_editable_' . $subscription->get_source(), false ) ) {
 				echo esc_html( $subscription->get_total_amount()->get_currency()->get_symbol() );
 
 				$amount = $subscription->get_total_amount()->format_i18n( '%2$s' );
@@ -205,11 +205,11 @@ $subscription = get_pronamic_subscription( $post_id );
 		<td>
 			<?php
 
-			echo esc_html( get_post_meta( $post_id, '_pronamic_subscription_consumer_name', true ) );
+			echo esc_html( get_post_meta( $subscription_id, '_pronamic_subscription_consumer_name', true ) );
 			echo '<br />';
-			echo esc_html( get_post_meta( $post_id, '_pronamic_subscription_consumer_iban', true ) );
+			echo esc_html( get_post_meta( $subscription_id, '_pronamic_subscription_consumer_iban', true ) );
 			echo '<br />';
-			echo esc_html( get_post_meta( $post_id, '_pronamic_subscription_consumer_bic', true ) );
+			echo esc_html( get_post_meta( $subscription_id, '_pronamic_subscription_consumer_bic', true ) );
 
 			?>
 		</td>
@@ -245,7 +245,8 @@ $subscription = get_pronamic_subscription( $post_id );
 		<td>
 			<?php
 
-			echo $subscription->get_source_text(); // WPCS: XSS ok.
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $subscription->get_source_text();
 
 			?>
 		</td>

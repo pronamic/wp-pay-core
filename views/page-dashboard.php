@@ -59,6 +59,7 @@
 									'date',
 								);
 
+							    // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
 								$column_titles = apply_filters( 'manage_edit-' . $payments_post_type . '_columns', array() );
 
 								?>
@@ -102,7 +103,7 @@
 											<tr class="type-<?php echo esc_attr( $payments_post_type ); ?>">
 												<?php
 
-												$post_id = get_the_ID();
+												$payment_id = get_the_ID();
 
 												// Loop columns.
 												foreach ( $columns as $column ) :
@@ -129,7 +130,7 @@
 													do_action(
 														'manage_' . $payments_post_type . '_posts_custom_column',
 														$custom_column,
-														$post_id
+														$payment_id
 													);
 
 													if ( 'pronamic_payment_title' === $custom_column ) :

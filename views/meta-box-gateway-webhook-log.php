@@ -32,7 +32,7 @@ $payment = $webhook_log_request_info->get_payment();
 
 printf(
 	/* translators: 1: formatted date, 2: payment edit url, 3: payment id */
-	__(
+	__( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		'Last webhook request processed on %1$s for <a href="%2$s" title="Payment %3$s">payment #%3$s</a>.',
 		'pronamic_ideal'
 	),

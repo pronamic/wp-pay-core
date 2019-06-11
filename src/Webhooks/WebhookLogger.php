@@ -11,6 +11,8 @@
 namespace Pronamic\WordPress\Pay\Webhooks;
 
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\Pay\Core\Server;
+use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
 
 /**
@@ -21,14 +23,28 @@ use Pronamic\WordPress\Pay\Plugin;
  * @since   2.1.6
  */
 class WebhookLogger {
+	/**
+	 * Setup.
+	 *
+	 * @return void
+	 */
 	public function setup() {
 		add_action( 'pronamic_pay_webhook_log_payment', array( $this, 'log_payment' ) );
 	}
 
-	public function log_payment( $payment ) {
+	/**
+	 * Log payment.
+	 *
+	 * @param Payment $payment Payment.
+	 *
+	 * @return void
+	 *
+	 * @throws \Exception Throws an Exception on request date error.
+	 */
+	public function log_payment( Payment $payment ) {
 		$request_info = new WebhookRequestInfo(
 			new DateTime(),
-			( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'],
+			( is_ssl() ? 'https://' : 'http://' ) . Server::get( 'HTTP_HOST' ) . Server::get( 'REQUEST_URI' ),
 			file_get_contents( 'php://input' )
 		);
 
@@ -37,6 +53,13 @@ class WebhookLogger {
 		$this->log_request( $request_info );
 	}
 
+	/**
+	 * Log request.
+	 *
+	 * @param WebhookRequestInfo $request_info Request info.
+	 *
+	 * @return void
+	 */
 	public function log_request( WebhookRequestInfo $request_info ) {
 		$payment = $request_info->get_payment();
 

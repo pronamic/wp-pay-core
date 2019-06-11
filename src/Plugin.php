@@ -214,8 +214,8 @@ class Plugin {
 		$this->version = $args['version'];
 
 		// Backward compatibility.
-		self::$file     = $args['file'];
-		self::$dirname  = dirname( self::$file );
+		self::$file    = $args['file'];
+		self::$dirname = dirname( self::$file );
 
 		// Bootstrap the add-ons.
 		$extensions = $args['extensions'];

@@ -12,9 +12,12 @@ use Pronamic\WordPress\Pay\Util;
 
 $integrations = iterator_to_array( $this->plugin->gateway_integrations );
 
-usort( $integrations, function( $integration_a, $integration_b ) {
-	return strcasecmp( $integration_a->get_name(), $integration_b->get_name() );
-} );
+usort(
+	$integrations,
+	function( $integration_a, $integration_b ) {
+		return strcasecmp( $integration_a->get_name(), $integration_b->get_name() );
+	}
+);
 
 // Sections.
 $variant_id = get_post_meta( get_the_ID(), '_pronamic_gateway_id', true );
@@ -35,11 +38,11 @@ $variant_id = get_post_meta( get_the_ID(), '_pronamic_gateway_id', true );
 					<?php
 
 					foreach ( $integrations as $integration ) {
-						$id          = $integration->get_id();
-						$name        = $integration->get_name();
-						$classes     = array();
-						$description = '';
-						$links       = array();
+						$integration_id = $integration->get_id();
+						$name           = $integration->get_name();
+						$classes        = array();
+						$description    = '';
+						$links          = array();
 
 						if ( isset( $integration->deprecated ) && $integration->deprecated ) {
 							$classes[] = 'deprecated';
@@ -47,7 +50,7 @@ $variant_id = get_post_meta( get_the_ID(), '_pronamic_gateway_id', true );
 							/* translators: %s: Integration name */
 							$name = sprintf( __( '%s (obsoleted)', 'pronamic_ideal' ), $name );
 
-							if ( $variant_id !== $id ) {
+							if ( $variant_id !== $integration_id ) {
 								continue;
 							}
 						}
@@ -94,8 +97,8 @@ $variant_id = get_post_meta( get_the_ID(), '_pronamic_gateway_id', true );
 							'<option data-gateway-description="%s" data-pronamic-pay-settings="%s" value="%s" %s class="%s">%s</option>',
 							esc_attr( $description ),
 							esc_attr( wp_json_encode( $integration->get_settings() ) ),
-							esc_attr( $id ),
-							selected( $variant_id, $id, false ),
+							esc_attr( $integration_id ),
+							selected( $variant_id, $integration_id, false ),
 							esc_attr( implode( ' ', $classes ) ),
 							esc_attr( $name )
 						);

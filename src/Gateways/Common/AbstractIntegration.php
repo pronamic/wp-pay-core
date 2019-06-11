@@ -210,6 +210,13 @@ abstract class AbstractIntegration {
 		return $meta_value;
 	}
 
+	/**
+	 * Get config by post ID.
+	 *
+	 * @param int $post_id Post ID.
+	 *
+	 * @return null
+	 */
 	public function get_config( $post_id ) {
 		return null;
 	}

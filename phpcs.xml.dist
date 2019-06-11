@@ -48,4 +48,8 @@
 	<rule ref="WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_putenv">
 		<exclude-pattern>/tests/phpstan-bootstrap.php</exclude-pattern>
 	</rule>
+
+	<rule ref="WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents">
+		<exclude-pattern>/views/tab-extensions.php</exclude-pattern>
+	</rule>
 </ruleset>

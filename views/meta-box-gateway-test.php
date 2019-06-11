@@ -96,7 +96,8 @@ require Plugin::$dirname . '/views/errors.php';
 			<td>
 				<?php
 
-				echo $input['html']; // WPCS: XSS ok.
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo $input['html'];
 
 				?>
 			</td>
