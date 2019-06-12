@@ -131,10 +131,25 @@ class WebhookRequestInfo implements JsonSerializable {
 	 * @return WebhookRequestInfo
 	 *
 	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
+	 * @throws InvalidArgumentException Throws invalid argument exception when JSON does not contain `post_data` property.
+	 * @throws InvalidArgumentException Throws invalid argument exception when JSON does not contain `request_date` property.
+	 * @throws InvalidArgumentException Throws invalid argument exception when JSON does not contain `request_url` property.
 	 */
 	public static function from_json( $json ) {
 		if ( ! is_object( $json ) ) {
 			throw new InvalidArgumentException( 'JSON value must be an object.' );
+		}
+
+		if ( ! isset( $json->post_data ) ) {
+			throw new InvalidArgumentException( 'JSON must contain `post_data` property.' );
+		}
+
+		if ( ! isset( $json->request_date ) ) {
+			throw new InvalidArgumentException( 'JSON must contain `request_date` property.' );
+		}
+
+		if ( ! isset( $json->request_url ) ) {
+			throw new InvalidArgumentException( 'JSON must contain `request_url` property.' );
 		}
 
 		$request_date = new DateTime( $json->request_date );
@@ -144,7 +159,9 @@ class WebhookRequestInfo implements JsonSerializable {
 		if ( isset( $json->payment_id ) ) {
 			$payment = get_pronamic_payment( $json->payment_id );
 
-			$webhook_request_info->set_payment( $payment );
+			if ( $payment ) {
+				$webhook_request_info->set_payment( $payment );
+			}
 		}
 
 		return $webhook_request_info;
