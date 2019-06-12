@@ -19,7 +19,7 @@ if ( empty( $payment_id ) ) {
 
 $payments_post_type = \Pronamic\WordPress\Pay\Admin\AdminPaymentPostType::POST_TYPE;
 
-$payment = get_pronamic_payment( $post_id );
+$payment = get_pronamic_payment( $payment_id );
 
 if ( null === $payment ) {
 	return;
@@ -78,7 +78,7 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 			<?php esc_html_e( 'Transaction ID', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
-			<?php do_action( 'manage_' . $payments_post_type . '_posts_custom_column', 'pronamic_payment_transaction', $post_id ); ?>
+			<?php do_action( 'manage_' . $payments_post_type . '_posts_custom_column', 'pronamic_payment_transaction', $payment_id ); ?>
 		</td>
 	</tr>
 
