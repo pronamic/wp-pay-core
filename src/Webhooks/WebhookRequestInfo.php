@@ -127,7 +127,9 @@ class WebhookRequestInfo implements JsonSerializable {
 	 * Create webhook request info from object.
 	 *
 	 * @param mixed $json JSON.
-	 * @return Payment
+	 *
+	 * @return WebhookRequestInfo
+	 *
 	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
 	public static function from_json( $json ) {
