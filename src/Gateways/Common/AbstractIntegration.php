@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay\Gateways\Common;
 
+use Pronamic\WordPress\Pay\Core\Gateway;
+
 /**
  * Title: Abstract Integration
  * Description:
@@ -127,6 +129,15 @@ abstract class AbstractIntegration {
 	}
 
 	/**
+	 * Get settings fields.
+	 *
+	 * @return array
+	 */
+	public function get_settings_fields() {
+		return array();
+	}
+
+	/**
 	 * Get dashboard URL.
 	 *
 	 * @return array
@@ -218,6 +229,17 @@ abstract class AbstractIntegration {
 	 * @return null
 	 */
 	public function get_config( $post_id ) {
+		return null;
+	}
+
+	/**
+	 * Get gateway.
+	 *
+	 * @param int $post_id Post ID.
+	 *
+	 * @return Gateway|null
+	 */
+	public function get_gateway( $post_id ) {
 		return null;
 	}
 }

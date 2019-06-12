@@ -458,11 +458,15 @@ class AdminGatewayPostType {
 
 		$integrations = $this->plugin->gateway_integrations;
 
-		if ( ! array_key_exists( $gateway_id, $integrations ) ) {
+		if ( ! array_key_exists( $gateway_id, iterator_to_array( $integrations ) ) ) {
 			return;
 		}
 
-		$integration = $integrations[ $gateway_id ];
+		$integration = $integrations->get_integration( $gateway_id );
+
+		if ( null === $integration ) {
+			return;
+		}
 
 		$fields = $integration->get_settings_fields();
 

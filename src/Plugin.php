@@ -185,7 +185,7 @@ class Plugin {
 	/**
 	 * Gateway integrations.
 	 *
-	 * @var AbstractIntegration[]
+	 * @var GatewayIntegrations
 	 */
 	public $gateway_integrations;
 

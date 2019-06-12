@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay;
 
 use Exception;
+use InvalidArgumentException;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Pay\Admin\AdminNotices;
@@ -189,9 +190,13 @@ class WebhookManager {
 	 */
 	public static function settings_status( array $field, $features = array() ) {
 		// Get log.
+		$log = null;
+
 		$config_id = self::get_setting_config_id( $field );
 
-		$log = self::get_log( $config_id );
+		if ( null !== $config_id ) {
+			$log = self::get_log( $config_id );
+		}
 
 		if ( null === $log ) {
 			esc_html_e( 'No webhook request processed yet.', 'pronamic_ideal' );
@@ -200,22 +205,34 @@ class WebhookManager {
 		}
 
 		// Prefix icon to field HTML.
-		printf(
-			'%s ',
-			wp_kses(
-				self::get_field_feedback_icon_html( $field, $features ),
-				array(
-					'span' => array(
-						'class' => array(),
-					),
+		$icon_html = self::get_field_feedback_icon_html( $field, $features );
+
+		if ( null !== $icon_html ) {
+			printf(
+				'%s ',
+				wp_kses(
+					$icon_html,
+					array(
+						'span' => array(
+							'class' => array(),
+						),
+					)
 				)
-			)
-		);
+			);
+		}
+
+		$edit_payment_link = isset( $log->payment_id ) ? get_edit_post_link( $log->payment_id ) : null;
 
 		try {
+			$date = null;
+
+			if ( ! isset( $log->date ) ) {
+				throw new InvalidArgumentException( 'No log date provided.' );
+			}
+
 			$date = new DateTime( $log->date, new DateTimeZone( 'UTC' ) );
 
-			if ( isset( $log->payment_id ) ) {
+			if ( isset( $log->payment_id ) && null !== $edit_payment_link ) {
 				printf(
 					wp_kses(
 						/* translators: 1: formatted date, 2: payment edit url, 3: payment id */
@@ -231,7 +248,7 @@ class WebhookManager {
 						)
 					),
 					esc_html( $date->format_i18n( _x( 'l j F Y \a\t H:i', 'full datetime format', 'pronamic_ideal' ) ) ),
-					esc_url( get_edit_post_link( $log->payment_id ) ),
+					esc_url( $edit_payment_link ),
 					esc_html( $log->payment_id )
 				);
 			} else {
@@ -242,7 +259,7 @@ class WebhookManager {
 				);
 			}
 		} catch ( Exception $e ) {
-			if ( isset( $log->payment_id ) ) {
+			if ( isset( $log->payment_id ) && null !== $edit_payment_link ) {
 				printf(
 					wp_kses(
 						/* translators: 1: payment edit url, 2: payment id */
@@ -257,7 +274,7 @@ class WebhookManager {
 							),
 						)
 					),
-					esc_url( get_edit_post_link( $log->payment_id ) ),
+					esc_url( $edit_payment_link ),
 					esc_html( $log->payment_id )
 				);
 			} else {
@@ -319,6 +336,10 @@ class WebhookManager {
 			// Get config ID for settings field.
 			$config_id = self::get_setting_config_id( $field );
 
+			if ( null === $config_id ) {
+				continue;
+			}
+
 			// Get log.
 			$log = self::get_log( $config_id );
 
@@ -326,11 +347,17 @@ class WebhookManager {
 				continue;
 			}
 
+			$edit_payment_link = isset( $log->payment_id ) ? get_edit_post_link( $log->payment_id ) : null;
+
 			// Replace field HTML with details about last processed webhook request.
 			try {
+				if ( ! isset( $log->date ) ) {
+					throw new InvalidArgumentException( 'No log date provided.' );
+				}
+
 				$date = new DateTime( $log->date, new DateTimeZone( 'UTC' ) );
 
-				if ( isset( $log->payment_id ) ) {
+				if ( isset( $log->payment_id ) && null !== $edit_payment_link ) {
 					$field['html'] = sprintf(
 						/* translators: 1: formatted date, 2: payment edit url, 3: payment id */
 						__(
@@ -338,7 +365,7 @@ class WebhookManager {
 							'pronamic_ideal'
 						),
 						esc_html( $date->format_i18n( _x( 'l j F Y \a\t H:i', 'full datetime format', 'pronamic_ideal' ) ) ),
-						esc_url( get_edit_post_link( $log->payment_id ) ),
+						esc_url( $edit_payment_link ),
 						esc_html( $log->payment_id )
 					);
 				} else {
@@ -349,14 +376,14 @@ class WebhookManager {
 					);
 				}
 			} catch ( Exception $e ) {
-				if ( isset( $log->payment_id ) ) {
-					$field['html'] = sprintf(
+				if ( isset( $log->payment_id ) && null !== $edit_payment_link ) {
+					$field['html']      = sprintf(
 						/* translators: 1: payment edit url, 2: payment id */
 						__(
 							'Last webhook request processed for <a href="%1$s" title="Payment %2$s">payment #%2$s</a>.',
 							'pronamic_ideal'
 						),
-						esc_url( get_edit_post_link( $log->payment_id ) ),
+						esc_url( $edit_payment_link ),
 						esc_html( $log->payment_id )
 					);
 				} else {
@@ -416,9 +443,13 @@ class WebhookManager {
 		$icon = self::ICON_CLASS_OK;
 
 		if ( self::is_manual_config_required( $features ) ) {
+			$log = null;
+
 			$config_id = self::get_setting_config_id( $setting );
 
-			$log = self::get_log( $config_id );
+			if ( null !== $config_id ) {
+				$log = self::get_log( $config_id );
+			}
 
 			if ( null === $log || ! self::valid_log_url( $log ) ) {
 				$icon = self::ICON_CLASS_WARNING;
@@ -447,7 +478,7 @@ class WebhookManager {
 	/**
 	 * Validate log URL against current site URL.
 	 *
-	 * @param stdClass $log Log object.
+	 * @param object $log Log object.
 	 *
 	 * @return bool
 	 */
@@ -498,6 +529,10 @@ class WebhookManager {
 			// Loop gateways.
 			foreach ( $query->posts as $config_id ) {
 				$log = self::get_log( $config_id );
+
+				if ( null === $log ) {
+					continue;
+				}
 
 				if ( self::valid_log_url( $log ) ) {
 					continue;

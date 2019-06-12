@@ -42,10 +42,16 @@ class WebhookLogger {
 	 * @throws \Exception Throws an Exception on request date error.
 	 */
 	public function log_payment( Payment $payment ) {
+		$post_data = file_get_contents( 'php://input' );
+
+		if ( ! $post_data ) {
+			$post_data = null;
+		}
+
 		$request_info = new WebhookRequestInfo(
 			new DateTime(),
 			( is_ssl() ? 'https://' : 'http://' ) . Server::get( 'HTTP_HOST' ) . Server::get( 'REQUEST_URI' ),
-			file_get_contents( 'php://input' )
+			$post_data
 		);
 
 		$request_info->set_payment( $payment );
@@ -61,14 +67,21 @@ class WebhookLogger {
 	 * @return void
 	 */
 	public function log_request( WebhookRequestInfo $request_info ) {
+		// Payment.
 		$payment = $request_info->get_payment();
 
 		if ( null === $payment ) {
 			return;
 		}
 
+		// Config ID.
 		$config_id = $payment->get_config_id();
 
+		if ( null === $config_id ) {
+			return;
+		}
+
+		// Gateway.
 		$gateway = Plugin::get_gateway( $config_id );
 
 		if ( null === $gateway ) {
@@ -76,6 +89,10 @@ class WebhookLogger {
 		}
 
 		// Update webhook log.
-		update_post_meta( $config_id, '_pronamic_gateway_webhook_log', wp_slash( wp_json_encode( $request_info ) ) );
+		$json = wp_json_encode( $request_info );
+
+		if ( $json ) {
+			update_post_meta( $config_id, '_pronamic_gateway_webhook_log', wp_slash( $json ) );
+		}
 	}
 }

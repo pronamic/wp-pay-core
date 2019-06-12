@@ -47,16 +47,16 @@ class WebhookRequestInfo implements JsonSerializable {
 	/**
 	 * Post data.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $post_data;
 
 	/**
 	 * Construct webhook request info object.
 	 *
-	 * @param DateTime $request_date Request date.
-	 * @param string   $request_url  Request URL.
-	 * @param string   $post_data    Post data.
+	 * @param DateTime    $request_date Request date.
+	 * @param string      $request_url  Request URL.
+	 * @param string|null $post_data    Post data.
 	 */
 	public function __construct( DateTime $request_date, $request_url, $post_data ) {
 		$this->request_date = $request_date;
