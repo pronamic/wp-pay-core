@@ -187,6 +187,8 @@ class WebhookManager {
 	 * @param array $features Supported gateway features.
 	 *
 	 * @return void
+	 *
+	 * @throws InvalidArgumentException Throws an exception if log does not contain a date.
 	 */
 	public static function settings_status( array $field, $features = array() ) {
 		// Get log.
@@ -323,6 +325,8 @@ class WebhookManager {
 	 * @param array $fields Settings fields.
 	 *
 	 * @return array
+	 *
+	 * @throws InvalidArgumentException Throws an exception if log does not contain a date.
 	 */
 	public function settings_field_feedback_icon( array $fields ) {
 		$feedback_title = __( 'Transaction feedback', 'pronamic_ideal' );
@@ -377,7 +381,7 @@ class WebhookManager {
 				}
 			} catch ( Exception $e ) {
 				if ( isset( $log->payment_id ) && null !== $edit_payment_link ) {
-					$field['html']      = sprintf(
+					$field['html'] = sprintf(
 						/* translators: 1: payment edit url, 2: payment id */
 						__(
 							'Last webhook request processed for <a href="%1$s" title="Payment %2$s">payment #%2$s</a>.',

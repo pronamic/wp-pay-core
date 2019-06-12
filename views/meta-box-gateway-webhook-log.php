@@ -30,9 +30,9 @@ $object = json_decode( $webhook_log_json_string );
 try {
 	$webhook_log_request_info = WebhookRequestInfo::from_json( $object );
 } catch ( InvalidArgumentException $e ) {
-	$error = new WP_Error( 'webhook_request_info_error', $e->getMessage() );
+	$webhook_error = new WP_Error( 'webhook_request_info_error', $e->getMessage() );
 
-	Plugin::render_errors( $error );
+	Plugin::render_errors( $webhook_error );
 
 	return;
 }
@@ -41,7 +41,7 @@ $payment = $webhook_log_request_info->get_payment();
 
 if ( $payment ) {
 	printf(
-	/* translators: 1: formatted date, 2: payment edit url, 3: payment id */
+		/* translators: 1: formatted date, 2: payment edit url, 3: payment id */
 		__( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			'Last webhook request processed on %1$s for <a href="%2$s" title="Payment %3$s">payment #%3$s</a>.',
 			'pronamic_ideal'
@@ -52,7 +52,7 @@ if ( $payment ) {
 	);
 } else {
 	printf(
-	/* translators: 1: formatted date, 2: payment edit url, 3: payment id */
+		/* translators: 1: formatted date, 2: payment edit url, 3: payment id */
 		__( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			'Last webhook request processed on %1$s.',
 			'pronamic_ideal'
