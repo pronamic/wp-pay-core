@@ -8,11 +8,19 @@
  * @package   Pronamic\WordPress\Pay
  */
 
+use Pronamic\WordPress\Pay\Plugin;
+
 ?><h2><?php esc_html_e( 'Supported extensions', 'pronamic_ideal' ); ?></h2>
 
 <?php
 
-$data       = file_get_contents( __DIR__ . '/../other/extensions.json' );
+$extensions_json_path = Plugin::$dirname . '/other/extensions.json';
+
+if ( ! file_exists( $extensions_json_path ) ) :
+	return;
+endif;
+
+$data       = file_get_contents( $extensions_json_path );
 $extensions = json_decode( $data );
 
 ?>
