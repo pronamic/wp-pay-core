@@ -15,6 +15,7 @@ use Pronamic\WordPress\Money\Parser;
 use Pronamic\WordPress\Pay\Forms\FormsSource;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
+use WP_Error;
 
 /**
  * Blocks
@@ -118,6 +119,31 @@ class BlocksModule {
 			'source_id' => get_the_ID(),
 		);
 
+		// Check valid gateway.
+		$config_id = get_option( 'pronamic_pay_config_id' );
+
+		$gateway = Plugin::get_gateway( $config_id );
+
+		if ( null === $gateway ) :
+			ob_start();
+
+			Plugin::render_errors(
+				new WP_Error(
+					'pay_error',
+					__( 'Unable to process payments with default gateway.', 'pronamic_ideal' )
+				)
+			);
+
+			$output = ob_get_clean();
+
+			if ( false === $output ) {
+				throw new Exception( 'Output buffering is not active.' );
+			}
+
+			return $output;
+		endif;
+
+		// Return form output.
 		return pronamic_pay_plugin()->forms_module->get_form_output( $args );
 	}
 
