@@ -248,25 +248,22 @@ function get_pronamic_subscriptions_by_meta( $meta_key, $meta_value ) {
 function bind_providers_and_gateways() {
 	global $pronamic_pay_providers;
 
-	foreach ( pronamic_pay_plugin()->gateway_integrations as $integration ) {
-		if ( isset( $pronamic_pay_providers[ $integration->provider ] ) ) {
-			$provider =& $pronamic_pay_providers[ $integration->provider ];
+	$integrations = pronamic_pay_plugin()->gateway_integrations;
 
-			if ( ! isset( $provider['integrations'] ) ) {
-				$provider['integrations'] = array();
-			}
+	foreach ( $integrations as $integration ) {
+		$provider = $integration->provider;
 
-			$provider['integrations'][] = $integration;
+		if ( ! isset( $pronamic_pay_providers[ $provider ] ) ) {
+			$pronamic_pay_providers[ $provider ] = array(
+				'integrations' => array(),
+			);
 		}
+
+		$pronamic_pay_providers[ $provider ]['integrations'][] = $integration;
 	}
 
-	// Sort by provider name.
-	usort(
-		$pronamic_pay_providers,
-		function( $a, $b ) {
-			return strcmp( $a['name'], $b['name'] );
-		}
-	);
+	// Sort by provider.
+	ksort( $pronamic_pay_providers );
 }
 
 /**
