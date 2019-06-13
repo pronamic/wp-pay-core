@@ -59,7 +59,7 @@ class FormScripts {
 
 		wp_register_style(
 			'pronamic-pay-forms',
-			plugins_url( 'css/forms' . $min . '.css', $this->plugin->get_file() ),
+			plugins_url( 'css/forms' . $min . '.css', dirname( __FILE__, 2 ) ),
 			array(),
 			$this->plugin->get_version()
 		);
