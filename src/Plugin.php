@@ -666,7 +666,7 @@ class Plugin {
 			$errors = array( $errors );
 		}
 
-		foreach ( $errors as $error ) {
+		foreach ( $errors as $pay_error ) {
 			include self::$dirname . '/views/error.php';
 		}
 	}
