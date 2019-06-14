@@ -614,7 +614,7 @@ class Plugin {
 
 		wp_register_style(
 			'pronamic-pay-redirect',
-			plugins_url( 'css/redirect' . $min . '.css', $this->get_file() ),
+			plugins_url( 'css/redirect' . $min . '.css', dirname( __FILE__ ) ),
 			array(),
 			$this->get_version()
 		);
