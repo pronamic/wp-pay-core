@@ -264,8 +264,8 @@ abstract class Gateway {
 	public function get_transient_issuers() {
 		$issuers = null;
 
-		// Transient name. Expected to not be SQL-escaped. Should be 45 characters or less in length.
-		$transient = 'pronamic_pay_issuers_' . $this->config->id;
+		// Transient name.
+		$transient = 'pronamic_pay_issuers_' . md5( serialize( $this->config ) );
 
 		$result = get_transient( $transient );
 
@@ -291,8 +291,8 @@ abstract class Gateway {
 	public function get_transient_credit_card_issuers() {
 		$issuers = null;
 
-		// Transient name. Expected to not be SQL-escaped. Should be 45 characters or less in length.
-		$transient = 'pronamic_pay_credit_card_issuers_' . $this->config->id;
+		// Transient name.
+		$transient = 'pronamic_pay_credit_card_issuers_' . md5( serialize( $this->config ) );
 
 		$result = get_transient( $transient );
 
@@ -349,8 +349,8 @@ abstract class Gateway {
 	 * @return array
 	 */
 	public function get_transient_available_payment_methods() {
-		// Transient name. Expected to not be SQL-escaped. Should be 45 characters or less in length.
-		$transient = 'pronamic_gateway_payment_methods_' . $this->config->id;
+		// Transient name.
+		$transient = 'pronamic_gateway_payment_methods_' . md5( serialize( $this->config ) );
 
 		$methods = get_transient( $transient );
 
