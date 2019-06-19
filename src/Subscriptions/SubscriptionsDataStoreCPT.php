@@ -19,6 +19,7 @@ use Pronamic\WordPress\Pay\AbstractDataStoreCPT;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\Customer;
 
 /**
  * Title: Subscriptions data store CPT
@@ -334,7 +335,6 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 		$subscription->post    = get_post( $id );
 		$subscription->title   = get_the_title( $id );
 		$subscription->date    = new DateTime( get_post_field( 'post_date_gmt', $id, 'raw' ), new DateTimeZone( 'UTC' ) );
-		$subscription->user_id = get_post_field( 'post_author', $id, 'raw' );
 
 		$content = get_post_field( 'post_content', $id, 'raw' );
 
@@ -342,6 +342,21 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 
 		if ( is_object( $json ) ) {
 			Subscription::from_json( $json, $subscription );
+		}
+
+		// Set user ID from `post_author` field if not set from subscription JSON.
+		$customer = $subscription->get_customer();
+
+		if ( null === $customer ) {
+			$customer = new Customer();
+
+			$subscription->set_customer( $customer );
+		}
+
+		if ( null === $customer->get_user_id() ) {
+			$post_author = get_post_field( 'post_author', $id, 'raw' );
+
+			$customer->set_user_id( intval( $post_author ) );
 		}
 
 		$this->read_post_meta( $subscription );
