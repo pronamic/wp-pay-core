@@ -445,11 +445,7 @@ class AdminGatewayPostType {
 		}
 
 		// Transient.
-		delete_transient( 'pronamic_pay_issuers_' . $post_id );
-		delete_transient( 'pronamic_gateway_payment_methods_' . $post_id );
 		delete_transient( WebhookManager::OUTDATED_WEBHOOK_URLS_OPTION );
-
-		PaymentMethods::update_active_payment_methods();
 
 		// Gatway fields.
 		if ( empty( $gateway_id ) ) {
@@ -468,6 +464,13 @@ class AdminGatewayPostType {
 			return;
 		}
 
+		// Delete transients.
+		$config = $integration->get_config( $post_id );
+
+		delete_transient( 'pronamic_pay_issuers_' . md5( serialize( $config ) ) );
+		delete_transient( 'pronamic_gateway_payment_methods_' . md5( serialize( $config ) ) );
+
+		// Save settings.
 		$fields = $integration->get_settings_fields();
 
 		foreach ( $fields as $field ) {
@@ -482,6 +485,9 @@ class AdminGatewayPostType {
 				}
 			}
 		}
+
+		// Update active payment methods.
+		PaymentMethods::update_active_payment_methods();
 	}
 
 	/**
