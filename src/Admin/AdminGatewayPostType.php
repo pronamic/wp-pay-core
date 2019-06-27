@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
+use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\Plugin;
@@ -235,33 +236,6 @@ class AdminGatewayPostType {
 			);
 
 			add_meta_box(
-				'pronamic_gateway_settings',
-				__( 'Settings', 'pronamic_ideal' ),
-				array( $this, 'meta_box_settings' ),
-				$post_type,
-				'normal',
-				'high'
-			);
-
-			add_meta_box(
-				'pronamic_gateway_payment_methods',
-				__( 'Payment Methods', 'pronamic_ideal' ),
-				array( $this, 'meta_box_payment_methods' ),
-				$post_type,
-				'normal',
-				'high'
-			);
-
-			add_meta_box(
-				'pronamic_gateway_webhook_log',
-				__( 'Webhook Log', 'pronamic_ideal' ),
-				array( $this, 'meta_box_webhook_log' ),
-				$post_type,
-				'normal',
-				'high'
-			);
-
-			add_meta_box(
 				'pronamic_gateway_test',
 				__( 'Test', 'pronamic_ideal' ),
 				array( $this, 'meta_box_test' ),
@@ -281,33 +255,49 @@ class AdminGatewayPostType {
 		wp_nonce_field( 'pronamic_pay_save_gateway', 'pronamic_pay_nonce' );
 
 		include __DIR__ . '/../../views/meta-box-gateway-config.php';
+
+		wp_localize_script(
+			'pronamic-pay-admin',
+			'pronamicPayGatewayAdmin',
+			array(
+				'rest_url' => rest_url( 'pronamic-pay/v1/gateways/' . $post->ID ),
+				'nonce'    => wp_create_nonce( 'wp_rest' ),
+			)
+		);
 	}
 
 	/**
-	 * Pronamic Pay gateway settings meta box.
+	 * Get settings gateway.
 	 *
-	 * @param WP_Post $post The object for the current post/page.
+	 * @return Gateway|null
 	 */
-	public function meta_box_settings( $post ) {
-		?>
-		<div id="pronamic-pay-gateway-settings" style="padding-top: 5px;">
+	public static function get_settings_gateway() {
+		global $pronamic_pay_rest_gateway;
 
-		</div>
-		<?php
+		// Config ID.
+		$config_id = get_the_ID();
+
+		if ( isset( $pronamic_pay_rest_gateway['config_id'] ) ) {
+			$config_id = $pronamic_pay_rest_gateway['config_id'];
+		}
+
+		// Gateway.
+		$gateway = Plugin::get_gateway( $config_id, $pronamic_pay_rest_gateway );
+
+		return $gateway;
 	}
 
 	/**
-	 * Pronamic Pay gateway payment methods meta box.
-	 *
-	 * @param WP_Post $post The object for the current post/page.
+	 * Pronamic Pay gateway payment methods setting.
 	 */
-	public function meta_box_payment_methods( $post ) {
-		$gateway = Plugin::get_gateway( $post->ID );
+	public static function settings_payment_methods() {
+		$gateway = self::get_settings_gateway();
 
 		if ( null === $gateway ) {
 			return;
 		}
 
+		// Supported and available payment methods.
 		$supported = $gateway->get_supported_payment_methods();
 		$available = $gateway->get_transient_available_payment_methods();
 
@@ -330,71 +320,20 @@ class AdminGatewayPostType {
 			}
 		);
 
-		?>
-		<div id="pronamic-pay-gateway-payment-methods">
-			<?php include __DIR__ . '/../../views/meta-box-gateway-payment-methods.php'; ?>
-		</div>
-		<?php
+		require __DIR__ . '/../../views/meta-box-gateway-payment-methods.php';
 	}
 
 	/**
-	 * Pronamic Pay gateway payment methods meta box.
-	 *
-	 * @param WP_Post $post The object for the current post/page.
+	 * Pronamic Pay gateway webhook log setting.
 	 */
-	public function meta_box_webhook_log( $post ) {
-		$settings = (object) array(
-			'rest_url' => rest_url( 'pronamic-pay/v1/gateways/' . $post->ID ),
-			'nonce'    => wp_create_nonce( 'wp_rest' ),
-		);
+	public static function settings_webhook_log() {
+		$gateway = self::get_settings_gateway();
 
-		?>
-		<div id="pronamic-pay-gateway-webhook-log"></div>
+		if ( null === $gateway ) {
+			return;
+		}
 
-		<script type="text/javascript">
-			jQuery( document ).ready( function( $ ) {
-				var settings = <?php echo wp_json_encode( $settings ); ?>;
-
-				var update_meta_boxes = function() {
-					$.ajax( {
-						url: settings.rest_url,
-						method: 'GET',
-						beforeSend: function ( xhr ) {
-							xhr.setRequestHeader( 'X-WP-Nonce', settings.nonce );
-						},
-						data: {
-							'gateway_id': $( '#pronamic_gateway_id' ).val(),
-							'gateway_mode': $( '#pronamic_ideal_mode' ).val()
-						}
-					} ).done( function ( response ) {
-						$( '#pronamic-pay-gateway-webhook-log' ).html( response.meta_boxes.webhook_log );
-
-						$( '#pronamic-pay-gateway-payment-methods' ).html( response.meta_boxes.payment_methods );
-
-						$( '#pronamic-pay-gateway-settings' ).html( response.meta_boxes.settings );
-
-						$( '#pronamic-pay-gateway-settings .pronamic-pay-tabs' ).pronamicPayTabs();
-
-						// Tooltip
-						$( '#pronamic-pay-gateway-settings .pronamic-pay-tip' ).each( function() {
-							tippy( this, {
-								content: $( this ).attr( 'title' ),
-								arrow: true,
-								theme: 'pronamic-pay'
-							} );
-						} );
-
-						console.log( response );
-					} );
-				};
-
-				$( '#pronamic_gateway_id' ).change( update_meta_boxes );
-				$( '#pronamic_ideal_mode' ).change( update_meta_boxes );
-
-				update_meta_boxes();
-			} );
-		</script>
-		<?php
+		require __DIR__ . '/../../views/meta-box-gateway-webhook-log.php';
 	}
 
 	/**

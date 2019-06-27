@@ -233,13 +233,12 @@ class PaymentsModule {
 		$gateway_mode = $request->get_param( 'gateway_mode' );
 
 		// Gateway.
-		$gateway = Plugin::get_gateway(
-			$config_id,
-			array(
-				'gateway_id'   => $gateway_id,
-				'gateway_mode' => $gateway_mode,
-			)
+		$args = array(
+			'gateway_id'   => $gateway_id,
+			'gateway_mode' => $gateway_mode,
 		);
+
+		$gateway = Plugin::get_gateway( $config_id, $args );
 
 		if ( empty( $gateway ) ) {
 			return new WP_Error(
@@ -253,61 +252,24 @@ class PaymentsModule {
 			);
 		}
 
-		// Payment Methods.
-		$supported = $gateway->get_supported_payment_methods();
-		$available = $gateway->get_transient_available_payment_methods();
+		global $pronamic_pay_rest_gateway;
 
-		$payment_methods = array();
-
-		foreach ( $supported as $payment_method ) {
-			$name = PaymentMethods::get_name( $payment_method );
-
-			$payment_methods[] = (object) array(
-				'id'        => $payment_method,
-				'name'      => $name,
-				'available' => in_array( $payment_method, $available, true ),
-			);
-		}
-
-		usort(
-			$payment_methods,
-			function( $a, $b ) {
-				return strnatcasecmp( $a->name, $b->name );
-			}
-		);
-
-		ob_start();
-
-		include __DIR__ . '/../../views/meta-box-gateway-payment-methods.php';
-
-		$meta_box_payment_methods = ob_get_clean();
+		$pronamic_pay_rest_gateway = array_merge( array( 'config_id' => $config_id ), $args );
 
 		// Settings.
-
 		ob_start();
 
-		include __DIR__ . '/../../views/meta-box-gateway-settings.php';
+		require __DIR__ . '/../../views/meta-box-gateway-settings.php';
 
 		$meta_box_settings = ob_get_clean();
 
-		// Webhook Log.
-
-		ob_start();
-
-		include __DIR__ . '/../../views/meta-box-gateway-webhook-log.php';
-
-		$meta_box_webhook_log = ob_get_clean();
-
 		// Object.
 		return (object) array(
-			'config_id'       => $config_id,
-			'gateway_id'      => $gateway_id,
-			'gateway_mode'    => $gateway_mode,
-			'payment_methods' => $payment_methods,
-			'meta_boxes'      => (object) array(
-				'settings'        => $meta_box_settings,
-				'payment_methods' => $meta_box_payment_methods,
-				'webhook_log'     => $meta_box_webhook_log,
+			'config_id'    => $config_id,
+			'gateway_id'   => $gateway_id,
+			'gateway_mode' => $gateway_mode,
+			'meta_boxes'   => (object) array(
+				'settings' => $meta_box_settings,
 			),
 		);
 	}

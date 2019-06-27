@@ -110,6 +110,36 @@
 		/**
 		 * Function calls
 		 */
+		var update_meta_boxes = function () {
+			$.ajax( {
+				url: pronamicPayGatewayAdmin.rest_url,
+				method: 'GET',
+				beforeSend: function ( xhr ) {
+					xhr.setRequestHeader( 'X-WP-Nonce', pronamicPayGatewayAdmin.nonce );
+				},
+				data: {
+					'gateway_id': $( '#pronamic_gateway_id' ).val(),
+					'gateway_mode': $( '#pronamic_ideal_mode' ).val()
+				}
+			} ).done( function ( response ) {
+				$( '#pronamic-pay-gateway-settings' ).html( response.meta_boxes.settings );
+
+				$( '#pronamic-pay-gateway-settings .pronamic-pay-tabs' ).pronamicPayTabs();
+
+				// Tooltip
+				$( '#pronamic-pay-gateway-settings .pronamic-pay-tip' ).each( function () {
+					tippy( this, {
+						content: $( this ).attr( 'title' ),
+						arrow: true,
+						theme: 'pronamic-pay'
+					} );
+				} );
+			} );
+		};
+
+		$( '#pronamic_gateway_id' ).change( update_meta_boxes );
+		$( '#pronamic_ideal_mode' ).change( update_meta_boxes );
+
 		obj.initTabs();
 
 		obj.updateFields();

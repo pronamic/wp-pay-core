@@ -8,6 +8,7 @@
  * @package   Pronamic\WordPress\Pay
  */
 
+use Pronamic\WordPress\Pay\Admin\AdminGatewayPostType;
 use Pronamic\WordPress\Pay\Util;
 
 $integration = $this->plugin->gateway_integrations->get_integration( $gateway_id );
@@ -16,18 +17,45 @@ $fields = $integration->get_settings_fields();
 
 $sections = array(
 	'general'  => (object) array(
-		'title'  => __( 'General', 'pronamic-ideal' ),
+		'title'  => __( 'General', 'pronamic_ideal' ),
 		'fields' => array(),
 	),
 	'advanced' => (object) array(
-		'title'  => __( 'Advanced', 'pronamic-ideal' ),
+		'title'  => __( 'Advanced', 'pronamic_ideal' ),
 		'fields' => array(),
 	),
 	'feedback' => (object) array(
-		'title'  => __( 'Feedback', 'pronamic-ideal' ),
+		'title'  => __( 'Feedback', 'pronamic_ideal' ),
 		'fields' => array(),
 	),
+	'payment_methods' => (object) array(
+		'title'  => __( 'Payment Methods', 'pronamic_ideal' ),
+		'fields' => array(
+			array(
+				'section'  => 'payment_methods',
+				'title'    => __( 'Supported Payment Methods', 'pronamic_ideal' ),
+				'type'     => 'html',
+				'callback' => array(
+					'Pronamic\WordPress\Pay\Admin\AdminGatewayPostType',
+					'settings_payment_methods'
+				),
+			),
+		),
+	),
 );
+
+// Feedback.
+if ( $integration->supports( 'webhook' ) ) {
+	$fields[] = array(
+		'section'  => 'feedback',
+		'title'    => __( 'Webhook Status', 'pronamic_ideal' ),
+		'type'     => 'description',
+		'callback' => array(
+			'Pronamic\WordPress\Pay\Admin\AdminGatewayPostType',
+			'settings_webhook_log'
+		),
+	);
+}
 
 if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_no_config' ) && ! $integration->supports( 'payment_status_request' ) ) {
 	$sections['feedback']->title = sprintf(
@@ -49,18 +77,7 @@ if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_n
 	);
 }
 
-if ( $integration->supports( 'payment_status_request' ) ) {
-	$fields[] = array(
-		'section' => 'general',
-		'title'   => __( 'Transaction feedback', 'pronamic_ideal' ),
-		'type'    => 'description',
-		'html'    => sprintf(
-			'<span class="dashicons dashicons-yes pronamic-pay-text-success"></span> %s',
-			__( 'Payment status updates will be processed without any additional configuration.', 'pronamic_ideal' )
-		),
-	);
-}
-
+// Sections.
 foreach ( $fields as $field_id => $field ) {
 	$section = 'general';
 

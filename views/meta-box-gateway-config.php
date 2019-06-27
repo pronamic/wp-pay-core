@@ -20,7 +20,9 @@ usort(
 );
 
 // Sections.
-$variant_id = get_post_meta( get_the_ID(), '_pronamic_gateway_id', true );
+$config_id = get_the_ID();
+
+$gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 
 ?>
 <div id="pronamic-pay-gateway-config-editor">
@@ -50,7 +52,7 @@ $variant_id = get_post_meta( get_the_ID(), '_pronamic_gateway_id', true );
 							/* translators: %s: Integration name */
 							$name = sprintf( __( '%s (obsoleted)', 'pronamic_ideal' ), $name );
 
-							if ( $variant_id !== $integration_id ) {
+							if ( $gateway_id !== $integration_id ) {
 								continue;
 							}
 						}
@@ -98,7 +100,7 @@ $variant_id = get_post_meta( get_the_ID(), '_pronamic_gateway_id', true );
 							esc_attr( $description ),
 							esc_attr( wp_json_encode( $integration->get_settings() ) ),
 							esc_attr( $integration_id ),
-							selected( $variant_id, $integration_id, false ),
+							selected( $gateway_id, $integration_id, false ),
 							esc_attr( implode( ' ', $classes ) ),
 							esc_attr( $name )
 						);
@@ -148,4 +150,10 @@ $variant_id = get_post_meta( get_the_ID(), '_pronamic_gateway_id', true );
 			</td>
 		</tr>
 	</table>
+</div>
+
+<div id="pronamic-pay-gateway-settings" style="padding-top: 5px;">
+
+	<?php require 'meta-box-gateway-settings.php'; ?>
+
 </div>
