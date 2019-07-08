@@ -200,12 +200,16 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 */
 	public function save_post_meta( $post_id, $post, $update ) {
 		if ( $this->payment instanceof Payment ) {
-			if ( ! $update && null === $this->payment->get_id() ) {
-				$this->payment->set_id( $post_id );
-				$this->payment->post = $post;
+			$payment = $this->payment;
+
+			if ( ! $update && null === $payment->get_id() ) {
+				$payment->set_id( $post_id );
+				$payment->post = $post;
 			}
 
-			$this->update_post_meta( $this->payment );
+			$this->update_post_meta( $payment );
+
+			do_action( 'pronamic_pay_update_payment', $payment );
 		}
 
 		$this->payment = null;
