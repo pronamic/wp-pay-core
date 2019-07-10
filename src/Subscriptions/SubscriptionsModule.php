@@ -371,9 +371,9 @@ class SubscriptionsModule {
 		}
 
 		// Check if there is a subscription object attached to the payment.
-		$subscription_data = $payment->subscription;
+		$subscription = $payment->subscription;
 
-		if ( empty( $subscription_data ) ) {
+		if ( empty( $subscription ) ) {
 			return;
 		}
 
@@ -392,9 +392,7 @@ class SubscriptionsModule {
 			}
 		}
 
-		// New subscription.
-		$subscription = new Subscription();
-
+		// Complement subscription.
 		$subscription->config_id = $payment->config_id;
 		$subscription->user_id   = $user_id;
 		$subscription->title     = sprintf(
@@ -402,18 +400,19 @@ class SubscriptionsModule {
 			__( 'Subscription for %s', 'pronamic_ideal' ),
 			$payment->title
 		);
-		$subscription->frequency       = $subscription_data->get_frequency();
-		$subscription->interval        = $subscription_data->get_interval();
-		$subscription->interval_period = $subscription_data->get_interval_period();
-		$subscription->key             = uniqid( 'subscr_' );
-		$subscription->source          = $payment->source;
-		$subscription->source_id       = $payment->subscription_source_id;
+
+		$subscription->key = uniqid( 'subscr_' );
+
+		if ( empty( $subscription->source ) && empty( $subscription->source_id ) ) {
+			$subscription->source          = $payment->source;
+			$subscription->source_id       = $payment->subscription_source_id;
+		}
+
 		$subscription->description     = $payment->description;
 		$subscription->email           = $payment->email;
 		$subscription->customer_name   = $customer_name;
 		$subscription->payment_method  = $payment->method;
 		$subscription->status          = Statuses::OPEN;
-		$subscription->set_total_amount( $subscription_data->get_total_amount() );
 
 		// @todo
 		// Calculate dates
@@ -430,9 +429,9 @@ class SubscriptionsModule {
 		$next_date = clone $start_date;
 		$next_date->add( $interval );
 
-		$interval_date       = $subscription_data->get_interval_date();
-		$interval_date_day   = $subscription_data->get_interval_date_day();
-		$interval_date_month = $subscription_data->get_interval_date_month();
+		$interval_date       = $subscription->get_interval_date();
+		$interval_date_day   = $subscription->get_interval_date_day();
+		$interval_date_month = $subscription->get_interval_date_month();
 
 		switch ( $subscription->interval_period ) {
 			case 'W':
@@ -479,15 +478,15 @@ class SubscriptionsModule {
 
 		$end_date = null;
 
-		if ( null !== $subscription_data->frequency ) {
+		if ( null !== $subscription->frequency ) {
 			// @link https://stackoverflow.com/a/10818981/6411283
-			$period = new DatePeriod( $start_date, $interval, $subscription_data->frequency );
+			$period = new DatePeriod( $start_date, $interval, $subscription->frequency );
 
 			$dates = iterator_to_array( $period );
 
 			$end_date = end( $dates );
 
-			if ( 'last' === $subscription_data->get_interval_date() ) {
+			if ( 'last' === $subscription->get_interval_date() ) {
 				$end_date->modify( 'last day of ' . $end_date->format( 'F Y' ) );
 			}
 		}
