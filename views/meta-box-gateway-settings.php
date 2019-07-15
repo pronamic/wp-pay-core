@@ -58,12 +58,12 @@ if ( $integration->supports( 'webhook' ) ) {
 }
 
 // Check if webhook configuration is needed.
-if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_no_config' ) && ! $integration->supports( 'payment_status_request' ) ) {
+if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_no_config' ) ) {
 	$webbhook_config_needed = true;
 
-	try {
-		$log = get_post_meta( $config_id, '_pronamic_gateway_webhook_log', true );
+	$log = get_post_meta( $config_id, '_pronamic_gateway_webhook_log', true );
 
+	if ( ! empty( $log ) ) {
 		$log = json_decode( $log );
 
 		$request_info = WebhookRequestInfo::from_json( $log );
@@ -72,8 +72,6 @@ if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_n
 		if ( WebhookManager::validate_request_url( $request_info ) ) {
 			$webbhook_config_needed = false;
 		}
-	} catch ( Exception $e ) {
-		$webbhook_config_needed = true;
 	}
 
 	if ( $webbhook_config_needed ) {
@@ -89,7 +87,7 @@ if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_n
 			'html'    => sprintf(
 				'⚠️ %s',
 				__(
-					"Receiving payment status updates needs additional configuration, see tab 'Feedback'.",
+					'Processing gateway transaction feedback in the background requires additional configuration.',
 					'pronamic_ideal'
 				)
 			),
