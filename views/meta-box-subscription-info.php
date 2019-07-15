@@ -198,22 +198,6 @@ $subscription = get_pronamic_subscription( $subscription_id );
 			?>
 		</td>
 	</tr>
-	<tr>
-		<th scope="row">
-			<?php esc_html_e( 'Consumer', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<?php
-
-			echo esc_html( get_post_meta( $subscription_id, '_pronamic_subscription_consumer_name', true ) );
-			echo '<br />';
-			echo esc_html( get_post_meta( $subscription_id, '_pronamic_subscription_consumer_iban', true ) );
-			echo '<br />';
-			echo esc_html( get_post_meta( $subscription_id, '_pronamic_subscription_consumer_bic', true ) );
-
-			?>
-		</td>
-	</tr>
 
 	<?php if ( null !== $subscription->get_customer() ) : ?>
 
