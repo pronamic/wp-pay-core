@@ -20,6 +20,9 @@ if ( empty( $subscription_id ) ) {
 
 $subscription = get_pronamic_subscription( $subscription_id );
 
+$customer = $subscription->get_customer();
+$user_id  = is_null( $customer ) ? null : $customer->get_user_id();
+
 ?>
 <table class="form-table">
 	<tr>
@@ -199,30 +202,24 @@ $subscription = get_pronamic_subscription( $subscription_id );
 		</td>
 	</tr>
 
-	<?php if ( null !== $subscription->get_customer() ) : ?>
+	<?php if ( null !== $user_id ) : ?>
 
-		<?php if ( null !== $subscription->get_customer()->get_user_id() ) : ?>
+		<tr>
+			<th scope="row">
+				<?php esc_html_e( 'User', 'pronamic_ideal' ); ?>
+			</th>
+			<td>
+				<?php
 
-			<tr>
-				<th scope="row">
-					<?php esc_html_e( 'User', 'pronamic_ideal' ); ?>
-				</th>
-				<td>
-					<?php
+				printf(
+					'<a href="%s">%s</a>',
+					esc_url( get_edit_user_link( $user_id ) ),
+					esc_html( $user_id )
+				);
 
-					$user_id = $subscription->get_customer()->get_user_id();
-
-					printf(
-						'<a href="%s">%s</a>',
-						esc_url( get_edit_user_link( $user_id ) ),
-						esc_html( $user_id )
-					);
-
-					?>
-				</td>
-			</tr>
-
-		<?php endif; ?>
+				?>
+			</td>
+		</tr>
 
 	<?php endif; ?>
 
