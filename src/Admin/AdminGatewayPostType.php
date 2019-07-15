@@ -254,6 +254,8 @@ class AdminGatewayPostType {
 	public function meta_box_config( $post ) {
 		wp_nonce_field( 'pronamic_pay_save_gateway', 'pronamic_pay_nonce' );
 
+		$gateway = Plugin::get_gateway( $post->ID );
+
 		include __DIR__ . '/../../views/meta-box-gateway-config.php';
 
 		wp_localize_script(
@@ -267,32 +269,9 @@ class AdminGatewayPostType {
 	}
 
 	/**
-	 * Get settings gateway.
-	 *
-	 * @return Gateway|null
-	 */
-	public static function get_settings_gateway() {
-		global $pronamic_pay_rest_gateway;
-
-		// Config ID.
-		$config_id = get_the_ID();
-
-		if ( isset( $pronamic_pay_rest_gateway['config_id'] ) ) {
-			$config_id = $pronamic_pay_rest_gateway['config_id'];
-		}
-
-		// Gateway.
-		$gateway = Plugin::get_gateway( $config_id, $pronamic_pay_rest_gateway );
-
-		return $gateway;
-	}
-
-	/**
 	 * Pronamic Pay gateway payment methods setting.
 	 */
-	public static function settings_payment_methods() {
-		$gateway = self::get_settings_gateway();
-
+	public static function settings_payment_methods( $gateway ) {
 		if ( null === $gateway ) {
 			return;
 		}
@@ -326,9 +305,7 @@ class AdminGatewayPostType {
 	/**
 	 * Pronamic Pay gateway webhook log setting.
 	 */
-	public static function settings_webhook_log() {
-		$gateway = self::get_settings_gateway();
-
+	public static function settings_webhook_log( $gateway ) {
 		if ( null === $gateway ) {
 			return;
 		}

@@ -35,10 +35,9 @@ $sections = array(
 				'section'  => 'payment_methods',
 				'title'    => __( 'Supported Payment Methods', 'pronamic_ideal' ),
 				'type'     => 'html',
-				'callback' => array(
-					'Pronamic\WordPress\Pay\Admin\AdminGatewayPostType',
-					'settings_payment_methods'
-				),
+				'callback' => function() use ( $gateway ) {
+					AdminGatewayPostType::settings_payment_methods( $gateway );
+				},
 			),
 		),
 	),
@@ -50,10 +49,9 @@ if ( $integration->supports( 'webhook' ) ) {
 		'section'  => 'feedback',
 		'title'    => __( 'Webhook Status', 'pronamic_ideal' ),
 		'type'     => 'description',
-		'callback' => array(
-			'Pronamic\WordPress\Pay\Admin\AdminGatewayPostType',
-			'settings_webhook_log'
-		),
+		'callback' => function() use ( $gateway ) {
+			AdminGatewayPostType::settings_webhook_log( $gateway );
+		},
 	);
 }
 

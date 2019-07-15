@@ -252,10 +252,6 @@ class PaymentsModule {
 			);
 		}
 
-		global $pronamic_pay_rest_gateway;
-
-		$pronamic_pay_rest_gateway = array_merge( array( 'config_id' => $config_id ), $args );
-
 		// Settings.
 		ob_start();
 
