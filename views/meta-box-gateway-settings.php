@@ -200,7 +200,6 @@ $sections = array_filter(
 						if ( 'html' === $field['type'] ) :
 							?>
 							colspan="2"<?php endif; ?>>
-						<td>
 							<?php
 
 							$field = (array) $field;
