@@ -10,6 +10,8 @@
 
 use Pronamic\WordPress\Pay\Admin\AdminGatewayPostType;
 use Pronamic\WordPress\Pay\Util;
+use Pronamic\WordPress\Pay\Webhooks\WebhookManager;
+use Pronamic\WordPress\Pay\Webhooks\WebhookRequestInfo;
 
 $integration = $this->plugin->gateway_integrations->get_integration( $gateway_id );
 
@@ -55,24 +57,44 @@ if ( $integration->supports( 'webhook' ) ) {
 	);
 }
 
+// Check if webhook configuration is needed.
 if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_no_config' ) && ! $integration->supports( 'payment_status_request' ) ) {
-	$sections['feedback']->title = sprintf(
-		'⚠️ %s',
-		$sections['feedback']->title
-	);
+	$webbhook_config_needed = true;
 
-	$fields[] = array(
-		'section' => 'general',
-		'title'   => __( 'Transaction feedback', 'pronamic_ideal' ),
-		'type'    => 'description',
-		'html'    => sprintf(
-			'<span class="dashicons dashicons-warning pronamic-pay-text-warning"></span> %s',
-			__(
-				'Receiving payment status updates needs additional configuration, if not yet completed.',
-				'pronamic_ideal'
-			)
-		),
-	);
+	try {
+		$log = get_post_meta( $config_id, '_pronamic_gateway_webhook_log', true );
+
+		$log = json_decode( $log );
+
+		$request_info = WebhookRequestInfo::from_json( $log );
+
+		// Validate log request URL against current home URL.
+		if ( WebhookManager::validate_request_url( $request_info ) ) {
+			$webbhook_config_needed = false;
+		}
+	} catch ( Exception $e ) {
+		$webbhook_config_needed = true;
+	}
+
+	if ( $webbhook_config_needed ) {
+		$sections['feedback']->title = sprintf(
+			'⚠️ %s',
+			$sections['feedback']->title
+		);
+
+		$fields[] = array(
+			'section' => 'general',
+			'title'   => __( 'Transaction feedback', 'pronamic_ideal' ),
+			'type'    => 'description',
+			'html'    => sprintf(
+				'⚠️ %s',
+				__(
+					"Receiving payment status updates needs additional configuration, see tab 'Feedback'.",
+					'pronamic_ideal'
+				)
+			),
+		);
+	}
 }
 
 // Sections.
