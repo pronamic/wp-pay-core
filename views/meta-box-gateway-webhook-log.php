@@ -21,7 +21,9 @@ if ( ! $integration->supports( 'webhook_log' ) ) {
 
 $webhook_log_json_string = get_post_meta( $config_id, '_pronamic_gateway_webhook_log', true );
 
-if ( empty( $webhook_log_json_string ) ) {
+$gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
+
+if ( empty( $webhook_log_json_string ) || $gateway->get_slug() !== $gateway_id ) {
 	esc_html_e( 'No webhook request processed yet.', 'pronamic_ideal' );
 
 	return;
