@@ -74,6 +74,15 @@ class WebhookRequestInfo implements JsonSerializable {
 	}
 
 	/**
+	 * Get request URL.
+	 *
+	 * @return string
+	 */
+	public function get_request_url() {
+		return $this->request_url;
+	}
+
+	/**
 	 * Get payment.
 	 *
 	 * @return Payment|null
@@ -140,7 +149,7 @@ class WebhookRequestInfo implements JsonSerializable {
 			throw new InvalidArgumentException( 'JSON value must be an object.' );
 		}
 
-		if ( ! isset( $json->post_data ) ) {
+		if ( ! property_exists( $json, 'post_data' ) ) {
 			throw new InvalidArgumentException( 'JSON must contain `post_data` property.' );
 		}
 

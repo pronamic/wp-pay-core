@@ -23,6 +23,7 @@ use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Payments\StatusChecker;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
 use Pronamic\WordPress\Pay\Webhooks\WebhookLogger;
+use Pronamic\WordPress\Pay\Webhooks\WebhookManager;
 use WP_Error;
 use WP_Query;
 
@@ -398,7 +399,7 @@ class Plugin {
 		// Sisow gatway will extend callback requests with querystring "notify=true".
 		if ( filter_has_var( INPUT_GET, 'notify' ) && filter_input( INPUT_GET, 'notify', FILTER_VALIDATE_BOOLEAN ) ) {
 			// Log webhook request.
-			WebhookManager::log_payment( $payment );
+			do_action( 'pronamic_pay_webhook_log_payment', $payment );
 
 			$should_redirect = false;
 		}
@@ -525,6 +526,9 @@ class Plugin {
 
 		// Privacy Manager.
 		$this->privacy_manager = new PrivacyManager();
+
+		// Webhook Manager.
+		$this->webhook_manager = new WebhookManager();
 
 		// Webhook Logger.
 		$this->webhook_logger = new WebhookLogger();

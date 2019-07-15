@@ -10,6 +10,8 @@
 
 use Pronamic\WordPress\Pay\Admin\AdminGatewayPostType;
 use Pronamic\WordPress\Pay\Util;
+use Pronamic\WordPress\Pay\Webhooks\WebhookManager;
+use Pronamic\WordPress\Pay\Webhooks\WebhookRequestInfo;
 
 $integration = $this->plugin->gateway_integrations->get_integration( $gateway_id );
 
@@ -49,30 +51,48 @@ if ( $integration->supports( 'webhook' ) ) {
 		'section'  => 'feedback',
 		'title'    => __( 'Webhook Status', 'pronamic_ideal' ),
 		'type'     => 'description',
-		'callback' => function() use ( $gateway ) {
-			AdminGatewayPostType::settings_webhook_log( $gateway );
+		'callback' => function() use ( $gateway, $config_id ) {
+			AdminGatewayPostType::settings_webhook_log( $gateway, $config_id );
 		},
 	);
 }
 
-if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_no_config' ) && ! $integration->supports( 'payment_status_request' ) ) {
-	$sections['feedback']->title = sprintf(
-		'⚠️ %s',
-		$sections['feedback']->title
-	);
+// Check if webhook configuration is needed.
+if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_no_config' ) ) {
+	$webbhook_config_needed = true;
 
-	$fields[] = array(
-		'section' => 'general',
-		'title'   => __( 'Transaction feedback', 'pronamic_ideal' ),
-		'type'    => 'description',
-		'html'    => sprintf(
-			'<span class="dashicons dashicons-warning pronamic-pay-text-warning"></span> %s',
-			__(
-				'Receiving payment status updates needs additional configuration, if not yet completed.',
-				'pronamic_ideal'
-			)
-		),
-	);
+	$log = get_post_meta( $config_id, '_pronamic_gateway_webhook_log', true );
+
+	if ( ! empty( $log ) ) {
+		$log = json_decode( $log );
+
+		$request_info = WebhookRequestInfo::from_json( $log );
+
+		// Validate log request URL against current home URL.
+		if ( WebhookManager::validate_request_url( $request_info ) ) {
+			$webbhook_config_needed = false;
+		}
+	}
+
+	if ( $webbhook_config_needed ) {
+		$sections['feedback']->title = sprintf(
+			'⚠️ %s',
+			$sections['feedback']->title
+		);
+
+		$fields[] = array(
+			'section' => 'general',
+			'title'   => __( 'Transaction feedback', 'pronamic_ideal' ),
+			'type'    => 'description',
+			'html'    => sprintf(
+				'⚠️ %s',
+				__(
+					'Processing gateway transaction feedback in the background requires additional configuration.',
+					'pronamic_ideal'
+				)
+			),
+		);
+	}
 }
 
 // Sections.
@@ -200,7 +220,6 @@ $sections = array_filter(
 						if ( 'html' === $field['type'] ) :
 							?>
 							colspan="2"<?php endif; ?>>
-						<td>
 							<?php
 
 							$field = (array) $field;

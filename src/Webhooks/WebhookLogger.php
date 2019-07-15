@@ -93,6 +93,9 @@ class WebhookLogger {
 
 		if ( $json ) {
 			update_post_meta( $config_id, '_pronamic_gateway_webhook_log', wp_slash( $json ) );
+
+			// Delete outdated webhook URLs transient.
+			delete_transient( 'pronamic_outdated_webhook_urls' );
 		}
 	}
 }
