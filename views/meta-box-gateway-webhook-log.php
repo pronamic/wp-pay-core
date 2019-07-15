@@ -13,7 +13,7 @@ use Pronamic\WordPress\Pay\Webhooks\WebhookRequestInfo;
 
 $integration = pronamic_pay_plugin()->gateway_integrations->get_integration( $gateway->get_slug() );
 
-if ( ! $integration->supports( 'webhook_log' ) ) {
+if ( ! $integration || ! $integration->supports( 'webhook_log' ) ) {
 	esc_html_e( 'This gateway does not support webhook logging.', 'pronamic_ideal' );
 
 	return;
