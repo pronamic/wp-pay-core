@@ -74,6 +74,15 @@ class WebhookRequestInfo implements JsonSerializable {
 	}
 
 	/**
+	 * Get request URL.
+	 *
+	 * @return string
+	 */
+	public function get_request_url() {
+		return $this->request_url;
+	}
+
+	/**
 	 * Get payment.
 	 *
 	 * @return Payment|null

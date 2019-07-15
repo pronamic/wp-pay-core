@@ -23,6 +23,7 @@ use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Payments\StatusChecker;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
 use Pronamic\WordPress\Pay\Webhooks\WebhookLogger;
+use Pronamic\WordPress\Pay\Webhooks\WebhookManager;
 use WP_Error;
 use WP_Query;
 
@@ -525,6 +526,9 @@ class Plugin {
 
 		// Privacy Manager.
 		$this->privacy_manager = new PrivacyManager();
+
+		// Webhook Manager.
+		$this->webhook_manager = new WebhookManager();
 
 		// Webhook Logger.
 		$this->webhook_logger = new WebhookLogger();

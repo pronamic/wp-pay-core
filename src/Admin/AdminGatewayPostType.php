@@ -361,7 +361,7 @@ class AdminGatewayPostType {
 		}
 
 		// Transient.
-		delete_transient( WebhookManager::OUTDATED_WEBHOOK_URLS_OPTION );
+		delete_transient( 'pronamic_outdated_webhook_urls' );
 
 		// Gatway fields.
 		if ( empty( $gateway_id ) ) {
