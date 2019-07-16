@@ -144,6 +144,14 @@ class PaymentMethods {
 	const DIRECT_DEBIT_SOFORT = 'direct_debit_sofort';
 
 	/**
+	 * Constant for the EPS payment method.
+	 *
+	 * @var string
+	 * @since 2.1.7
+	 */
+	const EPS = 'eps';
+
+	/**
 	 * Constant for the Focum payment method.
 	 *
 	 * @var string
