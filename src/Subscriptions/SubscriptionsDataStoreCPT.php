@@ -12,10 +12,7 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DatePeriod;
 use Exception;
-use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
-use Pronamic\WordPress\Money\TaxedMoney;
-use Pronamic\WordPress\Pay\AbstractDataStoreCPT;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Pay\Core\Statuses;
@@ -332,9 +329,9 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 			return;
 		}
 
-		$subscription->post    = get_post( $id );
-		$subscription->title   = get_the_title( $id );
-		$subscription->date    = new DateTime( get_post_field( 'post_date_gmt', $id, 'raw' ), new DateTimeZone( 'UTC' ) );
+		$subscription->post  = get_post( $id );
+		$subscription->title = get_the_title( $id );
+		$subscription->date  = new DateTime( get_post_field( 'post_date_gmt', $id, 'raw' ), new DateTimeZone( 'UTC' ) );
 
 		$content = get_post_field( 'post_content', $id, 'raw' );
 

@@ -49,6 +49,11 @@
 		<exclude-pattern>/tests/phpstan-bootstrap.php</exclude-pattern>
 	</rule>
 
+	<rule ref="WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize">
+		<exclude-pattern>/src/Admin/AdminGatewayPostType.php</exclude-pattern>
+		<exclude-pattern>/src/Core/Gateway.php</exclude-pattern>
+	</rule>
+
 	<rule ref="WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents">
 		<exclude-pattern>/views/tab-extensions.php</exclude-pattern>
 	</rule>

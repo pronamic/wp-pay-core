@@ -191,6 +191,13 @@ class Plugin {
 	public $gateway_integrations;
 
 	/**
+	 * Webhook manager.
+	 *
+	 * @var WebhookManager
+	 */
+	private $webhook_manager;
+
+	/**
 	 * Webhook logger.
 	 *
 	 * @var WebhookLogger

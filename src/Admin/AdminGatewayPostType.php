@@ -270,6 +270,10 @@ class AdminGatewayPostType {
 
 	/**
 	 * Pronamic Pay gateway payment methods setting.
+	 *
+	 * @param null|Gateway $gateway Gateway.
+	 *
+	 * @return void
 	 */
 	public static function settings_payment_methods( $gateway ) {
 		if ( null === $gateway ) {
@@ -304,6 +308,11 @@ class AdminGatewayPostType {
 
 	/**
 	 * Pronamic Pay gateway webhook log setting.
+	 *
+	 * @param null|Gateway $gateway   Gateway.
+	 * @param null|int     $config_id Config ID.
+	 *
+	 * @return void
 	 */
 	public static function settings_webhook_log( $gateway, $config_id ) {
 		if ( null === $gateway ) {

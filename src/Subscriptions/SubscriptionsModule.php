@@ -404,15 +404,15 @@ class SubscriptionsModule {
 		$subscription->key = uniqid( 'subscr_' );
 
 		if ( empty( $subscription->source ) && empty( $subscription->source_id ) ) {
-			$subscription->source          = $payment->source;
-			$subscription->source_id       = $payment->subscription_source_id;
+			$subscription->source    = $payment->source;
+			$subscription->source_id = $payment->subscription_source_id;
 		}
 
-		$subscription->description     = $payment->description;
-		$subscription->email           = $payment->email;
-		$subscription->customer_name   = $customer_name;
-		$subscription->payment_method  = $payment->method;
-		$subscription->status          = Statuses::OPEN;
+		$subscription->description    = $payment->description;
+		$subscription->email          = $payment->email;
+		$subscription->customer_name  = $customer_name;
+		$subscription->payment_method = $payment->method;
+		$subscription->status         = Statuses::OPEN;
 
 		// @todo
 		// Calculate dates

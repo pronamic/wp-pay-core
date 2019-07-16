@@ -18,15 +18,15 @@ $integration = $this->plugin->gateway_integrations->get_integration( $gateway_id
 $fields = $integration->get_settings_fields();
 
 $sections = array(
-	'general'  => (object) array(
+	'general'         => (object) array(
 		'title'  => __( 'General', 'pronamic_ideal' ),
 		'fields' => array(),
 	),
-	'advanced' => (object) array(
+	'advanced'        => (object) array(
 		'title'  => __( 'Advanced', 'pronamic_ideal' ),
 		'fields' => array(),
 	),
-	'feedback' => (object) array(
+	'feedback'        => (object) array(
 		'title'  => __( 'Feedback', 'pronamic_ideal' ),
 		'fields' => array(),
 	),

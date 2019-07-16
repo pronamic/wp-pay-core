@@ -11,14 +11,7 @@
 namespace Pronamic\WordPress\Pay\Webhooks;
 
 use Exception;
-use InvalidArgumentException;
-use Pronamic\WordPress\DateTime\DateTime;
-use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Pay\Admin\AdminNotices;
-use Pronamic\WordPress\Pay\Core\Server;
-use Pronamic\WordPress\Pay\Payments\Payment;
-use Pronamic\WordPress\Pay\Plugin;
-use stdClass;
 use WP_Query;
 
 /**
@@ -74,7 +67,7 @@ class WebhookManager {
 					$log = json_decode( $log );
 
 					$request_info = WebhookRequestInfo::from_json( $log );
-				} catch( Exception $e ) {
+				} catch ( Exception $e ) {
 					continue;
 				}
 
@@ -123,6 +116,6 @@ class WebhookManager {
 		// Check if current home URL is the same as in the logged URL.
 		$home_url = home_url( '/' );
 
-		return $home_url === substr( $request_info->get_request_url(), 0, strlen( $home_url ) );
+		return substr( $request_info->get_request_url(), 0, strlen( $home_url ) ) === $home_url;
 	}
 }
