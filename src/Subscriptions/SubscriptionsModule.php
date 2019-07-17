@@ -195,14 +195,15 @@ class SubscriptionsModule {
 	 */
 	public function new_subscription_payment( Subscription $subscription ) {
 		// Unset the next payment date if next payment date is after the subscription end date.
-		if ( isset( $subscription->end_date, $subscription->next_payment ) && $subscription->next_payment > $subscription->end_date ) {
-			$subscription->next_payment = null;
+		if ( isset( $subscription->end_date, $subscription->next_payment_date ) && $subscription->next_payment_date > $subscription->end_date ) {
+			$subscription->next_payment_date = null;
 		}
 
 		// Set the subscription status to `completed` if there is no next payment date.
-		if ( empty( $subscription->next_payment ) ) {
-			$subscription->status      = Statuses::COMPLETED;
-			$subscription->expiry_date = $subscription->end_date;
+		if ( empty( $subscription->next_payment_date ) ) {
+			$subscription->status                     = Statuses::COMPLETED;
+			$subscription->expiry_date                = $subscription->end_date;
+			$subscription->next_payment_delivery_date = null;
 
 			$subscription->save();
 
@@ -290,8 +291,8 @@ class SubscriptionsModule {
 		// Calculate payment start and end dates.
 		$start_date = new DateTime();
 
-		if ( ! empty( $subscription->next_payment ) ) {
-			$start_date = clone $subscription->next_payment;
+		if ( ! empty( $subscription->next_payment_date ) ) {
+			$start_date = clone $subscription->next_payment_date;
 		}
 
 		$interval = $subscription->get_date_interval();
@@ -307,7 +308,8 @@ class SubscriptionsModule {
 			$end_date->modify( 'last day of ' . $end_date->format( 'F Y' ) );
 		}
 
-		$subscription->next_payment = $end_date;
+		$subscription->next_payment_date          = $end_date;
+		$subscription->next_payment_delivery_date = apply_filters( 'pronamic_pay_subscription_next_payment_delivery_date', clone $end_date, $payment );
 
 		$payment->start_date = $start_date;
 		$payment->end_date   = $end_date;
@@ -491,10 +493,11 @@ class SubscriptionsModule {
 			}
 		}
 
-		$subscription->start_date   = $start_date;
-		$subscription->end_date     = $end_date;
-		$subscription->expiry_date  = $expiry_date;
-		$subscription->next_payment = $next_date;
+		$subscription->start_date                 = $start_date;
+		$subscription->end_date                   = $end_date;
+		$subscription->expiry_date                = $expiry_date;
+		$subscription->next_payment_date          = $next_date;
+		$subscription->next_payment_delivery_date = apply_filters( 'pronamic_pay_subscription_next_payment_delivery_date', clone $next_date, $payment );
 
 		// Create.
 		$result = $this->plugin->subscriptions_data_store->create( $subscription );
@@ -764,7 +767,7 @@ class SubscriptionsModule {
 
 		if ( ! $cli_test ) {
 			$args['meta_query'][] = array(
-				'key'     => '_pronamic_subscription_next_payment',
+				'key'     => '_pronamic_subscription_next_payment_delivery_date',
 				'compare' => '<=',
 				'value'   => current_time( 'mysql', true ),
 				'type'    => 'DATETIME',
@@ -807,7 +810,7 @@ class SubscriptionsModule {
 					// Delete next payment date so it won't get used as start date
 					// of the new payment period when manually renewing and to keep
 					// the subscription out of updating subscription payments (this method).
-					$subscription->set_meta( 'next_payment', null );
+					$subscription->set_meta( 'next_payment_date', null );
 				}
 			}
 		}

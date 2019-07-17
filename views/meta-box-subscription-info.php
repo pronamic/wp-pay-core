@@ -165,7 +165,7 @@ $user_id  = is_null( $customer ) ? null : $customer->get_user_id();
 
 	<?php
 
-	// Show next payment date if subscription is not cancelled or completed.
+	// Show next payment (delivery) date if subscription is not cancelled or completed.
 	if ( ! in_array( $subscription->get_status(), array( Statuses::CANCELLED, Statuses::COMPLETED ), true ) ) :
 
 		?>
@@ -177,9 +177,24 @@ $user_id  = is_null( $customer ) ? null : $customer->get_user_id();
 			<td>
 				<?php
 
-				$next_payment = $subscription->get_next_payment_date();
+				$next_payment_date = $subscription->get_next_payment_date();
 
-				echo empty( $next_payment ) ? '—' : esc_html( $next_payment->format_i18n() );
+				echo empty( $next_payment_date ) ? '—' : esc_html( $next_payment_date->format_i18n() );
+
+				?>
+			</td>
+		</tr>
+
+		<tr>
+			<th scope="row">
+				<?php esc_html_e( 'Next Payment Delivery Date', 'pronamic_ideal' ); ?>
+			</th>
+			<td>
+				<?php
+
+				$next_payment_delivery_date = $subscription->get_next_payment_delivery_date();
+
+				echo empty( $next_payment_delivery_date ) ? '—' : esc_html( $next_payment_delivery_date->format_i18n() );
 
 				?>
 			</td>

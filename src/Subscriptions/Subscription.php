@@ -124,7 +124,14 @@ class Subscription extends LegacySubscription {
 	 *
 	 * @var DateTime|null
 	 */
-	public $next_payment;
+	public $next_payment_date;
+
+	/**
+	 * The next payment delivery date.
+	 *
+	 * @var DateTime|null
+	 */
+	public $next_payment_delivery_date;
 
 	/**
 	 * Array for extra meta data to store with this subscription.
@@ -489,7 +496,7 @@ class Subscription extends LegacySubscription {
 	 * @return void
 	 */
 	public function set_next_payment_date( DateTime $date = null ) {
-		$this->next_payment = $date;
+		$this->next_payment_date = $date;
 	}
 
 	/**
@@ -498,7 +505,27 @@ class Subscription extends LegacySubscription {
 	 * @return DateTime|null
 	 */
 	public function get_next_payment_date() {
-		return $this->next_payment;
+		return $this->next_payment_date;
+	}
+
+	/**
+	 * Set the next payment delivery date of this subscription.
+	 *
+	 * @param DateTime|null $date Next payment delivery date.
+	 *
+	 * @return void
+	 */
+	public function set_next_payment_delivery_date( DateTime $date = null ) {
+		$this->next_payment_delivery_date = $date;
+	}
+
+	/**
+	 * Get the next payment delivery date of this subscription.
+	 *
+	 * @return DateTime|null
+	 */
+	public function get_next_payment_delivery_date() {
+		return $this->next_payment_delivery_date;
 	}
 
 	/**
