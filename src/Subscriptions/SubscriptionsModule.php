@@ -767,10 +767,19 @@ class SubscriptionsModule {
 
 		if ( ! $cli_test ) {
 			$args['meta_query'][] = array(
-				'key'     => '_pronamic_subscription_next_payment_delivery_date',
-				'compare' => '<=',
-				'value'   => current_time( 'mysql', true ),
-				'type'    => 'DATETIME',
+				'relation' => 'OR',
+				array(
+					'key'     => '_pronamic_subscription_next_payment',
+					'compare' => '<=',
+					'value'   => current_time( 'mysql', true ),
+					'type'    => 'DATETIME',
+				),
+				array(
+					'key'     => '_pronamic_subscription_next_payment_delivery_date',
+					'compare' => '<=',
+					'value'   => current_time( 'mysql', true ),
+					'type'    => 'DATETIME',
+				),
 			);
 		}
 
