@@ -810,7 +810,7 @@ class SubscriptionsModule {
 					// Delete next payment date so it won't get used as start date
 					// of the new payment period when manually renewing and to keep
 					// the subscription out of updating subscription payments (this method).
-					$subscription->set_meta( 'next_payment_date', null );
+					$subscription->set_meta( 'next_payment', null );
 				}
 			}
 		}

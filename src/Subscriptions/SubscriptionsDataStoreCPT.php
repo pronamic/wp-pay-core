@@ -593,17 +593,17 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 		$subscription->expiry_date = $expiry_date;
 
 		// Next Payment Date.
-		$subscription->next_payment_date = $this->get_meta_date( $id, 'next_payment_date' );
+		$subscription->next_payment_date = $this->get_meta_date( $id, 'next_payment' );
 
 		// Next Payment Delivery Date.
 		$subscription->next_payment_delivery_date = $this->get_meta_date( $id, 'next_payment_delivery_date' );
 
-		// Legacy.
-		parent::read_post_meta( $subscription );
-
 		if ( empty( $subscription->next_payment_delivery_date ) && null !== $subscription->next_payment_date ) {
 			$subscription->next_payment_delivery_date = clone $subscription->next_payment_date;
 		}
+
+		// Legacy.
+		parent::read_post_meta( $subscription );
 	}
 
 	/**
@@ -635,7 +635,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 		$this->update_meta( $id, 'start_date', $subscription->start_date );
 		$this->update_meta( $id, 'end_date', $subscription->end_date );
 		$this->update_meta( $id, 'expiry_date', $subscription->expiry_date );
-		$this->update_meta( $id, 'next_payment_date', $subscription->next_payment_date );
+		$this->update_meta( $id, 'next_payment', $subscription->next_payment_date );
 		$this->update_meta( $id, 'next_payment_delivery_date', $subscription->next_payment_delivery_date );
 
 		$this->update_meta_status( $subscription );

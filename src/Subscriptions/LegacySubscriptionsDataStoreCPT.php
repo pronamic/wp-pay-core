@@ -22,15 +22,4 @@ use Pronamic\WordPress\Pay\Payments\LegacyPaymentsDataStoreCPT;
  * @since   2.0.1
  */
 class LegacySubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
-	/**
-	 * Read post meta.
-	 *
-	 * @param Subscription $subscription The subscription to read.
-	 */
-	protected function read_post_meta( $subscription ) {
-		// Next payment date.
-		if ( null === $subscription->next_payment_date ) {
-			$subscription->next_payment_date = $this->get_meta_date( $subscription->get_id(), 'next_payment' );
-		}
-	}
 }
