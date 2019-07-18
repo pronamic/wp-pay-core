@@ -78,7 +78,7 @@ class Install {
 		if ( filter_has_var( INPUT_GET, 'pronamic_pay_update_db' ) && wp_verify_nonce( filter_input( INPUT_GET, 'pronamic_pay_nonce', FILTER_SANITIZE_STRING ), 'pronamic_pay_update_db' ) ) {
 			$this->update_db();
 
-			AdminNotices::remove_notice( 'update_db' );
+			$this->admin->notices->remove_notice( 'update_db' );
 
 			$this->redirect_to_about();
 		}
@@ -115,7 +115,7 @@ class Install {
 				version_compare( $current_db_version, max( $this->db_updates ), '<' )
 			)
 		) {
-			AdminNotices::add_notice( 'update_db' );
+			$this->admin->notices->add_notice( 'update_db' );
 		}
 
 		// Redirect.

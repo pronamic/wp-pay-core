@@ -15,6 +15,7 @@ use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\Forms\FormPostType;
 use Pronamic\WordPress\Pay\Plugin;
+use Pronamic\WordPress\Pay\Webhooks\WebhookManager;
 use WP_Error;
 
 /**
@@ -82,6 +83,13 @@ class AdminModule {
 	public $install;
 
 	/**
+	 * Webhook manager.
+	 *
+	 * @var WebhookManager
+	 */
+	private $webhook_manager;
+
+	/**
 	 * Constructs and initalize an admin object.
 	 *
 	 * @param Plugin $plugin Plugin.
@@ -108,6 +116,9 @@ class AdminModule {
 		$this->notices   = new AdminNotices( $plugin );
 		$this->reports   = new AdminReports( $plugin, $this );
 		$this->tour      = new AdminTour( $plugin );
+
+		// Webhook Manager.
+		$this->webhook_manager = new WebhookManager( $plugin, $this );
 	}
 
 	/**
