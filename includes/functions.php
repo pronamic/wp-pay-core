@@ -11,7 +11,6 @@
 use Pronamic\WordPress\Pay\Admin\AdminPaymentPostType;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
-use WP_Query;
 
 /**
  * Pronamic Pay plugin.
