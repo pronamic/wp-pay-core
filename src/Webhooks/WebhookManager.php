@@ -101,10 +101,6 @@ class WebhookManager {
 				$outdated_urls[] = $config_id;
 			}
 
-			if ( empty( $outdated_urls ) ) {
-				$outdated_urls = true;
-			}
-
 			set_transient( 'pronamic_outdated_webhook_urls', $outdated_urls, DAY_IN_SECONDS );
 		}
 
