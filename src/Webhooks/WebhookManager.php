@@ -101,6 +101,17 @@ class WebhookManager {
 				$outdated_urls[] = $config_id;
 			}
 
+			/**
+			 * The WordPress Transients API will not always store empty array 
+			 * values correctly, therefor we convert an empty array to true.
+			 *
+			 * @todo We should probably schedule a daily event to check for
+			 * possible broken webhooks.
+			 */
+			if ( empty( $outdated_urls ) ) {
+				$outdated_urls = true;
+			}
+
 			set_transient( 'pronamic_outdated_webhook_urls', $outdated_urls, DAY_IN_SECONDS );
 		}
 
