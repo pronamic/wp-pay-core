@@ -273,17 +273,17 @@ class PaymentMethods {
 			self::DIRECT_DEBIT            => __( 'Direct Debit', 'pronamic_ideal' ),
 			self::DIRECT_DEBIT_BANCONTACT => sprintf(
 				/* translators: %s: payment method */
-				__( 'Direct Debit mandate via %s', 'pronamic_ideal' ),
+				__( 'Direct Debit (mandate via %s)', 'pronamic_ideal' ),
 				__( 'Bancontact', 'pronamic_ideal' )
 			),
 			self::DIRECT_DEBIT_IDEAL      => sprintf(
 				/* translators: %s: payment method */
-				__( 'Direct Debit mandate via %s', 'pronamic_ideal' ),
+				__( 'Direct Debit (mandate via %s)', 'pronamic_ideal' ),
 				__( 'iDEAL', 'pronamic_ideal' )
 			),
 			self::DIRECT_DEBIT_SOFORT     => sprintf(
 				/* translators: %s: payment method */
-				__( 'Direct Debit mandate via %s', 'pronamic_ideal' ),
+				__( 'Direct Debit (mandate via %s)', 'pronamic_ideal' ),
 				__( 'SOFORT', 'pronamic_ideal' )
 			),
 			self::FOCUM                   => __( 'Focum', 'pronamic_ideal' ),
