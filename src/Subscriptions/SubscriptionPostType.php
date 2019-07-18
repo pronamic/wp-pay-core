@@ -101,6 +101,7 @@ class SubscriptionPostType {
 			'subscr_cancelled' => _x( 'Cancelled', 'Subscription status', 'pronamic_ideal' ),
 			'subscr_expired'   => _x( 'Expired', 'Subscription status', 'pronamic_ideal' ),
 			'subscr_failed'    => _x( 'Failed', 'Subscription status', 'pronamic_ideal' ),
+			'subscr_on_hold'   => _x( 'On Hold', 'Subscription status', 'pronamic_ideal' ),
 			'subscr_active'    => _x( 'Active', 'Subscription status', 'pronamic_ideal' ),
 			'subscr_completed' => _x( 'Completed', 'Subscription status', 'pronamic_ideal' ),
 		);
@@ -164,6 +165,19 @@ class SubscriptionPostType {
 				'show_in_admin_status_list' => true,
 				/* translators: %s: count value */
 				'label_count'               => _n_noop( 'Failed <span class="count">(%s)</span>', 'Failed <span class="count">(%s)</span>', 'pronamic_ideal' ),
+			)
+		);
+
+		register_post_status(
+			'subscr_on_hold',
+			array(
+				'label'                     => _x( 'On Hold', 'Subscription status', 'pronamic_ideal' ),
+				'public'                    => false,
+				'exclude_from_search'       => false,
+				'show_in_admin_all_list'    => true,
+				'show_in_admin_status_list' => true,
+				/* translators: %s: count value */
+				'label_count'               => _n_noop( 'On Hold <span class="count">(%s)</span>', 'On Hold <span class="count">(%s)</span>', 'pronamic_ideal' ),
 			)
 		);
 

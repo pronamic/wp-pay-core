@@ -65,6 +65,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 			Statuses::FAILURE   => 'subscr_failed',
 			Statuses::ACTIVE    => 'subscr_active',
 			Statuses::SUCCESS   => 'subscr_active',
+			Statuses::ON_HOLD   => 'subscr_on_hold',
 			Statuses::OPEN      => 'subscr_pending',
 			Statuses::COMPLETED => 'subscr_completed',
 		);
