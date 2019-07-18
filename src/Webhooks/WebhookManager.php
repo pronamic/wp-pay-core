@@ -93,6 +93,20 @@ class WebhookManager {
 					continue;
 				}
 
+				// Check if manual configuration is needed for webhook.
+				$gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
+
+				$integration = pronamic_pay_plugin()->gateway_integrations->get_integration( $gateway_id );
+
+				if ( null === $integration ) {
+					// Integration unknown.
+					continue;
+				}
+
+				if ( ! $integration->supports( 'webhook' ) || $integration->supports( 'webhook_no_config' ) ) {
+					continue;
+				}
+
 				// Validate log request URL against current home URL.
 				if ( self::validate_request_url( $request_info ) ) {
 					continue;
