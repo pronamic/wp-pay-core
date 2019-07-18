@@ -146,19 +146,39 @@ class WebhookRequestInfo implements JsonSerializable {
 	 */
 	public static function from_json( $json ) {
 		if ( ! is_object( $json ) ) {
-			throw new InvalidArgumentException( 'JSON value must be an object.' );
+			throw new InvalidArgumentException(
+				sprintf(
+					'JSON value must be an object (%s).',
+					var_export( $json, true )
+				)
+			);
 		}
 
 		if ( ! property_exists( $json, 'post_data' ) ) {
-			throw new InvalidArgumentException( 'JSON must contain `post_data` property.' );
+			throw new InvalidArgumentException(
+				sprintf(
+					'JSON must contain `post_data` property (%s).',
+					var_export( $json, true )
+				)
+			);
 		}
 
 		if ( ! isset( $json->request_date ) ) {
-			throw new InvalidArgumentException( 'JSON must contain `request_date` property.' );
+			throw new InvalidArgumentException(
+				sprintf(
+					'JSON must contain `request_date` property (%s).',
+					var_export( $json, true )
+				)
+			);
 		}
 
 		if ( ! isset( $json->request_url ) ) {
-			throw new InvalidArgumentException( 'JSON must contain `request_url` property.' );
+			throw new InvalidArgumentException(
+				sprintf(
+					'JSON must contain `request_url` property (%s).',
+					var_export( $json, true )
+				)
+			);
 		}
 
 		$request_date = new DateTime( $json->request_date );
