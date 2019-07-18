@@ -286,6 +286,7 @@ class PaymentMethods {
 				__( 'Direct Debit (mandate via %s)', 'pronamic_ideal' ),
 				__( 'SOFORT', 'pronamic_ideal' )
 			),
+			self::EPS                     => __( 'EPS', 'pronamic_ideal' ),
 			self::FOCUM                   => __( 'Focum', 'pronamic_ideal' ),
 			self::GIROPAY                 => __( 'Giropay', 'pronamic_ideal' ),
 			self::GULDEN                  => __( 'Gulden', 'pronamic_ideal' ),
