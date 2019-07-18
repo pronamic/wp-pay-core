@@ -55,8 +55,8 @@ if ( $integration->supports( 'webhook' ) ) {
 		'section'  => 'feedback',
 		'title'    => __( 'Webhook Status', 'pronamic_ideal' ),
 		'type'     => 'description',
-		'callback' => function() use ( $gateway, $config_id ) {
-			AdminGatewayPostType::settings_webhook_log( $gateway, $config_id );
+		'callback' => function() use ( $gateway, $gateway_id, $config_id ) {
+			AdminGatewayPostType::settings_webhook_log( $gateway, $gateway_id, $config_id );
 		},
 	);
 }

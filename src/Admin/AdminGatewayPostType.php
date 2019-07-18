@@ -309,12 +309,13 @@ class AdminGatewayPostType {
 	/**
 	 * Pronamic Pay gateway webhook log setting.
 	 *
-	 * @param null|Gateway $gateway   Gateway.
-	 * @param null|int     $config_id Config ID.
+	 * @param null|Gateway $gateway    Gateway.
+	 * @param null|string  $gateway_id Gateway ID.
+	 * @param null|int     $config_id  Config ID.
 	 *
 	 * @return void
 	 */
-	public static function settings_webhook_log( $gateway, $config_id ) {
+	public static function settings_webhook_log( $gateway, $gateway_id, $config_id ) {
 		if ( null === $gateway ) {
 			return;
 		}
