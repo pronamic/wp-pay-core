@@ -165,6 +165,138 @@
 						</div>
 					</div>
 				</div>
+
+				<?php
+
+				$subscriptions_post_type = \Pronamic\WordPress\Pay\Admin\AdminSubscriptionPostType::POST_TYPE;
+
+				$query = new WP_Query(
+					array(
+						'post_type'      => $subscriptions_post_type,
+						'post_status'    => \Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType::get_states(),
+						'posts_per_page' => 5,
+					)
+				);
+
+				if ( $query->have_posts() ) : ?>
+
+					<div id="normal-sortables" class="meta-box-sortables ui-sortable">
+
+						<div class="postbox">
+							<h2 class="hndle"><span><?php esc_html_e( 'Latest Subscriptions', 'pronamic_ideal' ); ?></span></h2>
+
+							<div class="inside">
+								<?php
+
+									$columns = array(
+										'status',
+										'title',
+										'amount',
+										'date',
+									);
+
+									// phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+									$column_titles = apply_filters( 'manage_edit-' . $subscriptions_post_type . '_columns', array() );
+
+									?>
+
+									<div id="dashboard_pronamic_pay_subscriptions">
+										<table class="wp-list-table widefat fixed striped posts">
+
+											<tr class="type-<?php echo esc_attr( $subscriptions_post_type ); ?>">
+
+												<?php
+
+												foreach ( $columns as $column ) :
+													$custom_column = sprintf( '%1$s_%2$s', 'pronamic_subscription', $column );
+
+													// Column classes.
+													$classes = array(
+														sprintf( 'column-%s', $custom_column ),
+													);
+
+													if ( 'pronamic_subscription_title' === $custom_column ) :
+														$classes[] = 'column-primary';
+													endif;
+
+													printf(
+														'<th class="%1$s">%2$s</th>',
+														esc_attr( implode( ' ', $classes ) ),
+														wp_kses_post( $column_titles[ $custom_column ] )
+													);
+
+												endforeach;
+
+												?>
+
+											</tr>
+
+											<?php
+											while ( $query->have_posts() ) :
+												$query->the_post();
+												?>
+
+												<tr class="type-<?php echo esc_attr( $subscriptions_post_type ); ?>">
+													<?php
+
+													$payment_id = get_the_ID();
+
+													// Loop columns.
+													foreach ( $columns as $column ) :
+
+														$custom_column = sprintf( '%1$s_%2$s', 'pronamic_subscription', $column );
+
+														// Column classes.
+														$classes = array(
+															$custom_column,
+															'column-' . $custom_column,
+														);
+
+														if ( 'pronamic_subscription_title' === $custom_column ) {
+															$classes[] = 'column-primary';
+														}
+
+														printf(
+															'<td class="%1$s" data-colname="%2$s">',
+															esc_attr( implode( ' ', $classes ) ),
+															esc_html( $column_titles[ $custom_column ] )
+														);
+
+														// Do custom column action.
+														do_action(
+															'manage_' . $subscriptions_post_type . '_posts_custom_column',
+															$custom_column,
+															$payment_id
+														);
+
+														if ( 'pronamic_subscription_title' === $custom_column ) :
+
+															printf(
+																'<button type = "button" class="toggle-row" ><span class="screen-reader-text">%1$s</span ></button>',
+																esc_html( __( 'Show more details', 'pronamic_ideal' ) )
+															);
+
+														endif;
+
+														echo '</td>';
+
+													endforeach;
+
+													?>
+
+												</tr>
+
+											<?php endwhile; ?>
+
+										</table>
+									</div>
+
+									<?php wp_reset_postdata(); ?>
+							</div>
+						</div>
+					</div>
+
+				<?php endif; ?>
 			</div>
 
 			<div id="postbox-container-2" class="postbox-container">
