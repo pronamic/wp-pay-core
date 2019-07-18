@@ -8,16 +8,6 @@
  * @package   Pronamic\WordPress\Pay
  */
 
-$subscription_id = get_the_ID();
-
-if ( empty( $subscription_id ) ) {
-	return;
-}
-
-$subscription = get_pronamic_subscription( $subscription_id );
-
-$payments = $subscription->get_payments();
-
 ?>
 
 <?php if ( empty( $payments ) ) : ?>

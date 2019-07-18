@@ -383,6 +383,12 @@ class AdminSubscriptionPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 */
 	public function meta_box_info( $post ) {
+		$subscription = get_pronamic_subscription( $post->ID );
+
+		if ( null === $subscription ) {
+			return;
+		}
+
 		include __DIR__ . '/../../views/meta-box-subscription-info.php';
 	}
 
@@ -394,7 +400,7 @@ class AdminSubscriptionPostType {
 	public function meta_box_lines( $post ) {
 		$subscription = get_pronamic_subscription( $post->ID );
 
-		if ( empty( $subscription ) ) {
+		if ( null === $subscription ) {
 			return;
 		}
 
@@ -426,6 +432,14 @@ class AdminSubscriptionPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 */
 	public function meta_box_payments( $post ) {
+		$subscription = get_pronamic_subscription( $post->ID );
+
+		if ( null === $subscription ) {
+			return;
+		}
+
+		$payments = $subscription->get_payments();
+
 		include __DIR__ . '/../../views/meta-box-subscription-payments.php';
 	}
 

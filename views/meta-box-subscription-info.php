@@ -12,13 +12,7 @@ use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Util;
 
-$subscription_id = get_the_ID();
-
-if ( empty( $subscription_id ) ) {
-	return;
-}
-
-$subscription = get_pronamic_subscription( $subscription_id );
+$subscription_id = $subscription->get_id();
 
 $customer = $subscription->get_customer();
 $user_id  = is_null( $customer ) ? null : $customer->get_user_id();
