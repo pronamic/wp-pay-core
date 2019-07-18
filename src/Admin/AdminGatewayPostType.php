@@ -406,6 +406,8 @@ class AdminGatewayPostType {
 			}
 		}
 
+		$integration->save_post( $post_id );
+
 		// Update active payment methods.
 		PaymentMethods::update_active_payment_methods();
 	}

@@ -242,4 +242,13 @@ abstract class AbstractIntegration {
 	public function get_gateway( $post_id ) {
 		return null;
 	}
+
+	/**
+	 * Save post.
+	 *
+	 * @param int $post_id Post ID.
+	 */
+	public function save_post( $post_id ) {
+		
+	}
 }
