@@ -34,9 +34,9 @@ function get_pronamic_payment( $post_id ) {
 
 	$post_id = (int) $post_id;
 
-	$payments_post_type = get_post_type( $post_id );
+	$post_type = get_post_type( $post_id );
 
-	if ( AdminPaymentPostType::POST_TYPE !== $payments_post_type ) {
+	if ( AdminPaymentPostType::POST_TYPE !== $post_type ) {
 		return null;
 	}
 
