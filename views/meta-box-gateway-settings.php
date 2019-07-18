@@ -15,6 +15,10 @@ use Pronamic\WordPress\Pay\Webhooks\WebhookRequestInfo;
 
 $integration = $this->plugin->gateway_integrations->get_integration( $gateway_id );
 
+if ( null === $integration ) {
+	return;
+}
+
 $fields = $integration->get_settings_fields();
 
 $sections = array(
