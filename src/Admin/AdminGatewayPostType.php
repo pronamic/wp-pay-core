@@ -377,13 +377,7 @@ class AdminGatewayPostType {
 			return;
 		}
 
-		$integrations = $this->plugin->gateway_integrations;
-
-		if ( ! array_key_exists( $gateway_id, iterator_to_array( $integrations ) ) ) {
-			return;
-		}
-
-		$integration = $integrations->get_integration( $gateway_id );
+		$integration = $this->plugin->gateway_integrations->get_integration( $gateway_id );
 
 		if ( null === $integration ) {
 			return;
