@@ -66,13 +66,6 @@ abstract class Gateway {
 	protected $config;
 
 	/**
-	 * The slug of this gateway
-	 *
-	 * @var string
-	 */
-	private $slug;
-
-	/**
 	 * The method of this gateway
 	 *
 	 * @var int
@@ -144,24 +137,6 @@ abstract class Gateway {
 	 */
 	public function supports( $feature ) {
 		return in_array( $feature, $this->supports, true );
-	}
-
-	/**
-	 * Get the slug of this gateway
-	 *
-	 * @return string
-	 */
-	public function get_slug() {
-		return $this->slug;
-	}
-
-	/**
-	 * Set the slug of this gateway
-	 *
-	 * @param string $slug Unique gateway slug.
-	 */
-	public function set_slug( $slug ) {
-		$this->slug = $slug;
 	}
 
 	/**
