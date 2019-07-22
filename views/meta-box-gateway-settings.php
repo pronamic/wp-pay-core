@@ -273,7 +273,7 @@ $sections = array_filter(
 								/**
 								 * An empty value can also be an empty string, this
 								 * should not always be overwritten with the default
-								 * value. Therefor we check if there is anykind of 
+								 * value. Therefor we check if there is anykind of
 								 * meta.
 								 *
 								 * @link https://developer.wordpress.org/reference/functions/get_post_meta/

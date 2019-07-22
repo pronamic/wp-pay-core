@@ -249,6 +249,6 @@ abstract class AbstractIntegration {
 	 * @param int $post_id Post ID.
 	 */
 	public function save_post( $post_id ) {
-		
+
 	}
 }

@@ -178,7 +178,8 @@
 					)
 				);
 
-				if ( $query->have_posts() ) : ?>
+				if ( $query->have_posts() ) :
+					?>
 
 					<div id="normal-sortables" class="meta-box-sortables ui-sortable">
 

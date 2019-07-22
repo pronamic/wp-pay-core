@@ -116,7 +116,7 @@ class WebhookManager {
 			}
 
 			/**
-			 * The WordPress Transients API will not always store empty array 
+			 * The WordPress Transients API will not always store empty array
 			 * values correctly, therefor we convert an empty array to true.
 			 *
 			 * @todo We should probably schedule a daily event to check for
