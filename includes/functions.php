@@ -68,7 +68,7 @@ function get_pronamic_payment_by_meta( $meta_key, $meta_value ) {
 				array(
 					'key'   => $meta_key,
 					'value' => $meta_value,
-				)
+				),
 			),
 		)
 	);
@@ -109,7 +109,7 @@ function get_pronamic_payments_by_meta( $meta_key, $meta_value ) {
 				array(
 					'key'   => $meta_key,
 					'value' => $meta_value,
-				)
+				),
 			),
 		)
 	);
@@ -196,7 +196,7 @@ function get_pronamic_subscription_by_meta( $meta_key, $meta_value ) {
 				array(
 					'key'   => $meta_key,
 					'value' => $meta_value,
-				)
+				),
 			),
 		)
 	);
@@ -205,7 +205,7 @@ function get_pronamic_subscription_by_meta( $meta_key, $meta_value ) {
 		while ( $query->have_posts() ) {
 			$query->the_post();
 
-			$subscription = get_pronamic_subscription( get_the_ID() );
+			$subscription = get_pronamic_subscription( (int) get_the_ID() );
 		}
 
 		wp_reset_postdata();
@@ -234,7 +234,7 @@ function get_pronamic_subscriptions_by_meta( $meta_key, $meta_value ) {
 				array(
 					'key'   => $meta_key,
 					'value' => $meta_value,
-				)
+				),
 			),
 		)
 	);
@@ -243,7 +243,7 @@ function get_pronamic_subscriptions_by_meta( $meta_key, $meta_value ) {
 		while ( $query->have_posts() ) {
 			$query->the_post();
 
-			$subscription = get_pronamic_subscription( get_the_ID() );
+			$subscription = get_pronamic_subscription( (int) get_the_ID() );
 
 			if ( null !== $subscription ) {
 				$subscriptions[] = $subscription;
