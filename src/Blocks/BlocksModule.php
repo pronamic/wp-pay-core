@@ -52,7 +52,7 @@ class BlocksModule {
 
 		wp_register_script(
 			'pronamic-payment-form-editor',
-			plugins_url( '/js/dist/block-payment-form' . $min . '.js', dirname( __FILE__, 2 ) ),
+			plugins_url( '/js/dist/block-payment-form' . $min . '.js', dirname( dirname( __FILE__ ) ) ),
 			array( 'wp-blocks', 'wp-components', 'wp-editor', 'wp-element' ),
 			pronamic_pay_plugin()->get_version(),
 			false
