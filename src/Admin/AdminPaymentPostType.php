@@ -92,6 +92,10 @@ class AdminPaymentPostType {
 	public function request( $vars ) {
 		$screen = get_current_screen();
 
+		if ( null === $screen ) {
+			return $vars;
+		}
+
 		// Check payment post type.
 		if ( self::POST_TYPE !== $screen->post_type ) {
 			return $vars;
@@ -121,6 +125,10 @@ class AdminPaymentPostType {
 		// Screen.
 		$screen = get_current_screen();
 
+		if ( null === $screen ) {
+			return;
+		}
+
 		if ( ! ( 'post' === $screen->base && 'pronamic_payment' === $screen->post_type ) ) {
 			return;
 		}
@@ -148,7 +156,7 @@ class AdminPaymentPostType {
 			$gateway = Plugin::get_gateway( $payment->get_config_id() );
 
 			// Admin notice.
-			if ( is_callable( array( $gateway, 'create_invoice' ) ) && $gateway->create_invoice( $payment ) ) {
+			if ( null !== $gateway && is_callable( array( $gateway, 'create_invoice' ) ) && $gateway->create_invoice( $payment ) ) {
 				$this->admin_notices[] = array(
 					'type'    => 'info',
 					'message' => __( 'Invoice created.', 'pronamic_ideal' ),
@@ -166,7 +174,7 @@ class AdminPaymentPostType {
 			$gateway = Plugin::get_gateway( $payment->get_config_id() );
 
 			// Admin notice.
-			if ( is_callable( array( $gateway, 'cancel_reservation' ) ) && $gateway->cancel_reservation( $payment ) ) {
+			if ( null !== $gateway && is_callable( array( $gateway, 'cancel_reservation' ) ) && $gateway->cancel_reservation( $payment ) ) {
 				$this->admin_notices[] = array(
 					'type'    => 'info',
 					'message' => __( 'Reservation cancelled.', 'pronamic_ideal' ),
@@ -210,6 +218,8 @@ class AdminPaymentPostType {
 
 	/**
 	 * Maybe display anonymized notice.
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/get_current_screen/
 	 */
 	public function maybe_display_anonymized_notice() {
 		// Current user.
@@ -220,7 +230,7 @@ class AdminPaymentPostType {
 		// Screen.
 		$screen = get_current_screen();
 
-		if ( ! ( 'post' === $screen->base && 'pronamic_payment' === $screen->post_type ) ) {
+		if ( null === $screen || 'post' !== $screen->base || 'pronamic_payment' !== $screen->post_type ) {
 			return;
 		}
 
@@ -257,8 +267,23 @@ class AdminPaymentPostType {
 	 * @param WP_Query $query WordPress query.
 	 */
 	public function pre_get_posts( $query ) {
-		if ( 'pronamic_payment_amount' === $query->get( 'orderby' ) ) {
-			$query->set( 'meta_key', '_pronamic_payment_amount' );
+		$map = array(
+			'pronamic_payment_amount'      => '_pronamic_payment_amount',
+			'pronamic_payment_customer'    => '_pronamic_payment_customer_name',
+			'pronamic_payment_transaction' => '_pronamic_payment_transaction_id',
+		);
+
+		$orderby = $query->get( 'orderby' );
+
+		if ( ! isset( $map[ $orderby ] ) ) {
+			return;
+		}
+
+		$query->set( 'meta_key', $map[ $orderby ] );
+		$query->set( 'orderby', $map[ $orderby ] );
+
+		// Set query meta key.
+		if ( 'pronamic_payment_amount' === $orderby ) {
 			$query->set( 'orderby', 'meta_value_num' );
 		}
 	}
@@ -314,9 +339,11 @@ class AdminPaymentPostType {
 	 * @return array
 	 */
 	public function sortable_columns( $sortable_columns ) {
-		$sortable_columns['pronamic_payment_title']  = 'ID';
-		$sortable_columns['pronamic_payment_amount'] = 'pronamic_payment_amount';
-		$sortable_columns['pronamic_payment_date']   = 'date';
+		$sortable_columns['pronamic_payment_title']       = 'ID';
+		$sortable_columns['pronamic_payment_transaction'] = 'pronamic_payment_transaction';
+		$sortable_columns['pronamic_payment_customer']    = 'pronamic_payment_customer';
+		$sortable_columns['pronamic_payment_amount']      = 'pronamic_payment_amount';
+		$sortable_columns['pronamic_payment_date']        = 'date';
 
 		return $sortable_columns;
 	}
@@ -340,8 +367,12 @@ class AdminPaymentPostType {
 	/**
 	 * Custom columns.
 	 *
+	 * @link https://codex.wordpress.org/Plugin_API/Action_Reference/manage_$post_type_posts_custom_column
+	 * @link https://developer.wordpress.org/reference/functions/get_post_status/
+	 * @link https://developer.wordpress.org/reference/functions/get_post_status_object/
+	 *
 	 * @param string $column  Column.
-	 * @param string $post_id Post ID.
+	 * @param int    $post_id Post ID.
 	 */
 	public function custom_columns( $column, $post_id ) {
 		$payment = get_pronamic_payment( $post_id );
@@ -353,6 +384,10 @@ class AdminPaymentPostType {
 		switch ( $column ) {
 			case 'pronamic_payment_status':
 				$post_status = get_post_status( $post_id );
+
+				if ( false === $post_status ) {
+					break;
+				}
 
 				$label = __( 'Unknown', 'pronamic_ideal' );
 
@@ -376,6 +411,7 @@ class AdminPaymentPostType {
 				break;
 			case 'pronamic_payment_subscription':
 				$subscription_id = get_post_meta( $post_id, '_pronamic_payment_subscription_id', true );
+				$subscription_id = intval( $subscription_id );
 
 				if ( $subscription_id ) {
 					$label = __( 'Recurring payment', 'pronamic_ideal' );
@@ -407,7 +443,22 @@ class AdminPaymentPostType {
 				$source_id          = $payment->get_source_id();
 				$source_description = $payment->get_source_description();
 
-				$source_id_text = '#' . $source_id;
+				$text = sprintf(
+					'<strong>#%s</strong>',
+					esc_html( strval( $post_id ) )
+				);
+
+				$link = get_edit_post_link( $post_id );
+
+				if ( null !== $link ) {
+					$text = sprintf(
+						'<a href="%s" class="row-title">%s</a>',
+						esc_url( $link ),
+						$text
+					);
+				}
+
+				$source_id_text = '#' . strval( $source_id );
 
 				$source_link = $payment->get_source_link();
 
@@ -423,12 +474,8 @@ class AdminPaymentPostType {
 					sprintf(
 						/* translators: 1: Payment edit post link with post ID, 2: Payment source description, 3: Payment source ID text */
 						__( '%1$s for %2$s %3$s', 'pronamic_ideal' ),
-						sprintf(
-							'<a href="%s" class="row-title"><strong>#%s</strong></a>',
-							esc_url( get_edit_post_link( $post_id ) ),
-							esc_html( $post_id )
-						),
-						$source_description,
+						$text,
+						strval( $source_description ),
 						$source_id_text
 					),
 					array(
@@ -443,6 +490,7 @@ class AdminPaymentPostType {
 				break;
 			case 'pronamic_payment_gateway':
 				$config_id = get_post_meta( $post_id, '_pronamic_payment_config_id', true );
+				$config_id = intval( $config_id );
 
 				if ( ! empty( $config_id ) ) {
 					echo esc_html( get_the_title( $config_id ) );
@@ -453,6 +501,7 @@ class AdminPaymentPostType {
 				break;
 			case 'pronamic_payment_transaction':
 				$transaction_id = get_post_meta( $post_id, '_pronamic_payment_transaction_id', true );
+				$transaction_id = strval( $transaction_id );
 
 				$url = $payment->get_provider_link();
 
@@ -480,8 +529,10 @@ class AdminPaymentPostType {
 
 				break;
 			case 'pronamic_payment_customer':
-				if ( null !== $payment->get_customer() ) {
-					echo esc_html( $payment->get_customer()->get_name() );
+				$customer = $payment->get_customer();
+
+				if ( null !== $customer ) {
+					echo esc_html( strval( $customer->get_name() ) );
 				}
 
 				break;
@@ -553,7 +604,7 @@ class AdminPaymentPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 */
 	public function meta_box_info( $post ) {
-		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-payment-info.php';
+		include __DIR__ . '/../../views/meta-box-payment-info.php';
 	}
 
 	/**
@@ -570,7 +621,7 @@ class AdminPaymentPostType {
 
 		$lines = $payment->get_lines();
 
-		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-payment-lines.php';
+		include __DIR__ . '/../../views/meta-box-payment-lines.php';
 	}
 
 	/**
@@ -587,7 +638,7 @@ class AdminPaymentPostType {
 			)
 		);
 
-		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-notes.php';
+		include __DIR__ . '/../../views/meta-box-notes.php';
 	}
 
 	/**
@@ -596,7 +647,7 @@ class AdminPaymentPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 */
 	public function meta_box_subscription( $post ) {
-		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-payment-subscription.php';
+		include __DIR__ . '/../../views/meta-box-payment-subscription.php';
 	}
 
 	/**
@@ -607,7 +658,7 @@ class AdminPaymentPostType {
 	public function meta_box_update( $post ) {
 		wp_nonce_field( 'pronamic_payment_update', 'pronamic_payment_update_nonce' );
 
-		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-payment-update.php';
+		include __DIR__ . '/../../views/meta-box-payment-update.php';
 	}
 
 	/**
@@ -650,8 +701,10 @@ class AdminPaymentPostType {
 			// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352798&filters[translation_id]=37947230.
 			4  => __( 'Payment updated.', 'pronamic_ideal' ),
 			// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352801&filters[translation_id]=37947231.
-			// translators: %s: date and time of the revision
-			5  => isset( $_GET['revision'] ) ? sprintf( __( 'Payment restored to revision from %s.', 'pronamic_ideal' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false, // WPCS: CSRF ok. // Input var okay.
+			/* phpcs:disable WordPress.Security.NonceVerification.Recommended */
+			/* translators: %s: date and time of the revision */
+			5  => isset( $_GET['revision'] ) ? sprintf( __( 'Payment restored to revision from %s.', 'pronamic_ideal' ), strval( wp_post_revision_title( (int) $_GET['revision'], false ) ) ) : false,
+			/* phpcs:enable WordPress.Security.NonceVerification.Recommended */
 			// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352802&filters[translation_id]=37949178.
 			6  => __( 'Payment published.', 'pronamic_ideal' ),
 			// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352803&filters[translation_id]=37947232.
@@ -661,7 +714,7 @@ class AdminPaymentPostType {
 			// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352805&filters[translation_id]=37949302.
 			/* translators: %s: scheduled date */
 			9  => sprintf( __( 'Payment scheduled for: %s.', 'pronamic_ideal' ), '<strong>' . $scheduled_date . '</strong>' ),
-			// @https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352806&filters[translation_id]=37949301.
+			// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352806&filters[translation_id]=37949301.
 			10 => __( 'Payment draft updated.', 'pronamic_ideal' ),
 		);
 

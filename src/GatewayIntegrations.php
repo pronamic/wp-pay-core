@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use ArrayIterator;
+use IteratorAggregate;
 use Pronamic\WordPress\Pay\Gateways\Common\AbstractIntegration;
 
 /**
@@ -19,7 +21,7 @@ use Pronamic\WordPress\Pay\Gateways\Common\AbstractIntegration;
  * @version 2.0.3
  * @since   1.0.0
  */
-class GatewayIntegrations {
+class GatewayIntegrations implements IteratorAggregate {
 	/**
 	 * Integrations.
 	 *
@@ -30,76 +32,37 @@ class GatewayIntegrations {
 	/**
 	 * Construct gateway integrations.
 	 *
-	 * @param array $gateways Gateways.
+	 * @param array $integrations Integrations.
 	 */
-	public function __construct( $gateways ) {
-		if ( ! is_array( $gateways ) ) {
-			return;
-		}
-
-		foreach ( $gateways as $gateway ) {
-			$integration = null;
-
-			if ( is_string( $gateway ) ) {
-				$integration = new $gateway();
-			} elseif ( is_array( $gateway ) ) {
-				if ( ! isset( $gateway['class'] ) ) {
-					continue;
-				}
-
-				$integration = new $gateway['class']();
-
-				// Call callback.
-				if ( isset( $gateway['callback'] ) ) {
-					call_user_func( $gateway['callback'], $integration );
-				}
-			}
-
-			if ( ! isset( $integration ) ) {
-				continue;
-			}
-
+	public function __construct( $integrations ) {
+		foreach ( $integrations as $integration ) {
 			$this->integrations[ $integration->get_id() ] = $integration;
-
-			$this->maybe_add_provider( $integration );
 		}
 	}
 
 	/**
-	 * Register gateway integrations.
+	 * Get integration by ID.
 	 *
-	 * @return AbstractIntegration[]
+	 * @param string $id Integration ID.
+	 *
+	 * @return AbstractIntegration|null
 	 */
-	public function register_integrations() {
-		// Register config providers.
-		foreach ( $this->integrations as $integration ) {
-			Core\ConfigProvider::register( $integration->get_id(), $integration->get_config_factory_class() );
+	public function get_integration( $id ) {
+		if ( array_key_exists( $id, $this->integrations ) ) {
+			return $this->integrations[ $id ];
 		}
 
-		return $this->integrations;
+		return null;
 	}
 
 	/**
-	 * Maybe add provider from gateway integration.
+	 * Get iterator.
 	 *
-	 * @param AbstractIntegration $integration Gateway integration.
+	 * @see IteratorAggregate::getIterator()
+	 *
+	 * @return ArrayIterator
 	 */
-	public function maybe_add_provider( $integration ) {
-		global $pronamic_pay_providers;
-
-		if ( ! is_callable( array( $integration, 'get_provider' ) ) ) {
-			return;
-		}
-
-		$provider = $integration->get_provider();
-
-		if ( isset( $pronamic_pay_providers[ $provider ] ) ) {
-			return;
-		}
-
-		$pronamic_pay_providers[ $provider ] = array(
-			'name' => $integration->get_name(),
-			'url'  => $integration->get_url(),
-		);
+	public function getIterator() {
+		return new ArrayIterator( $this->integrations );
 	}
 }

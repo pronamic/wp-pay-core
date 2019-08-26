@@ -50,6 +50,13 @@ class Statuses {
 	const FAILURE = 'Failure';
 
 	/**
+	 * Status indicator for on hold
+	 *
+	 * @var string
+	 */
+	const ON_HOLD = 'On Hold';
+
+	/**
 	 * Status indicator for open
 	 *
 	 * @var string

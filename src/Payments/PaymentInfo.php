@@ -21,7 +21,6 @@ use Pronamic\WordPress\Pay\CreditCard;
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
-use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
 use WP_Post;
 
 /**
@@ -35,7 +34,7 @@ abstract class PaymentInfo {
 	/**
 	 * The post object.
 	 *
-	 * @var WP_Post|array
+	 * @var WP_Post|array|null
 	 */
 	public $post;
 
@@ -49,28 +48,28 @@ abstract class PaymentInfo {
 	/**
 	 * The unique ID of this payment info.
 	 *
-	 * @var int
+	 * @var int|null
 	 */
 	protected $id;
 
 	/**
 	 * The title of this payment info.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $title;
 
 	/**
 	 * The configuration ID.
 	 *
-	 * @var integer
+	 * @var int|null
 	 */
 	public $config_id;
 
 	/**
 	 * The key of this payment info, used in URL's for security.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $key;
 
@@ -78,7 +77,7 @@ abstract class PaymentInfo {
 	 * Identifier for the source which started this payment info.
 	 * For example: 'woocommerce', 'gravityforms', 'easydigitaldownloads', etc.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $source;
 
@@ -88,7 +87,7 @@ abstract class PaymentInfo {
 	 * - Easy Digital Downloads payment ID.
 	 * - Gravity Forms entry ID.
 	 *
-	 * @var string
+	 * @var string|int|null
 	 */
 	public $source_id;
 
@@ -96,9 +95,17 @@ abstract class PaymentInfo {
 	 * The order ID of this payment.
 	 *
 	 * @todo Is this required/used?
-	 * @var string
+	 *
+	 * @var string|null
 	 */
 	public $order_id;
+
+	/**
+	 * The transaction ID of this payment.
+	 *
+	 * @var string|null
+	 */
+	public $transaction_id;
 
 	/**
 	 * The total amount of this payment.
@@ -117,7 +124,7 @@ abstract class PaymentInfo {
 	/**
 	 * The description of this payment.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $description;
 
@@ -125,7 +132,8 @@ abstract class PaymentInfo {
 	 * The name of the consumer of this payment.
 	 *
 	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string
+	 *
+	 * @var string|null
 	 */
 	public $consumer_name;
 
@@ -133,7 +141,8 @@ abstract class PaymentInfo {
 	 * The account number of the consumer of this payment.
 	 *
 	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string
+	 *
+	 * @var string|null
 	 */
 	public $consumer_account_number;
 
@@ -141,7 +150,8 @@ abstract class PaymentInfo {
 	 * The IBAN of the consumer of this payment.
 	 *
 	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string
+	 *
+	 * @var string|null
 	 */
 	public $consumer_iban;
 
@@ -149,7 +159,8 @@ abstract class PaymentInfo {
 	 * The BIC of the consumer of this payment.
 	 *
 	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string
+	 *
+	 * @var string|null
 	 */
 	public $consumer_bic;
 
@@ -157,28 +168,29 @@ abstract class PaymentInfo {
 	 * The city of the consumer of this payment.
 	 *
 	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string
+	 *
+	 * @var string|null
 	 */
 	public $consumer_city;
 
 	/**
 	 * The Google Analytics client ID of the user who started this payment.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $analytics_client_id;
 
 	/**
 	 * Google Analytics e-commerce tracked.
 	 *
-	 * @var bool
+	 * @var bool|null
 	 */
 	public $ga_tracked;
 
 	/**
 	 * The email of the user who started this payment.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $email;
 
@@ -192,7 +204,7 @@ abstract class PaymentInfo {
 	/**
 	 * The issuer chosen by the user who started this payment.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $issuer;
 
@@ -246,6 +258,34 @@ abstract class PaymentInfo {
 	private $anonymized;
 
 	/**
+	 * Credit card
+	 *
+	 * @var CreditCard|null
+	 */
+	private $credit_card;
+
+	/**
+	 * Start date if the payment is related to a specific period.
+	 *
+	 * @var DateTime|null
+	 */
+	public $start_date;
+
+	/**
+	 * End date if the payment is related to a specific period.
+	 *
+	 * @var DateTime|null
+	 */
+	public $end_date;
+
+	/**
+	 * Meta.
+	 *
+	 * @var array
+	 */
+	public $meta;
+
+	/**
 	 * Construct and initialize payment object.
 	 *
 	 * @param integer $post_id A payment post ID or null.
@@ -261,7 +301,7 @@ abstract class PaymentInfo {
 	/**
 	 * Get the ID of this payment.
 	 *
-	 * @return int
+	 * @return int|null
 	 */
 	public function get_id() {
 		return $this->id;
@@ -297,7 +337,7 @@ abstract class PaymentInfo {
 	/**
 	 * Get start date.
 	 *
-	 * @return DateTime
+	 * @return DateTime|null
 	 */
 	public function get_start_date() {
 		return $this->start_date;
@@ -306,7 +346,7 @@ abstract class PaymentInfo {
 	/**
 	 * Set start date.
 	 *
-	 * @param DateTime $start_date Start date.
+	 * @param DateTime|null $start_date Start date.
 	 */
 	public function set_start_date( $start_date ) {
 		$this->start_date = $start_date;
@@ -315,7 +355,7 @@ abstract class PaymentInfo {
 	/**
 	 * Get end date.
 	 *
-	 * @return DateTime
+	 * @return DateTime|null
 	 */
 	public function get_end_date() {
 		return $this->end_date;
@@ -324,7 +364,7 @@ abstract class PaymentInfo {
 	/**
 	 * Set end date.
 	 *
-	 * @param DateTime $end_date End date.
+	 * @param DateTime|null $end_date End date.
 	 */
 	public function set_end_date( $end_date ) {
 		$this->end_date = $end_date;
@@ -333,7 +373,7 @@ abstract class PaymentInfo {
 	/**
 	 * Get the source identifier of this payment.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_source() {
 		return $this->source;
@@ -342,7 +382,7 @@ abstract class PaymentInfo {
 	/**
 	 * Set the source of this payment.
 	 *
-	 * @param string $source Source.
+	 * @param string|null $source Source.
 	 */
 	public function set_source( $source ) {
 		$this->source = $source;
@@ -351,7 +391,7 @@ abstract class PaymentInfo {
 	/**
 	 * Get the source ID of this payment.
 	 *
-	 * @return string
+	 * @return string|int|null
 	 */
 	public function get_source_id() {
 		return $this->source_id;
@@ -360,7 +400,7 @@ abstract class PaymentInfo {
 	/**
 	 * Set the source ID of this payment.
 	 *
-	 * @param string|int $source_id Source ID.
+	 * @param string|int|null $source_id Source ID.
 	 */
 	public function set_source_id( $source_id ) {
 		$this->source_id = $source_id;
@@ -369,7 +409,7 @@ abstract class PaymentInfo {
 	/**
 	 * Get the config ID of this payment.
 	 *
-	 * @return string
+	 * @return int|null
 	 */
 	public function get_config_id() {
 		return $this->config_id;
@@ -378,24 +418,10 @@ abstract class PaymentInfo {
 	/**
 	 * Set the config ID of this payment.
 	 *
-	 * @param string|int $config_id Config ID.
+	 * @param int|null $config_id Config ID.
 	 */
 	public function set_config_id( $config_id ) {
 		$this->config_id = $config_id;
-	}
-
-	/**
-	 * Get the source text of this payment.
-	 *
-	 * @return string
-	 */
-	public function get_source_text() {
-		$text = $this->get_source() . '<br />' . $this->get_source_id();
-
-		$text = apply_filters( 'pronamic_payment_source_text_' . $this->get_source(), $text, $this );
-		$text = apply_filters( 'pronamic_payment_source_text', $text, $this );
-
-		return $text;
 	}
 
 	/**
@@ -410,7 +436,7 @@ abstract class PaymentInfo {
 	/**
 	 * Set customer.
 	 *
-	 * @param Customer $customer Contact.
+	 * @param Customer|null $customer Contact.
 	 */
 	public function set_customer( $customer ) {
 		$this->customer = $customer;
@@ -428,7 +454,7 @@ abstract class PaymentInfo {
 	/**
 	 * Set billing address.
 	 *
-	 * @param Address $billing_address Billing address.
+	 * @param Address|null $billing_address Billing address.
 	 */
 	public function set_billing_address( $billing_address ) {
 		$this->billing_address = $billing_address;
@@ -446,7 +472,7 @@ abstract class PaymentInfo {
 	/**
 	 * Set shipping address.
 	 *
-	 * @param Address $shipping_address Shipping address.
+	 * @param Address|null $shipping_address Shipping address.
 	 */
 	public function set_shipping_address( $shipping_address ) {
 		$this->shipping_address = $shipping_address;
@@ -473,7 +499,7 @@ abstract class PaymentInfo {
 	/**
 	 * Get the order ID of this payment.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_order_id() {
 		return $this->order_id;
@@ -511,7 +537,7 @@ abstract class PaymentInfo {
 	 *
 	 * @param Money|null $shipping_amount Money object.
 	 */
-	public function set_shipping_amount( Money $shipping_amount ) {
+	public function set_shipping_amount( Money $shipping_amount = null ) {
 		$this->shipping_amount = $shipping_amount;
 	}
 
@@ -519,6 +545,7 @@ abstract class PaymentInfo {
 	 * Get the payment method.
 	 *
 	 * @todo Constant?
+	 *
 	 * @return string|null
 	 */
 	public function get_method() {
@@ -528,7 +555,7 @@ abstract class PaymentInfo {
 	/**
 	 * Get the payment issuer.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_issuer() {
 		return $this->issuer;
@@ -537,7 +564,7 @@ abstract class PaymentInfo {
 	/**
 	 * Get the payment description.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_description() {
 		return $this->description;
@@ -550,6 +577,10 @@ abstract class PaymentInfo {
 	 * @return mixed
 	 */
 	public function get_meta( $key ) {
+		if ( null === $this->id ) {
+			return null;
+		}
+
 		$key = '_pronamic_payment_' . $key;
 
 		return get_post_meta( $this->id, $key, true );
@@ -561,9 +592,13 @@ abstract class PaymentInfo {
 	 * @param  string $key   A meta key.
 	 * @param  mixed  $value A meta value.
 	 *
-	 * @return boolean        True on successful update, false on failure.
+	 * @return bool True on successful update, false on failure.
 	 */
 	public function set_meta( $key, $value ) {
+		if ( null === $this->id ) {
+			return false;
+		}
+
 		$key = '_pronamic_payment_' . $key;
 
 		if ( $value instanceof \DateTime ) {
@@ -580,105 +615,9 @@ abstract class PaymentInfo {
 	}
 
 	/**
-	 * Get source description.
-	 *
-	 * @return string
-	 */
-	public function get_source_description() {
-		$description = $this->source;
-
-		$description = apply_filters( 'pronamic_payment_source_description', $description, $this );
-		$description = apply_filters( 'pronamic_payment_source_description_' . $this->source, $description, $this );
-
-		return $description;
-	}
-
-	/**
-	 * Get the source link for this payment.
-	 *
-	 * @return string|null
-	 */
-	public function get_source_link() {
-		$url = null;
-
-		$url = apply_filters( 'pronamic_payment_source_url', $url, $this );
-		$url = apply_filters( 'pronamic_payment_source_url_' . $this->source, $url, $this );
-
-		return $url;
-	}
-
-	/**
-	 * Get provider link for this payment.
-	 *
-	 * @return string
-	 */
-	public function get_provider_link() {
-		$url = null;
-
-		$config_id  = get_post_meta( $this->id, '_pronamic_payment_config_id', true );
-		$gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
-
-		$url = apply_filters( 'pronamic_payment_provider_url', $url, $this );
-		$url = apply_filters( 'pronamic_payment_provider_url_' . $gateway_id, $url, $this );
-
-		return $url;
-	}
-
-	/**
-	 * Get subscription.
-	 *
-	 * @return Subscription|bool
-	 */
-	public function get_subscription() {
-		if ( is_object( $this->subscription ) ) {
-			return $this->subscription;
-		}
-
-		if ( empty( $this->subscription_id ) ) {
-			return false;
-		}
-
-		$this->subscription = new Subscription( $this->subscription_id );
-
-		return $this->subscription;
-	}
-
-	/**
-	 * Format string
-	 *
-	 * @link https://github.com/woocommerce/woocommerce/blob/v2.2.3/includes/abstracts/abstract-wc-email.php#L187-L195
-	 *
-	 * @param string $string The string to format.
-	 * @return string
-	 */
-	public function format_string( $string ) {
-		// Replacements definition.
-		$replacements = array(
-			'{order_id}'   => $this->get_order_id(),
-			'{payment_id}' => $this->get_id(),
-		);
-
-		// Find and replace.
-		$string = str_replace(
-			array_keys( $replacements ),
-			array_values( $replacements ),
-			$string,
-			$count
-		);
-
-		// Make sure there is an dynamic part in the order ID.
-		// @link https://secure.ogone.com/ncol/param_cookbook.asp.
-		if ( 0 === $count ) {
-			$string .= $this->get_id();
-		}
-
-		return $string;
-	}
-
-	/**
 	 * Set consumer name.
 	 *
-	 * @param string $name Name.
+	 * @param string|null $name Name.
 	 */
 	public function set_consumer_name( $name ) {
 		$this->consumer_name = $name;
@@ -687,7 +626,7 @@ abstract class PaymentInfo {
 	/**
 	 * Set consumer account number.
 	 *
-	 * @param string $account_number Account number.
+	 * @param string|null $account_number Account number.
 	 */
 	public function set_consumer_account_number( $account_number ) {
 		$this->consumer_account_number = $account_number;
@@ -696,7 +635,7 @@ abstract class PaymentInfo {
 	/**
 	 * Set consumer IBAN.
 	 *
-	 * @param string $iban IBAN.
+	 * @param string|null $iban IBAN.
 	 */
 	public function set_consumer_iban( $iban ) {
 		$this->consumer_iban = $iban;
@@ -705,7 +644,7 @@ abstract class PaymentInfo {
 	/**
 	 * Set consumer BIC.
 	 *
-	 * @param string $bic BIC.
+	 * @param string|null $bic BIC.
 	 */
 	public function set_consumer_bic( $bic ) {
 		$this->consumer_bic = $bic;
@@ -714,7 +653,7 @@ abstract class PaymentInfo {
 	/**
 	 * Set consumer city.
 	 *
-	 * @param string $city City.
+	 * @param string|null $city City.
 	 */
 	public function set_consumer_city( $city ) {
 		$this->consumer_city = $city;
@@ -723,7 +662,7 @@ abstract class PaymentInfo {
 	/**
 	 * Get payment email.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_email() {
 		return $this->email;
@@ -732,25 +671,16 @@ abstract class PaymentInfo {
 	/**
 	 * Get Google Analytics client ID.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_analytics_client_id() {
 		return $this->analytics_client_id;
 	}
 
 	/**
-	 * Get entrance code.
-	 *
-	 * @return string
-	 */
-	public function get_entrance_code() {
-		return $this->entrance_code;
-	}
-
-	/**
 	 * Set the credit card to use for this payment.
 	 *
-	 * @param CreditCard $credit_card Credit Card.
+	 * @param CreditCard|null $credit_card Credit Card.
 	 */
 	public function set_credit_card( $credit_card ) {
 		$this->credit_card = $credit_card;
@@ -763,15 +693,6 @@ abstract class PaymentInfo {
 	 */
 	public function get_credit_card() {
 		return $this->credit_card;
-	}
-
-	/**
-	 * Get reucrring.
-	 *
-	 * @return bool
-	 */
-	public function get_recurring() {
-		return $this->recurring;
 	}
 
 	/**
@@ -836,114 +757,5 @@ abstract class PaymentInfo {
 	 */
 	public function set_anonymized( $anonymized ) {
 		$this->anonymized = $anonymized;
-	}
-
-	/**
-	 * Create payment from object.
-	 *
-	 * @param mixed       $json JSON.
-	 * @param PaymentInfo $info Payment info.
-	 * @return Payment
-	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
-	 */
-	public static function from_json( $json, $info = null ) {
-		if ( ! is_object( $json ) ) {
-			throw new InvalidArgumentException( 'JSON value must be an object.' );
-		}
-
-		if ( ! $info instanceof self ) {
-			throw new InvalidArgumentException( 'Info must be an object.' );
-		}
-
-		if ( isset( $json->id ) ) {
-			$info->set_id( $json->id );
-		}
-
-		if ( isset( $json->status ) ) {
-			$info->set_status( $json->status );
-		}
-
-		if ( isset( $json->total_amount ) ) {
-			$info->set_total_amount( TaxedMoneyJsonTransformer::from_json( $json->total_amount ) );
-		}
-
-		if ( isset( $json->shipping_amount ) ) {
-			$info->set_shipping_amount( MoneyJsonTransformer::from_json( $json->shipping_amount ) );
-		}
-
-		if ( isset( $json->customer ) ) {
-			$info->set_customer( Customer::from_json( $json->customer ) );
-		}
-
-		if ( isset( $json->billing_address ) ) {
-			$info->set_billing_address( Address::from_json( $json->billing_address ) );
-		}
-
-		if ( isset( $json->shipping_address ) ) {
-			$info->set_shipping_address( Address::from_json( $json->shipping_address ) );
-		}
-
-		if ( isset( $json->lines ) ) {
-			$info->set_lines( PaymentLines::from_json( $json->lines ) );
-		}
-
-		if ( isset( $json->mode ) ) {
-			$info->set_mode( $json->mode );
-		}
-
-		if ( isset( $json->anonymized ) ) {
-			$info->set_anonymized( $json->anonymized );
-		}
-
-		return $info;
-	}
-
-	/**
-	 * Get JSON.
-	 *
-	 * @return object
-	 */
-	public function get_json() {
-		$object = (object) array();
-
-		if ( null !== $this->get_id() ) {
-			$object->id = $this->get_id();
-		}
-
-		if ( null !== $this->get_status() ) {
-			$object->status = $this->get_status();
-		}
-
-		$object->total_amount = TaxedMoneyJsonTransformer::to_json( $this->get_total_amount() );
-
-		if ( null !== $this->get_shipping_amount() ) {
-			$object->shipping_amount = MoneyJsonTransformer::to_json( $this->get_shipping_amount() );
-		}
-
-		if ( null !== $this->get_customer() ) {
-			$object->customer = $this->get_customer()->get_json();
-		}
-
-		if ( null !== $this->get_billing_address() ) {
-			$object->billing_address = $this->get_billing_address()->get_json();
-		}
-
-		if ( null !== $this->get_shipping_address() ) {
-			$object->shipping_address = $this->get_shipping_address()->get_json();
-		}
-
-		if ( null !== $this->get_lines() ) {
-			$object->lines = $this->get_lines()->get_json();
-		}
-
-		if ( null !== $this->get_mode() ) {
-			$object->mode = $this->get_mode();
-		}
-
-		if ( $this->is_anonymized() ) {
-			$object->anonymized = $this->is_anonymized();
-		}
-
-		return $object;
 	}
 }

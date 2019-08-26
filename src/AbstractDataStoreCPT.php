@@ -88,7 +88,7 @@ abstract class AbstractDataStoreCPT {
 	 *
 	 * @param int    $id  Post ID.
 	 * @param string $key Key.
-	 * @return string|null
+	 * @return string|null|false
 	 */
 	public function get_meta( $id, $key ) {
 		$meta_key = $this->get_meta_key( $key );
@@ -124,6 +124,94 @@ abstract class AbstractDataStoreCPT {
 		}
 
 		return $date;
+	}
+
+	/**
+	 * Get string from meta.
+	 *
+	 * @param int    $id  Post ID.
+	 * @param string $key Key.
+	 *
+	 * @return string|null
+	 */
+	public function get_meta_string( $id, $key ) {
+		$value = $this->get_meta( $id, $key );
+
+		if ( empty( $value ) ) {
+			return null;
+		}
+
+		return strval( $value );
+	}
+
+	/**
+	 * Get int from meta.
+	 *
+	 * @param int    $id  Post ID.
+	 * @param string $key Key.
+	 *
+	 * @return int|null
+	 */
+	public function get_meta_int( $id, $key ) {
+		$value = $this->get_meta( $id, $key );
+
+		if ( empty( $value ) ) {
+			return null;
+		}
+
+		return intval( $value );
+	}
+
+	/**
+	 * Get bool from meta.
+	 *
+	 * Please note:
+	 *
+	 * ```
+	 * update_post_meta( 1, '_test_bool', false );
+	 * $test = get_post_meta( 1, 'test_bool', true );
+	 * var_dump( $test );
+	 * // string(0) ""
+	 * ```
+	 *
+	 * ```
+	 * delete_post_meta( 1, '_test_bool' );
+	 * $test = get_post_meta( 1, 'test_bool', true );
+	 * var_dump( $test );
+	 * // string(0) ""
+	 * ```
+	 *
+	 * ```
+	 * delete_post_meta( 1, '_test_bool' );
+	 * $test = get_post_meta( 1, 'test_bool' );
+	 * var_dump( $test );
+	 * // array(0) { }
+	 * ```
+	 *
+	 * ```
+	 * update_post_meta( 1, '_test_bool', true );
+	 * $test = get_post_meta( 1, 'test_bool' );
+	 * var_dump( $test );
+	 * // array(1) { [0]=> string(0) "" }
+	 * ```
+	 *
+	 * @param int    $id  Post ID.
+	 * @param string $key Key.
+	 *
+	 * @return bool|null
+	 */
+	public function get_meta_bool( $id, $key ) {
+		$meta_key = $this->get_meta_key( $key );
+
+		$value = get_post_meta( $id, $meta_key );
+
+		if ( empty( $value ) ) {
+			return null;
+		}
+
+		$value = get_post_meta( $id, $meta_key, true );
+
+		return boolval( $value );
 	}
 
 	/**

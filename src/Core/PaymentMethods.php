@@ -144,6 +144,14 @@ class PaymentMethods {
 	const DIRECT_DEBIT_SOFORT = 'direct_debit_sofort';
 
 	/**
+	 * Constant for the EPS payment method.
+	 *
+	 * @var string
+	 * @since 2.1.7
+	 */
+	const EPS = 'eps';
+
+	/**
 	 * Constant for the Focum payment method.
 	 *
 	 * @var string
@@ -265,19 +273,20 @@ class PaymentMethods {
 			self::DIRECT_DEBIT            => __( 'Direct Debit', 'pronamic_ideal' ),
 			self::DIRECT_DEBIT_BANCONTACT => sprintf(
 				/* translators: %s: payment method */
-				__( 'Direct Debit mandate via %s', 'pronamic_ideal' ),
+				__( 'Direct Debit (mandate via %s)', 'pronamic_ideal' ),
 				__( 'Bancontact', 'pronamic_ideal' )
 			),
 			self::DIRECT_DEBIT_IDEAL      => sprintf(
 				/* translators: %s: payment method */
-				__( 'Direct Debit mandate via %s', 'pronamic_ideal' ),
+				__( 'Direct Debit (mandate via %s)', 'pronamic_ideal' ),
 				__( 'iDEAL', 'pronamic_ideal' )
 			),
 			self::DIRECT_DEBIT_SOFORT     => sprintf(
 				/* translators: %s: payment method */
-				__( 'Direct Debit mandate via %s', 'pronamic_ideal' ),
+				__( 'Direct Debit (mandate via %s)', 'pronamic_ideal' ),
 				__( 'SOFORT', 'pronamic_ideal' )
 			),
+			self::EPS                     => __( 'EPS', 'pronamic_ideal' ),
 			self::FOCUM                   => __( 'Focum', 'pronamic_ideal' ),
 			self::GIROPAY                 => __( 'Giropay', 'pronamic_ideal' ),
 			self::GULDEN                  => __( 'Gulden', 'pronamic_ideal' ),
@@ -379,11 +388,15 @@ class PaymentMethods {
 	/**
 	 * Get first method for payment method.
 	 *
-	 * @param string $payment_method The payment method to get the first payment method for.
+	 * @param string|null $payment_method The payment method to get the first payment method for.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public static function get_first_payment_method( $payment_method ) {
+		if ( empty( $payment_method ) ) {
+			return null;
+		}
+
 		if ( self::is_direct_debit_method( $payment_method ) ) {
 			$direct_debit_methods = self::get_direct_debit_methods();
 

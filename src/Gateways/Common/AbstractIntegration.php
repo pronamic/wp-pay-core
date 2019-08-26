@@ -10,6 +10,9 @@
 
 namespace Pronamic\WordPress\Pay\Gateways\Common;
 
+use Pronamic\WordPress\Pay\Core\Gateway;
+use Pronamic\WordPress\Pay\Core\GatewayConfig;
+
 /**
  * Title: Abstract Integration
  * Description:
@@ -21,7 +24,7 @@ namespace Pronamic\WordPress\Pay\Gateways\Common;
  * @since   1.0.0
  * @link    https://github.com/thephpleague/omnipay-common/blob/master/src/Omnipay/Common/AbstractGateway.php
  */
-abstract class AbstractIntegration implements IntegrationInterface {
+abstract class AbstractIntegration {
 	/**
 	 * ID.
 	 *
@@ -63,6 +66,13 @@ abstract class AbstractIntegration implements IntegrationInterface {
 	 * @var string
 	 */
 	public $provider;
+
+	/**
+	 * Supported features.
+	 *
+	 * @var array
+	 */
+	protected $supports = array();
 
 	/**
 	 * Get ID.
@@ -120,6 +130,15 @@ abstract class AbstractIntegration implements IntegrationInterface {
 	}
 
 	/**
+	 * Get settings fields.
+	 *
+	 * @return array
+	 */
+	public function get_settings_fields() {
+		return array();
+	}
+
+	/**
 	 * Get dashboard URL.
 	 *
 	 * @return array
@@ -162,5 +181,75 @@ abstract class AbstractIntegration implements IntegrationInterface {
 	 */
 	public function get_url() {
 		return $this->url;
+	}
+
+	/**
+	 * Check if this intengration supports a given feature.
+	 *
+	 * @param string $feature The feature to check.
+	 * @return bool True if supported, false otherwise.
+	 */
+	public function supports( $feature ) {
+		return in_array( $feature, $this->supports, true );
+	}
+
+	/**
+	 * Get meta value.
+	 *
+	 * @since 2.0.8
+	 *
+	 * @param string|int $post_id Post ID.
+	 * @param string     $key     Shortened meta key.
+	 *
+	 * @return string
+	 */
+	protected function get_meta( $post_id, $key ) {
+		if ( empty( $post_id ) || empty( $key ) ) {
+			return '';
+		}
+
+		$post_id = intval( $post_id );
+
+		$meta_key = sprintf( '_pronamic_gateway_%s', $key );
+
+		// Get post meta.
+		$meta_value = get_post_meta( $post_id, $meta_key, true );
+
+		if ( false === $meta_value ) {
+			$meta_value = '';
+		}
+
+		return $meta_value;
+	}
+
+	/**
+	 * Get config by post ID.
+	 *
+	 * @param int $post_id Post ID.
+	 *
+	 * @return GatewayConfig|null
+	 */
+	public function get_config( $post_id ) {
+		return null;
+	}
+
+	/**
+	 * Get gateway.
+	 *
+	 * @param int $post_id Post ID.
+	 *
+	 * @return Gateway|null
+	 */
+	public function get_gateway( $post_id ) {
+		return null;
+	}
+
+	/**
+	 * Save post.
+	 *
+	 * @param int $post_id Post ID.
+	 */
+	public function save_post( $post_id ) {
+
 	}
 }

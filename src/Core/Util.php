@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Core;
 
+use InvalidArgumentException;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Util as Pay_Util;
@@ -39,7 +40,7 @@ class Util {
 	public static function remote_get_body( $url, $required_response_code = 200, array $args = array() ) {
 		$result = wp_remote_request( $url, $args );
 
-		if ( is_wp_error( $result ) ) {
+		if ( $result instanceof WP_Error ) {
 			return $result;
 		}
 
@@ -50,7 +51,8 @@ class Util {
 		 * @link https://github.com/WordPress/WordPress/blob/4.1/wp-includes/class-http.php#L528-L529
 		 * @link https://github.com/WordPress/WordPress/blob/4.0/wp-includes/class-http.php#L527
 		 */
-		if ( wp_remote_retrieve_response_code( $result ) == $required_response_code ) { // WPCS: loose comparison ok.
+		/* phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison */
+		if ( wp_remote_retrieve_response_code( $result ) == $required_response_code ) {
 			return wp_remote_retrieve_body( $result );
 		}
 
@@ -69,37 +71,53 @@ class Util {
 	/**
 	 * SimpleXML load string.
 	 *
-	 * @param string $string The XML string to convert to a SimpleXMLElement object.
+	 * @link https://akrabat.com/throw-an-exception-when-simplexml_load_string-fails/
+	 * @link https://www.php.net/manual/en/class.invalidargumentexception.php
+	 * @link https://www.php.net/manual/en/class.libxmlerror.php
 	 *
-	 * @return SimpleXMLElement|WP_Error
+	 * @param string $string The XML string to convert to a SimpleXMLElement object.
+	 * @return SimpleXMLElement
+	 * @throws InvalidArgumentException If string could not be loaded in to a SimpleXMLElement object.
 	 */
 	public static function simplexml_load_string( $string ) {
-		$result = false;
-
 		// Suppress all XML errors.
 		$use_errors = libxml_use_internal_errors( true );
 
 		// Load.
 		$xml = simplexml_load_string( $string );
 
+		// Check result.
 		if ( false !== $xml ) {
-			$result = $xml;
-		} else {
-			$error = new WP_Error( 'simplexml_load_error', __( 'Could not load the XML string.', 'pronamic_ideal' ) );
+			// Set back to previous value.
+			libxml_use_internal_errors( $use_errors );
 
-			foreach ( libxml_get_errors() as $e ) {
-				$error->add( 'libxml_error', $e->message, $e );
-			}
-
-			libxml_clear_errors();
-
-			$result = $error;
+			return $xml;
 		}
+
+		// Error message.
+		$messages = array(
+			__( 'Could not load the XML string.', 'pronamic_ideal' ),
+		);
+
+		foreach ( libxml_get_errors() as $error ) {
+			$messages[] = sprintf(
+				'%s on line: %s, column: %s',
+				$error->message,
+				$error->line,
+				$error->column
+			);
+		}
+
+		// Clear errors.
+		libxml_clear_errors();
 
 		// Set back to previous value.
 		libxml_use_internal_errors( $use_errors );
 
-		return $result;
+		// Throw exception.
+		$message = implode( PHP_EOL, $messages );
+
+		throw new InvalidArgumentException( $message );
 	}
 
 	/**
@@ -165,7 +183,7 @@ class Util {
 	 *
 	 * @deprecated 2.0.9 Use \Pronamic\WordPress\Money\Money::get_cents() instead.
 	 *
-	 * @return int
+	 * @return float
 	 */
 	public static function amount_to_cents( $amount ) {
 		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Money\Money::get_cents()' );
@@ -343,7 +361,7 @@ class Util {
 				 * addresses. The first one is the original client. It can't be
 				 * trusted for authenticity, but we don't need to for this purpose.
 				 */
-				$addresses = explode( ',', sanitize_text_field( wp_unslash( $_SERVER[ $header ] ) ) );
+				$addresses = explode( ',', filter_var( wp_unslash( $_SERVER[ $header ] ) ) );
 
 				$addresses = array_slice( $addresses, 0, 1 );
 

@@ -100,7 +100,13 @@ class PaymentsPrivacy {
 		foreach ( $payments as $payment ) {
 			$export_data = array();
 
-			$payment_meta = get_post_meta( $payment->get_id() );
+			$id = $payment->get_id();
+
+			if ( empty( $id ) ) {
+				continue;
+			}
+
+			$payment_meta = get_post_meta( $id );
 
 			// Get payment meta.
 			foreach ( $meta_keys as $meta_key => $meta_options ) {
@@ -119,18 +125,16 @@ class PaymentsPrivacy {
 				$items[] = array(
 					'group_id'    => 'pronamic-pay-payments',
 					'group_label' => __( 'Payments', 'pronamic_ideal' ),
-					'item_id'     => 'pronamic-pay-payment-' . $payment->get_id(),
+					'item_id'     => 'pronamic-pay-payment-' . $id,
 					'data'        => $export_data,
 				);
 			}
 		}
 
-		$done = true;
-
 		// Return export data.
 		return array(
 			'data' => $items,
-			'done' => $done,
+			'done' => true,
 		);
 	}
 
@@ -153,7 +157,6 @@ class PaymentsPrivacy {
 		$items_removed  = false;
 		$items_retained = false;
 		$messages       = array();
-		$done           = false;
 
 		// Get payments.
 		// @todo use paging.
@@ -174,6 +177,10 @@ class PaymentsPrivacy {
 		// Loop payments.
 		foreach ( $payments as $payment ) {
 			$payment_id = $payment->get_id();
+
+			if ( empty( $payment_id ) ) {
+				continue;
+			}
 
 			$payment_meta = get_post_meta( $payment_id );
 
@@ -227,14 +234,12 @@ class PaymentsPrivacy {
 			$items_removed = true;
 		}
 
-		$done = true;
-
 		// Return results.
 		return array(
 			'items_removed'  => $items_removed,
 			'items_retained' => $items_retained,
 			'messages'       => $messages,
-			'done'           => $done,
+			'done'           => true,
 		);
 	}
 

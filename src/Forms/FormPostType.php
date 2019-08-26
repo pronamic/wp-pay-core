@@ -31,6 +31,13 @@ class FormPostType {
 	const POST_TYPE = 'pronamic_pay_form';
 
 	/**
+	 * Amount method input fixed.
+	 *
+	 * @var string
+	 */
+	const AMOUNT_METHOD_INPUT_FIXED = 'fixed';
+
+	/**
 	 * Amount method input only.
 	 *
 	 * @var string
@@ -174,6 +181,7 @@ class FormPostType {
 	 */
 	public function custom_columns( $column, $post_id ) {
 		global $post;
+		global $wpdb;
 
 		switch ( $column ) {
 			case 'pronamic_payment_form_gateway':
@@ -187,75 +195,75 @@ class FormPostType {
 
 				break;
 			case 'pronamic_payment_form_payments':
-				global $wpdb;
-
-				$query = $wpdb->prepare(
-					"
-					SELECT
-						COUNT( post.ID ) AS value
-					FROM
-						$wpdb->posts AS post
-							LEFT JOIN
-						$wpdb->postmeta AS meta_amount
-								ON post.ID = meta_amount.post_id AND meta_amount.meta_key = '_pronamic_payment_amount'
-							LEFT JOIN
-						$wpdb->postmeta AS meta_source
-								ON post.ID = meta_source.post_id AND meta_source.meta_key = '_pronamic_payment_source'
-							LEFT JOIN
-						$wpdb->postmeta AS meta_source_id
-								ON post.ID = meta_source_id.post_id AND meta_source_id.meta_key = '_pronamic_payment_source_id'
-					WHERE
-						post.post_type = 'pronamic_payment'
-							AND
-						post.post_status = 'payment_completed'
-							AND
-						meta_source.meta_value = 'payment_form'
-							AND
-						meta_source_id.meta_value = %s
-					GROUP BY
-						post.ID
-					;",
-					$post_id
+				/* phpcs:ignore WordPress.DB.DirectDatabaseQuery */
+				$value = $wpdb->get_var(
+					$wpdb->prepare(
+						"
+						SELECT
+							COUNT( post.ID ) AS value
+						FROM
+							$wpdb->posts AS post
+								LEFT JOIN
+							$wpdb->postmeta AS meta_amount
+									ON post.ID = meta_amount.post_id AND meta_amount.meta_key = '_pronamic_payment_amount'
+								LEFT JOIN
+							$wpdb->postmeta AS meta_source
+									ON post.ID = meta_source.post_id AND meta_source.meta_key = '_pronamic_payment_source'
+								LEFT JOIN
+							$wpdb->postmeta AS meta_source_id
+									ON post.ID = meta_source_id.post_id AND meta_source_id.meta_key = '_pronamic_payment_source_id'
+						WHERE
+							post.post_type = 'pronamic_payment'
+								AND
+							post.post_status = 'payment_completed'
+								AND
+							meta_source.meta_value = 'payment_form'
+								AND
+							meta_source_id.meta_value = %s
+						GROUP BY
+							post.ID
+						;
+						",
+						$post_id
+					)
 				);
-
-				$value = $wpdb->get_var( $query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
 
 				echo esc_html( number_format_i18n( $value ) );
 
 				break;
 			case 'pronamic_payment_form_earnings':
-				global $wpdb;
-
-				$query = $wpdb->prepare(
-					"
-					SELECT
-						SUM( meta_amount.meta_value ) AS value
-					FROM
-						$wpdb->posts AS post
-							LEFT JOIN
-						$wpdb->postmeta AS meta_amount
-								ON post.ID = meta_amount.post_id AND meta_amount.meta_key = '_pronamic_payment_amount'
-							LEFT JOIN
-						$wpdb->postmeta AS meta_source
-								ON post.ID = meta_source.post_id AND meta_source.meta_key = '_pronamic_payment_source'
-							LEFT JOIN
-						$wpdb->postmeta AS meta_source_id
-								ON post.ID = meta_source_id.post_id AND meta_source_id.meta_key = '_pronamic_payment_source_id'
-					WHERE
-						post.post_type = 'pronamic_payment'
-							AND
-						post.post_status = 'payment_completed'
-							AND
-						meta_source.meta_value = 'payment_form'
-							AND
-						meta_source_id.meta_value = %s
-					GROUP BY
-						post.ID
-					;",
-					$post_id
+				/* phpcs:ignore WordPress.DB.DirectDatabaseQuery */
+				$value = $wpdb->get_var(
+					$wpdb->prepare(
+						"
+						SELECT
+							SUM( meta_amount.meta_value ) AS value
+						FROM
+							$wpdb->posts AS post
+								LEFT JOIN
+							$wpdb->postmeta AS meta_amount
+									ON post.ID = meta_amount.post_id AND meta_amount.meta_key = '_pronamic_payment_amount'
+								LEFT JOIN
+							$wpdb->postmeta AS meta_source
+									ON post.ID = meta_source.post_id AND meta_source.meta_key = '_pronamic_payment_source'
+								LEFT JOIN
+							$wpdb->postmeta AS meta_source_id
+									ON post.ID = meta_source_id.post_id AND meta_source_id.meta_key = '_pronamic_payment_source_id'
+						WHERE
+							post.post_type = 'pronamic_payment'
+								AND
+							post.post_status = 'payment_completed'
+								AND
+							meta_source.meta_value = 'payment_form'
+								AND
+							meta_source_id.meta_value = %s
+						GROUP BY
+							post.ID
+						;
+						",
+						$post_id
+					)
 				);
-
-				$value = $wpdb->get_var( $query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
 
 				$money = new Money( $value, 'EUR' );
 
@@ -296,7 +304,7 @@ class FormPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 */
 	public function meta_box_form_options( $post ) {
-		include plugin_dir_path( $this->plugin->get_file() ) . '/admin/meta-box-form-options.php';
+		include __DIR__ . '/../../views/meta-box-form-options.php';
 	}
 
 	/**
@@ -362,7 +370,7 @@ class FormPostType {
 	private function get_shortcode( $post_id = null ) {
 		$post_id = ( null === $post_id ) ? get_the_ID() : $post_id;
 
-		$shortcode = sprintf( '[pronamic_payment_form id="%s"]', esc_attr( $post_id ) );
+		$shortcode = sprintf( '[pronamic_payment_form id="%s"]', esc_attr( strval( $post_id ) ) );
 
 		return $shortcode;
 	}
@@ -381,7 +389,7 @@ class FormPostType {
 
 	<input id="pronamic-pay-shortcode" class="pronamic-pay-shortcode-input" onClick="this.setSelectionRange( 0, this.value.length )" type="text" class="shortcode-input" readonly value="<?php echo esc_attr( $this->get_shortcode() ); ?>" />
 </div>
-<?php
+		<?php
 	}
 
 	/**

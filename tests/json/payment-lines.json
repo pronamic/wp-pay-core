@@ -19,12 +19,14 @@
     },
     {
         "total_amount":{
-            "value":0
+            "value":0,
+            "currency":"EUR"
         }
     },
     {
         "total_amount":{
-            "value":0
+            "value":0,
+            "currency":"EUR"
         }
     }
 ]

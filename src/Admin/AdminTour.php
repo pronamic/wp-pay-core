@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
+use Exception;
 use Pronamic\WordPress\Pay\Plugin;
 
 /**
@@ -67,7 +68,7 @@ class AdminTour {
 		// Pointers.
 		wp_register_style(
 			'proanmic-pay-admin-tour',
-			plugins_url( 'css/admin-tour' . $min . '.css', $this->plugin->get_file() ),
+			plugins_url( '../../css/admin-tour' . $min . '.css', __FILE__ ),
 			array(
 				'wp-pointer',
 			),
@@ -76,7 +77,7 @@ class AdminTour {
 
 		wp_register_script(
 			'proanmic-pay-admin-tour',
-			plugins_url( 'js/admin-tour' . $min . '.js', $this->plugin->get_file() ),
+			plugins_url( '../../js/dist/admin-tour' . $min . '.js', __FILE__ ),
 			array(
 				'jquery',
 				'wp-pointer',
@@ -103,20 +104,23 @@ class AdminTour {
 	 *
 	 * @param string $file File.
 	 * @return string
+	 * @throws Exception When output buffering is not active.
 	 */
 	private function get_content( $file ) {
 		$content = '';
 
-		$path = plugin_dir_path( $this->plugin->get_file() ) . 'admin/' . $file . '.php';
+		$path = __DIR__ . '/../../views/' . $file . '.php';
 
 		if ( is_readable( $path ) ) {
 			ob_start();
 
 			include $path;
 
-			$content = ob_get_contents();
+			$content = ob_get_clean();
 
-			ob_end_clean();
+			if ( false === $content ) {
+				throw new Exception( 'Output buffering is not active.' );
+			}
 		}
 
 		return $content;
@@ -133,72 +137,74 @@ class AdminTour {
 		$page   = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
 		$screen = get_current_screen();
 
-		switch ( $screen->id ) {
-			case 'toplevel_page_pronamic_ideal':
-				$pointers = array(
-					array(
-						// @link https://github.com/WordPress/WordPress/blob/4.7/wp-admin/edit.php#L321
-						'selector' => '.wrap .wp-header-end',
-						'options'  => (object) array(
-							'content'      => $this->get_content( 'pointer-dashboard' ),
-							'position'     => (object) array(
-								'edge'  => 'top',
-								'align' => ( is_rtl() ) ? 'left' : 'right',
+		if ( null !== $screen ) {
+			switch ( $screen->id ) {
+				case 'toplevel_page_pronamic_ideal':
+					$pointers = array(
+						array(
+							// @link https://github.com/WordPress/WordPress/blob/4.7/wp-admin/edit.php#L321
+							'selector' => '.wrap .wp-header-end',
+							'options'  => (object) array(
+								'content'      => $this->get_content( 'pointer-dashboard' ),
+								'position'     => (object) array(
+									'edge'  => 'top',
+									'align' => ( is_rtl() ) ? 'left' : 'right',
+								),
+								'pointerWidth' => 450,
 							),
-							'pointerWidth' => 450,
 						),
-					),
-				);
+					);
 
-				break;
-			case 'edit-pronamic_payment':
-				$pointers = array(
-					array(
-						'selector' => '.wrap .wp-header-end',
-						'options'  => (object) array(
-							'content'      => $this->get_content( 'pointer-payments' ),
-							'position'     => (object) array(
-								'edge'  => 'top',
-								'align' => ( is_rtl() ) ? 'left' : 'right',
+					break;
+				case 'edit-pronamic_payment':
+					$pointers = array(
+						array(
+							'selector' => '.wrap .wp-header-end',
+							'options'  => (object) array(
+								'content'      => $this->get_content( 'pointer-payments' ),
+								'position'     => (object) array(
+									'edge'  => 'top',
+									'align' => ( is_rtl() ) ? 'left' : 'right',
+								),
+								'pointerWidth' => 450,
 							),
-							'pointerWidth' => 450,
 						),
-					),
-				);
+					);
 
-				break;
-			case 'edit-pronamic_gateway':
-				$pointers = array(
-					array(
-						'selector' => '.wrap .wp-header-end',
-						'options'  => (object) array(
-							'content'      => $this->get_content( 'pointer-gateways' ),
-							'position'     => (object) array(
-								'edge'  => 'top',
-								'align' => ( is_rtl() ) ? 'left' : 'right',
+					break;
+				case 'edit-pronamic_gateway':
+					$pointers = array(
+						array(
+							'selector' => '.wrap .wp-header-end',
+							'options'  => (object) array(
+								'content'      => $this->get_content( 'pointer-gateways' ),
+								'position'     => (object) array(
+									'edge'  => 'top',
+									'align' => ( is_rtl() ) ? 'left' : 'right',
+								),
+								'pointerWidth' => 450,
 							),
-							'pointerWidth' => 450,
 						),
-					),
-				);
+					);
 
-				break;
-			case 'edit-pronamic_pay_form':
-				$pointers = array(
-					array(
-						'selector' => '.wrap .wp-header-end',
-						'options'  => (object) array(
-							'content'      => $this->get_content( 'pointer-forms' ),
-							'position'     => (object) array(
-								'edge'  => 'top',
-								'align' => ( is_rtl() ) ? 'left' : 'right',
+					break;
+				case 'edit-pronamic_pay_form':
+					$pointers = array(
+						array(
+							'selector' => '.wrap .wp-header-end',
+							'options'  => (object) array(
+								'content'      => $this->get_content( 'pointer-forms' ),
+								'position'     => (object) array(
+									'edge'  => 'top',
+									'align' => ( is_rtl() ) ? 'left' : 'right',
+								),
+								'pointerWidth' => 450,
 							),
-							'pointerWidth' => 450,
 						),
-					),
-				);
+					);
 
-				break;
+					break;
+			}
 		}
 
 		switch ( $page ) {

@@ -121,7 +121,7 @@ class Customer {
 	/**
 	 * Set gender.
 	 *
-	 * @param string $gender Gender.
+	 * @param string|null $gender Gender.
 	 */
 	public function set_gender( $gender ) {
 		$this->gender = $gender;
@@ -139,7 +139,7 @@ class Customer {
 	/**
 	 * Set birth date.
 	 *
-	 * @param DateTime $birth_date Date of birth.
+	 * @param DateTime|null $birth_date Date of birth.
 	 */
 	public function set_birth_date( $birth_date ) {
 		$this->birth_date = $birth_date;
@@ -157,7 +157,7 @@ class Customer {
 	/**
 	 * Set email address.
 	 *
-	 * @param string $email Email adress.
+	 * @param string|null $email Email adress.
 	 */
 	public function set_email( $email ) {
 		$this->email = $email;
@@ -175,7 +175,7 @@ class Customer {
 	/**
 	 * Set phone.
 	 *
-	 * @param string $phone Telephone number.
+	 * @param string|null $phone Telephone number.
 	 */
 	public function set_phone( $phone ) {
 		$this->phone = $phone;
@@ -193,7 +193,7 @@ class Customer {
 	/**
 	 * Set ip address.
 	 *
-	 * @param string $ip_address IP address.
+	 * @param string|null $ip_address IP address.
 	 */
 	public function set_ip_address( $ip_address ) {
 		$this->ip_address = $ip_address;
@@ -211,7 +211,7 @@ class Customer {
 	/**
 	 * Set user agent.
 	 *
-	 * @param string $user_agent User agent.
+	 * @param string|null $user_agent User agent.
 	 */
 	public function set_user_agent( $user_agent ) {
 		$this->user_agent = $user_agent;
@@ -229,7 +229,7 @@ class Customer {
 	/**
 	 * Set language.
 	 *
-	 * @param string $language Language.
+	 * @param string|null $language Language.
 	 */
 	public function set_language( $language ) {
 		$this->language = $language;
@@ -247,7 +247,7 @@ class Customer {
 	/**
 	 * Set locale.
 	 *
-	 * @param string $locale Locale.
+	 * @param string|null $locale Locale.
 	 */
 	public function set_locale( $locale ) {
 		$this->locale = $locale;
@@ -256,7 +256,7 @@ class Customer {
 	/**
 	 * Get WordPress user ID.
 	 *
-	 * @return integer|null
+	 * @return int|null
 	 */
 	public function get_user_id() {
 		return $this->user_id;
@@ -265,7 +265,7 @@ class Customer {
 	/**
 	 * Set WordPress user ID.
 	 *
-	 * @param integer|null $user_id WordPress user ID.
+	 * @param int|null $user_id WordPress user ID.
 	 */
 	public function set_user_id( $user_id ) {
 		$this->user_id = $user_id;
@@ -278,9 +278,9 @@ class Customer {
 	 */
 	public function get_json() {
 		$data = array(
-			'name'       => ( null === $this->get_name() ) ? null : $this->get_name()->get_json(),
+			'name'       => ( null === $this->name ) ? null : $this->name->get_json(),
 			'gender'     => $this->get_gender(),
-			'birth_date' => ( null === $this->get_birth_date() ) ? null : $this->get_birth_date()->format( DATE_RFC3339 ),
+			'birth_date' => ( null === $this->birth_date ) ? null : $this->birth_date->format( DATE_RFC3339 ),
 			'email'      => $this->get_email(),
 			'phone'      => $this->get_phone(),
 			'ip_address' => $this->get_ip_address(),
@@ -313,10 +313,14 @@ class Customer {
 
 		$customer = new self();
 
-		foreach ( $json as $key => $value ) {
+		$properties = (array) $json;
+
+		foreach ( $properties as $key => $value ) {
 			$method = sprintf( 'set_%s', $key );
 
-			if ( is_callable( array( $customer, $method ) ) ) {
+			$callable = array( $customer, $method );
+
+			if ( is_callable( $callable ) ) {
 				if ( 'name' === $key ) {
 					$value = ContactName::from_json( $value );
 				}
@@ -325,7 +329,7 @@ class Customer {
 					$value = new DateTime( $value );
 				}
 
-				call_user_func( array( $customer, $method ), $value );
+				call_user_func( $callable, $value );
 			}
 		}
 
@@ -343,7 +347,7 @@ class Customer {
 			$this->get_email(),
 			$this->get_phone(),
 			$this->get_gender(),
-			( null === $this->get_birth_date() ) ? null : $this->get_birth_date()->format( DATE_RFC3339 ),
+			( null === $this->birth_date ) ? null : $this->birth_date->format( DATE_RFC3339 ),
 			$this->get_user_agent(),
 			$this->get_ip_address(),
 			$this->get_language(),

@@ -26,17 +26,18 @@ use Pronamic\WordPress\Pay\Customer;
  * @version 2.1.0
  * @since   2.1.0
  *
- * @property string $language
- * @property string $locale
- * @property string $email
- * @property string $first_name
- * @property string $last_name
- * @property string $telephone_number
- * @property string $country
- * @property string $zip
- * @property string $city
- * @property string $address
- * @property string $user_id
+ * @property string|null $language
+ * @property string|null $locale
+ * @property string|null $email
+ * @property string|null $first_name
+ * @property string|null $last_name
+ * @property string|null $customer_name
+ * @property string|null $telephone_number
+ * @property string|null $country
+ * @property string|null $zip
+ * @property string|null $city
+ * @property string|null $address
+ * @property int|string|null $user_id
  */
 abstract class LegacyPaymentInfo extends PaymentInfo {
 	/**
@@ -81,7 +82,7 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	 *
 	 * @deprecated 2.0.9 Use Payment::get_total_amount()->get_currency()->get_alphabetic_code() instead.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_currency() {
 		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_total_amount()->get_currency()->get_alphabetic_code()' );
@@ -112,11 +113,13 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	public function get_language() {
 		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_customer()->get_language()' );
 
-		if ( null === $this->get_customer() ) {
+		$customer = $this->get_customer();
+
+		if ( null === $customer ) {
 			return null;
 		}
 
-		return $this->get_customer()->get_language();
+		return $customer->get_language();
 	}
 
 	/**
@@ -129,24 +132,13 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	public function get_locale() {
 		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_customer()->get_locale()' );
 
-		if ( null === $this->get_customer() ) {
+		$customer = $this->get_customer();
+
+		if ( null === $customer ) {
 			return null;
 		}
 
-		return $this->get_customer()->get_locale();
-	}
-
-	/**
-	 * Get the redirect URL for this payment.
-	 *
-	 * @deprecated 4.1.2 Use get_return_redirect_url()
-	 *
-	 * @return string
-	 */
-	public function get_redirect_url() {
-		_deprecated_function( __FUNCTION__, '4.1.2', 'get_return_redirect_url()' );
-
-		return $this->get_return_redirect_url();
+		return $customer->get_locale();
 	}
 
 	/**
@@ -159,15 +151,19 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	public function get_first_name() {
 		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_customer()->get_name()->get_first_name()' );
 
-		if ( null === $this->get_customer() ) {
+		$customer = $this->get_customer();
+
+		if ( null === $customer ) {
 			return null;
 		}
 
-		if ( null === $this->get_customer()->get_name() ) {
+		$name = $customer->get_name();
+
+		if ( null === $name ) {
 			return null;
 		}
 
-		return $this->get_customer()->get_name()->get_first_name();
+		return $name->get_first_name();
 	}
 
 	/**
@@ -180,15 +176,19 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	public function get_last_name() {
 		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_customer()->get_name()->get_last_name()' );
 
-		if ( null === $this->get_customer() ) {
+		$customer = $this->get_customer();
+
+		if ( null === $customer ) {
 			return null;
 		}
 
-		if ( null === $this->get_customer()->get_name() ) {
+		$name = $customer->get_name();
+
+		if ( null === $name ) {
 			return null;
 		}
 
-		return $this->get_customer()->get_name()->get_last_name();
+		return $name->get_last_name();
 	}
 
 	/**
@@ -201,15 +201,19 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	public function get_customer_name() {
 		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_customer()->get_name()' );
 
-		if ( null === $this->get_customer() ) {
+		$customer = $this->get_customer();
+
+		if ( null === $customer ) {
 			return null;
 		}
 
-		if ( null === $this->get_customer()->get_name() ) {
+		$name = $customer->get_name();
+
+		if ( null === $name ) {
 			return null;
 		}
 
-		return strval( $this->get_customer()->get_name() );
+		return strval( $name );
 	}
 
 	/**
@@ -222,11 +226,13 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	public function get_address() {
 		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_billing_address()->get_line_1()' );
 
-		if ( null === $this->get_billing_address() ) {
+		$address = $this->get_billing_address();
+
+		if ( null === $address ) {
 			return null;
 		}
 
-		return $this->get_billing_address()->get_line_1();
+		return $address->get_line_1();
 	}
 
 	/**
@@ -239,11 +245,13 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	public function get_city() {
 		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_billing_address()->get_city()' );
 
-		if ( null === $this->get_billing_address() ) {
+		$address = $this->get_billing_address();
+
+		if ( null === $address ) {
 			return null;
 		}
 
-		return $this->get_billing_address()->get_city();
+		return $address->get_city();
 	}
 
 	/**
@@ -256,11 +264,13 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	public function get_zip() {
 		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_billing_address()->get_postal_code()' );
 
-		if ( null === $this->get_billing_address() ) {
+		$address = $this->get_billing_address();
+
+		if ( null === $address ) {
 			return null;
 		}
 
-		return $this->get_billing_address()->get_postal_code();
+		return $address->get_postal_code();
 	}
 
 	/**
@@ -273,11 +283,13 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	public function get_country() {
 		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_billing_address()->get_country()' );
 
-		if ( null === $this->get_billing_address() ) {
+		$address = $this->get_billing_address();
+
+		if ( null === $address ) {
 			return null;
 		}
 
-		return $this->get_billing_address()->get_country_code();
+		return $address->get_country_code();
 	}
 
 	/**
@@ -290,11 +302,13 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	public function get_telephone_number() {
 		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_billing_address()->get_phone()' );
 
-		if ( null === $this->get_billing_address() ) {
+		$address = $this->get_billing_address();
+
+		if ( null === $address ) {
 			return null;
 		}
 
-		return $this->get_billing_address()->get_phone();
+		return $address->get_phone();
 	}
 
 	/**
@@ -305,19 +319,21 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	 * @return mixed
 	 */
 	public function __get( $name ) {
+		$customer = $this->get_customer();
+
 		switch ( $name ) {
 			case 'language':
 				return $this->get_language();
 			case 'locale':
 				return $this->get_locale();
 			case 'email':
-				return ( null === $this->get_customer() ) ? null : $this->get_customer()->get_email();
+				return ( null === $customer ) ? null : $customer->get_email();
 			case 'user_agent':
-				return ( null === $this->get_customer() ) ? null : $this->get_customer()->get_user_agent();
+				return ( null === $customer ) ? null : $customer->get_user_agent();
 			case 'user_id':
-				return ( null === $this->get_customer() ) ? null : $this->get_customer()->get_user_id();
+				return ( null === $customer ) ? null : $customer->get_user_id();
 			case 'user_ip':
-				return ( null === $this->get_customer() ) ? null : $this->get_customer()->get_ip_address();
+				return ( null === $customer ) ? null : $customer->get_ip_address();
 			case 'customer_name':
 				return $this->get_customer_name();
 			case 'first_name':

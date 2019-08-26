@@ -1,5 +1,6 @@
 build:
   environment:
+    php: 7.3.0
     variables:
       WP_TESTS_DB_NAME: 'wp_phpunit_tests'
       WP_TESTS_DB_USER: 'root'
@@ -10,12 +11,19 @@ build:
       - mysql -e "CREATE DATABASE wp_phpunit_tests"
   dependencies:
     override:
-      - composer install --ignore-platform-reqs --no-interaction
+      - composer install --no-interaction
   nodes:
+    analysis:
+      tests:
+        override:
+          -
+            command: phpcs-run
+            use_website_config: false
+
     coverage:
       tests:
         override:
-          - command: ./vendor/bin/phpunit
+          - command: vendor/bin/phpunit
             coverage:
               file: build/logs/clover.xml
               format: clover

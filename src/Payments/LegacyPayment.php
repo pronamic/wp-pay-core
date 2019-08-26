@@ -25,29 +25,18 @@ use Pronamic\WordPress\Pay\Customer;
  * @version 2.1.0
  * @since   2.1.0
  *
- * @property string $language
- * @property string $locale
- * @property string $email
- * @property string $first_name
- * @property string $last_name
- * @property string $telephone_number
- * @property string $country
- * @property string $zip
- * @property string $city
- * @property string $address
- * @property string $user_id
+ * @property string   $language
+ * @property string   $locale
+ * @property string   $email
+ * @property string   $first_name
+ * @property string   $last_name
+ * @property string   $telephone_number
+ * @property string   $country
+ * @property string   $zip
+ * @property string   $city
+ * @property string   $address
+ * @property int|null $user_id
  */
 abstract class LegacyPayment extends LegacyPaymentInfo {
-	/**
-	 * Get the redirect URL for this payment.
-	 *
-	 * @deprecated 4.1.2 Use get_return_redirect_url()
-	 *
-	 * @return string
-	 */
-	public function get_redirect_url() {
-		_deprecated_function( __FUNCTION__, '4.1.2', 'get_return_redirect_url()' );
 
-		return $this->get_return_redirect_url();
-	}
 }

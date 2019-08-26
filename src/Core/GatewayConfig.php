@@ -22,36 +22,9 @@ namespace Pronamic\WordPress\Pay\Core;
  */
 abstract class GatewayConfig {
 	/**
-	 * ID.
-	 *
-	 * @var int
-	 */
-	public $id;
-
-	/**
-	 * Post ID.
-	 *
-	 * @var int
-	 */
-	public $post_id;
-
-	/**
 	 * Mode
 	 *
 	 * @var string
 	 */
 	public $mode;
-
-	/**
-	 * Get gateway class.
-	 *
-	 * @return string
-	 */
-	public function get_gateway_class() {
-		$class = get_class( $this );
-
-		$namespace = substr( $class, 0, strrpos( $class, '\\' ) );
-
-		return $namespace . '\Gateway';
-	}
 }

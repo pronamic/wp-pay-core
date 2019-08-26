@@ -12,9 +12,11 @@ namespace Pronamic\WordPress\Pay\Admin;
 
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Plugin;
+use Pronamic\WordPress\Pay\Util;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
 use WP_Post;
+use WP_Query;
 
 /**
  * WordPress admin subscription post type
@@ -57,6 +59,8 @@ class AdminSubscriptionPostType {
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 
 		add_filter( 'post_row_actions', array( $this, 'post_row_actions' ), 10, 2 );
+
+		add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
 	}
 
 	/**
@@ -69,6 +73,10 @@ class AdminSubscriptionPostType {
 	 */
 	public function request( $vars ) {
 		$screen = get_current_screen();
+
+		if ( null === $screen ) {
+			return $vars;
+		}
 
 		// Check payment post type.
 		if ( self::POST_TYPE !== $screen->post_type ) {
@@ -85,6 +93,32 @@ class AdminSubscriptionPostType {
 		$vars['post_status'][] = 'publish';
 
 		return $vars;
+	}
+
+	/**
+	 * Pre get posts.
+	 *
+	 * @param WP_Query $query WordPress query.
+	 */
+	public function pre_get_posts( $query ) {
+		$map = array(
+			'pronamic_subscription_amount'   => '_pronamic_subscription_amount',
+			'pronamic_subscription_customer' => '_pronamic_subscription_customer_name',
+		);
+
+		$orderby = $query->get( 'orderby' );
+
+		if ( ! isset( $map[ $orderby ] ) ) {
+			return;
+		}
+
+		$query->set( 'meta_key', $map[ $orderby ] );
+		$query->set( 'orderby', $map[ $orderby ] );
+
+		// Set query meta key.
+		if ( 'pronamic_subscription_amount' === $orderby ) {
+			$query->set( 'orderby', 'meta_value_num' );
+		}
 	}
 
 	/**
@@ -118,8 +152,10 @@ class AdminSubscriptionPostType {
 	 * @return array
 	 */
 	public function sortable_columns( $sortable_columns ) {
-		$sortable_columns['pronamic_subscription_title'] = 'ID';
-		$sortable_columns['pronamic_subscription_date']  = 'date';
+		$sortable_columns['pronamic_subscription_title']    = 'ID';
+		$sortable_columns['pronamic_subscription_amount']   = 'pronamic_subscription_amount';
+		$sortable_columns['pronamic_subscription_customer'] = 'pronamic_subscription_customer_name';
+		$sortable_columns['pronamic_subscription_date']     = 'date';
 
 		return $sortable_columns;
 	}
@@ -143,11 +179,17 @@ class AdminSubscriptionPostType {
 	/**
 	 * Custom columns.
 	 *
+	 * @link https://github.com/WordPress/WordPress/blob/5.1/wp-admin/includes/class-wp-posts-list-table.php#L1183-L1193
+	 *
 	 * @param string $column  Column.
-	 * @param string $post_id Post ID.
+	 * @param int    $post_id Post ID.
 	 */
 	public function custom_columns( $column, $post_id ) {
 		$subscription = get_pronamic_subscription( $post_id );
+
+		if ( null === $subscription ) {
+			return;
+		}
 
 		switch ( $column ) {
 			case 'pronamic_subscription_status':
@@ -178,7 +220,22 @@ class AdminSubscriptionPostType {
 				$source_id          = $subscription->get_source_id();
 				$source_description = $subscription->get_source_description();
 
-				$source_id_text = '#' . $source_id;
+				$text = sprintf(
+					'<strong>#%s</strong>',
+					esc_html( strval( $post_id ) )
+				);
+
+				$link = get_edit_post_link( $post_id );
+
+				if ( null !== $link ) {
+					$text = sprintf(
+						'<a href="%s" class="row-title">%s</a>',
+						esc_url( $link ),
+						$text
+					);
+				}
+
+				$source_id_text = '#' . strval( $source_id );
 
 				$source_link = $subscription->get_source_link();
 
@@ -194,11 +251,7 @@ class AdminSubscriptionPostType {
 					sprintf(
 						/* translators: 1: Subscription edit post link with post ID, 2: Subscription source description, 3: Subscription source ID text */
 						__( '%1$s for %2$s %3$s', 'pronamic_ideal' ),
-						sprintf(
-							'<a href="%s" class="row-title"><strong>#%s</strong></a>',
-							esc_url( get_edit_post_link( $post_id ) ),
-							esc_html( $post_id )
-						),
+						$text,
 						$source_description,
 						$source_id_text
 					),
@@ -215,15 +268,17 @@ class AdminSubscriptionPostType {
 			case 'pronamic_subscription_gateway':
 				$payment = get_pronamic_payment_by_meta( '_pronamic_payment_subscription_id', $post_id );
 
+				$config_id = null;
+
 				if ( $payment ) {
-					$config_id = get_post_meta( $payment->get_id(), '_pronamic_payment_config_id', true );
+					$payment_id = $payment->get_id();
+
+					if ( null !== $payment_id ) {
+						$config_id = get_post_meta( $payment_id, '_pronamic_payment_config_id', true );
+					}
 				}
 
-				if ( isset( $config_id ) && ! empty( $config_id ) ) {
-					echo esc_html( get_the_title( $config_id ) );
-				} else {
-					echo '—';
-				}
+				echo empty( $config_id ) ? '—' : esc_html( get_the_title( $config_id ) );
 
 				break;
 			case 'pronamic_subscription_description':
@@ -235,13 +290,25 @@ class AdminSubscriptionPostType {
 
 				break;
 			case 'pronamic_subscription_recurring':
-				echo esc_html( \Pronamic\WordPress\Pay\Util::format_interval( $subscription->get_interval(), $subscription->get_interval_period() ) );
+				$interval        = $subscription->get_interval();
+				$interval_period = $subscription->get_interval_period();
+				$frequency       = $subscription->get_frequency();
+
+				if ( null !== $interval && null !== $interval_period ) {
+					echo esc_html( strval( Util::format_interval( $interval, $interval_period ) ) );
+				}
+
 				echo '<br />';
-				echo esc_html( \Pronamic\WordPress\Pay\Util::format_frequency( $subscription->get_frequency() ) );
+
+				if ( null !== $frequency ) {
+					echo esc_html( strval( Util::format_frequency( $frequency ) ) );
+				}
 
 				break;
 			case 'pronamic_subscription_date':
-				echo esc_html( $subscription->date->format_i18n() );
+				if ( null !== $subscription->date ) {
+					echo esc_html( $subscription->date->format_i18n() );
+				}
 
 				break;
 			case 'pronamic_subscription_customer':
@@ -316,7 +383,13 @@ class AdminSubscriptionPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 */
 	public function meta_box_info( $post ) {
-		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-subscription-info.php';
+		$subscription = get_pronamic_subscription( $post->ID );
+
+		if ( null === $subscription ) {
+			return;
+		}
+
+		include __DIR__ . '/../../views/meta-box-subscription-info.php';
 	}
 
 	/**
@@ -327,9 +400,13 @@ class AdminSubscriptionPostType {
 	public function meta_box_lines( $post ) {
 		$subscription = get_pronamic_subscription( $post->ID );
 
+		if ( null === $subscription ) {
+			return;
+		}
+
 		$lines = $subscription->get_lines();
 
-		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-payment-lines.php';
+		include __DIR__ . '/../../views/meta-box-payment-lines.php';
 	}
 
 	/**
@@ -346,7 +423,7 @@ class AdminSubscriptionPostType {
 			)
 		);
 
-		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-notes.php';
+		include __DIR__ . '/../../views/meta-box-notes.php';
 	}
 
 	/**
@@ -355,7 +432,15 @@ class AdminSubscriptionPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 */
 	public function meta_box_payments( $post ) {
-		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-subscription-payments.php';
+		$subscription = get_pronamic_subscription( $post->ID );
+
+		if ( null === $subscription ) {
+			return;
+		}
+
+		$payments = $subscription->get_payments();
+
+		include __DIR__ . '/../../views/meta-box-subscription-payments.php';
 	}
 
 	/**
@@ -366,7 +451,7 @@ class AdminSubscriptionPostType {
 	public function meta_box_update( $post ) {
 		wp_nonce_field( 'pronamic_subscription_update', 'pronamic_subscription_update_nonce' );
 
-		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-subscription-update.php';
+		include __DIR__ . '/../../views/meta-box-subscription-update.php';
 	}
 
 	/**

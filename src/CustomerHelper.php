@@ -10,7 +10,7 @@
 
 namespace Pronamic\WordPress\Pay;
 
-use DateTime;
+use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Pay\Core\Server;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
 
@@ -67,18 +67,27 @@ class CustomerHelper {
 
 			// Locale based on ACCEPT_LANGUAGE header.
 			if ( function_exists( 'locale_accept_from_http' ) ) {
+				/**
+				 * Please note that `locale_accept_from_http` can also return `false`,
+				 * this is not documented on PHP.net.
+				 *
+				 * @link https://www.php.net/manual/en/locale.acceptfromhttp.php
+				 * @link https://github.com/php/php-src/blob/php-7.3.5/ext/intl/locale/locale_methods.c#L1578-L1631
+				 */
 				$http_locale = locale_accept_from_http( Server::get( 'HTTP_ACCEPT_LANGUAGE' ) );
 
 				// Make sure locale includes a country (i.e. Firefox sets `nl` as accepted language).
-				if ( false === strpos( $http_locale, '_' ) ) {
-					$http_locale = sprintf(
-						'%1$s_%2$s',
-						$http_locale,
-						strtoupper( $http_locale )
-					);
-				}
+				if ( false !== $http_locale ) {
+					if ( false === strpos( $http_locale, '_' ) ) {
+						$http_locale = sprintf(
+							'%1$s_%2$s',
+							$http_locale,
+							strtoupper( $http_locale )
+						);
+					}
 
-				$locales[] = $http_locale;
+					$locales[] = $http_locale;
+				}
 			}
 
 			// Site locale.
@@ -95,16 +104,21 @@ class CustomerHelper {
 		}
 
 		// Language.
-		if ( null === $customer->get_language() && null !== $customer->get_locale() ) {
-			$language = substr( $customer->get_locale(), 0, 2 );
+		$locale = $customer->get_locale();
+
+		if ( null === $customer->get_language() && null !== $locale ) {
+			$language = substr( $locale, 0, 2 );
 
 			$customer->set_language( $language );
 		}
 
-		// User Agent.
-		if ( null === $customer->get_user_agent() ) {
-			// User Agent (@link https://github.com/WordPress/WordPress/blob/4.9.4/wp-includes/comment.php#L1962-L1965).
-			$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : null; // WPCS: input var ok.
+		/**
+		 * User Agent.
+		 *
+		 * @link https://github.com/WordPress/WordPress/blob/4.9.4/wp-includes/comment.php#L1962-L1965
+		 */
+		if ( null === $customer->get_user_agent() && isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
+			$user_agent = filter_var( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) );
 
 			$customer->set_user_agent( $user_agent );
 		}
@@ -112,11 +126,9 @@ class CustomerHelper {
 		// User IP.
 		if ( null === $customer->get_ip_address() ) {
 			// IP (@link https://github.com/WordPress/WordPress/blob/4.9.4/wp-includes/comment.php#L1957-L1960).
-			$remote_address = Core_Util::get_remote_address();
+			$ip_address = Core_Util::get_remote_address();
 
-			if ( ! empty( $remote_address ) ) {
-				$ip_address = sanitize_text_field( wp_unslash( $remote_address ) );
-
+			if ( ! empty( $ip_address ) ) {
 				$customer->set_ip_address( $ip_address );
 			}
 		}
@@ -134,7 +146,7 @@ class CustomerHelper {
 		if ( null === $customer->get_birth_date() && filter_has_var( INPUT_POST, 'pronamic_pay_birth_date' ) ) {
 			$birth_date_string = filter_input( INPUT_POST, 'pronamic_pay_birth_date', FILTER_SANITIZE_STRING );
 
-			$birth_date = DateTime::createFromFormat( 'Y-m-d', $birth_date_string );
+			$birth_date = DateTime::create_from_format( 'Y-m-d', $birth_date_string );
 
 			if ( false !== $birth_date ) {
 				$customer->set_birth_date( $birth_date );

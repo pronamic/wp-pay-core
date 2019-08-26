@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
+use Pronamic\WordPress\Money\Money;
+
 /**
  * Item.
  *
@@ -53,7 +55,7 @@ class Item {
 		$this->number      = '';
 		$this->description = '';
 		$this->quantity    = 1;
-		$this->price       = 0;
+		$this->price       = 0.0;
 	}
 
 	/**
@@ -82,7 +84,11 @@ class Item {
 
 			_deprecated_function( esc_html( __CLASS__ . '::' . $old_method ), '2.0.1', esc_html( __CLASS__ . '::' . $new_method ) );
 
-			return call_user_func_array( array( $this, $new_method ), $arguments );
+			$callable = array( $this, $new_method );
+
+			if ( is_callable( $callable ) ) {
+				return call_user_func_array( $callable, $arguments );
+			}
 		}
 
 		trigger_error( esc_html( 'Call to undefined method ' . __CLASS__ . '::' . $name . '()' ), E_USER_ERROR );
@@ -164,9 +170,13 @@ class Item {
 	/**
 	 * Get the amount.
 	 *
-	 * @return float
+	 * @return Money
 	 */
 	public function get_amount() {
-		return $this->price * $this->quantity;
+		$money = new Money( $this->get_price() );
+
+		$amount = $money->multiply( $this->get_quantity() );
+
+		return $amount;
 	}
 }

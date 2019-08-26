@@ -11,7 +11,9 @@
 /.settings
 
 # Node.js
+/package-lock.json
 /node_modules/
 
 # WordPress
 /wordpress/
+/wp-content/

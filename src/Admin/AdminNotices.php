@@ -47,15 +47,15 @@ class AdminNotices {
 	 * @link https://github.com/WordPress/WordPress/blob/4.3.1/wp-admin/admin-header.php#L245-L250
 	 */
 	public function admin_notices() {
-		$screen = get_current_screen();
-
 		// Show notices only to options managers (administrators).
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
 		// Jetpack.
-		if ( 'jetpack' === $screen->parent_base ) {
+		$screen = get_current_screen();
+
+		if ( null !== $screen && 'jetpack' === $screen->parent_base ) {
 			return;
 		}
 
@@ -82,10 +82,10 @@ class AdminNotices {
 				);
 			}
 
-			printf( // WPCS: XSS ok.
+			printf(
 				'<div class="%s"><p>%s</p></div>',
 				esc_attr( $class ),
-				$notice
+				wp_kses_post( $notice )
 			);
 		}
 
@@ -93,7 +93,7 @@ class AdminNotices {
 		$notices = get_option( 'pronamic_pay_admin_notices', array() );
 
 		foreach ( $notices as $name ) {
-			$file = plugin_dir_path( $this->plugin->get_file() ) . 'admin/notice-' . $name . '.php';
+			$file = __DIR__ . '/../../views/notice-' . $name . '.php';
 
 			if ( is_readable( $file ) ) {
 				include $file;

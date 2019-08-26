@@ -24,7 +24,7 @@ function pronamic_pay_plugin() {
 /**
  * Get payment by specified post ID.
  *
- * @param int|string $post_id A payment post ID.
+ * @param bool|int|string|null $post_id A payment post ID.
  * @return Payment|null
  */
 function get_pronamic_payment( $post_id ) {
@@ -32,9 +32,11 @@ function get_pronamic_payment( $post_id ) {
 		return null;
 	}
 
+	$post_id = (int) $post_id;
+
 	$post_type = get_post_type( $post_id );
 
-	if ( AdminPaymentPostType::POST_TYPE !== $post_type ) {
+	if ( 'pronamic_payment' !== $post_type ) {
 		return null;
 	}
 
@@ -46,32 +48,40 @@ function get_pronamic_payment( $post_id ) {
 /**
  * Get payment by specified meta key and value.
  *
- * @param string $meta_key   The meta key to query for.
- * @param string $meta_value The Meta value to query for.
+ * @link https://developer.wordpress.org/reference/classes/wp_query/
+ * @link https://developer.wordpress.org/reference/functions/wp_reset_postdata/
+ *
+ * @param string     $meta_key   The meta key to query for.
+ * @param string|int $meta_value The Meta value to query for.
  * @return Payment|null
  */
 function get_pronamic_payment_by_meta( $meta_key, $meta_value ) {
-	global $wpdb;
+	$payment = null;
 
-	$db_query = $wpdb->prepare(
-		"
-		SELECT
-			post_id
-		FROM
-			$wpdb->postmeta
-		WHERE
-			meta_key = %s
-				AND
-			meta_value = %s
-			;
-	",
-		$meta_key,
-		$meta_value
+	$query = new WP_Query(
+		array(
+			'post_type'      => 'pronamic_payment',
+			'post_status'    => 'any',
+			'posts_per_page' => 1,
+			'no_found_rows'  => true,
+			'meta_query'     => array(
+				array(
+					'key'   => $meta_key,
+					'value' => $meta_value,
+				),
+			),
+		)
 	);
 
-	$post_id = $wpdb->get_var( $db_query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
+	if ( $query->have_posts() ) {
+		while ( $query->have_posts() ) {
+			$query->the_post();
 
-	$payment = get_pronamic_payment( $post_id );
+			$payment = get_pronamic_payment( get_the_ID() );
+		}
+
+		wp_reset_postdata();
+	}
 
 	return $payment;
 }
@@ -79,41 +89,43 @@ function get_pronamic_payment_by_meta( $meta_key, $meta_value ) {
 /**
  * Get payments by specified meta key and value.
  *
- * @param string $meta_key   The meta key to query for.
- * @param string $meta_value The Meta value to query for.
+ * @link https://developer.wordpress.org/reference/classes/wp_query/
+ * @link https://developer.wordpress.org/reference/functions/wp_reset_postdata/
+ *
+ * @param string     $meta_key   The meta key to query for.
+ * @param string|int $meta_value The Meta value to query for.
  * @return Payment[]
  */
 function get_pronamic_payments_by_meta( $meta_key, $meta_value ) {
-	global $wpdb;
-
 	$payments = array();
 
-	$db_query = $wpdb->prepare(
-		"
-		SELECT
-			post_id
-		FROM
-			$wpdb->postmeta
-		WHERE
-			meta_key = %s
-				AND
-			meta_value = %s
-		ORDER BY
-			meta_id ASC
-			;
-	",
-		$meta_key,
-		$meta_value
+	$query = new WP_Query(
+		array(
+			'post_type'      => 'pronamic_payment',
+			'post_status'    => 'any',
+			'posts_per_page' => -1,
+			'no_found_rows'  => true,
+			'meta_query'     => array(
+				array(
+					'key'   => $meta_key,
+					'value' => $meta_value,
+				),
+			),
+		)
 	);
 
-	$results = $wpdb->get_results( $db_query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
+	if ( $query->have_posts() ) {
+		while ( $query->have_posts() ) {
+			$query->the_post();
 
-	foreach ( $results as $result ) {
-		$payment = new Payment( $result->post_id );
+			$payment = get_pronamic_payment( get_the_ID() );
 
-		if ( null !== $payment->post ) {
-			$payments[] = new Payment( $result->post_id );
+			if ( null !== $payment ) {
+				$payments[] = $payment;
+			}
 		}
+
+		wp_reset_postdata();
 	}
 
 	return $payments;
@@ -151,11 +163,15 @@ function get_pronamic_subscription( $post_id ) {
 		return null;
 	}
 
-	$subscription = new Subscription( $post_id );
+	$post_id = (int) $post_id;
 
-	if ( ! isset( $subscription->post ) ) {
+	$post_type = get_post_type( $post_id );
+
+	if ( 'pronamic_pay_subscr' !== $post_type ) {
 		return null;
 	}
+
+	$subscription = new Subscription( $post_id );
 
 	return $subscription;
 }
@@ -168,30 +184,31 @@ function get_pronamic_subscription( $post_id ) {
  * @return Subscription|null
  */
 function get_pronamic_subscription_by_meta( $meta_key, $meta_value ) {
-	global $wpdb;
-
 	$subscription = null;
 
-	$db_query = $wpdb->prepare(
-		"
-		SELECT
-			post_id
-		FROM
-			$wpdb->postmeta
-		WHERE
-			meta_key = %s
-				AND
-			meta_value = %s
-			;
-	",
-		$meta_key,
-		$meta_value
+	$query = new WP_Query(
+		array(
+			'post_type'      => 'pronamic_pay_subscr',
+			'post_status'    => 'any',
+			'posts_per_page' => 1,
+			'no_found_rows'  => true,
+			'meta_query'     => array(
+				array(
+					'key'   => $meta_key,
+					'value' => $meta_value,
+				),
+			),
+		)
 	);
 
-	$post_id = $wpdb->get_var( $db_query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
+	if ( $query->have_posts() ) {
+		while ( $query->have_posts() ) {
+			$query->the_post();
 
-	if ( $post_id ) {
-		$subscription = new Subscription( $post_id );
+			$subscription = get_pronamic_subscription( (int) get_the_ID() );
+		}
+
+		wp_reset_postdata();
 	}
 
 	return $subscription;
@@ -205,32 +222,35 @@ function get_pronamic_subscription_by_meta( $meta_key, $meta_value ) {
  * @return Subscription[]
  */
 function get_pronamic_subscriptions_by_meta( $meta_key, $meta_value ) {
-	global $wpdb;
-
 	$subscriptions = array();
 
-	$db_query = $wpdb->prepare(
-		"
-		SELECT
-			post_id
-		FROM
-			$wpdb->postmeta
-		WHERE
-			meta_key = %s
-				AND
-			meta_value = %s
-		ORDER BY
-			meta_id ASC
-			;
-	",
-		$meta_key,
-		$meta_value
+	$query = new WP_Query(
+		array(
+			'post_type'      => 'pronamic_pay_subscr',
+			'post_status'    => 'any',
+			'posts_per_page' => 1,
+			'no_found_rows'  => true,
+			'meta_query'     => array(
+				array(
+					'key'   => $meta_key,
+					'value' => $meta_value,
+				),
+			),
+		)
 	);
 
-	$results = $wpdb->get_results( $db_query ); // WPCS: unprepared SQL ok, db call ok, cache ok.
+	if ( $query->have_posts() ) {
+		while ( $query->have_posts() ) {
+			$query->the_post();
 
-	foreach ( $results as $result ) {
-		$subscriptions[] = new Subscription( $result->post_id );
+			$subscription = get_pronamic_subscription( (int) get_the_ID() );
+
+			if ( null !== $subscription ) {
+				$subscriptions[] = $subscription;
+			}
+		}
+
+		wp_reset_postdata();
 	}
 
 	return $subscriptions;
@@ -242,25 +262,22 @@ function get_pronamic_subscriptions_by_meta( $meta_key, $meta_value ) {
 function bind_providers_and_gateways() {
 	global $pronamic_pay_providers;
 
-	foreach ( pronamic_pay_plugin()->gateway_integrations as $integration ) {
-		if ( isset( $pronamic_pay_providers[ $integration->provider ] ) ) {
-			$provider =& $pronamic_pay_providers[ $integration->provider ];
+	$integrations = pronamic_pay_plugin()->gateway_integrations;
 
-			if ( ! isset( $provider['integrations'] ) ) {
-				$provider['integrations'] = array();
-			}
+	foreach ( $integrations as $integration ) {
+		$provider = $integration->provider;
 
-			$provider['integrations'][] = $integration;
+		if ( ! isset( $pronamic_pay_providers[ $provider ] ) ) {
+			$pronamic_pay_providers[ $provider ] = array(
+				'integrations' => array(),
+			);
 		}
+
+		$pronamic_pay_providers[ $provider ]['integrations'][] = $integration;
 	}
 
-	// Sort by provider name.
-	usort(
-		$pronamic_pay_providers,
-		function( $a, $b ) {
-			return strcmp( $a['name'], $b['name'] );
-		}
-	);
+	// Sort by provider.
+	ksort( $pronamic_pay_providers );
 }
 
 /**
@@ -331,7 +348,7 @@ function pronamic_pay_update_post_meta_data( $post_id, array $data ) {
 	 * upon being stored, so you will need to be careful when passing
 	 * in values such as JSON that might include \ escaped characters.
 	 */
-	$data = wp_slash( $data );
+	$data = (array) wp_slash( $data );
 
 	// Meta.
 	foreach ( $data as $key => $value ) {

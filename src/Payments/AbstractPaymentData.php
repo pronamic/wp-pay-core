@@ -35,7 +35,8 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	 * Recurring.
 	 *
 	 * @todo Is this used?
-	 * @var TODO
+	 *
+	 * @var bool|null
 	 */
 	protected $recurring;
 
@@ -49,7 +50,10 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Get user ID.
 	 *
-	 * @return string
+	 * @link https://developer.wordpress.org/reference/functions/get_current_user_id/
+	 * @link https://github.com/WordPress/WordPress/blob/5.1/wp-includes/class-wp-post.php#L31-L39
+	 *
+	 * @return int|string|null
 	 */
 	public function get_user_id() {
 		return get_current_user_id();
@@ -58,14 +62,14 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Get source.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	abstract public function get_source();
 
 	/**
 	 * Get source ID.
 	 *
-	 * @return string
+	 * @return string|int|null
 	 */
 	public function get_source_id() {
 		return $this->get_order_id();
@@ -74,7 +78,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Get title.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_title() {
 		return $this->get_description();
@@ -83,14 +87,14 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Get description.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	abstract public function get_description();
 
 	/**
 	 * Get order ID.
 	 *
-	 * @return string
+	 * @return string|int|null
 	 */
 	abstract public function get_order_id();
 
@@ -107,16 +111,22 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	 * @return TaxedMoney
 	 */
 	public function get_amount() {
+		$currency_code = $this->get_currency_alphabetic_code();
+
+		if ( null === $currency_code ) {
+			$currency_code = 'EUR';
+		}
+
 		return new TaxedMoney(
 			$this->get_items()->get_amount()->get_value(),
-			$this->get_currency_alphabetic_code()
+			$currency_code
 		);
 	}
 
 	/**
 	 * Get email.
 	 *
-	 * @return null
+	 * @return string|null
 	 */
 	public function get_email() {
 		return null;
@@ -126,6 +136,8 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	 * Get customer name.
 	 *
 	 * @deprecated deprecated since version 4.0.1, use get_customer_name() instead.
+	 *
+	 * @return string|null
 	 */
 	public function getCustomerName() {
 		return $this->get_customer_name();
@@ -134,7 +146,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Get customer name.
 	 *
-	 * @return null
+	 * @return string|null
 	 */
 	public function get_customer_name() {
 		return null;
@@ -144,6 +156,8 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	 * Get owner address.
 	 *
 	 * @deprecated deprecated since version 4.0.1, use get_address() instead.
+	 *
+	 * @return string|null
 	 */
 	public function getOwnerAddress() {
 		return $this->get_address();
@@ -152,7 +166,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Get address.
 	 *
-	 * @return null
+	 * @return string|null
 	 */
 	public function get_address() {
 		return null;
@@ -162,6 +176,8 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	 * Get owner city.
 	 *
 	 * @deprecated deprecated since version 4.0.1, use get_city() instead.
+	 *
+	 * @return string|null
 	 */
 	public function getOwnerCity() {
 		return $this->get_city();
@@ -170,7 +186,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Get city.
 	 *
-	 * @return null
+	 * @return string|null
 	 */
 	public function get_city() {
 		return null;
@@ -180,6 +196,8 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	 * Get owner zip.
 	 *
 	 * @deprecated deprecated since version 4.0.1, use get_zip() instead.
+	 *
+	 * @return string|null
 	 */
 	public function getOwnerZip() {
 		return $this->get_zip();
@@ -188,7 +206,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Get ZIP.
 	 *
-	 * @return null
+	 * @return string|null
 	 */
 	public function get_zip() {
 		return null;
@@ -197,7 +215,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Get country.
 	 *
-	 * @return null
+	 * @return string|null
 	 */
 	public function get_country() {
 		return null;
@@ -206,7 +224,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Get telephone number.
 	 *
-	 * @return null
+	 * @return string|null
 	 */
 	public function get_telephone_number() {
 		return null;
@@ -215,7 +233,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Get the curreny alphabetic code.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	abstract public function get_currency_alphabetic_code();
 
@@ -231,7 +249,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Helper function to get the curreny alphabetic code.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_currency() {
 		return $this->get_amount()->get_currency()->get_alphabetic_code();
@@ -242,7 +260,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	 *
 	 * @link http://www.w3.org/WAI/ER/IG/ert/iso639.htm
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	abstract public function get_language();
 
@@ -252,7 +270,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	 * @link http://www.w3.org/WAI/ER/IG/ert/iso639.htm
 	 * @link http://www.iso.org/iso/home/standards/country_codes.htm
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	abstract public function get_language_and_country();
 
@@ -269,8 +287,9 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	 * Get issuer of the specified payment method.
 	 *
 	 * @todo Constant?
+	 *
 	 * @param string $payment_method Payment method identifier.
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_issuer( $payment_method = null ) {
 		if ( PaymentMethods::CREDIT_CARD === $payment_method ) {
@@ -283,7 +302,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Get issuer ID.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_issuer_id() {
 		return filter_input( INPUT_POST, 'pronamic_ideal_issuer_id', FILTER_SANITIZE_STRING );
@@ -292,7 +311,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Get credit card issuer ID.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_credit_card_issuer_id() {
 		return filter_input( INPUT_POST, 'pronamic_credit_card_issuer_id', FILTER_SANITIZE_STRING );
@@ -301,7 +320,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Get credit card object.
 	 *
-	 * @return CreditCard
+	 * @return CreditCard|null
 	 */
 	public function get_credit_card() {
 		return null;
@@ -310,23 +329,23 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Subscription.
 	 *
-	 * @return Subscription|false
+	 * @return Subscription|null
 	 */
 	public function get_subscription() {
-		return false;
+		return null;
 	}
 
 	/**
 	 * Subscription ID.
 	 *
-	 * @return int
+	 * @return int|null
 	 */
 	abstract public function get_subscription_id();
 
 	/**
 	 * Is this a recurring (not first) payment?
 	 *
-	 * @return boolean
+	 * @return bool|null
 	 */
 	public function get_recurring() {
 		return $this->recurring;
@@ -335,7 +354,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	/**
 	 * Set recurring.
 	 *
-	 * @param boolean $recurring Boolean flag which indicates recurring.
+	 * @param bool|null $recurring Boolean flag which indicates recurring.
 	 */
 	public function set_recurring( $recurring ) {
 		$this->recurring = $recurring;

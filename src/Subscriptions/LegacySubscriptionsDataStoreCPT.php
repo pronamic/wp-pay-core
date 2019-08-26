@@ -22,5 +22,4 @@ use Pronamic\WordPress\Pay\Payments\LegacyPaymentsDataStoreCPT;
  * @since   2.0.1
  */
 class LegacySubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
-
 }

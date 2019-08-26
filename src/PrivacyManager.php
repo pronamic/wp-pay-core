@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use Exception;
+
 /**
  * Class PrivacyManager
  *
@@ -44,7 +46,6 @@ class PrivacyManager {
 	 * Register exporters.
 	 *
 	 * @param array $exporters Privacy exporters.
-	 *
 	 * @return array
 	 */
 	public function register_exporters( $exporters ) {
@@ -61,7 +62,6 @@ class PrivacyManager {
 	 * Register erasers.
 	 *
 	 * @param array $erasers Privacy erasers.
-	 *
 	 * @return array
 	 */
 	public function register_erasers( $erasers ) {
@@ -80,6 +80,7 @@ class PrivacyManager {
 	 * @param string $id       ID of the exporter.
 	 * @param string $name     Exporter name.
 	 * @param array  $callback Exporter callback.
+	 * @return void
 	 */
 	public function add_exporter( $id, $name, $callback ) {
 		$id = 'pronamic-pay-' . $id;
@@ -96,6 +97,7 @@ class PrivacyManager {
 	 * @param string $id       ID of the eraser.
 	 * @param string $name     Eraser name.
 	 * @param array  $callback Eraser callback.
+	 * @return void
 	 */
 	public function add_eraser( $id, $name, $callback ) {
 		$id = 'pronamic-pay-' . $id;
@@ -145,6 +147,7 @@ class PrivacyManager {
 	 * @param int    $post_id  ID of the post.
 	 * @param string $meta_key Meta key to erase.
 	 * @param string $action   Action 'erase' or 'anonymize'.
+	 * @return void
 	 */
 	public function erase_meta( $post_id, $meta_key, $action = 'erase' ) {
 		switch ( $action ) {
@@ -170,7 +173,6 @@ class PrivacyManager {
 	 * Mask email address.
 	 *
 	 * @param string $email Email address.
-	 *
 	 * @return string
 	 */
 	public static function mask_email( $email ) {
@@ -266,6 +268,8 @@ class PrivacyManager {
 	 * @param string $data      Original data.
 	 *
 	 * @return string Anonymized string.
+	 *
+	 * @throws Exception When error occurs anonymize phone.
 	 */
 	public static function anonymize_custom_data_types( $anonymous, $type, $data ) {
 		switch ( $type ) {
@@ -275,6 +279,10 @@ class PrivacyManager {
 				break;
 			case 'phone':
 				$anonymous = preg_replace( '/\d/u', '0', $data );
+
+				if ( null === $anonymous ) {
+					throw new Exception( 'Could not anonymize phone number.' );
+				}
 
 				break;
 		}

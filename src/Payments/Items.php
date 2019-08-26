@@ -25,7 +25,7 @@ class Items implements IteratorAggregate {
 	/**
 	 * The items.
 	 *
-	 * @var array
+	 * @var Item[]
 	 */
 	private $items;
 
@@ -73,22 +73,12 @@ class Items implements IteratorAggregate {
 	 * @return Money
 	 */
 	public function get_amount() {
-		$amount = 0;
-
-		$use_bcmath = extension_loaded( 'bcmath' );
+		$amount = new Money( 0, 'EUR' );
 
 		foreach ( $this->items as $item ) {
-			if ( $use_bcmath ) {
-				// Use non-locale aware float value.
-				// @link http://php.net/sprintf.
-				$item_amount = sprintf( '%F', $item->get_amount() );
-
-				$amount = bcadd( $amount, $item_amount, 8 );
-			} else {
-				$amount += $item->get_amount();
-			}
+			$amount = $amount->add( $item->get_amount() );
 		}
 
-		return new Money( $amount );
+		return $amount;
 	}
 }

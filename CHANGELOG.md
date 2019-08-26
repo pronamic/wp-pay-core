@@ -7,6 +7,23 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.2.0] - 2019-08-26
+- Added Gutenberg payment form block.
+- Removed iDEAL simulator iDEAL Basic config, no longer available.
+- Removed Postcode iDEAL, no longer available.
+- Deleted AddOn class, no longer used.
+- Introduced a 'pronamic_pay_update_payment' action.
+- Added webhook manager to notice webhook URL changes.
+- Added subscription 'Next Payment Delivery Date'.
+- Changed name of direct debit mandate via payment methods.
+- Added EPS payment method.
+- Simplified integrations/gateways setup.
+- Switched to WP_Query usage, no longer custom DB queries.
+- Added subscription status 'On Hold'.
+- Fixed responsive subscriptions table.
+- Added dashboard widget 'Latest subscriptions'.
+- Removed documentation tab.
+
 ## [2.1.6] - 2019-03-28
 - Updated Tippy.js to version 3.4.1.
 - Introduced a `$payment->get_edit_payment_url()` function to easy retrieve the edit payment URL.
@@ -177,7 +194,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.1.6...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.2.0...HEAD
+[2.2.0]: https://github.com/wp-pay/core/compare/2.1.6...2.2.0
 [2.1.6]: https://github.com/wp-pay/core/compare/2.1.5...2.1.6
 [2.1.5]: https://github.com/wp-pay/core/compare/2.1.4...2.1.5
 [2.1.4]: https://github.com/wp-pay/core/compare/2.1.3...2.1.4

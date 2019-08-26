@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Core;
 
+use Exception;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
@@ -65,13 +66,6 @@ abstract class Gateway {
 	protected $config;
 
 	/**
-	 * The slug of this gateway
-	 *
-	 * @var string
-	 */
-	private $slug;
-
-	/**
 	 * The method of this gateway
 	 *
 	 * @var int
@@ -96,7 +90,7 @@ abstract class Gateway {
 	 * Payment method to use on this gateway.
 	 *
 	 * @since 1.2.3
-	 * @var string
+	 * @var string|null
 	 */
 	private $payment_method;
 
@@ -143,24 +137,6 @@ abstract class Gateway {
 	 */
 	public function supports( $feature ) {
 		return in_array( $feature, $this->supports, true );
-	}
-
-	/**
-	 * Get the slug of this gateway
-	 *
-	 * @return string
-	 */
-	public function get_slug() {
-		return $this->slug;
-	}
-
-	/**
-	 * Set the slug of this gateway
-	 *
-	 * @param string $slug Unique gateway slug.
-	 */
-	public function set_slug( $slug ) {
-		$this->slug = $slug;
 	}
 
 	/**
@@ -263,15 +239,15 @@ abstract class Gateway {
 	public function get_transient_issuers() {
 		$issuers = null;
 
-		// Transient name. Expected to not be SQL-escaped. Should be 45 characters or less in length.
-		$transient = 'pronamic_pay_issuers_' . $this->config->id;
+		// Transient name.
+		$transient = 'pronamic_pay_issuers_' . md5( serialize( $this->config ) );
 
 		$result = get_transient( $transient );
 
 		if ( is_wp_error( $result ) || false === $result ) {
 			$issuers = $this->get_issuers();
 
-			if ( $issuers ) {
+			if ( ! empty( $issuers ) ) {
 				// 60 * 60 * 24 = 24 hours = 1 day
 				set_transient( $transient, $issuers, 60 * 60 * 24 );
 			}
@@ -290,8 +266,8 @@ abstract class Gateway {
 	public function get_transient_credit_card_issuers() {
 		$issuers = null;
 
-		// Transient name. Expected to not be SQL-escaped. Should be 45 characters or less in length.
-		$transient = 'pronamic_pay_credit_card_issuers_' . $this->config->id;
+		// Transient name.
+		$transient = 'pronamic_pay_credit_card_issuers_' . md5( serialize( $this->config ) );
 
 		$result = get_transient( $transient );
 
@@ -345,11 +321,11 @@ abstract class Gateway {
 	 * Get the payment methods transient
 	 *
 	 * @since 1.3.0
-	 * @return array|null
+	 * @return array
 	 */
 	public function get_transient_available_payment_methods() {
-		// Transient name. Expected to not be SQL-escaped. Should be 45 characters or less in length.
-		$transient = 'pronamic_gateway_payment_methods_' . $this->config->id;
+		// Transient name.
+		$transient = 'pronamic_gateway_payment_methods_' . md5( serialize( $this->config ) );
 
 		$methods = get_transient( $transient );
 
@@ -359,6 +335,10 @@ abstract class Gateway {
 			if ( is_array( $methods ) ) {
 				set_transient( $transient, $methods, DAY_IN_SECONDS );
 			}
+		}
+
+		if ( empty( $methods ) ) {
+			return array();
 		}
 
 		return $methods;
@@ -457,15 +437,22 @@ abstract class Gateway {
 	 * Redirect via HTTP.
 	 *
 	 * @param Payment $payment The payment to redirect for.
+	 * @throws Exception When payment action URL is empty.
 	 */
 	public function redirect_via_http( Payment $payment ) {
 		if ( headers_sent() ) {
 			$this->redirect_via_html( $payment );
 		}
 
+		$action_url = $payment->get_action_url();
+
+		if ( empty( $action_url ) ) {
+			throw new Exception( 'Action URL is empty, can not redirect.' );
+		}
+
 		// Redirect, See Other.
 		// https://en.wikipedia.org/wiki/HTTP_303.
-		wp_redirect( $payment->get_action_url(), 303 );
+		wp_redirect( $action_url, 303 );
 
 		exit;
 	}
@@ -477,7 +464,8 @@ abstract class Gateway {
 	 */
 	public function redirect_via_html( Payment $payment ) {
 		if ( headers_sent() ) {
-			echo $this->get_form_html( $payment, true ); // WPCS: XSS ok.
+			/* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */
+			echo $this->get_form_html( $payment, true );
 		} else {
 			Core_Util::no_cache();
 
@@ -617,7 +605,7 @@ abstract class Gateway {
 	 * Get the payment method to use on this gateway.
 	 *
 	 * @since 1.2.3
-	 * @return string One of the PaymentMethods constants.
+	 * @return string|null One of the PaymentMethods constants.
 	 */
 	public function get_payment_method() {
 		return $this->payment_method;
@@ -628,7 +616,7 @@ abstract class Gateway {
 	 *
 	 * @since 1.2.3
 	 *
-	 * @param string $payment_method One of the PaymentMethods constants.
+	 * @param string|null $payment_method One of the PaymentMethods constants.
 	 */
 	public function set_payment_method( $payment_method ) {
 		$this->payment_method = $payment_method;
@@ -687,6 +675,7 @@ abstract class Gateway {
 	 * @param Payment $payment     Payment to get form HTML for.
 	 * @param bool    $auto_submit Flag to auto submit.
 	 * @return string
+	 * @throws Exception When payment action URL is empty.
 	 */
 	public function get_form_html( Payment $payment, $auto_submit = false ) {
 		$form_inner = $this->get_output_html();
@@ -696,9 +685,15 @@ abstract class Gateway {
 			__( 'Pay', 'pronamic_ideal' )
 		);
 
+		$action_url = $payment->get_action_url();
+
+		if ( empty( $action_url ) ) {
+			throw new Exception( 'Action URL is empty, can not get form HTML.' );
+		}
+
 		$html = sprintf(
 			'<form id="pronamic_ideal_form" name="pronamic_ideal_form" method="post" action="%s">%s</form>',
-			esc_attr( $payment->get_action_url() ),
+			esc_attr( $action_url ),
 			$form_inner
 		);
 
@@ -728,5 +723,32 @@ abstract class Gateway {
 		$fields = $this->get_output_fields();
 
 		return PayUtil::html_hidden_fields( $fields );
+	}
+
+	/**
+	 * Update status of the specified payment
+	 *
+	 * @param Payment $payment Payment.
+	 */
+	public function update_status( Payment $payment ) {
+
+	}
+
+	/**
+	 * Create invoice.
+	 *
+	 * @param Payment $payment Payment.
+	 */
+	public function create_invoice( $payment ) {
+
+	}
+
+	/**
+	 * Cancel reservation.
+	 *
+	 * @param Payment $payment Payment.
+	 */
+	public function cancel_reservation( $payment ) {
+
 	}
 }

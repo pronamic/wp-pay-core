@@ -129,7 +129,7 @@ class Util {
 	 * @param int    $interval The interval number.
 	 * @param string $period   The period indicator.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public static function format_interval( $interval, $period ) {
 		switch ( $period ) {
@@ -154,6 +154,8 @@ class Util {
 				/* translators: %s: interval */
 				return sprintf( _n( 'Every %s year', 'Every %s years', $interval, 'pronamic_ideal' ), $interval );
 		}
+
+		return null;
 	}
 
 	/**

@@ -19,6 +19,7 @@ use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentInfo;
+use Pronamic\WordPress\Pay\Payments\PaymentInfoHelper;
 use WP_Post;
 
 /**
@@ -32,21 +33,26 @@ class Subscription extends LegacySubscription {
 	/**
 	 * The key of this subscription, used in URL's for security.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $key;
 
 	/**
 	 * The title of this subscription.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $title;
 
 	/**
-	 * The frequency of this subscription, for example: `daily`, `weekly`, `monthly` or `annually`.
+	 * The frequency of this subscription, also known as `times` or `product length`.
+	 * If the frequency is `2` then there will be in total `3` payments for the
+	 * subscription. One (`1`) at the start of the subscription and `2` follow-up
+	 * payments.
 	 *
-	 * @var string
+	 * @link https://docs.mollie.com/reference/v2/subscriptions-api/create-subscription
+	 *
+	 * @var int|null
 	 */
 	public $frequency;
 
@@ -54,7 +60,8 @@ class Subscription extends LegacySubscription {
 	 * The interval of this subscription, for example: 1, 2, 3, etc.
 	 *
 	 * @todo Improve documentation?
-	 * @var  int
+	 *
+	 * @var int|null
 	 */
 	public $interval;
 
@@ -62,28 +69,29 @@ class Subscription extends LegacySubscription {
 	 * The interval period of this subscription.
 	 *
 	 * @todo Improve documentation?
-	 * @var  string
+	 *
+	 * @var string|null
 	 */
 	public $interval_period;
 
 	/**
 	 * The interval date of this subscription.
 	 *
-	 * @var  int|null
+	 * @var string|null
 	 */
 	public $interval_date;
 
 	/**
 	 * The interval date day of this subscription.
 	 *
-	 * @var  int|null
+	 * @var string|null
 	 */
 	public $interval_date_day;
 
 	/**
 	 * The interval date month of this subscription.
 	 *
-	 * @var  int|null
+	 * @var string|null
 	 */
 	public $interval_date_month;
 
@@ -92,14 +100,15 @@ class Subscription extends LegacySubscription {
 	 *
 	 * @todo How to reference to a class constant?
 	 * @see  Statuses
-	 * @var  string
+	 *
+	 * @var string|null
 	 */
 	public $status;
 
 	/**
 	 * The payment method which was used to create this subscription.
 	 *
-	 * @var  string
+	 * @var string|null
 	 */
 	public $payment_method;
 
@@ -115,7 +124,14 @@ class Subscription extends LegacySubscription {
 	 *
 	 * @var DateTime|null
 	 */
-	public $next_payment;
+	public $next_payment_date;
+
+	/**
+	 * The next payment delivery date.
+	 *
+	 * @var DateTime|null
+	 */
+	public $next_payment_delivery_date;
 
 	/**
 	 * Array for extra meta data to store with this subscription.
@@ -127,7 +143,7 @@ class Subscription extends LegacySubscription {
 	/**
 	 * Construct and initialize subscription object.
 	 *
-	 * @param int $post_id A subscription post ID or null.
+	 * @param int|null $post_id A subscription post ID or null.
 	 */
 	public function __construct( $post_id = null ) {
 		parent::__construct( $post_id );
@@ -142,16 +158,16 @@ class Subscription extends LegacySubscription {
 	/**
 	 * Get the unique key of this subscription.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_key() {
 		return $this->key;
 	}
 
 	/**
-	 * Get the frequency of this subscription, for example: 'daily', 'weekly', 'monthly' or 'annually'.
+	 * Get the frequency of this subscription.
 	 *
-	 * @return string
+	 * @return int|null
 	 */
 	public function get_frequency() {
 		return $this->frequency;
@@ -163,7 +179,7 @@ class Subscription extends LegacySubscription {
 	 * - Repeat every *1* months
 	 * - Repeat every *2* year
 	 *
-	 * @return int
+	 * @return int|null
 	 */
 	public function get_interval() {
 		return $this->interval;
@@ -172,8 +188,9 @@ class Subscription extends LegacySubscription {
 	/**
 	 * Get the interval period, for example 'D', 'M', 'Y', etc.
 	 *
-	 * @see    http://php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters
-	 * @return string
+	 * @link http://php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters
+	 *
+	 * @return string|null
 	 */
 	public function get_interval_period() {
 		return $this->interval_period;
@@ -227,8 +244,9 @@ class Subscription extends LegacySubscription {
 	/**
 	 * Get the status of this subscription.
 	 *
-	 * @todo   Check constant?
-	 * @return string
+	 * @todo Check constant?
+	 *
+	 * @return string|null
 	 */
 	public function get_status() {
 		return $this->status;
@@ -237,8 +255,10 @@ class Subscription extends LegacySubscription {
 	/**
 	 * Set the status of this subscription.
 	 *
-	 * @todo  Check constant?
-	 * @param string $status A status string.
+	 * @todo Check constant?
+	 *
+	 * @param string|null $status A status string.
+	 * @return void
 	 */
 	public function set_status( $status ) {
 		$this->status = $status;
@@ -247,7 +267,10 @@ class Subscription extends LegacySubscription {
 	/**
 	 * Add the specified note to this subscription.
 	 *
+	 * @link https://developer.wordpress.org/reference/functions/wp_insert_comment/
+	 *
 	 * @param string $note A Note.
+	 * @return int|false The new comment's ID on success, false on failure.
 	 */
 	public function add_note( $note ) {
 		$commentdata = array(
@@ -267,9 +290,13 @@ class Subscription extends LegacySubscription {
 	 * Get meta by the specified meta key.
 	 *
 	 * @param string $key A meta key.
-	 * @return string
+	 * @return string|false
 	 */
 	public function get_meta( $key ) {
+		if ( null === $this->id ) {
+			return false;
+		}
+
 		$key = '_pronamic_subscription_' . $key;
 
 		return get_post_meta( $this->id, $key, true );
@@ -281,9 +308,13 @@ class Subscription extends LegacySubscription {
 	 * @param  string $key   A meta key.
 	 * @param  mixed  $value A meta value.
 	 *
-	 * @return boolean        True on successful update, false on failure.
+	 * @return bool True on successful update, false on failure.
 	 */
 	public function set_meta( $key, $value = false ) {
+		if ( null === $this->id ) {
+			return false;
+		}
+
 		$key = '_pronamic_subscription_' . $key;
 
 		if ( $value instanceof \DateTime ) {
@@ -294,7 +325,9 @@ class Subscription extends LegacySubscription {
 			return delete_post_meta( $this->id, $key );
 		}
 
-		return update_post_meta( $this->id, $key, $value );
+		$result = update_post_meta( $this->id, $key, $value );
+
+		return ( false !== $result );
 	}
 
 	/**
@@ -303,7 +336,14 @@ class Subscription extends LegacySubscription {
 	 * @return string
 	 */
 	public function get_source_text() {
-		$default_text = $this->get_source() . '<br />' . $this->get_source_id();
+		$pieces = array(
+			$this->get_source(),
+			$this->get_source_id(),
+		);
+
+		$pieces = array_filter( $pieces );
+
+		$default_text = implode( '<br />', $pieces );
 
 		$text = apply_filters( 'pronamic_subscription_source_text_' . $this->get_source(), $default_text, $this );
 		$text = apply_filters( 'pronamic_subscription_source_text', $text, $this );
@@ -408,6 +448,10 @@ class Subscription extends LegacySubscription {
 	 * @return array
 	 */
 	public function get_payments() {
+		if ( null === $this->id ) {
+			return array();
+		}
+
 		return get_pronamic_payments_by_meta( '_pronamic_payment_subscription_id', $this->id );
 	}
 
@@ -429,7 +473,7 @@ class Subscription extends LegacySubscription {
 	/**
 	 * Get the expiry date of this subscription.
 	 *
-	 * @return DateTime
+	 * @return DateTime|null
 	 */
 	public function get_expiry_date() {
 		return $this->expiry_date;
@@ -438,28 +482,50 @@ class Subscription extends LegacySubscription {
 	/**
 	 * Set the expiry date of this subscription.
 	 *
-	 * @param DateTime $date Expiry date.
+	 * @param DateTime|null $date Expiry date.
+	 * @return void
 	 */
-	public function set_expiry_date( DateTime $date ) {
+	public function set_expiry_date( DateTime $date = null ) {
 		$this->expiry_date = $date;
 	}
 
 	/**
 	 * Set the next payment date of this subscription.
 	 *
-	 * @param DateTime $date Next payment date.
+	 * @param DateTime|null $date Next payment date.
+	 * @return void
 	 */
-	public function set_next_payment_date( DateTime $date ) {
-		$this->next_payment = $date;
+	public function set_next_payment_date( DateTime $date = null ) {
+		$this->next_payment_date = $date;
 	}
 
 	/**
 	 * Get the next payment date of this subscription.
 	 *
-	 * @return DateTime
+	 * @return DateTime|null
 	 */
 	public function get_next_payment_date() {
-		return $this->next_payment;
+		return $this->next_payment_date;
+	}
+
+	/**
+	 * Set the next payment delivery date of this subscription.
+	 *
+	 * @param DateTime|null $date Next payment delivery date.
+	 *
+	 * @return void
+	 */
+	public function set_next_payment_delivery_date( DateTime $date = null ) {
+		$this->next_payment_delivery_date = $date;
+	}
+
+	/**
+	 * Get the next payment delivery date of this subscription.
+	 *
+	 * @return DateTime|null
+	 */
+	public function get_next_payment_delivery_date() {
+		return $this->next_payment_delivery_date;
 	}
 
 	/**
@@ -467,6 +533,7 @@ class Subscription extends LegacySubscription {
 	 *
 	 * @todo  Not sure how and when this function is used.
 	 * @param array $meta The meta data to update.
+	 * @return void
 	 */
 	public function update_meta( $meta ) {
 		if ( ! is_array( $meta ) || count( $meta ) === 0 ) {
@@ -483,10 +550,10 @@ class Subscription extends LegacySubscription {
 		$add_note = false;
 
 		foreach ( $meta as $key => $value ) {
-			$current_value = $this->get_meta( $key );
+			$current_value = $this->get_meta( strval( $key ) );
 
 			// Convert string to amount for comparison.
-			if ( 'amount' === $key ) {
+			if ( 'amount' === $key && false !== $current_value ) {
 				$money_parser = new MoneyParser();
 
 				$current_value = $money_parser->parse( $current_value )->get_value();
@@ -498,14 +565,14 @@ class Subscription extends LegacySubscription {
 
 			$add_note = true;
 
-			$this->set_meta( $key, $value );
+			$this->set_meta( strval( $key ), $value );
 
 			if ( $value instanceof DateTime ) {
 				$value = date_i18n( __( 'l jS \o\f F Y, h:ia', 'pronamic_ideal' ), $value->getTimestamp() );
 			}
 
-			$note .= sprintf( '<dt>%s</dt>', esc_html( $key ) );
-			$note .= sprintf( '<dd>%s</dd>', esc_html( $value ) );
+			$note .= sprintf( '<dt>%s</dt>', esc_html( strval( $key ) ) );
+			$note .= sprintf( '<dd>%s</dd>', esc_html( strval( $value ) ) );
 		}
 
 		$note .= '</dl>';
@@ -539,11 +606,15 @@ class Subscription extends LegacySubscription {
 			throw new InvalidArgumentException( 'JSON value must be an object.' );
 		}
 
-		if ( ! $subscription instanceof self ) {
+		if ( null === $subscription ) {
 			$subscription = new self();
 		}
 
-		parent::from_json( $json, $subscription );
+		PaymentInfoHelper::from_json( $json, $subscription );
+
+		if ( isset( $json->status ) ) {
+			$subscription->set_status( $json->status );
+		}
 
 		return $subscription;
 	}
@@ -554,7 +625,15 @@ class Subscription extends LegacySubscription {
 	 * @return object
 	 */
 	public function get_json() {
-		$object = parent::get_json();
+		$object = PaymentInfoHelper::to_json( $this );
+
+		$properties = (array) $object;
+
+		if ( null !== $this->get_status() ) {
+			$properties['status'] = $this->get_status();
+		}
+
+		$object = (object) $properties;
 
 		return $object;
 	}

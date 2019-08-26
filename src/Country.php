@@ -106,7 +106,7 @@ class Country {
 	 * Create from object.
 	 *
 	 * @param mixed $json JSON.
-	 * @return Address
+	 * @return Country
 	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
 	public static function from_json( $json ) {
@@ -133,10 +133,23 @@ class Country {
 	 * @return string
 	 */
 	public function __toString() {
-		return sprintf(
-			'%s - %s',
+		$values = array(
 			$this->code,
-			$this->name
+			$this->name,
 		);
+
+		$values = array_filter( $values );
+
+		return implode( ' - ', $values );
+	}
+
+	/**
+	 * Anonymize.
+	 *
+	 * @return void
+	 */
+	public function anonymize() {
+		$this->set_code( PrivacyManager::anonymize_data( 'text', $this->get_code() ) );
+		$this->set_name( PrivacyManager::anonymize_data( 'text', $this->get_name() ) );
 	}
 }

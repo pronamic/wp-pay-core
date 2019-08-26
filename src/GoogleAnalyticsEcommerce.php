@@ -41,9 +41,9 @@ class GoogleAnalyticsEcommerce {
 	/**
 	 * Anonymous client ID.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
-	private $client_id = '';
+	private $client_id;
 
 	/**
 	 * Constructs an analytics e-commerce object.
@@ -149,14 +149,16 @@ class GoogleAnalyticsEcommerce {
 		}
 
 		// Shipping.
-		if ( null !== $payment->get_shipping_amount() ) {
+		$shipping_amount = $payment->get_shipping_amount();
+
+		if ( null !== $shipping_amount ) {
 			/*
 			 * Transaction Shipping
 			 * Optional.
 			 * Specifies the total shipping cost of the transaction.
 			 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ts
 			 */
-			$transaction['ts'] = sprintf( '%F', $payment->get_shipping_amount()->get_value() );
+			$transaction['ts'] = sprintf( '%F', $shipping_amount->get_value() );
 		}
 
 		// Tax.
@@ -207,8 +209,10 @@ class GoogleAnalyticsEcommerce {
 				 * Item Price - Optional. - Specifies the price for a single item / unit.
 				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ip
 				 */
-				if ( null !== $line->get_unit_price() ) {
-					$item['ip'] = sprintf( '%F', $line->get_unit_price()->get_amount() );
+				$unit_price = $line->get_unit_price();
+
+				if ( null !== $unit_price ) {
+					$item['ip'] = sprintf( '%F', $unit_price->get_amount() );
 				}
 
 				/*

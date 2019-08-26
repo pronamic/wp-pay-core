@@ -61,7 +61,7 @@ abstract class PaymentData extends AbstractPaymentData {
 	/**
 	 * Get email.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_email() {
 		$email = null;
@@ -76,7 +76,7 @@ abstract class PaymentData extends AbstractPaymentData {
 	/**
 	 * Get first name.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_first_name() {
 		if ( is_user_logged_in() ) {
@@ -87,7 +87,7 @@ abstract class PaymentData extends AbstractPaymentData {
 	/**
 	 * Get last name.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_last_name() {
 		if ( is_user_logged_in() ) {
@@ -98,7 +98,7 @@ abstract class PaymentData extends AbstractPaymentData {
 	/**
 	 * Get customer name.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_customer_name() {
 		$parts = array(
@@ -120,7 +120,7 @@ abstract class PaymentData extends AbstractPaymentData {
 	/**
 	 * Get Google Analytics client ID.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_analytics_client_id() {
 		return GoogleAnalyticsEcommerce::get_cookie_client_id();
@@ -128,6 +128,8 @@ abstract class PaymentData extends AbstractPaymentData {
 
 	/**
 	 * Get URL for the specified name.
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/get_permalink/
 	 *
 	 * @param string $name The name to get the URL for.
 	 * @return string
@@ -137,7 +139,7 @@ abstract class PaymentData extends AbstractPaymentData {
 
 		$permalink = get_permalink( pronamic_pay_get_page_id( $name ) );
 
-		if ( $permalink ) {
+		if ( false !== $permalink ) {
 			$url = $permalink;
 		}
 
@@ -203,7 +205,7 @@ abstract class PaymentData extends AbstractPaymentData {
 	/**
 	 * Get subscription source ID.
 	 *
-	 * @return string
+	 * @return string|int|null
 	 */
 	public function get_subscription_source_id() {
 		return $this->get_source_id();
@@ -213,14 +215,20 @@ abstract class PaymentData extends AbstractPaymentData {
 	 * Get subscription ID.
 	 *
 	 * @link https://github.com/woothemes/woocommerce/blob/v2.1.3/includes/abstracts/abstract-wc-payment-gateway.php#L52
-	 * @return string|null
+	 * @return int|null
 	 */
 	public function get_subscription_id() {
 		if ( ! $this->get_subscription() ) {
 			return null;
 		}
 
-		$subscription = get_pronamic_subscription_by_meta( '_pronamic_subscription_source_id', $this->get_subscription_source_id() );
+		$source_id = $this->get_subscription_source_id();
+
+		if ( null === $source_id ) {
+			return null;
+		}
+
+		$subscription = get_pronamic_subscription_by_meta( '_pronamic_subscription_source_id', strval( $source_id ) );
 
 		if ( empty( $subscription ) ) {
 			return null;

@@ -53,7 +53,7 @@ class LicenseManager {
 		$data = get_transient( 'pronamic_pay_license_data' );
 
 		if ( $data ) {
-			include $this->plugin->get_plugin_dir_path() . 'admin/notice-license.php';
+			include __DIR__ . '/../views/notice-license.php';
 
 			delete_transient( 'pronamic_pay_license_data' );
 		}
@@ -102,6 +102,7 @@ class LicenseManager {
 	 */
 	public function license_check_event() {
 		$license = get_option( 'pronamic_pay_license_key' );
+		$license = strval( $license );
 
 		$this->check_license( $license );
 	}
@@ -150,7 +151,7 @@ class LicenseManager {
 	/**
 	 * Check license.
 	 *
-	 * @param string|boolean $license License.
+	 * @param string $license License.
 	 */
 	public function check_license( $license ) {
 		$status = $this->request_license_status( $license );
@@ -201,6 +202,10 @@ class LicenseManager {
 				'timeout' => 20,
 			)
 		);
+
+		if ( $response instanceof WP_Error ) {
+			return;
+		}
 
 		$data = json_decode( wp_remote_retrieve_body( $response ) );
 

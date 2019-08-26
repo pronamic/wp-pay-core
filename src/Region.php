@@ -64,6 +64,7 @@ class Region {
 	 * Set value.
 	 *
 	 * @param string|null $value Value.
+	 * @return void
 	 */
 	public function set_value( $value ) {
 		$this->value = $value;
@@ -82,6 +83,7 @@ class Region {
 	 * Set code.
 	 *
 	 * @param string|null $code Code.
+	 * @return void
 	 */
 	public function set_code( $code ) {
 		$this->code = $code;
@@ -100,6 +102,7 @@ class Region {
 	 * Set name.
 	 *
 	 * @param string|null $name Name.
+	 * @return void
 	 */
 	public function set_name( $name ) {
 		$this->name = $name;
@@ -130,7 +133,7 @@ class Region {
 	 * Create from object.
 	 *
 	 * @param mixed $json JSON.
-	 * @return Address
+	 * @return Region
 	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
 	public static function from_json( $json ) {
@@ -169,10 +172,24 @@ class Region {
 			return $this->value;
 		}
 
-		return sprintf(
-			'%s - %s',
+		$values = array(
 			$this->code,
-			$this->name
+			$this->name,
 		);
+
+		$values = array_filter( $values );
+
+		return implode( ' - ', $values );
+	}
+
+	/**
+	 * Anonymize.
+	 *
+	 * @return void
+	 */
+	public function anonymize() {
+		$this->set_value( PrivacyManager::anonymize_data( 'text', $this->get_value() ) );
+		$this->set_code( PrivacyManager::anonymize_data( 'text', $this->get_code() ) );
+		$this->set_name( PrivacyManager::anonymize_data( 'text', $this->get_name() ) );
 	}
 }

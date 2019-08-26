@@ -210,7 +210,7 @@ class PaymentLine {
 	/**
 	 * Get the quantity of this payment line.
 	 *
-	 * @return int
+	 * @return int|null
 	 */
 	public function get_quantity() {
 		return $this->quantity;
@@ -219,7 +219,7 @@ class PaymentLine {
 	/**
 	 * Set the quantity of this payment line.
 	 *
-	 * @param int $quantity Quantity.
+	 * @param int|null $quantity Quantity.
 	 */
 	public function set_quantity( $quantity ) {
 		$this->quantity = $quantity;
@@ -228,7 +228,7 @@ class PaymentLine {
 	/**
 	 * Get unit price.
 	 *
-	 * @return TaxedMoney
+	 * @return TaxedMoney|null
 	 */
 	public function get_unit_price() {
 		return $this->unit_price;
@@ -237,7 +237,7 @@ class PaymentLine {
 	/**
 	 * Set unit price.
 	 *
-	 * @param TaxedMoney $price Unit price.
+	 * @param TaxedMoney|null $price Unit price.
 	 */
 	public function set_unit_price( TaxedMoney $price = null ) {
 		$this->unit_price = ( null === $price ? null : $price );
@@ -267,8 +267,14 @@ class PaymentLine {
 	 * @return Money|null
 	 */
 	public function get_tax_amount() {
+		$tax_value = $this->get_total_amount()->get_tax_value();
+
+		if ( null === $tax_value ) {
+			return null;
+		}
+
 		return new Money(
-			$this->get_total_amount()->get_tax_value(),
+			$tax_value,
 			$this->get_total_amount()->get_currency()
 		);
 	}

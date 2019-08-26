@@ -81,7 +81,7 @@ class PaymentTestData extends PaymentData {
 	 * @return string
 	 */
 	public function get_order_id() {
-		return time();
+		return strval( time() );
 	}
 
 	/**
@@ -150,25 +150,25 @@ class PaymentTestData extends PaymentData {
 	 * @since 1.2.1
 	 * @link https://github.com/woothemes/woocommerce/blob/v2.1.3/includes/abstracts/abstract-wc-payment-gateway.php#L52
 	 * @link https://github.com/wp-premium/woocommerce-subscriptions/blob/2.0.18/includes/class-wc-subscriptions-renewal-order.php#L371-L398
-	 * @return string|bool
+	 * @return Subscription|null
 	 */
 	public function get_subscription() {
 		$test_subscription = filter_input( INPUT_POST, 'pronamic_pay_test_subscription', FILTER_VALIDATE_BOOLEAN );
 
 		if ( ! $test_subscription ) {
-			return false;
+			return null;
 		}
 
 		$interval = filter_input( INPUT_POST, 'pronamic_pay_test_repeat_interval', FILTER_VALIDATE_INT );
 
 		if ( empty( $interval ) ) {
-			return false;
+			return null;
 		}
 
 		$interval_period = filter_input( INPUT_POST, 'pronamic_pay_test_repeat_frequency', FILTER_SANITIZE_STRING );
 
 		if ( empty( $interval_period ) ) {
-			return false;
+			return null;
 		}
 
 		// Ends on.
@@ -228,9 +228,10 @@ class PaymentTestData extends PaymentData {
 		// Test card to simulate a 3-D Secure registered card.
 		$credit_card->set_number( '5300000000000006' );
 
-		$credit_card->set_expiration_month( 12 );
+		$expiration_date = new DateTime( '+5 years' );
 
-		$credit_card->set_expiration_year( date( 'Y' ) + 5 );
+		$credit_card->set_expiration_month( intval( $expiration_date->format( 'n' ) ) );
+		$credit_card->set_expiration_year( intval( $expiration_date->format( 'Y' ) ) );
 
 		$credit_card->set_security_code( '123' );
 

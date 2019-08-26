@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
+use Exception;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Pay\Core\Statuses;
@@ -31,7 +32,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
 	 * Payment.
 	 *
-	 * @var Payment
+	 * @var Payment|null
 	 */
 	private $payment;
 
@@ -63,6 +64,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			Statuses::CANCELLED => 'payment_cancelled',
 			Statuses::EXPIRED   => 'payment_expired',
 			Statuses::FAILURE   => 'payment_failed',
+			Statuses::REFUNDED  => 'payment_refunded',
 			Statuses::RESERVED  => 'payment_reserved',
 			Statuses::SUCCESS   => 'payment_completed',
 			Statuses::OPEN      => 'payment_pending',
@@ -95,10 +97,14 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
 	 * Get post status from meta status.
 	 *
-	 * @param string $meta_status Meta status.
+	 * @param string|null $meta_status Meta status.
 	 * @return string|null
 	 */
 	private function get_post_status_from_meta_status( $meta_status ) {
+		if ( null === $meta_status ) {
+			return null;
+		}
+
 		if ( isset( $this->status_map[ $meta_status ] ) ) {
 			return $this->status_map[ $meta_status ];
 		}
@@ -126,10 +132,12 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * Complement payment post data.
 	 *
 	 * @link https://github.com/WordPress/WordPress/blob/5.0.3/wp-includes/post.php#L3515-L3523
+	 * @link https://developer.wordpress.org/reference/functions/wp_json_encode/
 	 *
 	 * @param array $data    An array of slashed post data.
 	 * @param array $postarr An array of sanitized, but otherwise unmodified post data.
 	 * @return array
+	 * @throws Exception When inserting payment post data JSON string fails.
 	 */
 	public function insert_payment_post_data( $data, $postarr ) {
 		$this->payment = null;
@@ -151,7 +159,13 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			}
 
 			// Data.
-			$data['post_content']   = wp_slash( wp_json_encode( $this->payment->get_json() ) );
+			$json_string = wp_json_encode( $this->payment->get_json() );
+
+			if ( false === $json_string ) {
+				throw new Exception( 'Error inserting payment post data as JSON.' );
+			}
+
+			$data['post_content']   = wp_slash( $json_string );
 			$data['post_mime_type'] = 'application/json';
 		}
 
@@ -166,7 +180,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 */
 	private function update_payment_form_post_array( $payment, $postarr ) {
 		if ( isset( $postarr['pronamic_payment_post_status'] ) ) {
-			$post_status = sanitize_text_field( wp_unslash( $postarr['pronamic_payment_post_status'] ) );
+			$post_status = sanitize_text_field( stripslashes( $postarr['pronamic_payment_post_status'] ) );
 			$meta_status = $this->get_meta_status_from_post_status( $post_status );
 
 			if ( null !== $meta_status ) {
@@ -186,12 +200,16 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 */
 	public function save_post_meta( $post_id, $post, $update ) {
 		if ( $this->payment instanceof Payment ) {
-			if ( ! $update && null === $this->payment->get_id() ) {
-				$this->payment->set_id( $post_id );
-				$this->payment->post = $post;
+			$payment = $this->payment;
+
+			if ( ! $update && null === $payment->get_id() ) {
+				$payment->set_id( $post_id );
+				$payment->post = $post;
 			}
 
-			$this->update_post_meta( $this->payment );
+			$this->update_post_meta( $payment );
+
+			do_action( 'pronamic_pay_update_payment', $payment );
 		}
 
 		$this->payment = null;
@@ -216,12 +234,14 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			);
 		}
 
+		$customer = $payment->get_customer();
+
 		$result = wp_insert_post(
 			array(
 				'post_type'        => 'pronamic_payment',
 				'post_date_gmt'    => $this->get_mysql_utc_date( $payment->date ),
 				'post_title'       => $title,
-				'post_author'      => null === $payment->get_customer() ? null : $payment->get_customer()->get_user_id(),
+				'post_author'      => null === $customer ? null : $customer->get_user_id(),
 				'pronamic_payment' => $payment,
 			),
 			true
@@ -292,14 +312,20 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @param Payment $payment The payment to read from this data store.
 	 */
 	public function read( Payment $payment ) {
-		$payment->post  = get_post( $payment->get_id() );
-		$payment->title = get_the_title( $payment->get_id() );
+		$id = $payment->get_id();
+
+		if ( empty( $id ) ) {
+			return;
+		}
+
+		$payment->post  = get_post( $id );
+		$payment->title = get_the_title( $id );
 		$payment->date  = new DateTime(
-			get_post_field( 'post_date_gmt', $payment->get_id(), 'raw' ),
+			get_post_field( 'post_date_gmt', $id, 'raw' ),
 			new DateTimeZone( 'UTC' )
 		);
 
-		$content = get_post_field( 'post_content', $payment->post, 'raw' );
+		$content = get_post_field( 'post_content', $id, 'raw' );
 
 		$json = json_decode( $content );
 
@@ -308,16 +334,18 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		}
 
 		// Set user ID from `post_author` field if not set from payment JSON.
-		if ( null === $payment->get_customer() ) {
+		$customer = $payment->get_customer();
+
+		if ( null === $customer ) {
 			$customer = new Customer();
 
 			$payment->set_customer( $customer );
 		}
 
-		if ( null === $payment->get_customer()->get_user_id() ) {
-			$post_author = get_post_field( 'post_author', $payment->get_id(), 'raw' );
+		if ( null === $customer->get_user_id() ) {
+			$post_author = get_post_field( 'post_author', $id, 'raw' );
 
-			$payment->get_customer()->set_user_id( $post_author );
+			$customer->set_user_id( intval( $post_author ) );
 		}
 
 		$this->read_post_meta( $payment );
@@ -326,14 +354,14 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
 	 * Get meta status label.
 	 *
-	 * @param string $meta_status The payment meta status to get the status label for.
-	 * @return string|boolean
+	 * @param string|null $meta_status The payment meta status to get the status label for.
+	 * @return string|null
 	 */
 	public function get_meta_status_label( $meta_status ) {
 		$post_status = $this->get_post_status_from_meta_status( $meta_status );
 
 		if ( empty( $post_status ) ) {
-			return false;
+			return null;
 		}
 
 		$status_object = get_post_status_object( $post_status );
@@ -342,7 +370,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			return $status_object->label;
 		}
 
-		return false;
+		return null;
 	}
 
 	/**
@@ -661,27 +689,31 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	protected function read_post_meta( $payment ) {
 		$id = $payment->get_id();
 
-		$payment->config_id           = $this->get_meta( $id, 'config_id' );
-		$payment->key                 = $this->get_meta( $id, 'key' );
-		$payment->method              = $this->get_meta( $id, 'method' );
-		$payment->issuer              = $this->get_meta( $id, 'issuer' );
-		$payment->order_id            = $this->get_meta( $id, 'order_id' );
-		$payment->transaction_id      = $this->get_meta( $id, 'transaction_id' );
-		$payment->entrance_code       = $this->get_meta( $id, 'entrance_code' );
-		$payment->action_url          = $this->get_meta( $id, 'action_url' );
-		$payment->source              = $this->get_meta( $id, 'source' );
-		$payment->source_id           = $this->get_meta( $id, 'source_id' );
-		$payment->description         = $this->get_meta( $id, 'description' );
-		$payment->email               = $this->get_meta( $id, 'email' );
-		$payment->status              = $this->get_meta( $id, 'status' );
-		$payment->analytics_client_id = $this->get_meta( $id, 'analytics_client_id' );
-		$payment->subscription_id     = $this->get_meta( $id, 'subscription_id' );
-		$payment->recurring_type      = $this->get_meta( $id, 'recurring_type' );
-		$payment->recurring           = $this->get_meta( $id, 'recurring' );
+		if ( empty( $id ) ) {
+			return;
+		}
+
+		$payment->config_id           = $this->get_meta_int( $id, 'config_id' );
+		$payment->key                 = $this->get_meta_string( $id, 'key' );
+		$payment->method              = $this->get_meta_string( $id, 'method' );
+		$payment->issuer              = $this->get_meta_string( $id, 'issuer' );
+		$payment->order_id            = $this->get_meta_string( $id, 'order_id' );
+		$payment->transaction_id      = $this->get_meta_string( $id, 'transaction_id' );
+		$payment->entrance_code       = $this->get_meta_string( $id, 'entrance_code' );
+		$payment->action_url          = $this->get_meta_string( $id, 'action_url' );
+		$payment->source              = $this->get_meta_string( $id, 'source' );
+		$payment->source_id           = $this->get_meta_string( $id, 'source_id' );
+		$payment->description         = $this->get_meta_string( $id, 'description' );
+		$payment->email               = $this->get_meta_string( $id, 'email' );
+		$payment->status              = $this->get_meta_string( $id, 'status' );
+		$payment->analytics_client_id = $this->get_meta_string( $id, 'analytics_client_id' );
+		$payment->subscription_id     = $this->get_meta_int( $id, 'subscription_id' );
+		$payment->recurring_type      = $this->get_meta_string( $id, 'recurring_type' );
+		$payment->recurring           = $this->get_meta_bool( $id, 'recurring' );
 		$payment->start_date          = $this->get_meta_date( $id, 'start_date' );
 		$payment->end_date            = $this->get_meta_date( $id, 'end_date' );
 
-		$payment->set_version( $this->get_meta( $id, 'version' ) );
+		$payment->set_version( $this->get_meta_string( $id, 'version' ) );
 
 		// Legacy.
 		parent::read_post_meta( $payment );
@@ -696,11 +728,14 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @return array
 	 */
 	protected function get_update_meta( $payment, $meta = array() ) {
+		$customer = $payment->get_customer();
+
 		$meta = array(
 			'config_id'               => $payment->config_id,
 			'key'                     => $payment->key,
 			'order_id'                => $payment->order_id,
 			'currency'                => $payment->get_total_amount()->get_currency()->get_alphabetic_code(),
+			'amount'                  => $payment->get_total_amount()->format(),
 			'method'                  => $payment->method,
 			'issuer'                  => $payment->issuer,
 			'expiration_period'       => null,
@@ -713,7 +748,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			'consumer_city'           => $payment->consumer_city,
 			'source'                  => $payment->source,
 			'source_id'               => $payment->source_id,
-			'email'                   => ( null === $payment->get_customer() ? null : $payment->get_customer()->get_email() ),
+			'email'                   => ( null === $customer ? null : $customer->get_email() ),
 			'analytics_client_id'     => $payment->analytics_client_id,
 			'subscription_id'         => $payment->subscription_id,
 			'recurring_type'          => $payment->recurring_type,
@@ -770,12 +805,12 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		if ( $previous_status !== $payment->status ) {
 			$old = $previous_status;
-			$old = strtolower( $old );
 			$old = empty( $old ) ? 'unknown' : $old;
+			$old = strtolower( $old );
 
 			$new = $payment->status;
-			$new = strtolower( $new );
 			$new = empty( $new ) ? 'unknown' : $new;
+			$new = strtolower( $new );
 
 			$can_redirect = false;
 

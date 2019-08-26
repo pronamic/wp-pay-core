@@ -44,7 +44,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 	 *
 	 * @see IteratorAggregate::getIterator()
 	 *
-	 * @return ArrayIterator|PaymentLine[]
+	 * @return ArrayIterator
 	 */
 	public function getIterator() {
 		return new ArrayIterator( $this->lines );
@@ -63,6 +63,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 	 * Add line.
 	 *
 	 * @param PaymentLine $line The line to add.
+	 * @return void
 	 */
 	public function add_line( PaymentLine $line ) {
 		$this->lines[] = $line;
@@ -96,23 +97,13 @@ class PaymentLines implements Countable, IteratorAggregate {
 	 * @return Money
 	 */
 	public function get_amount() {
-		$amount = 0;
-
-		$use_bcmath = extension_loaded( 'bcmath' );
+		$amount = new Money();
 
 		foreach ( $this->lines as $line ) {
-			if ( $use_bcmath ) {
-				// Use non-locale aware float value.
-				// @link http://php.net/sprintf.
-				$line_amount = sprintf( '%F', $line->get_total_amount() );
-
-				$amount = bcadd( $amount, $line_amount, 8 );
-			} else {
-				$amount += $line->get_total_amount();
-			}
+			$amount = $amount->add( $line->get_total_amount() );
 		}
 
-		return new Money( $amount );
+		return $amount;
 	}
 
 	/**
@@ -122,8 +113,14 @@ class PaymentLines implements Countable, IteratorAggregate {
 	 */
 	public function get_json() {
 		$objects = array_map(
+			/**
+			 * Get JSON for payment line.
+			 *
+			 * @param PaymentLine $line Payment line.
+			 * @return object
+			 */
 			function( PaymentLine $line ) {
-					return $line->get_json();
+				return $line->get_json();
 			},
 			$this->lines
 		);
@@ -146,8 +143,14 @@ class PaymentLines implements Countable, IteratorAggregate {
 		$object = new self();
 
 		$lines = array_map(
+			/**
+			 * Get payment line from object.
+			 *
+			 * @param object $object Object.
+			 * @return PaymentLine
+			 */
 			function( $object ) {
-					return PaymentLine::from_json( $object );
+				return PaymentLine::from_json( $object );
 			},
 			$json
 		);

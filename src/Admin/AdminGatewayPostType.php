@@ -10,9 +10,11 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
+use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\Plugin;
+use Pronamic\WordPress\Pay\WebhookManager;
 use WP_Post;
 
 /**
@@ -36,6 +38,13 @@ class AdminGatewayPostType {
 	 * @var Plugin
 	 */
 	private $plugin;
+
+	/**
+	 * Admin.
+	 *
+	 * @var AdminModule
+	 */
+	private $admin;
 
 	/**
 	 * Constructs and initializes an admin gateway post type object.
@@ -90,18 +99,14 @@ class AdminGatewayPostType {
 	public function custom_columns( $column, $post_id ) {
 		$id = get_post_meta( $post_id, '_pronamic_gateway_id', true );
 
-		$integrations = $this->plugin->gateway_integrations;
-
-		if ( isset( $integrations[ $id ] ) ) {
-			$integration = $integrations[ $id ];
-		}
+		$integration = $this->plugin->gateway_integrations->get_integration( $id );
 
 		switch ( $column ) {
 			case 'pronamic_gateway_variant':
 				if ( isset( $integration ) ) {
 					echo esc_html( $integration->get_name() );
 				} else {
-					echo esc_html( $id );
+					echo esc_html( strval( $id ) );
 				}
 
 				break;
@@ -158,11 +163,22 @@ class AdminGatewayPostType {
 						$content[] = sprintf(
 							'<a href="%s" target="_blank">%s</a>',
 							esc_attr( $url ),
-							esc_html( ucfirst( $name ) )
+							esc_html( ucfirst( strval( $name ) ) )
 						);
 					}
 
-					echo implode( ' | ', $content ); // WPCS: XSS ok.
+					echo wp_kses(
+						implode(
+							' | ',
+							$content
+						),
+						array(
+							'a' => array(
+								'href'   => array(),
+								'target' => array(),
+							),
+						)
+					);
 				}
 
 				break;
@@ -238,7 +254,73 @@ class AdminGatewayPostType {
 	public function meta_box_config( $post ) {
 		wp_nonce_field( 'pronamic_pay_save_gateway', 'pronamic_pay_nonce' );
 
-		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-gateway-config.php';
+		$gateway = Plugin::get_gateway( $post->ID );
+
+		include __DIR__ . '/../../views/meta-box-gateway-config.php';
+
+		wp_localize_script(
+			'pronamic-pay-admin',
+			'pronamicPayGatewayAdmin',
+			array(
+				'rest_url' => rest_url( 'pronamic-pay/v1/gateways/' . $post->ID ),
+				'nonce'    => wp_create_nonce( 'wp_rest' ),
+			)
+		);
+	}
+
+	/**
+	 * Pronamic Pay gateway payment methods setting.
+	 *
+	 * @param null|Gateway $gateway Gateway.
+	 *
+	 * @return void
+	 */
+	public static function settings_payment_methods( $gateway ) {
+		if ( null === $gateway ) {
+			return;
+		}
+
+		// Supported and available payment methods.
+		$supported = $gateway->get_supported_payment_methods();
+		$available = $gateway->get_transient_available_payment_methods();
+
+		$payment_methods = array();
+
+		foreach ( $supported as $payment_method ) {
+			$name = PaymentMethods::get_name( $payment_method );
+
+			$payment_methods[ $payment_method ] = (object) array(
+				'id'        => $payment_method,
+				'name'      => $name,
+				'available' => in_array( $payment_method, $available, true ),
+			);
+		}
+
+		usort(
+			$payment_methods,
+			function( $a, $b ) {
+				return strnatcasecmp( $a->name, $b->name );
+			}
+		);
+
+		require __DIR__ . '/../../views/meta-box-gateway-payment-methods.php';
+	}
+
+	/**
+	 * Pronamic Pay gateway webhook log setting.
+	 *
+	 * @param null|Gateway $gateway    Gateway.
+	 * @param null|string  $gateway_id Gateway ID.
+	 * @param null|int     $config_id  Config ID.
+	 *
+	 * @return void
+	 */
+	public static function settings_webhook_log( $gateway, $gateway_id, $config_id ) {
+		if ( null === $gateway ) {
+			return;
+		}
+
+		require __DIR__ . '/../../views/meta-box-gateway-webhook-log.php';
 	}
 
 	/**
@@ -247,111 +329,86 @@ class AdminGatewayPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 */
 	public function meta_box_test( $post ) {
-		include plugin_dir_path( $this->plugin->get_file() ) . 'admin/meta-box-gateway-test.php';
+		include __DIR__ . '/../../views/meta-box-gateway-test.php';
 	}
 
 	/**
 	 * When the post is saved, saves our custom data.
 	 *
-	 * @param int $post_id The ID of the post being saved.
+	 * @link https://github.com/WordPress/WordPress/blob/5.1/wp-includes/post.php#L3928-L3951
 	 *
-	 * @return int
+	 * @param int $post_id The ID of the post being saved.
+	 * @return void
 	 */
 	public function save_post( $post_id ) {
 		// Nonce.
 		if ( ! filter_has_var( INPUT_POST, 'pronamic_pay_nonce' ) ) {
-			return $post_id;
+			return;
 		}
 
 		check_admin_referer( 'pronamic_pay_save_gateway', 'pronamic_pay_nonce' );
 
 		// If this is an autosave, our form has not been submitted, so we don't want to do anything.
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-			return $post_id;
+			return;
 		}
 
 		// OK, its safe for us to save the data now.
-		$fields = $this->admin->gateway_settings->get_fields();
+		if ( ! filter_has_var( INPUT_POST, '_pronamic_gateway_id' ) ) {
+			return;
+		}
 
-		$definition = array(
-			// General.
-			'_pronamic_gateway_id' => FILTER_SANITIZE_STRING,
-		);
+		// Gateway.
+		$gateway_id = filter_input( INPUT_POST, '_pronamic_gateway_id', FILTER_SANITIZE_STRING );
+
+		update_post_meta( $post_id, '_pronamic_gateway_id', $gateway_id );
+
+		// Mode.
+		if ( filter_has_var( INPUT_POST, '_pronamic_gateway_mode' ) ) {
+			$gateway_mode = filter_input( INPUT_POST, '_pronamic_gateway_mode', FILTER_SANITIZE_STRING );
+
+			update_post_meta( $post_id, '_pronamic_gateway_mode', $gateway_mode );
+		}
+
+		// Transient.
+		delete_transient( 'pronamic_outdated_webhook_urls' );
+
+		// Gatway fields.
+		if ( empty( $gateway_id ) ) {
+			return;
+		}
+
+		$integration = $this->plugin->gateway_integrations->get_integration( $gateway_id );
+
+		if ( null === $integration ) {
+			return;
+		}
+
+		// Delete transients.
+		$config = $integration->get_config( $post_id );
+
+		delete_transient( 'pronamic_pay_issuers_' . md5( serialize( $config ) ) );
+		delete_transient( 'pronamic_gateway_payment_methods_' . md5( serialize( $config ) ) );
+
+		// Save settings.
+		$fields = $integration->get_settings_fields();
 
 		foreach ( $fields as $field ) {
 			if ( isset( $field['meta_key'], $field['filter'] ) ) {
 				$name   = $field['meta_key'];
 				$filter = $field['filter'];
 
-				$definition[ $name ] = $filter;
-			}
-		}
+				if ( filter_has_var( INPUT_POST, $name ) ) {
+					$value = filter_input( INPUT_POST, $name, $filter );
 
-		$data = filter_input_array( INPUT_POST, $definition );
-
-		if ( ! empty( $data['_pronamic_gateway_id'] ) ) {
-			$integrations = $this->plugin->gateway_integrations;
-
-			if ( isset( $integrations[ $data['_pronamic_gateway_id'] ] ) ) {
-				$integration = $integrations[ $data['_pronamic_gateway_id'] ];
-			}
-
-			if ( $integration ) {
-				$settings = $integration->get_settings();
-
-				foreach ( $fields as $field ) {
-					if ( isset( $field['default'], $field['meta_key'], $data[ $field['meta_key'] ] ) ) {
-						// Remove default value if not applicable to the selected gateway.
-						if ( isset( $field['methods'] ) ) {
-							$clean_default = array_intersect( $settings, $field['methods'] );
-
-							if ( empty( $clean_default ) ) {
-								$meta_value = get_post_meta( $post_id, $field['meta_key'], true );
-
-								// Only remove value if not saved before.
-								if ( empty( $meta_value ) ) {
-									$data[ $field['meta_key'] ] = null;
-
-									continue;
-								}
-							}
-						}
-
-						// Set the default value if empty.
-						if ( empty( $data[ $field['meta_key'] ] ) ) {
-							$default = $field['default'];
-
-							if ( is_array( $default ) && 2 === count( $default ) && Util::class_method_exists( $default[0], $default[1] ) ) {
-								$data[ $field['meta_key'] ] = call_user_func( $default, $field );
-							} else {
-								$data[ $field['meta_key'] ] = $default;
-							}
-						}
-					}
-				}
-
-				// Filter data through gateway integration settings.
-				$settings_classes = $integration->get_settings_class();
-
-				if ( ! is_array( $settings_classes ) ) {
-					$settings_classes = array( $settings_classes );
-				}
-
-				foreach ( $settings_classes as $settings_class ) {
-					$gateway_settings = new $settings_class();
-
-					$data = $gateway_settings->save_post( $data );
+					update_post_meta( $post_id, $name, $value );
 				}
 			}
 		}
 
-		// Update post meta data.
-		pronamic_pay_update_post_meta_data( $post_id, $data );
+		$integration->save_post( $post_id );
 
-		// Transient.
-		delete_transient( 'pronamic_pay_issuers_' . $post_id );
-		delete_transient( 'pronamic_gateway_payment_methods_' . $post_id );
-
+		// Update active payment methods.
 		PaymentMethods::update_active_payment_methods();
 	}
 
@@ -360,7 +417,11 @@ class AdminGatewayPostType {
 	 *
 	 * @link https://codex.wordpress.org/Function_Reference/register_post_type
 	 * @link https://github.com/WordPress/WordPress/blob/4.4.2/wp-admin/edit-form-advanced.php#L134-L173
+	 * @link https://github.com/WordPress/WordPress/blob/5.2.1/wp-admin/edit-form-advanced.php#L164-L203
 	 * @link https://github.com/woothemes/woocommerce/blob/2.5.5/includes/admin/class-wc-admin-post-types.php#L111-L168
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.6.4/includes/admin/class-wc-admin-post-types.php#L110-L180
+	 * @link https://developer.wordpress.org/reference/hooks/post_updated_messages/
+	 *
 	 * @param array $messages Messages.
 	 * @return array
 	 */
@@ -380,8 +441,10 @@ class AdminGatewayPostType {
 			// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352798&filters[translation_id]=37947230
 			4  => __( 'Configuration updated.', 'pronamic_ideal' ),
 			// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352801&filters[translation_id]=37947231
-			// translators: %s: date and time of the revision.
-			5  => isset( $_GET['revision'] ) ? sprintf( __( 'Configuration restored to revision from %s.', 'pronamic_ideal' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false, // WPCS: CSRF ok. // Input var okay.
+			/* phpcs:disable WordPress.Security.NonceVerification.Recommended */
+			/* translators: %s: date and time of the revision */
+			5  => isset( $_GET['revision'] ) ? sprintf( __( 'Configuration restored to revision from %s.', 'pronamic_ideal' ), strval( wp_post_revision_title( (int) $_GET['revision'], false ) ) ) : false,
+			/* phpcs:enable WordPress.Security.NonceVerification.Recommended */
 			// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352802&filters[translation_id]=37949178
 			6  => __( 'Configuration published.', 'pronamic_ideal' ),
 			// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352803&filters[translation_id]=37947232
@@ -391,7 +454,7 @@ class AdminGatewayPostType {
 			// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352805&filters[translation_id]=37949302
 			/* translators: %s: scheduled date */
 			9  => sprintf( __( 'Configuration scheduled for: %s.', 'pronamic_ideal' ), '<strong>' . $scheduled_date . '</strong>' ),
-			// @https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352806&filters[translation_id]=37949301
+			// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352806&filters[translation_id]=37949301
 			10 => __( 'Configuration draft updated.', 'pronamic_ideal' ),
 		);
 

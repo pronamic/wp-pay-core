@@ -22,6 +22,7 @@ use Pronamic\WordPress\Pay\Payments\PaymentData;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Payments\StatusChecker;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
+use Pronamic\WordPress\Pay\Webhooks\WebhookLogger;
 use WP_Error;
 use WP_Query;
 
@@ -62,19 +63,11 @@ class Plugin {
 	const TIMEZONE = 'UTC';
 
 	/**
-	 * Gateway integrations.
-	 *
-	 * @since 2.0.3
-	 * @var array
-	 */
-	public static $gateways;
-
-	/**
 	 * Instance.
 	 *
-	 * @var Plugin
+	 * @var Plugin|null
 	 */
-	protected static $instance = null;
+	protected static $instance;
 
 	/**
 	 * Instance.
@@ -155,6 +148,13 @@ class Plugin {
 	public $admin;
 
 	/**
+	 * Blocks module.
+	 *
+	 * @var Blocks\BlocksModule
+	 */
+	public $blocks_module;
+
+	/**
 	 * Forms module.
 	 *
 	 * @var Forms\FormsModule
@@ -185,9 +185,16 @@ class Plugin {
 	/**
 	 * Gateway integrations.
 	 *
-	 * @var AbstractIntegration[]
+	 * @var GatewayIntegrations
 	 */
 	public $gateway_integrations;
+
+	/**
+	 * Webhook logger.
+	 *
+	 * @var WebhookLogger
+	 */
+	private $webhook_logger;
 
 	/**
 	 * Construct and initialize an Pronamic Pay plugin object.
@@ -201,16 +208,14 @@ class Plugin {
 				'file'       => null,
 				'version'    => null,
 				'extensions' => array(),
-				'gateways'   => array(),
 			)
 		);
 
 		$this->version = $args['version'];
 
 		// Backward compatibility.
-		self::$file     = $args['file'];
-		self::$dirname  = dirname( self::$file );
-		self::$gateways = $args['gateways'];
+		self::$file    = $args['file'];
+		self::$dirname = dirname( self::$file );
 
 		// Bootstrap the add-ons.
 		$extensions = $args['extensions'];
@@ -301,9 +306,11 @@ class Plugin {
 		$gateway->update_status( $payment );
 
 		// Add gateway errors as payment notes.
-		if ( $gateway->has_error() ) {
-			foreach ( $gateway->error->get_error_codes() as $code ) {
-				$payment->add_note( sprintf( '%s: %s', $code, $gateway->error->get_error_message( $code ) ) );
+		$error = $gateway->get_error();
+
+		if ( $error instanceof WP_Error ) {
+			foreach ( $error->get_error_codes() as $code ) {
+				$payment->add_note( sprintf( '%s: %s', $code, $error->get_error_message( $code ) ) );
 			}
 		}
 
@@ -345,6 +352,8 @@ class Plugin {
 
 	/**
 	 * Handle returns.
+	 *
+	 * @return void
 	 */
 	public function handle_returns() {
 		if ( ! filter_has_var( INPUT_GET, 'payment' ) ) {
@@ -388,6 +397,9 @@ class Plugin {
 		// Check if the request is an notify request.
 		// Sisow gatway will extend callback requests with querystring "notify=true".
 		if ( filter_has_var( INPUT_GET, 'notify' ) && filter_input( INPUT_GET, 'notify', FILTER_VALIDATE_BOOLEAN ) ) {
+			// Log webhook request.
+			do_action( 'pronamic_pay_webhook_log_payment', $payment );
+
 			$should_redirect = false;
 		}
 
@@ -396,6 +408,8 @@ class Plugin {
 
 	/**
 	 * Maybe redirect.
+	 *
+	 * @return void
 	 */
 	public function maybe_redirect() {
 		if ( ! filter_has_var( INPUT_GET, 'payment_redirect' ) || ! filter_has_var( INPUT_GET, 'key' ) ) {
@@ -442,7 +456,7 @@ class Plugin {
 
 				$error = $gateway->get_error();
 
-				if ( is_wp_error( $error ) ) {
+				if ( $error instanceof WP_Error ) {
 					self::render_errors( $error );
 				} else {
 					$gateway->redirect( $payment );
@@ -461,14 +475,16 @@ class Plugin {
 	/**
 	 * Get number payments.
 	 *
-	 * @return int
+	 * @link https://developer.wordpress.org/reference/functions/wp_count_posts/
+	 *
+	 * @return int|false
 	 */
 	public static function get_number_payments() {
 		$number = false;
 
 		$count = wp_count_posts( 'pronamic_payment' );
 
-		if ( isset( $count, $count->payment_completed ) ) {
+		if ( isset( $count->payment_completed ) ) {
 			$number = intval( $count->payment_completed );
 		}
 
@@ -476,7 +492,10 @@ class Plugin {
 	}
 
 	/**
-	 * Setup, creates or updates database tables. Will only run when version changes.
+	 * Plugins loaded.
+	 *
+	 * @link https://developer.wordpress.org/reference/hooks/plugins_loaded/
+	 * @link https://developer.wordpress.org/reference/functions/load_plugin_textdomain/
 	 */
 	public function plugins_loaded() {
 		// Load plugin text domain.
@@ -507,10 +526,20 @@ class Plugin {
 		// Privacy Manager.
 		$this->privacy_manager = new PrivacyManager();
 
+		// Webhook Logger.
+		$this->webhook_logger = new WebhookLogger();
+		$this->webhook_logger->setup();
+
 		// Modules.
 		$this->forms_module         = new Forms\FormsModule( $this );
 		$this->payments_module      = new Payments\PaymentsModule( $this );
 		$this->subscriptions_module = new Subscriptions\SubscriptionsModule( $this );
+
+		// Blocks module.
+		if ( function_exists( 'register_block_type' ) ) {
+			$this->blocks_module = new Blocks\BlocksModule();
+			$this->blocks_module->setup();
+		}
 
 		// Google Analytics Ecommerce.
 		$this->google_analytics_ecommerce = new GoogleAnalyticsEcommerce();
@@ -521,10 +550,9 @@ class Plugin {
 		}
 
 		// Gateway Integrations.
-		$gateways     = apply_filters( 'pronamic_pay_gateways', self::$gateways );
-		$integrations = new GatewayIntegrations( $gateways );
+		$gateways = apply_filters( 'pronamic_pay_gateways', array() );
 
-		$this->gateway_integrations = $integrations->register_integrations();
+		$this->gateway_integrations = new GatewayIntegrations( $gateways );
 
 		// Maybes.
 		PaymentMethods::maybe_update_active_payment_methods();
@@ -582,11 +610,11 @@ class Plugin {
 	 * @since 2.1.6
 	 */
 	public function register_styles() {
-		$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		$min = SCRIPT_DEBUG ? '' : '.min';
 
 		wp_register_style(
 			'pronamic-pay-redirect',
-			plugins_url( 'css/redirect' . $min . '.css', $this->get_file() ),
+			plugins_url( 'css/redirect' . $min . '.css', dirname( __FILE__ ) ),
 			array(),
 			$this->get_version()
 		);
@@ -607,7 +635,7 @@ class Plugin {
 			'nopaging'  => true,
 		);
 
-		if ( $payment_method ) {
+		if ( null !== $payment_method ) {
 			$args['post__in'] = PaymentMethods::get_config_ids( $payment_method );
 		}
 
@@ -638,7 +666,7 @@ class Plugin {
 			$errors = array( $errors );
 		}
 
-		foreach ( $errors as $error ) {
+		foreach ( $errors as $pay_error ) {
 			include self::$dirname . '/views/error.php';
 		}
 	}
@@ -646,109 +674,46 @@ class Plugin {
 	/**
 	 * Get gateway.
 	 *
-	 * @param string|integer|boolean $config_id A gateway configuration ID.
+	 * @link https://wordpress.org/support/article/post-status/#default-statuses
+	 *
+	 * @param string|integer|boolean|null $config_id A gateway configuration ID.
+	 * @param array                       $args      Extra arguments.
 	 *
 	 * @return null|Gateway
 	 */
-	public static function get_gateway( $config_id ) {
-		// Check if config is published.
-		if ( 'publish' !== get_post_status( $config_id ) ) {
+	public static function get_gateway( $config_id, $args = array() ) {
+		// Check for 0, false, null and other empty values.
+		if ( empty( $config_id ) ) {
 			return null;
 		}
 
-		// Get config.
-		$gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
-		$mode       = get_post_meta( $config_id, '_pronamic_gateway_mode', true );
-		$is_utf8    = strcasecmp( get_bloginfo( 'charset' ), 'UTF-8' ) === 0;
+		$config_id = intval( $config_id );
 
-		$config = Core\ConfigProvider::get_config( $gateway_id, $config_id );
-
-		// Adjust config for specific gateways.
-		switch ( $gateway_id ) {
-			case 'abnamro-ideal-zelfbouw-v3':
-				$config->payment_server_url = 'https://abnamro.ideal-payment.de/ideal/iDEALv3';
-
-				if ( Gateway::MODE_TEST === $mode ) {
-					$config->payment_server_url = 'https://abnamro-test.ideal-payment.de/ideal/iDEALv3';
-				}
-
-				$config->certificates = array();
-
-				break;
-			case 'deutschebank-ideal-expert-v3':
-				$config->payment_server_url = 'https://myideal.db.com/ideal/iDealv3';
-
-				$config->certificates = array();
-
-				break;
-			case 'ideal-simulator-ideal-basic':
-				$config->url = 'https://www.ideal-simulator.nl/lite/';
-
-				break;
-			case 'ideal-simulator-ideal-advanced-v3':
-				$config->payment_server_url = 'https://www.ideal-checkout.nl/simulator/';
-
-				$config->certificates = array();
-
-				break;
-			case 'ing-ideal-basic':
-				$config->url = 'https://ideal.secure-ing.com/ideal/mpiPayInitIng.do';
-
-				if ( Gateway::MODE_TEST === $mode ) {
-					$config->url = 'https://idealtest.secure-ing.com/ideal/mpiPayInitIng.do';
-				}
-
-				break;
-			case 'ing-ideal-advanced-v3':
-				$config->payment_server_url = 'https://ideal.secure-ing.com/ideal/iDEALv3';
-
-				if ( Gateway::MODE_TEST === $mode ) {
-					$config->payment_server_url = 'https://idealtest.secure-ing.com/ideal/iDEALv3';
-				}
-
-				$config->certificates = array();
-
-				break;
-			case 'mollie-ideal-basic':
-				$config->url = 'https://secure.mollie.nl/xml/idealAcquirer/lite/';
-
-				if ( Gateway::MODE_TEST === $mode ) {
-					$config->url = 'https://secure.mollie.nl/xml/idealAcquirer/testmode/lite/';
-				}
-
-				break;
-			case 'postcode-ideal':
-				$config->payment_server_url = 'https://ideal.postcode.nl/ideal';
-
-				if ( Gateway::MODE_TEST === $mode ) {
-					$config->payment_server_url = 'https://ideal-test.postcode.nl/ideal';
-				}
-
-				$config->certificates = array();
-
-				break;
-			case 'rabobank-ideal-professional-v3':
-				$config->payment_server_url = 'https://ideal.rabobank.nl/ideal/iDEALv3';
-
-				if ( Gateway::MODE_TEST === $mode ) {
-					$config->payment_server_url = 'https://idealtest.rabobank.nl/ideal/iDEALv3';
-				}
-
-				$config->certificates = array();
-
-				break;
-			case 'sisow-ideal-basic':
-				$config->url = 'https://www.sisow.nl/Sisow/iDeal/IssuerHandler.ashx';
-
-				if ( Gateway::MODE_TEST === $mode ) {
-					$config->url = 'https://www.sisow.nl/Sisow/iDeal/IssuerHandler.ashx/test';
-				}
-
-				break;
+		// Check if config is trashed.
+		if ( 'trash' === get_post_status( $config_id ) ) {
+			return null;
 		}
 
-		// Create and return gateway.
-		$gateway = Core\GatewayFactory::create( $config );
+		// Arguments.
+		$args = wp_parse_args(
+			$args,
+			array(
+				'gateway_id' => get_post_meta( $config_id, '_pronamic_gateway_id', true ),
+				'mode'       => get_post_meta( $config_id, '_pronamic_gateway_mode', true ),
+			)
+		);
+
+		// Get config.
+		$gateway_id = $args['gateway_id'];
+		$mode       = $args['mode'];
+
+		$integration = pronamic_pay_plugin()->gateway_integrations->get_integration( $gateway_id );
+
+		if ( null === $integration ) {
+			return null;
+		}
+
+		$gateway = $integration->get_gateway( $config_id );
 
 		return $gateway;
 	}
@@ -756,7 +721,7 @@ class Plugin {
 	/**
 	 * Start a payment.
 	 *
-	 * @param string      $config_id      A gateway configuration ID.
+	 * @param int         $config_id      A gateway configuration ID.
 	 * @param Gateway     $gateway        The gateway to start the payment at.
 	 * @param PaymentData $data           A payment data interface object with all the required payment info.
 	 * @param string|null $payment_method The payment method to use to start the payment.
@@ -766,8 +731,15 @@ class Plugin {
 	public static function start( $config_id, Gateway $gateway, PaymentData $data, $payment_method = null ) {
 		$payment = new Payment();
 
-		/* translators: %s: payment data title */
-		$payment->title                  = sprintf( __( 'Payment for %s', 'pronamic_ideal' ), $data->get_title() );
+		// Title.
+		$title = $data->get_title();
+
+		if ( ! empty( $title ) ) {
+			/* translators: %s: payment data title */
+			$payment->title = sprintf( __( 'Payment for %s', 'pronamic_ideal' ), $title );
+		}
+
+		// Other.
 		$payment->config_id              = $config_id;
 		$payment->order_id               = $data->get_order_id();
 		$payment->description            = $data->get_description();
@@ -804,47 +776,55 @@ class Plugin {
 		}
 
 		// Billing address.
-		$billing_address = array(
-			'name'         => ( $customer instanceof Customer ? $customer->get_name() : null ),
-			'line_1'       => $data->get_address(),
-			'postal_code'  => $data->get_zip(),
-			'city'         => $data->get_city(),
-			'country_name' => $data->get_country(),
-			'email'        => $data->get_email(),
-			'phone'        => $data->get_telephone_number(),
+		$name         = ( $customer instanceof Customer ? $customer->get_name() : null );
+		$line_1       = $data->get_address();
+		$postal_code  = $data->get_zip();
+		$city         = $data->get_city();
+		$country_name = $data->get_country();
+		$email        = $data->get_email();
+		$phone        = $data->get_telephone_number();
+
+		$parts = array(
+			$name,
+			$line_1,
+			$postal_code,
+			$city,
+			$country_name,
+			$email,
+			$phone,
 		);
 
-		$billing_address = array_filter( $billing_address );
+		$parts = array_filter( $parts );
 
-		if ( ! empty( $billing_address ) ) {
+		if ( ! empty( $parts ) ) {
 			$address = new Address();
 
-			if ( isset( $billing_address['name'] ) ) {
-				$address->set_name( $billing_address['name'] );
+			if ( ! empty( $name ) ) {
+				$address->set_name( $name );
 			}
 
-			if ( isset( $billing_address['line_1'] ) ) {
-				$address->set_line_1( $billing_address['line_1'] );
+			if ( ! empty( $line_1 ) ) {
+				$address->set_line_1( $line_1 );
 			}
 
-			if ( isset( $billing_address['postal_code'] ) ) {
-				$address->set_postal_code( $billing_address['postal_code'] );
+			if ( ! empty( $postal_code ) ) {
+				$address->set_postal_code( $postal_code );
 			}
 
-			if ( isset( $billing_address['city'] ) ) {
-				$address->set_city( $billing_address['city'] );
+			if ( ! empty( $city ) ) {
+				$address->set_city( $city );
 			}
 
-			if ( isset( $billing_address['country_name'] ) ) {
-				$address->set_country_name( $billing_address['country_name'] );
+			if ( ! empty( $country_name ) ) {
+				$address->set_country_name( $country_name );
 			}
 
-			if ( isset( $billing_address['email'] ) ) {
-				$address->set_email( $billing_address['email'] );
+			if ( ! empty( $email ) ) {
+				$address->set_email( $email );
 			}
 
-			if ( isset( $billing_address['phone'] ) ) {
-				$address->set_phone( $billing_address['phone'] );
+			if ( ! empty( $phone ) ) {
+				$address->set_phone( $phone );
 			}
 
 			$payment->set_billing_address( $address );
@@ -894,21 +874,27 @@ class Plugin {
 		}
 
 		// Complements.
-		if ( null !== $payment->get_customer() ) {
-			CustomerHelper::complement_customer( $payment->get_customer() );
+		$customer = $payment->get_customer();
+
+		if ( null !== $customer ) {
+			CustomerHelper::complement_customer( $customer );
 
 			// Email.
 			if ( null === $payment->get_email() ) {
-				$payment->email = $payment->get_customer()->get_email();
+				$payment->email = $customer->get_email();
 			}
 		}
 
-		if ( null !== $payment->get_billing_address() ) {
-			AddressHelper::complement_address( $payment->get_billing_address() );
+		$billing_address = $payment->get_billing_address();
+
+		if ( null !== $billing_address ) {
+			AddressHelper::complement_address( $billing_address );
 		}
 
-		if ( null !== $payment->get_shipping_address() ) {
-			AddressHelper::complement_address( $payment->get_shipping_address() );
+		$shipping_address = $payment->get_shipping_address();
+
+		if ( null !== $shipping_address ) {
+			AddressHelper::complement_address( $shipping_address );
 		}
 
 		// Version.
@@ -917,8 +903,10 @@ class Plugin {
 		}
 
 		// Mode.
-		if ( null === $payment->get_mode() ) {
-			$mode = get_post_meta( $payment->get_config_id(), '_pronamic_gateway_mode', true );
+		$config_id = $payment->get_config_id();
+
+		if ( null === $payment->get_mode() && null !== $config_id ) {
+			$mode = get_post_meta( $config_id, '_pronamic_gateway_mode', true );
 
 			$payment->set_mode( $mode );
 		}
@@ -978,9 +966,11 @@ class Plugin {
 		$result = $gateway->start( $payment );
 
 		// Add gateway errors as payment notes.
-		if ( $gateway->has_error() ) {
-			foreach ( $gateway->error->get_error_codes() as $code ) {
-				$payment->add_note( sprintf( '%s: %s', $code, $gateway->error->get_error_message( $code ) ) );
+		$error = $gateway->get_error();
+
+		if ( $error instanceof WP_Error ) {
+			foreach ( $error->get_error_codes() as $code ) {
+				$payment->add_note( sprintf( '%s: %s', $code, $error->get_error_message( $code ) ) );
 			}
 		}
 
@@ -993,11 +983,11 @@ class Plugin {
 		$payment->save();
 
 		// Update subscription status for failed payments.
-		if ( false === $result && $payment->get_subscription() ) {
+		$subscription = $payment->get_subscription();
+
+		if ( false === $result && is_object( $subscription ) ) {
 			// Reload payment, so subscription is available.
 			$payment = new Payment( $payment->get_id() );
-
-			$subscription = $payment->get_subscription();
 
 			if ( Recurring::FIRST === $payment->recurring_type ) {
 				// First payment - cancel subscription to prevent unwanted recurring payments
