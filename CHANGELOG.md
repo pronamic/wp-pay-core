@@ -7,6 +7,9 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.2.1] - 2019-08-28
+- Fixed column classes on tabs.
+
 ## [2.2.0] - 2019-08-26
 - Added Gutenberg payment form block.
 - Removed iDEAL simulator iDEAL Basic config, no longer available.
@@ -194,7 +197,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.2.0...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.2.1...HEAD
+[2.2.1]: https://github.com/wp-pay/core/compare/2.2.0...2.2.1
 [2.2.0]: https://github.com/wp-pay/core/compare/2.1.6...2.2.0
 [2.1.6]: https://github.com/wp-pay/core/compare/2.1.5...2.1.6
 [2.1.5]: https://github.com/wp-pay/core/compare/2.1.4...2.1.5
