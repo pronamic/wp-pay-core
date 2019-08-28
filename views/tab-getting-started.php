@@ -14,8 +14,8 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 ?>
-<div class="feature-section two-col">
-	<div class="col">
+<div class="feature-section two-col has-2-columns">
+	<div class="col column">
 		<h3><?php esc_html_e( 'Step 1: open an account with a payment provider', 'pronamic_ideal' ); ?></h3>
 
 		<p>
@@ -54,17 +54,17 @@ the chosen payment provider and a wide variety of supported e-commerce plugins."
 		</p>
 	</div>
 
-	<div class="col">
+	<div class="col column">
 		<img src="https://www.pronamic.nl/wp-content/uploads/2016/10/pronamic-ideal-payment-providers.png" />
 	</div>
 </div>
 
-<div class="feature-section two-col">
-	<div class="col">
+<div class="feature-section two-col has-2-columns">
+	<div class="col column">
 		<img src="https://www.pronamic.nl/wp-content/uploads/2016/10/pronamic-ideal-new-gateway-configuration.png" />
 	</div>
 
-	<div class="col">
+	<div class="col column">
 		<h3><?php esc_html_e( 'Step 2: add payment provider configuration', 'pronamic_ideal' ); ?></h3>
 
 		<p>
@@ -112,8 +112,8 @@ see the "Transaction Feedback" tab of the configuration for details.',
 	</div>
 </div>
 
-<div class="feature-section two-col">
-	<div class="col">
+<div class="feature-section two-col has-2-columns">
+	<div class="col column">
 		<h3><?php esc_html_e( 'Step 3: test configuration', 'pronamic_ideal' ); ?></h3>
 
 		<p>
@@ -143,17 +143,17 @@ amounts will be shown. You need to test all these amounts before your live accou
 		</p>
 	</div>
 
-	<div class="col">
+	<div class="col column">
 		<img src="https://www.pronamic.nl/wp-content/uploads/2016/10/pronamic-ideal-meta-box-test.png" />
 	</div>
 </div>
 
-<div class="feature-section two-col">
-	<div class="col">
+<div class="feature-section two-col has-2-columns">
+	<div class="col column">
 		<img src="https://www.pronamic.nl/wp-content/uploads/2016/10/pronamic-ideal-extensions.png" />
 	</div>
 
-	<div class="col">
+	<div class="col column">
 		<h3><?php esc_html_e( 'Step 4: configure e-commerce plugin', 'pronamic_ideal' ); ?></h3>
 
 		<p>
