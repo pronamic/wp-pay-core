@@ -13,8 +13,8 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 ?>
-<div class="feature-section two-col">
-	<div class="col">
+<div class="feature-section two-col has-2-columns is-fullwidth">
+	<div class="col column">
 		<h3><?php esc_html_e( 'Recurring payments for MemberPress', 'pronamic_ideal' ); ?></h3>
 
 		<p>
@@ -32,17 +32,17 @@ Recurring payments are only supported with payment provider Mollie for now.',
 		</p>
 	</div>
 
-	<div class="col">
+	<div class="col column">
 		<img src="https://www.pronamic.nl/wp-content/uploads/2018/05/pronamic-pay-memberpress-recurring.jpg" />
 	</div>
 </div>
 
-<div class="feature-section two-col">
-	<div class="col">
+<div class="feature-section two-col has-2-columns is-fullwidth">
+	<div class="col column">
 		<img src="https://www.pronamic.nl/wp-content/uploads/2018/05/pronamic-pay-google-analytics-ecommerce-tracking.jpg" />
 	</div>
 
-	<div class="col">
+	<div class="col column">
 		<h3><?php esc_html_e( 'Google Analytics e-commerce tracking', 'pronamic_ideal' ); ?></h3>
 
 		<p>
@@ -60,8 +60,8 @@ the session of the visitor, which allows you to use visitor revenue in Google An
 	</div>
 </div>
 
-<div class="feature-section two-col">
-	<div class="col">
+<div class="feature-section two-col has-2-columns is-fullwidth">
+	<div class="col column">
 		<h3><?php esc_html_e( 'Better subscriptions', 'pronamic_ideal' ); ?></h3>
 
 		<p>
@@ -78,17 +78,17 @@ Subscriptions is now supported for example, and payment dates information has be
 		</p>
 	</div>
 
-	<div class="col">
+	<div class="col column">
 		<img src="https://www.pronamic.nl/wp-content/uploads/2017/12/pronamic-pay-subscriptions-dates.jpg" />
 	</div>
 </div>
 
-<div class="feature-section two-col">
-	<div class="col">
+<div class="feature-section two-col has-2-columns">
+	<div class="col column">
 		<img src="https://www.pronamic.nl/wp-content/uploads/2017/12/pronamic-pay-restrictcontentpro.jpg" />
 	</div>
 
-	<div class="col">
+	<div class="col column">
 		<h3><?php esc_html_e( 'Restrict Content Pro', 'pronamic_ideal' ); ?></h3>
 
 		<p>
@@ -107,8 +107,8 @@ supported with s2Member (new shortcodes can be created with the included generat
 	</div>
 </div>
 
-<div class="feature-section two-col">
-	<div class="col">
+<div class="feature-section two-col has-2-columns is-fullwidth">
+	<div class="col column">
 		<h3><?php esc_html_e( 'Refreshed payments overview', 'pronamic_ideal' ); ?></h3>
 
 		<p>
@@ -125,7 +125,7 @@ to make the overview a lot cleaner and easier to use. Additional columns can be 
 		</p>
 	</div>
 
-	<div class="col">
+	<div class="col column">
 		<img src="https://www.pronamic.nl/wp-content/uploads/2016/10/Pronamic-iDEAL-vernieuwd-betalingsoverzicht.png" />
 	</div>
 </div>
