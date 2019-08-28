@@ -13,7 +13,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 ?>
-<div class="feature-section two-col has-2-columns">
+<div class="feature-section two-col has-2-columns is-fullwidth">
 	<div class="col column">
 		<h3><?php esc_html_e( 'Recurring payments for MemberPress', 'pronamic_ideal' ); ?></h3>
 
@@ -37,7 +37,7 @@ Recurring payments are only supported with payment provider Mollie for now.',
 	</div>
 </div>
 
-<div class="feature-section two-col has-2-columns">
+<div class="feature-section two-col has-2-columns is-fullwidth">
 	<div class="col column">
 		<img src="https://www.pronamic.nl/wp-content/uploads/2018/05/pronamic-pay-google-analytics-ecommerce-tracking.jpg" />
 	</div>
@@ -60,7 +60,7 @@ the session of the visitor, which allows you to use visitor revenue in Google An
 	</div>
 </div>
 
-<div class="feature-section two-col has-2-columns">
+<div class="feature-section two-col has-2-columns is-fullwidth">
 	<div class="col column">
 		<h3><?php esc_html_e( 'Better subscriptions', 'pronamic_ideal' ); ?></h3>
 
@@ -107,7 +107,7 @@ supported with s2Member (new shortcodes can be created with the included generat
 	</div>
 </div>
 
-<div class="feature-section two-col has-2-columns">
+<div class="feature-section two-col has-2-columns is-fullwidth">
 	<div class="col column">
 		<h3><?php esc_html_e( 'Refreshed payments overview', 'pronamic_ideal' ); ?></h3>
 
