@@ -14,7 +14,6 @@
 		elements.sectionHeaders     = $element.find( '.gateway-config-section-header' );
 		elements.tabs               = $element.find( '.pronamic-pay-tabs' );
 		elements.tabItems           = $element.find( 'ul.pronamic-pay-tabs-items' );
-		elements.pkCertFieldsToggle = $( '#pk-cert-fields-toggle' );
 
 		/**
 		 * Update config fields
@@ -45,10 +44,6 @@
 			elements.tabItems.find( ':visible' ).first().text( providerName ).click();
 
 			$( '#pronamic-pay-gateway-description').html( obj.selectedVariant.attr( 'data-gateway-description' ) );
-
-			if ( elements.pkCertFieldsToggle.length > 0 ) {
-				elements.extraSettings.find( 'tr.pk-cert' ).hide();
-			}
 		};
 
 		// Update row background color
@@ -85,26 +80,6 @@
 
 			// Show tab
 			elements.extraSettings.hide().eq( tabItem.index() ).show();
-		};
-
-		this.togglePkCertFields = function( e ) {
-			if ( e.preventDefault ) {
-				e.preventDefault();
-			}
-
-			if ( elements.pkCertFieldsToggle.hasClass( 'active' ) ) {
-				elements.pkCertFieldsToggle.removeClass( 'active' );
-
-				elements.extraSettings.find( 'tr.pk-cert' ).hide();
-			} else {
-				elements.pkCertFieldsToggle.addClass( 'active' );
-
-				elements.extraSettings.find( 'tr.pk-cert' ).show();
-			}
-
-			obj.updateRowBackgroundColor();
-
-			return false;
 		};
 
 		/**
@@ -145,8 +120,6 @@
 		obj.updateFields();
 
 		elements.variantId.change( obj.updateFields );
-
-		elements.pkCertFieldsToggle.click( obj.togglePkCertFields );
 	};
 
 	/**
