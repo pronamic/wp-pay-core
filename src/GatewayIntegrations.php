@@ -18,7 +18,7 @@ use Pronamic\WordPress\Pay\Gateways\Common\AbstractIntegration;
  * Title: WordPress gateway integrations class.
  *
  * @author  Reüel van der Steege
- * @version 2.0.3
+ * @version 2.2.2
  * @since   1.0.0
  */
 class GatewayIntegrations implements IteratorAggregate {
@@ -36,6 +36,19 @@ class GatewayIntegrations implements IteratorAggregate {
 	 */
 	public function __construct( $integrations ) {
 		foreach ( $integrations as $integration ) {
+			if ( is_string( $integration ) && class_exists( $integration ) ) {
+				$integration = new $integration();
+			}
+
+			/**
+			 * Invalid integrations are ignored for now.
+			 *
+			 * @todo Consider throwing exception?
+			 */
+			if ( $integration instanceof AbstractIntegration ) {
+				continue;
+			}
+
 			$this->integrations[ $integration->get_id() ] = $integration;
 		}
 	}
