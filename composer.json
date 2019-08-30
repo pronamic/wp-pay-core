@@ -8,13 +8,13 @@
 		{
 			"name": "Pronamic",
 			"email": "info@pronamic.eu",
-			"homepage": "http://www.pronamic.eu/",
+			"homepage": "https://www.pronamic.eu/",
 			"role": "Company"
 		},
 		{
 			"name": "Remco Tolsma",
 			"email": "info@remcotolsma.nl",
-			"homepage": "http://www.remcotolsma.nl/",
+			"homepage": "https://www.remcotolsma.nl/",
 			"role": "Developer"
 		}
 	],
@@ -51,8 +51,8 @@
 	"require-dev": {
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.5.0",
 		"php-coveralls/php-coveralls": "^2.1",
-		"phpcompatibility/php-compatibility": "^9.2",
-		"phpcompatibility/phpcompatibility-wp": "^2.0",
+		"phpcompatibility/php-compatibility": "^9.3",
+		"phpcompatibility/phpcompatibility-wp": "^2.1",
 		"phpmd/phpmd": "^2.7",
 		"phpunit/phpunit": "^5.7 || ^6.0",
 		"roots/wordpress": "^5.2",

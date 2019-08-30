@@ -7,6 +7,9 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.2.2] - 2019-08-30
+- Handle gateway integration class name string for backwards compatibility.
+
 ## [2.2.1] - 2019-08-28
 - Fixed column classes on tabs.
 
@@ -197,7 +200,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.2.1...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.2.2...HEAD
+[2.2.2]: https://github.com/wp-pay/core/compare/2.2.1...2.2.2
 [2.2.1]: https://github.com/wp-pay/core/compare/2.2.0...2.2.1
 [2.2.0]: https://github.com/wp-pay/core/compare/2.1.6...2.2.0
 [2.1.6]: https://github.com/wp-pay/core/compare/2.1.5...2.1.6
