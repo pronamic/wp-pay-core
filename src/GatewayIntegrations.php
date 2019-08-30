@@ -36,6 +36,19 @@ class GatewayIntegrations implements IteratorAggregate {
 	 */
 	public function __construct( $integrations ) {
 		foreach ( $integrations as $integration ) {
+			if ( is_string( $integration ) && class_exists( $integration ) ) {
+				$integration = new $integration();
+			}
+
+			/**
+			 * Invalid integrations are ignored for now.
+			 *
+			 * @todo Consider throwing exception?
+			 */
+			if ( $integration instanceof AbstractIntegration ) {
+				continue;
+			}
+
 			$this->integrations[ $integration->get_id() ] = $integration;
 		}
 	}
