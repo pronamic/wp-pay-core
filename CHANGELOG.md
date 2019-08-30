@@ -7,6 +7,9 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.2.3] - 2019-08-30
+- Fix gateways not loading (since version 2.2.2).
+
 ## [2.2.2] - 2019-08-30
 - Handle gateway integration class name string for backwards compatibility.
 
