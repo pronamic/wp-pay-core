@@ -93,6 +93,9 @@ class SubscriptionsModule {
 		if ( Util::doing_cli() ) {
 			WP_CLI::add_command( 'pay subscriptions test', array( $this, 'cli_subscriptions_test' ) );
 		}
+
+		// REST API.
+		add_action( 'rest_api_init', array( $this, 'rest_api_init' ) );
 	}
 
 	/**
@@ -834,5 +837,59 @@ class SubscriptionsModule {
 		$this->update_subscription_payments( $cli_test );
 
 		WP_CLI::success( 'Pronamic Pay subscriptions test.' );
+	}
+
+	/**
+	 * REST API init.
+	 *
+	 * @link https://developer.wordpress.org/rest-api/extending-the-rest-api/adding-custom-endpoints/
+	 * @link https://developer.wordpress.org/reference/hooks/rest_api_init/
+	 *
+	 * @return void
+	 */
+	public function rest_api_init() {
+		\register_rest_route(
+			'pronamic-pay/v1',
+			'/subscriptions/(?P<subscription_id>\d+)',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $this, 'rest_api_subscription' ),
+				'permission_callback' => function() {
+					return \current_user_can( 'manage_options' );
+				},
+				'args'                => array(
+					'subscription_id' => array(
+						'description' => __( 'Subscription ID.', 'pronamic_ideal' ),
+						'type'        => 'integer',
+					),
+				),
+			)
+		);
+	}
+
+	/**
+	 * REST API subscription.
+	 *
+	 * @param WP_REST_Request $request Request.
+	 * @return object
+	 */
+	public function rest_api_subscription( \WP_REST_Request $request ) {
+		$subscription_id = $request->get_param( 'subscription_id' );
+
+		$subscription = \get_pronamic_subscription( $subscription_id );
+
+		if ( null === $subscription ) {
+			return new \WP_Error(
+				'pronamic-pay-subscription-not-found',
+				\sprintf(
+					/* translators: %s: Subscription ID */
+					\__( 'Could not found subscription with ID `%s`.', 'pronamic_ideal' ),
+					$subscription_id
+				),
+				$subscription_id
+			);
+		}
+
+		return $subscription->get_json();
 	}
 }

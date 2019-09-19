@@ -303,4 +303,35 @@ $user_id  = is_null( $customer ) ? null : $customer->get_user_id();
 			?>
 		</td>
 	</tr>
+
+	<?php if ( PRONAMIC_PAY_DEBUG ) : ?>
+
+		<tr>
+			<th scope="row">
+				<?php esc_html_e( 'REST API URL', 'pronamic_ideal' ); ?>
+			</th>
+			<td>
+				<?php
+
+				/**
+				 * REST API URL.
+				 *
+				 * @link https://developer.wordpress.org/rest-api/using-the-rest-api/authentication/#cookie-authentication
+				 */
+				$rest_api_url = rest_url( 'pronamic-pay/v1/subscriptions/' . $subscription_id );
+
+				$rest_api_nonce_url = wp_nonce_url( $rest_api_url, 'wp_rest' );
+
+				printf(
+					'<a href="%s">%s</a>',
+					esc_url( $rest_api_nonce_url ),
+					esc_html( $rest_api_url )
+				);
+
+				?>
+			</td>
+		</tr>
+
+	<?php endif; ?>
+
 </table>
