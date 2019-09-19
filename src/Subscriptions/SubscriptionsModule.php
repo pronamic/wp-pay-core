@@ -870,7 +870,7 @@ class SubscriptionsModule {
 	/**
 	 * REST API subscription.
 	 *
-	 * @param WP_REST_Request $request Request.
+	 * @param \WP_REST_Request $request Request.
 	 * @return object
 	 */
 	public function rest_api_subscription( \WP_REST_Request $request ) {

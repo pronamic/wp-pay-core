@@ -204,7 +204,7 @@ class PaymentsModule {
 					return \current_user_can( 'manage_options' );
 				},
 				'args'                => array(
-					'payment_id'    => array(
+					'payment_id' => array(
 						'description' => __( 'Payment ID.', 'pronamic_ideal' ),
 						'type'        => 'integer',
 					),
@@ -242,7 +242,7 @@ class PaymentsModule {
 	/**
 	 * REST API payment.
 	 *
-	 * @param WP_REST_Request $request Request.
+	 * @param \WP_REST_Request $request Request.
 	 * @return object
 	 */
 	public function rest_api_payment( \WP_REST_Request $request ) {
