@@ -680,13 +680,23 @@ class AdminModule {
 			);
 		}
 
+		/**
+		 * Icon URL.
+		 *
+		 * Pass a base64-encoded SVG using a data URI, which will be colored to match the color scheme.
+		 * This should begin with 'data:image/svg+xml;base64,'.
+		 *
+		 * @link https://developer.wordpress.org/reference/functions/add_menu_page/
+		 */
+		$icon_url = 'data:image/svg+xml;base64,' . base64_encode( file_get_contents( __DIR__ . '/../../images/dist/pronamic-pay.svgo-min.svg', true ) );
+
 		add_menu_page(
 			__( 'Pronamic Pay', 'pronamic_ideal' ),
 			__( 'Pay', 'pronamic_ideal' ) . $badge,
 			'edit_payments',
 			'pronamic_ideal',
 			array( $this, 'page_dashboard' ),
-			'dashicons-money'
+			$icon_url
 		);
 
 		add_submenu_page(
