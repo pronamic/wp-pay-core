@@ -10,6 +10,13 @@
 
 namespace Pronamic\WordPress\Pay;
 
+/**
+ * Gateway not found exception.
+ *
+ * @author  Reüel van der Steege
+ * @version 2.2.4
+ * @since   2.2.4
+ */
 class GatewayNotFoundException extends PayException {
 	/**
 	 * Constructor.

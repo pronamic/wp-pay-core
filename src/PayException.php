@@ -13,6 +13,13 @@ namespace Pronamic\WordPress\Pay;
 use Exception;
 use Pronamic\WordPress\Pay\Payments\Payment;
 
+/**
+ * WordPress Pay exception.
+ *
+ * @author  Reüel van der Steege
+ * @version 2.2.4
+ * @since   2.2.4
+ */
 class PayException extends Exception {
 	/**
 	 * Error code.
@@ -46,7 +53,7 @@ class PayException extends Exception {
 		$this->error_code = $error_code;
 		$this->data       = $data;
 
-		return parent::__construct( $message );
+		parent::__construct( $message );
 	}
 
 	/**

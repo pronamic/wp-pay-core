@@ -289,6 +289,8 @@ class Plugin {
 	 *
 	 * @param Payment $payment      The payment to update.
 	 * @param bool    $can_redirect Flag to indicate if redirect is allowed after the payment update.
+	 *
+	 * @throws \Pronamic\WordPress\Pay\PayException Throws exception on error in gateway status update.
 	 */
 	public static function update_payment( $payment = null, $can_redirect = true ) {
 		if ( empty( $payment ) ) {
@@ -942,6 +944,7 @@ class Plugin {
 	 * @return Payment
 	 *
 	 * @throws \Pronamic\WordPress\Pay\GatewayNotFoundException Throws exception if gateway could not be found.
+	 * @throws \Pronamic\WordPress\Pay\PayException             Throws exception on error during payment start at gateway.
 	 */
 	public static function start_payment( Payment $payment, $gateway = null ) {
 		global $pronamic_ideal;

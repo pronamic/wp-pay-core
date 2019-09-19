@@ -14,7 +14,6 @@ use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Util as Pay_Util;
 use SimpleXMLElement;
-use WP_Error;
 
 /**
  * Title: WordPress utility class
@@ -78,7 +77,7 @@ class Util {
 	 *
 	 * @param string $string The XML string to convert to a SimpleXMLElement object.
 	 * @return SimpleXMLElement
-	 * @throws InvalidArgumentException If string could not be loaded in to a SimpleXMLElement object.
+	 * @throws \InvalidArgumentException If string could not be loaded in to a SimpleXMLElement object.
 	 */
 	public static function simplexml_load_string( $string ) {
 		// Suppress all XML errors.

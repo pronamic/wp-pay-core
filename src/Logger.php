@@ -10,9 +10,21 @@
 
 namespace Pronamic\WordPress\Pay;
 
+/**
+ * Logger.
+ *
+ * @author  Reüel van der Steege
+ * @version 2.2.4
+ * @since   2.2.4
+ */
 class Logger {
 	/**
 	 * Log exception.
+	 *
+	 * @param string $error_code Error code.
+	 * @param string $message    Error message.
+	 * @param mixed  $data       Additional data.
+	 * @param string $trace      Backtrace.
 	 */
 	public static function log( $error_code, $message, $data, $trace ) {
 		$log = self::get_log();

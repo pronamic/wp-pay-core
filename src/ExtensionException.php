@@ -10,6 +10,13 @@
 
 namespace Pronamic\WordPress\Pay;
 
+/**
+ * Extension exception.
+ *
+ * @author  Reüel van der Steege
+ * @version 2.2.4
+ * @since   2.2.4
+ */
 class ExtensionException extends PayException {
 	/**
 	 * Constructor.
@@ -21,6 +28,6 @@ class ExtensionException extends PayException {
 		// Error code.
 		$error_code = sprintf( 'extension_%s_error', $extension_id );
 
-		return parent::__construct( $error_code, $message, $data );
+		parent::__construct( $error_code, $message, $data );
 	}
 }
