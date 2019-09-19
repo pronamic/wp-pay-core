@@ -688,7 +688,7 @@ class AdminModule {
 		 *
 		 * @link https://developer.wordpress.org/reference/functions/add_menu_page/
 		 */
-		$icon_url = 'data:image/svg+xml;base64,' . base64_encode( file_get_contents( __DIR__ . '/../../images/dist/pronamic-pay.svgo-min.svg', true ) );
+		$icon_url = 'data:image/svg+xml;base64,' . \base64_encode( \file_get_contents( __DIR__ . '/../../images/dist/pronamic-pay.svgo-min.svg', true ) );
 
 		add_menu_page(
 			__( 'Pronamic Pay', 'pronamic_ideal' ),
