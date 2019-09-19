@@ -303,15 +303,19 @@ class Plugin {
 		}
 
 		// Update status.
-		$gateway->update_status( $payment );
+		try {
+			$gateway->update_status( $payment );
 
-		// Add gateway errors as payment notes.
-		$error = $gateway->get_error();
+			// Add gateway errors as payment notes.
+			$error = $gateway->get_error();
 
-		if ( $error instanceof WP_Error ) {
-			foreach ( $error->get_error_codes() as $code ) {
-				$payment->add_note( sprintf( '%s: %s', $code, $error->get_error_message( $code ) ) );
+			if ( $error instanceof \WP_Error ) {
+				foreach ( $error->get_error_codes() as $code ) {
+					throw new \Pronamic\WordPress\Pay\PayException( $code, $error->get_error_message( $code ) );
+				}
 			}
+		} catch ( \Pronamic\WordPress\Pay\GatewayException $e ) {
+			$payment->add_note( sprintf( '%s: %s', $e->get_error_code(), $e->get_message() ) );
 		}
 
 		// Update payment in data store.
@@ -452,14 +456,20 @@ class Plugin {
 
 			// Handle HTML form redirect.
 			if ( $gateway->is_html_form() ) {
-				$gateway->start( $payment );
+				try {
+					$gateway->start( $payment );
 
-				$error = $gateway->get_error();
+					$error = $gateway->get_error();
 
-				if ( $error instanceof WP_Error ) {
-					self::render_errors( $error );
-				} else {
+					if ( $error instanceof \WP_Error ) {
+						throw new \Pronamic\WordPress\Pay\PayException( 'pay_error', $error->get_error_message() );
+					}
+
 					$gateway->redirect( $payment );
+				} catch ( \Pronamic\WordPress\Pay\PayException $e ) {
+					$e->render();
+
+					exit;
 				}
 			}
 		}
@@ -930,12 +940,21 @@ class Plugin {
 	 * @param Gateway $gateway The gateway to start the payment at.
 	 *
 	 * @return Payment
+	 *
+	 * @throws \Pronamic\WordPress\Pay\GatewayNotFoundException Throws exception if gateway could not be found.
 	 */
 	public static function start_payment( Payment $payment, $gateway = null ) {
 		global $pronamic_ideal;
 
+		// Complement payment.
 		self::complement_payment( $payment );
 
+		// Config ID.
+		$config_id = \apply_filters( 'pronamic_pay_config_id', $payment->get_config_id(), $payment );
+
+		$payment->set_config_id( $config_id );
+
+		// Create payment.
 		$pronamic_ideal->payments_data_store->create( $payment );
 
 		// Prevent payment start at gateway if amount is empty.
@@ -950,33 +969,45 @@ class Plugin {
 		}
 
 		// Gateway.
-		if ( null === $gateway ) {
-			$gateway = self::get_gateway( $payment->get_config_id() );
-		}
+		$gateway = self::get_gateway( $config_id );
 
-		if ( ! $gateway ) {
+		if ( null === $gateway ) {
 			$payment->set_status( Statuses::FAILURE );
 
 			$payment->save();
 
-			return $payment;
+			$exception = new \Pronamic\WordPress\Pay\GatewayNotFoundException( $config_id );
+
+			$exception->set_payment( $payment );
+
+			throw $exception;
 		}
 
 		// Start payment at the gateway.
-		$result = $gateway->start( $payment );
+		$result = false;
 
-		// Add gateway errors as payment notes.
-		$error = $gateway->get_error();
+		try {
+			$result = $gateway->start( $payment );
 
-		if ( $error instanceof WP_Error ) {
-			foreach ( $error->get_error_codes() as $code ) {
-				$payment->add_note( sprintf( '%s: %s', $code, $error->get_error_message( $code ) ) );
+			// Set payment status.
+			if ( false === $result ) {
+				$payment->set_status( Statuses::FAILURE );
 			}
-		}
 
-		// Set payment status.
-		if ( false === $result ) {
+			// Add gateway errors as payment notes.
+			$error = $gateway->get_error();
+
+			if ( $error instanceof \WP_Error ) {
+				foreach ( $error->get_error_codes() as $code ) {
+					throw new \Pronamic\WordPress\Pay\PayException( $code, $error->get_error_message( $code ) );
+				}
+			}
+		} catch ( \Pronamic\WordPress\Pay\PayException $e ) {
+			// Set status to 'Failed'.
 			$payment->set_status( Statuses::FAILURE );
+
+			// Add gateway errors as payment notes.
+			$payment->add_note( sprintf( '%s: %s', $e->get_error_code(), $e->get_message() ) );
 		}
 
 		// Save payment.
@@ -998,6 +1029,18 @@ class Plugin {
 			}
 
 			$subscription->save();
+		}
+
+		// Re-throw exception.
+		if ( isset( $e ) ) {
+			// Reload payment, so subscription is available.
+			$payment = new Payment( $payment->get_id() );
+
+			// Attach payment to exception.
+			$e->set_payment( $payment );
+
+			// Re-throw.
+			throw $e;
 		}
 
 		// Schedule payment status check.

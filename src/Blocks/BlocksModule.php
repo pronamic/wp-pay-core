@@ -15,7 +15,6 @@ use Pronamic\WordPress\Money\Parser;
 use Pronamic\WordPress\Pay\Forms\FormsSource;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
-use WP_Error;
 
 /**
  * Blocks
@@ -127,12 +126,12 @@ class BlocksModule {
 		if ( null === $gateway ) :
 			ob_start();
 
-			Plugin::render_errors(
-				new WP_Error(
-					'pay_error',
-					__( 'Unable to process payments with default gateway.', 'pronamic_ideal' )
-				)
+			$exception = new Pronamic\WordPress\Pay\PayException(
+				'pay_error',
+				__( 'Unable to process payments with default gateway.', 'pronamic_ideal' )
 			);
+
+			$exception->render();
 
 			$output = ob_get_clean();
 
