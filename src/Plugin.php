@@ -940,12 +940,21 @@ class Plugin {
 	 * @param Gateway $gateway The gateway to start the payment at.
 	 *
 	 * @return Payment
+	 *
+	 * @throws \Pronamic\WordPress\Pay\GatewayNotFoundException Throws exception if gateway could not be found.
 	 */
 	public static function start_payment( Payment $payment, $gateway = null ) {
 		global $pronamic_ideal;
 
+		// Complement payment.
 		self::complement_payment( $payment );
 
+		// Config ID.
+		$config_id = \apply_filters( 'pronamic_pay_config_id', $payment->get_config_id(), $payment );
+
+		$payment->set_config_id( $config_id );
+
+		// Create payment.
 		$pronamic_ideal->payments_data_store->create( $payment );
 
 		// Prevent payment start at gateway if amount is empty.
@@ -960,16 +969,18 @@ class Plugin {
 		}
 
 		// Gateway.
-		if ( null === $gateway ) {
-			$gateway = self::get_gateway( $payment->get_config_id() );
-		}
+		$gateway = self::get_gateway( $config_id );
 
-		if ( ! $gateway ) {
+		if ( null === $gateway ) {
 			$payment->set_status( Statuses::FAILURE );
 
 			$payment->save();
 
-			return $payment;
+			$exception = new \Pronamic\WordPress\Pay\GatewayNotFoundException( $config_id );
+
+			$exception->set_payment( $payment );
+
+			throw $exception;
 		}
 
 		// Start payment at the gateway.
