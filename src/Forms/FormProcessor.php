@@ -10,7 +10,6 @@
 
 namespace Pronamic\WordPress\Pay\Forms;
 
-use Exception;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Address;
@@ -18,7 +17,6 @@ use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentLines;
 use Pronamic\WordPress\Pay\Plugin;
-use WP_Error;
 use WP_User;
 
 /**
@@ -51,7 +49,7 @@ class FormProcessor {
 	/**
 	 * Initialize.
 	 *
-	 * @throws Exception When processing form fails on creating WordPress user.
+	 * @throws \Exception When processing form fails on creating WordPress user.
 	 */
 	public function init() {
 		global $pronamic_pay_errors;
@@ -177,12 +175,10 @@ class FormProcessor {
 		$line->set_total_amount( $payment->get_total_amount() );
 
 		// Start payment.
-		$payment = Plugin::start_payment( $payment, $gateway );
-
-		$error = $gateway->get_error();
-
-		if ( $error instanceof WP_Error ) {
-			Plugin::render_errors( $error );
+		try {
+			$payment = Plugin::start_payment( $payment, $gateway );
+		} catch ( \Pronamic\WordPress\Pay\PayException $e ) {
+			$e->render();
 
 			exit;
 		}
@@ -207,8 +203,8 @@ class FormProcessor {
 				)
 			);
 
-			if ( $result instanceof WP_Error ) {
-				throw new Exception( $result->get_error_message() );
+			if ( $result instanceof \WP_Error ) {
+				throw new \Exception( $result->get_error_message() );
 			}
 
 			// User.

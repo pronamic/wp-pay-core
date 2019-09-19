@@ -13,7 +13,6 @@ namespace Pronamic\WordPress\Pay;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
 use Pronamic\WordPress\Money\Money;
 use SimpleXMLElement;
-use WP_Error;
 
 /**
  * WordPress utility class
@@ -34,7 +33,7 @@ class Util {
 	 *
 	 * @deprecated 2.0.9 Use Pronamic\WordPress\Pay\Core\Util::remote_get_body() instead.
 	 *
-	 * @return array|bool|string|WP_Error
+	 * @return array|bool|string
 	 */
 	public static function remote_get_body( $url, $required_response_code = 200, array $args = array() ) {
 		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Pay\Core\Util::remote_get_body()' );
@@ -49,7 +48,7 @@ class Util {
 	 *
 	 * @deprecated 2.0.9 Use Pronamic\WordPress\Pay\Core\Util::simplexml_load_string() instead.
 	 *
-	 * @return SimpleXMLElement|WP_Error
+	 * @return SimpleXMLElement
 	 */
 	public static function simplexml_load_string( $string ) {
 		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Pay\Core\Util::simplexml_load_string()' );

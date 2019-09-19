@@ -610,8 +610,6 @@ class AdminModule {
 		$amount = $money_parser->parse( $string )->get_value();
 
 		// Start.
-		$errors = array();
-
 		try {
 			$data = new \Pronamic\WordPress\Pay\Payments\PaymentTestData( wp_get_current_user(), $amount );
 
@@ -619,19 +617,9 @@ class AdminModule {
 
 			$payment = Plugin::start( $id, $gateway, $data, $payment_method );
 
-			$errors[] = $gateway->get_error();
-
-			if ( ! $gateway->has_error() ) {
-				$gateway->redirect( $payment );
-			}
-		} catch ( Exception $e ) {
-			$errors[] = new WP_Error( 'pay_error', $e->getMessage() );
-		}
-
-		$errors = array_filter( $errors );
-
-		if ( ! empty( $errors ) ) {
-			Plugin::render_errors( $errors );
+			$gateway->redirect( $payment );
+		} catch ( \Pronamic\WordPress\Pay\PayException $e ) {
+			$e->render();
 
 			exit;
 		}
