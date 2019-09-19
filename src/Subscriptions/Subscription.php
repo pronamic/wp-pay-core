@@ -612,6 +612,18 @@ class Subscription extends LegacySubscription {
 
 		PaymentInfoHelper::from_json( $json, $subscription );
 
+		if ( isset( $json->expiry_date ) ) {
+			$subscription->set_expiry_date( new DateTime( $json->expiry_date ) );
+		}
+
+		if ( isset( $json->next_payment_date ) ) {
+			$subscription->set_next_payment_date( new DateTime( $json->next_payment_date ) );
+		}
+
+		if ( isset( $json->next_payment_delivery_date ) ) {
+			$subscription->set_next_payment_delivery_date( new DateTime( $json->next_payment_delivery_date ) );
+		}
+
 		if ( isset( $json->status ) ) {
 			$subscription->set_status( $json->status );
 		}
@@ -628,6 +640,18 @@ class Subscription extends LegacySubscription {
 		$object = PaymentInfoHelper::to_json( $this );
 
 		$properties = (array) $object;
+
+		if ( null !== $this->expiry_date ) {
+			$properties['expiry_date'] = $this->expiry_date->format( \DATE_ATOM );
+		}
+
+		if ( null !== $this->next_payment_date ) {
+			$properties['next_payment_date'] = $this->next_payment_date->format( \DATE_ATOM );
+		}
+
+		if ( null !== $this->next_payment_delivery_date ) {
+			$properties['next_payment_delivery_date'] = $this->next_payment_delivery_date->format( \DATE_ATOM );
+		}
 
 		if ( null !== $this->get_status() ) {
 			$properties['status'] = $this->get_status();

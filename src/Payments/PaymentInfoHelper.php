@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
+use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
@@ -78,6 +79,18 @@ class PaymentInfoHelper {
 			$object->anonymized = $payment_info->is_anonymized();
 		}
 
+		$start_date = $payment_info->get_start_date();
+
+		if ( null !== $start_date ) {
+			$object->start_date = $start_date->format( \DATE_ATOM );
+		}
+
+		$end_date = $payment_info->get_end_date();
+
+		if ( null !== $end_date ) {
+			$object->end_date = $end_date->format( \DATE_ATOM );
+		}
+
 		return $object;
 	}
 
@@ -123,6 +136,14 @@ class PaymentInfoHelper {
 
 		if ( isset( $json->anonymized ) ) {
 			$payment_info->set_anonymized( $json->anonymized );
+		}
+
+		if ( isset( $json->start_date ) ) {
+			$payment_info->set_start_date( new DateTime( $json->start_date ) );
+		}
+
+		if ( isset( $json->end_date ) ) {
+			$payment_info->set_end_date( new DateTime( $json->end_date ) );
 		}
 
 		return $payment_info;
