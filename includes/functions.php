@@ -105,6 +105,8 @@ function get_pronamic_payments_by_meta( $meta_key, $meta_value ) {
 			'post_status'    => 'any',
 			'posts_per_page' => -1,
 			'no_found_rows'  => true,
+			'orderby'        => 'date',
+			'order'          => 'ASC',
 			'meta_query'     => array(
 				array(
 					'key'   => $meta_key,
