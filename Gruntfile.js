@@ -185,25 +185,12 @@ module.exports = function( grunt ) {
 			// PHPLint.
 			phplint: {
 				all: [ 'src/**/*.php' ]
-			},
-
-			// PHP Mess Detector.
-			phpmd: {
-				application: {
-					dir: 'src'
-				},
-				options: {
-					bin: 'vendor/bin/phpmd',
-					exclude: 'node_modules',
-					reportFormat: 'text',
-					rulesets: 'phpmd.ruleset.xml'
-				}
 			}
 		}
 	);
 
 	// Default task(s).
-	grunt.registerTask( 'default', [ 'jshint', 'phplint', 'phpmd' ] );
+	grunt.registerTask( 'default', [ 'jshint', 'phplint' ] );
 	grunt.registerTask( 'assets', [ 'sasslint', 'sass', 'postcss', 'copy:scripts', 'copy:assets' ] );
 	grunt.registerTask( 'min', [ 'uglify' ] );
 
