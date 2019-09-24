@@ -60,9 +60,10 @@
   },
   "scripts": {
     "build-image": "npm-run-all build-image-*",
-    "build-image-svg": "svgo images/src/pronamic-pay.svg -o images/dist/pronamic-pay.svgo-min.svg",
+    "build-image-svg-default": "svgo images/src/pronamic-pay.svg -o images/dist/pronamic-pay.svgo-min.svg",
+    "build-image-svg-wp-admin": "svgo images/src/pronamic-pay-wp-admin-fresh-base.svg -o images/dist/pronamic-pay-wp-admin-fresh-base.svgo-min.svg",
     "build-image-png-512": "rsvg-convert -w 512 -h 512 images/src/pronamic-pay.svg -o images/src/pronamic-pay-512.png",
     "build-image-png-512-min": "pngquant images/src/pronamic-pay-512.png --output images/dist/pronamic-pay-512.pngquant-min.png --force",
-    "build-image-ico": "icon-gen --input images/src/pronamic-pay.svg --output images/dist --ico --icns name=pronamic-pay -r"
+    "build-image-ico": "icon-gen --input images/src/pronamic-pay.svg --output images/dist --ico name=pronamic-pay --icns name=pronamic-pay -r"
   }
 }

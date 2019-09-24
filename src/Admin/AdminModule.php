@@ -674,9 +674,23 @@ class AdminModule {
 		 * Pass a base64-encoded SVG using a data URI, which will be colored to match the color scheme.
 		 * This should begin with 'data:image/svg+xml;base64,'.
 		 *
+		 * We use a SVG image with default fill color #A0A5AA from the default admin color scheme:
+		 * https://github.com/WordPress/WordPress/blob/5.2/wp-includes/general-template.php#L4135-L4145
+		 *
+		 * The advantage of this is that users with the default admin color scheme do not see the repaint:
+		 * https://github.com/WordPress/WordPress/blob/5.2/wp-admin/js/svg-painter.js
+		 *
 		 * @link https://developer.wordpress.org/reference/functions/add_menu_page/
 		 */
-		$icon_url = 'data:image/svg+xml;base64,' . \base64_encode( \file_get_contents( __DIR__ . '/../../images/dist/pronamic-pay.svgo-min.svg', true ) );
+		$icon_url = \sprintf(
+			'data:image/svg+xml;base64,%s',
+			\base64_encode(
+				\file_get_contents(
+					__DIR__ . '/../../images/dist/pronamic-pay-wp-admin-fresh-base.svgo-min.svg',
+					true
+				)
+			)
+		);
 
 		add_menu_page(
 			__( 'Pronamic Pay', 'pronamic_ideal' ),
