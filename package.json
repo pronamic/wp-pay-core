@@ -55,12 +55,14 @@
     "grunt-sass-lint": "^0.2.4",
     "grunt-webfont": "^1.7.2",
     "load-grunt-tasks": "^5.1.0",
+    "npm-run-all": "^4.1.5",
     "postcss-eol": "0.0.8"
   },
   "scripts": {
-    "build:image:svg": "svgo images/src/pronamic-pay.svg -o images/dist/pronamic-pay.svgo-min.svg",
-    "build:image:png:512": "rsvg-convert -w 512 -h 512 images/src/pronamic-pay.svg -o images/src/pronamic-pay-512.png",
-    "build:image:png:512:min": "pngquant images/src/pronamic-pay-512.png --output images/dist/pronamic-pay-512.pngquant-min.png",
-    "build:image:ico": "icon-gen --input images/src/pronamic-pay.svg --output images/dist --ico --icns name=pronamic-pay -r"
+    "build-image": "npm-run-all build-image-*",
+    "build-image-svg": "svgo images/src/pronamic-pay.svg -o images/dist/pronamic-pay.svgo-min.svg",
+    "build-image-png-512": "rsvg-convert -w 512 -h 512 images/src/pronamic-pay.svg -o images/src/pronamic-pay-512.png",
+    "build-image-png-512-min": "pngquant images/src/pronamic-pay-512.png --output images/dist/pronamic-pay-512.pngquant-min.png --force",
+    "build-image-ico": "icon-gen --input images/src/pronamic-pay.svg --output images/dist --ico --icns name=pronamic-pay -r"
   }
 }
