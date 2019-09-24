@@ -94,27 +94,28 @@ function get_pronamic_payment_by_meta( $meta_key, $meta_value ) {
  *
  * @param string     $meta_key   The meta key to query for.
  * @param string|int $meta_value The Meta value to query for.
+ * @param array      $args       Query arguments.
  * @return Payment[]
  */
-function get_pronamic_payments_by_meta( $meta_key, $meta_value ) {
+function get_pronamic_payments_by_meta( $meta_key, $meta_value, $args = array() ) {
 	$payments = array();
 
-	$query = new WP_Query(
-		array(
-			'post_type'      => 'pronamic_payment',
-			'post_status'    => 'any',
-			'posts_per_page' => -1,
-			'no_found_rows'  => true,
-			'orderby'        => 'date',
-			'order'          => 'ASC',
-			'meta_query'     => array(
-				array(
-					'key'   => $meta_key,
-					'value' => $meta_value,
-				),
+	$defaults = array(
+		'post_type'      => 'pronamic_payment',
+		'post_status'    => 'any',
+		'posts_per_page' => -1,
+		'no_found_rows'  => true,
+		'meta_query'     => array(
+			array(
+				'key'   => $meta_key,
+				'value' => $meta_value,
 			),
-		)
+		),
 	);
+
+	$args = wp_parse_args( $args, $defaults );
+
+	$query = new WP_Query( $args );
 
 	if ( $query->have_posts() ) {
 		while ( $query->have_posts() ) {
