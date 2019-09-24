@@ -182,24 +182,6 @@ module.exports = function( grunt ) {
 				all: [ 'Gruntfile.js', 'composer.json', 'package.json' ]
 			},
 
-			// PHP Code Sniffer.
-			phpcs: {
-				application: {
-					src: [
-						'**/*.php',
-						'!node_modules/**',
-						'!vendor/**',
-						'!wordpress/**',
-						'!wp-content/**'
-					],
-				},
-				options: {
-					bin: 'vendor/bin/phpcs',
-					standard: 'phpcs.xml.dist',
-					showSniffCodes: true
-				}
-			},
-
 			// PHPLint.
 			phplint: {
 				all: [ 'src/**/*.php' ]
@@ -231,7 +213,7 @@ module.exports = function( grunt ) {
 	);
 
 	// Default task(s).
-	grunt.registerTask( 'default', [ 'jshint', 'phplint', 'phpmd', 'phpcs', 'phpunit' ] );
+	grunt.registerTask( 'default', [ 'jshint', 'phplint', 'phpmd', 'phpunit' ] );
 	grunt.registerTask( 'assets', [ 'sasslint', 'sass', 'postcss', 'copy:scripts', 'copy:assets' ] );
 	grunt.registerTask( 'min', [ 'uglify' ] );
 
