@@ -64,6 +64,7 @@
     "build-image-png-512-min": "pngquant images/src/pronamic-pay-512.png --output images/dist/pronamic-pay-512.pngquant-min.png --force",
     "build-image-ico": "icon-gen --input images/src/pronamic-pay.svg --output images/dist --ico name=pronamic-pay --icns name=pronamic-pay -r",
     "eslint": "eslint . --ext .json --ext .js",
+    "lint": "npm-run-all --parallel eslint sass-lint",
     "sass-lint": "sass-lint --verbose"
   }
 }
