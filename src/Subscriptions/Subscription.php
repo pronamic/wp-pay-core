@@ -461,10 +461,21 @@ class Subscription extends LegacySubscription {
 	 * @return Payment|null
 	 */
 	public function get_first_payment() {
-		$payments = $this->get_payments();
+		if ( null === $this->id ) {
+			return null;
+		}
 
-		if ( count( $payments ) > 0 ) {
-			return $payments[0];
+		// Query arguments to get first payment.
+		$args = array(
+			'posts_per_page' => 1,
+			'orderby'        => 'post_date',
+			'order'          => 'ASC',
+		);
+
+		$first_payment = get_pronamic_payments_by_meta( '_pronamic_payment_subscription_id', $this->id, $args );
+
+		if ( ! empty( $first_payment ) ) {
+			return $first_payment[0];
 		}
 
 		return null;

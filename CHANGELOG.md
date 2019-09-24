@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
--
+- Improved getting first subscription payment.
 
 ## [2.2.3] - 2019-08-30
 - Fix gateways not loading (since version 2.2.2).
