@@ -1,0 +1,10 @@
+path: ./
+jobs: 10
+cache: build/phplint.cache
+extensions:
+  - php
+exclude:
+  - build
+  - node_modules
+  - vendor
+  - wordpress
