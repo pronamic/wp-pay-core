@@ -198,22 +198,12 @@ module.exports = function( grunt ) {
 					reportFormat: 'text',
 					rulesets: 'phpmd.ruleset.xml'
 				}
-			},
-
-			// PHPUnit.
-			phpunit: {
-				options: {
-					bin: 'vendor/bin/phpunit'
-				},
-				classes: {
-
-				}
 			}
 		}
 	);
 
 	// Default task(s).
-	grunt.registerTask( 'default', [ 'jshint', 'phplint', 'phpmd', 'phpunit' ] );
+	grunt.registerTask( 'default', [ 'jshint', 'phplint', 'phpmd' ] );
 	grunt.registerTask( 'assets', [ 'sasslint', 'sass', 'postcss', 'copy:scripts', 'copy:assets' ] );
 	grunt.registerTask( 'min', [ 'uglify' ] );
 

@@ -49,7 +49,6 @@
     "grunt-contrib-sass": "^1.0.0",
     "grunt-contrib-uglify": "^4.0.1",
     "grunt-phplint": "0.1.0",
-    "grunt-phpunit": "^0.3.6",
     "grunt-postcss": "^0.9.0",
     "grunt-sass-lint": "^0.2.4",
     "grunt-webfont": "^1.7.2",
