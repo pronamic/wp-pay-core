@@ -1,6 +1,6 @@
 <?php
 /**
- * Page About
+ * Page about
  *
  * @author    Pronamic <info@pronamic.eu>
  * @copyright 2005-2019 Pronamic
@@ -12,6 +12,8 @@ use Pronamic\WordPress\Pay\Plugin;
 
 /**
  * Page about
+ *
+ * @version 2.2.4
  */
 
 // If this file is called directly, abort.

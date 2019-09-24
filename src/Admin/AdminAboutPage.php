@@ -101,9 +101,44 @@ class AdminAboutPage {
 	}
 
 	/**
+	 * Get file version.
+	 *
+	 * @param string $file Absolute path to the file.
+	 * @return string
+	 *
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.7.0/includes/admin/class-wc-admin-status.php#L144-L176
+	 * @link https://github.com/WordPress/WordPress/blob/5.2/wp-includes/functions.php#L5546-L5605
+	 * @link https://github.com/WordPress/WordPress/blob/5.2/wp-includes/functions.php#L5479-L5492
+	 */
+	private function get_file_version( $file ) {
+		// We don't need to write to the file, so just open for reading.
+		$fp = \fopen( $file, 'r' );
+
+		// Pull only the first 8kiB of the file in.
+		$file_data = \fread( $fp, 8192 );
+
+		// PHP will close file handle, but we are good citizens.
+		\fclose( $fp );
+
+		// Search.
+		preg_match( '/^[ \t\/*#@]*@version(?P<version>.*)$/mi', $file_data, $matches );
+
+		// Version.
+		$version = '';
+
+		if ( array_key_exists( 'version', $matches ) ) {
+			$version = trim( $matches['version'] );
+		}
+
+		return $version;
+	}
+
+	/**
 	 * Page about.
 	 */
 	public function page_about() {
+		$version = $this->get_file_version( __DIR__ . '/../../views/page-about.php' );
+
 		$this->admin->render_page( 'about' );
 	}
 }
