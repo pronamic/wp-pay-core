@@ -1,6 +1,6 @@
 <?php
 /**
- * House number test
+ * JavaScript files test
  *
  * @author    Pronamic <info@pronamic.eu>
  * @copyright 2005-2019 Pronamic
@@ -11,9 +11,7 @@
 namespace Pronamic\WordPress\Pay;
 
 /**
- * House number test
- *
- * @link https://github.com/woocommerce/woocommerce/blob/3.5.5/i18n/states/US.php
+ * JavaScript files test
  *
  * @author  Remco Tolsma
  * @version 2.1.6
