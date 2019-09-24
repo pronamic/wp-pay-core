@@ -175,17 +175,11 @@ module.exports = function( grunt ) {
 				target: [
 					'scss/**/*.scss'
 				]
-			},
-
-			// JSHint.
-			jshint: {
-				all: [ 'Gruntfile.js', 'composer.json', 'package.json' ]
 			}
 		}
 	);
 
 	// Default task(s).
-	grunt.registerTask( 'default', [ 'jshint' ] );
 	grunt.registerTask( 'assets', [ 'sasslint', 'sass', 'postcss', 'copy:scripts', 'copy:assets' ] );
 	grunt.registerTask( 'min', [ 'uglify' ] );
 

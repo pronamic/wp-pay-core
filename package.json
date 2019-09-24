@@ -41,11 +41,12 @@
   "devDependencies": {
     "autoprefixer": "^9.6.1",
     "cssnano": "^4.1.10",
+    "eslint": "^6.4.0",
+    "eslint-plugin-json": "^1.4.0",
     "grunt": "^1.0.4",
     "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-imagemin": "^3.1.0",
-    "grunt-contrib-jshint": "^2.1.0",
     "grunt-contrib-sass": "^1.0.0",
     "grunt-contrib-uglify": "^4.0.1",
     "grunt-postcss": "^0.9.0",
@@ -61,6 +62,7 @@
     "build-image-svg-wp-admin": "svgo images/src/pronamic-pay-wp-admin-fresh-base.svg -o images/dist/pronamic-pay-wp-admin-fresh-base.svgo-min.svg",
     "build-image-png-512": "rsvg-convert -w 512 -h 512 images/src/pronamic-pay.svg -o images/src/pronamic-pay-512.png",
     "build-image-png-512-min": "pngquant images/src/pronamic-pay-512.png --output images/dist/pronamic-pay-512.pngquant-min.png --force",
-    "build-image-ico": "icon-gen --input images/src/pronamic-pay.svg --output images/dist --ico name=pronamic-pay --icns name=pronamic-pay -r"
+    "build-image-ico": "icon-gen --input images/src/pronamic-pay.svg --output images/dist --ico name=pronamic-pay --icns name=pronamic-pay -r",
+    "eslint": "eslint . --ext .json --ext .js"
   }
 }
