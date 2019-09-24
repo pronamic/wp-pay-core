@@ -18,16 +18,6 @@ module.exports = function( grunt ) {
 
 			// Copy.
 			copy: {
-				scripts: {
-					files: [
-						{ // JS.
-							expand: true,
-							cwd: 'js/src/',
-							src: '**',
-							dest: 'js/dist/'
-						}
-					]
-				},
 				assets: {
 					files: [
 						{ // Flot - http://www.flotcharts.org/.
@@ -115,10 +105,6 @@ module.exports = function( grunt ) {
 			uglify: {
 				scripts: {
 					files: {
-						// Pronamic Pay.
-						'js/dist/admin.min.js': 'js/dist/admin.js',
-						'js/dist/admin-reports.min.js': 'js/dist/admin-reports.js',
-						'js/dist/admin-tour.min.js': 'js/dist/admin-tour.js',
 						// Accounting.
 						'assets/accounting/accounting.min.js': 'assets/accounting/accounting.js',
 						// Flot.
@@ -137,8 +123,7 @@ module.exports = function( grunt ) {
 					src: [
 						'assets',
 						'css',
-						'images',
-						'js/dist'
+						'images'
 					]
 				}
 			},
@@ -170,7 +155,7 @@ module.exports = function( grunt ) {
 	);
 
 	// Default task(s).
-	grunt.registerTask( 'assets', [ 'sass', 'postcss', 'copy:scripts', 'copy:assets' ] );
+	grunt.registerTask( 'assets', [ 'sass', 'postcss', 'copy:assets' ] );
 	grunt.registerTask( 'min', [ 'uglify' ] );
 
 	grunt.registerTask( 'build_assets', [

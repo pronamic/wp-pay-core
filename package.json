@@ -54,7 +54,8 @@
     "load-grunt-tasks": "^5.1.0",
     "npm-run-all": "^4.1.5",
     "postcss-eol": "0.0.8",
-    "sass-lint": "^1.13.1"
+    "sass-lint": "^1.13.1",
+    "terser": "^4.3.1"
   },
   "scripts": {
     "build-image": "npm-run-all build-image-*",
@@ -65,6 +66,12 @@
     "build-image-ico": "icon-gen --input images/src/pronamic-pay.svg --output images/dist --ico name=pronamic-pay --icns name=pronamic-pay -r",
     "eslint": "eslint . --ext .json --ext .js",
     "lint": "npm-run-all --parallel eslint sass-lint",
-    "sass-lint": "sass-lint --verbose"
+    "sass-lint": "sass-lint --verbose",
+    "js-build": "cp js/src/*.js js/dist",
+    "js-minify": "npm-run-all js-minify-*",
+    "js-minify-admin": "terser --compress --mangle --output js/dist/admin.min.js js/src/admin.js",
+    "js-minify-admin-reports": "terser --compress --mangle --output js/dist/admin-reports.min.js js/src/admin-reports.js",
+    "js-minify-admin-tour": "terser --compress --mangle --output js/dist/admin-tour.min.js js/src/admin-tour.js",
+    "js-minify-block-payment-form": "terser --compress --mangle --output js/dist/block-payment-form.min.js js/src/block-payment-form.js"
   }
 }
