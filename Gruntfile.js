@@ -165,22 +165,12 @@ module.exports = function( grunt ) {
 						} ]
 					}
 				}
-			},
-
-			// Sass Lint.
-			sasslint: {
-				options: {
-					configFile: '.sass-lint.yml'
-				},
-				target: [
-					'scss/**/*.scss'
-				]
 			}
 		}
 	);
 
 	// Default task(s).
-	grunt.registerTask( 'assets', [ 'sasslint', 'sass', 'postcss', 'copy:scripts', 'copy:assets' ] );
+	grunt.registerTask( 'assets', [ 'sass', 'postcss', 'copy:scripts', 'copy:assets' ] );
 	grunt.registerTask( 'min', [ 'uglify' ] );
 
 	grunt.registerTask( 'build_assets', [

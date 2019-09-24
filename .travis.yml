@@ -12,7 +12,7 @@ env:
 jobs:
   include:
     - php: 7.3
-      env: WP_VERSION=^5.1 COVERAGE=1 PHPCS=1 PHPSTAN=1 ESLINT=1
+      env: WP_VERSION=^5.1 COVERAGE=1 PHPCS=1 PHPSTAN=1 ESLINT=1 SASS_LINT=1
     - php: 7.3
       env: WP_VERSION=^5.0
     - php: 7.2
@@ -81,6 +81,8 @@ install:
 script:
   # ESLint
   - if [ "$ESLINT" == "1" ]; then npm run-script eslint; fi
+  # Sass Lint
+  - if [ "$SASS_LINT" == "1" ]; then npm run-script sass-lint; fi
   # PHPLint
   - composer run-script phplint
   # PHPUnit
