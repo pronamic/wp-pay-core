@@ -275,7 +275,7 @@ class AdminPaymentPostType {
 
 		$orderby = $query->get( 'orderby' );
 
-		if ( ! isset( $map[ $orderby ] ) ) {
+		if ( is_array( $orderby ) || ! isset( $map[ $orderby ] ) ) {
 			return;
 		}
 
