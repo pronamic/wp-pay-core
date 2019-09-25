@@ -54,16 +54,20 @@
     "load-grunt-tasks": "^5.1.0",
     "npm-run-all": "^4.1.5",
     "postcss-eol": "0.0.8",
+    "sass": "^1.22.12",
     "sass-lint": "^1.13.1",
     "terser": "^4.3.1"
   },
   "scripts": {
     "build-image": "npm-run-all build-image-*",
-    "build-image-svg-default": "svgo images/src/pronamic-pay.svg -o images/dist/pronamic-pay.svgo-min.svg",
-    "build-image-svg-wp-admin": "svgo images/src/pronamic-pay-wp-admin-fresh-base.svg -o images/dist/pronamic-pay-wp-admin-fresh-base.svgo-min.svg",
-    "build-image-png-512": "rsvg-convert -w 512 -h 512 images/src/pronamic-pay.svg -o images/src/pronamic-pay-512.png",
-    "build-image-png-512-min": "pngquant images/src/pronamic-pay-512.png --output images/dist/pronamic-pay-512.pngquant-min.png --force",
-    "build-image-ico": "icon-gen --input images/src/pronamic-pay.svg --output images/dist --ico name=pronamic-pay --icns name=pronamic-pay -r",
+    "build-image-svg-default": "svgo images/src/wp-pay.svg -o images/dist/wp-pay.svgo-min.svg",
+    "build-image-svg-white": "svgo images/src/wp-pay-white.svg -o images/dist/wp-pay-white.svgo-min.svg",
+    "build-image-svg-wp-admin": "svgo images/src/wp-pay-wp-admin-fresh-base.svg -o images/dist/wp-pay-wp-admin-fresh-base.svgo-min.svg",
+    "build-image-png-512": "rsvg-convert -w 512 -h 512 images/src/wp-pay.svg -o images/src/wp-pay-512.png",
+    "build-image-png-512-min": "pngquant images/src/wp-pay-512.png --output images/dist/wp-pay-512.pngquant-min.png --force",
+    "build-image-png-white-512": "rsvg-convert -w 512 -h 512 images/src/wp-pay-white.svg -o images/src/wp-pay-white-512.png",
+    "build-image-png-white-512-min": "pngquant images/src/wp-pay-white-512.png --output images/dist/wp-pay-white-512.pngquant-min.png --force",
+    "build-image-ico": "icon-gen --input images/src/wp-pay.svg --output images/dist --ico name=wp-pay --icns name=wp-pay -r",
     "eslint": "eslint . --ext .json --ext .js",
     "lint": "npm-run-all --parallel eslint sass-lint",
     "sass-lint": "sass-lint --verbose",
@@ -72,6 +76,7 @@
     "js-minify-admin": "terser --compress --mangle --output js/dist/admin.min.js js/src/admin.js",
     "js-minify-admin-reports": "terser --compress --mangle --output js/dist/admin-reports.min.js js/src/admin-reports.js",
     "js-minify-admin-tour": "terser --compress --mangle --output js/dist/admin-tour.min.js js/src/admin-tour.js",
-    "js-minify-block-payment-form": "terser --compress --mangle --output js/dist/block-payment-form.min.js js/src/block-payment-form.js"
+    "js-minify-block-payment-form": "terser --compress --mangle --output js/dist/block-payment-form.min.js js/src/block-payment-form.js",
+    "sass": "sass scss:css"
   }
 }

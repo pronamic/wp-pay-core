@@ -45,7 +45,7 @@ class AdminModule {
 	 *
 	 * @var AdminAboutPage
 	 */
-	public $about;
+	public $about_page;
 
 	/**
 	 * Admin dashboard page.
@@ -110,12 +110,12 @@ class AdminModule {
 		add_filter( 'parent_file', array( $this, 'admin_menu_parent_file' ) );
 
 		// Modules.
-		$this->settings  = new AdminSettings( $plugin );
-		$this->about     = new AdminAboutPage( $plugin, $this );
-		$this->dashboard = new AdminDashboard( $plugin );
-		$this->notices   = new AdminNotices( $plugin );
-		$this->reports   = new AdminReports( $plugin, $this );
-		$this->tour      = new AdminTour( $plugin );
+		$this->settings   = new AdminSettings( $plugin );
+		$this->about_page = new AdminAboutPage( $plugin, $this );
+		$this->dashboard  = new AdminDashboard( $plugin );
+		$this->notices    = new AdminNotices( $plugin );
+		$this->reports    = new AdminReports( $plugin, $this );
+		$this->tour       = new AdminTour( $plugin );
 
 		// Webhook Manager.
 		$this->webhook_manager = new WebhookManager( $plugin, $this );
@@ -686,7 +686,7 @@ class AdminModule {
 			'data:image/svg+xml;base64,%s',
 			\base64_encode(
 				\file_get_contents(
-					__DIR__ . '/../../images/dist/pronamic-pay-wp-admin-fresh-base.svgo-min.svg',
+					__DIR__ . '/../../images/dist/wp-pay-wp-admin-fresh-base.svgo-min.svg',
 					true
 				)
 			)
