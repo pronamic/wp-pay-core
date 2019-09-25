@@ -1,9 +1,9 @@
 .pronamic-pay-badge {
-  background-color: #f9461c;
-  background-image: url("../../../../../images/pronamic-logo-white.png");
-  color: #fedad2;
+  background-color: #ffb200;
+  background-image: url("../images/dist/wp-pay-white-512.pngquant-min.png");
+  color: #fff0cc;
 }
 
 .svg .pronamic-pay-badge {
-  background-image: url("../../../../../images/pronamic-logo-white.svg");
+  background-image: url("../images/dist/wp-pay-white.svgo-min.svg");
 }

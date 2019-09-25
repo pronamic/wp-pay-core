@@ -68,7 +68,7 @@ class AdminAboutPage {
 			__( 'Welcome to Pronamic Pay', 'pronamic_ideal' ),
 			'manage_options',
 			$page,
-			array( $this, 'page_about' )
+			array( $this, 'render_page' )
 		);
 
 		if ( false === $hook_suffix ) {
@@ -94,7 +94,7 @@ class AdminAboutPage {
 
 		wp_enqueue_style(
 			'proanmic-pay-admin-about',
-			plugins_url( 'css/admin-about' . $min . '.css', $this->plugin->get_file() ),
+			plugins_url( '../../css/admin-about' . $min . '.css', __FILE__ ),
 			array(),
 			$this->plugin->get_version()
 		);
@@ -134,11 +134,27 @@ class AdminAboutPage {
 	}
 
 	/**
-	 * Page about.
+	 * Get file.
+	 *
+	 * @return string
 	 */
-	public function page_about() {
-		$version = $this->get_file_version( __DIR__ . '/../../views/page-about.php' );
+	private function get_file() {
+		return __DIR__ . '/../../views/page-about.php';
+	}
 
-		$this->admin->render_page( 'about' );
+	/**
+	 * Get version.
+	 *
+	 * @return string
+	 */
+	public function get_version() {
+		return $this->get_file_version( $this->get_file() );
+	}
+
+	/**
+	 * Render about page.
+	 */
+	public function render_page() {
+		include $this->get_file();
 	}
 }
