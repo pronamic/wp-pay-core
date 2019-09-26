@@ -415,6 +415,8 @@ class Plugin {
 	/**
 	 * Maybe redirect.
 	 *
+	 * @throws \Pronamic\WordPress\Pay\PayException Throws exception on error.
+	 *
 	 * @return void
 	 */
 	public function maybe_redirect() {

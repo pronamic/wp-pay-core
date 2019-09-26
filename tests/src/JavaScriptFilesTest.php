@@ -26,7 +26,7 @@ class JavaScriptFilesTest extends \PHPUnit\Framework\TestCase {
 
 		foreach ( $iterator as $item ) {
 			$dist_file     = __DIR__ . '/../../js/dist/' . $item->getBasename();
-			$dist_min_file =__DIR__ . '/../../js/dist/' . $item->getBasename( '.js' ) . '.min.js';
+			$dist_min_file = __DIR__ . '/../../js/dist/' . $item->getBasename( '.js' ) . '.min.js';
 
 			$this->assertFileExists( $dist_file );
 			$this->assertFileExists( $dist_min_file );

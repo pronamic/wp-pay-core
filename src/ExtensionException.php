@@ -23,6 +23,7 @@ class ExtensionException extends PayException {
 	 *
 	 * @param string $extension_id Extension ID.
 	 * @param string $message      Message.
+	 * @param mixed  $data         Additional data.
 	 */
 	public function __construct( $extension_id, $message, $data = null ) {
 		// Error code.
