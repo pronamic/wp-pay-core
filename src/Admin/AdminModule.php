@@ -777,7 +777,7 @@ class AdminModule {
 	 *
 	 * @param array $pages Submenu pages.
 	 *
-	 * @return array
+	 * @return string
 	 */
 	public function get_minimum_capability( array $pages ) {
 		foreach ( $pages as $page ) {
