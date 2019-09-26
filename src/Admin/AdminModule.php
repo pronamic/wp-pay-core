@@ -692,73 +692,101 @@ class AdminModule {
 			)
 		);
 
+		$submenu_pages = array(
+			array(
+				'page_title' => __( 'Payments', 'pronamic_ideal' ),
+				'menu_title' => __( 'Payments', 'pronamic_ideal' ) . $badge,
+				'capability' => 'edit_payments',
+				'menu_slug'  => 'edit.php?post_type=pronamic_payment',
+			),
+			array(
+				'page_title' => __( 'Subscriptions', 'pronamic_ideal' ),
+				'menu_title' => __( 'Subscriptions', 'pronamic_ideal' ),
+				'capability' => 'edit_payments',
+				'menu_slug'  => 'edit.php?post_type=pronamic_pay_subscr',
+			),
+			array(
+				'page_title' => __( 'Reports', 'pronamic_ideal' ),
+				'menu_title' => __( 'Reports', 'pronamic_ideal' ),
+				'capability' => 'edit_payments',
+				'menu_slug'  => 'pronamic_pay_reports',
+				'function'   => array( $this->reports, 'page_reports' ),
+			),
+			array(
+				'page_title' => __( 'Payment Forms', 'pronamic_ideal' ),
+				'menu_title' => __( 'Forms', 'pronamic_ideal' ),
+				'capability' => 'edit_forms',
+				'menu_slug'  => 'edit.php?post_type=pronamic_pay_form',
+			),
+			array(
+				'page_title' => __( 'Configurations', 'pronamic_ideal' ),
+				'menu_title' => __( 'Configurations', 'pronamic_ideal' ),
+				'capability' => 'manage_options',
+				'menu_slug'  => 'edit.php?post_type=pronamic_gateway',
+			),
+			array(
+				'page_title' => __( 'Settings', 'pronamic_ideal' ),
+				'menu_title' => __( 'Settings', 'pronamic_ideal' ),
+				'capability' => 'manage_options',
+				'menu_slug'  => 'pronamic_pay_settings',
+				'function'   => array( $this, 'page_settings' ),
+			),
+			array(
+				'page_title' => __( 'Tools', 'pronamic_ideal' ),
+				'menu_title' => __( 'Tools', 'pronamic_ideal' ),
+				'capability' => 'manage_options',
+				'menu_slug'  => 'pronamic_pay_tools',
+				'function'   => array( $this, 'page_tools' ),
+			),
+		);
+
+		$minimum_capability = $this->get_minimum_capability( $submenu_pages );
+
 		add_menu_page(
 			__( 'Pronamic Pay', 'pronamic_ideal' ),
 			__( 'Pay', 'pronamic_ideal' ) . $badge,
-			'edit_payments',
+			$minimum_capability,
 			'pronamic_ideal',
 			array( $this, 'page_dashboard' ),
 			$icon_url
 		);
 
-		add_submenu_page(
-			'pronamic_ideal',
-			__( 'Payments', 'pronamic_ideal' ),
-			__( 'Payments', 'pronamic_ideal' ) . $badge,
-			'edit_payments',
-			'edit.php?post_type=pronamic_payment'
-		);
+		// Add submmenu pages.
+		foreach ( $submenu_pages as $page ) {
+			add_submenu_page(
+				'pronamic_ideal',
+				$page['page_title'],
+				$page['menu_title'],
+				$page['capability'],
+				$page['menu_slug'],
+				( isset( $page['function'] ) ? $page['function'] : null )
+			);
+		}
 
-		add_submenu_page(
-			'pronamic_ideal',
-			__( 'Subscriptions', 'pronamic_ideal' ),
-			__( 'Subscriptions', 'pronamic_ideal' ),
-			'edit_payments',
-			'edit.php?post_type=pronamic_pay_subscr'
-		);
-
-		do_action( 'pronamic_pay_admin_menu' );
-
-		add_submenu_page(
-			'pronamic_ideal',
-			__( 'Payment Forms', 'pronamic_ideal' ),
-			__( 'Forms', 'pronamic_ideal' ),
-			'edit_forms',
-			'edit.php?post_type=pronamic_pay_form'
-		);
-
-		add_submenu_page(
-			'pronamic_ideal',
-			__( 'Configurations', 'pronamic_ideal' ),
-			__( 'Configurations', 'pronamic_ideal' ),
-			'manage_options',
-			'edit.php?post_type=pronamic_gateway'
-		);
-
-		add_submenu_page(
-			'pronamic_ideal',
-			__( 'Settings', 'pronamic_ideal' ),
-			__( 'Settings', 'pronamic_ideal' ),
-			'manage_options',
-			'pronamic_pay_settings',
-			array( $this, 'page_settings' )
-		);
-
-		add_submenu_page(
-			'pronamic_ideal',
-			__( 'Tools', 'pronamic_ideal' ),
-			__( 'Tools', 'pronamic_ideal' ),
-			'manage_options',
-			'pronamic_pay_tools',
-			array( $this, 'page_tools' )
-		);
-
+		// Change title of plugin submenu page to 'Dashboard'.
 		global $submenu;
 
 		if ( isset( $submenu['pronamic_ideal'] ) ) {
 			/* phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited */
 			$submenu['pronamic_ideal'][0][0] = __( 'Dashboard', 'pronamic_ideal' );
 		}
+	}
+
+	/**
+	 * Get minimum capability from submenu pages.
+	 *
+	 * @param array $pages Submenu pages.
+	 *
+	 * @return array
+	 */
+	public function get_minimum_capability( array $pages ) {
+		foreach ( $pages as $page ) {
+			if ( \current_user_can( $page['capability'] ) ) {
+				return $page['capability'];
+			}
+		}
+
+		return 'edit_payments';
 	}
 
 	/**

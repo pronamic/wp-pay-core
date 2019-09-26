@@ -46,26 +46,7 @@ class AdminReports {
 		$this->admin  = $admin;
 
 		// Actions.
-		add_action( 'pronamic_pay_admin_menu', array( $this, 'admin_menu' ) );
-	}
-
-	/**
-	 * Admin Menu.
-	 */
-	public function admin_menu() {
-		$hook_suffix = add_submenu_page(
-			'pronamic_ideal',
-			__( 'Reports', 'pronamic_ideal' ),
-			__( 'Reports', 'pronamic_ideal' ),
-			'edit_payments',
-			'pronamic_pay_reports',
-			array( $this, 'page_reports' )
-		);
-
-		if ( false !== $hook_suffix ) {
-			// @link https://github.com/WordPress/WordPress/blob/4.2.4/wp-admin/admin-header.php#L82-L87.
-			add_action( 'admin_print_styles-' . $hook_suffix, array( $this, 'admin_css' ) );
-		}
+		add_action( 'admin_print_styles', array( $this, 'admin_css' ) );
 	}
 
 	/**
@@ -79,6 +60,13 @@ class AdminReports {
 	 * Enqueue admin scripts.
 	 */
 	public function admin_css() {
+		// Check if this is the reports page.
+		$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
+
+		if ( 'pronamic_pay_reports' !== $page ) {
+			return;
+		}
+
 		$min = SCRIPT_DEBUG ? '' : '.min';
 
 		// Flot - http://www.flotcharts.org/.
