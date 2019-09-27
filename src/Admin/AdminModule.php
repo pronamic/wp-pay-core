@@ -605,9 +605,17 @@ class AdminModule {
 		// Amount.
 		$string = filter_input( INPUT_POST, 'test_amount', FILTER_SANITIZE_STRING );
 
-		$money_parser = new MoneyParser();
+		try {
+			$money_parser = new MoneyParser();
 
-		$amount = $money_parser->parse( $string )->get_value();
+			$amount = $money_parser->parse( $string )->get_value();
+		} catch ( \Exception $e ) {
+			$e = new \Pronamic\WordPress\Pay\PayException( 'pay_error', $e->getMessage() );
+
+			$e->render();
+
+			exit;
+		}
 
 		// Start.
 		try {
