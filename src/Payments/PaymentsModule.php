@@ -12,7 +12,7 @@ namespace Pronamic\WordPress\Pay\Payments;
 
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
-use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use WP_Error;
 use WP_REST_Request;
 
@@ -105,23 +105,23 @@ class PaymentsModule {
 		$page_id = null;
 
 		switch ( $payment->status ) {
-			case Statuses::CANCELLED:
+			case PaymentStatus::CANCELLED:
 				$page_id = pronamic_pay_get_page_id( 'cancel' );
 
 				break;
-			case Statuses::EXPIRED:
+			case PaymentStatus::EXPIRED:
 				$page_id = pronamic_pay_get_page_id( 'expired' );
 
 				break;
-			case Statuses::FAILURE:
+			case PaymentStatus::FAILURE:
 				$page_id = pronamic_pay_get_page_id( 'error' );
 
 				break;
-			case Statuses::OPEN:
+			case PaymentStatus::OPEN:
 				$page_id = pronamic_pay_get_page_id( 'unknown' );
 
 				break;
-			case Statuses::SUCCESS:
+			case PaymentStatus::SUCCESS:
 				$page_id = pronamic_pay_get_page_id( 'completed' );
 
 				break;

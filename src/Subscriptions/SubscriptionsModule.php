@@ -17,7 +17,7 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\Recurring;
 use Pronamic\WordPress\Pay\Core\Server;
-use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
@@ -134,8 +134,8 @@ class SubscriptionsModule {
 	 * @param Subscription $subscription Subscription to cancel.
 	 */
 	private function handle_subscription_cancel( Subscription $subscription ) {
-		if ( Statuses::CANCELLED !== $subscription->get_status() ) {
-			$subscription->set_status( Statuses::CANCELLED );
+		if ( PaymentStatus::CANCELLED !== $subscription->get_status() ) {
+			$subscription->set_status( PaymentStatus::CANCELLED );
 
 			$subscription->save();
 		}
@@ -197,7 +197,7 @@ class SubscriptionsModule {
 
 		// Set the subscription status to `completed` if there is no next payment date.
 		if ( empty( $subscription->next_payment_date ) ) {
-			$subscription->status                     = Statuses::COMPLETED;
+			$subscription->status                     = PaymentStatus::COMPLETED;
 			$subscription->expiry_date                = $subscription->end_date;
 			$subscription->next_payment_delivery_date = null;
 
@@ -410,7 +410,7 @@ class SubscriptionsModule {
 		$subscription->email          = $payment->email;
 		$subscription->customer_name  = $customer_name;
 		$subscription->payment_method = $payment->method;
-		$subscription->status         = Statuses::OPEN;
+		$subscription->status         = PaymentStatus::OPEN;
 
 		// @todo
 		// Calculate dates
@@ -570,18 +570,18 @@ class SubscriptionsModule {
 		$status_update = $status_before;
 
 		switch ( $payment->get_status() ) {
-			case Statuses::OPEN:
+			case PaymentStatus::OPEN:
 				// @todo
 				break;
-			case Statuses::SUCCESS:
-				$status_update = Statuses::ACTIVE;
+			case PaymentStatus::SUCCESS:
+				$status_update = PaymentStatus::ACTIVE;
 
 				if ( isset( $subscription->expiry_date, $payment->end_date ) && $subscription->expiry_date < $payment->end_date ) {
 					$subscription->expiry_date = clone $payment->end_date;
 				}
 
 				break;
-			case Statuses::FAILURE:
+			case PaymentStatus::FAILURE:
 				/**
 				 * Subscription status for failed payment.
 				 *
@@ -590,18 +590,18 @@ class SubscriptionsModule {
 				 * @link https://www.europeanpaymentscouncil.eu/document-library/guidance-documents/guidance-reason-codes-sepa-direct-debit-r-transactions
 				 * @link https://github.com/pronamic/wp-pronamic-ideal/commit/48449417eac49eb6a93480e3b523a396c7db9b3d#diff-6712c698c6b38adfa7190a4be983a093
 				 */
-				$status_update = Statuses::FAILURE;
+				$status_update = PaymentStatus::FAILURE;
 
 				break;
-			case Statuses::CANCELLED:
-			case Statuses::EXPIRED:
-				$status_update = Statuses::CANCELLED;
+			case PaymentStatus::CANCELLED:
+			case PaymentStatus::EXPIRED:
+				$status_update = PaymentStatus::CANCELLED;
 
 				break;
 		}
 
 		// The status of canceled or completed subscriptions will not be changed automatically.
-		if ( ! in_array( $status_before, array( Statuses::CANCELLED, Statuses::COMPLETED ), true ) ) {
+		if ( ! in_array( $status_before, array( PaymentStatus::CANCELLED, PaymentStatus::COMPLETED ), true ) ) {
 			$subscription->set_status( $status_update );
 		}
 
@@ -807,8 +807,8 @@ class SubscriptionsModule {
 			if ( ! $gateway->supports( 'recurring' ) ) {
 				$now = new DateTime();
 
-				if ( Statuses::COMPLETED !== $subscription->status && isset( $subscription->expiry_date ) && $subscription->expiry_date <= $now ) {
-					$subscription->status = Statuses::EXPIRED;
+				if ( PaymentStatus::COMPLETED !== $subscription->status && isset( $subscription->expiry_date ) && $subscription->expiry_date <= $now ) {
+					$subscription->status = PaymentStatus::EXPIRED;
 
 					$subscription->save();
 

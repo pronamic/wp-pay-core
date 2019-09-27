@@ -12,7 +12,7 @@ namespace Pronamic\WordPress\Pay;
 
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\Server;
-use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Payments\Payment;
 
 /**
@@ -88,7 +88,7 @@ class GoogleAnalyticsEcommerce {
 		}
 
 		// Only process successful payments.
-		if ( Statuses::SUCCESS !== $payment->get_status() ) {
+		if ( PaymentStatus::SUCCESS !== $payment->get_status() ) {
 			return false;
 		}
 

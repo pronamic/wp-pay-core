@@ -16,7 +16,7 @@ use InvalidArgumentException;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
-use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentInfo;
 use Pronamic\WordPress\Pay\Payments\PaymentInfoHelper;
@@ -99,7 +99,7 @@ class Subscription extends LegacySubscription {
 	 * The status of this subscription, for example 'Success'.
 	 *
 	 * @todo How to reference to a class constant?
-	 * @see  Statuses
+	 * @see  PaymentStatus
 	 *
 	 * @var string|null
 	 */

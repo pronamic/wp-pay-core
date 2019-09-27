@@ -14,7 +14,7 @@ use Pronamic\WordPress\Pay\Admin\AdminModule;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Core\Recurring;
-use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
 use Pronamic\WordPress\Pay\Gateways\Common\AbstractIntegration;
 use Pronamic\WordPress\Pay\Payments\Payment;
@@ -966,7 +966,7 @@ class Plugin {
 		$amount = $payment->get_total_amount()->get_value();
 
 		if ( empty( $amount ) ) {
-			$payment->set_status( Statuses::SUCCESS );
+			$payment->set_status( PaymentStatus::SUCCESS );
 
 			$payment->save();
 
@@ -977,7 +977,7 @@ class Plugin {
 		$gateway = self::get_gateway( $config_id );
 
 		if ( null === $gateway ) {
-			$payment->set_status( Statuses::FAILURE );
+			$payment->set_status( PaymentStatus::FAILURE );
 
 			$payment->save();
 
@@ -996,7 +996,7 @@ class Plugin {
 
 			// Set payment status.
 			if ( false === $result ) {
-				$payment->set_status( Statuses::FAILURE );
+				$payment->set_status( PaymentStatus::FAILURE );
 			}
 
 			// Add gateway errors as payment notes.
@@ -1009,7 +1009,7 @@ class Plugin {
 			}
 		} catch ( \Pronamic\WordPress\Pay\PayException $e ) {
 			// Set status to 'Failed'.
-			$payment->set_status( Statuses::FAILURE );
+			$payment->set_status( PaymentStatus::FAILURE );
 
 			// Add gateway errors as payment notes.
 			$payment->add_note( sprintf( '%s: %s', $e->get_error_code(), $e->get_message() ) );
@@ -1028,9 +1028,9 @@ class Plugin {
 			if ( Recurring::FIRST === $payment->recurring_type ) {
 				// First payment - cancel subscription to prevent unwanted recurring payments
 				// in the future, when a valid customer ID might be set for the user.
-				$subscription->set_status( Statuses::CANCELLED );
+				$subscription->set_status( PaymentStatus::CANCELLED );
 			} else {
-				$subscription->set_status( Statuses::FAILURE );
+				$subscription->set_status( PaymentStatus::FAILURE );
 			}
 
 			$subscription->save();

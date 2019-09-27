@@ -13,7 +13,7 @@ namespace Pronamic\WordPress\Pay\Payments;
 use Exception;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
-use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Customer;
 
 /**
@@ -61,13 +61,13 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$this->payments = array();
 
 		$this->status_map = array(
-			Statuses::CANCELLED => 'payment_cancelled',
-			Statuses::EXPIRED   => 'payment_expired',
-			Statuses::FAILURE   => 'payment_failed',
-			Statuses::REFUNDED  => 'payment_refunded',
-			Statuses::RESERVED  => 'payment_reserved',
-			Statuses::SUCCESS   => 'payment_completed',
-			Statuses::OPEN      => 'payment_pending',
+			PaymentStatus::CANCELLED => 'payment_cancelled',
+			PaymentStatus::EXPIRED   => 'payment_expired',
+			PaymentStatus::FAILURE   => 'payment_failed',
+			PaymentStatus::REFUNDED  => 'payment_refunded',
+			PaymentStatus::RESERVED  => 'payment_reserved',
+			PaymentStatus::SUCCESS   => 'payment_completed',
+			PaymentStatus::OPEN      => 'payment_pending',
 		);
 	}
 

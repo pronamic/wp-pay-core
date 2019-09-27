@@ -10,7 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
-use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Util;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
