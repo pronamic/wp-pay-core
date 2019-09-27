@@ -294,8 +294,14 @@ class Payment extends LegacyPayment {
 	 * Add a note to this payment.
 	 *
 	 * @param string $note The note to add.
+	 *
+	 * @return int|false The new comment's ID on success, false on failure.
 	 */
 	public function add_note( $note ) {
+		if ( empty( $note ) ) {
+			return false;
+		}
+
 		$commentdata = array(
 			'comment_post_ID'  => $this->id,
 			'comment_content'  => $note,
