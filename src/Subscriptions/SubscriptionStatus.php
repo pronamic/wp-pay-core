@@ -8,7 +8,7 @@
  * @package   Pronamic\WordPress\Pay\Core
  */
 
-namespace Pronamic\WordPress\Pay\Payments;
+namespace Pronamic\WordPress\Pay\Subscriptions;
 
 /**
  * Title: WordPress pay subscription statuses constants
