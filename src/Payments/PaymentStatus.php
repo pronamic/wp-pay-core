@@ -1,6 +1,6 @@
 <?php
 /**
- * Statuses
+ * Payment statuses
  *
  * @author    Pronamic <info@pronamic.eu>
  * @copyright 2005-2019 Pronamic
@@ -11,7 +11,7 @@
 namespace Pronamic\WordPress\Pay\Payments;
 
 /**
- * Title: WordPress pay statuses constants
+ * Title: WordPress pay payment statuses constants
  * Description:
  * Copyright: 2005-2019 Pronamic
  * Company: Pronamic
