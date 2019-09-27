@@ -78,13 +78,6 @@ class PaymentStatus {
 	const RESERVED = 'Reserved';
 
 	/**
-	 * Status indicator for active
-	 *
-	 * @var string
-	 */
-	const ACTIVE = 'Active';
-
-	/**
 	 * Status indicator for completed
 	 *
 	 * @var string

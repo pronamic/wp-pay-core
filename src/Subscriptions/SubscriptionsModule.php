@@ -134,8 +134,8 @@ class SubscriptionsModule {
 	 * @param Subscription $subscription Subscription to cancel.
 	 */
 	private function handle_subscription_cancel( Subscription $subscription ) {
-		if ( PaymentStatus::CANCELLED !== $subscription->get_status() ) {
-			$subscription->set_status( PaymentStatus::CANCELLED );
+		if ( SubscriptionStatus::CANCELLED !== $subscription->get_status() ) {
+			$subscription->set_status( SubscriptionStatus::CANCELLED );
 
 			$subscription->save();
 		}
@@ -574,7 +574,7 @@ class SubscriptionsModule {
 				// @todo
 				break;
 			case PaymentStatus::SUCCESS:
-				$status_update = PaymentStatus::ACTIVE;
+				$status_update = SubscriptionStatus::ACTIVE;
 
 				if ( isset( $subscription->expiry_date, $payment->end_date ) && $subscription->expiry_date < $payment->end_date ) {
 					$subscription->expiry_date = clone $payment->end_date;
@@ -590,18 +590,18 @@ class SubscriptionsModule {
 				 * @link https://www.europeanpaymentscouncil.eu/document-library/guidance-documents/guidance-reason-codes-sepa-direct-debit-r-transactions
 				 * @link https://github.com/pronamic/wp-pronamic-ideal/commit/48449417eac49eb6a93480e3b523a396c7db9b3d#diff-6712c698c6b38adfa7190a4be983a093
 				 */
-				$status_update = PaymentStatus::FAILURE;
+				$status_update = SubscriptionStatus::FAILURE;
 
 				break;
 			case PaymentStatus::CANCELLED:
 			case PaymentStatus::EXPIRED:
-				$status_update = PaymentStatus::CANCELLED;
+				$status_update = SubscriptionStatus::CANCELLED;
 
 				break;
 		}
 
 		// The status of canceled or completed subscriptions will not be changed automatically.
-		if ( ! in_array( $status_before, array( PaymentStatus::CANCELLED, PaymentStatus::COMPLETED ), true ) ) {
+		if ( ! in_array( $status_before, array( SubscriptionStatus::CANCELLED, SubscriptionStatus::COMPLETED ), true ) ) {
 			$subscription->set_status( $status_update );
 		}
 

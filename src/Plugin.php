@@ -22,6 +22,7 @@ use Pronamic\WordPress\Pay\Payments\PaymentData;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Payments\StatusChecker;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
+use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
 use Pronamic\WordPress\Pay\Webhooks\WebhookLogger;
 use WP_Error;
 use WP_Query;
@@ -1028,9 +1029,9 @@ class Plugin {
 			if ( Recurring::FIRST === $payment->recurring_type ) {
 				// First payment - cancel subscription to prevent unwanted recurring payments
 				// in the future, when a valid customer ID might be set for the user.
-				$subscription->set_status( PaymentStatus::CANCELLED );
+				$subscription->set_status( SubscriptionStatus::CANCELLED );
 			} else {
-				$subscription->set_status( PaymentStatus::FAILURE );
+				$subscription->set_status( SubscriptionStatus::FAILURE );
 			}
 
 			$subscription->save();

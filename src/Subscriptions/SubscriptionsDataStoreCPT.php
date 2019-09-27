@@ -60,14 +60,16 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 		$this->subscriptions = array();
 
 		$this->status_map = array(
-			PaymentStatus::CANCELLED => 'subscr_cancelled',
-			PaymentStatus::EXPIRED   => 'subscr_expired',
-			PaymentStatus::FAILURE   => 'subscr_failed',
-			PaymentStatus::ACTIVE    => 'subscr_active',
-			PaymentStatus::SUCCESS   => 'subscr_active',
-			PaymentStatus::ON_HOLD   => 'subscr_on_hold',
-			PaymentStatus::OPEN      => 'subscr_pending',
-			PaymentStatus::COMPLETED => 'subscr_completed',
+			SubscriptionStatus::CANCELLED => 'subscr_cancelled',
+			SubscriptionStatus::EXPIRED   => 'subscr_expired',
+			SubscriptionStatus::FAILURE   => 'subscr_failed',
+			SubscriptionStatus::ACTIVE    => 'subscr_active',
+			SubscriptionStatus::ON_HOLD   => 'subscr_on_hold',
+			SubscriptionStatus::OPEN      => 'subscr_pending',
+			SubscriptionStatus::COMPLETED => 'subscr_completed',
+
+			// Map payment status `Success` for backwards compatibility.
+			PaymentStatus::SUCCESS => 'subscr_active',
 		);
 	}
 
