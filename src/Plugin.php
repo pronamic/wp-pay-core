@@ -40,7 +40,7 @@ class Plugin {
 	 *
 	 * @var string
 	 */
-	private $version;
+	private $version = '';
 
 	/**
 	 * The root file of this WordPress plugin
@@ -207,12 +207,18 @@ class Plugin {
 			$args,
 			array(
 				'file'       => null,
-				'version'    => null,
 				'extensions' => array(),
 			)
 		);
 
-		$this->version = $args['version'];
+		// Version from plugin file header.
+		if ( null !== $args['file'] ) {
+			$file_data = get_file_data( $args['file'], array( 'Version' => 'Version' ) );
+
+			if ( ! empty( $file_data['Version'] ) ) {
+				$this->version = $file_data['Version'];
+			}
+		}
 
 		// Backward compatibility.
 		self::$file    = $args['file'];
