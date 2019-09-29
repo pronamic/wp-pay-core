@@ -55,6 +55,13 @@ class AdminModule {
 	public $dashboard;
 
 	/**
+	 * Admin site health.
+	 *
+	 * @var AdminHealth
+	 */
+	public $health;
+
+	/**
 	 * Admin notices page.
 	 *
 	 * @var AdminNotices
@@ -113,6 +120,7 @@ class AdminModule {
 		$this->settings   = new AdminSettings( $plugin );
 		$this->about_page = new AdminAboutPage( $plugin, $this );
 		$this->dashboard  = new AdminDashboard( $plugin );
+		$this->health     = new AdminHealth( $plugin );
 		$this->notices    = new AdminNotices( $plugin );
 		$this->reports    = new AdminReports( $plugin, $this );
 		$this->tour       = new AdminTour( $plugin );
@@ -739,14 +747,17 @@ class AdminModule {
 				'menu_slug'  => 'pronamic_pay_settings',
 				'function'   => array( $this, 'page_settings' ),
 			),
-			array(
+		);
+
+		if ( version_compare( get_bloginfo( 'version' ), '5.2', '<' ) ) {
+			$submenu_pages[] = array(
 				'page_title' => __( 'Tools', 'pronamic_ideal' ),
 				'menu_title' => __( 'Tools', 'pronamic_ideal' ),
 				'capability' => 'manage_options',
 				'menu_slug'  => 'pronamic_pay_tools',
 				'function'   => array( $this, 'page_tools' ),
-			),
-		);
+			);
+		}
 
 		$minimum_capability = $this->get_minimum_capability( $submenu_pages );
 
