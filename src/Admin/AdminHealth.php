@@ -71,12 +71,16 @@ class AdminHealth {
 		);
 
 		// OpenSSL version.
+		$openssl_version = __( 'Not available', 'pronamic_ideal' );
+
 		if ( defined( 'OPENSSL_VERSION_TEXT' ) ) {
-			$fields['pronamic_pay_openssl_version'] = array(
-				'label' => __( 'OpenSSL version', 'pronamic_ideal' ),
-				'value' => esc_html( OPENSSL_VERSION_TEXT ),
-			);
+			$openssl_version = OPENSSL_VERSION_TEXT;
 		}
+
+		$fields['pronamic_pay_openssl_version'] = array(
+			'label' => __( 'OpenSSL version', 'pronamic_ideal' ),
+			'value' => esc_html( $openssl_version ),
+		);
 
 		// Add debug information section.
 		$debug_information['pronamic-pay'] = array(
