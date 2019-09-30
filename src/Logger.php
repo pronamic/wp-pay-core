@@ -21,12 +21,12 @@ class Logger {
 	/**
 	 * Log exception.
 	 *
+	 * @param string $level      Severity level.
 	 * @param string $error_code Error code.
 	 * @param string $message    Error message.
 	 * @param mixed  $data       Additional data.
-	 * @param string $trace      Backtrace.
 	 */
-	public static function log( $error_code, $message, $data, $trace ) {
+	public static function log( $level, $error_code, $message, $data ) {
 		$log = self::get_log();
 
 		// Append error.
@@ -36,10 +36,10 @@ class Logger {
 			array(
 				array(
 					'date'       => current_time( 'mysql', true ),
+					'level'      => $level,
 					'error_code' => $error_code,
 					'message'    => $message,
 					'data'       => $data,
-					'trace'      => $trace,
 				),
 			),
 			$errors
@@ -59,7 +59,7 @@ class Logger {
 	 * @param PayException $exception Pay exception.
 	 */
 	public static function log_exception( PayException $exception ) {
-		self::log( $exception->get_error_code(), $exception->get_message(), $exception->get_data(), $exception->getTraceAsString() );
+		self::log( LogLevel::CRITICAL, $exception->get_error_code(), $exception->get_message(), $exception->get_data() );
 	}
 
 	/**
