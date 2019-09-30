@@ -215,7 +215,7 @@ class Plugin {
 		if ( null !== $args['file'] ) {
 			$file_data = get_file_data( $args['file'], array( 'Version' => 'Version' ) );
 
-			if ( ! empty( $file_data['Version'] ) ) {
+			if ( \array_key_exists( 'Version', $file_data ) ) {
 				$this->version = $file_data['Version'];
 			}
 		}
