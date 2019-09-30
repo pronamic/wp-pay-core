@@ -123,6 +123,12 @@ class AdminHealth {
 			'test'  => array( $this, 'test_wordpress_version' ),
 		);
 
+		// Test OpenSSL version.
+		$status_tests['direct']['pronamic_pay_openssl_version'] = array(
+			'label' => __( 'Pronamic Pay OpenSSL version test' ),
+			'test'  => array( $this, 'test_openssl_version' ),
+		);
+
 		// Test memory limit.
 		$status_tests['direct']['pronamic_pay_memory_limit'] = array(
 			'label' => __( 'Pronamic Pay memory limit test' ),
@@ -133,12 +139,6 @@ class AdminHealth {
 		$status_tests['direct']['pronamic_pay_character_set'] = array(
 			'label' => __( 'Pronamic Pay UTF-8 character set test' ),
 			'test'  => array( $this, 'test_character_set' ),
-		);
-
-		// Test OpenSSL version.
-		$status_tests['direct']['pronamic_pay_openssl_version'] = array(
-			'label' => __( 'Pronamic Pay OpenSSL version test' ),
-			'test'  => array( $this, 'test_openssl_version' ),
 		);
 
 		// Test hashing algorithms.
@@ -358,17 +358,24 @@ class AdminHealth {
 	 * @return array
 	 */
 	public function test_openssl_version() {
-		// Good.
-		$openssl_version_text = __( 'OpenSSL version', 'pronamic_ideal' );
+		$openssl_version_text = '';
 
 		if ( defined( 'OPENSSL_VERSION_TEXT' ) ) {
-			$openssl_version_text = OPENSSL_VERSION_TEXT;
+			$openssl_version_text = \str_replace( 'OpenSSL ', '', OPENSSL_VERSION_TEXT );
 		}
 
+		// Good.
 		$result = array(
 			'test'        => 'pronamic_pay_openssl_version',
-			'label'       => sprintf( __( '%1$s is supported by Pronamic Pay', 'pronamic_ideal' ), $openssl_version_text ),
-			'description' => sprintf( '<p>%s</p>', __( 'Pronamic Pay requires OpenSSL 0.9.8 or higher.', 'pronamic_ideal' ) ),
+			'label'       => sprintf(
+				/* translators: %s: OpenSSL version number */
+				__( 'OpenSSL version meets the recommendation for Pronamic Pay (%s)', 'pronamic_ideal' ),
+				$openssl_version_text
+			),
+			'description' => sprintf(
+				'<p>%s</p>',
+				__( 'Pronamic Pay advises OpenSSL 0.9.8 or higher, earlier versions can result in issues with payments.', 'pronamic_ideal' )
+			),
 			'badge'       => array(
 				'label' => __( 'Payments' ),
 				'color' => 'blue',
@@ -378,10 +385,20 @@ class AdminHealth {
 		);
 
 		// Recommendation.
-		if ( version_compare( OPENSSL_VERSION_NUMBER, 0x000908000, '<' ) ) {
+		$openssl_version_number = null;
+
+		if ( defined( 'OPENSSL_VERSION_NUMBER' ) ) {
+			$openssl_version_number = OPENSSL_VERSION_NUMBER;
+		}
+
+		if ( version_compare( $openssl_version_number, 0x000908000, '<' ) ) {
 			$result['status'] = 'recommended';
 
-			$result['label'] = sprintf( __( '%1$s is unsupported by Pronamic Pay', 'pronamic_ideal' ), $openssl_version_text );
+			$result['label'] = sprintf(
+				/* translators: %s: OpenSSL version text */
+				__( 'OpenSSL version does not meet the recommended version for Pronamic Pay (%s)', 'pronamic_ideal' ),
+				$openssl_version_text
+			);
 		}
 
 		return $result;
