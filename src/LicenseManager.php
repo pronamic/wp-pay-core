@@ -235,15 +235,13 @@ class LicenseManager {
 				return __( 'Site Inactive', 'pronamic_ideal' );
 		}
 
-		return __( $license_status );
+		return $license_status;
 	}
-
 
 	/**
 	 * Get next scheduled license check text.
 	 *
 	 * @return string
-	 * @throws \Exception
 	 */
 	public function get_formatted_next_license_check() {
 		$next_license_check = esc_html__( 'Not scheduled', 'pronamic_ideal' );

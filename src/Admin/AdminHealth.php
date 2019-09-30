@@ -47,15 +47,15 @@ class AdminHealth {
 
 		// License key.
 		$fields['pronamic_pay_license_key'] = array(
-			'label'    => __( 'Support license key', 'pronamic_ideal' ),
+			'label'   => __( 'Support license key', 'pronamic_ideal' ),
 			'value'   => esc_html( get_option( 'pronamic_pay_license_key', __( 'No license key found', 'pronamic_ideal' ) ) ),
 			'private' => true,
 		);
 
 		// License status.
 		$fields['pronamic_pay_license_status'] = array(
-			'label'    => __( 'License status', 'pronamic_ideal' ),
-			'value'   => esc_html( $this->plugin->license_manager->get_formatted_license_status() ),
+			'label' => __( 'License status', 'pronamic_ideal' ),
+			'value' => esc_html( $this->plugin->license_manager->get_formatted_license_status() ),
 		);
 
 		// Next scheduled license check.
@@ -212,7 +212,11 @@ class AdminHealth {
 		// Good.
 		$result = array(
 			'test'        => 'pronamic_pay_php_version',
-			'label'       => sprintf( __( 'PHP %s is supported by Pronamic Pay', 'pronamic_ideal' ), phpversion() ),
+			'label'       => sprintf(
+				/* translators: %s: PHP version number */
+				__( 'PHP version is supported by Pronamic Pay (%s)', 'pronamic_ideal' ),
+				phpversion()
+			),
 			'description' => sprintf( '<p>%s</p>', __( 'Pronamic Pay requires at least PHP 5.6.20.', 'pronamic_ideal' ) ),
 			'badge'       => array(
 				'label' => __( 'Payments' ),
@@ -242,7 +246,11 @@ class AdminHealth {
 		// Good.
 		$result = array(
 			'test'        => 'pronamic_pay_mysql_version',
-			'label'       => sprintf( __( 'MySQL %s is supported by Pronamic Pay', 'pronamic_ideal' ), $wpdb->db_version() ),
+			'label'       => sprintf(
+				/* translators: %s: MySQL version number */
+				__( 'MySQL version is supported by Pronamic Pay (%s)', 'pronamic_ideal' ),
+				$wpdb->db_version()
+			),
 			'description' => sprintf( '<p>%s</p>', __( 'Pronamic Pay requires at least MySQL 5.', 'pronamic_ideal' ) ),
 			'badge'       => array(
 				'label' => __( 'Payments' ),
@@ -270,7 +278,11 @@ class AdminHealth {
 		// Good.
 		$result = array(
 			'test'        => 'pronamic_pay_wordpress_version',
-			'label'       => sprintf( __( 'WordPress %s is supported by Pronamic Pay', 'pronamic_ideal' ), get_bloginfo( 'version' ) ),
+			'label'       => sprintf(
+				/* translators: %s: WordPress version number */
+				__( 'WordPress version is supported by Pronamic Pay (%s)', 'pronamic_ideal' ),
+				get_bloginfo( 'version' )
+			),
 			'description' => sprintf( '<p>%s</p>', __( 'Pronamic Pay requires at least WordPress 4.7.', 'pronamic_ideal' ) ),
 			'badge'       => array(
 				'label' => __( 'Payments' ),
@@ -300,7 +312,11 @@ class AdminHealth {
 		// Good.
 		$result = array(
 			'test'        => 'pronamic_pay_memory_limit',
-			'label'       => sprintf( __( 'WordPress memory limit is %1$s', 'pronamic_ideal' ), size_format( $memory ) ),
+			'label'       => sprintf(
+				/* translators: %s: WordPress memory limit */
+				__( 'WordPress memory limit is sufficient (%s)', 'pronamic_ideal' ),
+				size_format( $memory )
+			),
 			'description' => sprintf( '<p>%s</p>', __( 'Pronamic Pay recommends setting the WordPress memory limit to at least 64 MB.', 'pronamic_ideal' ) ),
 			'badge'       => array(
 				'label' => __( 'Payments' ),
@@ -315,7 +331,8 @@ class AdminHealth {
 			$result['status'] = 'recommended';
 
 			$result['label'] = sprintf(
-				__( 'Increase %1$s WordPress memory limit to at least 64 MB', 'pronamic_ideal' ),
+				/* translators: %s: WordPress memory limit */
+				__( 'Increase WordPress memory limit (%s) to at least 64 MB', 'pronamic_ideal' ),
 				size_format( $memory )
 			);
 		}
