@@ -70,22 +70,6 @@ class AdminHealth {
 			'value' => esc_html( date( __( 'Y/m/d g:i:s A', 'pronamic_ideal' ) ) ),
 		);
 
-		// cURL version.
-		if ( function_exists( 'curl_version' ) ) {
-			// @codingStandardsIgnoreStart
-			// Using cURL functions is highly discouraged within VIP context
-			// We only use this cURL function for on the system status page
-			$version = curl_version();
-			// @codingStandardsIgnoreEnd
-
-			if ( isset( $version['version'] ) ) {
-				$fields['pronamic_pay_curl_version'] = array(
-					'label' => __( 'cURL version', 'pronamic_ideal' ),
-					'value' => esc_html( $version['version'] ),
-				);
-			}
-		}
-
 		// OpenSSL version.
 		if ( defined( 'OPENSSL_VERSION_TEXT' ) ) {
 			$fields['pronamic_pay_openssl_version'] = array(
