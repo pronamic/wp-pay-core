@@ -10,8 +10,6 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
-use Pronamic\WordPress\DateTime\DateTime;
-use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Pay\Plugin;
 
 /**
@@ -219,7 +217,7 @@ class AdminHealth {
 			),
 			'description' => sprintf( '<p>%s</p>', __( 'Pronamic Pay requires at least PHP 5.6.20.', 'pronamic_ideal' ) ),
 			'badge'       => array(
-				'label' => __( 'Payments' ),
+				'label' => __( 'Payments', 'pronamic_ideal' ),
 				'color' => 'blue',
 			),
 			'status'      => 'good',
@@ -253,7 +251,7 @@ class AdminHealth {
 			),
 			'description' => sprintf( '<p>%s</p>', __( 'Pronamic Pay requires at least MySQL 5.', 'pronamic_ideal' ) ),
 			'badge'       => array(
-				'label' => __( 'Payments' ),
+				'label' => __( 'Payments', 'pronamic_ideal' ),
 				'color' => 'blue',
 			),
 			'status'      => 'good',
@@ -285,7 +283,7 @@ class AdminHealth {
 			),
 			'description' => sprintf( '<p>%s</p>', __( 'Pronamic Pay requires at least WordPress 4.7.', 'pronamic_ideal' ) ),
 			'badge'       => array(
-				'label' => __( 'Payments' ),
+				'label' => __( 'Payments', 'pronamic_ideal' ),
 				'color' => 'blue',
 			),
 			'status'      => 'good',
@@ -319,7 +317,7 @@ class AdminHealth {
 			),
 			'description' => sprintf( '<p>%s</p>', __( 'Pronamic Pay recommends setting the WordPress memory limit to at least 64 MB.', 'pronamic_ideal' ) ),
 			'badge'       => array(
-				'label' => __( 'Payments' ),
+				'label' => __( 'Payments', 'pronamic_ideal' ),
 				'color' => 'blue',
 			),
 			'status'      => 'good',
@@ -352,7 +350,7 @@ class AdminHealth {
 			'label'       => __( 'Character encoding is set to UTF-8', 'pronamic_ideal' ),
 			'description' => sprintf( '<p>%s</p>', __( 'Pronamic Pay recommends to use the UTF-8 character encoding for payments.', 'pronamic_ideal' ) ),
 			'badge'       => array(
-				'label' => __( 'Payments' ),
+				'label' => __( 'Payments', 'pronamic_ideal' ),
 				'color' => 'blue',
 			),
 			'status'      => 'good',
@@ -394,7 +392,7 @@ class AdminHealth {
 				__( 'Pronamic Pay advises OpenSSL 0.9.8 or higher, earlier versions can result in issues with payments.', 'pronamic_ideal' )
 			),
 			'badge'       => array(
-				'label' => __( 'Payments' ),
+				'label' => __( 'Payments', 'pronamic_ideal' ),
 				'color' => 'blue',
 			),
 			'status'      => 'good',
@@ -433,7 +431,7 @@ class AdminHealth {
 			'label'       => __( 'SHA1 hashing algorithm is available', 'pronamic_ideal' ),
 			'description' => sprintf( '<p>%s</p>', __( 'Payment gateways often use the SHA1 hashing algorithm, therefore Pronamic Pay advises to enable this hashing algorithm.', 'pronamic_ideal' ) ),
 			'badge'       => array(
-				'label' => __( 'Payments' ),
+				'label' => __( 'Payments', 'pronamic_ideal' ),
 				'color' => 'blue',
 			),
 			'status'      => 'good',
