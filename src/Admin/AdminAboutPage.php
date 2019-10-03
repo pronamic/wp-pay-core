@@ -142,13 +142,13 @@ class AdminAboutPage {
 		\fclose( $fp );
 
 		// Search.
-		preg_match( '/^[ \t\/*#@]*@version(?P<version>.*)$/mi', $file_data, $matches );
+		\preg_match( '/^[ \t\/*#@]*@version(?P<version>.*)$/mi', $file_data, $matches );
 
 		// Version.
 		$version = '';
 
-		if ( array_key_exists( 'version', $matches ) ) {
-			$version = trim( $matches['version'] );
+		if ( \array_key_exists( 'version', $matches ) ) {
+			$version = \trim( $matches['version'] );
 		}
 
 		return $version;
