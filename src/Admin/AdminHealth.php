@@ -23,7 +23,16 @@ use Pronamic\WordPress\Pay\Plugin;
  */
 class AdminHealth {
 	/**
+	 * Plugin.
+	 *
+	 * @var Plugin
+	 */
+	protected $plugin;
+
+	/**
 	 * Site health constructor.
+	 *
+	 * @param Plugin $plugin Plugin.
 	 */
 	public function __construct( Plugin $plugin ) {
 		$this->plugin = $plugin;
@@ -82,8 +91,8 @@ class AdminHealth {
 
 		// Add debug information section.
 		$debug_information['pronamic-pay'] = array(
-			'label'    => __( 'Pronamic Pay', 'pronamic_ideal' ),
-			'fields'   => $fields,
+			'label'  => __( 'Pronamic Pay', 'pronamic_ideal' ),
+			'fields' => $fields,
 		);
 
 		return $debug_information;
@@ -143,6 +152,12 @@ class AdminHealth {
 		$status_tests['direct']['pronamic_pay_hashing_algorithms'] = array(
 			'label' => __( 'Pronamic Pay hashing algorithms test' ),
 			'test'  => array( $this, 'test_hashing_algorithms' ),
+		);
+
+		// Test supported extensions.
+		$status_tests['direct']['pronamic_pay_extensions_support'] = array(
+			'label' => __( 'Pronamic Pay extensions support test' ),
+			'test'  => array( $this, 'test_extensions_support' ),
 		);
 
 		return $status_tests;
@@ -446,6 +461,137 @@ class AdminHealth {
 
 			$result['label'] = __( 'SHA1 hashing algorithm is not available for Pronamic Pay', 'pronamic_ideal' );
 		}
+
+		return $result;
+	}
+
+	/**
+	 * Test extensions support.
+	 */
+	public function test_extensions_support() {
+		$extensions_json_path = \dirname( $this->plugin->get_file() ) . '/other/extensions.json';
+
+		if ( ! \file_exists( $extensions_json_path ) ) :
+			return array();
+		endif;
+
+		// Check supported extensions.
+		$data       = \file_get_contents( $extensions_json_path );
+		$extensions = \json_decode( $data );
+
+		$supported_extensions     = array();
+		$untested_plugin_versions = array();
+		$outdated_plugin_versions = array();
+
+		$active_plugins = \get_option( 'active_plugins' );
+		$plugins        = \get_plugins();
+
+		$status = 'good';
+
+		foreach ( $plugins as $file => $plugin ) {
+			// Only test active plugins.
+			if ( false === \array_search( $file, $active_plugins, true ) ) {
+				continue;
+			}
+
+			$plugin_file = null;
+
+			foreach ( $extensions as $extension ) {
+				// Requires at least.
+				$requires_at_least = '0.0.0';
+
+				if ( isset( $extension->requires_at_least ) ) {
+					$requires_at_least = $extension->requires_at_least;
+				}
+
+				// Tested up to.
+				$tested_up_to = '0.0.0';
+
+				if ( isset( $extension->tested_up_to ) ) {
+					$tested_up_to = $extension->tested_up_to;
+				}
+
+				if ( 0 === \strcasecmp( \dirname( $file ), $extension->slug ) ) {
+					$tested_up_to_ok      = \version_compare( $plugin['Version'], $tested_up_to, '<=' );
+					$requires_at_least_ok = \version_compare( $plugin['Version'], $requires_at_least, '>=' );
+
+					$description_text = sprintf(
+						'– %1$s %2$s (requires at least version %3$s, tested up to %4$s)',
+						\esc_html( $extension->name ),
+						\esc_html( $plugin['Version'] ),
+						\esc_html( $requires_at_least ),
+						\esc_html( $tested_up_to )
+					);
+
+					if ( $tested_up_to_ok && $requires_at_least_ok ) {
+						// Plugin version is between minimum and tested versions.
+						$supported_extensions[] = $description_text;
+					} elseif ( ! $requires_at_least_ok ) {
+						// Plugin version is lower than minimum required version.
+						$outdated_plugin_versions[] = $description_text;
+					} elseif ( ! $tested_up_to_ok ) {
+						// Plugin version is higher than tested version.
+						$untested_plugin_versions[] = $description_text;
+					}
+				}
+			}
+		}
+
+		// Extensions list text.
+		$extensions_list_text = '';
+
+		// Untested plugin versions.
+		if ( 0 !== count( $untested_plugin_versions ) ) {
+			$status = 'recommended';
+
+			$extensions_list_text .= sprintf(
+				'<p>%1$s</p><p>%2$s</p>',
+				__( 'Untested plugin versions (issues with payments might occur):', 'pronamic_ideal' ),
+				\join( '</p><p>', $untested_plugin_versions )
+			);
+		}
+
+		if ( 0 !== count( $outdated_plugin_versions ) ) {
+			$status = 'critical';
+
+			$extensions_list_text .= sprintf(
+				'<p>%1$s</p><p>%2$s</p>',
+				__( 'Outdated unsupported plugin versions for which payments can not be processed:', 'pronamic_ideal' ),
+				\join( '</p><p>', $outdated_plugin_versions )
+			);
+		}
+
+		// Supported extensions.
+		if ( 0 !== count( $supported_extensions ) ) {
+			$extensions_list_text .= sprintf(
+				'<p>%1$s</p><p>%2$s</p>',
+				__( 'Supported plugin versions:', 'pronamic_ideal' ),
+				\join( '</p><p>', $supported_extensions )
+			);
+		}
+
+		// Result.
+		$label = __( 'Pronamic Pay extensions are compatible', 'pronamic_ideal' );
+
+		$description_text = __( 'Pronamic Pay uses extensions to integrate with form, booking and other e-commerce plugins. All extensions support the currently activated plugin version.', 'pronamic_ideal' );
+
+		if ( 'good' !== $status ) {
+			$label = __( 'Pronamic Pay extensions are incompatible', 'pronamic_ideal' );
+
+			$description_text = __( 'Pronamic Pay uses extensions to integrate with form, booking and other e-commerce plugins. Not all extensions support the version of the currently activated plugin.', 'pronamic_ideal' );
+		}
+
+		$result = array(
+			'test'        => 'pronamic_pay_extensions_support',
+			'label'       => $label,
+			'description' => sprintf( '<p>%s</p><p>%s</p>', \esc_html( $description_text ), $extensions_list_text ),
+			'badge'       => array(
+				'label' => __( 'Payments', 'pronamic_ideal' ),
+				'color' => 'blue',
+			),
+			'status'      => $status,
+			'actions'     => '',
+		);
 
 		return $result;
 	}
