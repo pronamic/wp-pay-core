@@ -115,9 +115,27 @@ class AdminAboutPage {
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fopen
 		$fp = \fopen( $file, 'r' );
 
+		if ( false === $fp ) {
+			throw new \Exception(
+				\sprintf(
+					'Could not open file to get version: %s.',
+					$file
+				)
+			);
+		}
+
 		// Pull only the first 8kiB of the file in.
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fread
 		$file_data = \fread( $fp, 8192 );
+
+		if ( false === $file_data ) {
+			throw new \Exception(
+				\sprintf(
+					'Could not read file to get version: %s.',
+					$file
+				)
+			);
+		}
 
 		// PHP will close file handle, but we are good citizens.
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
