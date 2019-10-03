@@ -10,13 +10,11 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
-use Exception;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\Forms\FormPostType;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Webhooks\WebhookManager;
-use WP_Error;
 
 /**
  * WordPress Pay admin
@@ -359,8 +357,8 @@ class AdminModule {
 
 			$result = wp_insert_post( $post, true );
 
-			if ( $result instanceof WP_Error ) {
-				throw new Exception( $result->get_error_message() );
+			if ( $result instanceof \WP_Error ) {
+				throw new \Exception( $result->get_error_message() );
 			}
 
 			if ( isset( $page['post_meta'] ) ) {
@@ -636,8 +634,8 @@ class AdminModule {
 			if ( ! $gateway->has_error() ) {
 				$gateway->redirect( $payment );
 			}
-		} catch ( Exception $e ) {
-			$errors[] = new WP_Error( 'pay_error', $e->getMessage() );
+		} catch ( \Exception $e ) {
+			$errors[] = new \WP_Error( 'pay_error', $e->getMessage() );
 		}
 
 		$errors = array_filter( $errors );
