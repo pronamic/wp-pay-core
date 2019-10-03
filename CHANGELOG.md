@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
+-
+
+## [2.2.4] - 2019-10-04
+- Updated `viison/address-splitter` library to version `0.3.3`.
+- Move tools to site health debug information and status tests.
+- Read plugin version from plugin file header.
+- Catch money parser exception for test payments.
+- Sepereated `Statuses` class in `PaymentStatus` and `SubscriptionStatus` class.
+- Require `edit_payments` capability for payments related meta boxes on dashboard page.
+- Set menu page capability to minimum required capability based on submenu pages.
+- Only redirect to about page if not already viewed.
+- Removed Google +1 button.
+- Order payments by ascending date (fixes last payment as result in `Subscription::get_first_payment()`).
+- Added new WordPress Pay icon.
+- Added start, end, expiry, next payment (delivery) date to payment/subscription JSON.
+- Introduced a custom REST API route for payments and subscriptions.
+- Fixed handling settings field `filter` array.
+- Catch and handle error when parsing input value to money object fails (i.e. empty string).
 - Improved getting first subscription payment.
 
 ## [2.2.3] - 2019-08-30
@@ -203,7 +221,9 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.2.2...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.2.4...HEAD
+[2.2.4]: https://github.com/wp-pay/core/compare/2.2.3...2.2.4
+[2.2.3]: https://github.com/wp-pay/core/compare/2.2.2...2.2.3
 [2.2.2]: https://github.com/wp-pay/core/compare/2.2.1...2.2.2
 [2.2.1]: https://github.com/wp-pay/core/compare/2.2.0...2.2.1
 [2.2.0]: https://github.com/wp-pay/core/compare/2.1.6...2.2.0
