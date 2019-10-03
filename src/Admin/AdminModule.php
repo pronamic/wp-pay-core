@@ -712,6 +712,7 @@ class AdminModule {
 		 */
 		$icon_url = \sprintf(
 			'data:image/svg+xml;base64,%s',
+			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 			\base64_encode(
 				\file_get_contents(
 					__DIR__ . '/../../images/dist/wp-pay-wp-admin-fresh-base.svgo-min.svg',

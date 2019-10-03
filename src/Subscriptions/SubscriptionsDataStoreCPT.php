@@ -67,9 +67,8 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 			SubscriptionStatus::ON_HOLD   => 'subscr_on_hold',
 			SubscriptionStatus::OPEN      => 'subscr_pending',
 			SubscriptionStatus::COMPLETED => 'subscr_completed',
-
 			// Map payment status `Success` for backwards compatibility.
-			PaymentStatus::SUCCESS => 'subscr_active',
+			PaymentStatus::SUCCESS        => 'subscr_active',
 		);
 	}
 
