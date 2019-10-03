@@ -338,7 +338,7 @@ class AdminModule {
 	 * @param array    $pages   Page.
 	 * @param int|null $parent Parent post ID.
 	 * @return void
-	 * @throws Exception When creating page fails.
+	 * @throws \Exception When creating page fails.
 	 */
 	private function create_pages( $pages, $parent = null ) {
 		foreach ( $pages as $page ) {
@@ -672,6 +672,49 @@ class AdminModule {
 	}
 
 	/**
+	 * Get menu icon URL.
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/add_menu_page/
+	 * @return string
+	 */
+	private function get_menu_icon_url() {
+		/**
+		 * Icon URL.
+		 *
+		 * Pass a base64-encoded SVG using a data URI, which will be colored to match the color scheme.
+		 * This should begin with 'data:image/svg+xml;base64,'.
+		 *
+		 * We use a SVG image with default fill color #A0A5AA from the default admin color scheme:
+		 * https://github.com/WordPress/WordPress/blob/5.2/wp-includes/general-template.php#L4135-L4145
+		 *
+		 * The advantage of this is that users with the default admin color scheme do not see the repaint:
+		 * https://github.com/WordPress/WordPress/blob/5.2/wp-admin/js/svg-painter.js
+		 *
+		 * @link https://developer.wordpress.org/reference/functions/add_menu_page/
+		 */
+		$file = __DIR__ . '/../../images/dist/wp-pay-wp-admin-fresh-base.svgo-min.svg';
+
+		$svg = \file_get_contents( $file, true );
+
+		if ( false === $svg ) {
+			throw new \Exception(
+				\sprintf(
+					'Could not read WordPress admin menu icon from file: %s.',
+					$file
+				)
+			);
+		}
+
+		$icon_url = \sprintf(
+			'data:image/svg+xml;base64,%s',
+			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+			\base64_encode( $svg )
+		);
+
+		return $icon_url;
+	}
+
+	/**
 	 * Create the admin menu.
 	 *
 	 * @return void
@@ -689,31 +732,6 @@ class AdminModule {
 				$counts->payment_pending
 			);
 		}
-
-		/**
-		 * Icon URL.
-		 *
-		 * Pass a base64-encoded SVG using a data URI, which will be colored to match the color scheme.
-		 * This should begin with 'data:image/svg+xml;base64,'.
-		 *
-		 * We use a SVG image with default fill color #A0A5AA from the default admin color scheme:
-		 * https://github.com/WordPress/WordPress/blob/5.2/wp-includes/general-template.php#L4135-L4145
-		 *
-		 * The advantage of this is that users with the default admin color scheme do not see the repaint:
-		 * https://github.com/WordPress/WordPress/blob/5.2/wp-admin/js/svg-painter.js
-		 *
-		 * @link https://developer.wordpress.org/reference/functions/add_menu_page/
-		 */
-		$icon_url = \sprintf(
-			'data:image/svg+xml;base64,%s',
-			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
-			\base64_encode(
-				\file_get_contents(
-					__DIR__ . '/../../images/dist/wp-pay-wp-admin-fresh-base.svgo-min.svg',
-					true
-				)
-			)
-		);
 
 		$submenu_pages = array(
 			array(
@@ -774,7 +792,7 @@ class AdminModule {
 			$minimum_capability,
 			'pronamic_ideal',
 			array( $this, 'page_dashboard' ),
-			$icon_url
+			$this->get_menu_icon_url()
 		);
 
 		// Add submmenu pages.
