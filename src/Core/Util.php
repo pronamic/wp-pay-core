@@ -10,11 +10,9 @@
 
 namespace Pronamic\WordPress\Pay\Core;
 
-use InvalidArgumentException;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Util as Pay_Util;
-use SimpleXMLElement;
 
 /**
  * Title: WordPress utility class
@@ -34,12 +32,12 @@ class Util {
 	 * @param int    $required_response_code Required response code.
 	 * @param array  $args                   Remote request arguments.
 	 *
-	 * @return array|bool|string|WP_Error
+	 * @return array|bool|string|\WP_Error
 	 */
 	public static function remote_get_body( $url, $required_response_code = 200, array $args = array() ) {
 		$result = wp_remote_request( $url, $args );
 
-		if ( $result instanceof WP_Error ) {
+		if ( $result instanceof \WP_Error ) {
 			return $result;
 		}
 
@@ -56,7 +54,7 @@ class Util {
 		}
 
 		// Wrong response code.
-		return new WP_Error(
+		return new \WP_Error(
 			'wrong_response_code',
 			sprintf(
 				/* translators: 1: received responce code, 2: required response code */
@@ -75,7 +73,7 @@ class Util {
 	 * @link https://www.php.net/manual/en/class.libxmlerror.php
 	 *
 	 * @param string $string The XML string to convert to a SimpleXMLElement object.
-	 * @return SimpleXMLElement
+	 * @return \SimpleXMLElement
 	 * @throws \InvalidArgumentException If string could not be loaded in to a SimpleXMLElement object.
 	 */
 	public static function simplexml_load_string( $string ) {
@@ -116,7 +114,7 @@ class Util {
 		// Throw exception.
 		$message = implode( PHP_EOL, $messages );
 
-		throw new InvalidArgumentException( $message );
+		throw new \InvalidArgumentException( $message );
 	}
 
 	/**
