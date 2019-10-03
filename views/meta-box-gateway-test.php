@@ -33,31 +33,33 @@ $is_ideal |= $gateway instanceof IDealBasic_Gateway;
 $is_ideal |= $gateway instanceof IDealAdvancedV3_Gateway;
 
 // Payment method selector.
+$payment_methods = $gateway->get_payment_method_field_options( true );
+
 $inputs = array();
 
-try {
-	$payment_methods = $gateway->get_payment_method_field_options( true );
-
-	foreach ( $payment_methods as $payment_method => $method_name ) {
-		if ( 0 === $payment_method ) {
-			$payment_method = null;
-		}
-
-		$gateway->set_payment_method( $payment_method );
-
-		// Payment method input HTML.
-		$html = $gateway->get_input_html();
-
-		if ( ! empty( $html ) ) {
-			$inputs[ $payment_method ] = array(
-				'label' => $method_name,
-				'html'  => $html,
-			);
-		}
+foreach ( $payment_methods as $payment_method => $method_name ) {
+	if ( 0 === $payment_method ) {
+		$payment_method = null;
 	}
-} catch ( \Pronamic\WordPress\Pay\PayException $e ) {
-	$e->render();
+
+	$gateway->set_payment_method( $payment_method );
+
+	// Payment method input HTML.
+	$html = $gateway->get_input_html();
+
+	if ( ! empty( $html ) ) {
+		$inputs[ $payment_method ] = array(
+			'label' => $method_name,
+			'html'  => $html,
+		);
+	}
 }
+
+if ( $gateway->has_error() ) {
+	$pronamic_ideal_errors[] = $gateway->get_error();
+}
+
+require Plugin::$dirname . '/views/errors.php';
 
 ?>
 <table class="form-table">

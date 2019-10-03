@@ -12,6 +12,7 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DateInterval;
 use DatePeriod;
+use Exception;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Pay\Core\Gateway;
@@ -21,7 +22,9 @@ use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
+use UnexpectedValueException;
 use WP_CLI;
+use WP_Error;
 use WP_Query;
 
 /**
@@ -160,10 +163,12 @@ class SubscriptionsModule {
 		}
 
 		if ( 'POST' === Server::get( 'REQUEST_METHOD' ) ) {
-			try {
-				$payment = $this->start_recurring( $subscription, $gateway, false );
-			} catch ( \Pronamic\WordPress\Pay\PayException $e ) {
-				$e->render();
+			$payment = $this->start_recurring( $subscription, $gateway, false );
+
+			$error = $gateway->get_error();
+
+			if ( $error instanceof WP_Error ) {
+				Plugin::render_errors( $error );
 
 				exit;
 			}
@@ -268,7 +273,7 @@ class SubscriptionsModule {
 	 * @param Payment      $payment Payment.
 	 * @param Gateway|null $gateway Gateway to start the recurring payment at.
 	 *
-	 * @throws \UnexpectedValueException Throw unexpected value exception when no subscription was found in payment.
+	 * @throws UnexpectedValueException Throw unexpected value exception when no subscription was found in payment.
 	 *
 	 * @return Payment
 	 */
@@ -281,7 +286,7 @@ class SubscriptionsModule {
 		$subscription = $payment->get_subscription();
 
 		if ( empty( $subscription ) ) {
-			throw new \UnexpectedValueException( 'No subscription object found in payment.' );
+			throw new UnexpectedValueException( 'No subscription object found in payment.' );
 		}
 
 		// Calculate payment start and end dates.
@@ -294,7 +299,7 @@ class SubscriptionsModule {
 		$interval = $subscription->get_date_interval();
 
 		if ( null === $interval ) {
-			throw new \UnexpectedValueException( 'Cannot start a follow-up payment for payment because the subscription does not have a valid date interval.' );
+			throw new UnexpectedValueException( 'Cannot start a follow-up payment for payment because the subscription does not have a valid date interval.' );
 		}
 
 		$end_date = clone $start_date;
@@ -357,7 +362,7 @@ class SubscriptionsModule {
 	 *
 	 * @return void
 	 *
-	 * @throws \UnexpectedValueException Throw unexpected value exception if the subscription does not have a valid date interval.
+	 * @throws UnexpectedValueException Throw unexpected value exception if the subscription does not have a valid date interval.
 	 */
 	public function maybe_create_subscription( $payment ) {
 		// Check if there is already subscription attached to the payment.
@@ -418,7 +423,7 @@ class SubscriptionsModule {
 		$interval = $subscription->get_date_interval();
 
 		if ( null === $interval ) {
-			throw new \UnexpectedValueException( 'Cannot create a subscription for payment because the subscription does not have a valid date interval.' );
+			throw new UnexpectedValueException( 'Cannot create a subscription for payment because the subscription does not have a valid date interval.' );
 		}
 
 		$start_date  = clone $payment->date;

@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Core;
 
+use InvalidArgumentException;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Util as Pay_Util;
@@ -33,15 +34,13 @@ class Util {
 	 * @param int    $required_response_code Required response code.
 	 * @param array  $args                   Remote request arguments.
 	 *
-	 * @return array|bool|string
-	 *
-	 * @throws \Pronamic\WordPress\Pay\PayException Throws exception on error.
+	 * @return array|bool|string|WP_Error
 	 */
 	public static function remote_get_body( $url, $required_response_code = 200, array $args = array() ) {
 		$result = wp_remote_request( $url, $args );
 
-		if ( $result instanceof \WP_Error ) {
-			throw new \Pronamic\WordPress\Pay\PayException( 'pay_error', $result->get_error_message() );
+		if ( $result instanceof WP_Error ) {
+			return $result;
 		}
 
 		/*
@@ -57,7 +56,7 @@ class Util {
 		}
 
 		// Wrong response code.
-		throw new \Pronamic\WordPress\Pay\PayException(
+		return new WP_Error(
 			'wrong_response_code',
 			sprintf(
 				/* translators: 1: received responce code, 2: required response code */
@@ -117,7 +116,7 @@ class Util {
 		// Throw exception.
 		$message = implode( PHP_EOL, $messages );
 
-		throw new \InvalidArgumentException( $message );
+		throw new InvalidArgumentException( $message );
 	}
 
 	/**

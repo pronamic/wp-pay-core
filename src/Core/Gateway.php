@@ -274,7 +274,7 @@ abstract class Gateway {
 		if ( is_wp_error( $result ) || false === $result ) {
 			$issuers = $this->get_credit_card_issuers();
 
-			if ( ! empty( $issuers ) ) {
+			if ( $issuers ) {
 				// 60 * 60 * 24 = 24 hours = 1 day
 				set_transient( $transient, $issuers, 60 * 60 * 24 );
 			}
@@ -330,11 +330,7 @@ abstract class Gateway {
 		$methods = get_transient( $transient );
 
 		if ( is_wp_error( $methods ) || false === $methods ) {
-			try {
-				$methods = $this->get_available_payment_methods();
-			} catch ( \Pronamic\WordPress\Pay\GatewayException $e ) {
-				$methods = array();
-			}
+			$methods = $this->get_available_payment_methods();
 
 			if ( is_array( $methods ) ) {
 				set_transient( $transient, $methods, DAY_IN_SECONDS );
