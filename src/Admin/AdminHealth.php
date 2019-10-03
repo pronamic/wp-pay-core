@@ -23,7 +23,16 @@ use Pronamic\WordPress\Pay\Plugin;
  */
 class AdminHealth {
 	/**
+	 * Plugin.
+	 *
+	 * @var Plugin
+	 */
+	private $plugin;
+
+	/**
 	 * Site health constructor.
+	 *
+	 * @param Plugin $plugin Plugin.
 	 */
 	public function __construct( Plugin $plugin ) {
 		$this->plugin = $plugin;
@@ -82,8 +91,8 @@ class AdminHealth {
 
 		// Add debug information section.
 		$debug_information['pronamic-pay'] = array(
-			'label'    => __( 'Pronamic Pay', 'pronamic_ideal' ),
-			'fields'   => $fields,
+			'label'  => __( 'Pronamic Pay', 'pronamic_ideal' ),
+			'fields' => $fields,
 		);
 
 		return $debug_information;
