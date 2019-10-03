@@ -618,11 +618,7 @@ class AdminModule {
 
 			$amount = $money_parser->parse( $string )->get_value();
 		} catch ( \Exception $e ) {
-			$e = new \Pronamic\WordPress\Pay\PayException( 'pay_error', $e->getMessage() );
-
-			$e->render();
-
-			exit;
+			wp_die( $e->getMessage() );
 		}
 
 		// Start.
