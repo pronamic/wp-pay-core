@@ -270,14 +270,9 @@ class Subscription extends LegacySubscription {
 	 * @link https://developer.wordpress.org/reference/functions/wp_insert_comment/
 	 *
 	 * @param string $note A Note.
-	 *
 	 * @return int|false The new comment's ID on success, false on failure.
 	 */
 	public function add_note( $note ) {
-		if ( empty( $note ) ) {
-			return false;
-		}
-
 		$commentdata = array(
 			'comment_post_ID'  => $this->id,
 			'comment_content'  => $note,
