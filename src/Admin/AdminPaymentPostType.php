@@ -267,20 +267,34 @@ class AdminPaymentPostType {
 	 * @param WP_Query $query WordPress query.
 	 */
 	public function pre_get_posts( $query ) {
+		/**
+		 * The `WP_Query::get` function can return different variable type.
+		 * For now this function can only handle one specific string orderby.
+		 *
+		 * @link https://developer.wordpress.org/reference/classes/wp_query/get/
+		 * @link https://developer.wordpress.org/reference/classes/wp_query/#order-orderby-parameters
+		 * @link https://github.com/WordPress/WordPress/blob/5.2/wp-includes/class-wp-query.php#L1697-L1713
+		 */
+		$orderby = $query->get( 'orderby' );
+
+		if ( ! is_string( $orderby ) ) {
+			return;
+		}
+
 		$map = array(
 			'pronamic_payment_amount'      => '_pronamic_payment_amount',
 			'pronamic_payment_customer'    => '_pronamic_payment_customer_name',
 			'pronamic_payment_transaction' => '_pronamic_payment_transaction_id',
 		);
 
-		$orderby = $query->get( 'orderby' );
-
-		if ( is_array( $orderby ) || ! isset( $map[ $orderby ] ) ) {
+		if ( ! isset( $map[ $orderby ] ) ) {
 			return;
 		}
 
-		$query->set( 'meta_key', $map[ $orderby ] );
-		$query->set( 'orderby', $map[ $orderby ] );
+		$meta_key = $map[ $orderby ];
+
+		$query->set( 'meta_key', $meta_key );
+		$query->set( 'orderby', 'meta_value' );
 
 		// Set query meta key.
 		if ( 'pronamic_payment_amount' === $orderby ) {
