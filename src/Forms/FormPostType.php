@@ -10,7 +10,6 @@
 
 namespace Pronamic\WordPress\Pay\Forms;
 
-use Exception;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Plugin;
@@ -352,7 +351,7 @@ class FormPostType {
 				// Parse input value to money object.
 				try {
 					$amount = $money_parser->parse( $amount );
-				} catch ( Exception $e ) {
+				} catch ( \Exception $e ) {
 					// Remove amount choice if parsing failed (i.e. empty string).
 					unset( $data['_pronamic_payment_form_amount_choices'][ $i ] );
 
