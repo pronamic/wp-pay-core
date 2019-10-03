@@ -112,12 +112,15 @@ class AdminAboutPage {
 	 */
 	private function get_file_version( $file ) {
 		// We don't need to write to the file, so just open for reading.
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fopen
 		$fp = \fopen( $file, 'r' );
 
 		// Pull only the first 8kiB of the file in.
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fread
 		$file_data = \fread( $fp, 8192 );
 
 		// PHP will close file handle, but we are good citizens.
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
 		\fclose( $fp );
 
 		// Search.
