@@ -296,8 +296,6 @@ class Plugin {
 	 *
 	 * @param Payment $payment      The payment to update.
 	 * @param bool    $can_redirect Flag to indicate if redirect is allowed after the payment update.
-	 *
-	 * @throws \Pronamic\WordPress\Pay\PayException Throws exception on error in gateway status update.
 	 */
 	public static function update_payment( $payment = null, $can_redirect = true ) {
 		if ( empty( $payment ) ) {
@@ -417,8 +415,6 @@ class Plugin {
 
 	/**
 	 * Maybe redirect.
-	 *
-	 * @throws \Pronamic\WordPress\Pay\PayException Throws exception on error.
 	 *
 	 * @return void
 	 */
@@ -966,7 +962,7 @@ class Plugin {
 		}
 
 		if ( ! $gateway ) {
-			$payment->set_status( Statuses::FAILURE );
+			$payment->set_status( PaymentStatus::FAILURE );
 
 			$payment->save();
 
@@ -987,7 +983,7 @@ class Plugin {
 
 		// Set payment status.
 		if ( false === $result ) {
-			$payment->set_status( Statuses::FAILURE );
+			$payment->set_status( PaymentStatus::FAILURE );
 		}
 
 		// Save payment.
