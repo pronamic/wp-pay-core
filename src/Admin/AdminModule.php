@@ -623,6 +623,8 @@ class AdminModule {
 			$amount = $money_parser->parse( $string )->get_value();
 		} catch ( \Exception $e ) {
 			wp_die( esc_html( $e->getMessage() ) );
+
+			return;
 		}
 
 		// Start.

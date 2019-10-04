@@ -28,6 +28,13 @@ class AdminAboutPage {
 	private $plugin;
 
 	/**
+	 * File.
+	 *
+	 * @var string
+	 */
+	private $file;
+
+	/**
 	 * Constructs and initializes admin about page object.
 	 *
 	 * @link https://github.com/WordImpress/Give/blob/1.1/includes/admin/dashboard-widgets.php
