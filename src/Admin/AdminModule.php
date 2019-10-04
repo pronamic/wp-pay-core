@@ -703,6 +703,15 @@ class AdminModule {
 		 */
 		$file = __DIR__ . '/../../images/dist/wp-pay-wp-admin-fresh-base.svgo-min.svg';
 
+		if ( ! \is_readable( $file ) ) {
+			throw new \Exception(
+				\sprintf(
+					'Could not read WordPress admin menu icon from file: %s.',
+					$file
+				)
+			);
+		}
+
 		$svg = \file_get_contents( $file, true );
 
 		if ( false === $svg ) {
@@ -742,6 +751,7 @@ class AdminModule {
 			);
 		}
 
+		// Submenu pages.
 		$submenu_pages = array(
 			array(
 				'page_title' => __( 'Payments', 'pronamic_ideal' ),
@@ -760,7 +770,9 @@ class AdminModule {
 				'menu_title' => __( 'Reports', 'pronamic_ideal' ),
 				'capability' => 'edit_payments',
 				'menu_slug'  => 'pronamic_pay_reports',
-				'function'   => array( $this->reports, 'page_reports' ),
+				'function'   => function() {
+					$this->reports->page_reports();
+				},
 			),
 			array(
 				'page_title' => __( 'Payment Forms', 'pronamic_ideal' ),
@@ -779,7 +791,9 @@ class AdminModule {
 				'menu_title' => __( 'Settings', 'pronamic_ideal' ),
 				'capability' => 'manage_options',
 				'menu_slug'  => 'pronamic_pay_settings',
-				'function'   => array( $this, 'page_settings' ),
+				'function'   => function() {
+					$this->render_page( 'settings' );
+				},
 			),
 		);
 
@@ -789,31 +803,67 @@ class AdminModule {
 				'menu_title' => __( 'Tools', 'pronamic_ideal' ),
 				'capability' => 'manage_options',
 				'menu_slug'  => 'pronamic_pay_tools',
-				'function'   => array( $this, 'page_tools' ),
+				'function'   => function() {
+					$this->render_page( 'tools' );
+				},
 			);
 		}
 
 		$minimum_capability = $this->get_minimum_capability( $submenu_pages );
+
+		try {
+			$menu_icon_url = $this->get_menu_icon_url();
+		} catch ( \Exception $e ) {
+			// @todo Log.
+
+			/**
+			 * If retrieving the menu icon URL fails we will
+			 * fallback to the WordPress money dashicon.
+			 *
+			 * @link https://developer.wordpress.org/resource/dashicons/#money
+			 */
+			$menu_icon_url = 'dashicons-money';
+		}
 
 		add_menu_page(
 			__( 'Pronamic Pay', 'pronamic_ideal' ),
 			__( 'Pay', 'pronamic_ideal' ) . $badge,
 			$minimum_capability,
 			'pronamic_ideal',
-			array( $this, 'page_dashboard' ),
-			$this->get_menu_icon_url()
+			function() {
+				$this->render_page( 'dashboard' );
+			},
+			$menu_icon_url
 		);
 
 		// Add submmenu pages.
 		foreach ( $submenu_pages as $page ) {
-			add_submenu_page(
-				'pronamic_ideal',
-				$page['page_title'],
-				$page['menu_title'],
-				$page['capability'],
-				$page['menu_slug'],
-				( isset( $page['function'] ) ? $page['function'] : null )
-			);
+			/**
+			 * To keep PHPStan happy we use an if/else statement for
+			 * the 6th $function parameter which should be a callable
+			 * function. Unfortunately this is not documented
+			 * correctly in WordPress.
+			 *
+			 * @link https://github.com/WordPress/WordPress/blob/5.2/wp-admin/includes/plugin.php#L1296-L1377
+			 */
+			if ( array_key_exists( 'function', $page ) ) {
+				add_submenu_page(
+					'pronamic_ideal',
+					$page['page_title'],
+					$page['menu_title'],
+					$page['capability'],
+					$page['menu_slug'],
+					$page['function']
+				);
+			} else {
+				add_submenu_page(
+					'pronamic_ideal',
+					$page['page_title'],
+					$page['menu_title'],
+					$page['capability'],
+					$page['menu_slug']
+				);
+			}
 		}
 
 		// Change title of plugin submenu page to 'Dashboard'.
@@ -840,39 +890,6 @@ class AdminModule {
 		}
 
 		return 'edit_payments';
-	}
-
-	/**
-	 * Page dashboard.
-	 *
-	 * @link https://github.com/WordPress/WordPress/blob/5.1/wp-admin/admin.php#L236-L253
-	 *
-	 * @return void
-	 */
-	public function page_dashboard() {
-		$this->render_page( 'dashboard' );
-	}
-
-	/**
-	 * Page settings.
-	 *
-	 * @link https://github.com/WordPress/WordPress/blob/5.1/wp-admin/admin.php#L236-L253
-	 *
-	 * @return void
-	 */
-	public function page_settings() {
-		$this->render_page( 'settings' );
-	}
-
-	/**
-	 * Page tools.
-	 *
-	 * @link https://github.com/WordPress/WordPress/blob/5.1/wp-admin/admin.php#L236-L253
-	 *
-	 * @return void
-	 */
-	public function page_tools() {
-		$this->render_page( 'tools' );
 	}
 
 	/**
