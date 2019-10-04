@@ -342,36 +342,36 @@ class AdminGatewayPostType {
 	 */
 	public function save_post( $post_id ) {
 		// Nonce.
-		if ( ! filter_has_var( INPUT_POST, 'pronamic_pay_nonce' ) ) {
+		if ( ! \filter_has_var( INPUT_POST, 'pronamic_pay_nonce' ) ) {
 			return;
 		}
 
-		check_admin_referer( 'pronamic_pay_save_gateway', 'pronamic_pay_nonce' );
+		\check_admin_referer( 'pronamic_pay_save_gateway', 'pronamic_pay_nonce' );
 
 		// If this is an autosave, our form has not been submitted, so we don't want to do anything.
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		if ( \defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return;
 		}
 
 		// OK, its safe for us to save the data now.
-		if ( ! filter_has_var( INPUT_POST, '_pronamic_gateway_id' ) ) {
+		if ( ! \filter_has_var( INPUT_POST, '_pronamic_gateway_id' ) ) {
 			return;
 		}
 
 		// Gateway.
-		$gateway_id = filter_input( INPUT_POST, '_pronamic_gateway_id', FILTER_SANITIZE_STRING );
+		$gateway_id = \filter_input( INPUT_POST, '_pronamic_gateway_id', FILTER_SANITIZE_STRING );
 
-		update_post_meta( $post_id, '_pronamic_gateway_id', $gateway_id );
+		\update_post_meta( $post_id, '_pronamic_gateway_id', $gateway_id );
 
 		// Mode.
-		if ( filter_has_var( INPUT_POST, '_pronamic_gateway_mode' ) ) {
-			$gateway_mode = filter_input( INPUT_POST, '_pronamic_gateway_mode', FILTER_SANITIZE_STRING );
+		if ( \filter_has_var( INPUT_POST, '_pronamic_gateway_mode' ) ) {
+			$gateway_mode = \filter_input( INPUT_POST, '_pronamic_gateway_mode', FILTER_SANITIZE_STRING );
 
-			update_post_meta( $post_id, '_pronamic_gateway_mode', $gateway_mode );
+			\update_post_meta( $post_id, '_pronamic_gateway_mode', $gateway_mode );
 		}
 
 		// Transient.
-		delete_transient( 'pronamic_outdated_webhook_urls' );
+		\delete_transient( 'pronamic_outdated_webhook_urls' );
 
 		// Gatway fields.
 		if ( empty( $gateway_id ) ) {
@@ -387,23 +387,42 @@ class AdminGatewayPostType {
 		// Delete transients.
 		$config = $integration->get_config( $post_id );
 
-		delete_transient( 'pronamic_pay_issuers_' . md5( serialize( $config ) ) );
-		delete_transient( 'pronamic_gateway_payment_methods_' . md5( serialize( $config ) ) );
+		\delete_transient( 'pronamic_pay_issuers_' . md5( serialize( $config ) ) );
+		\delete_transient( 'pronamic_gateway_payment_methods_' . md5( serialize( $config ) ) );
 
 		// Save settings.
 		$fields = $integration->get_settings_fields();
 
 		foreach ( $fields as $field ) {
-			if ( isset( $field['meta_key'], $field['filter'] ) ) {
-				$name   = $field['meta_key'];
-				$filter = $field['filter'];
-
-				if ( filter_has_var( INPUT_POST, $name ) ) {
-					$value = filter_input( INPUT_POST, $name, $filter );
-
-					update_post_meta( $post_id, $name, $value );
-				}
+			// Check presence of required field settings.
+			if ( ! isset( $field['meta_key'], $field['filter'] ) ) {
+				continue;
 			}
+
+			$name   = $field['meta_key'];
+			$filter = $field['filter'];
+
+			// Check field in input.
+			if ( ! \filter_has_var( INPUT_POST, $name ) ) {
+				continue;
+			}
+
+			// Filter options.
+			$options = array();
+
+			if ( isset( $filter['flags'] ) ) {
+				$options['flags'] = $filter['flags'];
+			}
+
+			// Make sure filter is not an array.
+			if ( \is_array( $filter ) && isset( $filter['filter'] ) ) {
+				$filter = $filter['filter'];
+			}
+
+			// Get filtered input and update post meta.
+			$value = \filter_input( INPUT_POST, $name, $filter, $options );
+
+			\update_post_meta( $post_id, $name, $value );
 		}
 
 		$integration->save_post( $post_id );

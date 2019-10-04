@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\DateTime\DateTimeZone;
 use WP_Error;
 
 /**
@@ -212,5 +214,50 @@ class LicenseManager {
 		if ( $data ) {
 			set_transient( 'pronamic_pay_license_data', $data, 30 );
 		}
+	}
+
+	/**
+	 * Get license status text.
+	 *
+	 * @return string
+	 */
+	public function get_formatted_license_status() {
+		$license_status = get_option( 'pronamic_pay_license_status' );
+
+		switch ( $license_status ) {
+			case 'valid':
+				return __( 'Valid', 'pronamic_ideal' );
+
+			case 'invalid':
+				return __( 'Invalid', 'pronamic_ideal' );
+
+			case 'site_inactive':
+				return __( 'Site Inactive', 'pronamic_ideal' );
+		}
+
+		return $license_status;
+	}
+
+	/**
+	 * Get next scheduled license check text.
+	 *
+	 * @return string
+	 */
+	public function get_formatted_next_license_check() {
+		$next_license_check = esc_html__( 'Not scheduled', 'pronamic_ideal' );
+
+		$timestamp = wp_next_scheduled( 'pronamic_pay_license_check' );
+
+		if ( false !== $timestamp ) {
+			try {
+				$date = new DateTime( '@' . $timestamp, new DateTimeZone( 'UTC' ) );
+
+				$next_license_check = $date->format_i18n();
+			} catch ( \Exception $e ) {
+				return $next_license_check;
+			}
+		}
+
+		return $next_license_check;
 	}
 }

@@ -15,7 +15,7 @@ use Exception;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
-use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Customer;
 
 /**
@@ -60,14 +60,15 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 		$this->subscriptions = array();
 
 		$this->status_map = array(
-			Statuses::CANCELLED => 'subscr_cancelled',
-			Statuses::EXPIRED   => 'subscr_expired',
-			Statuses::FAILURE   => 'subscr_failed',
-			Statuses::ACTIVE    => 'subscr_active',
-			Statuses::SUCCESS   => 'subscr_active',
-			Statuses::ON_HOLD   => 'subscr_on_hold',
-			Statuses::OPEN      => 'subscr_pending',
-			Statuses::COMPLETED => 'subscr_completed',
+			SubscriptionStatus::CANCELLED => 'subscr_cancelled',
+			SubscriptionStatus::EXPIRED   => 'subscr_expired',
+			SubscriptionStatus::FAILURE   => 'subscr_failed',
+			SubscriptionStatus::ACTIVE    => 'subscr_active',
+			SubscriptionStatus::ON_HOLD   => 'subscr_on_hold',
+			SubscriptionStatus::OPEN      => 'subscr_pending',
+			SubscriptionStatus::COMPLETED => 'subscr_completed',
+			// Map payment status `Success` for backwards compatibility.
+			PaymentStatus::SUCCESS        => 'subscr_active',
 		);
 	}
 

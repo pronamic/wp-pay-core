@@ -16,7 +16,7 @@ use InvalidArgumentException;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
-use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentInfo;
 use Pronamic\WordPress\Pay\Payments\PaymentInfoHelper;
@@ -99,7 +99,7 @@ class Subscription extends LegacySubscription {
 	 * The status of this subscription, for example 'Success'.
 	 *
 	 * @todo How to reference to a class constant?
-	 * @see  Statuses
+	 * @see  PaymentStatus
 	 *
 	 * @var string|null
 	 */
@@ -461,10 +461,21 @@ class Subscription extends LegacySubscription {
 	 * @return Payment|null
 	 */
 	public function get_first_payment() {
-		$payments = $this->get_payments();
+		if ( null === $this->id ) {
+			return null;
+		}
 
-		if ( count( $payments ) > 0 ) {
-			return $payments[0];
+		// Query arguments to get first payment.
+		$args = array(
+			'posts_per_page' => 1,
+			'orderby'        => 'post_date',
+			'order'          => 'ASC',
+		);
+
+		$first_payment = get_pronamic_payments_by_meta( '_pronamic_payment_subscription_id', $this->id, $args );
+
+		if ( ! empty( $first_payment ) ) {
+			return $first_payment[0];
 		}
 
 		return null;
@@ -612,6 +623,18 @@ class Subscription extends LegacySubscription {
 
 		PaymentInfoHelper::from_json( $json, $subscription );
 
+		if ( isset( $json->expiry_date ) ) {
+			$subscription->set_expiry_date( new DateTime( $json->expiry_date ) );
+		}
+
+		if ( isset( $json->next_payment_date ) ) {
+			$subscription->set_next_payment_date( new DateTime( $json->next_payment_date ) );
+		}
+
+		if ( isset( $json->next_payment_delivery_date ) ) {
+			$subscription->set_next_payment_delivery_date( new DateTime( $json->next_payment_delivery_date ) );
+		}
+
 		if ( isset( $json->status ) ) {
 			$subscription->set_status( $json->status );
 		}
@@ -628,6 +651,18 @@ class Subscription extends LegacySubscription {
 		$object = PaymentInfoHelper::to_json( $this );
 
 		$properties = (array) $object;
+
+		if ( null !== $this->expiry_date ) {
+			$properties['expiry_date'] = $this->expiry_date->format( \DATE_ATOM );
+		}
+
+		if ( null !== $this->next_payment_date ) {
+			$properties['next_payment_date'] = $this->next_payment_date->format( \DATE_ATOM );
+		}
+
+		if ( null !== $this->next_payment_delivery_date ) {
+			$properties['next_payment_delivery_date'] = $this->next_payment_delivery_date->format( \DATE_ATOM );
+		}
 
 		if ( null !== $this->get_status() ) {
 			$properties['status'] = $this->get_status();

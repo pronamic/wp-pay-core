@@ -14,7 +14,7 @@ use Pronamic\WordPress\Pay\Admin\AdminModule;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Core\Recurring;
-use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
 use Pronamic\WordPress\Pay\Gateways\Common\AbstractIntegration;
 use Pronamic\WordPress\Pay\Payments\Payment;
@@ -22,6 +22,7 @@ use Pronamic\WordPress\Pay\Payments\PaymentData;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Payments\StatusChecker;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
+use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
 use Pronamic\WordPress\Pay\Webhooks\WebhookLogger;
 use WP_Error;
 use WP_Query;
@@ -39,7 +40,7 @@ class Plugin {
 	 *
 	 * @var string
 	 */
-	private $version;
+	private $version = '';
 
 	/**
 	 * The root file of this WordPress plugin
@@ -197,6 +198,13 @@ class Plugin {
 	private $webhook_logger;
 
 	/**
+	 * Options.
+	 *
+	 * @var array
+	 */
+	private $options;
+
+	/**
 	 * Construct and initialize an Pronamic Pay plugin object.
 	 *
 	 * @param string|array|object $args The plugin arguments.
@@ -206,16 +214,26 @@ class Plugin {
 			$args,
 			array(
 				'file'       => null,
-				'version'    => null,
 				'extensions' => array(),
+				'options'    => array(),
 			)
 		);
 
-		$this->version = $args['version'];
+		// Version from plugin file header.
+		if ( null !== $args['file'] ) {
+			$file_data = get_file_data( $args['file'], array( 'Version' => 'Version' ) );
+
+			if ( \array_key_exists( 'Version', $file_data ) ) {
+				$this->version = $file_data['Version'];
+			}
+		}
 
 		// Backward compatibility.
 		self::$file    = $args['file'];
 		self::$dirname = dirname( self::$file );
+
+		// Options.
+		$this->options = $args['options'];
 
 		// Bootstrap the add-ons.
 		$extensions = $args['extensions'];
@@ -273,6 +291,20 @@ class Plugin {
 	 */
 	public function get_file() {
 		return self::$file;
+	}
+
+	/**
+	 * Get option.
+	 *
+	 * @param string $option Name of option to retrieve.
+	 * @return string|null
+	 */
+	public function get_option( $option ) {
+		if ( array_key_exists( $option, $this->options ) ) {
+			return $this->options[ $option ];
+		}
+
+		return null;
 	}
 
 	/**
@@ -942,7 +974,7 @@ class Plugin {
 		$amount = $payment->get_total_amount()->get_value();
 
 		if ( empty( $amount ) ) {
-			$payment->set_status( Statuses::SUCCESS );
+			$payment->set_status( PaymentStatus::SUCCESS );
 
 			$payment->save();
 
@@ -955,7 +987,7 @@ class Plugin {
 		}
 
 		if ( ! $gateway ) {
-			$payment->set_status( Statuses::FAILURE );
+			$payment->set_status( PaymentStatus::FAILURE );
 
 			$payment->save();
 
@@ -976,7 +1008,7 @@ class Plugin {
 
 		// Set payment status.
 		if ( false === $result ) {
-			$payment->set_status( Statuses::FAILURE );
+			$payment->set_status( PaymentStatus::FAILURE );
 		}
 
 		// Save payment.
@@ -992,9 +1024,9 @@ class Plugin {
 			if ( Recurring::FIRST === $payment->recurring_type ) {
 				// First payment - cancel subscription to prevent unwanted recurring payments
 				// in the future, when a valid customer ID might be set for the user.
-				$subscription->set_status( Statuses::CANCELLED );
+				$subscription->set_status( SubscriptionStatus::CANCELLED );
 			} else {
-				$subscription->set_status( Statuses::FAILURE );
+				$subscription->set_status( SubscriptionStatus::FAILURE );
 			}
 
 			$subscription->save();

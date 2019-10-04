@@ -28,11 +28,11 @@ class AdminAboutPage {
 	private $plugin;
 
 	/**
-	 * Admin.
+	 * File.
 	 *
-	 * @var AdminModule
+	 * @var string
 	 */
-	private $admin;
+	private $file;
 
 	/**
 	 * Constructs and initializes admin about page object.
@@ -41,12 +41,12 @@ class AdminAboutPage {
 	 * @link https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin.php
 	 * @link https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin-dashboard.php
 	 *
-	 * @param Plugin      $plugin Plugin.
-	 * @param AdminModule $admin  Admin.
+	 * @param Plugin $plugin Plugin.
+	 * @param string $file   About page file.
 	 */
-	public function __construct( Plugin $plugin, AdminModule $admin ) {
+	public function __construct( Plugin $plugin, $file ) {
 		$this->plugin = $plugin;
-		$this->admin  = $admin;
+		$this->file   = $file;
 
 		// Actions.
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
@@ -68,7 +68,7 @@ class AdminAboutPage {
 			__( 'Welcome to Pronamic Pay', 'pronamic_ideal' ),
 			'manage_options',
 			$page,
-			array( $this, 'page_about' )
+			array( $this, 'render_page' )
 		);
 
 		if ( false === $hook_suffix ) {
@@ -94,16 +94,89 @@ class AdminAboutPage {
 
 		wp_enqueue_style(
 			'proanmic-pay-admin-about',
-			plugins_url( 'css/admin-about' . $min . '.css', $this->plugin->get_file() ),
+			plugins_url( '../../css/admin-about' . $min . '.css', __FILE__ ),
 			array(),
 			$this->plugin->get_version()
 		);
 	}
 
 	/**
-	 * Page about.
+	 * Get file version.
+	 *
+	 * @param string $file Absolute path to the file.
+	 * @return string
+	 *
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.7.0/includes/admin/class-wc-admin-status.php#L144-L176
+	 * @link https://github.com/WordPress/WordPress/blob/5.2/wp-includes/functions.php#L5546-L5605
+	 * @link https://github.com/WordPress/WordPress/blob/5.2/wp-includes/functions.php#L5479-L5492
+	 * @throws \Exception Throws exception when reading file version fails.
 	 */
-	public function page_about() {
-		$this->admin->render_page( 'about' );
+	private function get_file_version( $file ) {
+		// We don't need to write to the file, so just open for reading.
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fopen
+		$fp = \fopen( $file, 'r' );
+
+		if ( false === $fp ) {
+			throw new \Exception(
+				\sprintf(
+					'Could not open file to get version: %s.',
+					$file
+				)
+			);
+		}
+
+		// Pull only the first 8kiB of the file in.
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fread
+		$file_data = \fread( $fp, 8192 );
+
+		if ( false === $file_data ) {
+			throw new \Exception(
+				\sprintf(
+					'Could not read file to get version: %s.',
+					$file
+				)
+			);
+		}
+
+		// PHP will close file handle, but we are good citizens.
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
+		\fclose( $fp );
+
+		// Search.
+		\preg_match( '/^[ \t\/*#@]*@version(?P<version>.*)$/mi', $file_data, $matches );
+
+		// Version.
+		$version = '';
+
+		if ( \array_key_exists( 'version', $matches ) ) {
+			$version = \trim( $matches['version'] );
+		}
+
+		return $version;
+	}
+
+	/**
+	 * Get file.
+	 *
+	 * @return string
+	 */
+	private function get_file() {
+		return $this->file;
+	}
+
+	/**
+	 * Get version.
+	 *
+	 * @return string
+	 */
+	public function get_version() {
+		return $this->get_file_version( $this->get_file() );
+	}
+
+	/**
+	 * Render about page.
+	 */
+	public function render_page() {
+		include $this->get_file();
 	}
 }

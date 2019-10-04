@@ -1,6 +1,6 @@
 {
   "name": "@wp-pay/core",
-  "version": "2.2.2",
+  "version": "2.2.4",
   "description": "Core components for the WordPress payment processing library.",
   "repository": {
     "type": "git",
@@ -34,26 +34,49 @@
   "dependencies": {
     "Flot": "github:flot/flot#958e5fd43c6dff4bab3e1fd5cb6109df5c1e8003",
     "accounting": "^0.4.1",
+    "icon-gen": "^2.0.0",
     "jquery": "^3.4.1",
     "tippy.js": "^3.4.1"
   },
   "devDependencies": {
     "autoprefixer": "^9.6.1",
     "cssnano": "^4.1.10",
+    "eslint": "^6.5.1",
+    "eslint-plugin-json": "^1.4.0",
     "grunt": "^1.0.4",
     "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-imagemin": "^3.1.0",
-    "grunt-contrib-jshint": "^2.1.0",
     "grunt-contrib-sass": "^1.0.0",
     "grunt-contrib-uglify": "^4.0.1",
-    "grunt-phpcs": "^0.4.0",
-    "grunt-phplint": "0.1.0",
-    "grunt-phpunit": "^0.3.6",
     "grunt-postcss": "^0.9.0",
-    "grunt-sass-lint": "^0.2.4",
     "grunt-webfont": "^1.7.2",
     "load-grunt-tasks": "^5.1.0",
-    "postcss-eol": "0.0.8"
+    "npm-run-all": "^4.1.5",
+    "postcss-eol": "0.0.8",
+    "sass": "^1.23.0",
+    "sass-lint": "^1.13.1",
+    "terser": "^4.3.4"
+  },
+  "scripts": {
+    "build-image": "npm-run-all build-image-*",
+    "build-image-svg-default": "svgo images/src/wp-pay.svg -o images/dist/wp-pay.svgo-min.svg",
+    "build-image-svg-white": "svgo images/src/wp-pay-white.svg -o images/dist/wp-pay-white.svgo-min.svg",
+    "build-image-svg-wp-admin": "svgo images/src/wp-pay-wp-admin-fresh-base.svg -o images/dist/wp-pay-wp-admin-fresh-base.svgo-min.svg",
+    "build-image-png-512": "rsvg-convert -w 512 -h 512 images/src/wp-pay.svg -o images/src/wp-pay-512.png",
+    "build-image-png-512-min": "pngquant images/src/wp-pay-512.png --output images/dist/wp-pay-512.pngquant-min.png --force",
+    "build-image-png-white-512": "rsvg-convert -w 512 -h 512 images/src/wp-pay-white.svg -o images/src/wp-pay-white-512.png",
+    "build-image-png-white-512-min": "pngquant images/src/wp-pay-white-512.png --output images/dist/wp-pay-white-512.pngquant-min.png --force",
+    "build-image-ico": "icon-gen --input images/src/wp-pay.svg --output images/dist --ico name=wp-pay --icns name=wp-pay -r",
+    "eslint": "eslint . --ext .json --ext .js",
+    "lint": "npm-run-all --parallel eslint sass-lint",
+    "sass-lint": "sass-lint --verbose",
+    "js-build": "cp js/src/*.js js/dist",
+    "js-minify": "npm-run-all js-minify-*",
+    "js-minify-admin": "terser --compress --mangle --output js/dist/admin.min.js js/src/admin.js",
+    "js-minify-admin-reports": "terser --compress --mangle --output js/dist/admin-reports.min.js js/src/admin-reports.js",
+    "js-minify-admin-tour": "terser --compress --mangle --output js/dist/admin-tour.min.js js/src/admin-tour.js",
+    "js-minify-block-payment-form": "terser --compress --mangle --output js/dist/block-payment-form.min.js js/src/block-payment-form.js",
+    "sass": "sass scss:css"
   }
 }

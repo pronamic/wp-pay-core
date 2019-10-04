@@ -622,5 +622,31 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 
 		<?php endif ?>
 
+		<tr>
+			<th scope="row">
+				<?php esc_html_e( 'REST API URL', 'pronamic_ideal' ); ?>
+			</th>
+			<td>
+				<?php
+
+				/**
+				 * REST API URL.
+				 *
+				 * @link https://developer.wordpress.org/rest-api/using-the-rest-api/authentication/#cookie-authentication
+				 */
+				$rest_api_url = rest_url( 'pronamic-pay/v1/payments/' . $payment_id );
+
+				$rest_api_nonce_url = wp_nonce_url( $rest_api_url, 'wp_rest' );
+
+				printf(
+					'<a href="%s">%s</a>',
+					esc_url( $rest_api_nonce_url ),
+					esc_html( $rest_api_url )
+				);
+
+				?>
+			</td>
+		</tr>
+
 	<?php endif; ?>
 </table>

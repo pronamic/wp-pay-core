@@ -18,16 +18,6 @@ module.exports = function( grunt ) {
 
 			// Copy.
 			copy: {
-				scripts: {
-					files: [
-						{ // JS.
-							expand: true,
-							cwd: 'js/src/',
-							src: '**',
-							dest: 'js/dist/'
-						}
-					]
-				},
 				assets: {
 					files: [
 						{ // Flot - http://www.flotcharts.org/.
@@ -115,10 +105,6 @@ module.exports = function( grunt ) {
 			uglify: {
 				scripts: {
 					files: {
-						// Pronamic Pay.
-						'js/dist/admin.min.js': 'js/dist/admin.js',
-						'js/dist/admin-reports.min.js': 'js/dist/admin-reports.js',
-						'js/dist/admin-tour.min.js': 'js/dist/admin-tour.js',
 						// Accounting.
 						'assets/accounting/accounting.min.js': 'assets/accounting/accounting.js',
 						// Flot.
@@ -137,8 +123,7 @@ module.exports = function( grunt ) {
 					src: [
 						'assets',
 						'css',
-						'images',
-						'js/dist'
+						'images'
 					]
 				}
 			},
@@ -165,74 +150,12 @@ module.exports = function( grunt ) {
 						} ]
 					}
 				}
-			},
-
-			// Sass Lint.
-			sasslint: {
-				options: {
-					configFile: '.sass-lint.yml'
-				},
-				target: [
-					'scss/**/*.scss'
-				]
-			},
-
-			// JSHint.
-			jshint: {
-				all: [ 'Gruntfile.js', 'composer.json', 'package.json' ]
-			},
-
-			// PHP Code Sniffer.
-			phpcs: {
-				application: {
-					src: [
-						'**/*.php',
-						'!node_modules/**',
-						'!vendor/**',
-						'!wordpress/**',
-						'!wp-content/**'
-					],
-				},
-				options: {
-					bin: 'vendor/bin/phpcs',
-					standard: 'phpcs.xml.dist',
-					showSniffCodes: true
-				}
-			},
-
-			// PHPLint.
-			phplint: {
-				all: [ 'src/**/*.php' ]
-			},
-
-			// PHP Mess Detector.
-			phpmd: {
-				application: {
-					dir: 'src'
-				},
-				options: {
-					bin: 'vendor/bin/phpmd',
-					exclude: 'node_modules',
-					reportFormat: 'text',
-					rulesets: 'phpmd.ruleset.xml'
-				}
-			},
-
-			// PHPUnit.
-			phpunit: {
-				options: {
-					bin: 'vendor/bin/phpunit'
-				},
-				classes: {
-
-				}
 			}
 		}
 	);
 
 	// Default task(s).
-	grunt.registerTask( 'default', [ 'jshint', 'phplint', 'phpmd', 'phpcs', 'phpunit' ] );
-	grunt.registerTask( 'assets', [ 'sasslint', 'sass', 'postcss', 'copy:scripts', 'copy:assets' ] );
+	grunt.registerTask( 'assets', [ 'sass', 'postcss', 'copy:assets' ] );
 	grunt.registerTask( 'min', [ 'uglify' ] );
 
 	grunt.registerTask( 'build_assets', [

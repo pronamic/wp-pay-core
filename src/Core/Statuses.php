@@ -17,12 +17,15 @@ namespace Pronamic\WordPress\Pay\Core;
  * Company: Pronamic
  *
  * @author  Remco Tolsma
- * @version 2.1.0
+ * @version 2.2.4
  * @since   1.0.0
+ * @deprecated 2.2.4 Use \Pronamic\WordPress\Pay\Payments\PaymentStatus or \Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus instead.
  */
 class Statuses {
 	/**
 	 * Status indicator for success
+	 *
+	 * @deprecated 2.2.4 Use \Pronamic\WordPress\Pay\Payments\PaymentStatus or \Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus instead.
 	 *
 	 * @var string
 	 */
@@ -31,12 +34,16 @@ class Statuses {
 	/**
 	 * Status indicator for cancelled
 	 *
+	 * @deprecated 2.2.4 Use \Pronamic\WordPress\Pay\Payments\PaymentStatus or \Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus instead.
+	 *
 	 * @var string
 	 */
 	const CANCELLED = 'Cancelled';
 
 	/**
 	 * Status indicator for expired
+	 *
+	 * @deprecated 2.2.4 Use \Pronamic\WordPress\Pay\Payments\PaymentStatus or \Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus instead.
 	 *
 	 * @var string
 	 */
@@ -45,12 +52,16 @@ class Statuses {
 	/**
 	 * Status indicator for failure
 	 *
+	 * @deprecated 2.2.4 Use \Pronamic\WordPress\Pay\Payments\PaymentStatus or \Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus instead.
+	 *
 	 * @var string
 	 */
 	const FAILURE = 'Failure';
 
 	/**
 	 * Status indicator for on hold
+	 *
+	 * @deprecated 2.2.4 Use \Pronamic\WordPress\Pay\Payments\PaymentStatus or \Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus instead.
 	 *
 	 * @var string
 	 */
@@ -59,12 +70,16 @@ class Statuses {
 	/**
 	 * Status indicator for open
 	 *
+	 * @deprecated 2.2.4 Use \Pronamic\WordPress\Pay\Payments\PaymentStatus or \Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus instead.
+	 *
 	 * @var string
 	 */
 	const OPEN = 'Open';
 
 	/**
 	 * Status indicator for refunded
+	 *
+	 * @deprecated 2.2.4 Use \Pronamic\WordPress\Pay\Payments\PaymentStatus or \Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus instead.
 	 *
 	 * @var string
 	 */
@@ -73,6 +88,8 @@ class Statuses {
 	/**
 	 * Status indicator for reserved
 	 *
+	 * @deprecated 2.2.4 Use \Pronamic\WordPress\Pay\Payments\PaymentStatus or \Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus instead.
+	 *
 	 * @var string
 	 */
 	const RESERVED = 'Reserved';
@@ -80,12 +97,16 @@ class Statuses {
 	/**
 	 * Status indicator for active
 	 *
+	 * @deprecated 2.2.4 Use \Pronamic\WordPress\Pay\Payments\PaymentStatus or \Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus instead.
+	 *
 	 * @var string
 	 */
 	const ACTIVE = 'Active';
 
 	/**
 	 * Status indicator for completed
+	 *
+	 * @deprecated 2.2.4 Use \Pronamic\WordPress\Pay\Payments\PaymentStatus or \Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus instead.
 	 *
 	 * @var string
 	 */

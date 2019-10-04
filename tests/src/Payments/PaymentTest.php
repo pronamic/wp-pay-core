@@ -277,6 +277,10 @@ class PaymentTest extends WP_UnitTestCase {
 		$payment->set_shipping_address( $address );
 		$payment->set_lines( $lines );
 
+		// Dates.
+		$payment->set_start_date( new DateTime( '2005-05-05' ) );
+		$payment->set_end_date( new DateTime( '2100-05-05' ) );
+
 		// Test.
 		$json_file = __DIR__ . '/../../json/payment.json';
 

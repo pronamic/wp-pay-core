@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
+use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
 use WP_UnitTestCase;
@@ -133,5 +134,51 @@ class SubscriptionTest extends WP_UnitTestCase {
 		$subscription = new Subscription();
 
 		$this->assertNull( $subscription->get_id() );
+	}
+
+	/**
+	 * Test JSON.
+	 */
+	public function test_json() {
+		/*
+		 * Subscription.
+		 */
+		$subscription = new Subscription();
+		$subscription->set_id( 1 );
+
+		// Dates.
+		$subscription->set_start_date( new DateTime( '2005-05-05' ) );
+		$subscription->set_end_date( new DateTime( '2005-06-05' ) );
+		$subscription->set_expiry_date( new DateTime( '2010-05-05' ) );
+		$subscription->set_next_payment_date( new DateTime( '2005-06-05' ) );
+		$subscription->set_next_payment_delivery_date( new DateTime( '2005-06-01' ) );
+
+		// Test.
+		$json_file = __DIR__ . '/../../json/subscription.json';
+
+		$json_data = json_decode( file_get_contents( $json_file, true ) );
+
+		$json_string = wp_json_encode( $subscription->get_json(), JSON_PRETTY_PRINT );
+
+		$this->assertEquals( wp_json_encode( $json_data, JSON_PRETTY_PRINT ), $json_string );
+
+		$this->assertJsonStringEqualsJsonFile( $json_file, $json_string );
+	}
+
+	/**
+	 * Test from object.
+	 */
+	public function test_from_object() {
+		$json_file = __DIR__ . '/../../json/subscription.json';
+
+		$json_data = json_decode( file_get_contents( $json_file, true ) );
+
+		$subscription = Subscription::from_json( $json_data );
+
+		$json_string = wp_json_encode( $subscription->get_json(), JSON_PRETTY_PRINT );
+
+		$this->assertEquals( wp_json_encode( $json_data, JSON_PRETTY_PRINT ), $json_string );
+
+		$this->assertJsonStringEqualsJsonFile( $json_file, $json_string );
 	}
 }

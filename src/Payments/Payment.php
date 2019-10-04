@@ -18,7 +18,7 @@ use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\CreditCard;
-use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
@@ -274,7 +274,7 @@ class Payment extends LegacyPayment {
 	public function __construct( $post_id = null ) {
 		parent::__construct( $post_id );
 
-		$this->set_status( Statuses::OPEN );
+		$this->set_status( PaymentStatus::OPEN );
 
 		if ( null !== $post_id ) {
 			pronamic_pay_plugin()->payments_data_store->read( $this );
@@ -451,7 +451,7 @@ class Payment extends LegacyPayment {
 		if ( empty( $amount ) ) {
 			$status = $this->get_status();
 
-			$this->set_status( Statuses::SUCCESS );
+			$this->set_status( PaymentStatus::SUCCESS );
 
 			$action_url = $this->get_return_redirect_url();
 

@@ -10,7 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
-use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Util;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
@@ -101,19 +101,33 @@ class AdminSubscriptionPostType {
 	 * @param WP_Query $query WordPress query.
 	 */
 	public function pre_get_posts( $query ) {
+		/**
+		 * The `WP_Query::get` function can return different variable type.
+		 * For now this function can only handle one specific string orderby.
+		 *
+		 * @link https://developer.wordpress.org/reference/classes/wp_query/get/
+		 * @link https://developer.wordpress.org/reference/classes/wp_query/#order-orderby-parameters
+		 * @link https://github.com/WordPress/WordPress/blob/5.2/wp-includes/class-wp-query.php#L1697-L1713
+		 */
+		$orderby = $query->get( 'orderby' );
+
+		if ( ! is_string( $orderby ) ) {
+			return;
+		}
+
 		$map = array(
 			'pronamic_subscription_amount'   => '_pronamic_subscription_amount',
 			'pronamic_subscription_customer' => '_pronamic_subscription_customer_name',
 		);
 
-		$orderby = $query->get( 'orderby' );
-
 		if ( ! isset( $map[ $orderby ] ) ) {
 			return;
 		}
 
-		$query->set( 'meta_key', $map[ $orderby ] );
-		$query->set( 'orderby', $map[ $orderby ] );
+		$meta_key = $map[ $orderby ];
+
+		$query->set( 'meta_key', $meta_key );
+		$query->set( 'orderby', 'meta_value' );
 
 		// Set query meta key.
 		if ( 'pronamic_subscription_amount' === $orderby ) {

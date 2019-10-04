@@ -10,13 +10,11 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
-use Exception;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\Forms\FormPostType;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Webhooks\WebhookManager;
-use WP_Error;
 
 /**
  * WordPress Pay admin
@@ -43,9 +41,9 @@ class AdminModule {
 	/**
 	 * Admin about page.
 	 *
-	 * @var AdminAboutPage
+	 * @var AdminAboutPage|null
 	 */
-	public $about;
+	public $about_page;
 
 	/**
 	 * Admin dashboard page.
@@ -53,6 +51,13 @@ class AdminModule {
 	 * @var AdminDashboard
 	 */
 	public $dashboard;
+
+	/**
+	 * Admin site health.
+	 *
+	 * @var AdminHealth
+	 */
+	public $health;
 
 	/**
 	 * Admin notices page.
@@ -111,11 +116,18 @@ class AdminModule {
 
 		// Modules.
 		$this->settings  = new AdminSettings( $plugin );
-		$this->about     = new AdminAboutPage( $plugin, $this );
 		$this->dashboard = new AdminDashboard( $plugin );
+		$this->health    = new AdminHealth( $plugin );
 		$this->notices   = new AdminNotices( $plugin );
 		$this->reports   = new AdminReports( $plugin, $this );
 		$this->tour      = new AdminTour( $plugin );
+
+		// About page.
+		$about_page_file = $this->plugin->get_option( 'about_page_file' );
+
+		if ( null !== $about_page_file ) {
+			$this->about_page = new AdminAboutPage( $plugin, $about_page_file );
+		}
 
 		// Webhook Manager.
 		$this->webhook_manager = new WebhookManager( $plugin, $this );
@@ -332,7 +344,7 @@ class AdminModule {
 	 * @param array    $pages   Page.
 	 * @param int|null $parent Parent post ID.
 	 * @return void
-	 * @throws Exception When creating page fails.
+	 * @throws \Exception When creating page fails.
 	 */
 	private function create_pages( $pages, $parent = null ) {
 		foreach ( $pages as $page ) {
@@ -351,8 +363,8 @@ class AdminModule {
 
 			$result = wp_insert_post( $post, true );
 
-			if ( $result instanceof WP_Error ) {
-				throw new Exception( $result->get_error_message() );
+			if ( $result instanceof \WP_Error ) {
+				throw new \Exception( $result->get_error_message() );
 			}
 
 			if ( isset( $page['post_meta'] ) ) {
@@ -605,9 +617,15 @@ class AdminModule {
 		// Amount.
 		$string = filter_input( INPUT_POST, 'test_amount', FILTER_SANITIZE_STRING );
 
-		$money_parser = new MoneyParser();
+		try {
+			$money_parser = new MoneyParser();
 
-		$amount = $money_parser->parse( $string )->get_value();
+			$amount = $money_parser->parse( $string )->get_value();
+		} catch ( \Exception $e ) {
+			wp_die( esc_html( $e->getMessage() ) );
+
+			return;
+		}
 
 		// Start.
 		$errors = array();
@@ -624,8 +642,8 @@ class AdminModule {
 			if ( ! $gateway->has_error() ) {
 				$gateway->redirect( $payment );
 			}
-		} catch ( Exception $e ) {
-			$errors[] = new WP_Error( 'pay_error', $e->getMessage() );
+		} catch ( \Exception $e ) {
+			$errors[] = new \WP_Error( 'pay_error', $e->getMessage() );
 		}
 
 		$errors = array_filter( $errors );
@@ -662,6 +680,59 @@ class AdminModule {
 	}
 
 	/**
+	 * Get menu icon URL.
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/add_menu_page/
+	 * @return string
+	 * @throws \Exception Throws exception when retrieving menu icon fails.
+	 */
+	private function get_menu_icon_url() {
+		/**
+		 * Icon URL.
+		 *
+		 * Pass a base64-encoded SVG using a data URI, which will be colored to match the color scheme.
+		 * This should begin with 'data:image/svg+xml;base64,'.
+		 *
+		 * We use a SVG image with default fill color #A0A5AA from the default admin color scheme:
+		 * https://github.com/WordPress/WordPress/blob/5.2/wp-includes/general-template.php#L4135-L4145
+		 *
+		 * The advantage of this is that users with the default admin color scheme do not see the repaint:
+		 * https://github.com/WordPress/WordPress/blob/5.2/wp-admin/js/svg-painter.js
+		 *
+		 * @link https://developer.wordpress.org/reference/functions/add_menu_page/
+		 */
+		$file = __DIR__ . '/../../images/dist/wp-pay-wp-admin-fresh-base.svgo-min.svg';
+
+		if ( ! \is_readable( $file ) ) {
+			throw new \Exception(
+				\sprintf(
+					'Could not read WordPress admin menu icon from file: %s.',
+					$file
+				)
+			);
+		}
+
+		$svg = \file_get_contents( $file, true );
+
+		if ( false === $svg ) {
+			throw new \Exception(
+				\sprintf(
+					'Could not read WordPress admin menu icon from file: %s.',
+					$file
+				)
+			);
+		}
+
+		$icon_url = \sprintf(
+			'data:image/svg+xml;base64,%s',
+			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+			\base64_encode( $svg )
+		);
+
+		return $icon_url;
+	}
+
+	/**
 	 * Create the admin menu.
 	 *
 	 * @return void
@@ -680,67 +751,122 @@ class AdminModule {
 			);
 		}
 
+		// Submenu pages.
+		$submenu_pages = array(
+			array(
+				'page_title' => __( 'Payments', 'pronamic_ideal' ),
+				'menu_title' => __( 'Payments', 'pronamic_ideal' ) . $badge,
+				'capability' => 'edit_payments',
+				'menu_slug'  => 'edit.php?post_type=pronamic_payment',
+			),
+			array(
+				'page_title' => __( 'Subscriptions', 'pronamic_ideal' ),
+				'menu_title' => __( 'Subscriptions', 'pronamic_ideal' ),
+				'capability' => 'edit_payments',
+				'menu_slug'  => 'edit.php?post_type=pronamic_pay_subscr',
+			),
+			array(
+				'page_title' => __( 'Reports', 'pronamic_ideal' ),
+				'menu_title' => __( 'Reports', 'pronamic_ideal' ),
+				'capability' => 'edit_payments',
+				'menu_slug'  => 'pronamic_pay_reports',
+				'function'   => function() {
+					$this->reports->page_reports();
+				},
+			),
+			array(
+				'page_title' => __( 'Payment Forms', 'pronamic_ideal' ),
+				'menu_title' => __( 'Forms', 'pronamic_ideal' ),
+				'capability' => 'edit_forms',
+				'menu_slug'  => 'edit.php?post_type=pronamic_pay_form',
+			),
+			array(
+				'page_title' => __( 'Configurations', 'pronamic_ideal' ),
+				'menu_title' => __( 'Configurations', 'pronamic_ideal' ),
+				'capability' => 'manage_options',
+				'menu_slug'  => 'edit.php?post_type=pronamic_gateway',
+			),
+			array(
+				'page_title' => __( 'Settings', 'pronamic_ideal' ),
+				'menu_title' => __( 'Settings', 'pronamic_ideal' ),
+				'capability' => 'manage_options',
+				'menu_slug'  => 'pronamic_pay_settings',
+				'function'   => function() {
+					$this->render_page( 'settings' );
+				},
+			),
+		);
+
+		if ( version_compare( get_bloginfo( 'version' ), '5.2', '<' ) ) {
+			$submenu_pages[] = array(
+				'page_title' => __( 'Tools', 'pronamic_ideal' ),
+				'menu_title' => __( 'Tools', 'pronamic_ideal' ),
+				'capability' => 'manage_options',
+				'menu_slug'  => 'pronamic_pay_tools',
+				'function'   => function() {
+					$this->render_page( 'tools' );
+				},
+			);
+		}
+
+		$minimum_capability = $this->get_minimum_capability( $submenu_pages );
+
+		try {
+			$menu_icon_url = $this->get_menu_icon_url();
+		} catch ( \Exception $e ) {
+			// @todo Log.
+
+			/**
+			 * If retrieving the menu icon URL fails we will
+			 * fallback to the WordPress money dashicon.
+			 *
+			 * @link https://developer.wordpress.org/resource/dashicons/#money
+			 */
+			$menu_icon_url = 'dashicons-money';
+		}
+
 		add_menu_page(
 			__( 'Pronamic Pay', 'pronamic_ideal' ),
 			__( 'Pay', 'pronamic_ideal' ) . $badge,
-			'edit_payments',
+			$minimum_capability,
 			'pronamic_ideal',
-			array( $this, 'page_dashboard' ),
-			'dashicons-money'
+			function() {
+				$this->render_page( 'dashboard' );
+			},
+			$menu_icon_url
 		);
 
-		add_submenu_page(
-			'pronamic_ideal',
-			__( 'Payments', 'pronamic_ideal' ),
-			__( 'Payments', 'pronamic_ideal' ) . $badge,
-			'edit_payments',
-			'edit.php?post_type=pronamic_payment'
-		);
+		// Add submmenu pages.
+		foreach ( $submenu_pages as $page ) {
+			/**
+			 * To keep PHPStan happy we use an if/else statement for
+			 * the 6th $function parameter which should be a callable
+			 * function. Unfortunately this is not documented
+			 * correctly in WordPress.
+			 *
+			 * @link https://github.com/WordPress/WordPress/blob/5.2/wp-admin/includes/plugin.php#L1296-L1377
+			 */
+			if ( array_key_exists( 'function', $page ) ) {
+				add_submenu_page(
+					'pronamic_ideal',
+					$page['page_title'],
+					$page['menu_title'],
+					$page['capability'],
+					$page['menu_slug'],
+					$page['function']
+				);
+			} else {
+				add_submenu_page(
+					'pronamic_ideal',
+					$page['page_title'],
+					$page['menu_title'],
+					$page['capability'],
+					$page['menu_slug']
+				);
+			}
+		}
 
-		add_submenu_page(
-			'pronamic_ideal',
-			__( 'Subscriptions', 'pronamic_ideal' ),
-			__( 'Subscriptions', 'pronamic_ideal' ),
-			'edit_payments',
-			'edit.php?post_type=pronamic_pay_subscr'
-		);
-
-		do_action( 'pronamic_pay_admin_menu' );
-
-		add_submenu_page(
-			'pronamic_ideal',
-			__( 'Payment Forms', 'pronamic_ideal' ),
-			__( 'Forms', 'pronamic_ideal' ),
-			'edit_forms',
-			'edit.php?post_type=pronamic_pay_form'
-		);
-
-		add_submenu_page(
-			'pronamic_ideal',
-			__( 'Configurations', 'pronamic_ideal' ),
-			__( 'Configurations', 'pronamic_ideal' ),
-			'manage_options',
-			'edit.php?post_type=pronamic_gateway'
-		);
-
-		add_submenu_page(
-			'pronamic_ideal',
-			__( 'Settings', 'pronamic_ideal' ),
-			__( 'Settings', 'pronamic_ideal' ),
-			'manage_options',
-			'pronamic_pay_settings',
-			array( $this, 'page_settings' )
-		);
-
-		add_submenu_page(
-			'pronamic_ideal',
-			__( 'Tools', 'pronamic_ideal' ),
-			__( 'Tools', 'pronamic_ideal' ),
-			'manage_options',
-			'pronamic_pay_tools',
-			array( $this, 'page_tools' )
-		);
-
+		// Change title of plugin submenu page to 'Dashboard'.
 		global $submenu;
 
 		if ( isset( $submenu['pronamic_ideal'] ) ) {
@@ -750,36 +876,20 @@ class AdminModule {
 	}
 
 	/**
-	 * Page dashboard.
+	 * Get minimum capability from submenu pages.
 	 *
-	 * @link https://github.com/WordPress/WordPress/blob/5.1/wp-admin/admin.php#L236-L253
+	 * @param array $pages Submenu pages.
 	 *
-	 * @return void
+	 * @return string
 	 */
-	public function page_dashboard() {
-		$this->render_page( 'dashboard' );
-	}
+	public function get_minimum_capability( array $pages ) {
+		foreach ( $pages as $page ) {
+			if ( \current_user_can( $page['capability'] ) ) {
+				return $page['capability'];
+			}
+		}
 
-	/**
-	 * Page settings.
-	 *
-	 * @link https://github.com/WordPress/WordPress/blob/5.1/wp-admin/admin.php#L236-L253
-	 *
-	 * @return void
-	 */
-	public function page_settings() {
-		$this->render_page( 'settings' );
-	}
-
-	/**
-	 * Page tools.
-	 *
-	 * @link https://github.com/WordPress/WordPress/blob/5.1/wp-admin/admin.php#L236-L253
-	 *
-	 * @return void
-	 */
-	public function page_tools() {
-		$this->render_page( 'tools' );
+		return 'edit_payments';
 	}
 
 	/**

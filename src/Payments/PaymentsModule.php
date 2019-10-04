@@ -12,7 +12,7 @@ namespace Pronamic\WordPress\Pay\Payments;
 
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
-use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use WP_Error;
 use WP_REST_Request;
 
@@ -105,23 +105,23 @@ class PaymentsModule {
 		$page_id = null;
 
 		switch ( $payment->status ) {
-			case Statuses::CANCELLED:
+			case PaymentStatus::CANCELLED:
 				$page_id = pronamic_pay_get_page_id( 'cancel' );
 
 				break;
-			case Statuses::EXPIRED:
+			case PaymentStatus::EXPIRED:
 				$page_id = pronamic_pay_get_page_id( 'expired' );
 
 				break;
-			case Statuses::FAILURE:
+			case PaymentStatus::FAILURE:
 				$page_id = pronamic_pay_get_page_id( 'error' );
 
 				break;
-			case Statuses::OPEN:
+			case PaymentStatus::OPEN:
 				$page_id = pronamic_pay_get_page_id( 'unknown' );
 
 				break;
-			case Statuses::SUCCESS:
+			case PaymentStatus::SUCCESS:
 				$page_id = pronamic_pay_get_page_id( 'completed' );
 
 				break;
@@ -194,6 +194,24 @@ class PaymentsModule {
 	 * @return void
 	 */
 	public function rest_api_init() {
+		\register_rest_route(
+			'pronamic-pay/v1',
+			'/payments/(?P<payment_id>\d+)',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $this, 'rest_api_payment' ),
+				'permission_callback' => function() {
+					return \current_user_can( 'manage_options' );
+				},
+				'args'                => array(
+					'payment_id' => array(
+						'description' => __( 'Payment ID.', 'pronamic_ideal' ),
+						'type'        => 'integer',
+					),
+				),
+			)
+		);
+
 		register_rest_route(
 			'pronamic-pay/v1',
 			'/gateways/(?P<config_id>\d+)',
@@ -219,6 +237,32 @@ class PaymentsModule {
 				),
 			)
 		);
+	}
+
+	/**
+	 * REST API payment.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return object
+	 */
+	public function rest_api_payment( \WP_REST_Request $request ) {
+		$payment_id = $request->get_param( 'payment_id' );
+
+		$payment = \get_pronamic_payment( $payment_id );
+
+		if ( null === $payment ) {
+			return new \WP_Error(
+				'pronamic-pay-payment-not-found',
+				\sprintf(
+					/* translators: %s: Payment ID */
+					\__( 'Could not found payment with ID `%s`.', 'pronamic_ideal' ),
+					$payment_id
+				),
+				$payment_id
+			);
+		}
+
+		return $payment->get_json();
 	}
 
 	/**

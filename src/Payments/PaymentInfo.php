@@ -18,7 +18,7 @@ use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\CreditCard;
-use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 use WP_Post;

@@ -45,7 +45,7 @@ class GatewayIntegrations implements IteratorAggregate {
 			 *
 			 * @todo Consider throwing exception?
 			 */
-			if ( $integration instanceof AbstractIntegration ) {
+			if ( ! ( $integration instanceof AbstractIntegration ) ) {
 				continue;
 			}
 

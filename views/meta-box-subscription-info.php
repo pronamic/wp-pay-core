@@ -9,7 +9,7 @@
  */
 
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
-use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Util;
 
 $subscription_id = $subscription->get_id();
@@ -160,7 +160,7 @@ $user_id  = is_null( $customer ) ? null : $customer->get_user_id();
 	<?php
 
 	// Show next payment (delivery) date if subscription is not cancelled or completed.
-	if ( ! in_array( $subscription->get_status(), array( Statuses::CANCELLED, Statuses::COMPLETED ), true ) ) :
+	if ( ! in_array( $subscription->get_status(), array( PaymentStatus::CANCELLED, PaymentStatus::COMPLETED ), true ) ) :
 
 		?>
 
@@ -303,4 +303,35 @@ $user_id  = is_null( $customer ) ? null : $customer->get_user_id();
 			?>
 		</td>
 	</tr>
+
+	<?php if ( PRONAMIC_PAY_DEBUG ) : ?>
+
+		<tr>
+			<th scope="row">
+				<?php esc_html_e( 'REST API URL', 'pronamic_ideal' ); ?>
+			</th>
+			<td>
+				<?php
+
+				/**
+				 * REST API URL.
+				 *
+				 * @link https://developer.wordpress.org/rest-api/using-the-rest-api/authentication/#cookie-authentication
+				 */
+				$rest_api_url = rest_url( 'pronamic-pay/v1/subscriptions/' . $subscription_id );
+
+				$rest_api_nonce_url = wp_nonce_url( $rest_api_url, 'wp_rest' );
+
+				printf(
+					'<a href="%s">%s</a>',
+					esc_url( $rest_api_nonce_url ),
+					esc_html( $rest_api_url )
+				);
+
+				?>
+			</td>
+		</tr>
+
+	<?php endif; ?>
+
 </table>

@@ -97,11 +97,6 @@ class Install {
 		// Database update.
 		$version = $this->plugin->get_version();
 
-		$parts = explode( '.', $version );
-
-		$major_version = implode( '.', array_slice( $parts, 0, 1 ) );
-		$minor_version = implode( '.', array_slice( $parts, 0, 2 ) );
-
 		$current_version    = get_option( 'pronamic_pay_version', null );
 		$current_db_version = get_option( 'pronamic_pay_db_version', null );
 
@@ -119,28 +114,33 @@ class Install {
 		}
 
 		// Redirect.
-		if ( null === $current_version ) {
-			// No version? This is a new install :).
-			$url = add_query_arg(
-				array(
-					'page' => 'pronamic-pay-about',
-					'tab'  => 'getting-started',
-				),
-				admin_url( 'index.php' )
-			);
+		if ( null !== $this->admin->about_page ) {
+			$about_page_version        = $this->admin->about_page->get_version();
+			$about_page_version_viewed = get_option( 'pronamic_pay_about_page_version', null );
 
-			set_transient( 'pronamic_pay_admin_redirect', $url, 3600 );
-		} elseif ( version_compare( $current_version, $minor_version, '<' ) ) {
-			// Show welcome screen for minor updates only.
-			$url = add_query_arg(
-				array(
-					'page' => 'pronamic-pay-about',
-					'tab'  => 'new',
-				),
-				admin_url( 'index.php' )
-			);
+			$tab = null;
 
-			set_transient( 'pronamic_pay_admin_redirect', $url, 3600 );
+			if ( null === $current_version ) {
+				// No version? This is a new install :).
+				$tab = 'getting-started';
+			} elseif ( version_compare( $about_page_version_viewed, $about_page_version, '<' ) ) {
+				// Show about page only if viewed version is lower then current version.
+				$tab = 'new';
+			}
+
+			if ( null !== $tab ) {
+				$url = add_query_arg(
+					array(
+						'page' => 'pronamic-pay-about',
+						'tab'  => $tab,
+					),
+					admin_url( 'index.php' )
+				);
+
+				set_transient( 'pronamic_pay_admin_redirect', $url, 3600 );
+			}
+
+			update_option( 'pronamic_pay_about_page_version', $about_page_version );
 		}
 
 		// Update version.

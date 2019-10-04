@@ -326,21 +326,21 @@ body.post-type-pronamic_payment #post-body-content, body.post-type-pronamic_pay_
 
 @media only screen and (max-width: 782px) {
   .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_status, .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_subscription, .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_subscription_status,
-  .wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_status,
-  .wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_subscription,
-  .wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_subscription_status {
+.wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_status,
+.wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_subscription,
+.wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_subscription_status {
     display: table-cell;
   }
   .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_status::before, .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_subscription::before, .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_subscription_status::before,
-  .wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_status::before,
-  .wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_subscription::before,
-  .wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_subscription_status::before {
+.wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_status::before,
+.wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_subscription::before,
+.wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_subscription_status::before {
     display: none;
   }
   .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items).is-expanded td:not(.hidden).column-pronamic_payment_status, .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items).is-expanded td:not(.hidden).column-pronamic_payment_subscription, .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items).is-expanded td:not(.hidden).column-pronamic_subscription_status,
-  .wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items).is-expanded td:not(.hidden).column-pronamic_payment_status,
-  .wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items).is-expanded td:not(.hidden).column-pronamic_payment_subscription,
-  .wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items).is-expanded td:not(.hidden).column-pronamic_subscription_status {
+.wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items).is-expanded td:not(.hidden).column-pronamic_payment_status,
+.wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items).is-expanded td:not(.hidden).column-pronamic_payment_subscription,
+.wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items).is-expanded td:not(.hidden).column-pronamic_subscription_status {
     display: table-cell !important;
   }
 }

@@ -85,6 +85,8 @@
     }
   ],
   "mode":"live",
+  "start_date": "2005-05-05T00:00:00+00:00",
+  "end_date": "2100-05-05T00:00:00+00:00",
   "status":"Open",
   "ga_tracked":true
 }

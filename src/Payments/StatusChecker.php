@@ -10,7 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
-use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Plugin;
 
 /**
@@ -65,7 +65,7 @@ class StatusChecker {
 		// Bail if payment already has a final status (e.g. failed payments).
 		$status = $payment->get_status();
 
-		if ( ! empty( $status ) && Statuses::OPEN !== $status ) {
+		if ( ! empty( $status ) && PaymentStatus::OPEN !== $status ) {
 			return;
 		}
 
@@ -159,7 +159,7 @@ class StatusChecker {
 
 		// http://pronamic.nl/wp-content/uploads/2011/12/iDEAL_Advanced_PHP_EN_V2.2.pdf (page 19)
 		// - No status request after a final status has been received for a transaction.
-		if ( ! empty( $payment->status ) && Statuses::OPEN !== $payment->status ) {
+		if ( ! empty( $payment->status ) && PaymentStatus::OPEN !== $payment->status ) {
 			return;
 		}
 
@@ -183,7 +183,7 @@ class StatusChecker {
 		// Schedule check if no final status has been received.
 		$status = $payment->get_status();
 
-		if ( empty( $status ) || Statuses::OPEN === $status ) {
+		if ( empty( $status ) || PaymentStatus::OPEN === $status ) {
 			$next_try = ( $try + 1 );
 
 			// Get delay seconds for next status check.
@@ -211,7 +211,7 @@ class StatusChecker {
 		$status = $payment->get_status();
 
 		// Bail if payment does not have a final payment status.
-		if ( empty( $status ) || Statuses::OPEN === $status ) {
+		if ( empty( $status ) || PaymentStatus::OPEN === $status ) {
 			return;
 		}
 
