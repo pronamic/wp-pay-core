@@ -28,25 +28,16 @@ class AdminAboutPage {
 	private $plugin;
 
 	/**
-	 * Admin.
-	 *
-	 * @var AdminModule
-	 */
-	private $admin;
-
-	/**
 	 * Constructs and initializes admin about page object.
 	 *
 	 * @link https://github.com/WordImpress/Give/blob/1.1/includes/admin/dashboard-widgets.php
 	 * @link https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin.php
 	 * @link https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin-dashboard.php
 	 *
-	 * @param Plugin      $plugin Plugin.
-	 * @param AdminModule $admin  Admin.
+	 * @param Plugin $plugin Plugin.
 	 */
-	public function __construct( Plugin $plugin, AdminModule $admin ) {
+	public function __construct( Plugin $plugin ) {
 		$this->plugin = $plugin;
-		$this->admin  = $admin;
 
 		// Actions.
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );

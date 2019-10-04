@@ -116,7 +116,7 @@ class AdminModule {
 
 		// Modules.
 		$this->settings   = new AdminSettings( $plugin );
-		$this->about_page = new AdminAboutPage( $plugin, $this );
+		$this->about_page = new AdminAboutPage( $plugin );
 		$this->dashboard  = new AdminDashboard( $plugin );
 		$this->health     = new AdminHealth( $plugin );
 		$this->notices    = new AdminNotices( $plugin );
