@@ -41,7 +41,7 @@ class AdminModule {
 	/**
 	 * Admin about page.
 	 *
-	 * @var AdminAboutPage
+	 * @var AdminAboutPage|null
 	 */
 	public $about_page;
 
@@ -116,12 +116,18 @@ class AdminModule {
 
 		// Modules.
 		$this->settings   = new AdminSettings( $plugin );
-		$this->about_page = new AdminAboutPage( $plugin );
 		$this->dashboard  = new AdminDashboard( $plugin );
 		$this->health     = new AdminHealth( $plugin );
 		$this->notices    = new AdminNotices( $plugin );
 		$this->reports    = new AdminReports( $plugin, $this );
 		$this->tour       = new AdminTour( $plugin );
+
+		// About page.
+		$about_page_file = $this->plugin->get_option( 'about_page_file' );
+
+		if ( null !== $about_page_file ) {
+			$this->about_page = new AdminAboutPage( $plugin, $about_page_file );
+		}
 
 		// Webhook Manager.
 		$this->webhook_manager = new WebhookManager( $plugin, $this );

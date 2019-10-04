@@ -35,9 +35,11 @@ class AdminAboutPage {
 	 * @link https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin-dashboard.php
 	 *
 	 * @param Plugin $plugin Plugin.
+	 * @param string $file   About page file.
 	 */
-	public function __construct( Plugin $plugin ) {
+	public function __construct( Plugin $plugin, $file ) {
 		$this->plugin = $plugin;
+		$this->file   = $file;
 
 		// Actions.
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
@@ -151,7 +153,7 @@ class AdminAboutPage {
 	 * @return string
 	 */
 	private function get_file() {
-		return __DIR__ . '/../../views/page-about.php';
+		return $this->file;
 	}
 
 	/**

@@ -198,6 +198,13 @@ class Plugin {
 	private $webhook_logger;
 
 	/**
+	 * Options.
+	 *
+	 * @var array
+	 */
+	private $options;
+
+	/**
 	 * Construct and initialize an Pronamic Pay plugin object.
 	 *
 	 * @param string|array|object $args The plugin arguments.
@@ -208,6 +215,7 @@ class Plugin {
 			array(
 				'file'       => null,
 				'extensions' => array(),
+				'options'    => array(),
 			)
 		);
 
@@ -223,6 +231,9 @@ class Plugin {
 		// Backward compatibility.
 		self::$file    = $args['file'];
 		self::$dirname = dirname( self::$file );
+
+		// Options.
+		$this->options = $args['options'];
 
 		// Bootstrap the add-ons.
 		$extensions = $args['extensions'];
@@ -280,6 +291,20 @@ class Plugin {
 	 */
 	public function get_file() {
 		return self::$file;
+	}
+
+	/**
+	 * Get option.
+	 *
+	 * @param string $option Name of option to retrieve.
+	 * @return string|null
+	 */
+	public function get_option( $option ) {
+		if ( array_key_exists( $option, $this->options ) ) {
+			return $this->options[ $option ];
+		}
+
+		return null;
 	}
 
 	/**
