@@ -102,6 +102,7 @@ class AdminAboutPage {
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.7.0/includes/admin/class-wc-admin-status.php#L144-L176
 	 * @link https://github.com/WordPress/WordPress/blob/5.2/wp-includes/functions.php#L5546-L5605
 	 * @link https://github.com/WordPress/WordPress/blob/5.2/wp-includes/functions.php#L5479-L5492
+	 * @throws \Exception Throws exception when reading file version fails.
 	 */
 	private function get_file_version( $file ) {
 		// We don't need to write to the file, so just open for reading.

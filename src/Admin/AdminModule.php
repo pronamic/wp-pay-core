@@ -115,12 +115,12 @@ class AdminModule {
 		add_filter( 'parent_file', array( $this, 'admin_menu_parent_file' ) );
 
 		// Modules.
-		$this->settings   = new AdminSettings( $plugin );
-		$this->dashboard  = new AdminDashboard( $plugin );
-		$this->health     = new AdminHealth( $plugin );
-		$this->notices    = new AdminNotices( $plugin );
-		$this->reports    = new AdminReports( $plugin, $this );
-		$this->tour       = new AdminTour( $plugin );
+		$this->settings  = new AdminSettings( $plugin );
+		$this->dashboard = new AdminDashboard( $plugin );
+		$this->health    = new AdminHealth( $plugin );
+		$this->notices   = new AdminNotices( $plugin );
+		$this->reports   = new AdminReports( $plugin, $this );
+		$this->tour      = new AdminTour( $plugin );
 
 		// About page.
 		$about_page_file = $this->plugin->get_option( 'about_page_file' );
@@ -622,7 +622,7 @@ class AdminModule {
 
 			$amount = $money_parser->parse( $string )->get_value();
 		} catch ( \Exception $e ) {
-			wp_die( $e->getMessage() );
+			wp_die( esc_html( $e->getMessage() ) );
 		}
 
 		// Start.
@@ -682,6 +682,7 @@ class AdminModule {
 	 *
 	 * @link https://developer.wordpress.org/reference/functions/add_menu_page/
 	 * @return string
+	 * @throws \Exception Throws exception when retrieving menu icon fails.
 	 */
 	private function get_menu_icon_url() {
 		/**
