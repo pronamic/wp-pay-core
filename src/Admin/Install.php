@@ -139,7 +139,7 @@ class Install {
 
 				set_transient( 'pronamic_pay_admin_redirect', $url, 3600 );
 			}
-		
+
 			update_option( 'pronamic_pay_about_page_version', $about_page_version );
 		}
 
