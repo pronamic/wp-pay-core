@@ -476,7 +476,7 @@ class AdminHealth {
 		endif;
 
 		// Check supported extensions.
-		$data       = \file_get_contents( $extensions_json_path );
+		$data       = \file_get_contents( $extensions_json_path, true );
 		$extensions = \json_decode( $data );
 
 		$supported_extensions     = array();
