@@ -25,7 +25,7 @@
 
 ## WordPress Filters
 
-### pronamic_pay_omnikassa_2_request_args
+### pronamic_payment_gateway_configuration_id
 
 ```php
 add_filter(
