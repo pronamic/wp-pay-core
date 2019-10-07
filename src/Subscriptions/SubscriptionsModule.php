@@ -881,7 +881,7 @@ class SubscriptionsModule {
 				'pronamic-pay-subscription-not-found',
 				\sprintf(
 					/* translators: %s: Subscription ID */
-					\__( 'Could not found subscription with ID `%s`.', 'pronamic_ideal' ),
+					\__( 'Could not find subscription with ID `%s`.', 'pronamic_ideal' ),
 					$subscription_id
 				),
 				$subscription_id

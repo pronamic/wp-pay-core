@@ -289,7 +289,7 @@ class PaymentsModule {
 				'pronamic-pay-gateway-not-found',
 				sprintf(
 					/* translators: %s: Gateway configuration ID */
-					__( 'Could not found gateway with ID `%s`.', 'pronamic_ideal' ),
+					__( 'Could not find gateway with ID `%s`.', 'pronamic_ideal' ),
 					$config_id
 				),
 				$config_id
