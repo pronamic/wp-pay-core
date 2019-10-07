@@ -7,6 +7,10 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.2.5] - 2019-10-07
+- Added `pronamic_payment_gateway_configuration_id` WordPress filter.
+- Improved some translatable texts.
+
 ## [2.2.4] - 2019-10-04
 - Updated `viison/address-splitter` library to version `0.3.3`.
 - Move tools to site health debug information and status tests.
@@ -221,7 +225,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.2.4...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.2.5...HEAD
+[2.2.5]: https://github.com/wp-pay/core/compare/2.2.4...2.2.5
 [2.2.4]: https://github.com/wp-pay/core/compare/2.2.3...2.2.4
 [2.2.3]: https://github.com/wp-pay/core/compare/2.2.2...2.2.3
 [2.2.2]: https://github.com/wp-pay/core/compare/2.2.1...2.2.2

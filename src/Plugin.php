@@ -966,8 +966,20 @@ class Plugin {
 	public static function start_payment( Payment $payment, $gateway = null ) {
 		global $pronamic_ideal;
 
+		// Complement payment.
 		self::complement_payment( $payment );
 
+		/**
+		 * Filters the payment gateway configuration ID.
+		 *
+		 * @param int     $configuration_id Gateway configuration ID.
+		 * @param Payment $payment          The payment resource data.
+		 */
+		$config_id = \apply_filters( 'pronamic_payment_gateway_configuration_id', $payment->get_config_id(), $payment );
+
+		$payment->set_config_id( $config_id );
+
+		// Create payment.
 		$pronamic_ideal->payments_data_store->create( $payment );
 
 		// Prevent payment start at gateway if amount is empty.
@@ -978,15 +990,20 @@ class Plugin {
 
 			$payment->save();
 
+			/**
+			 * Return or throw exception?
+			 *
+			 * @link https://github.com/wp-pay/core/commit/aa6422f0963d9718edd11ac41edbadfd6cd07d49
+			 * @todo Throw exception?
+			 */
+
 			return $payment;
 		}
 
 		// Gateway.
-		if ( null === $gateway ) {
-			$gateway = self::get_gateway( $payment->get_config_id() );
-		}
+		$gateway = self::get_gateway( $payment->get_config_id() );
 
-		if ( ! $gateway ) {
+		if ( null === $gateway ) {
 			$payment->set_status( PaymentStatus::FAILURE );
 
 			$payment->save();
