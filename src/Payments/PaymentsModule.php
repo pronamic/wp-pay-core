@@ -255,7 +255,7 @@ class PaymentsModule {
 				'pronamic-pay-payment-not-found',
 				\sprintf(
 					/* translators: %s: Payment ID */
-					\__( 'Could not found payment with ID `%s`.', 'pronamic_ideal' ),
+					\__( 'Could not find payment with ID `%s`.', 'pronamic_ideal' ),
 					$payment_id
 				),
 				$payment_id
