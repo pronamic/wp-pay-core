@@ -49,7 +49,7 @@ $container_index = 1;
 								$query = new WP_Query(
 									array(
 										'post_type'      => $payments_post_type,
-										'post_status'    => \Pronamic\WordPress\Pay\Payments\PaymentPostType::get_payment_states(),
+										'post_status'    => \array_keys( \Pronamic\WordPress\Pay\Payments\PaymentPostType::get_payment_states() ),
 										'posts_per_page' => 5,
 									)
 								);
@@ -178,7 +178,7 @@ $container_index = 1;
 					$query = new WP_Query(
 						array(
 							'post_type'      => $subscriptions_post_type,
-							'post_status'    => \Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType::get_states(),
+							'post_status'    => \array_keys( \Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType::get_states() ),
 							'posts_per_page' => 5,
 						)
 					);
