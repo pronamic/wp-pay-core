@@ -53,10 +53,10 @@ add_filter(
 
 		switch ( $billing_address->get_country_code() ) {
 			case 'US':
-				$id = get_option( 'custom_us_gateway_configuration_id', $configuration_id );
+				$id = get_option( 'custom_us_gateway_configuration_id', $id );
 				break;
 			case 'AU':
-				$id = get_option( 'custom_au_gateway_configuration_id', $configuration_id );
+				$id = get_option( 'custom_au_gateway_configuration_id', $id );
 				break;
 		}
 
