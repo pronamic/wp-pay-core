@@ -560,6 +560,25 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 
 	<?php endif; ?>
 
+	<?php
+
+	$mollie_transfer_reference = $payment->get_meta( 'mollie_transfer_reference' );
+
+	?>
+
+	<?php if ( ! empty( $mollie_transfer_reference ) ) : ?>
+
+		<tr>
+			<th scope="row">
+				<?php esc_html_e( 'Mollie Transfer Reference', 'pronamic_ideal' ); ?>
+			</th>
+			<td>
+				<?php echo esc_html( $mollie_transfer_reference ); ?>
+			</td>
+		</tr>
+
+	<?php endif; ?>
+
 	<?php if ( PRONAMIC_PAY_DEBUG ) : ?>
 
 		<tr>
