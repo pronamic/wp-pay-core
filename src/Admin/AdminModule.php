@@ -470,13 +470,22 @@ class AdminModule {
 			),
 		);
 
-		$this->create_pages( $pages );
+		$url_args = array(
+			'page'    => 'pronamic_pay_settings',
+			'message' => 'pages-generated',
+		);
+
+		try {
+			$this->create_pages( $pages );
+		} catch ( \Exception $e ) {
+			$url_args = array(
+				'page'    => 'pronamic_pay_settings',
+				'message' => 'pages-not-generated',
+			);
+		}
 
 		$url = add_query_arg(
-			array(
-				'page'    => 'pronamic_pay_settings',
-				'message' => 'pages-generated',
-			),
+			$url_args,
 			admin_url( 'admin.php' )
 		);
 
@@ -836,7 +845,7 @@ class AdminModule {
 			$menu_icon_url
 		);
 
-		// Add submmenu pages.
+		// Add submenu pages.
 		foreach ( $submenu_pages as $page ) {
 			/**
 			 * To keep PHPStan happy we use an if/else statement for

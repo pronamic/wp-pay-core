@@ -10,7 +10,6 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
-use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Plugin;
@@ -453,7 +452,6 @@ class AdminPaymentPostType {
 
 				break;
 			case 'pronamic_payment_title':
-				$source             = $payment->get_source();
 				$source_id          = $payment->get_source_id();
 				$source_description = $payment->get_source_description();
 

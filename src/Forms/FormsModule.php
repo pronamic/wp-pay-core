@@ -10,7 +10,6 @@
 
 namespace Pronamic\WordPress\Pay\Forms;
 
-use Exception;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
 
@@ -89,8 +88,12 @@ class FormsModule {
 	 * Maybe add form to content.
 	 *
 	 * @link https://developer.wordpress.org/reference/hooks/the_content/
+	 *
 	 * @param string $content Post content to maybe extend with a payment form.
+	 *
 	 * @return string
+	 *
+	 * @throws \Exception Throws exception if output buffering is not active.
 	 */
 	public function maybe_add_form_to_content( $content ) {
 		if ( is_singular( 'pronamic_pay_form' ) && 'pronamic_pay_form' === get_post_type() ) {
@@ -106,6 +109,8 @@ class FormsModule {
 	 * @param int $id Form ID or form settings.
 	 *
 	 * @return string
+	 *
+	 * @throws \Exception Throws exception if output buffering is not active.
 	 */
 	public function get_form_output_by_id( $id ) {
 		$args = array(
@@ -129,7 +134,7 @@ class FormsModule {
 	 *
 	 * @return string
 	 *
-	 * @throws Exception When output buffering is not working as expected.
+	 * @throws \Exception When output buffering is not working as expected.
 	 */
 	public function get_form_output( $args ) {
 		if ( ! is_array( $args ) ) {
@@ -168,7 +173,7 @@ class FormsModule {
 		$output = ob_get_clean();
 
 		if ( false === $output ) {
-			throw new Exception( 'Output buffering is not active.' );
+			throw new \Exception( 'Output buffering is not active.' );
 		}
 
 		return $output;

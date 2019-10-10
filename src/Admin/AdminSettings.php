@@ -29,7 +29,7 @@ class AdminSettings {
 	private $plugin;
 
 	/**
-	 * Constructs and initalize an admin object.
+	 * Constructs and initialize an admin object.
 	 *
 	 * @param Plugin $plugin Plugin.
 	 */

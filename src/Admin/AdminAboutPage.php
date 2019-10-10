@@ -168,6 +168,8 @@ class AdminAboutPage {
 	 * Get version.
 	 *
 	 * @return string
+	 *
+	 * @throws \Exception Throws exception if file could not be opened or read.
 	 */
 	public function get_version() {
 		return $this->get_file_version( $this->get_file() );

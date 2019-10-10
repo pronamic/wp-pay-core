@@ -10,8 +10,6 @@
 
 namespace Pronamic\WordPress\Pay\Core;
 
-use Exception;
-
 /**
  * Title: Data helper class
  * Description:
@@ -34,7 +32,7 @@ class DataHelper {
 	 *
 	 * @return string
 	 *
-	 * @throws Exception When filtering charachters from text fails.
+	 * @throws \Exception When filtering charachters from text fails.
 	 */
 	public static function filter( array $characters, $string, $max = null ) {
 		$pattern = '#[^' . implode( $characters ) . ']#';
@@ -43,7 +41,7 @@ class DataHelper {
 
 		// preg_replace() returns an array if the subject parameter is an array, or a string otherwise.
 		if ( ! is_string( $string ) ) {
-			throw new Exception( 'Unexpected behavior when filtering characters from text.' );
+			throw new \Exception( 'Unexpected behavior when filtering characters from text.' );
 		}
 
 		if ( isset( $max ) ) {

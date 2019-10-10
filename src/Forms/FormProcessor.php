@@ -13,7 +13,6 @@ namespace Pronamic\WordPress\Pay\Forms;
 use Exception;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Money\TaxedMoney;
-use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentLines;
@@ -37,7 +36,7 @@ class FormProcessor {
 	private $plugin;
 
 	/**
-	 * Constructs and initalize an form processor object.
+	 * Constructs and initialize an form processor object.
 	 *
 	 * @param Plugin $plugin Plugin.
 	 */

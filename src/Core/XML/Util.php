@@ -32,6 +32,8 @@ class Util {
 	 * @param DOMNode     $parent   DOM node to add a new element to.
 	 * @param string      $name     Name of the new DOM element to add.
 	 * @param string      $value    Value of the new DOM element to add.
+	 *
+	 * @return \DOMElement
 	 */
 	public static function add_element( DOMDocument $document, DOMNode $parent, $name, $value = null ) {
 		$element = $document->createElement( $name );

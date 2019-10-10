@@ -10,13 +10,11 @@
 
 namespace Pronamic\WordPress\Pay\Core;
 
-use Exception;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 use Pronamic\WordPress\Pay\Util as PayUtil;
-use ReflectionClass;
 use WP_Error;
 
 /**
@@ -421,6 +419,8 @@ abstract class Gateway {
 	 * Redirect to the gateway action URL.
 	 *
 	 * @param Payment $payment The payment to redirect for.
+	 *
+	 * @throws \Exception Throws exception when action URL for HTTP redirect is empty.
 	 */
 	public function redirect( Payment $payment ) {
 		switch ( $this->method ) {
@@ -437,7 +437,7 @@ abstract class Gateway {
 	 * Redirect via HTTP.
 	 *
 	 * @param Payment $payment The payment to redirect for.
-	 * @throws Exception When payment action URL is empty.
+	 * @throws \Exception When payment action URL is empty.
 	 */
 	public function redirect_via_http( Payment $payment ) {
 		if ( headers_sent() ) {
@@ -447,7 +447,7 @@ abstract class Gateway {
 		$action_url = $payment->get_action_url();
 
 		if ( empty( $action_url ) ) {
-			throw new Exception( 'Action URL is empty, can not redirect.' );
+			throw new \Exception( 'Action URL is empty, can not redirect.' );
 		}
 
 		// Redirect, See Other.
@@ -675,7 +675,7 @@ abstract class Gateway {
 	 * @param Payment $payment     Payment to get form HTML for.
 	 * @param bool    $auto_submit Flag to auto submit.
 	 * @return string
-	 * @throws Exception When payment action URL is empty.
+	 * @throws \Exception When payment action URL is empty.
 	 */
 	public function get_form_html( Payment $payment, $auto_submit = false ) {
 		$form_inner = $this->get_output_html();
@@ -688,7 +688,7 @@ abstract class Gateway {
 		$action_url = $payment->get_action_url();
 
 		if ( empty( $action_url ) ) {
-			throw new Exception( 'Action URL is empty, can not get form HTML.' );
+			throw new \Exception( 'Action URL is empty, can not get form HTML.' );
 		}
 
 		$html = sprintf(

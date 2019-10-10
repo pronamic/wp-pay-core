@@ -12,7 +12,6 @@ namespace Pronamic\WordPress\Pay\Admin;
 
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
-use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\WebhookManager;
 use WP_Post;
@@ -214,9 +213,11 @@ class AdminGatewayPostType {
 	 * @param WP_Post $post Post (only available @since 3.5.2).
 	 */
 	public function post_edit_form_tag( $post ) {
-		if ( self::POST_TYPE === get_post_type( $post ) ) {
-			echo ' enctype="multipart/form-data"';
+		if ( self::POST_TYPE !== get_post_type( $post ) ) {
+			return;
 		}
+
+		echo ' enctype="multipart/form-data"';
 	}
 
 	/**
@@ -225,25 +226,27 @@ class AdminGatewayPostType {
 	 * @param string $post_type Post Type.
 	 */
 	public function add_meta_boxes( $post_type ) {
-		if ( self::POST_TYPE === $post_type ) {
-			add_meta_box(
-				'pronamic_gateway_config',
-				__( 'Configuration', 'pronamic_ideal' ),
-				array( $this, 'meta_box_config' ),
-				$post_type,
-				'normal',
-				'high'
-			);
-
-			add_meta_box(
-				'pronamic_gateway_test',
-				__( 'Test', 'pronamic_ideal' ),
-				array( $this, 'meta_box_test' ),
-				$post_type,
-				'normal',
-				'high'
-			);
+		if ( self::POST_TYPE !== $post_type ) {
+			return;
 		}
+
+		add_meta_box(
+			'pronamic_gateway_config',
+			__( 'Configuration', 'pronamic_ideal' ),
+			array( $this, 'meta_box_config' ),
+			$post_type,
+			'normal',
+			'high'
+		);
+
+		add_meta_box(
+			'pronamic_gateway_test',
+			__( 'Test', 'pronamic_ideal' ),
+			array( $this, 'meta_box_test' ),
+			$post_type,
+			'normal',
+			'high'
+		);
 	}
 
 	/**
@@ -373,7 +376,7 @@ class AdminGatewayPostType {
 		// Transient.
 		\delete_transient( 'pronamic_outdated_webhook_urls' );
 
-		// Gatway fields.
+		// Gateway fields.
 		if ( empty( $gateway_id ) ) {
 			return;
 		}

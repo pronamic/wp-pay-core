@@ -28,7 +28,7 @@ class FormScripts {
 	private $plugin;
 
 	/**
-	 * Constructs and initalize an form scripts object.
+	 * Constructs and initialize an form scripts object.
 	 *
 	 * @param Plugin $plugin Plugin.
 	 */

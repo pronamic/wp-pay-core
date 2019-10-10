@@ -212,14 +212,6 @@ class PaymentMethods {
 	const MAESTRO = 'maestro';
 
 	/**
-	 * MiniTix
-	 *
-	 * @var string
-	 * @deprecated deprecated since version 1.3.1
-	 */
-	const MINITIX = 'minitix';
-
-	/**
 	 * Bancontact/Mister Cash
 	 *
 	 * @deprecated "Bancontact/Mister Cash" was renamed to just "Bancontact".

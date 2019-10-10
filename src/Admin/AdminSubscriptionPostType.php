@@ -10,10 +10,8 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
-use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Util;
-use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
 use WP_Post;
 use WP_Query;
@@ -230,7 +228,6 @@ class AdminSubscriptionPostType {
 
 				break;
 			case 'pronamic_subscription_title':
-				$source             = $subscription->get_source();
 				$source_id          = $subscription->get_source_id();
 				$source_description = $subscription->get_source_description();
 

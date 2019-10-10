@@ -311,6 +311,8 @@ class FormPostType {
 	 * When the post is saved, saves our custom data.
 	 *
 	 * @param int $post_id The ID of the post being saved.
+	 *
+	 * @return int
 	 */
 	public function save_post( $post_id ) {
 		// Check if our nonce is set.

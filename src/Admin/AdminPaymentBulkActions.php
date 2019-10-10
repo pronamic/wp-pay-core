@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
+use Pronamic\WordPress\Pay\Plugin;
 use WP_Query;
 
 /**
@@ -117,7 +118,7 @@ class AdminPaymentBulkActions {
 			}
 
 			if ( ! isset( $gateways[ $config_id ] ) ) {
-				$gateways[ $config_id ] = \Pronamic\WordPress\Pay\Plugin::get_gateway( $config_id );
+				$gateways[ $config_id ] = Plugin::get_gateway( $config_id );
 
 				if ( $gateways[ $config_id ] && ! $gateways[ $config_id ]->supports( 'payment_status_request' ) ) {
 					$unsupported_gateways[] = $config_id;
@@ -128,7 +129,7 @@ class AdminPaymentBulkActions {
 				continue;
 			}
 
-			\Pronamic\WordPress\Pay\Plugin::update_payment( $payment, false );
+			Plugin::update_payment( $payment, false );
 
 			$status_updated++;
 		}

@@ -28,6 +28,8 @@ class Security {
 	 *
 	 * @param string|SimpleXMLElement $variable Variable to filter.
 	 * @param int                     $filter   PHP filter flag constant.
+	 *
+	 * @return mixed|null
 	 */
 	public static function filter( $variable, $filter = FILTER_SANITIZE_STRING ) {
 		if ( ! $variable ) {

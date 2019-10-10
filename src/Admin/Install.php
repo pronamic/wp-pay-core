@@ -66,7 +66,7 @@ class Install {
 	}
 
 	/**
-	 * Admin intialize.
+	 * Admin initialize.
 	 */
 	public function admin_init() {
 		// Install.
@@ -115,7 +115,12 @@ class Install {
 
 		// Redirect.
 		if ( null !== $this->admin->about_page ) {
-			$about_page_version        = $this->admin->about_page->get_version();
+			try {
+				$about_page_version = $this->admin->about_page->get_version();
+			} catch ( \Exception $e ) {
+				$about_page_version = '';
+			}
+
 			$about_page_version_viewed = get_option( 'pronamic_pay_about_page_version', null );
 
 			$tab = null;

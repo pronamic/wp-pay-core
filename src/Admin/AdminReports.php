@@ -141,12 +141,16 @@ class AdminReports {
 	 * @return array
 	 */
 	public function get_reports() {
-		$start = new \DateTime( 'First day of January' );
-		$end   = new \DateTime( 'Last day of December' );
+		try {
+			$start = new \DateTime( 'First day of January' );
+			$end   = new \DateTime( 'Last day of December' );
+		} catch ( \Exception $e ) {
+			return array();
+		}
 
 		$data = array(
 			(object) array(
-				'label'      => __( 'Number succesfull payments', 'pronamic_ideal' ),
+				'label'      => __( 'Number successful payments', 'pronamic_ideal' ),
 				'data'       => $this->get_report( 'payment_completed', 'COUNT', $start, $end ),
 				'color'      => '#dbe1e3',
 				'bars'       => (object) array(
@@ -183,7 +187,7 @@ class AdminReports {
 				'class'            => 'pending-sum',
 			),
 			(object) array(
-				'label'            => __( 'Succesfull payments', 'pronamic_ideal' ),
+				'label'            => __( 'Successful payments', 'pronamic_ideal' ),
 				'data'             => $this->get_report( 'payment_completed', 'SUM', $start, $end ),
 				'yaxis'            => 2,
 				'color'            => '#3498db',
@@ -286,10 +290,15 @@ class AdminReports {
 	 *
 	 * @link https://github.com/woothemes/woocommerce/blob/2.3.11/assets/js/admin/reports.js
 	 * @link https://github.com/woothemes/woocommerce/blob/master/includes/admin/reports/class-wc-report-sales-by-date.php
+	 *
 	 * @param string    $status   Status.
 	 * @param string    $function Function.
 	 * @param \DateTime $start    Start date.
 	 * @param \DateTime $end      End date.
+	 *
+	 * @return array
+	 *
+	 * @throws \Exception Throws exception on date interval error.
 	 */
 	private function get_report( $status, $function, $start, $end ) {
 		global $wpdb;
