@@ -299,6 +299,26 @@ $sections = array_filter(
 									);
 
 									break;
+								case 'number':
+									$attributes['type']  = $field['type'];
+									$attributes['value'] = $value;
+
+									if ( isset( $field['min'] ) ) {
+										$attributes['min'] = $field['min'];
+									}
+
+									if ( isset( $field['max'] ) ) {
+										$attributes['max'] = $field['max'];
+									}
+
+									printf(
+										'<input %s />',
+										// @codingStandardsIgnoreStart
+										Util::array_to_html_attributes( $attributes )
+										// @codingStandardsIgnoreEnd
+									);
+
+									break;
 								case 'checkbox':
 									$attributes['type']  = $field['type'];
 									$attributes['value'] = '1';
