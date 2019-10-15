@@ -10,10 +10,8 @@
 
 namespace Pronamic\WordPress\Pay\Webhooks;
 
-use Exception;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Admin\AdminModule;
-use Pronamic\WordPress\Pay\Admin\AdminNotices;
 use WP_Query;
 
 /**
@@ -89,7 +87,7 @@ class WebhookManager {
 					$log = json_decode( $log );
 
 					$request_info = WebhookRequestInfo::from_json( $log );
-				} catch ( Exception $e ) {
+				} catch ( \Exception $e ) {
 					continue;
 				}
 

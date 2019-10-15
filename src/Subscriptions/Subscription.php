@@ -11,16 +11,11 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DateInterval;
-use Exception;
 use InvalidArgumentException;
 use Pronamic\WordPress\DateTime\DateTime;
-use Pronamic\WordPress\Money\Money;
-use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Payments\Payment;
-use Pronamic\WordPress\Pay\Payments\PaymentInfo;
 use Pronamic\WordPress\Pay\Payments\PaymentInfoHelper;
-use WP_Post;
 
 /**
  * Subscription
@@ -144,6 +139,8 @@ class Subscription extends LegacySubscription {
 	 * Construct and initialize subscription object.
 	 *
 	 * @param int|null $post_id A subscription post ID or null.
+	 *
+	 * @throws \Exception Throws exception on invalid post date.
 	 */
 	public function __construct( $post_id = null ) {
 		parent::__construct( $post_id );
@@ -227,14 +224,15 @@ class Subscription extends LegacySubscription {
 	 * Get date interval.
 	 *
 	 * @link http://php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters
-	 * @return \DateInterval|null
+	 *
+	 * @return DateInterval|null
 	 */
 	public function get_date_interval() {
 		$interval_spec = 'P' . $this->interval . $this->interval_period;
 
 		try {
 			$interval = new DateInterval( $interval_spec );
-		} catch ( Exception $e ) {
+		} catch ( \Exception $e ) {
 			$interval = null;
 		}
 
@@ -547,62 +545,6 @@ class Subscription extends LegacySubscription {
 	 */
 	public function get_next_payment_delivery_date() {
 		return $this->next_payment_delivery_date;
-	}
-
-	/**
-	 * Update meta.
-	 *
-	 * @todo  Not sure how and when this function is used.
-	 * @param array $meta The meta data to update.
-	 * @return void
-	 */
-	public function update_meta( $meta ) {
-		if ( ! is_array( $meta ) || count( $meta ) === 0 ) {
-			return;
-		}
-
-		$note = sprintf(
-			'<p>%s:</p>',
-			__( 'Subscription changed', 'pronamic_ideal' )
-		);
-
-		$note .= '<dl>';
-
-		$add_note = false;
-
-		foreach ( $meta as $key => $value ) {
-			$current_value = $this->get_meta( strval( $key ) );
-
-			// Convert string to amount for comparison.
-			if ( 'amount' === $key && false !== $current_value ) {
-				$money_parser = new MoneyParser();
-
-				$current_value = $money_parser->parse( $current_value )->get_value();
-			}
-
-			if ( $current_value === $value ) {
-				continue;
-			}
-
-			$add_note = true;
-
-			$this->set_meta( strval( $key ), $value );
-
-			if ( $value instanceof DateTime ) {
-				$value = date_i18n( __( 'l jS \o\f F Y, h:ia', 'pronamic_ideal' ), $value->getTimestamp() );
-			}
-
-			$note .= sprintf( '<dt>%s</dt>', esc_html( strval( $key ) ) );
-			$note .= sprintf( '<dd>%s</dd>', esc_html( strval( $value ) ) );
-		}
-
-		$note .= '</dl>';
-
-		if ( ! $add_note ) {
-			return;
-		}
-
-		$this->add_note( $note );
 	}
 
 	/**

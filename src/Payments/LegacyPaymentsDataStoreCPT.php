@@ -30,7 +30,7 @@ use Pronamic\WordPress\Pay\ContactName;
  */
 class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	/**
-	 * Get contact name from legeacy meta.
+	 * Get contact name from legacy meta.
 	 *
 	 * @param PaymentInfo $payment The payment info to read.
 	 * @return ContactName|null
@@ -75,7 +75,7 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	}
 
 	/**
-	 * Maybe create customer from legeacy meta.
+	 * Maybe create customer from legacy meta.
 	 *
 	 * @param PaymentInfo $payment The payment to read.
 	 */
@@ -147,7 +147,7 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	}
 
 	/**
-	 * Maybe create billing address from legeacy meta.
+	 * Maybe create billing address from legacy meta.
 	 *
 	 * @param PaymentInfo $payment The payment to read.
 	 */

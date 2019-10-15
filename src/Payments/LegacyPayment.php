@@ -10,11 +10,6 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
-use Pronamic\WordPress\Money\Money;
-use Pronamic\WordPress\Pay\Address;
-use Pronamic\WordPress\Pay\ContactName;
-use Pronamic\WordPress\Pay\Customer;
-
 /**
  * Legacy payment.
  *

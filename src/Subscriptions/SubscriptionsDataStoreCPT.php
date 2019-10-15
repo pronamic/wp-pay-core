@@ -11,7 +11,6 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DatePeriod;
-use Exception;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
@@ -139,7 +138,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 * @param array $data    An array of slashed post data.
 	 * @param array $postarr An array of sanitized, but otherwise unmodified post data.
 	 * @return array
-	 * @throws Exception When inserting subscription post data JSON string fails.
+	 * @throws \Exception When inserting subscription post data JSON string fails.
 	 */
 	public function insert_subscription_post_data( $data, $postarr ) {
 		$this->subscription = null;
@@ -166,7 +165,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 			$json_string = wp_json_encode( $this->subscription->get_json() );
 
 			if ( false === $json_string ) {
-				throw new Exception( 'Error inserting subscription post data as JSON.' );
+				throw new \Exception( 'Error inserting subscription post data as JSON.' );
 			}
 
 			$data['post_content']   = wp_slash( $json_string );
@@ -181,6 +180,8 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 *
 	 * @param Subscription $subscription Subscription.
 	 * @param array        $postarr      Post data array.
+	 *
+	 * @throws \Exception Throws exception if amount could not be parsed to Money object.
 	 */
 	private function update_subscription_form_post_array( $subscription, $postarr ) {
 		if ( isset( $postarr['pronamic_subscription_post_status'] ) ) {
@@ -322,7 +323,9 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 * @link https://developer.wordpress.org/reference/functions/get_post_field/
 	 *
 	 * @param Subscription $subscription The subscription to read the additional data for.
+	 *
 	 * @return void
+	 * @throws \Exception Throws exception on invalid post date.
 	 */
 	public function read( $subscription ) {
 		$id = $subscription->get_id();

@@ -43,8 +43,12 @@ class FormShortcode {
 	 *
 	 * @link https://github.com/WordImpress/Give/blob/1.1/includes/shortcodes.php#L39-L65
 	 * @link https://github.com/WordImpress/Give/blob/1.1/includes/forms/template.php#L18-L140
+	 *
 	 * @param array $atts Shortcode attributes array.
+	 *
 	 * @return string
+	 *
+	 * @throws \Exception Throws exception if output buffering is not active.
 	 */
 	public function shortcode_form( $atts ) {
 		$atts = shortcode_atts(

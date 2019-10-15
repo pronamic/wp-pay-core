@@ -10,10 +10,8 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
-use Exception;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
-use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Customer;
 
 /**
@@ -137,7 +135,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @param array $data    An array of slashed post data.
 	 * @param array $postarr An array of sanitized, but otherwise unmodified post data.
 	 * @return array
-	 * @throws Exception When inserting payment post data JSON string fails.
+	 * @throws \Exception When inserting payment post data JSON string fails.
 	 */
 	public function insert_payment_post_data( $data, $postarr ) {
 		$this->payment = null;
@@ -162,7 +160,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			$json_string = wp_json_encode( $this->payment->get_json() );
 
 			if ( false === $json_string ) {
-				throw new Exception( 'Error inserting payment post data as JSON.' );
+				throw new \Exception( 'Error inserting payment post data as JSON.' );
 			}
 
 			$data['post_content']   = wp_slash( $json_string );
@@ -179,14 +177,18 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @param array   $postarr Post data array.
 	 */
 	private function update_payment_form_post_array( $payment, $postarr ) {
-		if ( isset( $postarr['pronamic_payment_post_status'] ) ) {
-			$post_status = sanitize_text_field( stripslashes( $postarr['pronamic_payment_post_status'] ) );
-			$meta_status = $this->get_meta_status_from_post_status( $post_status );
-
-			if ( null !== $meta_status ) {
-				$payment->set_status( $meta_status );
-			}
+		if ( ! isset( $postarr['pronamic_payment_post_status'] ) ) {
+			return;
 		}
+
+		$post_status = sanitize_text_field( stripslashes( $postarr['pronamic_payment_post_status'] ) );
+		$meta_status = $this->get_meta_status_from_post_status( $post_status );
+
+		if ( null === $meta_status ) {
+			return;
+		}
+
+		$payment->set_status( $meta_status );
 	}
 
 	/**
@@ -261,7 +263,10 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L113-L154
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
+	 *
 	 * @param Payment $payment The payment to update in this data store.
+	 *
+	 * @return bool
 	 */
 	public function update( Payment $payment ) {
 		$id = $payment->get_id();
@@ -310,6 +315,8 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @link https://developer.wordpress.org/reference/classes/wp_post/
 	 *
 	 * @param Payment $payment The payment to read from this data store.
+	 *
+	 * @throws \Exception Throws exception if payment date can not be set.
 	 */
 	public function read( Payment $payment ) {
 		$id = $payment->get_id();

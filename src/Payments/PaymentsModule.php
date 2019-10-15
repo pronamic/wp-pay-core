@@ -11,10 +11,6 @@
 namespace Pronamic\WordPress\Pay\Payments;
 
 use Pronamic\WordPress\Pay\Plugin;
-use Pronamic\WordPress\Pay\Core\PaymentMethods;
-use Pronamic\WordPress\Pay\Payments\PaymentStatus;
-use WP_Error;
-use WP_REST_Request;
 
 /**
  * Payments Module
@@ -268,10 +264,10 @@ class PaymentsModule {
 	/**
 	 * REST API gateway.
 	 *
-	 * @param WP_REST_Request $request Request.
+	 * @param \WP_REST_Request $request Request.
 	 * @return object
 	 */
-	public function rest_api_gateway( WP_REST_Request $request ) {
+	public function rest_api_gateway( \WP_REST_Request $request ) {
 		$config_id    = $request->get_param( 'config_id' );
 		$gateway_id   = $request->get_param( 'gateway_id' );
 		$gateway_mode = $request->get_param( 'gateway_mode' );
@@ -285,7 +281,7 @@ class PaymentsModule {
 		$gateway = Plugin::get_gateway( $config_id, $args );
 
 		if ( empty( $gateway ) ) {
-			return new WP_Error(
+			return new \WP_Error(
 				'pronamic-pay-gateway-not-found',
 				sprintf(
 					/* translators: %s: Gateway configuration ID */

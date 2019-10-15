@@ -222,10 +222,15 @@ class SubscriptionsPrivacy {
 				$items_retained = true;
 			}
 
-			// Add subscription note and erasure return message.
-			$subscription->add_note( $note );
-
+			// Add erasure return message.
 			$messages[] = sprintf( $message, $subscription_id );
+
+			// Add subscription note.
+			try {
+				$subscription->add_note( $note );
+			} catch ( \Exception $e ) {
+				continue;
+			}
 		}
 
 		$done = true;

@@ -148,9 +148,12 @@ class PaymentTestData extends PaymentData {
 	 * Get subscription.
 	 *
 	 * @since 1.2.1
-	 * @link https://github.com/woothemes/woocommerce/blob/v2.1.3/includes/abstracts/abstract-wc-payment-gateway.php#L52
-	 * @link https://github.com/wp-premium/woocommerce-subscriptions/blob/2.0.18/includes/class-wc-subscriptions-renewal-order.php#L371-L398
 	 * @return Subscription|null
+	 *
+	 * @throws \Exception Throws exception on end date error.
+	 *
+	 * @link  https://github.com/wp-premium/woocommerce-subscriptions/blob/2.0.18/includes/class-wc-subscriptions-renewal-order.php#L371-L398
+	 * @link  https://github.com/woothemes/woocommerce/blob/v2.1.3/includes/abstracts/abstract-wc-payment-gateway.php#L52
 	 */
 	public function get_subscription() {
 		$test_subscription = filter_input( INPUT_POST, 'pronamic_pay_test_subscription', FILTER_VALIDATE_BOOLEAN );
@@ -220,6 +223,8 @@ class PaymentTestData extends PaymentData {
 	 * Get credit card.
 	 *
 	 * @return CreditCard
+	 *
+	 * @throws \Exception Throws exception on date error.
 	 */
 	public function get_credit_card() {
 		$credit_card = new CreditCard();
