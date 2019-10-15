@@ -72,7 +72,7 @@ bind_providers_and_gateways();
 					// Product link.
 					$site = '';
 
-					if ( $integration->get_product_url() ) {
+					if ( null !== $integration->get_product_url() ) {
 						$site = sprintf(
 							'<a href="%s" target="_blank" title="%s">%2$s</a>',
 							$integration->get_product_url(),

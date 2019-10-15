@@ -54,6 +54,13 @@ abstract class AbstractIntegration {
 	public $product_url;
 
 	/**
+	 * Manual URL.
+	 *
+	 * @var string
+	 */
+	public $manual_url;
+
+	/**
 	 * Dashboard URL.
 	 *
 	 * @var string|array
@@ -160,10 +167,10 @@ abstract class AbstractIntegration {
 	/**
 	 * Get product URL.
 	 *
-	 * @return string|false
+	 * @return string|null
 	 */
 	public function get_product_url() {
-		$url = false;
+		$url = null;
 
 		if ( isset( $this->product_url ) ) {
 			$url = $this->product_url;
@@ -172,6 +179,21 @@ abstract class AbstractIntegration {
 		}
 
 		return $url;
+	}
+
+	/**
+	 * Get manual URL.
+	 *
+	 * @return string|null
+	 */
+	public function get_manual_url() {
+		$manual_url = null;
+
+		if ( isset( $this->manual_url ) ) {
+			$manual_url = $this->manual_url;
+		}
+
+		return $manual_url;
 	}
 
 	/**

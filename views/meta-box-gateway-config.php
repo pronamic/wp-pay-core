@@ -85,11 +85,20 @@ $gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 						}
 
 						// Product link.
-						if ( $integration->get_product_url() ) {
+						if ( null !== $integration->get_product_url() ) {
 							$links[] = sprintf(
 								'<a href="%s" target="_blank" title="%s">%2$s</a>',
 								$integration->get_product_url(),
 								__( 'Product information', 'pronamic_ideal' )
+							);
+						}
+
+						// Manual URL.
+						if ( null !== $integration->get_manual_url() ) {
+							$links[] = sprintf(
+								'<a href="%1$s" target="_blank" title="%2$s">%2$s</a>',
+								$integration->get_manual_url(),
+								__( 'Manual', 'pronamic_ideal' )
 							);
 						}
 
