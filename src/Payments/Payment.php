@@ -293,7 +293,10 @@ class Payment extends LegacyPayment {
 	/**
 	 * Add a note to this payment.
 	 *
+	 * @link https://developer.wordpress.org/reference/functions/wp_insert_comment/
 	 * @param string $note The note to add.
+	 * @return int The new comment's ID.
+	 * @throws \Exception Throws exception when adding note fails.
 	 */
 	public function add_note( $note ) {
 		$commentdata = array(
@@ -304,9 +307,19 @@ class Payment extends LegacyPayment {
 			'comment_approved' => true,
 		);
 
-		$comment_id = wp_insert_comment( $commentdata );
+		$result = wp_insert_comment( $commentdata );
 
-		return $comment_id;
+		if ( false === $result ) {
+			throw new \Exception(
+				\sprintf(
+					'Could not add note "%s" to payment with ID "%d".',
+					$note,
+					$this->id
+				)
+			);
+		}
+
+		return $result;
 	}
 
 	/**
