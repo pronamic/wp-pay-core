@@ -205,6 +205,13 @@ class Plugin {
 	private $options;
 
 	/**
+	 * Extensions.
+	 *
+	 * @var array
+	 */
+	public $extensions;
+
+	/**
 	 * Construct and initialize an Pronamic Pay plugin object.
 	 *
 	 * @param string|array|object $args The plugin arguments.
@@ -579,6 +586,17 @@ class Plugin {
 		// Admin.
 		if ( is_admin() ) {
 			$this->admin = new Admin\AdminModule( $this );
+		}
+
+		// Extensions.
+		$extensions = apply_filters( 'pronamic_pay_extensions', array() );
+
+		$this->extensions = $extensions;
+
+		foreach ( $this->extensions as $extension ) {
+			if ( method_exists( $extension, 'plugins_loaded' ) ) {
+				$extension->plugins_loaded();
+			}
 		}
 
 		// Gateway Integrations.
