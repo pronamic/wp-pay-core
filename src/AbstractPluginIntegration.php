@@ -27,7 +27,7 @@ abstract class AbstractPluginIntegration {
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.7.0/includes/class-wc-install.php#L368-L376
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.7.0/includes/wc-update-functions.php
-	 * @return array<string>
+	 * @return array<array<string>>
 	 */
 	public function get_db_update_files() {
 		return array();
