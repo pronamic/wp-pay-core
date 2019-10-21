@@ -205,11 +205,11 @@ class Plugin {
 	private $options;
 
 	/**
-	 * Extensions.
+	 * Plugin integrations.
 	 *
 	 * @var array
 	 */
-	public $extensions;
+	public $plugin_integrations;
 
 	/**
 	 * Construct and initialize an Pronamic Pay plugin object.
@@ -588,14 +588,12 @@ class Plugin {
 			$this->admin = new Admin\AdminModule( $this );
 		}
 
-		// Extensions.
-		$extensions = apply_filters( 'pronamic_pay_extensions', array() );
+		// Plugin integrations.
+		$this->plugin_integrations = apply_filters( 'pronamic_pay_plugin_integrations', array() );
 
-		$this->extensions = $extensions;
-
-		foreach ( $this->extensions as $extension ) {
-			if ( method_exists( $extension, 'plugins_loaded' ) ) {
-				$extension->plugins_loaded();
+		foreach ( $this->plugin_integrations as $integration ) {
+			if ( method_exists( $integration, 'plugins_loaded' ) ) {
+				$integration->plugins_loaded();
 			}
 		}
 
