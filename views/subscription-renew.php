@@ -116,6 +116,8 @@
 					echo $gateway->get_input_html();
 
 					?>
+
+					<input type="submit" value="<?php esc_html_e( 'Pay', 'pronamic_ideal' ); ?>"/>
 				</form>
 			</div>
 		</div>
