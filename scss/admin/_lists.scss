@@ -13,6 +13,10 @@
 		}
 	}
 
+	.pronamic-pay-icon {
+		line-height: inherit;
+	}
+
 	.pronamic-pay-icon-completed {
 		&::after {
 			color: $pronamic-pay-processing-color;

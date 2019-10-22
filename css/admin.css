@@ -217,6 +217,9 @@ body.post-type-pronamic_payment #post-body-content, body.post-type-pronamic_pay_
 .pronamic-pay-payment-methods thead th:first-of-type {
   width: 60%;
 }
+.pronamic-pay-payment-methods .pronamic-pay-icon {
+  line-height: inherit;
+}
 .pronamic-pay-payment-methods .pronamic-pay-icon-completed::after {
   color: #73a724;
 }
