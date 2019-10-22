@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use Pronamic\WordPress\Pay\Dependencies\Dependencies;
+
 /**
  * Title: Abstract plugin integration
  * Description:
@@ -22,6 +24,29 @@ namespace Pronamic\WordPress\Pay;
  * @link    https://github.com/thephpleague/omnipay-common/blob/master/src/Omnipay/Common/AbstractGateway.php
  */
 abstract class AbstractPluginIntegration {
+	/**
+	 * Dependencies.
+	 *
+	 * @var Dependencies
+	 */
+	private $dependencies;
+
+	/**
+	 * Construct.
+	 */
+	public function __construct() {
+		$this->dependencies = new Dependencies();
+	}
+
+	/**
+	 * Is active.
+	 *
+	 * @return bool True if dependencies are met, false othwerise.
+	 */
+	public function is_active() {
+		return $this->dependencies->are_met();
+	}
+
 	/**
 	 * Get list of database update files.
 	 *
