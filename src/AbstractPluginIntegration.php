@@ -39,6 +39,15 @@ abstract class AbstractPluginIntegration {
 	}
 
 	/**
+	 * Get the dependencies of this plugin integration.
+	 *
+	 * @return Dependencies
+	 */
+	public function get_dependencies() {
+		return $this->dependencies;
+	}
+
+	/**
 	 * Is active.
 	 *
 	 * @return bool True if dependencies are met, false othwerise.

@@ -182,6 +182,30 @@ class Install {
 	}
 
 	/**
+	 * Get active plugin integrations.
+	 *
+	 * @return array<AbstractPluginIntegration>
+	 */
+	private function get_active_plugin_integrations() {
+		$plugin_integrations = $this->plugin->plugin_integrations;
+
+		$plugin_integrations = array_filter(
+			$plugin_integrations,
+			/**
+			 * Filter active plugin integration.
+			 *
+			 * @param AbstractPluginIntegration $plugin_integration Plugin integration object.
+			 * @return bool True if active, false otherwse.
+			 */
+			function( $plugin_integration ) {
+				return $plugin_integration->is_active();
+			}
+		);
+
+		return $plugin_integrations;
+	}
+
+	/**
 	 * Requires database update.
 	 *
 	 * @return bool True if database update is required, false othwerise.
@@ -199,7 +223,7 @@ class Install {
 		}
 
 		// Plugin integrations.
-		foreach ( $this->plugin->plugin_integrations as $integration ) {
+		foreach ( $this->get_active_plugin_integrations() as $integration ) {
 			$option_db_version  = $integration->option_db_version;
 			$current_db_version = get_option( $option_db_version );
 
@@ -238,7 +262,7 @@ class Install {
 		}
 
 		// Plugin integrations.
-		foreach ( $this->plugin->plugin_integrations as $integration ) {
+		foreach ( $this->get_active_plugin_integrations() as $integration ) {
 			$option_db_version  = $integration->option_db_version;
 			$current_db_version = get_option( $option_db_version );
 
