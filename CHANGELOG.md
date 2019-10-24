@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
--
+- Fixed duplicate currency symbol in payment forms.
 
 ## [2.2.5] - 2019-10-07
 - Added `pronamic_payment_gateway_configuration_id` WordPress filter.
