@@ -26,6 +26,13 @@ use Pronamic\WordPress\Pay\Util as Pay_Util;
  */
 class Util {
 	/**
+	 * Support URL parameters.
+	 *
+	 * @var null|string
+	 */
+	private static $support_url_params;
+
+	/**
 	 * Remote get body.
 	 *
 	 * @param string $url                    URL to request.
@@ -334,6 +341,64 @@ class Util {
 	 */
 	public static function build_url( $url, array $parameters ) {
 		return $url . '?' . _http_build_query( $parameters, null, '&' );
+	}
+
+	/**
+	 * Build URL with support parameters.
+	 *
+	 * @param string $url URL to extend with the support parameters.
+	 *
+	 * @return string
+	 */
+	public static function support_url( $url ) {
+		if ( null === self::$support_url_params ) {
+			// URL parameters.
+			$params = array(
+				'php'    => \str_replace( PHP_EXTRA_VERSION, '', \phpversion() ),
+				'locale' => \get_locale(),
+			);
+
+			// Add extensions URL parameters.
+			$extensions_json_path = \dirname( \pronamic_pay_plugin()->get_file() ) . '/other/extensions.json';
+
+			$plugins = \get_plugins();
+
+			$extensions = array(
+				'contact-form-7',
+				'wpforms',
+			);
+
+			if ( \is_readable( $extensions_json_path ) ) {
+				$data = \file_get_contents( $extensions_json_path, true );
+
+				if ( false !== $data ) {
+					$supported_extensions = \json_decode( $data );
+
+					if ( null !== $supported_extensions ) {
+						$supported_extensions = \wp_list_pluck( $supported_extensions, 'slug' );
+
+						$extensions = \array_merge( $extensions, $supported_extensions );
+					}
+				}
+			}
+
+			foreach ( $plugins as $slug => $plugin ) {
+				foreach ( $extensions as $extension ) {
+					if ( false === \stristr( $slug, $extension ) ) {
+						continue;
+					}
+
+					// Add plugin to URL parameters.
+					$slug = dirname( $slug );
+
+					$params[ $slug ] = $plugin['Version'];
+				}
+			}
+
+			self::$support_url_params = $params;
+		}
+
+		return \add_query_arg( self::$support_url_params, $url );
 	}
 
 	/**

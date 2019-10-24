@@ -9,24 +9,37 @@
  */
 
 ?>
-<ul class="pronamic-pay-payment-methods">
+<table class="form-table widefat pronamic-pay-payment-methods">
+	<thead>
+		<tr>
+			<th><?php esc_html_e( 'Payment method', 'pronamic_ideal' ); ?></th>
+			<th><?php esc_html_e( 'Supported', 'pronamic_ideal' ); ?></th>
+			<th><?php esc_html_e( 'Active', 'pronamic_ideal' ); ?></th>
+		</tr>
+	</thead>
 
-	<?php
+	<tbody>
+		<?php
 
-	foreach ( $payment_methods as $payment_method => $details ) {
-		$class = $payment_method;
+		foreach ( $payment_methods as $method ) {
+			$class = $method->id;
+			$icon  = 'cancelled';
 
-		if ( $details->available ) {
-			$class .= ' available';
+			if ( $method->available ) {
+				$class .= ' available';
+				$icon   = 'completed';
+			}
+
+			printf(
+				'<tr class="%1$s"><td>%2$s</td><td>%3$s</td><td>%4$s</td></tr>',
+				esc_attr( $class ),
+				esc_html( $method->name ),
+				'<span class="pronamic-pay-icon pronamic-pay-icon-completed"></span>',
+				sprintf( '<span class="pronamic-pay-icon pronamic-pay-icon-%s"></span>', esc_attr( $icon ) )
+			);
 		}
 
-		printf(
-			'<li class="%1$s"><span class="pronamic-pay-icon pronamic-pay-icon-completed"></span> %2$s</li>',
-			esc_attr( $class ),
-			esc_html( $details->name )
-		);
-	}
+		?>
+	</tbody>
 
-	?>
-
-</ul>
+</table>

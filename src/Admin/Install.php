@@ -94,22 +94,13 @@ class Install {
 		// Rewrite Rules.
 		flush_rewrite_rules();
 
-		// Database update.
+		// Version.
 		$version = $this->plugin->get_version();
 
-		$current_version    = get_option( 'pronamic_pay_version', null );
-		$current_db_version = get_option( 'pronamic_pay_db_version', null );
+		$current_version = get_option( 'pronamic_pay_version', null );
 
-		if (
-			$current_db_version
-				&&
-			(
-				// Check for old database version notation without dots, for example `366`.
-				false === strpos( $current_db_version, '.' )
-					||
-				version_compare( $current_db_version, max( $this->db_updates ), '<' )
-			)
-		) {
+		// Database update.
+		if ( $this->requires_db_update() ) {
 			$this->admin->notices->add_notice( 'update_db' );
 		}
 
@@ -191,6 +182,64 @@ class Install {
 	}
 
 	/**
+	 * Get active plugin integrations.
+	 *
+	 * @return array<AbstractPluginIntegration>
+	 */
+	private function get_active_plugin_integrations() {
+		$plugin_integrations = $this->plugin->plugin_integrations;
+
+		$plugin_integrations = array_filter(
+			$plugin_integrations,
+			/**
+			 * Filter active plugin integration.
+			 *
+			 * @param AbstractPluginIntegration $plugin_integration Plugin integration object.
+			 * @return bool True if active, false otherwse.
+			 */
+			function( $plugin_integration ) {
+				return $plugin_integration->is_active();
+			}
+		);
+
+		return $plugin_integrations;
+	}
+
+	/**
+	 * Requires database update.
+	 *
+	 * @return bool True if database update is required, false othwerise.
+	 */
+	public function requires_db_update() {
+		$current_db_version = get_option( 'pronamic_pay_db_version' );
+
+		if (
+			// Check for old database version notation without dots, for example `366`.
+			false === strpos( $current_db_version, '.' )
+				||
+			version_compare( $current_db_version, max( $this->db_updates ), '<' )
+		) {
+			return true;
+		}
+
+		// Plugin integrations.
+		foreach ( $this->get_active_plugin_integrations() as $integration ) {
+			$option_db_version  = $integration->option_db_version;
+			$current_db_version = get_option( $option_db_version );
+
+			$db_updates = $integration->get_db_update_files();
+
+			foreach ( $db_updates as $version => $files ) {
+				if ( version_compare( $current_db_version, max( $db_updates ), '<' ) ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Update database.
 	 */
 	public function update_db() {
@@ -209,6 +258,26 @@ class Install {
 
 					update_option( 'pronamic_pay_db_version', $version );
 				}
+			}
+		}
+
+		// Plugin integrations.
+		foreach ( $this->get_active_plugin_integrations() as $integration ) {
+			$option_db_version  = $integration->option_db_version;
+			$current_db_version = get_option( $option_db_version );
+
+			$db_updates = $integration->get_db_update_files();
+
+			foreach ( $db_updates as $version => $files ) {
+				if ( ! version_compare( $current_db_version, $version, '<' ) ) {
+					continue;
+				}
+
+				foreach ( $files as $file ) {
+					include $file;
+				}
+
+				update_option( $option_db_version, $version );
 			}
 		}
 
