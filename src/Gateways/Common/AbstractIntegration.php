@@ -12,7 +12,6 @@ namespace Pronamic\WordPress\Pay\Gateways\Common;
 
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\GatewayConfig;
-use Pronamic\WordPress\Pay\Core\Util;
 
 /**
  * Title: Abstract Integration
@@ -57,9 +56,9 @@ abstract class AbstractIntegration {
 	/**
 	 * Manual URL.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
-	public $manual_url;
+	private $manual_url;
 
 	/**
 	 * Dashboard URL.
@@ -188,13 +187,16 @@ abstract class AbstractIntegration {
 	 * @return string|null
 	 */
 	public function get_manual_url() {
-		$manual_url = null;
+		return $this->manual_url;
+	}
 
-		if ( isset( $this->manual_url ) ) {
-			$manual_url = Util::support_url( $this->manual_url );
-		}
-
-		return $manual_url;
+	/**
+	 * Set manual URL.
+	 *
+	 * @param string|null $manual_url Manual URL.
+	 */
+	public function set_manual_url( $manual_url ) {
+		$this->manual_url = $manual_url;
 	}
 
 	/**

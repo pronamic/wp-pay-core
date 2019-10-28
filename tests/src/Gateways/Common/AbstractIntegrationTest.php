@@ -32,18 +32,14 @@ class AbstractIntegrationTest extends \WP_UnitTestCase {
 		// Abstract integration class mock.
 		$this->integration = $this->getMockForAbstractClass( 'Pronamic\WordPress\Pay\Gateways\Common\AbstractIntegration' );
 
-		$this->integration->manual_url = 'https://domain.tld/manuals/test/';
+		$this->integration->set_manual_url( 'https://domain.tld/manuals/test/' );
 	}
 
 	/**
 	 * Test manual URL.
 	 */
 	public function test_get_manual_url() {
-		$expected = \sprintf(
-			'https://domain.tld/manuals/test/?php=%1$s&locale=%2$s',
-			\str_replace( PHP_EXTRA_VERSION, '', \phpversion() ),
-			get_locale()
-		);
+		$expected = 'https://domain.tld/manuals/test/';
 
 		$this->assertEquals( $expected, $this->integration->get_manual_url() );
 	}
