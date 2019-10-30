@@ -13,8 +13,8 @@ namespace Pronamic\WordPress\Pay\Payments;
 use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\AbstractDataStoreCPT;
 use Pronamic\WordPress\Pay\Address;
-use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\ContactName;
+use Pronamic\WordPress\Pay\Customer;
 
 /**
  * Title: Payments data store CPT
@@ -217,6 +217,65 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	}
 
 	/**
+	 * Maybe create consumer bank details from legacy meta.
+	 *
+	 * @param PaymentInfo $payment The payment to read.
+	 */
+	private function maybe_create_consumer_bank_details_from_legacy_meta( $payment ) {
+		if ( null !== $payment->get_consumer_bank_details() ) {
+			// Bail out if there is already a billing consumer_bank_details.
+			return;
+		}
+
+		$id = $payment->get_id();
+
+		if ( empty( $id ) ) {
+			return;
+		}
+
+		$data = array(
+			'consumer_name'           => $this->get_meta_string( $id, 'consumer_name' ),
+			'consumer_account_number' => $this->get_meta_string( $id, 'consumer_account_number' ),
+			'consumer_iban'           => $this->get_meta_string( $id, 'consumer_iban' ),
+			'consumer_bic'            => $this->get_meta_string( $id, 'consumer_bic' ),
+			'consumer_city'           => $this->get_meta_string( $id, 'consumer_city' ),
+		);
+
+		$data = array_filter( $data );
+		$data = array_map( 'trim', $data );
+		$data = array_filter( $data );
+
+		if ( empty( $data ) ) {
+			// Bail out if there is no consumer data.
+			return;
+		}
+
+		$consumer_bank_details = new BankAccountDetails();
+
+		$payment->set_consumer_bank_details( $consumer_bank_details );
+
+		if ( isset( $data['consumer_name'] ) ) {
+			$consumer_bank_details->set_name( $data['consumer_name'] );
+		}
+
+		if ( isset( $data['consumer_account_number'] ) ) {
+			$consumer_bank_details->set_account_number( $data['consumer_account_number'] );
+		}
+
+		if ( isset( $data['consumer_iban'] ) ) {
+			$consumer_bank_details->set_iban( $data['consumer_iban'] );
+		}
+
+		if ( isset( $data['consumer_bic'] ) ) {
+			$consumer_bank_details->set_bic( $data['consumer_bic'] );
+		}
+
+		if ( isset( $data['consumer_city'] ) ) {
+			$consumer_bank_details->set_city( $data['consumer_city'] );
+		}
+	}
+
+	/**
 	 * Read post meta.
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-data.php#L462-L507
@@ -225,6 +284,7 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	protected function read_post_meta( $payment ) {
 		$this->maybe_create_customer_from_legacy_meta( $payment );
 		$this->maybe_create_billing_address_from_legacy_meta( $payment );
+		$this->maybe_create_consumer_bank_details_from_legacy_meta( $payment );
 
 		// Amount.
 		$amount = $payment->get_meta( 'amount' );
@@ -276,6 +336,18 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			$meta['city']             = $billing_address->get_city();
 			$meta['country']          = $billing_address->get_country_name();
 			$meta['telephone_number'] = $billing_address->get_phone();
+		}
+
+		// Consumer.
+		$consumer_bank_details = $payment->get_consumer_bank_details();
+
+		if ( null !== $consumer_bank_details ) {
+			// Deprecated meta values.
+			$meta['consumer_name']           = $consumer_bank_details->get_name();
+			$meta['consumer_account_number'] = $consumer_bank_details->get_account_number();
+			$meta['consumer_iban']           = $consumer_bank_details->get_iban();
+			$meta['consumer_bic']            = $consumer_bank_details->get_bic();
+			$meta['consumer_city']           = $consumer_bank_details->get_city();
 		}
 
 		return $meta;

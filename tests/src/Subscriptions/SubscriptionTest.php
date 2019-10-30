@@ -71,6 +71,8 @@ class SubscriptionTest extends WP_UnitTestCase {
 	 * @param string $value        Expected value.
 	 */
 	public function test_set( $set_function, $property, $value ) {
+		$this->setExpectedDeprecated( $set_function );
+
 		$subscription = new Subscription();
 
 		$subscription->$set_function( $value );

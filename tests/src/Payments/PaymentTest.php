@@ -85,6 +85,8 @@ class PaymentTest extends WP_UnitTestCase {
 			array( 'set_shipping_address', 'get_shipping_address', new Address() ),
 			array( 'set_shipping_amount', 'get_shipping_amount', new Money( 10, 'EUR' ) ),
 			array( 'set_ga_tracked', 'get_ga_tracked', true ),
+			array( 'set_consumer_bank_details', 'get_consumer_bank_details', new BankAccountDetails() ),
+			array( 'set_bank_transfer_recipient_details', 'get_bank_transfer_recipient_details', new BankTransferDetails() ),
 
 			// Deprecated.
 			array( 'set_amount', 'get_amount', new TaxedMoney( 89.95, 'EUR' ), true ),
@@ -101,6 +103,8 @@ class PaymentTest extends WP_UnitTestCase {
 	 * @param string $value        Expected value.
 	 */
 	public function test_set( $set_function, $property, $value ) {
+		$this->setExpectedDeprecated( $set_function );
+
 		$payment = new Payment();
 
 		$payment->$set_function( $value );
@@ -280,6 +284,28 @@ class PaymentTest extends WP_UnitTestCase {
 		// Dates.
 		$payment->set_start_date( new DateTime( '2005-05-05' ) );
 		$payment->set_end_date( new DateTime( '2100-05-05' ) );
+		$payment->set_expiry_date( new DateTime( '2005-05-05 00:30:00' ) );
+
+		// Consumer bank details.
+		$bank_details = new BankAccountDetails();
+
+		$bank_details->set_bank_name( 'Rabobank' );
+		$bank_details->set_name( 'John Doe' );
+		$bank_details->set_account_number( '1086.34.779' );
+		$bank_details->set_iban( 'NL56 RABO 0108 6347 79' );
+		$bank_details->set_bic( 'RABONL2U' );
+		$bank_details->set_city( 'Drachten' );
+		$bank_details->set_country( 'Netherlands' );
+
+		$payment->set_consumer_bank_details( $bank_details );
+
+		// Bank transfer recipient details.
+		$bank_transfer_recipient_details = new BankTransferDetails();
+
+		$bank_transfer_recipient_details->set_bank_account( $bank_details );
+		$bank_transfer_recipient_details->set_reference( 'ABCD-1234-EFGH-5678' );
+
+		$payment->set_bank_transfer_recipient_details( $bank_transfer_recipient_details );
 
 		// Test.
 		$json_file = __DIR__ . '/../../json/payment.json';

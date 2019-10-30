@@ -84,9 +84,29 @@
       }
     }
   ],
+  "consumer_bank_details": {
+    "bank_name": "Rabobank",
+    "iban": "NL56 RABO 0108 6347 79",
+    "bic": "RABONL2U",
+    "account_number": "1086.34.779",
+    "city": "Drachten",
+    "country": "Netherlands"
+  },
+  "bank_transfer_recipient_details": {
+    "bank_account": {
+      "bank_name": "Rabobank",
+      "iban": "NL56 RABO 0108 6347 79",
+      "bic": "RABONL2U",
+      "account_number": "1086.34.779",
+      "city": "Drachten",
+      "country": "Netherlands"
+    },
+    "reference": "ABCD-1234-EFGH-5678"
+  },
   "mode":"live",
   "start_date": "2005-05-05T00:00:00+00:00",
   "end_date": "2100-05-05T00:00:00+00:00",
+  "expiry_date": "2005-05-05T00:30:00+00:00",
   "status":"Open",
   "ga_tracked":true
 }

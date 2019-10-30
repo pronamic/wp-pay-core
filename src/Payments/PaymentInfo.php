@@ -11,16 +11,13 @@
 namespace Pronamic\WordPress\Pay\Payments;
 
 use InvalidArgumentException;
-use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\Core\Gateway;
-use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\CreditCard;
-use Pronamic\WordPress\Pay\Payments\PaymentStatus;
-use Pronamic\WordPress\Pay\MoneyJsonTransformer;
-use Pronamic\WordPress\Pay\Subscriptions\Subscription;
+use Pronamic\WordPress\Pay\Customer;
 use WP_Post;
 
 /**
@@ -129,49 +126,18 @@ abstract class PaymentInfo {
 	public $description;
 
 	/**
-	 * The name of the consumer of this payment.
+	 * Bank transfer recipient details.
 	 *
-	 * @todo Is this required and should we add the 'consumer' part?
-	 *
-	 * @var string|null
+	 * @var BankTransferDetails|null
 	 */
-	public $consumer_name;
+	private $bank_transfer_recipient_details;
 
 	/**
-	 * The account number of the consumer of this payment.
+	 * Consumer bank details.
 	 *
-	 * @todo Is this required and should we add the 'consumer' part?
-	 *
-	 * @var string|null
+	 * @var BankAccountDetails|null
 	 */
-	public $consumer_account_number;
-
-	/**
-	 * The IBAN of the consumer of this payment.
-	 *
-	 * @todo Is this required and should we add the 'consumer' part?
-	 *
-	 * @var string|null
-	 */
-	public $consumer_iban;
-
-	/**
-	 * The BIC of the consumer of this payment.
-	 *
-	 * @todo Is this required and should we add the 'consumer' part?
-	 *
-	 * @var string|null
-	 */
-	public $consumer_bic;
-
-	/**
-	 * The city of the consumer of this payment.
-	 *
-	 * @todo Is this required and should we add the 'consumer' part?
-	 *
-	 * @var string|null
-	 */
-	public $consumer_city;
+	private $consumer_bank_details;
 
 	/**
 	 * The Google Analytics client ID of the user who started this payment.
@@ -615,48 +581,39 @@ abstract class PaymentInfo {
 	}
 
 	/**
-	 * Set consumer name.
+	 * Get consumer bank details.
 	 *
-	 * @param string|null $name Name.
+	 * @return BankAccountDetails|null
 	 */
-	public function set_consumer_name( $name ) {
-		$this->consumer_name = $name;
+	public function get_consumer_bank_details() {
+		return $this->consumer_bank_details;
 	}
 
 	/**
-	 * Set consumer account number.
+	 * Set consumer bank details.
 	 *
-	 * @param string|null $account_number Account number.
+	 * @param BankAccountDetails|null $bank_details Consumer bank details.
 	 */
-	public function set_consumer_account_number( $account_number ) {
-		$this->consumer_account_number = $account_number;
+	public function set_consumer_bank_details( $bank_details ) {
+		$this->consumer_bank_details = $bank_details;
 	}
 
 	/**
-	 * Set consumer IBAN.
+	 * Get bank transfer details.
 	 *
-	 * @param string|null $iban IBAN.
+	 * @return BankTransferDetails|null
 	 */
-	public function set_consumer_iban( $iban ) {
-		$this->consumer_iban = $iban;
+	public function get_bank_transfer_recipient_details() {
+		return $this->bank_transfer_recipient_details;
 	}
 
 	/**
-	 * Set consumer BIC.
+	 * Set bank transfer details.
 	 *
-	 * @param string|null $bic BIC.
+	 * @param BankTransferDetails|null $bank_transfer Bank transfer details.
 	 */
-	public function set_consumer_bic( $bic ) {
-		$this->consumer_bic = $bic;
-	}
-
-	/**
-	 * Set consumer city.
-	 *
-	 * @param string|null $city City.
-	 */
-	public function set_consumer_city( $city ) {
-		$this->consumer_city = $city;
+	public function set_bank_transfer_recipient_details( $bank_transfer ) {
+		$this->bank_transfer_recipient_details = $bank_transfer;
 	}
 
 	/**

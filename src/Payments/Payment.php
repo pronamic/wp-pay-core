@@ -93,46 +93,6 @@ class Payment extends LegacyPayment {
 	public $description;
 
 	/**
-	 * The name of the consumer of this payment.
-	 *
-	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string|null
-	 */
-	public $consumer_name;
-
-	/**
-	 * The account number of the consumer of this payment.
-	 *
-	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string|null
-	 */
-	public $consumer_account_number;
-
-	/**
-	 * The IBAN of the consumer of this payment.
-	 *
-	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string|null
-	 */
-	public $consumer_iban;
-
-	/**
-	 * The BIC of the consumer of this payment.
-	 *
-	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string|null
-	 */
-	public $consumer_bic;
-
-	/**
-	 * The city of the consumer of this payment.
-	 *
-	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string|null
-	 */
-	public $consumer_city;
-
-	/**
 	 * The Google Analytics client ID of the user who started this payment.
 	 *
 	 * @var string|null
@@ -167,6 +127,13 @@ class Payment extends LegacyPayment {
 	 * @var string|null
 	 */
 	public $action_url;
+
+	/**
+	 * The date this payment expires.
+	 *
+	 * @var DateTime|null
+	 */
+	private $expiry_date;
 
 	/**
 	 * The payment method chosen by the user who started this payment.
@@ -484,6 +451,24 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
+	 * Get expiry date.
+	 *
+	 * @return DateTime|null
+	 */
+	public function get_expiry_date() {
+		return $this->expiry_date;
+	}
+
+	/**
+	 * Set expiry date.
+	 *
+	 * @param DateTime|null $expiry_date Expiry date.
+	 */
+	public function set_expiry_date( $expiry_date ) {
+		$this->expiry_date = $expiry_date;
+	}
+
+	/**
 	 * Get the return redirect URL for this payment. This URL is used after a user is returned
 	 * from a payment provider / gateway to WordPress. It allows WordPress payment extensions
 	 * to redirect users to the correct URL.
@@ -707,6 +692,10 @@ class Payment extends LegacyPayment {
 
 		PaymentInfoHelper::from_json( $json, $payment );
 
+		if ( isset( $json->expiry_date ) ) {
+			$payment->set_expiry_date( new DateTime( $json->expiry_date ) );
+		}
+
 		if ( isset( $json->status ) ) {
 			$payment->set_status( $json->status );
 		}
@@ -727,6 +716,12 @@ class Payment extends LegacyPayment {
 		$object = PaymentInfoHelper::to_json( $this );
 
 		$properties = (array) $object;
+
+		$expiry_date = $this->get_expiry_date();
+
+		if ( null !== $expiry_date ) {
+			$properties['expiry_date'] = $expiry_date->format( \DATE_ATOM );
+		}
 
 		if ( null !== $this->get_status() ) {
 			$properties['status'] = $this->get_status();

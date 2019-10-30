@@ -312,6 +312,111 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	}
 
 	/**
+	 * Set consumer name.
+	 *
+	 * @deprecated 2.2.6 Use Payment::set_consumer_bank_details()->set_name() instead.
+	 *
+	 * @param string|null $name Name.
+	 */
+	public function set_consumer_name( $name ) {
+		_deprecated_function( __FUNCTION__, '2.2.6', 'Payment::set_consumer_bank_details()->set_name()' );
+
+		$consumer_bank_details = $this->get_consumer_bank_details();
+
+		if ( null === $consumer_bank_details ) {
+			$consumer_bank_details = new BankAccountDetails();
+
+			$this->set_consumer_bank_details( $consumer_bank_details );
+		}
+
+		$consumer_bank_details->set_name( $name );
+	}
+
+	/**
+	 * Set consumer account number.
+	 *
+	 * @deprecated 2.2.6 Use Payment::set_consumer_bank_details()->set_account_number() instead.
+	 *
+	 * @param string|null $account_number Account number.
+	 */
+	public function set_consumer_account_number( $account_number ) {
+		_deprecated_function( __FUNCTION__, '2.2.6', 'Payment::set_consumer_bank_details()->set_account_number()' );
+
+		$consumer_bank_details = $this->get_consumer_bank_details();
+
+		if ( null === $consumer_bank_details ) {
+			$consumer_bank_details = new BankAccountDetails();
+
+			$this->set_consumer_bank_details( $consumer_bank_details );
+		}
+
+		$consumer_bank_details->set_account_number( $account_number );
+	}
+
+	/**
+	 * Set consumer IBAN.
+	 *
+	 * @deprecated 2.2.6 Use Payment::set_consumer_bank_details()->set_iban() instead.
+	 *
+	 * @param string|null $iban IBAN.
+	 */
+	public function set_consumer_iban( $iban ) {
+		_deprecated_function( __FUNCTION__, '2.2.6', 'Payment::set_consumer_bank_details()->set_iban()' );
+
+		$consumer_bank_details = $this->get_consumer_bank_details();
+
+		if ( null === $consumer_bank_details ) {
+			$consumer_bank_details = new BankAccountDetails();
+
+			$this->set_consumer_bank_details( $consumer_bank_details );
+		}
+
+		$consumer_bank_details->set_iban( $iban );
+	}
+
+	/**
+	 * Set consumer BIC.
+	 *
+	 * @deprecated 2.2.6 Use Payment::set_consumer_bank_details()->set_bic() instead.
+	 *
+	 * @param string|null $bic BIC.
+	 */
+	public function set_consumer_bic( $bic ) {
+		_deprecated_function( __FUNCTION__, '2.2.6', 'Payment::set_consumer_bank_details()->set_bic()' );
+
+		$consumer_bank_details = $this->get_consumer_bank_details();
+
+		if ( null === $consumer_bank_details ) {
+			$consumer_bank_details = new BankAccountDetails();
+
+			$this->set_consumer_bank_details( $consumer_bank_details );
+		}
+
+		$consumer_bank_details->set_bic( $bic );
+	}
+
+	/**
+	 * Set consumer city.
+	 *
+	 * @deprecated 2.2.6 Use Payment::set_consumer_bank_details()->set_city() instead.
+	 *
+	 * @param string|null $city City.
+	 */
+	public function set_consumer_city( $city ) {
+		_deprecated_function( __FUNCTION__, '2.2.6', 'Payment::set_consumer_bank_details()->set_city()' );
+
+		$consumer_bank_details = $this->get_consumer_bank_details();
+
+		if ( null === $consumer_bank_details ) {
+			$consumer_bank_details = new BankAccountDetails();
+
+			$this->set_consumer_bank_details( $consumer_bank_details );
+		}
+
+		$consumer_bank_details->set_city( $city );
+	}
+
+	/**
 	 * Get.
 	 *
 	 * @link http://php.net/manual/en/language.oop5.overloading.php#object.get
@@ -319,7 +424,8 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	 * @return mixed
 	 */
 	public function __get( $name ) {
-		$customer = $this->get_customer();
+		$customer              = $this->get_customer();
+		$consumer_bank_details = $this->get_consumer_bank_details();
 
 		switch ( $name ) {
 			case 'language':
@@ -350,6 +456,18 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 				return $this->get_country();
 			case 'telephone_number':
 				return $this->get_telephone_number();
+
+			// @since 2.2.6
+			case 'consumer_name':
+				return ( null === $consumer_bank_details ) ? null : $consumer_bank_details->get_name();
+			case 'consumer_account_number':
+				return ( null === $consumer_bank_details ) ? null : $consumer_bank_details->get_account_number();
+			case 'consumer_iban':
+				return ( null === $consumer_bank_details ) ? null : $consumer_bank_details->get_iban();
+			case 'consumer_bic':
+				return ( null === $consumer_bank_details ) ? null : $consumer_bank_details->get_bic();
+			case 'consumer_city':
+				return ( null === $consumer_bank_details ) ? null : $consumer_bank_details->get_city();
 		}
 
 		return $this->{$name};
@@ -386,9 +504,10 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 			return null;
 		}
 
-		$customer     = $this->get_customer();
-		$address      = $this->get_billing_address();
-		$contact_name = null;
+		$customer              = $this->get_customer();
+		$address               = $this->get_billing_address();
+		$consumer_bank_details = $this->get_consumer_bank_details();
+		$contact_name          = null;
 
 		if ( in_array( $name, array( 'language', 'locale', 'email', 'first_name', 'last_name', 'user_id' ), true ) ) {
 			if ( null === $value && null === $customer ) {
@@ -428,6 +547,19 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 			}
 		}
 
+		// Consumer.
+		if ( in_array( $name, array( 'consumer_name', 'consumer_account_number', 'consumer_iban', 'consumer_bic', 'consumer_city' ), true ) ) {
+			if ( null === $value && null === $consumer_bank_details ) {
+				return null;
+			}
+
+			if ( null === $consumer_bank_details ) {
+				$consumer_bank_details = new BankAccountDetails();
+
+				$this->set_consumer_bank_details( $consumer_bank_details );
+			}
+		}
+
 		switch ( $name ) {
 			case 'language':
 				return ( null === $customer ) ? null : $customer->set_language( $value );
@@ -451,6 +583,22 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 				return ( null === $address ) ? null : $address->set_line_1( $value );
 			case 'user_id':
 				return ( null === $customer ) ? null : $customer->set_user_id( $value );
+
+			// @since 2.2.6
+			case 'consumer_name':
+				return ( null === $consumer_bank_details ) ? null : $consumer_bank_details->set_name( $value );
+
+			case 'consumer_account_number':
+				return ( null === $consumer_bank_details ) ? null : $consumer_bank_details->set_account_number( $value );
+
+			case 'consumer_iban':
+				return ( null === $consumer_bank_details ) ? null : $consumer_bank_details->set_iban( $value );
+
+			case 'consumer_bic':
+				return ( null === $consumer_bank_details ) ? null : $consumer_bank_details->set_bic( $value );
+
+			case 'consumer_city':
+				return ( null === $consumer_bank_details ) ? null : $consumer_bank_details->set_city( $value );
 		}
 
 		$this->{$name} = $value;
