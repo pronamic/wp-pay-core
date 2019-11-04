@@ -8,12 +8,28 @@
  * @package   Pronamic\WordPress\Pay
  */
 
+use Pronamic\WordPress\Pay\Core\PaymentMethods;
+
+$columns = array(
+	'payment_method' => __( 'Payment method', 'pronamic_ideal' ),
+	'active'         => __( 'Active', 'pronamic_ideal' ),
+);
+
+$integration = pronamic_pay_plugin()->gateway_integrations->get_integration( $gateway_id );
+
+if ( $integration->supports( 'recurring' ) ) :
+	$columns['recurring'] = __( 'Recurring', 'pronamic_ideal' );
+endif;
+
 ?>
 <table class="form-table widefat pronamic-pay-payment-methods">
 	<thead>
 		<tr>
-			<th><?php esc_html_e( 'Payment method', 'pronamic_ideal' ); ?></th>
-			<th><?php esc_html_e( 'Active', 'pronamic_ideal' ); ?></th>
+			<?php foreach ( $columns as $column ) : ?>
+
+				<th><?php echo esc_html( $column ); ?></th>
+
+			<?php endforeach; ?>
 		</tr>
 	</thead>
 
@@ -23,16 +39,58 @@
 		$supports_methods_request = ( null !== $gateway->get_transient_available_payment_methods() );
 
 		foreach ( $payment_methods as $method ) {
-			$class = $method->id;
-			$icon  = 'question-mark';
+			?>
 
+			<tr>
 
-			printf(
-				'<tr class="%1$s"><td>%2$s</td><td>%3$s</td></tr>',
-				esc_attr( $class ),
-				esc_html( $method->name ),
-				sprintf( '<span class="pronamic-pay-icon pronamic-pay-icon-%s"></span>', esc_attr( $icon ) )
-			);
+				<?php
+
+				foreach ( $columns as $key => $column ) :
+					$value = '';
+
+					switch ( $key ) :
+						case 'payment_method':
+							$value = $method->name;
+
+							break;
+						case 'active':
+							$icon = 'question-mark';
+
+							if ( $supports_methods_request ) {
+								$icon = ( $method->available ? 'completed' : 'cancelled' );
+							}
+
+							$value = sprintf( '<span class="pronamic-pay-icon pronamic-pay-icon-%s"></span>', esc_attr( $icon ) );
+
+							break;
+						case 'recurring':
+							$icon = 'cancelled';
+
+							if ( PaymentMethods::is_recurring_method( $method->id ) ) :
+								$icon = 'completed';
+							endif;
+
+							$value = sprintf( '<span class="pronamic-pay-icon pronamic-pay-icon-%s"></span>', esc_attr( $icon ) );
+
+							break;
+					endswitch;
+
+					printf(
+						'<td>%s</td>',
+						wp_kses(
+							$value,
+							array( 'span' => array( 'class' => array() ) )
+						)
+					);
+
+				endforeach;
+
+				?>
+
+			</tr>
+
+			<?php
+
 		}
 
 		?>
