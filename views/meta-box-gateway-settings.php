@@ -41,8 +41,8 @@ $sections = array(
 				'section'  => 'payment_methods',
 				'title'    => __( 'Supported Payment Methods', 'pronamic_ideal' ),
 				'type'     => 'html',
-				'callback' => function() use ( $gateway ) {
-					AdminGatewayPostType::settings_payment_methods( $gateway );
+				'callback' => function() use ( $gateway, $gateway_id ) {
+					AdminGatewayPostType::settings_payment_methods( $gateway, $gateway_id );
 				},
 			),
 		),

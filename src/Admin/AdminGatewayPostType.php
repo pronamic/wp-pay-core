@@ -274,11 +274,12 @@ class AdminGatewayPostType {
 	/**
 	 * Pronamic Pay gateway payment methods setting.
 	 *
-	 * @param null|Gateway $gateway Gateway.
+	 * @param null|Gateway $gateway    Gateway.
+	 * @param null|string  $gateway_id Gateway ID.
 	 *
 	 * @return void
 	 */
-	public static function settings_payment_methods( $gateway ) {
+	public static function settings_payment_methods( $gateway, $gateway_id ) {
 		if ( null === $gateway ) {
 			return;
 		}
