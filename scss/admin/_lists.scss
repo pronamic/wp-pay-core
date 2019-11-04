@@ -22,4 +22,10 @@
 			color: $pronamic-pay-processing-color;
 		}
 	}
+
+	.pronamic-pay-icon-cancelled {
+		&::after {
+			color: $gray;
+		}
+	}
 }
