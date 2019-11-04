@@ -441,6 +441,10 @@ class PaymentMethods {
 
 			$payment_methods = $gateway->get_transient_available_payment_methods();
 
+			if ( null === $payment_methods ) {
+				$payment_methods = $gateway->get_supported_payment_methods();
+			}
+
 			foreach ( $payment_methods as $payment_method ) {
 				if ( ! isset( $active_payment_methods[ $payment_method ] ) ) {
 					$active_payment_methods[ $payment_method ] = array();
