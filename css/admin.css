@@ -232,6 +232,17 @@ body.post-type-pronamic_payment #post-body-content, body.post-type-pronamic_pay_
   color: #aaa;
 }
 
+@media screen and (max-width: 782px) {
+  .pronamic-pay-payment-methods.form-table th {
+    display: table-cell;
+  }
+  .pronamic-pay-payment-methods.form-table th:first-of-type {
+    width: 50%;
+  }
+  .pronamic-pay-payment-methods.form-table td {
+    display: table-cell;
+  }
+}
 .gateway-config-section-header h4 {
   margin: 0;
 }

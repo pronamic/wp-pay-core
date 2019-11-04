@@ -29,3 +29,21 @@
 		}
 	}
 }
+
+@media screen and (max-width: 782px) {
+	.pronamic-pay-payment-methods {
+		&.form-table {
+			th {
+				display: table-cell;
+
+				&:first-of-type {
+					width: 50%;
+				}
+			}
+
+			td {
+				display: table-cell;
+			}
+		}
+	}
+}
