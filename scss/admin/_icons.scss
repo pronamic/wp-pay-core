@@ -88,3 +88,10 @@
 		content: $ppi-recurring;
 	}
 }
+
+.pronamic-pay-icon-question-mark {
+	&::after {
+		color: $wp-icon-color;
+		content: $ppi-question-mark;
+	}
+}
