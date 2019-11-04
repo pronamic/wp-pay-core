@@ -13,6 +13,7 @@ namespace Pronamic\WordPress\Pay\Forms;
 use Exception;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Money\TaxedMoney;
+use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentLines;
@@ -124,6 +125,11 @@ class FormProcessor {
 		$payment->order_id    = $order_id;
 		$payment->source      = $source;
 		$payment->source_id   = $source_id;
+
+		// Set default payment method if required.
+		if ( $gateway->payment_method_is_required() ) {
+			$payment->method = PaymentMethods::IDEAL;
+		}
 
 		// Customer.
 		$customer = array(
