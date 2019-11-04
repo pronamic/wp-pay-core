@@ -312,14 +312,14 @@ abstract class Gateway {
 	 * @return array
 	 */
 	public function get_available_payment_methods() {
-		return $this->get_supported_payment_methods();
+		return null;
 	}
 
 	/**
 	 * Get the payment methods transient
 	 *
 	 * @since 1.3.0
-	 * @return array
+	 * @return array|null
 	 */
 	public function get_transient_available_payment_methods() {
 		// Transient name.
@@ -336,7 +336,7 @@ abstract class Gateway {
 		}
 
 		if ( empty( $methods ) ) {
-			return array();
+			return null;
 		}
 
 		return $methods;

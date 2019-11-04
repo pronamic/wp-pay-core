@@ -287,6 +287,10 @@ class AdminGatewayPostType {
 		$supported = $gateway->get_supported_payment_methods();
 		$available = $gateway->get_transient_available_payment_methods();
 
+		if ( null === $available ) {
+			$available = array();
+		}
+
 		$payment_methods = array();
 
 		foreach ( $supported as $payment_method ) {
