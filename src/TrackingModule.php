@@ -55,6 +55,7 @@ class TrackingModule {
 
 		$extensions = \array_merge(
 			array(
+				'pronamic-ideal',
 				'contact-form-7',
 				'wpforms',
 			),
