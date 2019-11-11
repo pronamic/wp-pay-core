@@ -986,6 +986,8 @@ class Plugin {
 	 * @param Gateway $gateway The gateway to start the payment at.
 	 *
 	 * @return Payment
+	 *
+	 * @throws \Exception Throws exception if gateway payment start fails.
 	 */
 	public static function start_payment( Payment $payment, $gateway = null ) {
 		global $pronamic_ideal;
@@ -1036,15 +1038,37 @@ class Plugin {
 		}
 
 		// Start payment at the gateway.
-		$result = $gateway->start( $payment );
+		$result = false;
 
-		// Add gateway errors as payment notes.
-		$error = $gateway->get_error();
+		try {
+			$result = $gateway->start( $payment );
 
-		if ( $error instanceof WP_Error ) {
-			foreach ( $error->get_error_codes() as $code ) {
-				$payment->add_note( sprintf( '%s: %s', $code, $error->get_error_message( $code ) ) );
+			// Add gateway errors as payment notes.
+			$error = $gateway->get_error();
+
+			if ( $error instanceof \WP_Error ) {
+				$message = $error->get_error_message();
+				$code    = $error->get_error_code();
+
+				if ( ! \is_int( $code ) ) {
+					$message = sprintf( '%s: %s', $code, $message );
+					$code    = 0;
+				}
+
+				throw new \Exception( $message, $code );
 			}
+		} catch ( \Exception $error ) {
+			$message = $error->getMessage();
+
+			// Maybe include error code in message.
+			$code = $error->getCode();
+
+			if ( $code > 0 ) {
+				$message = \sprintf( '%s: %s', $code, $message );
+			}
+
+			// Add note.
+			$payment->add_note( $message );
 		}
 
 		// Set payment status.
@@ -1076,6 +1100,11 @@ class Plugin {
 		// Schedule payment status check.
 		if ( $gateway->supports( 'payment_status_request' ) ) {
 			StatusChecker::schedule_event( $payment );
+		}
+
+		// Throw/rethrow exception.
+		if ( $error instanceof \Exception ) {
+			throw $error;
 		}
 
 		return $payment;
