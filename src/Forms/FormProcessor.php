@@ -182,12 +182,10 @@ class FormProcessor {
 		$line->set_total_amount( $payment->get_total_amount() );
 
 		// Start payment.
-		$payment = Plugin::start_payment( $payment, $gateway );
-
-		$error = $gateway->get_error();
-
-		if ( $error instanceof WP_Error ) {
-			Plugin::render_errors( $error );
+		try {
+			$payment = Plugin::start_payment( $payment, $gateway );
+		} catch ( \Exception $e ) {
+			Plugin::render_exception( $e );
 
 			exit;
 		}

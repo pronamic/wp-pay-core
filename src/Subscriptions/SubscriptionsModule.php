@@ -328,7 +328,11 @@ class SubscriptionsModule {
 		$payment->end_date   = $end_date;
 
 		// Start payment.
-		$payment = Plugin::start_payment( $payment, $gateway );
+		try {
+			$payment = Plugin::start_payment( $payment, $gateway );
+		} catch ( \Exception $e ) {
+			// @todo What to do?
+		}
 
 		// Update subscription.
 		$subscription->save();
