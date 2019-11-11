@@ -728,6 +728,15 @@ class Plugin {
 	}
 
 	/**
+	 * Render exception.
+	 *
+	 * @param \Exception $exception An exception.
+	 */
+	public static function render_exception( \Exception $exception ) {
+		include self::$dirname . '/views/exception.php';
+	}
+
+	/**
 	 * Get gateway.
 	 *
 	 * @link https://wordpress.org/support/article/post-status/#default-statuses
