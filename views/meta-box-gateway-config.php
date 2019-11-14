@@ -98,9 +98,10 @@ $gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 
 						if ( null !== $manual_url ) {
 							$links[] = sprintf(
-								'<a href="%1$s" target="_blank" title="%2$s">%2$s</a>',
-								$this->plugin->tracking_module->get_tracking_url( $manual_url ),
-								__( 'Manual', 'pronamic_ideal' )
+								'<a href="%s" target="_blank" title="%s">%s</a>',
+								\esc_url( $this->plugin->tracking_module->get_tracking_url( $manual_url ) ),
+								\esc_attr__( 'Manual', 'pronamic_ideal' ),
+								\esc_html__( 'Manual', 'pronamic_ideal' )
 							);
 						}
 
