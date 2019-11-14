@@ -279,7 +279,7 @@ class Plugin {
 		add_filter( 'plugin_locale', array( $this, 'plugin_locale' ), 10, 2 );
 
 		// Register styles.
-		add_action( 'wp_loaded', array( $this, 'register_styles' ), 9 );
+		add_action( 'init', array( $this, 'register_styles' ), 9 );
 
 		// If WordPress is loaded check on returns and maybe redirect requests.
 		add_action( 'wp_loaded', array( $this, 'handle_returns' ), 10 );
