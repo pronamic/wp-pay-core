@@ -678,7 +678,7 @@ abstract class Gateway {
 	 * @throws \Exception When payment action URL is empty.
 	 */
 	public function get_form_html( Payment $payment, $auto_submit = false ) {
-		$form_inner = $this->get_output_html();
+		$form_inner = $this->get_output_html( $payment );
 
 		$form_inner .= sprintf(
 			'<input class="pronamic-pay-btn" type="submit" name="pay" value="%s" />',
@@ -707,20 +707,24 @@ abstract class Gateway {
 	/**
 	 * Get output inputs.
 	 *
-	 * @since 1.2.0
+	 * @param Payment $payment Payment.
+	 *
 	 * @return array
+	 * @since 1.2.0
 	 */
-	public function get_output_fields() {
+	public function get_output_fields( Payment $payment ) {
 		return array();
 	}
 
 	/**
 	 * Get the output HTML
 	 *
+	 * @param Payment $payment Payment.
+	 *
 	 * @return string
 	 */
-	public function get_output_html() {
-		$fields = $this->get_output_fields();
+	public function get_output_html( Payment $payment ) {
+		$fields = $this->get_output_fields( $payment );
 
 		return PayUtil::html_hidden_fields( $fields );
 	}
