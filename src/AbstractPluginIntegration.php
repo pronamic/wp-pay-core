@@ -45,9 +45,12 @@ abstract class AbstractPluginIntegration {
 	 * @param array $args Arguments.
 	 */
 	public function __construct( $args = array() ) {
-		$args = wp_parse_args( $args, array(
-			'version_option_name' => null,
-		) );
+		$args = wp_parse_args(
+			$args,
+			array(
+				'version_option_name' => null,
+			)
+		);
 
 		// Dependencies.
 		$this->dependencies = new Dependencies();
