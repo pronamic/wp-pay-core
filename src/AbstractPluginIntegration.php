@@ -32,10 +32,28 @@ abstract class AbstractPluginIntegration {
 	private $dependencies;
 
 	/**
-	 * Construct.
+	 * The name of the option we store the version of the plugin integration in.
+	 *
+	 * @link https://github.com/WordPress/WordPress/search?q=option_name&unscoped_q=option_name
+	 * @var string|null
 	 */
-	public function __construct() {
+	private $version_option_name;
+
+	/**
+	 * Construct.
+	 *
+	 * @param array $args Arguments.
+	 */
+	public function __construct( $args = array() ) {
+		$args = wp_parse_args( $args, array(
+			'version_option_name' => null,
+		) );
+
+		// Dependencies.
 		$this->dependencies = new Dependencies();
+
+		// Version option name.
+		$this->set_version_option_name( $args['version_option_name'] );
 	}
 
 	/**
@@ -57,13 +75,31 @@ abstract class AbstractPluginIntegration {
 	}
 
 	/**
-	 * Get list of database update files.
+	 * Get version option name.
+	 *
+	 * @return string|null
+	 */
+	public function get_version_option_name() {
+		return $this->version_option_name;
+	}
+
+	/**
+	 * Set version option name.
+	 *
+	 * @param string $option_name Option name.
+	 */
+	public function set_version_option_name( $option_name ) {
+		$this->version_option_name = $option_name;
+	}
+
+	/**
+	 * Get list of update files.
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.7.0/includes/class-wc-install.php#L368-L376
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.7.0/includes/wc-update-functions.php
 	 * @return array<array<string>>
 	 */
-	public function get_db_update_files() {
+	public function get_update_files() {
 		return array();
 	}
 }
