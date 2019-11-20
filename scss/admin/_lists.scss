@@ -1,15 +1,19 @@
 .pronamic-pay-payment-methods {
-	&.form-table.widefat {
-		width: calc( 100% + 20px );
-		margin: -15px -10px;
-		border-left: none;
-		border-right: none;
-		border-bottom: none;
+	&.form-table {
+		&.widefat {
+			border-right: 0;
+			border-bottom: 0;
+			border-left: 0;
+			margin: -15px -10px;
+			width: calc(100% + 20px);
+		}
 	}
 
 	thead {
-		th:first-of-type {
-			width: 60%;
+		th {
+			&:first-of-type {
+				width: 60%;
+			}
 		}
 	}
 

@@ -1,7 +1,11 @@
-*:not(a).pronamic-pay-tip  {
-	color: $gray-dark;
+* {
+	&:not(a) {
+		&.pronamic-pay-tip {
+			color: $gray-dark;
 
-	cursor: help;
+			cursor: help;
+		}
+	}
 }
 
 .form-table {

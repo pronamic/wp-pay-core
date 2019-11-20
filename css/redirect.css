@@ -19,9 +19,9 @@ body {
 .pronamic-pay-redirect-container h1 {
   margin: 0;
 }
-.pronamic-pay-redirect-container:after {
-  content: "";
+.pronamic-pay-redirect-container::after {
   clear: both;
+  content: "";
   display: table;
 }
 
