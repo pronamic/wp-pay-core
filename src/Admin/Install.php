@@ -195,10 +195,34 @@ class Install {
 			 * Filter active plugin integration.
 			 *
 			 * @param AbstractPluginIntegration $plugin_integration Plugin integration object.
-			 * @return bool True if active, false otherwse.
+			 * @return bool True if active, false otherwise.
 			 */
 			function( $plugin_integration ) {
 				return $plugin_integration->is_active();
+			}
+		);
+
+		return $plugin_integrations;
+	}
+
+	/**
+	 * Get update plugin integrations.
+	 *
+	 * @return array<AbstractPluginIntegration>
+	 */
+	private function get_update_plugin_integrations() {
+		$plugin_integrations = $this->get_active_plugin_integrations();
+
+		$plugin_integrations = array_filter(
+			$plugin_integrations,
+			/**
+			 * Filter plugin integration with version option name.
+			 *
+			 * @param AbstractPluginIntegration $plugin_integration Plugin integration object.
+			 * @return bool True if plugin integration has version option name, false otherwise.
+			 */
+			function( $plugin_integration ) {
+				return null !== $plugin_integration->get_version_option_name();
 			}
 		);
 
@@ -223,14 +247,17 @@ class Install {
 		}
 
 		// Plugin integrations.
-		foreach ( $this->get_active_plugin_integrations() as $integration ) {
-			$option_db_version  = $integration->option_db_version;
-			$current_db_version = get_option( $option_db_version );
+		$plugin_integrations = $this->get_update_plugin_integrations();
 
-			$db_updates = $integration->get_db_update_files();
+		foreach ( $plugin_integrations as $integration ) {
+			$version_option_name = $integration->get_version_option_name();
 
-			foreach ( $db_updates as $version => $files ) {
-				if ( version_compare( $current_db_version, max( $db_updates ), '<' ) ) {
+			$current_version = get_option( $version_option_name );
+
+			$update_files = $integration->get_update_files();
+
+			foreach ( $update_files as $version => $files ) {
+				if ( version_compare( $current_version, $version, '<' ) ) {
 					return true;
 				}
 			}
@@ -262,14 +289,17 @@ class Install {
 		}
 
 		// Plugin integrations.
-		foreach ( $this->get_active_plugin_integrations() as $integration ) {
-			$option_db_version  = $integration->option_db_version;
-			$current_db_version = get_option( $option_db_version );
+		$plugin_integrations = $this->get_update_plugin_integrations();
 
-			$db_updates = $integration->get_db_update_files();
+		foreach ( $plugin_integrations as $integration ) {
+			$version_option_name = $integration->get_version_option_name();
 
-			foreach ( $db_updates as $version => $files ) {
-				if ( ! version_compare( $current_db_version, $version, '<' ) ) {
+			$current_version = get_option( $version_option_name );
+
+			$update_files = $integration->get_update_files();
+
+			foreach ( $update_files as $version => $files ) {
+				if ( ! version_compare( $current_version, $version, '<' ) ) {
 					continue;
 				}
 
@@ -277,7 +307,7 @@ class Install {
 					include $file;
 				}
 
-				update_option( $option_db_version, $version );
+				update_option( $version_option_name, $version );
 			}
 		}
 

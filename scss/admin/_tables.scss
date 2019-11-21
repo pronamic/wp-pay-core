@@ -90,27 +90,33 @@
 }
 
 @media only screen and (max-width: 782px) {
+	// sass-lint:disable-block class-name-format
+	// sass-lint:disable-block force-pseudo-nesting
+	// sass-lint:disable-block nesting-depth
+
 	.wp-list-table {
-		tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items),
-		tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items){
-			td:not(.column-primary) {
-				&.column-pronamic_payment_status,
-				&.column-pronamic_payment_subscription,
-				&.column-pronamic_subscription_status {
-					display: table-cell;
-
-					&::before {
-						display: none;
-					}
-				}
-			}
-
-			&.is-expanded {
-				td:not(.hidden) {
+		tr {
+			&.type-pronamic_payment:not(.inline-edit-row):not(.no-items),
+			&.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items) {
+				td:not(.column-primary) {
 					&.column-pronamic_payment_status,
 					&.column-pronamic_payment_subscription,
 					&.column-pronamic_subscription_status {
-						display: table-cell !important;
+						display: table-cell;
+
+						&::before {
+							display: none;
+						}
+					}
+				}
+
+				&.is-expanded {
+					td:not(.hidden) {
+						&.column-pronamic_payment_status,
+						&.column-pronamic_payment_subscription,
+						&.column-pronamic_subscription_status {
+							display: table-cell !important; // sass-lint:disable-line no-important
+						}
 					}
 				}
 			}

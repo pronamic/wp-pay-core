@@ -36,9 +36,9 @@ body {
 		margin: 0;
 	}
 
-	&:after {
-		content: "";
+	&::after {
 		clear: both;
+		content: '';
 		display: table;
 	}
 }
