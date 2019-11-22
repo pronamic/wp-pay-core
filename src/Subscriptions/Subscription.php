@@ -356,15 +356,6 @@ class Subscription extends LegacySubscription {
 		$text = apply_filters( 'pronamic_subscription_source_text_' . $this->get_source(), $default_text, $this );
 		$text = apply_filters( 'pronamic_subscription_source_text', $text, $this );
 
-		// Fallback to first payment source text.
-		if ( $default_text === $text ) {
-			$payment = $this->get_first_payment();
-
-			if ( null !== $payment ) {
-				$text = $payment->get_source_text();
-			}
-		}
-
 		return $text;
 	}
 
@@ -379,15 +370,6 @@ class Subscription extends LegacySubscription {
 		$text = apply_filters( 'pronamic_subscription_source_description_' . $this->get_source(), $default_text, $this );
 		$text = apply_filters( 'pronamic_subscription_source_description', $text, $this );
 
-		// Fallback to first payment source description.
-		if ( $default_text === $text ) {
-			$payment = $this->get_first_payment();
-
-			if ( $payment ) {
-				$text = $payment->get_source_description();
-			}
-		}
-
 		return $text;
 	}
 
@@ -401,15 +383,6 @@ class Subscription extends LegacySubscription {
 
 		$url = apply_filters( 'pronamic_subscription_source_url', $url, $this );
 		$url = apply_filters( 'pronamic_subscription_source_url_' . $this->source, $url, $this );
-
-		if ( null === $url ) {
-			$payment = $this->get_first_payment();
-
-			if ( $payment ) {
-				$url = apply_filters( 'pronamic_payment_source_url', $url, $payment );
-				$url = apply_filters( 'pronamic_payment_source_url_' . $this->source, $url, $payment );
-			}
-		}
 
 		return $url;
 	}
