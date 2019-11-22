@@ -88,46 +88,5 @@ class AdminNotices {
 				wp_kses_post( $notice )
 			);
 		}
-
-		// Stored notices.
-		$notices = get_option( 'pronamic_pay_admin_notices', array() );
-
-		foreach ( $notices as $name ) {
-			$file = __DIR__ . '/../../views/notice-' . $name . '.php';
-
-			if ( is_readable( $file ) ) {
-				include $file;
-			}
-		}
-	}
-
-	/**
-	 * Add a notice to show.
-	 *
-	 * @param string $name Name.
-	 */
-	public function add_notice( $name ) {
-		$notices = get_option( 'pronamic_pay_admin_notices', array() );
-
-		$notices = is_array( $notices ) ? $notices : array();
-
-		$notices = array_unique( array_merge( $notices, array( $name ) ) );
-
-		update_option( 'pronamic_pay_admin_notices', $notices );
-	}
-
-	/**
-	 * Remove a notice from being displayed.
-	 *
-	 * @param string $name Name.
-	 */
-	public function remove_notice( $name ) {
-		$notices = get_option( 'pronamic_pay_admin_notices', array() );
-
-		$notices = is_array( $notices ) ? $notices : array();
-
-		$notices = array_diff( $notices, array( $name ) );
-
-		update_option( 'pronamic_pay_admin_notices', $notices );
 	}
 }

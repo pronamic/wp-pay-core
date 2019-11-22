@@ -63,6 +63,7 @@ class Install {
 
 		// Actions.
 		add_action( 'admin_init', array( $this, 'admin_init' ), 5 );
+
 	}
 
 	/**
@@ -74,11 +75,12 @@ class Install {
 			$this->install();
 		}
 
+		// Notices.
+		add_action( 'admin_notices', array( $this, 'admin_notice_update' ), 20 );
+
 		// Maybe update database.
 		if ( filter_has_var( INPUT_GET, 'pronamic_pay_update_db' ) && wp_verify_nonce( filter_input( INPUT_GET, 'pronamic_pay_nonce', FILTER_SANITIZE_STRING ), 'pronamic_pay_update_db' ) ) {
 			$this->update_db();
-
-			$this->admin->notices->remove_notice( 'update_db' );
 
 			$this->redirect_to_about();
 		}
@@ -98,11 +100,6 @@ class Install {
 		$version = $this->plugin->get_version();
 
 		$current_version = get_option( 'pronamic_pay_version', null );
-
-		// Database update.
-		if ( $this->requires_db_update() ) {
-			$this->admin->notices->add_notice( 'update_db' );
-		}
 
 		// Redirect.
 		if ( null !== $this->admin->about_page ) {
@@ -141,6 +138,19 @@ class Install {
 
 		// Update version.
 		update_option( 'pronamic_pay_version', $version );
+	}
+
+	/**
+	 * Admin notice update.
+	 *
+	 * @link https://developer.wordpress.org/reference/hooks/admin_notices/
+	 */
+	public function admin_notice_update() {
+		if ( ! $this->requires_db_update() ) {
+			return;
+		}
+
+		include __DIR__ . '/../../views/notice-update_db.php';
 	}
 
 	/**

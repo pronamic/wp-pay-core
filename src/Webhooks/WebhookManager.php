@@ -128,7 +128,7 @@ class WebhookManager {
 		}
 
 		if ( ! empty( $outdated_urls ) ) {
-			$this->admin->notices->add_notice( 'webhook-url' );
+			include __DIR__ . '/../../views/notice-webhook-url.php';
 		}
 	}
 
