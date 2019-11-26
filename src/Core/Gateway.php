@@ -332,6 +332,8 @@ abstract class Gateway {
 
 			if ( is_array( $methods ) ) {
 				set_transient( $transient, $methods, DAY_IN_SECONDS );
+
+				PaymentMethods::update_active_payment_methods();
 			}
 		}
 
