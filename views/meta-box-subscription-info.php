@@ -220,10 +220,21 @@ $user_id  = is_null( $customer ) ? null : $customer->get_user_id();
 			<td>
 				<?php
 
+				$user_text = sprintf( '#%s', $user_id );
+
+				// User display name.
+				$user = new WP_User( $user_id );
+
+				$display_name = $user->display_name;
+
+				if ( ! empty( $display_name ) ) {
+					$user_text .= sprintf( ' - %s', $display_name );
+				}
+
 				printf(
 					'<a href="%s">%s</a>',
 					esc_url( get_edit_user_link( $user_id ) ),
-					esc_html( $user_id )
+					esc_html( $user_text )
 				);
 
 				?>

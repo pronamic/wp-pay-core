@@ -273,10 +273,21 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 
 					$user_id = $payment->get_customer()->get_user_id();
 
+					$user_text = sprintf( '#%s', $user_id );
+
+					// User display name.
+					$user = new WP_User( $user_id );
+
+					$display_name = $user->display_name;
+
+					if ( ! empty( $display_name ) ) {
+						$user_text .= sprintf( ' - %s', $display_name );
+					}
+
 					printf(
 						'<a href="%s">%s</a>',
 						esc_url( get_edit_user_link( $user_id ) ),
-						esc_html( $user_id )
+						esc_html( $user_text )
 					);
 
 					?>
