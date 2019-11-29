@@ -432,22 +432,7 @@ class Plugin {
 		}
 
 		// Check if we should redirect.
-		$should_redirect = true;
-
-		// Check if the request is an callback request.
-		// Sisow gatway will extend callback requests with querystring "callback=true".
-		if ( filter_has_var( INPUT_GET, 'callback' ) && filter_input( INPUT_GET, 'callback', FILTER_VALIDATE_BOOLEAN ) ) {
-			$should_redirect = false;
-		}
-
-		// Check if the request is an notify request.
-		// Sisow gatway will extend callback requests with querystring "notify=true".
-		if ( filter_has_var( INPUT_GET, 'notify' ) && filter_input( INPUT_GET, 'notify', FILTER_VALIDATE_BOOLEAN ) ) {
-			// Log webhook request.
-			do_action( 'pronamic_pay_webhook_log_payment', $payment );
-
-			$should_redirect = false;
-		}
+		$should_redirect = apply_filters( 'pronamic_pay_return_should_redirect', true, $payment );
 
 		self::update_payment( $payment, $should_redirect );
 	}
