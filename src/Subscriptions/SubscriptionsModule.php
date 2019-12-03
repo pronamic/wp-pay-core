@@ -479,10 +479,16 @@ class SubscriptionsModule {
 				break;
 			case 'Y':
 				if ( is_numeric( $interval_date_month ) ) {
+					$day = $next_date->format( 'd' );
+
+					if ( \is_numeric( $interval_date ) ) {
+						$day = $interval_date;
+					}
+
 					$next_date->setDate(
 						intval( $next_date->format( 'Y' ) ),
 						intval( $interval_date_month ),
-						intval( $next_date->format( 'd' ) )
+						intval( $day )
 					);
 
 					$next_date->setTime( 0, 0 );
