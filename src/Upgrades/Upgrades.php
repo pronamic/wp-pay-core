@@ -17,7 +17,7 @@ namespace Pronamic\WordPress\Pay\Upgrades;
  * @version unreleased
  * @since   unreleased
  */
-class Upgrades {
+class Upgrades implements \Countable, \IteratorAggregate {
 	/**
 	 * Upgrades.
 	 *
@@ -65,5 +65,23 @@ class Upgrades {
 	 */
 	public function add( Upgrade $upgrade ) {
 		$this->upgrades[] = $upgrade;
+	}
+
+	/**
+	 * Get iterator.
+	 *
+	 * @return \ArrayIterator
+	 */
+	public function getIterator() {
+		return new ArrayIterator( $this->upgrades );
+	}
+
+	/**
+	 * Count upgrades.
+	 *
+	 * @return int
+	 */
+	public function count() {
+		return count( $this->upgrades );
 	}
 }
