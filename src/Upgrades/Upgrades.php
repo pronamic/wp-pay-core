@@ -73,7 +73,7 @@ class Upgrades implements \Countable, \IteratorAggregate {
 	 * @return \ArrayIterator
 	 */
 	public function getIterator() {
-		return new ArrayIterator( $this->upgrades );
+		return new \ArrayIterator( $this->upgrades );
 	}
 
 	/**
