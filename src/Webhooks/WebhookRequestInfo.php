@@ -142,7 +142,6 @@ class WebhookRequestInfo implements JsonSerializable {
 	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON does not contain `post_data` property.
 	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON does not contain `request_date` property.
 	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON does not contain `request_url` property.
-	 * @throws \Exception Throws exception when JSON contains invalid `request_date` property.
 	 */
 	public static function from_json( $json ) {
 		if ( ! is_object( $json ) ) {
