@@ -212,7 +212,7 @@ class Install {
 					return false;
 				}
 
-				if ( null !== $plugin_integration->get_version_option_name() ) {
+				if ( null === $plugin_integration->get_version_option_name() ) {
 					return false;
 				}
 
