@@ -1,0 +1,69 @@
+<?php
+/**
+ * Upgrades
+ *
+ * @author    Pronamic <info@pronamic.eu>
+ * @copyright 2005-2019 Pronamic
+ * @license   GPL-3.0-or-later
+ * @package   Pronamic\WordPress\Pay\Upgrades
+ */
+
+namespace Pronamic\WordPress\Pay\Upgrades;
+
+/**
+ * Upgrades
+ *
+ * @author  Remco Tolsma
+ * @version unreleased
+ * @since   unreleased
+ */
+class Upgrades {
+	/**
+	 * Upgrades.
+	 *
+	 * @var array<Upgrade>
+	 */
+	private $upgrades;
+
+	/**
+	 * Executable.
+	 *
+	 * @var boolean
+	 */
+	private $executable;
+
+	/**
+	 * Construct.
+	 */
+	public function __construct() {
+		$this->upgrades   = array();
+		$this->executable = true;
+	}
+
+	/**
+	 * Are executable.
+	 *
+	 * @return boolean True if upgrade are executable, false otherwise.
+	 */
+	public function are_executable() {
+		return $this->executable;
+	}
+
+	/**
+	 * Set the upgrades as executable or not.
+	 *
+	 * @param boolean $executable True if upgrades are executable, false otherwise.
+	 */
+	public function set_executable( $executable ) {
+		$this->executable = $executable;
+	}
+
+	/**
+	 * Add upgrades.
+	 *
+	 * @param Upgrade $upgrade The upgrade to add.
+	 */
+	public function add( Upgrade $upgrade ) {
+		$this->upgrades[] = $upgrade;
+	}
+}

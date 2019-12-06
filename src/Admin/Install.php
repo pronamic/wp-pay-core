@@ -192,36 +192,12 @@ class Install {
 	}
 
 	/**
-	 * Get active plugin integrations.
+	 * Get upgradeable plugin integrations.
 	 *
 	 * @return array<AbstractPluginIntegration>
 	 */
-	private function get_active_plugin_integrations() {
+	private function get_upgradeable_plugin_integrations() {
 		$plugin_integrations = $this->plugin->plugin_integrations;
-
-		$plugin_integrations = array_filter(
-			$plugin_integrations,
-			/**
-			 * Filter active plugin integration.
-			 *
-			 * @param AbstractPluginIntegration $plugin_integration Plugin integration object.
-			 * @return bool True if active, false otherwise.
-			 */
-			function( $plugin_integration ) {
-				return $plugin_integration->is_active();
-			}
-		);
-
-		return $plugin_integrations;
-	}
-
-	/**
-	 * Get update plugin integrations.
-	 *
-	 * @return array<AbstractPluginIntegration>
-	 */
-	private function get_update_plugin_integrations() {
-		$plugin_integrations = $this->get_active_plugin_integrations();
 
 		$plugin_integrations = array_filter(
 			$plugin_integrations,
@@ -232,7 +208,19 @@ class Install {
 			 * @return bool True if plugin integration has version option name, false otherwise.
 			 */
 			function( $plugin_integration ) {
-				return null !== $plugin_integration->get_version_option_name();
+				if ( ! $plugin_integration->is_active() ) {
+					return false;
+				}
+
+				if ( null !== $plugin_integration->get_version_option_name() ) {
+					return false;
+				}
+
+				if ( ! $plugin_integration->get_upgrades()->are_executable() ) {
+					return false;
+				}
+
+				return true;
 			}
 		);
 
@@ -257,17 +245,17 @@ class Install {
 		}
 
 		// Plugin integrations.
-		$plugin_integrations = $this->get_update_plugin_integrations();
+		$plugin_integrations = $this->get_upgradeable_plugin_integrations();
 
 		foreach ( $plugin_integrations as $integration ) {
 			$version_option_name = $integration->get_version_option_name();
 
 			$current_version = get_option( $version_option_name );
 
-			$update_files = $integration->get_update_files();
+			$upgrades = $integration->get_upgrades();
 
-			foreach ( $update_files as $version => $files ) {
-				if ( version_compare( $current_version, $version, '<' ) ) {
+			foreach ( $upgrades as $upgrade ) {
+				if ( version_compare( $current_version, $upgrade->get_version(), '<' ) ) {
 					return true;
 				}
 			}
@@ -299,23 +287,23 @@ class Install {
 		}
 
 		// Plugin integrations.
-		$plugin_integrations = $this->get_update_plugin_integrations();
+		$plugin_integrations = $this->get_upgradeable_plugin_integrations();
 
 		foreach ( $plugin_integrations as $integration ) {
 			$version_option_name = $integration->get_version_option_name();
 
 			$current_version = get_option( $version_option_name );
 
-			$update_files = $integration->get_update_files();
+			$upgrades = $integration->get_upgrades();
 
-			foreach ( $update_files as $version => $files ) {
+			foreach ( $upgrades as $upgrade ) {
+				$version = $upgrade->get_version();
+
 				if ( ! version_compare( $current_version, $version, '<' ) ) {
 					continue;
 				}
 
-				foreach ( $files as $file ) {
-					include $file;
-				}
+				$upgrade->execute();
 
 				update_option( $version_option_name, $version );
 			}

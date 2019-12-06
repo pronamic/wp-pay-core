@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay;
 
 use Pronamic\WordPress\Pay\Dependencies\Dependencies;
+use Pronamic\WordPress\Pay\Upgrades\Upgrades;
 
 /**
  * Title: Abstract plugin integration
@@ -30,6 +31,13 @@ abstract class AbstractPluginIntegration {
 	 * @var Dependencies
 	 */
 	private $dependencies;
+
+	/**
+	 * Upgrades.
+	 *
+	 * @var Upgrades
+	 */
+	private $upgrades;
 
 	/**
 	 * The name of the option we store the version of the plugin integration in.
@@ -54,6 +62,9 @@ abstract class AbstractPluginIntegration {
 
 		// Dependencies.
 		$this->dependencies = new Dependencies();
+
+		// Upgrades.
+		$this->upgrades = new Upgrades();
 
 		// Version option name.
 		$this->set_version_option_name( $args['version_option_name'] );
@@ -96,13 +107,11 @@ abstract class AbstractPluginIntegration {
 	}
 
 	/**
-	 * Get list of update files.
+	 * Get upgrades.
 	 *
-	 * @link https://github.com/woocommerce/woocommerce/blob/3.7.0/includes/class-wc-install.php#L368-L376
-	 * @link https://github.com/woocommerce/woocommerce/blob/3.7.0/includes/wc-update-functions.php
-	 * @return array<array<string>>
+	 * @return Upgrades
 	 */
-	public function get_update_files() {
-		return array();
+	public function get_upgrades() {
+		return $this->upgrades;
 	}
 }
