@@ -19,6 +19,13 @@ namespace Pronamic\WordPress\Pay\Upgrades;
  */
 abstract class Upgrade {
 	/**
+	 * Version.
+	 *
+	 * @var string
+	 */
+	private $version;
+
+	/**
 	 * Construct upgrade object.
 	 *
 	 * @param string $version Version.
