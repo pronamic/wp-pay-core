@@ -76,13 +76,40 @@ class Install {
 		}
 
 		// Notices.
-		add_action( 'admin_notices', array( $this, 'admin_notice_update' ), 20 );
+		add_action( 'admin_notices', array( $this, 'admin_notice_upgrades_available' ), 20 );
+		add_action( 'admin_notices', array( $this, 'admin_notice_upgraded' ), 20 );
 
 		// Maybe update database.
-		if ( filter_has_var( INPUT_GET, 'pronamic_pay_update_db' ) && wp_verify_nonce( filter_input( INPUT_GET, 'pronamic_pay_nonce', FILTER_SANITIZE_STRING ), 'pronamic_pay_update_db' ) ) {
-			$this->update_db();
+		if ( filter_has_var( INPUT_GET, 'pronamic_pay_upgrade' ) && wp_verify_nonce( filter_input( INPUT_GET, 'pronamic_pay_nonce', FILTER_SANITIZE_STRING ), 'pronamic_pay_upgrade' ) ) {
+			$this->upgrade();
 
-			$this->redirect_to_about();
+			/**
+			 * Redirect to admin dashboard or referer.
+			 *
+			 * @link https://developer.wordpress.org/reference/functions/admin_url/
+			 * @link https://developer.wordpress.org/reference/functions/wp_get_referer/
+			 * @link https://developer.wordpress.org/reference/functions/wp_safe_redirect/
+			 */
+			$location = admin_url();
+
+			$referer = wp_get_referer();
+
+			if ( false !== $referer ) {
+				$location = $referer;
+			}
+
+			$location = add_query_arg(
+				array(
+					'pronamic_pay_upgrade'  => false,
+					'pronamic_pay_nonce'    => false,
+					'pronamic_pay_upgraded' => true,
+				),
+				$location
+			);
+
+			wp_safe_redirect( $location );
+
+			exit;
 		}
 	}
 
@@ -141,16 +168,31 @@ class Install {
 	}
 
 	/**
-	 * Admin notice update.
+	 * Admin notice upgrades.
 	 *
 	 * @link https://developer.wordpress.org/reference/hooks/admin_notices/
 	 */
-	public function admin_notice_update() {
-		if ( ! $this->requires_db_update() ) {
+	public function admin_notice_upgrades_available() {
+		if ( ! $this->requires_upgrade() ) {
 			return;
 		}
 
-		include __DIR__ . '/../../views/notice-update_db.php';
+		include __DIR__ . '/../../views/notice-upgrade.php';
+	}
+
+	/**
+	 * Admin notice upgraded.
+	 *
+	 * @link https://developer.wordpress.org/reference/hooks/admin_notices/
+	 */
+	public function admin_notice_upgraded() {
+		$upgraded = filter_input( INPUT_GET, 'pronamic_pay_upgraded', FILTER_VALIDATE_BOOLEAN );
+
+		if ( true !== $upgraded ) {
+			return;
+		}
+
+		include __DIR__ . '/../../views/notice-upgraded.php';
 	}
 
 	/**
@@ -228,11 +270,11 @@ class Install {
 	}
 
 	/**
-	 * Requires database update.
+	 * Requires upgrade.
 	 *
 	 * @return bool True if database update is required, false othwerise.
 	 */
-	public function requires_db_update() {
+	public function requires_upgrade() {
 		$current_db_version = get_option( 'pronamic_pay_db_version' );
 
 		if (
@@ -265,9 +307,9 @@ class Install {
 	}
 
 	/**
-	 * Update database.
+	 * Upgrade.
 	 */
-	public function update_db() {
+	public function upgrade() {
 		$current_db_version = get_option( 'pronamic_pay_db_version', null );
 
 		if ( $current_db_version ) {
@@ -310,14 +352,5 @@ class Install {
 		}
 
 		update_option( 'pronamic_pay_db_version', $this->plugin->get_version() );
-	}
-
-	/**
-	 * Redirect to about.
-	 */
-	private function redirect_to_about() {
-		wp_safe_redirect( admin_url( 'index.php?page=pronamic-pay-about' ) );
-
-		exit;
 	}
 }
