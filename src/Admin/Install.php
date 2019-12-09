@@ -64,6 +64,7 @@ class Install {
 		// Actions.
 		add_action( 'admin_init', array( $this, 'admin_init' ), 5 );
 
+		add_filter( 'removable_query_args', array( $this, 'removable_query_args' ) );
 	}
 
 	/**
@@ -111,6 +112,20 @@ class Install {
 
 			exit;
 		}
+	}
+
+	/**
+	 * Removable query arguments.
+	 *
+	 * @link https://github.com/WordPress/WordPress/blob/5.3/wp-admin/includes/misc.php#L1204-L1230
+	 * @link https://developer.wordpress.org/reference/functions/wp_removable_query_args/
+	 * @param array $args Arguments.
+	 * @return array
+	 */
+	public function removable_query_args( $args ) {
+		$args[] = 'pronamic_pay_upgraded';
+
+		return $args;
 	}
 
 	/**
