@@ -318,7 +318,7 @@ $container_index = 1;
 
 							<div class="inside">
 								<p>
-									<?php esc_html_e( "Please follow the tour, read the 'What is new' and 'Getting Started' pages before contacting us. Also, check the system status page for any issues.", 'pronamic_ideal' ); ?>
+									<?php esc_html_e( "Please follow the tour, read the 'What is new' and 'Getting Started' pages before contacting us. Also, check the Site Health page for any issues.", 'pronamic_ideal' ); ?>
 								</p>
 
 								<?php
@@ -372,17 +372,33 @@ $container_index = 1;
 
 								echo ' ';
 
-								printf(
-									'<a href="%s" class="button-secondary">%s</a>',
-									esc_attr(
-										add_query_arg(
-											array(
-												'page' => 'pronamic_pay_tools',
+								// Site Health button.
+								if ( version_compare( get_bloginfo( 'version' ), '5.2', '>' ) && current_user_can( 'view_site_health_checks' ) ) :
+
+									printf(
+										'<a href="%s" class="button-secondary">%s</a>',
+										esc_attr( get_admin_url( null, 'site-health.php' ) ),
+										esc_html__( 'Site Health', 'pronamic_ideal' )
+									);
+
+								endif;
+
+								// System Status button.
+								if ( version_compare( get_bloginfo( 'version' ), '5.2', '<' ) ) :
+
+									printf(
+										'<a href="%s" class="button-secondary">%s</a>',
+										esc_attr(
+											add_query_arg(
+												array(
+													'page' => 'pronamic_pay_tools',
+												)
 											)
-										)
-									),
-									esc_html__( 'System Status', 'pronamic_ideal' )
-								);
+										),
+										esc_html__( 'System Status', 'pronamic_ideal' )
+									);
+
+								endif;
 
 								?>
 							</div>
