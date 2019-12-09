@@ -73,8 +73,8 @@ class AdminHealth {
 
 		// Time.
 		$fields['pronamic_pay_time'] = array(
-			'label' => __( 'Time', 'pronamic_ideal' ),
-			'value' => esc_html( date( __( 'Y/m/d g:i:s A', 'pronamic_ideal' ) ) ),
+			'label' => __( 'Time (UTC)', 'pronamic_ideal' ),
+			'value' => esc_html( gmdate( __( 'Y/m/d g:i:s A', 'pronamic_ideal' ) ) ),
 		);
 
 		// OpenSSL version.

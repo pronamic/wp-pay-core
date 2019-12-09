@@ -60,7 +60,7 @@ class CreditCardTest extends WP_UnitTestCase {
 	public function test_set_and_get_expiration_year() {
 		$credit_card = new CreditCard();
 
-		$year = date( 'Y' ) + 5;
+		$year = gmdate( 'Y' ) + 5;
 
 		$credit_card->set_expiration_year( $year );
 

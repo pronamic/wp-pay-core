@@ -207,7 +207,7 @@ class PaymentTest extends WP_UnitTestCase {
 		$credit_card = new CreditCard();
 		$credit_card->set_number( '5300000000000006' );
 		$credit_card->set_expiration_month( 12 );
-		$credit_card->set_expiration_year( date( 'Y' ) + 5 );
+		$credit_card->set_expiration_year( gmdate( 'Y' ) + 5 );
 		$credit_card->set_security_code( '123' );
 		$credit_card->set_name( 'Pronamic' );
 
