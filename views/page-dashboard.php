@@ -373,7 +373,8 @@ $container_index = 1;
 								echo ' ';
 
 								// Site Health button.
-								if ( version_compare( get_bloginfo( 'version' ), '5.2', '>' ) && current_user_can( 'view_site_health_checks' ) ) :
+
+								if ( version_compare( get_bloginfo( 'version' ), '5.2', '>=' ) && current_user_can( 'view_site_health_checks' ) ) :
 
 									printf(
 										'<a href="%s" class="button-secondary">%s</a>',
