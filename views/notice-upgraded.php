@@ -11,7 +11,7 @@
  */
 
 ?>
-<div class="updated">
+<div class="updated notice is-dismissible">
 	<p>
 		<strong><?php esc_html_e( 'Pronamic Pay Upgraded', 'pronamic_ideal' ); ?></strong> – 
 		<?php esc_html_e( 'Successfully upgraded to the latest version.', 'pronamic_ideal' ); ?>
