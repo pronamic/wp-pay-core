@@ -40,6 +40,7 @@ class SubscriptionPostType {
 	 * Register post types.
 	 *
 	 * @link https://github.com/WordPress/WordPress/blob/4.6.1/wp-includes/post.php#L1277-L1300
+	 * @return void
 	 */
 	public function register_subscription_post_type() {
 		register_post_type(

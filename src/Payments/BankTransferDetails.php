@@ -45,6 +45,7 @@ class BankTransferDetails {
 	 * Set bank account.
 	 *
 	 * @param BankAccountDetails|null $bank_account Bank account.
+	 * @return void
 	 */
 	public function set_bank_account( $bank_account ) {
 		$this->bank_account = $bank_account;
@@ -63,6 +64,7 @@ class BankTransferDetails {
 	 * Set reference.
 	 *
 	 * @param string|null $reference Reference.
+	 * @return void
 	 */
 	public function set_reference( $reference ) {
 		$this->reference = $reference;

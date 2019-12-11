@@ -10,21 +10,17 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
-use ArrayIterator;
-use Countable;
-use InvalidArgumentException;
-use IteratorAggregate;
 use Pronamic\WordPress\Money\Money;
-use stdClass;
 
 /**
  * Payment lines
  *
- * @author  Remco Tolsma
- * @version 2.1.0
- * @since   2.1.0
+ * @author     Remco Tolsma
+ * @version    2.1.0
+ * @since      2.1.0
+ * @implements \IteratorAggregate<int, PaymentLine>
  */
-class PaymentLines implements Countable, IteratorAggregate {
+class PaymentLines implements \Countable, \IteratorAggregate {
 	/**
 	 * The lines.
 	 *
@@ -42,18 +38,16 @@ class PaymentLines implements Countable, IteratorAggregate {
 	/**
 	 * Get iterator.
 	 *
-	 * @see IteratorAggregate::getIterator()
-	 *
-	 * @return ArrayIterator
+	 * @return \ArrayIteratory<int, PaymentLine>
 	 */
 	public function getIterator() {
-		return new ArrayIterator( $this->lines );
+		return new \ArrayIterator( $this->lines );
 	}
 
 	/**
 	 * Get array.
 	 *
-	 * @return array
+	 * @return array<int, PaymentLine>
 	 */
 	public function get_array() {
 		return $this->lines;
@@ -133,11 +127,11 @@ class PaymentLines implements Countable, IteratorAggregate {
 	 *
 	 * @param mixed $json JSON.
 	 * @return PaymentLines
-	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an array.
+	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON is not an array.
 	 */
 	public static function from_json( $json ) {
 		if ( ! is_array( $json ) ) {
-			throw new InvalidArgumentException( 'JSON value must be an array.' );
+			throw new \InvalidArgumentException( 'JSON value must be an array.' );
 		}
 
 		$object = new self();

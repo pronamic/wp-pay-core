@@ -323,6 +323,7 @@ class Payment extends LegacyPayment {
 	 * Set the transaction ID.
 	 *
 	 * @param string|null $transaction_id Transaction ID.
+	 * @return void
 	 */
 	public function set_transaction_id( $transaction_id ) {
 		$this->transaction_id = $transaction_id;
@@ -360,6 +361,7 @@ class Payment extends LegacyPayment {
 	 * Set the payment status.
 	 *
 	 * @param string|null $status Status.
+	 * @return void
 	 */
 	public function set_status( $status ) {
 		$this->status = $status;
@@ -378,6 +380,7 @@ class Payment extends LegacyPayment {
 	 * Set if payment is tracked in Google Analytics.
 	 *
 	 * @param bool|null $tracked Tracked in Google Analytics.
+	 * @return void
 	 */
 	public function set_ga_tracked( $tracked ) {
 		$this->ga_tracked = $tracked;
@@ -456,6 +459,7 @@ class Payment extends LegacyPayment {
 	 * Set the action URL.
 	 *
 	 * @param string $action_url Action URL.
+	 * @return void
 	 */
 	public function set_action_url( $action_url ) {
 		$this->action_url = $action_url;
@@ -474,6 +478,7 @@ class Payment extends LegacyPayment {
 	 * Set expiry date.
 	 *
 	 * @param DateTime|null $expiry_date Expiry date.
+	 * @return void
 	 */
 	public function set_expiry_date( $expiry_date ) {
 		$this->expiry_date = $expiry_date;

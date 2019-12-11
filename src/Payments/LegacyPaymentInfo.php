@@ -66,7 +66,7 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	 * Set the payment amount.
 	 *
 	 * @param Money $amount Money object.
-	 *
+	 * @return void
 	 * @deprecated 2.0.9 Use Payment::set_total_amount() instead.
 	 */
 	public function set_amount( Money $amount ) {
@@ -317,6 +317,7 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	 * @deprecated 2.2.6 Use Payment::set_consumer_bank_details()->set_name() instead.
 	 *
 	 * @param string|null $name Name.
+	 * @return void
 	 */
 	public function set_consumer_name( $name ) {
 		_deprecated_function( __FUNCTION__, '2.2.6', 'Payment::set_consumer_bank_details()->set_name()' );
@@ -338,6 +339,7 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	 * @deprecated 2.2.6 Use Payment::set_consumer_bank_details()->set_account_number() instead.
 	 *
 	 * @param string|null $account_number Account number.
+	 * @return void
 	 */
 	public function set_consumer_account_number( $account_number ) {
 		_deprecated_function( __FUNCTION__, '2.2.6', 'Payment::set_consumer_bank_details()->set_account_number()' );
@@ -359,6 +361,7 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	 * @deprecated 2.2.6 Use Payment::set_consumer_bank_details()->set_iban() instead.
 	 *
 	 * @param string|null $iban IBAN.
+	 * @return void
 	 */
 	public function set_consumer_iban( $iban ) {
 		_deprecated_function( __FUNCTION__, '2.2.6', 'Payment::set_consumer_bank_details()->set_iban()' );
@@ -380,6 +383,7 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	 * @deprecated 2.2.6 Use Payment::set_consumer_bank_details()->set_bic() instead.
 	 *
 	 * @param string|null $bic BIC.
+	 * @return void
 	 */
 	public function set_consumer_bic( $bic ) {
 		_deprecated_function( __FUNCTION__, '2.2.6', 'Payment::set_consumer_bank_details()->set_bic()' );
@@ -401,6 +405,7 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	 * @deprecated 2.2.6 Use Payment::set_consumer_bank_details()->set_city() instead.
 	 *
 	 * @param string|null $city City.
+	 * @return void
 	 */
 	public function set_consumer_city( $city ) {
 		_deprecated_function( __FUNCTION__, '2.2.6', 'Payment::set_consumer_bank_details()->set_city()' );

@@ -277,6 +277,7 @@ abstract class PaymentInfo {
 	 * Set the ID of this payment.
 	 *
 	 * @param int $id Unique ID.
+	 * @return void
 	 */
 	public function set_id( $id ) {
 		$this->id = $id;
@@ -295,6 +296,7 @@ abstract class PaymentInfo {
 	 * Set payment date.
 	 *
 	 * @param DateTime $date Date.
+	 * @return void
 	 */
 	public function set_date( $date ) {
 		$this->date = $date;
@@ -313,6 +315,7 @@ abstract class PaymentInfo {
 	 * Set start date.
 	 *
 	 * @param DateTime|null $start_date Start date.
+	 * @return void
 	 */
 	public function set_start_date( $start_date ) {
 		$this->start_date = $start_date;
@@ -331,6 +334,7 @@ abstract class PaymentInfo {
 	 * Set end date.
 	 *
 	 * @param DateTime|null $end_date End date.
+	 * @return void
 	 */
 	public function set_end_date( $end_date ) {
 		$this->end_date = $end_date;
@@ -349,6 +353,7 @@ abstract class PaymentInfo {
 	 * Set the source of this payment.
 	 *
 	 * @param string|null $source Source.
+	 * @return void
 	 */
 	public function set_source( $source ) {
 		$this->source = $source;
@@ -367,6 +372,7 @@ abstract class PaymentInfo {
 	 * Set the source ID of this payment.
 	 *
 	 * @param string|int|null $source_id Source ID.
+	 * @return void
 	 */
 	public function set_source_id( $source_id ) {
 		$this->source_id = $source_id;
@@ -385,6 +391,7 @@ abstract class PaymentInfo {
 	 * Set the config ID of this payment.
 	 *
 	 * @param int|null $config_id Config ID.
+	 * @return void
 	 */
 	public function set_config_id( $config_id ) {
 		$this->config_id = $config_id;
@@ -403,6 +410,7 @@ abstract class PaymentInfo {
 	 * Set customer.
 	 *
 	 * @param Customer|null $customer Contact.
+	 * @return void
 	 */
 	public function set_customer( $customer ) {
 		$this->customer = $customer;
@@ -421,6 +429,7 @@ abstract class PaymentInfo {
 	 * Set billing address.
 	 *
 	 * @param Address|null $billing_address Billing address.
+	 * @return void
 	 */
 	public function set_billing_address( $billing_address ) {
 		$this->billing_address = $billing_address;
@@ -439,6 +448,7 @@ abstract class PaymentInfo {
 	 * Set shipping address.
 	 *
 	 * @param Address|null $shipping_address Shipping address.
+	 * @return void
 	 */
 	public function set_shipping_address( $shipping_address ) {
 		$this->shipping_address = $shipping_address;
@@ -457,6 +467,7 @@ abstract class PaymentInfo {
 	 * Set payment lines.
 	 *
 	 * @param PaymentLines|null $lines Payment lines.
+	 * @return void
 	 */
 	public function set_lines( PaymentLines $lines = null ) {
 		$this->lines = $lines;
@@ -484,6 +495,7 @@ abstract class PaymentInfo {
 	 * Set total amount.
 	 *
 	 * @param TaxedMoney $total_amount Total amount.
+	 * @return void
 	 */
 	public function set_total_amount( TaxedMoney $total_amount ) {
 		$this->total_amount = $total_amount;
@@ -502,6 +514,7 @@ abstract class PaymentInfo {
 	 * Set the shipping amount.
 	 *
 	 * @param Money|null $shipping_amount Money object.
+	 * @return void
 	 */
 	public function set_shipping_amount( Money $shipping_amount = null ) {
 		$this->shipping_amount = $shipping_amount;
@@ -593,6 +606,7 @@ abstract class PaymentInfo {
 	 * Set consumer bank details.
 	 *
 	 * @param BankAccountDetails|null $bank_details Consumer bank details.
+	 * @return void
 	 */
 	public function set_consumer_bank_details( $bank_details ) {
 		$this->consumer_bank_details = $bank_details;
@@ -611,6 +625,7 @@ abstract class PaymentInfo {
 	 * Set bank transfer details.
 	 *
 	 * @param BankTransferDetails|null $bank_transfer Bank transfer details.
+	 * @return void
 	 */
 	public function set_bank_transfer_recipient_details( $bank_transfer ) {
 		$this->bank_transfer_recipient_details = $bank_transfer;
@@ -638,6 +653,7 @@ abstract class PaymentInfo {
 	 * Set the credit card to use for this payment.
 	 *
 	 * @param CreditCard|null $credit_card Credit Card.
+	 * @return void
 	 */
 	public function set_credit_card( $credit_card ) {
 		$this->credit_card = $credit_card;
@@ -656,6 +672,7 @@ abstract class PaymentInfo {
 	 * Set version.
 	 *
 	 * @param string|null $version Version.
+	 * @return void
 	 */
 	public function set_version( $version ) {
 		$this->version = $version;
@@ -674,7 +691,7 @@ abstract class PaymentInfo {
 	 * Set mode.
 	 *
 	 * @param string|null $mode Mode.
-	 *
+	 * @return void
 	 * @throws InvalidArgumentException Throws invalid argument exception when mode is not a string or not one of the mode constants.
 	 */
 	public function set_mode( $mode ) {
@@ -711,6 +728,7 @@ abstract class PaymentInfo {
 	 * Set anonymized.
 	 *
 	 * @param bool|null $anonymized Anonymized.
+	 * @return void
 	 */
 	public function set_anonymized( $anonymized ) {
 		$this->anonymized = $anonymized;

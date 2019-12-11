@@ -79,6 +79,7 @@ class BankAccountDetails {
 	 * Set bank name.
 	 *
 	 * @param string|null $bank_name Bank name.
+	 * @return void
 	 */
 	public function set_bank_name( $bank_name ) {
 		$this->bank_name = $bank_name;
@@ -97,6 +98,7 @@ class BankAccountDetails {
 	 * Set name.
 	 *
 	 * @param string|null $name Name.
+	 * @return void
 	 */
 	public function set_name( $name ) {
 		$this->name = $name;
@@ -114,7 +116,8 @@ class BankAccountDetails {
 	/**
 	 * Set IBAN.
 	 *
-	 * @param string|null $iban Iban.
+	 * @param string|null $iban IBAN.
+	 * @return void
 	 */
 	public function set_iban( $iban ) {
 		$this->iban = $iban;
@@ -133,6 +136,7 @@ class BankAccountDetails {
 	 * Set BIC.
 	 *
 	 * @param string|null $bic Bic.
+	 * @return void
 	 */
 	public function set_bic( $bic ) {
 		$this->bic = $bic;
@@ -151,6 +155,7 @@ class BankAccountDetails {
 	 * Set account number.
 	 *
 	 * @param string|null $account_number Account number.
+	 * @return void
 	 */
 	public function set_account_number( $account_number ) {
 		$this->account_number = $account_number;
@@ -169,6 +174,7 @@ class BankAccountDetails {
 	 * Set city.
 	 *
 	 * @param string|null $city City.
+	 * @return void
 	 */
 	public function set_city( $city ) {
 		$this->city = $city;
@@ -187,6 +193,7 @@ class BankAccountDetails {
 	 * Set country.
 	 *
 	 * @param string|null $country Country.
+	 * @return void
 	 */
 	public function set_country( $country ) {
 		$this->country = $country;

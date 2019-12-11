@@ -335,6 +335,7 @@ class Plugin {
 	 *
 	 * @param Payment $payment      The payment to update.
 	 * @param bool    $can_redirect Flag to indicate if redirect is allowed after the payment update.
+	 * @return void
 	 */
 	public static function update_payment( $payment = null, $can_redirect = true ) {
 		if ( empty( $payment ) ) {
@@ -527,6 +528,7 @@ class Plugin {
 	 *
 	 * @link https://developer.wordpress.org/reference/hooks/plugins_loaded/
 	 * @link https://developer.wordpress.org/reference/functions/load_plugin_textdomain/
+	 * @return void
 	 */
 	public function plugins_loaded() {
 		// Load plugin text domain.
@@ -649,6 +651,7 @@ class Plugin {
 	 * Register styles.
 	 *
 	 * @since 2.1.6
+	 * @return void
 	 */
 	public function register_styles() {
 		$min = SCRIPT_DEBUG ? '' : '.min';
@@ -701,6 +704,7 @@ class Plugin {
 	 * Render errors.
 	 *
 	 * @param array|WP_Error $errors An array with errors to render.
+	 * @return void
 	 */
 	public static function render_errors( $errors = array() ) {
 		if ( ! is_array( $errors ) ) {
@@ -716,6 +720,7 @@ class Plugin {
 	 * Render exception.
 	 *
 	 * @param \Exception $exception An exception.
+	 * @return void
 	 */
 	public static function render_exception( \Exception $exception ) {
 		include self::$dirname . '/views/exception.php';
@@ -901,6 +906,7 @@ class Plugin {
 	 * Complement payment.
 	 *
 	 * @param Payment $payment Payment.
+	 * @return void
 	 */
 	private static function complement_payment( Payment $payment ) {
 		// Entrance Code.

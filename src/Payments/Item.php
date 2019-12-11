@@ -65,7 +65,7 @@ class Item {
 	 *
 	 * @param string $name      Method name.
 	 * @param array  $arguments Method arguments.
-	 * @return string|int|float
+	 * @return float|int|string
 	 */
 	public function __call( $name, $arguments ) {
 		$map = array(

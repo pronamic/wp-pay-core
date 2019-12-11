@@ -71,6 +71,8 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 	/**
 	 * Setup.
+	 *
+	 * @return void
 	 */
 	public function setup() {
 		add_filter( 'wp_insert_post_data', array( $this, 'insert_payment_post_data' ), 10, 2 );
@@ -175,6 +177,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 *
 	 * @param Payment $payment Payment.
 	 * @param array   $postarr Post data array.
+	 * @return void
 	 */
 	private function update_payment_form_post_array( $payment, $postarr ) {
 		if ( ! isset( $postarr['pronamic_payment_post_status'] ) ) {
@@ -199,6 +202,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @param int      $post_id Post ID.
 	 * @param \WP_Post $post    Post object.
 	 * @param bool     $update  Whether this is an existing post being updated or not.
+	 * @return void
 	 */
 	public function save_post_meta( $post_id, $post, $update ) {
 		if ( $this->payment instanceof Payment ) {
@@ -315,7 +319,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @link https://developer.wordpress.org/reference/classes/wp_post/
 	 *
 	 * @param Payment $payment The payment to read from this data store.
-	 *
+	 * @return void
 	 * @throws \Exception Throws exception if payment date can not be set.
 	 */
 	public function read( Payment $payment ) {
@@ -692,6 +696,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-data.php#L462-L507
 	 * @param Payment $payment The payment to read.
+	 * @return void
 	 */
 	protected function read_post_meta( $payment ) {
 		$id = $payment->get_id();
@@ -777,6 +782,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
 	 * @param Payment $payment The payment to update.
+	 * @return void
 	 */
 	private function update_post_meta( $payment ) {
 		$id = $payment->get_id();
@@ -798,6 +804,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * Update meta status.
 	 *
 	 * @param Payment $payment The payment to update the status for.
+	 * @return void
 	 */
 	public function update_meta_status( $payment ) {
 		$id = $payment->get_id();
