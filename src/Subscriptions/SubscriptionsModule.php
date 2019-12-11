@@ -627,7 +627,7 @@ class SubscriptionsModule {
 		}
 
 		// The status of canceled or completed subscriptions will not be changed automatically.
-		if ( ! in_array( $status_before, array( SubscriptionStatus::CANCELLED, SubscriptionStatus::COMPLETED ), true ) ) {
+		if ( ! in_array( $status_before, array( SubscriptionStatus::CANCELLED, SubscriptionStatus::COMPLETED, SubscriptionStatus::ON_HOLD ), true ) ) {
 			$subscription->set_status( $status_update );
 		}
 
