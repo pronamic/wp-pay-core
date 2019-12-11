@@ -36,8 +36,6 @@ endif;
 	<tbody>
 		<?php
 
-		$supports_methods_request = ( null !== $gateway->get_transient_available_payment_methods() );
-
 		foreach ( $payment_methods as $method ) {
 			?>
 

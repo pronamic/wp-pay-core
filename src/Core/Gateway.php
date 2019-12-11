@@ -363,7 +363,11 @@ abstract class Gateway {
 	public function get_payment_method_field_options( $other_first = false ) {
 		$options = array();
 
-		$payment_methods = $this->get_transient_available_payment_methods();
+		try {
+			$payment_methods = $this->get_transient_available_payment_methods();
+		} catch ( \Exception $e ) {
+			$payment_methods = array();
+		}
 
 		// Use all supported payment methods as fallback.
 		if ( empty( $payment_methods ) ) {

@@ -286,10 +286,21 @@ class AdminGatewayPostType {
 
 		// Supported and available payment methods.
 		$supported = $gateway->get_supported_payment_methods();
-		$available = $gateway->get_transient_available_payment_methods();
+
+		try {
+			$available = $gateway->get_transient_available_payment_methods();
+		} catch ( \Exception $e ) {
+			$available = array();
+		}
+
+		// Handle methods request support.
+		$supports_methods_request = false;
 
 		if ( null === $available ) {
 			$available = array();
+		} else {
+			// Set method request support variable for use in HTML.
+			$supports_methods_request = true;
 		}
 
 		$payment_methods = array();
