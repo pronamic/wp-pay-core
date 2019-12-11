@@ -271,7 +271,7 @@ class SubscriptionsModule {
 			$gateway = Plugin::get_gateway( $payment->get_config_id() );
 		}
 
-		if ( false === $payment->get_recurring() && ( ! $gateway || ! $gateway->supports( 'recurring' ) ) ) {
+		if ( true === $payment->get_recurring() && ( ! $gateway || ! $gateway->supports( 'recurring' ) ) ) {
 			// @todo
 			return null;
 		}
