@@ -13,3 +13,4 @@ parameters:
 		-
 			message: '#Function wp_add_dashboard_widget not found\.#'
 			path: %currentWorkingDirectory%/src/Admin/AdminDashboard.php
+	checkMissingIterableValueType: false
