@@ -407,12 +407,23 @@ class Payment extends LegacyPayment {
 	 * @return string
 	 */
 	public function get_return_url() {
+		$home_url = home_url( '/' );
+
+		/*
+		 * Polylang compatibility.
+		 *
+		 * @link https://github.com/polylang/polylang/blob/2.6.8/include/api.php#L97-L111
+		 */
+		if ( \function_exists( 'pll_home_url' ) ) {
+			$home_url = pll_home_url();
+		}
+
 		$url = add_query_arg(
 			array(
 				'payment' => $this->id,
 				'key'     => $this->key,
 			),
-			home_url( '/' )
+			$home_url
 		);
 
 		return $url;
