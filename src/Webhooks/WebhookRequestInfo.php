@@ -94,6 +94,7 @@ class WebhookRequestInfo implements JsonSerializable {
 	 * Set payment.
 	 *
 	 * @param Payment $payment Payment.
+	 * @return void
 	 */
 	public function set_payment( Payment $payment ) {
 		$this->payment = $payment;

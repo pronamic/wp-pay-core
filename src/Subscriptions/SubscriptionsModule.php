@@ -139,6 +139,7 @@ class SubscriptionsModule {
 	 * Handle cancel subscription action request.
 	 *
 	 * @param Subscription $subscription Subscription to cancel.
+	 * @return void
 	 */
 	private function handle_subscription_cancel( Subscription $subscription ) {
 		if ( SubscriptionStatus::CANCELLED !== $subscription->get_status() ) {
@@ -156,7 +157,7 @@ class SubscriptionsModule {
 	 * Handle renew subscription action request.
 	 *
 	 * @param Subscription $subscription Subscription to renew.
-	 *
+	 * @return void
 	 * @throws \Exception Throws exception if unable to redirect (empty payment action URL).
 	 */
 	private function handle_subscription_renew( Subscription $subscription ) {
@@ -858,6 +859,8 @@ class SubscriptionsModule {
 
 	/**
 	 * CLI subscriptions test.
+	 *
+	 * @return void
 	 */
 	public function cli_subscriptions_test() {
 		$cli_test = true;

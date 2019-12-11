@@ -52,6 +52,8 @@ class WebhookManager {
 
 	/**
 	 * Admin notices.
+	 *
+	 * @return void
 	 */
 	public function admin_notices() {
 		if ( ! current_user_can( 'manage_options' ) ) {

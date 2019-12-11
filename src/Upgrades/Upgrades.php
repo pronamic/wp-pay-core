@@ -13,9 +13,10 @@ namespace Pronamic\WordPress\Pay\Upgrades;
 /**
  * Upgrades
  *
- * @author  Remco Tolsma
- * @version unreleased
- * @since   unreleased
+ * @author     Remco Tolsma
+ * @version    unreleased
+ * @since      unreleased
+ * @implements \IteratorAggregate<int, Upgrade>
  */
 class Upgrades implements \Countable, \IteratorAggregate {
 	/**
@@ -53,6 +54,7 @@ class Upgrades implements \Countable, \IteratorAggregate {
 	 * Set the upgrades as executable or not.
 	 *
 	 * @param boolean $executable True if upgrades are executable, false otherwise.
+	 * @return void
 	 */
 	public function set_executable( $executable ) {
 		$this->executable = $executable;
@@ -62,6 +64,7 @@ class Upgrades implements \Countable, \IteratorAggregate {
 	 * Add upgrades.
 	 *
 	 * @param Upgrade $upgrade The upgrade to add.
+	 * @return void
 	 */
 	public function add( Upgrade $upgrade ) {
 		$this->upgrades[] = $upgrade;
@@ -70,7 +73,7 @@ class Upgrades implements \Countable, \IteratorAggregate {
 	/**
 	 * Get iterator.
 	 *
-	 * @return \ArrayIterator
+	 * @return \ArrayIterator<int, Upgrade>
 	 */
 	public function getIterator() {
 		return new \ArrayIterator( $this->upgrades );

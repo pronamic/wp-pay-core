@@ -180,7 +180,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 *
 	 * @param Subscription $subscription Subscription.
 	 * @param array        $postarr      Post data array.
-	 *
+	 * @return void
 	 * @throws \Exception Throws exception if amount could not be parsed to Money object.
 	 */
 	private function update_subscription_form_post_array( $subscription, $postarr ) {
@@ -616,6 +616,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
 	 * @param Subscription $subscription The subscription to update the post meta for.
+	 * @return void
 	 */
 	private function update_post_meta( $subscription ) {
 		$id = $subscription->get_id();
@@ -650,6 +651,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 * Update meta status.
 	 *
 	 * @param Subscription $subscription The subscription to update the status for.
+	 * @return void
 	 */
 	public function update_meta_status( $subscription ) {
 		$id = $subscription->get_id();

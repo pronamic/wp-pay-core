@@ -47,6 +47,7 @@ abstract class Upgrade {
 	 * Set version.
 	 *
 	 * @param string $version Version.
+	 * @return void
 	 */
 	public function set_version( $version ) {
 		$this->version = $version;
@@ -54,6 +55,8 @@ abstract class Upgrade {
 
 	/**
 	 * Execute.
+	 *
+	 * @return void
 	 */
 	abstract public function execute();
 }

@@ -29,7 +29,6 @@ class TrackingModule {
 	 * Get tracking URL.
 	 *
 	 * @param string $url URL to add tracking parameters to.
-	 *
 	 * @return string
 	 */
 	public function get_tracking_url( $url ) {
@@ -42,12 +41,14 @@ class TrackingModule {
 
 	/**
 	 * Build URL parameters.
+	 *
+	 * @return void
 	 */
 	private function build_parameters() {
 		// General parameters.
 		$params = array(
 			'locale' => \get_locale(),
-			'php'    => \str_replace( PHP_EXTRA_VERSION, '', \phpversion() ),
+			'php'    => \str_replace( PHP_EXTRA_VERSION, '', \strval( \phpversion() ) ),
 		);
 
 		// Add extensions parameters.
