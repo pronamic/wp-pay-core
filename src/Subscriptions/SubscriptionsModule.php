@@ -621,7 +621,7 @@ class SubscriptionsModule {
 				break;
 			case PaymentStatus::CANCELLED:
 			case PaymentStatus::EXPIRED:
-				$status_update = SubscriptionStatus::CANCELLED;
+				$status_update = SubscriptionStatus::ON_HOLD;
 
 				break;
 		}
