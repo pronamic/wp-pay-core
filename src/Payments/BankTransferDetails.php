@@ -103,7 +103,7 @@ class BankTransferDetails {
 	 * @param mixed                    $json                  JSON.
 	 * @param BankTransferDetails|null $bank_transfer_details Bank account details.
 	 *
-	 * @return BankAccountDetails
+	 * @return BankTransferDetails
 	 *
 	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */

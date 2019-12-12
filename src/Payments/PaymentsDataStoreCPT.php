@@ -744,6 +744,8 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	protected function get_update_meta( $payment, $meta = array() ) {
 		$customer = $payment->get_customer();
 
+		$consumer_bank_details = $payment->get_consumer_bank_details();
+
 		$meta = array(
 			'config_id'               => $payment->config_id,
 			'key'                     => $payment->key,
@@ -755,11 +757,11 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			'expiration_period'       => null,
 			'entrance_code'           => $payment->entrance_code,
 			'description'             => $payment->description,
-			'consumer_name'           => $payment->consumer_name,
-			'consumer_account_number' => $payment->consumer_account_number,
-			'consumer_iban'           => $payment->consumer_iban,
-			'consumer_bic'            => $payment->consumer_bic,
-			'consumer_city'           => $payment->consumer_city,
+			'consumer_name'           => ( null === $consumer_bank_details ? null : $consumer_bank_details->get_name() ),
+			'consumer_account_number' => ( null === $consumer_bank_details ? null : $consumer_bank_details->get_account_number() ),
+			'consumer_iban'           => ( null === $consumer_bank_details ? null : $consumer_bank_details->get_iban() ),
+			'consumer_bic'            => ( null === $consumer_bank_details ? null : $consumer_bank_details->get_bic() ),
+			'consumer_city'           => ( null === $consumer_bank_details ? null : $consumer_bank_details->get_city() ),
 			'source'                  => $payment->source,
 			'source_id'               => $payment->source_id,
 			'email'                   => ( null === $customer ? null : $customer->get_email() ),

@@ -567,43 +567,134 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 
 		switch ( $name ) {
 			case 'language':
-				return ( null === $customer ) ? null : $customer->set_language( $value );
-			case 'email':
-				return ( null === $customer ) ? null : $customer->set_email( $value );
-			case 'first_name':
-				return ( null === $contact_name ) ? null : $contact_name->set_first_name( $value );
-			case 'last_name':
-				return ( null === $contact_name ) ? null : $contact_name->set_last_name( $value );
-			case 'locale':
-				return ( null === $customer ) ? null : $customer->set_locale( $value );
-			case 'telephone_number':
-				return ( null === $address ) ? null : $address->set_phone( $value );
-			case 'country':
-				return ( null === $address ) ? null : $address->set_country_code( $value );
-			case 'zip':
-				return ( null === $address ) ? null : $address->set_postal_code( $value );
-			case 'city':
-				return ( null === $address ) ? null : $address->set_city( $value );
-			case 'address':
-				return ( null === $address ) ? null : $address->set_line_1( $value );
-			case 'user_id':
-				return ( null === $customer ) ? null : $customer->set_user_id( $value );
+				if ( null === $customer ) {
+					return null;
+				}
 
+				$customer->set_language( $value );
+
+				return;
+			case 'email':
+				if ( null === $customer ) {
+					return null;
+				}
+
+				$customer->set_email( $value );
+
+				return;
+			case 'first_name':
+				if ( null === $contact_name ) {
+					return null;
+				}
+
+				$contact_name->set_first_name( $value );
+
+				return;
+			case 'last_name':
+				if ( null === $contact_name ) {
+					return null;
+				}
+
+				$contact_name->set_last_name( $value );
+
+				return;
+			case 'locale':
+				if ( null === $customer ) {
+					return null;
+				}
+
+				$customer->set_locale( $value );
+
+				return;
+			case 'telephone_number':
+				if ( null === $address ) {
+					return null;
+				}
+
+				$address->set_phone( $value );
+
+				return;
+			case 'country':
+				if ( null === $address ) {
+					return null;
+				}
+
+				$address->set_country_code( $value );
+
+				return;
+			case 'zip':
+				if ( null === $address ) {
+					return null;
+				}
+
+				$address->set_postal_code( $value );
+
+				return;
+			case 'city':
+				if ( null === $address ) {
+					return null;
+				}
+
+				$address->set_city( $value );
+
+				return;
+			case 'address':
+				if ( null === $address ) {
+					return null;
+				}
+
+				$address->set_line_1( $value );
+
+				return;
+			case 'user_id':
+				if ( null === $customer ) {
+					return null;
+				}
+
+				$customer->set_user_id( $value );
+
+				return;
 			// @since 2.2.6
 			case 'consumer_name':
-				return ( null === $consumer_bank_details ) ? null : $consumer_bank_details->set_name( $value );
+				if ( null === $consumer_bank_details ) {
+					return null;
+				}
 
+				$consumer_bank_details->set_name( $value );
+
+				return;
 			case 'consumer_account_number':
-				return ( null === $consumer_bank_details ) ? null : $consumer_bank_details->set_account_number( $value );
+				if ( null === $consumer_bank_details ) {
+					return null;
+				}
 
+				$consumer_bank_details->set_account_number( $value );
+
+				return;
 			case 'consumer_iban':
-				return ( null === $consumer_bank_details ) ? null : $consumer_bank_details->set_iban( $value );
+				if ( null === $consumer_bank_details ) {
+					return null;
+				}
 
+				$consumer_bank_details->set_iban( $value );
+
+				return;
 			case 'consumer_bic':
-				return ( null === $consumer_bank_details ) ? null : $consumer_bank_details->set_bic( $value );
+				if ( null === $consumer_bank_details ) {
+					return null;
+				}
 
+				$consumer_bank_details->set_bic( $value );
+
+				return;
 			case 'consumer_city':
-				return ( null === $consumer_bank_details ) ? null : $consumer_bank_details->set_city( $value );
+				if ( null === $consumer_bank_details ) {
+					return null;
+				}
+
+				$consumer_bank_details->set_city( $value );
+
+				return;
 		}
 
 		$this->{$name} = $value;
