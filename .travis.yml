@@ -13,7 +13,7 @@ jobs:
   include:
     # WordPress and PHP 7.4: https://make.wordpress.org/core/2019/10/11/wordpress-and-php-7-4/.
     - php: 7.4
-      env: WP_VERSION=5.3.* COVERAGE=1 PHPCS=1 ESLINT=1 SASS_LINT=1
+      env: WP_VERSION=5.3.* COVERAGE=1 PHPCS=1 PHPSTAN=1 ESLINT=1 SASS_LINT=1
     # WordPress 5.2 (or lower) will trigger PHP 7.4 (or higher) errors.
     # @link https://make.wordpress.org/core/2019/10/11/wordpress-and-php-7-4/.
     - php: 7.3
@@ -35,8 +35,6 @@ jobs:
     - php: 7.4
       env: WP_MULTISITE=1
     - php: 7.4
-      env: PHPSTAN=1
-    - php: 7.4
       env: PHPMD=1
     - php: 7.4
       env: PSALM=1
@@ -51,7 +49,6 @@ jobs:
     - php: hhvm
     - php: nightly
     - env: PHPMD=1
-    - env: PHPSTAN=1
     - env: PSALM=1
 
 cache:
