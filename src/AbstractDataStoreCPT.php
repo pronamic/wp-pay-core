@@ -220,7 +220,7 @@ abstract class AbstractDataStoreCPT {
 	 * @param int    $id    Post ID.
 	 * @param string $key   Key.
 	 * @param mixed  $value Value.
-	 * @return void
+	 * @return int|bool
 	 */
 	public function update_meta( $id, $key, $value ) {
 		if ( empty( $value ) ) {

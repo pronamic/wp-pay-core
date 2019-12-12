@@ -55,7 +55,7 @@ class AdminReports {
 	 * @return void
 	 */
 	public function page_reports() {
-		return $this->admin->render_page( 'reports' );
+		$this->admin->render_page( 'reports' );
 	}
 
 	/**

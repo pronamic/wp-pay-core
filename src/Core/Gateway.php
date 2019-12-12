@@ -400,7 +400,7 @@ abstract class Gateway {
 	 * Start transaction/payment
 	 *
 	 * @param Payment $payment The payment to start up at this gateway.
-	 * @return void
+	 * @return boolean|void
 	 */
 	public function start( Payment $payment ) {
 

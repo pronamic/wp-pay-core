@@ -315,25 +315,26 @@ class FormPostType {
 	/**
 	 * When the post is saved, saves our custom data.
 	 *
+	 * @link https://github.com/WordPress/WordPress/blob/5.3/wp-includes/post.php#L4096-L4119
 	 * @param int $post_id The ID of the post being saved.
-	 * @return int|void
+	 * @return void
 	 */
 	public function save_post( $post_id ) {
 		// Check if our nonce is set.
 		if ( ! filter_has_var( INPUT_POST, 'pronamic_pay_nonce' ) ) {
-			return $post_id;
+			return;
 		}
 
 		$nonce = filter_input( INPUT_POST, 'pronamic_pay_nonce', FILTER_SANITIZE_STRING );
 
 		// Verify that the nonce is valid.
 		if ( ! wp_verify_nonce( $nonce, 'pronamic_pay_save_form_options' ) ) {
-			return $post_id;
+			return;
 		}
 
 		// If this is an autosave, our form has not been submitted, so we don't want to do anything.
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-			return $post_id;
+			return;
 		}
 
 		// OK, its safe for us to save the data now.
@@ -392,11 +393,12 @@ class FormPostType {
 	/**
 	 * Post submit box miscellaneous actions.
 	 *
-	 * @return void|false
+	 * @link https://github.com/WordPress/WordPress/blob/5.3/wp-admin/includes/meta-boxes.php#L283-L293
+	 * @return void
 	 */
 	public function post_submitbox_misc_actions() {
 		if ( self::POST_TYPE !== get_post_type() ) {
-			return false;
+			return;
 		}
 
 		?>

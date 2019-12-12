@@ -151,15 +151,17 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		}
 
 		if ( $this->payment instanceof Payment ) {
+			$payment = $this->payment;
+
 			// Update subscription from post array.
-			$this->update_payment_form_post_array( $this->payment, $postarr );
+			$this->update_payment_form_post_array( $payment, $postarr );
 
 			if ( ! isset( $data['post_status'] ) || 'trash' !== $data['post_status'] ) {
-				$data['post_status'] = $this->get_post_status_from_meta_status( $this->payment->get_status() );
+				$data['post_status'] = $this->get_post_status_from_meta_status( $payment->get_status() );
 			}
 
 			// Data.
-			$json_string = wp_json_encode( $this->payment->get_json() );
+			$json_string = wp_json_encode( $payment->get_json() );
 
 			if ( false === $json_string ) {
 				throw new \Exception( 'Error inserting payment post data as JSON.' );

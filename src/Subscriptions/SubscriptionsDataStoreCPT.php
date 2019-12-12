@@ -154,15 +154,17 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 		}
 
 		if ( $this->subscription instanceof Subscription ) {
+			$subscription = $this->subscription;
+
 			// Update subscription from post array.
-			$this->update_subscription_form_post_array( $this->subscription, $postarr );
+			$this->update_subscription_form_post_array( $subscription, $postarr );
 
 			if ( ! isset( $data['post_status'] ) || 'trash' !== $data['post_status'] ) {
-				$data['post_status'] = $this->get_post_status_from_meta_status( $this->subscription->get_status() );
+				$data['post_status'] = $this->get_post_status_from_meta_status( $subscription->get_status() );
 			}
 
 			// Data.
-			$json_string = wp_json_encode( $this->subscription->get_json() );
+			$json_string = wp_json_encode( $subscription->get_json() );
 
 			if ( false === $json_string ) {
 				throw new \Exception( 'Error inserting subscription post data as JSON.' );

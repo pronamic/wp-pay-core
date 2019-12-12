@@ -92,6 +92,8 @@ class Item {
 		}
 
 		trigger_error( esc_html( 'Call to undefined method ' . __CLASS__ . '::' . $name . '()' ), E_USER_ERROR );
+
+		return;
 	}
 
 	/**

@@ -893,20 +893,10 @@ class AdminModule {
 	 * Render the specified page.
 	 *
 	 * @param string $name Page identifier.
-	 * @return boolean True if a page is rendered, false otherwise.
+	 * @return void
 	 */
 	public function render_page( $name ) {
-		$result = false;
-
-		$file = __DIR__ . '/../../views/page-' . $name . '.php';
-
-		if ( is_readable( $file ) ) {
-			include $file;
-
-			$result = true;
-		}
-
-		return $result;
+		include __DIR__ . '/../../views/page-' . $name . '.php';
 	}
 
 	/**
