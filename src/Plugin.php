@@ -1038,10 +1038,8 @@ class Plugin {
 		}
 
 		// Start payment at the gateway.
-		$result = false;
-
 		try {
-			$result = $gateway->start( $payment );
+			$gateway->start( $payment );
 
 			// Add gateway errors as payment notes.
 			$error = $gateway->get_error();
@@ -1069,33 +1067,13 @@ class Plugin {
 
 			// Add note.
 			$payment->add_note( $message );
-		}
 
-		// Set payment status.
-		if ( false === $result ) {
+			// Set payment status.
 			$payment->set_status( PaymentStatus::FAILURE );
 		}
 
 		// Save payment.
 		$payment->save();
-
-		// Update subscription status for failed payments.
-		$subscription = $payment->get_subscription();
-
-		if ( false === $result && is_object( $subscription ) ) {
-			// Reload payment, so subscription is available.
-			$payment = new Payment( $payment->get_id() );
-
-			if ( Recurring::FIRST === $payment->recurring_type ) {
-				// First payment - cancel subscription to prevent unwanted recurring payments
-				// in the future, when a valid customer ID might be set for the user.
-				$subscription->set_status( SubscriptionStatus::CANCELLED );
-			} else {
-				$subscription->set_status( SubscriptionStatus::FAILURE );
-			}
-
-			$subscription->save();
-		}
 
 		// Schedule payment status check.
 		if ( $gateway->supports( 'payment_status_request' ) ) {

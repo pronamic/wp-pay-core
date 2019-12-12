@@ -400,7 +400,7 @@ abstract class Gateway {
 	 * Start transaction/payment
 	 *
 	 * @param Payment $payment The payment to start up at this gateway.
-	 * @return boolean|void
+	 * @return void
 	 */
 	public function start( Payment $payment ) {
 
@@ -761,19 +761,19 @@ abstract class Gateway {
 	 * Create invoice.
 	 *
 	 * @param Payment $payment Payment.
-	 * @return void
+	 * @return bool
 	 */
 	public function create_invoice( $payment ) {
-
+		return false;
 	}
 
 	/**
 	 * Cancel reservation.
 	 *
 	 * @param Payment $payment Payment.
-	 * @return void
+	 * @return bool
 	 */
 	public function cancel_reservation( $payment ) {
-
+		return false;
 	}
 }

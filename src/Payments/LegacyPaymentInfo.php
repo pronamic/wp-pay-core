@@ -501,6 +501,11 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 			'city',
 			'address',
 			'user_id',
+			'consumer_name',
+			'consumer_account_number',
+			'consumer_iban',
+			'consumer_bic',
+			'consumer_city',
 		);
 
 		if ( ! in_array( $name, $legacy_keys, true ) ) {
@@ -567,132 +572,100 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 
 		switch ( $name ) {
 			case 'language':
-				if ( null === $customer ) {
-					return null;
+				if ( null !== $customer ) {
+					$customer->set_language( $value );
 				}
-
-				$customer->set_language( $value );
 
 				return;
 			case 'email':
-				if ( null === $customer ) {
-					return null;
+				if ( null !== $customer ) {
+					$customer->set_email( $value );
 				}
-
-				$customer->set_email( $value );
 
 				return;
 			case 'first_name':
-				if ( null === $contact_name ) {
-					return null;
+				if ( null !== $contact_name ) {
+					$contact_name->set_first_name( $value );
 				}
-
-				$contact_name->set_first_name( $value );
 
 				return;
 			case 'last_name':
-				if ( null === $contact_name ) {
-					return null;
+				if ( null !== $contact_name ) {
+					$contact_name->set_last_name( $value );
 				}
-
-				$contact_name->set_last_name( $value );
 
 				return;
 			case 'locale':
-				if ( null === $customer ) {
-					return null;
+				if ( null !== $customer ) {
+					$customer->set_locale( $value );
 				}
-
-				$customer->set_locale( $value );
 
 				return;
 			case 'telephone_number':
-				if ( null === $address ) {
-					return null;
+				if ( null !== $address ) {
+					$address->set_phone( $value );
 				}
-
-				$address->set_phone( $value );
 
 				return;
 			case 'country':
-				if ( null === $address ) {
-					return null;
+				if ( null !== $address ) {
+					$address->set_country_code( $value );
 				}
-
-				$address->set_country_code( $value );
 
 				return;
 			case 'zip':
-				if ( null === $address ) {
-					return null;
+				if ( null !== $address ) {
+					$address->set_postal_code( $value );
 				}
-
-				$address->set_postal_code( $value );
 
 				return;
 			case 'city':
-				if ( null === $address ) {
-					return null;
+				if ( null !== $address ) {
+					$address->set_city( $value );
 				}
-
-				$address->set_city( $value );
 
 				return;
 			case 'address':
-				if ( null === $address ) {
-					return null;
+				if ( null !== $address ) {
+					$address->set_line_1( $value );
 				}
-
-				$address->set_line_1( $value );
 
 				return;
 			case 'user_id':
-				if ( null === $customer ) {
-					return null;
+				if ( null !== $customer ) {
+					$customer->set_user_id( $value );
 				}
-
-				$customer->set_user_id( $value );
 
 				return;
 			// @since 2.2.6
 			case 'consumer_name':
-				if ( null === $consumer_bank_details ) {
-					return null;
+				if ( null !== $consumer_bank_details ) {
+					$consumer_bank_details->set_name( $value );
 				}
-
-				$consumer_bank_details->set_name( $value );
 
 				return;
 			case 'consumer_account_number':
-				if ( null === $consumer_bank_details ) {
-					return null;
+				if ( null !== $consumer_bank_details ) {
+					$consumer_bank_details->set_account_number( $value );
 				}
-
-				$consumer_bank_details->set_account_number( $value );
 
 				return;
 			case 'consumer_iban':
-				if ( null === $consumer_bank_details ) {
-					return null;
+				if ( null !== $consumer_bank_details ) {
+					$consumer_bank_details->set_iban( $value );
 				}
-
-				$consumer_bank_details->set_iban( $value );
 
 				return;
 			case 'consumer_bic':
-				if ( null === $consumer_bank_details ) {
-					return null;
+				if ( null !== $consumer_bank_details ) {
+					$consumer_bank_details->set_bic( $value );
 				}
-
-				$consumer_bank_details->set_bic( $value );
 
 				return;
 			case 'consumer_city':
-				if ( null === $consumer_bank_details ) {
-					return null;
+				if ( null !== $consumer_bank_details ) {
+					$consumer_bank_details->set_city( $value );
 				}
-
-				$consumer_bank_details->set_city( $value );
 
 				return;
 		}
