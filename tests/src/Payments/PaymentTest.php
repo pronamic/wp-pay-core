@@ -335,4 +335,36 @@ class PaymentTest extends WP_UnitTestCase {
 
 		$this->assertJsonStringEqualsJsonFile( $json_file, $json_string );
 	}
+
+	/**
+	 * Test legacy consumer bank details.
+	 *
+	 * @return void
+	 */
+	public function test_legacy_consumer_bank_details() {
+		$payment = new Payment();
+
+		$payment->consumer_name           = 'Pronamic';
+		$payment->consumer_account_number = '1086.34.779';
+		$payment->consumer_iban           = 'NL56 RABO 0108 6347 79';
+		$payment->consumer_bic            = 'RABONL2U';
+		$payment->consumer_city           = 'Drachten';
+
+		$this->assertEquals( 'Pronamic', $payment->consumer_name );
+		$this->assertEquals( '1086.34.779', $payment->consumer_account_number );
+		$this->assertEquals( 'NL56 RABO 0108 6347 79', $payment->consumer_iban );
+		$this->assertEquals( 'RABONL2U', $payment->consumer_bic );
+		$this->assertEquals( 'Drachten', $payment->consumer_city );
+
+		$consumer_bank_details = $payment->get_consumer_bank_details();
+
+		$this->assertNotNull( $consumer_bank_details );
+		$this->assertInstanceOf( \Pronamic\WordPress\Pay\Payments\BankAccountDetails::class, $consumer_bank_details );
+
+		$this->assertEquals( 'Pronamic', $consumer_bank_details->get_name() );
+		$this->assertEquals( '1086.34.779', $consumer_bank_details->get_account_number() );
+		$this->assertEquals( 'NL56 RABO 0108 6347 79', $consumer_bank_details->get_iban() );
+		$this->assertEquals( 'RABONL2U', $consumer_bank_details->get_bic() );
+		$this->assertEquals( 'Drachten', $consumer_bank_details->get_city() );
+	}
 }
