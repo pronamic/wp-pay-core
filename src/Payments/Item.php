@@ -65,7 +65,7 @@ class Item {
 	 *
 	 * @param string $name      Method name.
 	 * @param array  $arguments Method arguments.
-	 * @return float|int|string|void
+	 * @return float|int|string|bool
 	 */
 	public function __call( $name, $arguments ) {
 		$map = array(
@@ -91,9 +91,7 @@ class Item {
 			}
 		}
 
-		trigger_error( esc_html( 'Call to undefined method ' . __CLASS__ . '::' . $name . '()' ), E_USER_ERROR );
-
-		return;
+		return trigger_error( esc_html( 'Call to undefined method ' . __CLASS__ . '::' . $name . '()' ), E_USER_ERROR );
 	}
 
 	/**
