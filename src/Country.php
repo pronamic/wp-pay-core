@@ -50,6 +50,7 @@ class Country {
 	 * @throws InvalidArgumentException Thrown when country code length is not equal to 2.
 	 *
 	 * @param string|null $code Code.
+	 * @return void
 	 */
 	public function set_code( $code ) {
 		if ( null !== $code && 2 !== strlen( $code ) ) {
@@ -77,6 +78,7 @@ class Country {
 	 * Set name.
 	 *
 	 * @param string|null $name Name.
+	 * @return void
 	 */
 	public function set_name( $name ) {
 		$this->name = $name;

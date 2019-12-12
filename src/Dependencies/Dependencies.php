@@ -36,6 +36,7 @@ class Dependencies {
 	 * Add dependency.
 	 *
 	 * @param Dependency $dependency The dependency to add.
+	 * @return void
 	 */
 	public function add( Dependency $dependency ) {
 		$this->dependencies[] = $dependency;

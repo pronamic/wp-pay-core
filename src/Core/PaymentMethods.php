@@ -416,6 +416,7 @@ class PaymentMethods {
 	 * Update active payment methods option.
 	 *
 	 * @since 2.0.0
+	 * @return void
 	 */
 	public static function update_active_payment_methods() {
 		$active_payment_methods = array();

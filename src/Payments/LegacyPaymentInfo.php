@@ -486,7 +486,7 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	 * @param string $name  Name.
 	 * @param mixed  $value Value.
 	 *
-	 * @return null
+	 * @return null|void
 	 */
 	public function __set( $name, $value ) {
 		$legacy_keys = array(

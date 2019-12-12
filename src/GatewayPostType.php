@@ -46,6 +46,7 @@ class GatewayPostType {
 	 * Register post types.
 	 *
 	 * @link https://github.com/WordPress/WordPress/blob/4.6.1/wp-includes/post.php#L1277-L1300
+	 * @return void
 	 */
 	public function register_gateway_post_type() {
 		register_post_type(
@@ -103,6 +104,7 @@ class GatewayPostType {
 	 * Maybe set the default gateway.
 	 *
 	 * @param int $post_id Post ID.
+	 * @return void
 	 */
 	public function maybe_set_default_gateway( $post_id ) {
 		// Don't set the default gateway if the post is not published.

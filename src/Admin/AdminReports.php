@@ -51,6 +51,8 @@ class AdminReports {
 
 	/**
 	 * Page reports.
+	 *
+	 * @return void
 	 */
 	public function page_reports() {
 		return $this->admin->render_page( 'reports' );
@@ -58,6 +60,8 @@ class AdminReports {
 
 	/**
 	 * Enqueue admin scripts.
+	 *
+	 * @return void
 	 */
 	public function admin_css() {
 		// Check if this is the reports page.

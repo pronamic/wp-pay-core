@@ -101,6 +101,7 @@ abstract class AbstractPluginIntegration {
 	 * Set version option name.
 	 *
 	 * @param string $option_name Option name.
+	 * @return void
 	 */
 	public function set_version_option_name( $option_name ) {
 		$this->version_option_name = $option_name;

@@ -100,6 +100,7 @@ class ContactName {
 	 * Set full name.
 	 *
 	 * @param string|null $full_name Full name.
+	 * @return void
 	 */
 	public function set_full_name( $full_name ) {
 		$this->full_name = $full_name;
@@ -118,6 +119,7 @@ class ContactName {
 	 * Set prefix.
 	 *
 	 * @param string|null $prefix Prefix.
+	 * @return void
 	 */
 	public function set_prefix( $prefix ) {
 		$this->prefix = $prefix;
@@ -136,6 +138,7 @@ class ContactName {
 	 * Set initials.
 	 *
 	 * @param string|null $initials Initials.
+	 * @return void
 	 */
 	public function set_initials( $initials ) {
 		$this->initials = $initials;
@@ -154,6 +157,7 @@ class ContactName {
 	 * Set first name.
 	 *
 	 * @param string|null $first_name First name.
+	 * @return void
 	 */
 	public function set_first_name( $first_name ) {
 		$this->first_name = $first_name;
@@ -172,6 +176,7 @@ class ContactName {
 	 * Set middle name.
 	 *
 	 * @param string|null $middle_name Middle name.
+	 * @return void
 	 */
 	public function set_middle_name( $middle_name ) {
 		$this->middle_name = $middle_name;
@@ -190,6 +195,7 @@ class ContactName {
 	 * Set last name.
 	 *
 	 * @param string|null $last_name Last name.
+	 * @return void
 	 */
 	public function set_last_name( $last_name ) {
 		$this->last_name = $last_name;
@@ -208,6 +214,7 @@ class ContactName {
 	 * Set suffix.
 	 *
 	 * @param string|null $suffix Suffix.
+	 * @return void
 	 */
 	public function set_suffix( $suffix ) {
 		$this->suffix = $suffix;

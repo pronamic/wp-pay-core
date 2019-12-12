@@ -94,6 +94,7 @@ class AdminGatewayPostType {
 	 *
 	 * @param string $column  Column.
 	 * @param int    $post_id Post ID.
+	 * @return void
 	 */
 	public function custom_columns( $column, $post_id ) {
 		$id = get_post_meta( $post_id, '_pronamic_gateway_id', true );
@@ -211,6 +212,7 @@ class AdminGatewayPostType {
 	 * @link https://github.com/WordPress/WordPress/blob/3.5.2/wp-admin/edit-form-advanced.php#L299
 	 *
 	 * @param WP_Post $post Post (only available @since 3.5.2).
+	 * @return void
 	 */
 	public function post_edit_form_tag( $post ) {
 		if ( self::POST_TYPE !== get_post_type( $post ) ) {
@@ -224,6 +226,7 @@ class AdminGatewayPostType {
 	 * Add meta boxes.
 	 *
 	 * @param string $post_type Post Type.
+	 * @return void
 	 */
 	public function add_meta_boxes( $post_type ) {
 		if ( self::POST_TYPE !== $post_type ) {
@@ -253,6 +256,7 @@ class AdminGatewayPostType {
 	 * Pronamic Pay gateway config meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 * @return void
 	 */
 	public function meta_box_config( $post ) {
 		wp_nonce_field( 'pronamic_pay_save_gateway', 'pronamic_pay_nonce' );
@@ -346,6 +350,7 @@ class AdminGatewayPostType {
 	 * Pronamic Pay gateway test meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 * @return void
 	 */
 	public function meta_box_test( $post ) {
 		include __DIR__ . '/../../views/meta-box-gateway-test.php';

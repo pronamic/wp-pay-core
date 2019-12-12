@@ -97,6 +97,7 @@ class AdminSubscriptionPostType {
 	 * Pre get posts.
 	 *
 	 * @param WP_Query $query WordPress query.
+	 * @return void
 	 */
 	public function pre_get_posts( $query ) {
 		/**
@@ -195,6 +196,7 @@ class AdminSubscriptionPostType {
 	 *
 	 * @param string $column  Column.
 	 * @param int    $post_id Post ID.
+	 * @return void
 	 */
 	public function custom_columns( $column, $post_id ) {
 		$subscription = get_pronamic_subscription( $post_id );
@@ -333,6 +335,7 @@ class AdminSubscriptionPostType {
 	 * Add meta boxes.
 	 *
 	 * @param string $post_type Post Type.
+	 * @return void
 	 */
 	public function add_meta_boxes( $post_type ) {
 		if ( self::POST_TYPE !== $post_type ) {
@@ -392,6 +395,7 @@ class AdminSubscriptionPostType {
 	 * Pronamic Pay subscription info meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 * @return void
 	 */
 	public function meta_box_info( $post ) {
 		$subscription = get_pronamic_subscription( $post->ID );
@@ -407,6 +411,7 @@ class AdminSubscriptionPostType {
 	 * Pronamic Pay payment lines meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 * @return void
 	 */
 	public function meta_box_lines( $post ) {
 		$subscription = get_pronamic_subscription( $post->ID );
@@ -424,6 +429,7 @@ class AdminSubscriptionPostType {
 	 * Pronamic Pay subscription notes meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 * @return void
 	 */
 	public function meta_box_notes( $post ) {
 		$notes = get_comments(
@@ -441,6 +447,7 @@ class AdminSubscriptionPostType {
 	 * Pronamic Pay subscription payments meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 * @return void
 	 */
 	public function meta_box_payments( $post ) {
 		$subscription = get_pronamic_subscription( $post->ID );
@@ -458,6 +465,7 @@ class AdminSubscriptionPostType {
 	 * Pronamic Pay subscription update meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 * @return void
 	 */
 	public function meta_box_update( $post ) {
 		wp_nonce_field( 'pronamic_subscription_update', 'pronamic_subscription_update_nonce' );

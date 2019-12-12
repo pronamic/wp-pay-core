@@ -45,6 +45,7 @@ class AdminNotices {
 	 * Admin notices.
 	 *
 	 * @link https://github.com/WordPress/WordPress/blob/4.3.1/wp-admin/admin-header.php#L245-L250
+	 * @return void
 	 */
 	public function admin_notices() {
 		// Show notices only to options managers (administrators).

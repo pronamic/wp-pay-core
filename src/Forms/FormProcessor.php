@@ -51,6 +51,7 @@ class FormProcessor {
 	/**
 	 * Initialize.
 	 *
+	 * @return void
 	 * @throws Exception When processing form fails on creating WordPress user.
 	 */
 	public function init() {

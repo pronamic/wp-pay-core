@@ -38,7 +38,7 @@ class PaymentLines implements \Countable, \IteratorAggregate {
 	/**
 	 * Get iterator.
 	 *
-	 * @return \ArrayIteratory<int, PaymentLine>
+	 * @return \ArrayIterator<int, PaymentLine>
 	 */
 	public function getIterator() {
 		return new \ArrayIterator( $this->lines );

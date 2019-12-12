@@ -94,6 +94,7 @@ abstract class AbstractIntegration {
 	 * Set ID.
 	 *
 	 * @param string $id ID.
+	 * @return void
 	 */
 	public function set_id( $id ) {
 		$this->id = $id;
@@ -112,6 +113,7 @@ abstract class AbstractIntegration {
 	 * Set name.
 	 *
 	 * @param string $name Name.
+	 * @return void
 	 */
 	public function set_name( $name ) {
 		$this->name = $name;
@@ -194,6 +196,7 @@ abstract class AbstractIntegration {
 	 * Set manual URL.
 	 *
 	 * @param string|null $manual_url Manual URL.
+	 * @return void
 	 */
 	public function set_manual_url( $manual_url ) {
 		$this->manual_url = $manual_url;
@@ -273,6 +276,7 @@ abstract class AbstractIntegration {
 	 * Save post.
 	 *
 	 * @param int $post_id Post ID.
+	 * @return void
 	 */
 	public function save_post( $post_id ) {
 

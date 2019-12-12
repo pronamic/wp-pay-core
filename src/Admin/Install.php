@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
+use Pronamic\WordPress\Pay\AbstractPluginIntegration;
 use Pronamic\WordPress\Pay\Forms\FormPostType;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Plugin;
@@ -69,6 +70,8 @@ class Install {
 
 	/**
 	 * Admin initialize.
+	 *
+	 * @return void
 	 */
 	public function admin_init() {
 		// Install.
@@ -130,6 +133,8 @@ class Install {
 
 	/**
 	 * Install.
+	 *
+	 * @return void
 	 */
 	private function install() {
 		// Roles.
@@ -186,6 +191,7 @@ class Install {
 	 * Admin notice upgrades.
 	 *
 	 * @link https://developer.wordpress.org/reference/hooks/admin_notices/
+	 * @return void
 	 */
 	public function admin_notice_upgrades_available() {
 		if ( ! $this->requires_upgrade() ) {
@@ -199,6 +205,7 @@ class Install {
 	 * Admin notice upgraded.
 	 *
 	 * @link https://developer.wordpress.org/reference/hooks/admin_notices/
+	 * @return void
 	 */
 	public function admin_notice_upgraded() {
 		$upgraded = filter_input( INPUT_GET, 'pronamic_pay_upgraded', FILTER_VALIDATE_BOOLEAN );
@@ -216,6 +223,7 @@ class Install {
 	 * @link https://codex.wordpress.org/Function_Reference/register_post_type
 	 * @link https://github.com/woothemes/woocommerce/blob/v2.2.3/includes/class-wc-install.php#L519-L562
 	 * @link https://github.com/woothemes/woocommerce/blob/v2.2.3/includes/class-wc-post-types.php#L245
+	 * @return void
 	 */
 	private function create_roles() {
 		// Payer role.
@@ -307,6 +315,10 @@ class Install {
 		foreach ( $plugin_integrations as $integration ) {
 			$version_option_name = $integration->get_version_option_name();
 
+			if ( null === $version_option_name ) {
+				continue;
+			}
+
 			$current_version = get_option( $version_option_name );
 
 			$upgrades = $integration->get_upgrades();
@@ -323,6 +335,8 @@ class Install {
 
 	/**
 	 * Upgrade.
+	 *
+	 * @return void
 	 */
 	public function upgrade() {
 		$current_db_version = get_option( 'pronamic_pay_db_version', null );
@@ -348,6 +362,10 @@ class Install {
 
 		foreach ( $plugin_integrations as $integration ) {
 			$version_option_name = $integration->get_version_option_name();
+
+			if ( null === $version_option_name ) {
+				continue;
+			}
 
 			$current_version = get_option( $version_option_name );
 

@@ -100,6 +100,8 @@ class FormPostType {
 
 	/**
 	 * Register post type.
+	 *
+	 * @return void
 	 */
 	public function register_post_type() {
 		register_post_type(
@@ -178,6 +180,7 @@ class FormPostType {
 	 *
 	 * @param string $column  Column.
 	 * @param int    $post_id Post ID.
+	 * @return void
 	 */
 	public function custom_columns( $column, $post_id ) {
 		global $post;
@@ -284,6 +287,7 @@ class FormPostType {
 	 * Add meta boxes.
 	 *
 	 * @param string $post_type Post Type.
+	 * @return void
 	 */
 	public function add_meta_boxes( $post_type ) {
 		if ( self::POST_TYPE === $post_type ) {
@@ -302,6 +306,7 @@ class FormPostType {
 	 * Pronamic Pay gateway config meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 * @return void
 	 */
 	public function meta_box_form_options( $post ) {
 		include __DIR__ . '/../../views/meta-box-form-options.php';
@@ -311,8 +316,7 @@ class FormPostType {
 	 * When the post is saved, saves our custom data.
 	 *
 	 * @param int $post_id The ID of the post being saved.
-	 *
-	 * @return int
+	 * @return int|void
 	 */
 	public function save_post( $post_id ) {
 		// Check if our nonce is set.
@@ -387,6 +391,8 @@ class FormPostType {
 
 	/**
 	 * Post submit box miscellaneous actions.
+	 *
+	 * @return void|false
 	 */
 	public function post_submitbox_misc_actions() {
 		if ( self::POST_TYPE !== get_post_type() ) {

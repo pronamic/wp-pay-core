@@ -25,6 +25,7 @@ class AddressHelper {
 	 * Complement address.
 	 *
 	 * @param Address $address Address to complement.
+	 * @return void
 	 */
 	public static function complement_address( Address $address ) {
 		// Name.
@@ -74,6 +75,7 @@ class AddressHelper {
 	 * Anonymize address.
 	 *
 	 * @param Address $address Address to complement.
+	 * @return void
 	 */
 	public static function anonymize_address( Address $address ) {
 		$address->set_company_name( PrivacyManager::anonymize_data( 'text', $address->get_company_name() ) );

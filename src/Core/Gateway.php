@@ -159,6 +159,7 @@ abstract class Gateway {
 	 * Set error
 	 *
 	 * @param WP_Error|null $error WordPress error object or null.
+	 * @return void
 	 */
 	public function set_error( WP_Error $error = null ) {
 		$this->error = $error;
@@ -168,6 +169,7 @@ abstract class Gateway {
 	 * Set the method.
 	 *
 	 * @param int $method HTML form or HTTP redirect method.
+	 * @return void
 	 */
 	public function set_method( $method ) {
 		$this->method = $method;
@@ -195,7 +197,7 @@ abstract class Gateway {
 	 * Set has feedback.
 	 *
 	 * @param boolean $has_feedback Feedback from gateway indicator.
-	 *
+	 * @return void
 	 * @deprecated 2.0.5 Not in use anymore.
 	 */
 	public function set_has_feedback( $has_feedback ) {
@@ -205,7 +207,7 @@ abstract class Gateway {
 	 * Set the minimum amount required
 	 *
 	 * @param float $amount Minimum payment amount.
-	 *
+	 * @return void
 	 * @deprecated 2.0.5 Not in use anymore.
 	 */
 	public function set_amount_minimum( $amount ) {
@@ -309,7 +311,7 @@ abstract class Gateway {
 	 * Intended to be overridden by gateway if active payment methods for account can be determined.
 	 *
 	 * @since 1.3.0
-	 * @return array
+	 * @return array|null
 	 */
 	public function get_available_payment_methods() {
 		return null;
@@ -398,6 +400,7 @@ abstract class Gateway {
 	 * Start transaction/payment
 	 *
 	 * @param Payment $payment The payment to start up at this gateway.
+	 * @return void
 	 */
 	public function start( Payment $payment ) {
 
@@ -407,6 +410,7 @@ abstract class Gateway {
 	 * Handle subscription update.
 	 *
 	 * @param Payment $payment The payment to handle subscription update for.
+	 * @return void
 	 */
 	public function update_subscription( Payment $payment ) {
 
@@ -416,6 +420,7 @@ abstract class Gateway {
 	 * Handle subscription cancellation.
 	 *
 	 * @param Subscription $subscription The subscipriont to handle cancellation for.
+	 * @return void
 	 */
 	public function cancel_subscription( Subscription $subscription ) {
 
@@ -425,7 +430,7 @@ abstract class Gateway {
 	 * Redirect to the gateway action URL.
 	 *
 	 * @param Payment $payment The payment to redirect for.
-	 *
+	 * @return void
 	 * @throws \Exception Throws exception when action URL for HTTP redirect is empty.
 	 */
 	public function redirect( Payment $payment ) {
@@ -443,6 +448,7 @@ abstract class Gateway {
 	 * Redirect via HTTP.
 	 *
 	 * @param Payment $payment The payment to redirect for.
+	 * @return void
 	 * @throws \Exception When payment action URL is empty.
 	 */
 	public function redirect_via_http( Payment $payment ) {
@@ -467,6 +473,7 @@ abstract class Gateway {
 	 * Redirect via HTML.
 	 *
 	 * @param Payment $payment The payment to redirect for.
+	 * @return void
 	 */
 	public function redirect_via_html( Payment $payment ) {
 		if ( headers_sent() ) {
@@ -623,6 +630,7 @@ abstract class Gateway {
 	 * @since 1.2.3
 	 *
 	 * @param string|null $payment_method One of the PaymentMethods constants.
+	 * @return void
 	 */
 	public function set_payment_method( $payment_method ) {
 		$this->payment_method = $payment_method;
@@ -739,6 +747,7 @@ abstract class Gateway {
 	 * Update status of the specified payment
 	 *
 	 * @param Payment $payment Payment.
+	 * @return void
 	 */
 	public function update_status( Payment $payment ) {
 
@@ -748,6 +757,7 @@ abstract class Gateway {
 	 * Create invoice.
 	 *
 	 * @param Payment $payment Payment.
+	 * @return void
 	 */
 	public function create_invoice( $payment ) {
 
@@ -757,6 +767,7 @@ abstract class Gateway {
 	 * Cancel reservation.
 	 *
 	 * @param Payment $payment Payment.
+	 * @return void
 	 */
 	public function cancel_reservation( $payment ) {
 

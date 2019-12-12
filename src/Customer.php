@@ -104,6 +104,7 @@ class Customer {
 	 * Set contact name.
 	 *
 	 * @param ContactName|null $name Contact name.
+	 * @return void
 	 */
 	public function set_name( ContactName $name = null ) {
 		$this->name = $name;
@@ -122,6 +123,7 @@ class Customer {
 	 * Set gender.
 	 *
 	 * @param string|null $gender Gender.
+	 * @return void
 	 */
 	public function set_gender( $gender ) {
 		$this->gender = $gender;
@@ -140,6 +142,7 @@ class Customer {
 	 * Set birth date.
 	 *
 	 * @param DateTime|null $birth_date Date of birth.
+	 * @return void
 	 */
 	public function set_birth_date( $birth_date ) {
 		$this->birth_date = $birth_date;
@@ -158,6 +161,7 @@ class Customer {
 	 * Set email address.
 	 *
 	 * @param string|null $email Email adress.
+	 * @return void
 	 */
 	public function set_email( $email ) {
 		$this->email = $email;
@@ -176,6 +180,7 @@ class Customer {
 	 * Set phone.
 	 *
 	 * @param string|null $phone Telephone number.
+	 * @return void
 	 */
 	public function set_phone( $phone ) {
 		$this->phone = $phone;
@@ -194,6 +199,7 @@ class Customer {
 	 * Set ip address.
 	 *
 	 * @param string|null $ip_address IP address.
+	 * @return void
 	 */
 	public function set_ip_address( $ip_address ) {
 		$this->ip_address = $ip_address;
@@ -212,6 +218,7 @@ class Customer {
 	 * Set user agent.
 	 *
 	 * @param string|null $user_agent User agent.
+	 * @return void
 	 */
 	public function set_user_agent( $user_agent ) {
 		$this->user_agent = $user_agent;
@@ -230,6 +237,7 @@ class Customer {
 	 * Set language.
 	 *
 	 * @param string|null $language Language.
+	 * @return void
 	 */
 	public function set_language( $language ) {
 		$this->language = $language;
@@ -248,6 +256,7 @@ class Customer {
 	 * Set locale.
 	 *
 	 * @param string|null $locale Locale.
+	 * @return void
 	 */
 	public function set_locale( $locale ) {
 		$this->locale = $locale;
@@ -266,6 +275,7 @@ class Customer {
 	 * Set WordPress user ID.
 	 *
 	 * @param int|null $user_id WordPress user ID.
+	 * @return void
 	 */
 	public function set_user_id( $user_id ) {
 		$this->user_id = $user_id;

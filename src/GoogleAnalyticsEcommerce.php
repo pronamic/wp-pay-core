@@ -57,6 +57,7 @@ class GoogleAnalyticsEcommerce {
 	 * Maybe send transaction for the specified payment.
 	 *
 	 * @param Payment $payment Payment.
+	 * @return void
 	 */
 	public function maybe_send_transaction( $payment ) {
 		// Ignore test mode payments.
@@ -114,6 +115,7 @@ class GoogleAnalyticsEcommerce {
 	 * &cu=EUR          // Currency code.
 	 *
 	 * @param Payment $payment Payment.
+	 * @return void
 	 */
 	public function send_transaction( $payment ) {
 		if ( ! $this->valid_payment( $payment ) ) {

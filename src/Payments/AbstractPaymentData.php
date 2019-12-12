@@ -355,6 +355,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	 * Set recurring.
 	 *
 	 * @param bool|null $recurring Boolean flag which indicates recurring.
+	 * @return void
 	 */
 	public function set_recurring( $recurring ) {
 		$this->recurring = $recurring;

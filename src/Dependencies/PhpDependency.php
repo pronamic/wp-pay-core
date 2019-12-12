@@ -44,7 +44,7 @@ class PhpDependency extends Dependency {
 	 */
 	public function is_met() {
 		return \version_compare(
-			\phpversion(),
+			\strval( \phpversion() ),
 			$this->minimum_version,
 			'>='
 		);

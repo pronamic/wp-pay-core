@@ -45,6 +45,8 @@ class AdminTour {
 
 	/**
 	 * Admin initialize.
+	 *
+	 * @return void
 	 */
 	public function admin_init() {
 		if ( filter_has_var( INPUT_GET, 'pronamic_pay_ignore_tour' ) && wp_verify_nonce( filter_input( INPUT_GET, 'pronamic_pay_nonce', FILTER_SANITIZE_STRING ), 'pronamic_pay_ignore_tour' ) ) {
@@ -60,6 +62,8 @@ class AdminTour {
 
 	/**
 	 * Admin enqueue scripts.
+	 *
+	 * @return void
 	 */
 	public function admin_enqueue_scripts() {
 		$min = SCRIPT_DEBUG ? '' : '.min';

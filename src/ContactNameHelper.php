@@ -26,6 +26,7 @@ class ContactNameHelper {
 	 * Complement name.
 	 *
 	 * @param ContactName $name Contact name to complement.
+	 * @return void
 	 */
 	public static function complement_name( ContactName $name ) {
 		// Name.
@@ -77,6 +78,7 @@ class ContactNameHelper {
 	 * Anonymize customer.
 	 *
 	 * @param ContactName $name Contact name to anonymize.
+	 * @return void
 	 */
 	public static function anonymize_name( ContactName $name ) {
 		$name->set_full_name( PrivacyManager::anonymize_data( 'text', $name->get_full_name() ) );

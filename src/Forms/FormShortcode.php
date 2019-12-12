@@ -64,6 +64,8 @@ class FormShortcode {
 
 	/**
 	 * Shortcode user interface register.
+	 *
+	 * @return void
 	 */
 	public function shortcode_ui_register() {
 		if ( ! function_exists( 'shortcode_ui_register_for_shortcode' ) ) {

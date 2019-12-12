@@ -26,6 +26,7 @@ class CustomerHelper {
 	 * Complement customer.
 	 *
 	 * @param Customer $customer Customer to complement.
+	 * @return void
 	 */
 	public static function complement_customer( Customer $customer ) {
 		// Name.
@@ -158,6 +159,7 @@ class CustomerHelper {
 	 * Anonymize customer.
 	 *
 	 * @param Customer $customer Customer to anonymize.
+	 * @return void
 	 */
 	public static function anonymize_customer( Customer $customer ) {
 		$customer->set_gender( PrivacyManager::anonymize_data( 'text', $customer->get_gender() ) );

@@ -65,7 +65,7 @@ class Item {
 	 *
 	 * @param string $name      Method name.
 	 * @param array  $arguments Method arguments.
-	 * @return float|int|string
+	 * @return float|int|string|void
 	 */
 	public function __call( $name, $arguments ) {
 		$map = array(
@@ -107,6 +107,7 @@ class Item {
 	 * Set the number / identifier of this item.
 	 *
 	 * @param string $number Number.
+	 * @return void
 	 */
 	public function set_number( $number ) {
 		$this->number = $number;
@@ -126,6 +127,7 @@ class Item {
 	 * AN..max32 (AN = Alphanumeric, free text).
 	 *
 	 * @param string $description Description.
+	 * @return void
 	 */
 	public function set_description( $description ) {
 		$this->description = substr( $description, 0, 32 );
@@ -144,6 +146,7 @@ class Item {
 	 * Set the quantity of this item
 	 *
 	 * @param int $quantity Quantity.
+	 * @return void
 	 */
 	public function set_quantity( $quantity ) {
 		$this->quantity = $quantity;
@@ -162,6 +165,7 @@ class Item {
 	 * Set the price of this item.
 	 *
 	 * @param float $price Price.
+	 * @return void
 	 */
 	public function set_price( $price ) {
 		$this->price = $price;

@@ -31,6 +31,8 @@ class AdminPaymentBulkActions {
 
 	/**
 	 * Load.
+	 *
+	 * @return void
 	 */
 	public function load() {
 		// Current user.
@@ -148,6 +150,8 @@ class AdminPaymentBulkActions {
 
 	/**
 	 * Admin notices.
+	 *
+	 * @return void
 	 */
 	public function admin_notices() {
 		if ( filter_has_var( INPUT_GET, 'status_updated' ) ) {

@@ -55,6 +55,8 @@ class AdminAboutPage {
 
 	/**
 	 * Add admin menus/screens.
+	 *
+	 * @return void
 	 */
 	public function admin_menu() {
 		$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
@@ -80,6 +82,8 @@ class AdminAboutPage {
 
 	/**
 	 * Admin head.
+	 *
+	 * @return void
 	 */
 	public function admin_head() {
 		remove_submenu_page( 'index.php', 'pronamic-pay-about' );
@@ -87,6 +91,8 @@ class AdminAboutPage {
 
 	/**
 	 * Admin CSS.
+	 *
+	 * @return void
 	 */
 	public function admin_css() {
 		// @link https://github.com/WordPress/WordPress/blob/4.7/wp-includes/default-constants.php#L83-L93.
@@ -177,6 +183,8 @@ class AdminAboutPage {
 
 	/**
 	 * Render about page.
+	 *
+	 * @return void
 	 */
 	public function render_page() {
 		include $this->get_file();

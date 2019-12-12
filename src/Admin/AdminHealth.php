@@ -147,6 +147,8 @@ class AdminHealth {
 
 	/**
 	 * Test if configuration exists.
+	 *
+	 * @return void
 	 */
 	public function test_valid_license() {
 		// Good.
@@ -331,6 +333,8 @@ class AdminHealth {
 
 	/**
 	 * Test extensions support.
+	 *
+	 * @return void
 	 */
 	public function test_extensions_support() {
 		$extensions_json_path = \dirname( $this->plugin->get_file() ) . '/other/extensions.json';

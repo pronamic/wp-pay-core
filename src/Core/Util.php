@@ -152,6 +152,8 @@ class Util {
 
 	/**
 	 * No cache.
+	 *
+	 * @return void
 	 */
 	public static function no_cache() {
 		// @link https://github.com/woothemes/woocommerce/blob/2.3.11/includes/class-wc-cache-helper.php

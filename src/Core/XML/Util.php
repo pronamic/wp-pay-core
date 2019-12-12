@@ -53,6 +53,7 @@ class Util {
 	 * @param DOMDocument $document DOM document to add the specified node to.
 	 * @param DOMNode     $parent   DOM node to add a new element to.
 	 * @param array       $elements The elements (name => value pairs) to add.
+	 * @return void
 	 */
 	public static function add_elements( DOMDocument $document, DOMNode $parent, array $elements = array() ) {
 		foreach ( $elements as $name => $value ) {

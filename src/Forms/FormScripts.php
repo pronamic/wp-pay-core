@@ -53,6 +53,8 @@ class FormScripts {
 
 	/**
 	 * Register.
+	 *
+	 * @return void
 	 */
 	public function register() {
 		$min = SCRIPT_DEBUG ? '' : '.min';
@@ -70,6 +72,7 @@ class FormScripts {
 	 *
 	 * @link https://mikejolley.com/2013/12/02/sensible-script-enqueuing-shortcodes/
 	 * @link http://wordpress.stackexchange.com/questions/165754/enqueue-scripts-styles-when-shortcode-is-present
+	 * @return void
 	 */
 	public function enqueue() {
 		if (
