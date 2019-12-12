@@ -436,9 +436,13 @@ abstract class Gateway {
 	public function redirect( Payment $payment ) {
 		switch ( $this->method ) {
 			case self::METHOD_HTTP_REDIRECT:
-				return $this->redirect_via_http( $payment );
+				$this->redirect_via_http( $payment );
+
+				break;
 			case self::METHOD_HTML_FORM:
-				return $this->redirect_via_html( $payment );
+				$this->redirect_via_html( $payment );
+
+				break;
 			default:
 				// No idea how to redirect to the gateway.
 		}

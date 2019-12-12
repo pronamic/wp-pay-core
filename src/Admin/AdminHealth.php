@@ -148,7 +148,7 @@ class AdminHealth {
 	/**
 	 * Test if configuration exists.
 	 *
-	 * @return void
+	 * @return array<string, array<string,string>|string>
 	 */
 	public function test_valid_license() {
 		// Good.
@@ -203,7 +203,7 @@ class AdminHealth {
 	/**
 	 * Test WordPress version.
 	 *
-	 * @return array
+	 * @return array<string, array<string,string>|string>
 	 */
 	public function test_wordpress_version() {
 		// Good.
@@ -235,7 +235,7 @@ class AdminHealth {
 	/**
 	 * Test WordPress memory limit.
 	 *
-	 * @return array
+	 * @return array<string, array<string,string>|string>
 	 */
 	public function test_memory_limit() {
 		$memory = pronamic_pay_let_to_num( strval( WP_MEMORY_LIMIT ) );
@@ -274,7 +274,7 @@ class AdminHealth {
 	/**
 	 * Test UTF-8 character set.
 	 *
-	 * @return array
+	 * @return array<string, array<string,string>|string>
 	 */
 	public function test_character_set() {
 		// Good.
@@ -303,7 +303,7 @@ class AdminHealth {
 	/**
 	 * Test registered hashing algorithms.
 	 *
-	 * @return array
+	 * @return array<string, array<string,string>|string>
 	 */
 	public function test_hashing_algorithms() {
 		// Good.
@@ -334,7 +334,7 @@ class AdminHealth {
 	/**
 	 * Test extensions support.
 	 *
-	 * @return void
+	 * @return array<string, array<string,string>|string>
 	 */
 	public function test_extensions_support() {
 		$extensions_json_path = \dirname( $this->plugin->get_file() ) . '/other/extensions.json';
