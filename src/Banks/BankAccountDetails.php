@@ -8,7 +8,7 @@
  * @package   Pronamic\WordPress\Pay
  */
 
-namespace Pronamic\WordPress\Pay\Payments;
+namespace Pronamic\WordPress\Pay\Banks;
 
 /**
  * Bank details
@@ -206,10 +206,11 @@ class BankAccountDetails {
 	 */
 	public function get_json() {
 		$data = array(
-			'bank_name'      => $this->get_bank_name(),
+			'name'           => $this->get_name(),
+			'account_number' => $this->get_account_number(),
 			'iban'           => $this->get_iban(),
 			'bic'            => $this->get_bic(),
-			'account_number' => $this->get_account_number(),
+			'bank_name'      => $this->get_bank_name(),
 			'city'           => $this->get_city(),
 			'country'        => $this->get_country(),
 		);

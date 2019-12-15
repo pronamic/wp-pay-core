@@ -8,7 +8,7 @@
  * @package   Pronamic\WordPress\Pay
  */
 
-namespace Pronamic\WordPress\Pay\Payments;
+namespace Pronamic\WordPress\Pay\Banks;
 
 /**
  * Bank transfer details

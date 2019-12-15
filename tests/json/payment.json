@@ -85,19 +85,21 @@
     }
   ],
   "consumer_bank_details": {
-    "bank_name": "Rabobank",
+    "name": "John Doe",
+    "account_number": "1086.34.779",
     "iban": "NL56 RABO 0108 6347 79",
     "bic": "RABONL2U",
-    "account_number": "1086.34.779",
+    "bank_name": "Rabobank",
     "city": "Drachten",
     "country": "Netherlands"
   },
   "bank_transfer_recipient_details": {
     "bank_account": {
-      "bank_name": "Rabobank",
+      "name": "John Doe",
+      "account_number": "1086.34.779",
       "iban": "NL56 RABO 0108 6347 79",
       "bic": "RABONL2U",
-      "account_number": "1086.34.779",
+      "bank_name": "Rabobank",
       "city": "Drachten",
       "country": "Netherlands"
     },

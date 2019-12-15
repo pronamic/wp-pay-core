@@ -13,6 +13,8 @@ namespace Pronamic\WordPress\Pay\Payments;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
+use Pronamic\WordPress\Pay\Banks\BankAccountDetails;
+use Pronamic\WordPress\Pay\Banks\BankTransferDetails;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\ContactName;
 use Pronamic\WordPress\Pay\Core\Gateway;
@@ -359,7 +361,7 @@ class PaymentTest extends WP_UnitTestCase {
 		$consumer_bank_details = $payment->get_consumer_bank_details();
 
 		$this->assertNotNull( $consumer_bank_details );
-		$this->assertInstanceOf( \Pronamic\WordPress\Pay\Payments\BankAccountDetails::class, $consumer_bank_details );
+		$this->assertInstanceOf( BankAccountDetails::class, $consumer_bank_details );
 
 		$this->assertEquals( 'Pronamic', $consumer_bank_details->get_name() );
 		$this->assertEquals( '1086.34.779', $consumer_bank_details->get_account_number() );
