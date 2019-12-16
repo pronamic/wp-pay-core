@@ -243,8 +243,8 @@ class BankAccountDetails {
 			$bank_account_details = new self();
 		}
 
-		if ( isset( $json->bank_name ) ) {
-			$bank_account_details->set_bank_name( $json->bank_name );
+		if ( isset( $json->name ) ) {
+			$bank_account_details->set_name( $json->name );
 		}
 
 		if ( isset( $json->iban ) ) {
@@ -257,6 +257,10 @@ class BankAccountDetails {
 
 		if ( isset( $json->account_number ) ) {
 			$bank_account_details->set_account_number( $json->account_number );
+		}
+
+		if ( isset( $json->bank_name ) ) {
+			$bank_account_details->set_bank_name( $json->bank_name );
 		}
 
 		if ( isset( $json->city ) ) {
