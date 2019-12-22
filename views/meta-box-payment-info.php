@@ -139,7 +139,14 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 				<?php esc_html_e( 'Bank Transfer Recipient', 'pronamic_ideal' ); ?>
 			</th>
 			<td>
-				<?php echo wpautop($bank_transfer_recipient ); ?>
+				<?php
+
+				echo wp_kses(
+					wpautop( $bank_transfer_recipient ),
+					array( 'p' => array() )
+				);
+
+				?>
 			</td>
 		</tr>
 
