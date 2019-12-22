@@ -281,6 +281,7 @@ class BankAccountDetails {
 	 */
 	public function __toString() {
 		$pieces = array(
+			$this->get_name(),
 			$this->get_bank_name(),
 			$this->get_iban(),
 			$this->get_bic(),
