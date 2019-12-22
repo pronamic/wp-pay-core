@@ -16,7 +16,7 @@ use Pronamic\WordPress\Pay\Gateways\Common\AbstractIntegration;
  * Title: WordPress gateway integrations class.
  *
  * @author     Reüel van der Steege
- * @version    2.2.2
+ * @version    2.2.6
  * @since      1.0.0
  * @implements \IteratorAggregate<string, AbstractIntegration>
  */

@@ -16,7 +16,7 @@ use Pronamic\WordPress\Money\Money;
  * Payment lines
  *
  * @author     Remco Tolsma
- * @version    2.1.0
+ * @version    2.2.6
  * @since      2.1.0
  * @implements \IteratorAggregate<int, PaymentLine>
  */

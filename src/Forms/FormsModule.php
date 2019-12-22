@@ -17,7 +17,7 @@ use Pronamic\WordPress\Pay\Plugin;
  * Forms Module
  *
  * @author Remco Tolsma
- * @version 3.7.0
+ * @version 2.2.6
  * @since 3.7.0
  */
 class FormsModule {

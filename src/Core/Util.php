@@ -21,7 +21,7 @@ use Pronamic\WordPress\Pay\Util as Pay_Util;
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 2.0.0
+ * @version 2.2.6
  * @since 1.0.0
  */
 class Util {

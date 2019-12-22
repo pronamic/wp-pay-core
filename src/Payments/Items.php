@@ -17,7 +17,7 @@ use Pronamic\WordPress\Money\Money;
  *
  * @deprecated Use `PaymentLines`.
  * @author     Remco Tolsma
- * @version    2.0.6
+ * @version    2.2.6
  * @implements \IteratorAggregate<int, Item>
  */
 class Items implements \IteratorAggregate {

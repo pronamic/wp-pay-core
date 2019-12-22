@@ -16,8 +16,8 @@ namespace Pronamic\WordPress\Pay\Dependencies;
  * @link    https://github.com/Yoast/yoast-acf-analysis/blob/2.3.0/inc/dependencies/dependency-yoast-seo.php
  * @link    https://github.com/dsawardekar/wp-requirements/blob/0.3.0/lib/Requirements.php#L104-L118
  * @author  Remco Tolsma
- * @version unreleased
- * @since   unreleased
+ * @version 2.2.6
+ * @since   2.2.6
  */
 class WordPressDependency extends Dependency {
 	/**

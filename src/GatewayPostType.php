@@ -14,7 +14,7 @@ namespace Pronamic\WordPress\Pay;
  * Title: WordPress gateway post type
  *
  * @author  Remco Tolsma
- * @version 2.0.5
+ * @version 2.2.6
  * @since   ?
  */
 class GatewayPostType {

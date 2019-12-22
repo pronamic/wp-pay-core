@@ -16,8 +16,8 @@ use PHPUnit\Framework\TestCase;
  * Bank transfer details test
  *
  * @author  Remco Tolsma
- * @version 2.2.5
- * @since   2.2.5
+ * @version 2.2.6
+ * @since   2.2.6
  */
 class BankTransferDetailsTest extends TestCase {
 	/**

@@ -14,7 +14,7 @@ namespace Pronamic\WordPress\Pay\Gateways\Common;
  * Abstract integration test
  *
  * @author  Reüel van der Steege
- * @version 1.0
+ * @version 2.2.6
  * @since   2.2.6
  */
 class AbstractIntegrationTest extends \WP_UnitTestCase {

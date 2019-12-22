@@ -16,7 +16,7 @@ use Pronamic\WordPress\Pay\Payments\PaymentStatus;
  * Subscriptions Privacy class.
  *
  * @author  Reüel van der Steege
- * @version 2.1.0
+ * @version 2.2.6
  * @since   2.0.2
  */
 class SubscriptionsPrivacy {

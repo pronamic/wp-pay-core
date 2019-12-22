@@ -20,7 +20,7 @@ use WP_Query;
  * WordPress admin payment post type
  *
  * @author  Remco Tolsma
- * @version 2.1.6
+ * @version 2.2.6
  * @since   1.0.0
  */
 class AdminPaymentPostType {

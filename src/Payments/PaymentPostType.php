@@ -17,7 +17,7 @@ namespace Pronamic\WordPress\Pay\Payments;
  * Company: Pronamic
  *
  * @author  Remco Tolsma
- * @version 2.0.5
+ * @version 2.2.6
  * @since   3.7.0
  */
 class PaymentPostType {

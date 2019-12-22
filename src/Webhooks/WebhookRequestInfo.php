@@ -18,7 +18,7 @@ use Pronamic\WordPress\Pay\Payments\Payment;
  * Webhook request info class
  *
  * @author  Reüel van der Steege
- * @version 2.1.6
+ * @version 2.2.6
  * @since   2.1.6
  */
 class WebhookRequestInfo implements JsonSerializable {

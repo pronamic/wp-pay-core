@@ -19,7 +19,7 @@ use Pronamic\WordPress\Pay\Subscriptions\Subscription;
  * Abstract payment data class
  *
  * @author Remco Tolsma
- * @version 2.0.2
+ * @version 2.2.6
  * @since 1.4.0
  */
 abstract class AbstractPaymentData implements PaymentDataInterface {

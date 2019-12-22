@@ -16,7 +16,7 @@ use WP_UnitTestCase;
  * Payment test
  *
  * @author Remco Tolsma
- * @version 1.0
+ * @version 2.2.6
  */
 class CreditCardTest extends WP_UnitTestCase {
 	/**
