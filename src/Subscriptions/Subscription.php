@@ -21,7 +21,7 @@ use Pronamic\WordPress\Pay\Payments\PaymentInfoHelper;
  * Subscription
  *
  * @author  Remco Tolsma
- * @version 2.1.0
+ * @version 2.2.6
  * @since   1.0.0
  */
 class Subscription extends LegacySubscription {

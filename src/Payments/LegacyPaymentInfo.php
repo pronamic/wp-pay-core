@@ -24,7 +24,7 @@ use Pronamic\WordPress\Pay\Customer;
  * This class will be removed in future versions.
  *
  * @author  Remco Tolsma
- * @version 2.1.0
+ * @version 2.2.6
  * @since   2.1.0
  *
  * @property string|null $language

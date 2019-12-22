@@ -14,8 +14,8 @@ namespace Pronamic\WordPress\Pay\Dependencies;
  * WordPress Dependency test
  *
  * @author  Remco Tolsma
- * @version unreleased
- * @since   unreleased
+ * @version 2.2.6
+ * @since   2.2.6
  */
 class WordPressDependencyTest extends \WP_UnitTestCase {
 	/**

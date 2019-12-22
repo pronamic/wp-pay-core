@@ -18,7 +18,7 @@ use WP_Error;
  * License Manager
  *
  * @author  Remco Tolsma
- * @version 2.0.2
+ * @version 2.2.6
  * @since   2.0.1
  */
 class LicenseManager {

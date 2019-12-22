@@ -20,7 +20,7 @@ use WP_Post;
  * WordPress admin gateway post type
  *
  * @author  Remco Tolsma
- * @version 2.1.6
+ * @version 2.2.6
  * @since   ?
  */
 class AdminGatewayPostType {

@@ -17,7 +17,7 @@ use Pronamic\WordPress\Money\Money;
  *
  * @deprecated Use `PaymentLine`.
  * @author     Remco Tolsma
- * @version    1.0
+ * @version    2.2.6
  */
 class Item {
 	/**

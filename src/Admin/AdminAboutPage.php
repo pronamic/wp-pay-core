@@ -16,7 +16,7 @@ use Pronamic\WordPress\Pay\Plugin;
  * WordPress admin about
  *
  * @author  Remco Tolsma
- * @version 2.1.0
+ * @version 2.2.6
  * @since   1.0.0
  */
 class AdminAboutPage {

@@ -20,7 +20,7 @@ use Pronamic\WordPress\Pay\Webhooks\WebhookManager;
  * WordPress Pay admin
  *
  * @author  Remco Tolsma
- * @version 2.1.0
+ * @version 2.2.6
  * @since   1.0.0
  */
 class AdminModule {

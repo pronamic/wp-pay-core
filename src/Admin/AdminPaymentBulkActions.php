@@ -18,7 +18,7 @@ use WP_Query;
  *
  * @link https://www.skyverge.com/blog/add-custom-bulk-action/
  * @author Remco Tolsma
- * @version 4.1.0
+ * @version 2.2.6
  * @since 4.1.0
  */
 class AdminPaymentBulkActions {

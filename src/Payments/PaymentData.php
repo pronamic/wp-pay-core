@@ -17,7 +17,7 @@ use WP_User;
  * WordPress payment data
  *
  * @author Remco Tolsma
- * @version 1.0
+ * @version 2.2.6
  */
 abstract class PaymentData extends AbstractPaymentData {
 	/**

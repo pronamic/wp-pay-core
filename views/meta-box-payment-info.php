@@ -125,6 +125,26 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 			?>
 		</td>
 	</tr>
+
+	<?php
+
+	$bank_transfer_recipient = $payment->get_bank_transfer_recipient_details();
+
+	?>
+
+	<?php if ( null !== $bank_transfer_recipient ) : ?>
+
+		<tr>
+			<th scope="row">
+				<?php esc_html_e( 'Bank Transfer Recipient', 'pronamic_ideal' ); ?>
+			</th>
+			<td>
+				<?php echo wpautop($bank_transfer_recipient ); ?>
+			</td>
+		</tr>
+
+	<?php endif; ?>
+
 	<tr>
 		<th scope="row">
 			<?php esc_html_e( 'Action URL', 'pronamic_ideal' ); ?>
@@ -595,25 +615,6 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 			</th>
 			<td>
 				<?php echo esc_html( $ogone_alias ); ?>
-			</td>
-		</tr>
-
-	<?php endif; ?>
-
-	<?php
-
-	$mollie_transfer_reference = $payment->get_meta( 'mollie_transfer_reference' );
-
-	?>
-
-	<?php if ( ! empty( $mollie_transfer_reference ) ) : ?>
-
-		<tr>
-			<th scope="row">
-				<?php esc_html_e( 'Mollie Transfer Reference', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php echo esc_html( $mollie_transfer_reference ); ?>
 			</td>
 		</tr>
 
