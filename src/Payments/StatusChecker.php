@@ -10,14 +10,13 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
-use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Plugin;
 
 /**
  * Status Checker
  *
  * @author  Remco Tolsma
- * @version 2.1.6
+ * @version 2.2.6
  * @since   1.0.0
  */
 class StatusChecker {

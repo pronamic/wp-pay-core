@@ -150,7 +150,7 @@ body.post-type-pronamic_payment #post-body-content, body.post-type-pronamic_pay_
   height: 1em;
 }
 .pronamic-pay-icon::after {
-  content: "";
+  content: "";
   display: block;
   font-family: "Pronamic Pay Icons";
   position: absolute;
@@ -164,67 +164,85 @@ body.post-type-pronamic_payment #post-body-content, body.post-type-pronamic_pay_
 
 .pronamic-pay-icon-pending::after {
   color: #ffba00;
-  content: "";
+  content: "";
 }
 
 .pronamic-pay-icon-cancelled::after {
   color: #a00;
-  content: "";
+  content: "";
 }
 
 .pronamic-pay-icon-processing::after {
   color: #73a724;
-  content: "";
+  content: "";
 }
 
 .pronamic-pay-icon-completed::after {
   color: #2ea2cc;
-  content: "";
+  content: "";
 }
 
 .pronamic-pay-icon-refunded::after {
   color: #999;
-  content: "";
+  content: "";
 }
 
 .pronamic-pay-icon-failed::after {
   color: #d0c21f;
-  content: "";
+  content: "";
 }
 
 .pronamic-pay-icon-on-hold::after {
   color: #999;
-  content: "";
+  content: "";
 }
 
 .pronamic-pay-icon-recurring::after {
   color: #999;
-  content: "";
+  content: "";
 }
 
 .pronamic-pay-icon-recurring-first::after {
   color: #2ea2cc;
+  content: "";
+}
+
+.pronamic-pay-icon-question-mark::after {
+  color: #999;
   content: "";
 }
 
-.pronamic-pay-payment-methods li {
-  color: #aaa;
-  margin-bottom: 1em;
+.pronamic-pay-payment-methods.form-table.widefat {
+  border-right: 0;
+  border-bottom: 0;
+  border-left: 0;
+  margin: -15px -10px;
+  width: calc(100% + 20px);
 }
-.pronamic-pay-payment-methods li .pronamic-pay-icon {
-  display: inline-block;
-  padding-right: 0.8em;
+.pronamic-pay-payment-methods thead th:first-of-type {
+  width: 60%;
 }
-.pronamic-pay-payment-methods li .pronamic-pay-icon::after {
-  color: #ededed;
+.pronamic-pay-payment-methods .pronamic-pay-icon {
+  line-height: inherit;
 }
-.pronamic-pay-payment-methods li.available {
-  color: #000;
-}
-.pronamic-pay-payment-methods li.available .pronamic-pay-icon::after {
+.pronamic-pay-payment-methods .pronamic-pay-icon-completed::after {
   color: #73a724;
 }
+.pronamic-pay-payment-methods .pronamic-pay-icon-cancelled::after {
+  color: #aaa;
+}
 
+@media screen and (max-width: 782px) {
+  .pronamic-pay-payment-methods.form-table th {
+    display: table-cell;
+  }
+  .pronamic-pay-payment-methods.form-table th:first-of-type {
+    width: 50%;
+  }
+  .pronamic-pay-payment-methods.form-table td {
+    display: table-cell;
+  }
+}
 .gateway-config-section-header h4 {
   margin: 0;
 }
@@ -325,22 +343,13 @@ body.post-type-pronamic_payment #post-body-content, body.post-type-pronamic_pay_
 }
 
 @media only screen and (max-width: 782px) {
-  .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_status, .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_subscription, .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_subscription_status,
-.wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_status,
-.wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_subscription,
-.wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_subscription_status {
+  .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_status, .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_subscription, .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_subscription_status, .wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_status, .wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_subscription, .wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_subscription_status {
     display: table-cell;
   }
-  .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_status::before, .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_subscription::before, .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_subscription_status::before,
-.wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_status::before,
-.wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_subscription::before,
-.wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_subscription_status::before {
+  .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_status::before, .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_subscription::before, .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_subscription_status::before, .wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_status::before, .wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_payment_subscription::before, .wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items) td:not(.column-primary).column-pronamic_subscription_status::before {
     display: none;
   }
-  .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items).is-expanded td:not(.hidden).column-pronamic_payment_status, .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items).is-expanded td:not(.hidden).column-pronamic_payment_subscription, .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items).is-expanded td:not(.hidden).column-pronamic_subscription_status,
-.wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items).is-expanded td:not(.hidden).column-pronamic_payment_status,
-.wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items).is-expanded td:not(.hidden).column-pronamic_payment_subscription,
-.wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items).is-expanded td:not(.hidden).column-pronamic_subscription_status {
+  .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items).is-expanded td:not(.hidden).column-pronamic_payment_status, .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items).is-expanded td:not(.hidden).column-pronamic_payment_subscription, .wp-list-table tr.type-pronamic_payment:not(.inline-edit-row):not(.no-items).is-expanded td:not(.hidden).column-pronamic_subscription_status, .wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items).is-expanded td:not(.hidden).column-pronamic_payment_status, .wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items).is-expanded td:not(.hidden).column-pronamic_payment_subscription, .wp-list-table tr.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items).is-expanded td:not(.hidden).column-pronamic_subscription_status {
     display: table-cell !important;
   }
 }

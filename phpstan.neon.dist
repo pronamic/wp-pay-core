@@ -13,3 +13,7 @@ parameters:
 		-
 			message: '#Function wp_add_dashboard_widget not found\.#'
 			path: %currentWorkingDirectory%/src/Admin/AdminDashboard.php
+		-
+			message: '#Function pll_home_url not found\.#'
+			path: %currentWorkingDirectory%/src/Payments/Payment.php
+	checkMissingIterableValueType: false

@@ -17,7 +17,7 @@ use Pronamic\WordPress\Pay\Util;
  * WordPress iDEAL admin
  *
  * @author  Remco Tolsma
- * @version 2.1.0
+ * @version 2.2.6
  * @since   1.0.0
  */
 class AdminSettings {
@@ -29,7 +29,7 @@ class AdminSettings {
 	private $plugin;
 
 	/**
-	 * Constructs and initalize an admin object.
+	 * Constructs and initialize an admin object.
 	 *
 	 * @param Plugin $plugin Plugin.
 	 */
@@ -42,6 +42,8 @@ class AdminSettings {
 
 	/**
 	 * Admin initialize.
+	 *
+	 * @return void
 	 */
 	public function admin_init() {
 		// Settings - General.
@@ -134,6 +136,7 @@ class AdminSettings {
 	 * Settings section.
 	 *
 	 * @param array $args Arguments.
+	 * @return void
 	 */
 	public function settings_section( $args ) {
 		switch ( $args['id'] ) {
@@ -171,6 +174,7 @@ class AdminSettings {
 	 * Input text.
 	 *
 	 * @param array $args Arguments.
+	 * @return void
 	 */
 	public function input_element( $args ) {
 		$defaults = array(
@@ -213,6 +217,7 @@ class AdminSettings {
 	 * @link https://github.com/WordPress/WordPress/blob/4.9.1/wp-admin/options-writing.php#L60-L68
 	 * @link https://github.com/WordPress/WordPress/blob/4.9.1/wp-admin/options-reading.php#L110-L141
 	 * @param array $args Arguments.
+	 * @return void
 	 */
 	public function input_checkbox( $args ) {
 		$id     = $args['label_for'];
@@ -250,6 +255,7 @@ class AdminSettings {
 	 * Input license key.
 	 *
 	 * @param array $args Arguments.
+	 * @return void
 	 */
 	public function input_license_key( $args ) {
 		do_action( 'pronamic_pay_license_check' );
@@ -267,6 +273,7 @@ class AdminSettings {
 	 * Input page.
 	 *
 	 * @param array $args Arguments.
+	 * @return void
 	 */
 	public function input_page( $args ) {
 		$name = $args['label_for'];

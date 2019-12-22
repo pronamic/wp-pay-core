@@ -11,6 +11,8 @@
 namespace Pronamic\WordPress\Pay\Payments;
 
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\Pay\Banks\BankAccountDetails;
+use Pronamic\WordPress\Pay\Banks\BankTransferDetails;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
@@ -20,7 +22,7 @@ use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
  * Payment info helper
  *
  * @author  Remco Tolsma
- * @version 2.1.0
+ * @version 2.2.6
  * @since   2.1.0
  */
 class PaymentInfoHelper {
@@ -67,6 +69,20 @@ class PaymentInfoHelper {
 
 		if ( null !== $lines ) {
 			$object->lines = $lines->get_json();
+		}
+
+		// Consumer bank details.
+		$consumer_bank_details = $payment_info->get_consumer_bank_details();
+
+		if ( null !== $consumer_bank_details ) {
+			$object->consumer_bank_details = $consumer_bank_details->get_json();
+		}
+
+		// Bank transfer recipient details.
+		$bank_transfer_recipient_details = $payment_info->get_bank_transfer_recipient_details();
+
+		if ( null !== $bank_transfer_recipient_details ) {
+			$object->bank_transfer_recipient_details = $bank_transfer_recipient_details->get_json();
 		}
 
 		$mode = $payment_info->get_mode();
@@ -124,6 +140,18 @@ class PaymentInfoHelper {
 
 		if ( isset( $json->shipping_address ) ) {
 			$payment_info->set_shipping_address( Address::from_json( $json->shipping_address ) );
+		}
+
+		if ( isset( $json->lines ) ) {
+			$payment_info->set_lines( PaymentLines::from_json( $json->lines ) );
+		}
+
+		if ( isset( $json->consumer_bank_details ) ) {
+			$payment_info->set_consumer_bank_details( BankAccountDetails::from_json( $json->consumer_bank_details ) );
+		}
+
+		if ( isset( $json->bank_transfer_recipient_details ) ) {
+			$payment_info->set_bank_transfer_recipient_details( BankTransferDetails::from_json( $json->bank_transfer_recipient_details ) );
 		}
 
 		if ( isset( $json->lines ) ) {

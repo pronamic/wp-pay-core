@@ -28,7 +28,7 @@ use WP_Post;
  * Payment
  *
  * @author  Remco Tolsma
- * @version 2.1.6
+ * @version 2.2.6
  * @since   1.0.0
  */
 class Payment extends LegacyPayment {
@@ -93,46 +93,6 @@ class Payment extends LegacyPayment {
 	public $description;
 
 	/**
-	 * The name of the consumer of this payment.
-	 *
-	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string|null
-	 */
-	public $consumer_name;
-
-	/**
-	 * The account number of the consumer of this payment.
-	 *
-	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string|null
-	 */
-	public $consumer_account_number;
-
-	/**
-	 * The IBAN of the consumer of this payment.
-	 *
-	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string|null
-	 */
-	public $consumer_iban;
-
-	/**
-	 * The BIC of the consumer of this payment.
-	 *
-	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string|null
-	 */
-	public $consumer_bic;
-
-	/**
-	 * The city of the consumer of this payment.
-	 *
-	 * @todo Is this required and should we add the 'consumer' part?
-	 * @var  string|null
-	 */
-	public $consumer_city;
-
-	/**
 	 * The Google Analytics client ID of the user who started this payment.
 	 *
 	 * @var string|null
@@ -167,6 +127,13 @@ class Payment extends LegacyPayment {
 	 * @var string|null
 	 */
 	public $action_url;
+
+	/**
+	 * The date this payment expires.
+	 *
+	 * @var DateTime|null
+	 */
+	private $expiry_date;
 
 	/**
 	 * The payment method chosen by the user who started this payment.
@@ -293,7 +260,10 @@ class Payment extends LegacyPayment {
 	/**
 	 * Add a note to this payment.
 	 *
+	 * @link https://developer.wordpress.org/reference/functions/wp_insert_comment/
 	 * @param string $note The note to add.
+	 * @return int The new comment's ID.
+	 * @throws \Exception Throws exception when adding note fails.
 	 */
 	public function add_note( $note ) {
 		$commentdata = array(
@@ -304,9 +274,19 @@ class Payment extends LegacyPayment {
 			'comment_approved' => true,
 		);
 
-		$comment_id = wp_insert_comment( $commentdata );
+		$result = wp_insert_comment( $commentdata );
 
-		return $comment_id;
+		if ( false === $result ) {
+			throw new \Exception(
+				\sprintf(
+					'Could not add note "%s" to payment with ID "%d".',
+					$note,
+					$this->id
+				)
+			);
+		}
+
+		return $result;
 	}
 
 	/**
@@ -343,6 +323,7 @@ class Payment extends LegacyPayment {
 	 * Set the transaction ID.
 	 *
 	 * @param string|null $transaction_id Transaction ID.
+	 * @return void
 	 */
 	public function set_transaction_id( $transaction_id ) {
 		$this->transaction_id = $transaction_id;
@@ -380,6 +361,7 @@ class Payment extends LegacyPayment {
 	 * Set the payment status.
 	 *
 	 * @param string|null $status Status.
+	 * @return void
 	 */
 	public function set_status( $status ) {
 		$this->status = $status;
@@ -398,6 +380,7 @@ class Payment extends LegacyPayment {
 	 * Set if payment is tracked in Google Analytics.
 	 *
 	 * @param bool|null $tracked Tracked in Google Analytics.
+	 * @return void
 	 */
 	public function set_ga_tracked( $tracked ) {
 		$this->ga_tracked = $tracked;
@@ -427,12 +410,23 @@ class Payment extends LegacyPayment {
 	 * @return string
 	 */
 	public function get_return_url() {
+		$home_url = home_url( '/' );
+
+		/**
+		 * Polylang compatibility.
+		 *
+		 * @link https://github.com/polylang/polylang/blob/2.6.8/include/api.php#L97-L111
+		 */
+		if ( \function_exists( '\pll_home_url' ) ) {
+			$home_url = \pll_home_url();
+		}
+
 		$url = add_query_arg(
 			array(
 				'payment' => $this->id,
 				'key'     => $this->key,
 			),
-			home_url( '/' )
+			$home_url
 		);
 
 		return $url;
@@ -465,9 +459,29 @@ class Payment extends LegacyPayment {
 	 * Set the action URL.
 	 *
 	 * @param string $action_url Action URL.
+	 * @return void
 	 */
 	public function set_action_url( $action_url ) {
 		$this->action_url = $action_url;
+	}
+
+	/**
+	 * Get expiry date.
+	 *
+	 * @return DateTime|null
+	 */
+	public function get_expiry_date() {
+		return $this->expiry_date;
+	}
+
+	/**
+	 * Set expiry date.
+	 *
+	 * @param DateTime|null $expiry_date Expiry date.
+	 * @return void
+	 */
+	public function set_expiry_date( $expiry_date ) {
+		$this->expiry_date = $expiry_date;
 	}
 
 	/**
@@ -694,6 +708,10 @@ class Payment extends LegacyPayment {
 
 		PaymentInfoHelper::from_json( $json, $payment );
 
+		if ( isset( $json->expiry_date ) ) {
+			$payment->set_expiry_date( new DateTime( $json->expiry_date ) );
+		}
+
 		if ( isset( $json->status ) ) {
 			$payment->set_status( $json->status );
 		}
@@ -714,6 +732,12 @@ class Payment extends LegacyPayment {
 		$object = PaymentInfoHelper::to_json( $this );
 
 		$properties = (array) $object;
+
+		$expiry_date = $this->get_expiry_date();
+
+		if ( null !== $expiry_date ) {
+			$properties['expiry_date'] = $expiry_date->format( \DATE_ATOM );
+		}
 
 		if ( null !== $this->get_status() ) {
 			$properties['status'] = $this->get_status();

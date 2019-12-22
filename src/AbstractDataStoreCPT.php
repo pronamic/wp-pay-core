@@ -20,7 +20,7 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
  * @link https://woocommerce.com/2017/04/woocommerce-3-0-release/
  * @link https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
  * @author  Remco Tolsma
- * @version 2.0.6
+ * @version 2.2.6
  * @since   3.7.0
  */
 abstract class AbstractDataStoreCPT {
@@ -220,6 +220,7 @@ abstract class AbstractDataStoreCPT {
 	 * @param int    $id    Post ID.
 	 * @param string $key   Key.
 	 * @param mixed  $value Value.
+	 * @return int|bool
 	 */
 	public function update_meta( $id, $key, $value ) {
 		if ( empty( $value ) ) {

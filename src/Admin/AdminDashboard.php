@@ -16,7 +16,7 @@ use Pronamic\WordPress\Pay\Plugin;
  * WordPress admin dashboard
  *
  * @author Remco Tolsma
- * @version 3.7.0
+ * @version 2.2.6
  * @since 3.7.0
  */
 class AdminDashboard {
@@ -47,6 +47,7 @@ class AdminDashboard {
 	 * Setup.
 	 *
 	 * @link https://developer.wordpress.org/reference/functions/wp_add_dashboard_widget/
+	 * @return void
 	 */
 	public function setup() {
 		/**
@@ -78,6 +79,8 @@ class AdminDashboard {
 
 	/**
 	 * Status widget.
+	 *
+	 * @return void
 	 */
 	public function status_widget() {
 		$counts = wp_count_posts( 'pronamic_payment' );

@@ -11,7 +11,6 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DatePeriod;
-use Exception;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
@@ -24,7 +23,7 @@ use Pronamic\WordPress\Pay\Customer;
  * @link https://woocommerce.com/2017/04/woocommerce-3-0-release/
  * @link https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
  * @author  Remco Tolsma
- * @version 2.1.0
+ * @version 2.2.6
  * @since   2.0.1
  */
 class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
@@ -139,7 +138,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 * @param array $data    An array of slashed post data.
 	 * @param array $postarr An array of sanitized, but otherwise unmodified post data.
 	 * @return array
-	 * @throws Exception When inserting subscription post data JSON string fails.
+	 * @throws \Exception When inserting subscription post data JSON string fails.
 	 */
 	public function insert_subscription_post_data( $data, $postarr ) {
 		$this->subscription = null;
@@ -155,18 +154,20 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 		}
 
 		if ( $this->subscription instanceof Subscription ) {
+			$subscription = $this->subscription;
+
 			// Update subscription from post array.
-			$this->update_subscription_form_post_array( $this->subscription, $postarr );
+			$this->update_subscription_form_post_array( $subscription, $postarr );
 
 			if ( ! isset( $data['post_status'] ) || 'trash' !== $data['post_status'] ) {
-				$data['post_status'] = $this->get_post_status_from_meta_status( $this->subscription->get_status() );
+				$data['post_status'] = $this->get_post_status_from_meta_status( $subscription->get_status() );
 			}
 
 			// Data.
-			$json_string = wp_json_encode( $this->subscription->get_json() );
+			$json_string = wp_json_encode( $subscription->get_json() );
 
 			if ( false === $json_string ) {
-				throw new Exception( 'Error inserting subscription post data as JSON.' );
+				throw new \Exception( 'Error inserting subscription post data as JSON.' );
 			}
 
 			$data['post_content']   = wp_slash( $json_string );
@@ -181,6 +182,8 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 *
 	 * @param Subscription $subscription Subscription.
 	 * @param array        $postarr      Post data array.
+	 * @return void
+	 * @throws \Exception Throws exception if amount could not be parsed to Money object.
 	 */
 	private function update_subscription_form_post_array( $subscription, $postarr ) {
 		if ( isset( $postarr['pronamic_subscription_post_status'] ) ) {
@@ -322,7 +325,9 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 * @link https://developer.wordpress.org/reference/functions/get_post_field/
 	 *
 	 * @param Subscription $subscription The subscription to read the additional data for.
+	 *
 	 * @return void
+	 * @throws \Exception Throws exception on invalid post date.
 	 */
 	public function read( $subscription ) {
 		$id = $subscription->get_id();
@@ -613,6 +618,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
 	 * @param Subscription $subscription The subscription to update the post meta for.
+	 * @return void
 	 */
 	private function update_post_meta( $subscription ) {
 		$id = $subscription->get_id();
@@ -647,6 +653,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 	 * Update meta status.
 	 *
 	 * @param Subscription $subscription The subscription to update the status for.
+	 * @return void
 	 */
 	public function update_meta_status( $subscription ) {
 		$id = $subscription->get_id();

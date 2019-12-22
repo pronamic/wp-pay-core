@@ -16,7 +16,7 @@ use Pronamic\WordPress\Pay\Payments\PaymentStatus;
  * Subscriptions Privacy class.
  *
  * @author  Reüel van der Steege
- * @version 2.1.0
+ * @version 2.2.6
  * @since   2.0.2
  */
 class SubscriptionsPrivacy {
@@ -222,10 +222,15 @@ class SubscriptionsPrivacy {
 				$items_retained = true;
 			}
 
-			// Add subscription note and erasure return message.
-			$subscription->add_note( $note );
-
+			// Add erasure return message.
 			$messages[] = sprintf( $message, $subscription_id );
+
+			// Add subscription note.
+			try {
+				$subscription->add_note( $note );
+			} catch ( \Exception $e ) {
+				continue;
+			}
 		}
 
 		$done = true;

@@ -4,12 +4,12 @@
 
 @font-face {
 	font-family:"Pronamic Pay Icons";
-	src:url("pronamic-pay-icons.eot?8d7c26dfe1c08e3d6f757f829f959be5");
-	src:url("pronamic-pay-icons.eot?8d7c26dfe1c08e3d6f757f829f959be5#iefix") format("embedded-opentype"),
-		url("pronamic-pay-icons.woff2?8d7c26dfe1c08e3d6f757f829f959be5") format("woff2"),
-		url("pronamic-pay-icons.woff?8d7c26dfe1c08e3d6f757f829f959be5") format("woff"),
-		url("pronamic-pay-icons.ttf?8d7c26dfe1c08e3d6f757f829f959be5") format("truetype"),
-		url("pronamic-pay-icons.svg?8d7c26dfe1c08e3d6f757f829f959be5#pronamic-pay-icons") format("svg");
+	src:url("pronamic-pay-icons.eot?90e24a9302e93ce8bcdcfcae23956ece");
+	src:url("pronamic-pay-icons.eot?90e24a9302e93ce8bcdcfcae23956ece#iefix") format("embedded-opentype"),
+		url("pronamic-pay-icons.woff2?90e24a9302e93ce8bcdcfcae23956ece") format("woff2"),
+		url("pronamic-pay-icons.woff?90e24a9302e93ce8bcdcfcae23956ece") format("woff"),
+		url("pronamic-pay-icons.ttf?90e24a9302e93ce8bcdcfcae23956ece") format("truetype"),
+		url("pronamic-pay-icons.svg?90e24a9302e93ce8bcdcfcae23956ece#pronamic-pay-icons") format("svg");
 	font-weight:normal;
 	font-style:normal;
 }
@@ -49,41 +49,46 @@
 }
 
 
-.pronamic-pay-icon-recurring:before {
+.pronamic-pay-icon-question-mark:before {
 	content:"\f104";
 }
 
 
-.pronamic-pay-icon-status-cancelled:before {
+.pronamic-pay-icon-recurring:before {
 	content:"\f105";
 }
 
 
-.pronamic-pay-icon-status-completed:before {
+.pronamic-pay-icon-status-cancelled:before {
 	content:"\f106";
 }
 
 
-.pronamic-pay-icon-status-failed:before {
+.pronamic-pay-icon-status-completed:before {
 	content:"\f107";
 }
 
 
-.pronamic-pay-icon-status-on-hold:before {
+.pronamic-pay-icon-status-failed:before {
 	content:"\f108";
 }
 
 
-.pronamic-pay-icon-status-pending:before {
+.pronamic-pay-icon-status-on-hold:before {
 	content:"\f109";
 }
 
 
-.pronamic-pay-icon-status-processing:before {
+.pronamic-pay-icon-status-pending:before {
 	content:"\f10a";
 }
 
 
-.pronamic-pay-icon-status-refunded:before {
+.pronamic-pay-icon-status-processing:before {
 	content:"\f10b";
+}
+
+
+.pronamic-pay-icon-status-refunded:before {
+	content:"\f10c";
 }

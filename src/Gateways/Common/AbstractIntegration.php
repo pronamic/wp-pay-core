@@ -20,7 +20,7 @@ use Pronamic\WordPress\Pay\Core\GatewayConfig;
  * Company: Pronamic
  *
  * @author  Remco Tolsma
- * @version 2.0.1
+ * @version 2.2.6
  * @since   1.0.0
  * @link    https://github.com/thephpleague/omnipay-common/blob/master/src/Omnipay/Common/AbstractGateway.php
  */
@@ -52,6 +52,13 @@ abstract class AbstractIntegration {
 	 * @var string
 	 */
 	public $product_url;
+
+	/**
+	 * Manual URL.
+	 *
+	 * @var string|null
+	 */
+	private $manual_url;
 
 	/**
 	 * Dashboard URL.
@@ -87,6 +94,7 @@ abstract class AbstractIntegration {
 	 * Set ID.
 	 *
 	 * @param string $id ID.
+	 * @return void
 	 */
 	public function set_id( $id ) {
 		$this->id = $id;
@@ -105,6 +113,7 @@ abstract class AbstractIntegration {
 	 * Set name.
 	 *
 	 * @param string $name Name.
+	 * @return void
 	 */
 	public function set_name( $name ) {
 		$this->name = $name;
@@ -160,10 +169,10 @@ abstract class AbstractIntegration {
 	/**
 	 * Get product URL.
 	 *
-	 * @return string|false
+	 * @return string|null
 	 */
 	public function get_product_url() {
-		$url = false;
+		$url = null;
 
 		if ( isset( $this->product_url ) ) {
 			$url = $this->product_url;
@@ -172,6 +181,25 @@ abstract class AbstractIntegration {
 		}
 
 		return $url;
+	}
+
+	/**
+	 * Get manual URL.
+	 *
+	 * @return string|null
+	 */
+	public function get_manual_url() {
+		return $this->manual_url;
+	}
+
+	/**
+	 * Set manual URL.
+	 *
+	 * @param string|null $manual_url Manual URL.
+	 * @return void
+	 */
+	public function set_manual_url( $manual_url ) {
+		$this->manual_url = $manual_url;
 	}
 
 	/**
@@ -248,6 +276,7 @@ abstract class AbstractIntegration {
 	 * Save post.
 	 *
 	 * @param int $post_id Post ID.
+	 * @return void
 	 */
 	public function save_post( $post_id ) {
 

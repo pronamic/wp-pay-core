@@ -19,6 +19,13 @@ if ( filter_has_var( INPUT_GET, 'message' ) ) {
 			);
 
 			break;
+		case 'pages-not-generated':
+			printf(
+				'<div id="message" class="error"><p>%s</p></div>',
+				esc_html__( 'The default payment status pages could not be created.', 'pronamic_ideal' )
+			);
+
+			break;
 	}
 }
 

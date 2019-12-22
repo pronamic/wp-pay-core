@@ -21,7 +21,7 @@ use DOMText;
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 2.0.0
+ * @version 2.2.6
  * @since 1.2.1
  */
 class Util {
@@ -32,6 +32,8 @@ class Util {
 	 * @param DOMNode     $parent   DOM node to add a new element to.
 	 * @param string      $name     Name of the new DOM element to add.
 	 * @param string      $value    Value of the new DOM element to add.
+	 *
+	 * @return \DOMElement
 	 */
 	public static function add_element( DOMDocument $document, DOMNode $parent, $name, $value = null ) {
 		$element = $document->createElement( $name );
@@ -51,6 +53,7 @@ class Util {
 	 * @param DOMDocument $document DOM document to add the specified node to.
 	 * @param DOMNode     $parent   DOM node to add a new element to.
 	 * @param array       $elements The elements (name => value pairs) to add.
+	 * @return void
 	 */
 	public static function add_elements( DOMDocument $document, DOMNode $parent, array $elements = array() ) {
 		foreach ( $elements as $name => $value ) {

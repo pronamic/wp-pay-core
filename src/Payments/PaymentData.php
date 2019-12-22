@@ -17,7 +17,7 @@ use WP_User;
  * WordPress payment data
  *
  * @author Remco Tolsma
- * @version 1.0
+ * @version 2.2.6
  */
 abstract class PaymentData extends AbstractPaymentData {
 	/**
@@ -82,6 +82,8 @@ abstract class PaymentData extends AbstractPaymentData {
 		if ( is_user_logged_in() ) {
 			return $this->user->user_firstname;
 		}
+
+		return null;
 	}
 
 	/**
@@ -93,6 +95,8 @@ abstract class PaymentData extends AbstractPaymentData {
 		if ( is_user_logged_in() ) {
 			return $this->user->user_lastname;
 		}
+
+		return null;
 	}
 
 	/**

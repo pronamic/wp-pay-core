@@ -10,18 +10,17 @@
 
 namespace Pronamic\WordPress\Pay;
 
-use ArrayIterator;
-use IteratorAggregate;
 use Pronamic\WordPress\Pay\Gateways\Common\AbstractIntegration;
 
 /**
  * Title: WordPress gateway integrations class.
  *
- * @author  Reüel van der Steege
- * @version 2.2.2
- * @since   1.0.0
+ * @author     Reüel van der Steege
+ * @version    2.2.6
+ * @since      1.0.0
+ * @implements \IteratorAggregate<string, AbstractIntegration>
  */
-class GatewayIntegrations implements IteratorAggregate {
+class GatewayIntegrations implements \IteratorAggregate {
 	/**
 	 * Integrations.
 	 *
@@ -71,11 +70,9 @@ class GatewayIntegrations implements IteratorAggregate {
 	/**
 	 * Get iterator.
 	 *
-	 * @see IteratorAggregate::getIterator()
-	 *
-	 * @return ArrayIterator
+	 * @return \ArrayIterator<string, AbstractIntegration>
 	 */
 	public function getIterator() {
-		return new ArrayIterator( $this->integrations );
+		return new \ArrayIterator( $this->integrations );
 	}
 }

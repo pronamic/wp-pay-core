@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
+use Pronamic\WordPress\Pay\Plugin;
 use WP_Query;
 
 /**
@@ -17,7 +18,7 @@ use WP_Query;
  *
  * @link https://www.skyverge.com/blog/add-custom-bulk-action/
  * @author Remco Tolsma
- * @version 4.1.0
+ * @version 2.2.6
  * @since 4.1.0
  */
 class AdminPaymentBulkActions {
@@ -30,6 +31,8 @@ class AdminPaymentBulkActions {
 
 	/**
 	 * Load.
+	 *
+	 * @return void
 	 */
 	public function load() {
 		// Current user.
@@ -117,7 +120,7 @@ class AdminPaymentBulkActions {
 			}
 
 			if ( ! isset( $gateways[ $config_id ] ) ) {
-				$gateways[ $config_id ] = \Pronamic\WordPress\Pay\Plugin::get_gateway( $config_id );
+				$gateways[ $config_id ] = Plugin::get_gateway( $config_id );
 
 				if ( $gateways[ $config_id ] && ! $gateways[ $config_id ]->supports( 'payment_status_request' ) ) {
 					$unsupported_gateways[] = $config_id;
@@ -128,7 +131,7 @@ class AdminPaymentBulkActions {
 				continue;
 			}
 
-			\Pronamic\WordPress\Pay\Plugin::update_payment( $payment, false );
+			Plugin::update_payment( $payment, false );
 
 			$status_updated++;
 		}
@@ -147,6 +150,8 @@ class AdminPaymentBulkActions {
 
 	/**
 	 * Admin notices.
+	 *
+	 * @return void
 	 */
 	public function admin_notices() {
 		if ( filter_has_var( INPUT_GET, 'status_updated' ) ) {

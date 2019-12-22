@@ -13,7 +13,7 @@ namespace Pronamic\WordPress\Pay\Forms;
 use Exception;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Money\TaxedMoney;
-use Pronamic\WordPress\Pay\Address;
+use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentLines;
@@ -25,7 +25,7 @@ use WP_User;
  * Form Processor
  *
  * @author Remco Tolsma
- * @version 3.7.0
+ * @version 2.2.6
  * @since 3.7.0
  */
 class FormProcessor {
@@ -37,7 +37,7 @@ class FormProcessor {
 	private $plugin;
 
 	/**
-	 * Constructs and initalize an form processor object.
+	 * Constructs and initialize an form processor object.
 	 *
 	 * @param Plugin $plugin Plugin.
 	 */
@@ -51,6 +51,7 @@ class FormProcessor {
 	/**
 	 * Initialize.
 	 *
+	 * @return void
 	 * @throws Exception When processing form fails on creating WordPress user.
 	 */
 	public function init() {
@@ -126,6 +127,11 @@ class FormProcessor {
 		$payment->source      = $source;
 		$payment->source_id   = $source_id;
 
+		// Set default payment method if required.
+		if ( $gateway->payment_method_is_required() ) {
+			$payment->method = PaymentMethods::IDEAL;
+		}
+
 		// Customer.
 		$customer = array(
 			'name'  => (object) array(
@@ -177,12 +183,10 @@ class FormProcessor {
 		$line->set_total_amount( $payment->get_total_amount() );
 
 		// Start payment.
-		$payment = Plugin::start_payment( $payment, $gateway );
-
-		$error = $gateway->get_error();
-
-		if ( $error instanceof WP_Error ) {
-			Plugin::render_errors( $error );
+		try {
+			$payment = Plugin::start_payment( $payment, $gateway );
+		} catch ( \Exception $e ) {
+			Plugin::render_exception( $e );
 
 			exit;
 		}

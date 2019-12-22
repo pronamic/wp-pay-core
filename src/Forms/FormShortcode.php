@@ -14,7 +14,7 @@ namespace Pronamic\WordPress\Pay\Forms;
  * Form Shortcode
  *
  * @author  Remco Tolsma
- * @version 2.0.5
+ * @version 2.2.6
  * @since   3.7.0
  */
 class FormShortcode {
@@ -43,8 +43,12 @@ class FormShortcode {
 	 *
 	 * @link https://github.com/WordImpress/Give/blob/1.1/includes/shortcodes.php#L39-L65
 	 * @link https://github.com/WordImpress/Give/blob/1.1/includes/forms/template.php#L18-L140
+	 *
 	 * @param array $atts Shortcode attributes array.
+	 *
 	 * @return string
+	 *
+	 * @throws \Exception Throws exception if output buffering is not active.
 	 */
 	public function shortcode_form( $atts ) {
 		$atts = shortcode_atts(
@@ -60,6 +64,8 @@ class FormShortcode {
 
 	/**
 	 * Shortcode user interface register.
+	 *
+	 * @return void
 	 */
 	public function shortcode_ui_register() {
 		if ( ! function_exists( 'shortcode_ui_register_for_shortcode' ) ) {

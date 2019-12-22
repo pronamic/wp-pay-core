@@ -20,7 +20,7 @@ use WP_Query;
  * Company: Pronamic
  *
  * @author  Remco Tolsma
- * @version 2.1.0
+ * @version 2.2.6
  * @since   1.0.1
  */
 class PaymentMethods {
@@ -210,14 +210,6 @@ class PaymentMethods {
 	 * @since 1.3.10
 	 */
 	const MAESTRO = 'maestro';
-
-	/**
-	 * MiniTix
-	 *
-	 * @var string
-	 * @deprecated deprecated since version 1.3.1
-	 */
-	const MINITIX = 'minitix';
 
 	/**
 	 * Bancontact/Mister Cash
@@ -424,6 +416,7 @@ class PaymentMethods {
 	 * Update active payment methods option.
 	 *
 	 * @since 2.0.0
+	 * @return void
 	 */
 	public static function update_active_payment_methods() {
 		$active_payment_methods = array();
@@ -447,7 +440,16 @@ class PaymentMethods {
 				continue;
 			}
 
-			$payment_methods = $gateway->get_transient_available_payment_methods();
+			try {
+				$payment_methods = $gateway->get_transient_available_payment_methods();
+			} catch ( \Exception $e ) {
+				// Do not update active payment methods on error.
+				return;
+			}
+
+			if ( null === $payment_methods ) {
+				$payment_methods = $gateway->get_supported_payment_methods();
+			}
 
 			foreach ( $payment_methods as $payment_method ) {
 				if ( ! isset( $active_payment_methods[ $payment_method ] ) ) {

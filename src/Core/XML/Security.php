@@ -19,7 +19,7 @@ use SimpleXMLElement;
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 2.0.0
+ * @version 2.2.6
  * @since 1.0.0
  */
 class Security {
@@ -28,6 +28,8 @@ class Security {
 	 *
 	 * @param string|SimpleXMLElement $variable Variable to filter.
 	 * @param int                     $filter   PHP filter flag constant.
+	 *
+	 * @return mixed|null
 	 */
 	public static function filter( $variable, $filter = FILTER_SANITIZE_STRING ) {
 		if ( ! $variable ) {

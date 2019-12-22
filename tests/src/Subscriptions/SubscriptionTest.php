@@ -19,7 +19,7 @@ use WP_UnitTestCase;
  * Subscription test
  *
  * @author Remco Tolsma
- * @version 1.0
+ * @version 2.2.6
  */
 class SubscriptionTest extends WP_UnitTestCase {
 	/**
@@ -71,6 +71,8 @@ class SubscriptionTest extends WP_UnitTestCase {
 	 * @param string $value        Expected value.
 	 */
 	public function test_set( $set_function, $property, $value ) {
+		$this->setExpectedDeprecated( $set_function );
+
 		$subscription = new Subscription();
 
 		$subscription->$set_function( $value );

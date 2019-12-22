@@ -12,7 +12,6 @@ namespace Pronamic\WordPress\Pay\Admin;
 
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
-use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\WebhookManager;
 use WP_Post;
@@ -21,7 +20,7 @@ use WP_Post;
  * WordPress admin gateway post type
  *
  * @author  Remco Tolsma
- * @version 2.1.6
+ * @version 2.2.6
  * @since   ?
  */
 class AdminGatewayPostType {
@@ -95,6 +94,7 @@ class AdminGatewayPostType {
 	 *
 	 * @param string $column  Column.
 	 * @param int    $post_id Post ID.
+	 * @return void
 	 */
 	public function custom_columns( $column, $post_id ) {
 		$id = get_post_meta( $post_id, '_pronamic_gateway_id', true );
@@ -212,44 +212,51 @@ class AdminGatewayPostType {
 	 * @link https://github.com/WordPress/WordPress/blob/3.5.2/wp-admin/edit-form-advanced.php#L299
 	 *
 	 * @param WP_Post $post Post (only available @since 3.5.2).
+	 * @return void
 	 */
 	public function post_edit_form_tag( $post ) {
-		if ( self::POST_TYPE === get_post_type( $post ) ) {
-			echo ' enctype="multipart/form-data"';
+		if ( self::POST_TYPE !== get_post_type( $post ) ) {
+			return;
 		}
+
+		echo ' enctype="multipart/form-data"';
 	}
 
 	/**
 	 * Add meta boxes.
 	 *
 	 * @param string $post_type Post Type.
+	 * @return void
 	 */
 	public function add_meta_boxes( $post_type ) {
-		if ( self::POST_TYPE === $post_type ) {
-			add_meta_box(
-				'pronamic_gateway_config',
-				__( 'Configuration', 'pronamic_ideal' ),
-				array( $this, 'meta_box_config' ),
-				$post_type,
-				'normal',
-				'high'
-			);
-
-			add_meta_box(
-				'pronamic_gateway_test',
-				__( 'Test', 'pronamic_ideal' ),
-				array( $this, 'meta_box_test' ),
-				$post_type,
-				'normal',
-				'high'
-			);
+		if ( self::POST_TYPE !== $post_type ) {
+			return;
 		}
+
+		add_meta_box(
+			'pronamic_gateway_config',
+			__( 'Configuration', 'pronamic_ideal' ),
+			array( $this, 'meta_box_config' ),
+			$post_type,
+			'normal',
+			'high'
+		);
+
+		add_meta_box(
+			'pronamic_gateway_test',
+			__( 'Test', 'pronamic_ideal' ),
+			array( $this, 'meta_box_test' ),
+			$post_type,
+			'normal',
+			'high'
+		);
 	}
 
 	/**
 	 * Pronamic Pay gateway config meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 * @return void
 	 */
 	public function meta_box_config( $post ) {
 		wp_nonce_field( 'pronamic_pay_save_gateway', 'pronamic_pay_nonce' );
@@ -271,18 +278,34 @@ class AdminGatewayPostType {
 	/**
 	 * Pronamic Pay gateway payment methods setting.
 	 *
-	 * @param null|Gateway $gateway Gateway.
+	 * @param null|Gateway $gateway    Gateway.
+	 * @param null|string  $gateway_id Gateway ID.
 	 *
 	 * @return void
 	 */
-	public static function settings_payment_methods( $gateway ) {
+	public static function settings_payment_methods( $gateway, $gateway_id ) {
 		if ( null === $gateway ) {
 			return;
 		}
 
 		// Supported and available payment methods.
 		$supported = $gateway->get_supported_payment_methods();
-		$available = $gateway->get_transient_available_payment_methods();
+
+		try {
+			$available = $gateway->get_transient_available_payment_methods();
+		} catch ( \Exception $e ) {
+			$available = array();
+		}
+
+		// Handle methods request support.
+		$supports_methods_request = false;
+
+		if ( null === $available ) {
+			$available = array();
+		} else {
+			// Set method request support variable for use in HTML.
+			$supports_methods_request = true;
+		}
 
 		$payment_methods = array();
 
@@ -327,6 +350,7 @@ class AdminGatewayPostType {
 	 * Pronamic Pay gateway test meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 * @return void
 	 */
 	public function meta_box_test( $post ) {
 		include __DIR__ . '/../../views/meta-box-gateway-test.php';
@@ -373,7 +397,7 @@ class AdminGatewayPostType {
 		// Transient.
 		\delete_transient( 'pronamic_outdated_webhook_urls' );
 
-		// Gatway fields.
+		// Gateway fields.
 		if ( empty( $gateway_id ) ) {
 			return;
 		}

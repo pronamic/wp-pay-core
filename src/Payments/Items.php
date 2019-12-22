@@ -10,8 +10,6 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
-use ArrayIterator;
-use IteratorAggregate;
 use Pronamic\WordPress\Money\Money;
 
 /**
@@ -19,9 +17,10 @@ use Pronamic\WordPress\Money\Money;
  *
  * @deprecated Use `PaymentLines`.
  * @author     Remco Tolsma
- * @version    2.0.6
+ * @version    2.2.6
+ * @implements \IteratorAggregate<int, Item>
  */
-class Items implements IteratorAggregate {
+class Items implements \IteratorAggregate {
 	/**
 	 * The items.
 	 *
@@ -39,17 +38,17 @@ class Items implements IteratorAggregate {
 	/**
 	 * Get iterator.
 	 *
-	 * @see IteratorAggregate::getIterator()
+	 * @return \ArrayIterator<int, Item>
 	 */
 	public function getIterator() {
-		return new ArrayIterator( $this->items );
+		return new \ArrayIterator( $this->items );
 	}
 
 	/**
 	 * Add item.
 	 *
 	 * @param Item $item The item to add.
-	 *
+	 * @return void
 	 * @deprecated 2.0.8
 	 */
 	public function addItem( Item $item ) {
@@ -62,6 +61,7 @@ class Items implements IteratorAggregate {
 	 * Add item.
 	 *
 	 * @param Item $item The item to add.
+	 * @return void
 	 */
 	public function add_item( Item $item ) {
 		$this->items[] = $item;

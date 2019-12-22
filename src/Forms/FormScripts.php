@@ -16,7 +16,7 @@ use Pronamic\WordPress\Pay\Plugin;
  * Form Scripts
  *
  * @author Remco Tolsma
- * @version 3.7.0
+ * @version 2.2.6
  * @since 3.7.0
  */
 class FormScripts {
@@ -28,7 +28,7 @@ class FormScripts {
 	private $plugin;
 
 	/**
-	 * Constructs and initalize an form scripts object.
+	 * Constructs and initialize an form scripts object.
 	 *
 	 * @param Plugin $plugin Plugin.
 	 */
@@ -53,6 +53,8 @@ class FormScripts {
 
 	/**
 	 * Register.
+	 *
+	 * @return void
 	 */
 	public function register() {
 		$min = SCRIPT_DEBUG ? '' : '.min';
@@ -70,6 +72,7 @@ class FormScripts {
 	 *
 	 * @link https://mikejolley.com/2013/12/02/sensible-script-enqueuing-shortcodes/
 	 * @link http://wordpress.stackexchange.com/questions/165754/enqueue-scripts-styles-when-shortcode-is-present
+	 * @return void
 	 */
 	public function enqueue() {
 		if (

@@ -10,7 +10,6 @@
 
 namespace Pronamic\WordPress\Pay\Forms;
 
-use Exception;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
 
@@ -18,7 +17,7 @@ use Pronamic\WordPress\Pay\Plugin;
  * Forms Module
  *
  * @author Remco Tolsma
- * @version 3.7.0
+ * @version 2.2.6
  * @since 3.7.0
  */
 class FormsModule {
@@ -89,8 +88,12 @@ class FormsModule {
 	 * Maybe add form to content.
 	 *
 	 * @link https://developer.wordpress.org/reference/hooks/the_content/
+	 *
 	 * @param string $content Post content to maybe extend with a payment form.
+	 *
 	 * @return string
+	 *
+	 * @throws \Exception Throws exception if output buffering is not active.
 	 */
 	public function maybe_add_form_to_content( $content ) {
 		if ( is_singular( 'pronamic_pay_form' ) && 'pronamic_pay_form' === get_post_type() ) {
@@ -106,18 +109,26 @@ class FormsModule {
 	 * @param int $id Form ID or form settings.
 	 *
 	 * @return string
+	 *
+	 * @throws \Exception Throws exception if output buffering is not active.
 	 */
 	public function get_form_output_by_id( $id ) {
 		$args = array(
 			'amount_method' => get_post_meta( $id, '_pronamic_payment_form_amount_method', true ),
 			'amounts'       => get_post_meta( $id, '_pronamic_payment_form_amount_choices', true ),
-			'button_text'   => get_post_meta( $id, '_pronamic_payment_form_button_text', true ),
 			'config_id'     => get_post_meta( $id, '_pronamic_payment_form_config_id', true ),
 			'html_id'       => sprintf( 'pronamic-pay-form-%s', $id ),
 			'source'        => FormsSource::PAYMENT_FORM,
 			'source_id'     => $id,
 			'title'         => ( is_singular( 'pronamic_pay_form' ) ? null : get_the_title( $id ) ),
 		);
+
+		// Button text.
+		$button_text = get_post_meta( $id, '_pronamic_payment_form_button_text', true );
+
+		if ( '' !== $button_text ) {
+			$args['button_text'] = $button_text;
+		}
 
 		return $this->get_form_output( $args );
 	}
@@ -129,7 +140,7 @@ class FormsModule {
 	 *
 	 * @return string
 	 *
-	 * @throws Exception When output buffering is not working as expected.
+	 * @throws \Exception When output buffering is not working as expected.
 	 */
 	public function get_form_output( $args ) {
 		if ( ! is_array( $args ) ) {
@@ -168,7 +179,7 @@ class FormsModule {
 		$output = ob_get_clean();
 
 		if ( false === $output ) {
-			throw new Exception( 'Output buffering is not active.' );
+			throw new \Exception( 'Output buffering is not active.' );
 		}
 
 		return $output;

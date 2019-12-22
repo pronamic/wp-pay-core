@@ -228,10 +228,10 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 		</tr>
 		<tr>
 			<th scope="row">
-				<?php esc_html_e( 'Time', 'pronamic_ideal' ); ?>
+				<?php esc_html_e( 'Time (UTC)', 'pronamic_ideal' ); ?>
 			</th>
 			<td>
-				<?php echo esc_html( date( __( 'Y/m/d g:i:s A', 'pronamic_ideal' ) ) ); ?>
+				<?php echo esc_html( gmdate( __( 'Y/m/d g:i:s A', 'pronamic_ideal' ) ) ); ?>
 			</td>
 			<td>
 				✓

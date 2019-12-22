@@ -10,7 +10,6 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
-use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Plugin;
@@ -21,7 +20,7 @@ use WP_Query;
  * WordPress admin payment post type
  *
  * @author  Remco Tolsma
- * @version 2.1.6
+ * @version 2.2.6
  * @since   1.0.0
  */
 class AdminPaymentPostType {
@@ -115,6 +114,8 @@ class AdminPaymentPostType {
 
 	/**
 	 * Maybe process payment action.
+	 *
+	 * @return void
 	 */
 	public function maybe_process_payment_action() {
 		// Current user.
@@ -220,6 +221,7 @@ class AdminPaymentPostType {
 	 * Maybe display anonymized notice.
 	 *
 	 * @link https://developer.wordpress.org/reference/functions/get_current_screen/
+	 * @return void
 	 */
 	public function maybe_display_anonymized_notice() {
 		// Current user.
@@ -250,6 +252,8 @@ class AdminPaymentPostType {
 
 	/**
 	 * Admin notices.
+	 *
+	 * @return void
 	 */
 	public function admin_notices() {
 		foreach ( $this->admin_notices as $notice ) {
@@ -265,6 +269,7 @@ class AdminPaymentPostType {
 	 * Pre get posts.
 	 *
 	 * @param WP_Query $query WordPress query.
+	 * @return void
 	 */
 	public function pre_get_posts( $query ) {
 		/**
@@ -387,6 +392,7 @@ class AdminPaymentPostType {
 	 *
 	 * @param string $column  Column.
 	 * @param int    $post_id Post ID.
+	 * @return void
 	 */
 	public function custom_columns( $column, $post_id ) {
 		$payment = get_pronamic_payment( $post_id );
@@ -453,7 +459,6 @@ class AdminPaymentPostType {
 
 				break;
 			case 'pronamic_payment_title':
-				$source             = $payment->get_source();
 				$source_id          = $payment->get_source_id();
 				$source_description = $payment->get_source_description();
 
@@ -557,6 +562,7 @@ class AdminPaymentPostType {
 	 * Add meta boxes.
 	 *
 	 * @param string $post_type Post Type.
+	 * @return void
 	 */
 	public function add_meta_boxes( $post_type ) {
 		if ( self::POST_TYPE !== $post_type ) {
@@ -616,6 +622,7 @@ class AdminPaymentPostType {
 	 * Pronamic Pay gateway config meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 * @return void
 	 */
 	public function meta_box_info( $post ) {
 		include __DIR__ . '/../../views/meta-box-payment-info.php';
@@ -625,6 +632,7 @@ class AdminPaymentPostType {
 	 * Pronamic Pay payment lines meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 * @return void
 	 */
 	public function meta_box_lines( $post ) {
 		$payment = get_pronamic_payment( $post->ID );
@@ -642,6 +650,7 @@ class AdminPaymentPostType {
 	 * Pronamic Pay gateway config meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 * @return void
 	 */
 	public function meta_box_notes( $post ) {
 		$notes = get_comments(
@@ -659,6 +668,7 @@ class AdminPaymentPostType {
 	 * Pronamic Pay payment subscription meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 * @return void
 	 */
 	public function meta_box_subscription( $post ) {
 		include __DIR__ . '/../../views/meta-box-payment-subscription.php';
@@ -668,6 +678,7 @@ class AdminPaymentPostType {
 	 * Pronamic Pay gateway update meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 * @return void
 	 */
 	public function meta_box_update( $post ) {
 		wp_nonce_field( 'pronamic_payment_update', 'pronamic_payment_update_nonce' );

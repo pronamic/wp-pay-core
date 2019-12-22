@@ -16,7 +16,7 @@ use Pronamic\WordPress\Pay\Payments\PaymentPostType;
  * Title: WordPress iDEAL post types
  *
  * @author  Remco Tolsma
- * @version 2.1.0
+ * @version 2.2.6
  * @since   1.0.0
  */
 class SubscriptionPostType {
@@ -25,7 +25,7 @@ class SubscriptionPostType {
 	 */
 	public function __construct() {
 		/**
-		 * Priotiry of the initial post types function should be set to < 10.
+		 * Priority of the initial post types function should be set to < 10.
 		 *
 		 * @link https://core.trac.wordpress.org/ticket/28488
 		 * @link https://core.trac.wordpress.org/changeset/29318
@@ -40,6 +40,7 @@ class SubscriptionPostType {
 	 * Register post types.
 	 *
 	 * @link https://github.com/WordPress/WordPress/blob/4.6.1/wp-includes/post.php#L1277-L1300
+	 * @return void
 	 */
 	public function register_subscription_post_type() {
 		register_post_type(

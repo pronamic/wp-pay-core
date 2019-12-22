@@ -30,7 +30,7 @@ use stdClass;
  * @link   https://epayments-api.developer-ingenico.com/s2sapi/v1/en_US/java/payments/create.html#payments-create-payload
  *
  * @author  Remco Tolsma
- * @version 2.1.6
+ * @version 2.2.6
  * @since   2.1.0
  */
 class Address {
@@ -140,6 +140,7 @@ class Address {
 	 * Set contact name.
 	 *
 	 * @param ContactName|null $name Contact name.
+	 * @return void
 	 */
 	public function set_name( ContactName $name = null ) {
 		$this->name = $name;
@@ -158,6 +159,7 @@ class Address {
 	 * Set email.
 	 *
 	 * @param string|null $email Email.
+	 * @return void
 	 */
 	public function set_email( $email ) {
 		$this->email = $email;
@@ -176,6 +178,7 @@ class Address {
 	 * Set company name.
 	 *
 	 * @param string|null $company_name Company name.
+	 * @return void
 	 */
 	public function set_company_name( $company_name ) {
 		$this->company_name = $company_name;
@@ -194,6 +197,7 @@ class Address {
 	 * Set Kamer van Koophandel number.
 	 *
 	 * @param string|null $coc_number Kamer van Koophandel number.
+	 * @return void
 	 */
 	public function set_coc_number( $coc_number ) {
 		$this->coc_number = $coc_number;
@@ -212,6 +216,7 @@ class Address {
 	 * Set address line 1.
 	 *
 	 * @param string|null $line_1 Address 1.
+	 * @return void
 	 */
 	public function set_line_1( $line_1 ) {
 		$this->line_1 = $line_1;
@@ -230,6 +235,7 @@ class Address {
 	 * Set address line 2.
 	 *
 	 * @param string|null $line_2 Address 2.
+	 * @return void
 	 */
 	public function set_line_2( $line_2 ) {
 		$this->line_2 = $line_2;
@@ -248,6 +254,7 @@ class Address {
 	 * Set street name.
 	 *
 	 * @param string|null $street_name Street name.
+	 * @return void
 	 */
 	public function set_street_name( $street_name ) {
 		$this->street_name = $street_name;
@@ -266,6 +273,7 @@ class Address {
 	 * Set house number.
 	 *
 	 * @param string|HouseNumber|null $house_number House number.
+	 * @return void
 	 */
 	public function set_house_number( $house_number ) {
 		if ( is_string( $house_number ) ) {
@@ -292,6 +300,7 @@ class Address {
 	 * Set house number base.
 	 *
 	 * @param string|null $house_number_base House number base.
+	 * @return void
 	 */
 	public function set_house_number_base( $house_number_base ) {
 		if ( null === $this->house_number ) {
@@ -318,6 +327,7 @@ class Address {
 	 * Set house number addition.
 	 *
 	 * @param string|null $house_number_addition House number addition.
+	 * @return void
 	 */
 	public function set_house_number_addition( $house_number_addition ) {
 		if ( null === $this->house_number ) {
@@ -340,6 +350,7 @@ class Address {
 	 * Set postal code.
 	 *
 	 * @param string|null $postal_code Postal Code.
+	 * @return void
 	 */
 	public function set_postal_code( $postal_code ) {
 		$this->postal_code = $postal_code;
@@ -358,6 +369,7 @@ class Address {
 	 * Set city.
 	 *
 	 * @param string|null $city City.
+	 * @return void
 	 */
 	public function set_city( $city ) {
 		$this->city = $city;
@@ -376,6 +388,7 @@ class Address {
 	 * Set region.
 	 *
 	 * @param string|Region|null $region Region.
+	 * @return void
 	 */
 	public function set_region( $region ) {
 		if ( is_string( $region ) ) {
@@ -398,6 +411,7 @@ class Address {
 	 * Set country.
 	 *
 	 * @param Country|null $country Country.
+	 * @return void
 	 */
 	public function set_country( $country ) {
 		$this->country = $country;
@@ -422,6 +436,7 @@ class Address {
 	 * @throws InvalidArgumentException Thrown when country code length is not equal to 2.
 	 *
 	 * @param null|string $country_code Country code.
+	 * @return void
 	 */
 	public function set_country_code( $country_code ) {
 		if ( null === $this->country ) {
@@ -448,6 +463,7 @@ class Address {
 	 * Set country name.
 	 *
 	 * @param string|null $country_name Country name.
+	 * @return void
 	 */
 	public function set_country_name( $country_name ) {
 		if ( null === $this->country ) {
@@ -470,6 +486,7 @@ class Address {
 	 * Set phone.
 	 *
 	 * @param string|null $phone Phone.
+	 * @return void
 	 */
 	public function set_phone( $phone ) {
 		$this->phone = $phone;

@@ -10,17 +10,15 @@
 
 namespace Pronamic\WordPress\Pay\Webhooks;
 
-use Exception;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Admin\AdminModule;
-use Pronamic\WordPress\Pay\Admin\AdminNotices;
 use WP_Query;
 
 /**
  * Webhook manager class
  *
  * @author  Reüel van der Steege
- * @version 2.1.6
+ * @version 2.2.6
  * @since   2.1.6
  */
 class WebhookManager {
@@ -54,6 +52,8 @@ class WebhookManager {
 
 	/**
 	 * Admin notices.
+	 *
+	 * @return void
 	 */
 	public function admin_notices() {
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -89,7 +89,7 @@ class WebhookManager {
 					$log = json_decode( $log );
 
 					$request_info = WebhookRequestInfo::from_json( $log );
-				} catch ( Exception $e ) {
+				} catch ( \Exception $e ) {
 					continue;
 				}
 
@@ -130,7 +130,7 @@ class WebhookManager {
 		}
 
 		if ( ! empty( $outdated_urls ) ) {
-			$this->admin->notices->add_notice( 'webhook-url' );
+			include __DIR__ . '/../../views/notice-webhook-url.php';
 		}
 	}
 

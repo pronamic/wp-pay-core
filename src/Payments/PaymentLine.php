@@ -20,7 +20,7 @@ use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
  * Payment line.
  *
  * @author  Remco Tolsma
- * @version 2.1.0
+ * @version 2.2.6
  * @since   2.1.0
  */
 class PaymentLine {
@@ -130,6 +130,7 @@ class PaymentLine {
 	 * Set the id / identifier of this payment line.
 	 *
 	 * @param string|null $id Number.
+	 * @return void
 	 */
 	public function set_id( $id ) {
 		$this->id = $id;
@@ -148,6 +149,7 @@ class PaymentLine {
 	 * Set type.
 	 *
 	 * @param string $type Type.
+	 * @return void
 	 */
 	public function set_type( $type ) {
 		$this->type = $type;
@@ -166,6 +168,7 @@ class PaymentLine {
 	 * Set the SKU of this payment line.
 	 *
 	 * @param string|null $sku SKU.
+	 * @return void
 	 */
 	public function set_sku( $sku ) {
 		$this->sku = $sku;
@@ -184,6 +187,7 @@ class PaymentLine {
 	 * Set the name of this payment line.
 	 *
 	 * @param string|null $name Name.
+	 * @return void
 	 */
 	public function set_name( $name ) {
 		$this->name = $name;
@@ -202,6 +206,7 @@ class PaymentLine {
 	 * Set the description of this payment line.
 	 *
 	 * @param string|null $description Description.
+	 * @return void
 	 */
 	public function set_description( $description ) {
 		$this->description = $description;
@@ -220,6 +225,7 @@ class PaymentLine {
 	 * Set the quantity of this payment line.
 	 *
 	 * @param int|null $quantity Quantity.
+	 * @return void
 	 */
 	public function set_quantity( $quantity ) {
 		$this->quantity = $quantity;
@@ -238,6 +244,7 @@ class PaymentLine {
 	 * Set unit price.
 	 *
 	 * @param TaxedMoney|null $price Unit price.
+	 * @return void
 	 */
 	public function set_unit_price( TaxedMoney $price = null ) {
 		$this->unit_price = ( null === $price ? null : $price );
@@ -256,6 +263,7 @@ class PaymentLine {
 	 * Set discount amount, should not contain any tax.
 	 *
 	 * @param Money $discount_amount Discount amount.
+	 * @return void
 	 */
 	public function set_discount_amount( Money $discount_amount = null ) {
 		$this->discount_amount = $discount_amount;
@@ -292,6 +300,7 @@ class PaymentLine {
 	 * Set total amount.
 	 *
 	 * @param TaxedMoney $total_amount Total amount.
+	 * @return void
 	 */
 	public function set_total_amount( TaxedMoney $total_amount ) {
 		$this->total_amount = $total_amount;
@@ -310,6 +319,7 @@ class PaymentLine {
 	 * Set product URL.
 	 *
 	 * @param string|null $product_url Product URL.
+	 * @return void
 	 */
 	public function set_product_url( $product_url = null ) {
 		$this->product_url = $product_url;
@@ -328,6 +338,7 @@ class PaymentLine {
 	 * Set image URL.
 	 *
 	 * @param null|string $image_url Image url.
+	 * @return void
 	 */
 	public function set_image_url( $image_url ) {
 		$this->image_url = $image_url;
@@ -346,6 +357,7 @@ class PaymentLine {
 	 * Set product category.
 	 *
 	 * @param null|string $product_category Product category.
+	 * @return void
 	 */
 	public function set_product_category( $product_category ) {
 		$this->product_category = $product_category;

@@ -12,6 +12,7 @@ namespace Pronamic\WordPress\Pay\Payments;
 
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
+use Pronamic\WordPress\Pay\Banks\BankAccountDetails;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\ContactName;
 use Pronamic\WordPress\Pay\Customer;
@@ -23,7 +24,7 @@ use Pronamic\WordPress\Pay\Customer;
  * This class will be removed in future versions.
  *
  * @author  Remco Tolsma
- * @version 2.1.0
+ * @version 2.2.6
  * @since   2.1.0
  *
  * @property string|null $language
@@ -66,7 +67,7 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	 * Set the payment amount.
 	 *
 	 * @param Money $amount Money object.
-	 *
+	 * @return void
 	 * @deprecated 2.0.9 Use Payment::set_total_amount() instead.
 	 */
 	public function set_amount( Money $amount ) {
@@ -312,6 +313,116 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	}
 
 	/**
+	 * Set consumer name.
+	 *
+	 * @deprecated 2.2.6 Use Payment::set_consumer_bank_details()->set_name() instead.
+	 *
+	 * @param string|null $name Name.
+	 * @return void
+	 */
+	public function set_consumer_name( $name ) {
+		_deprecated_function( __FUNCTION__, '2.2.6', 'Payment::set_consumer_bank_details()->set_name()' );
+
+		$consumer_bank_details = $this->get_consumer_bank_details();
+
+		if ( null === $consumer_bank_details ) {
+			$consumer_bank_details = new BankAccountDetails();
+
+			$this->set_consumer_bank_details( $consumer_bank_details );
+		}
+
+		$consumer_bank_details->set_name( $name );
+	}
+
+	/**
+	 * Set consumer account number.
+	 *
+	 * @deprecated 2.2.6 Use Payment::set_consumer_bank_details()->set_account_number() instead.
+	 *
+	 * @param string|null $account_number Account number.
+	 * @return void
+	 */
+	public function set_consumer_account_number( $account_number ) {
+		_deprecated_function( __FUNCTION__, '2.2.6', 'Payment::set_consumer_bank_details()->set_account_number()' );
+
+		$consumer_bank_details = $this->get_consumer_bank_details();
+
+		if ( null === $consumer_bank_details ) {
+			$consumer_bank_details = new BankAccountDetails();
+
+			$this->set_consumer_bank_details( $consumer_bank_details );
+		}
+
+		$consumer_bank_details->set_account_number( $account_number );
+	}
+
+	/**
+	 * Set consumer IBAN.
+	 *
+	 * @deprecated 2.2.6 Use Payment::set_consumer_bank_details()->set_iban() instead.
+	 *
+	 * @param string|null $iban IBAN.
+	 * @return void
+	 */
+	public function set_consumer_iban( $iban ) {
+		_deprecated_function( __FUNCTION__, '2.2.6', 'Payment::set_consumer_bank_details()->set_iban()' );
+
+		$consumer_bank_details = $this->get_consumer_bank_details();
+
+		if ( null === $consumer_bank_details ) {
+			$consumer_bank_details = new BankAccountDetails();
+
+			$this->set_consumer_bank_details( $consumer_bank_details );
+		}
+
+		$consumer_bank_details->set_iban( $iban );
+	}
+
+	/**
+	 * Set consumer BIC.
+	 *
+	 * @deprecated 2.2.6 Use Payment::set_consumer_bank_details()->set_bic() instead.
+	 *
+	 * @param string|null $bic BIC.
+	 * @return void
+	 */
+	public function set_consumer_bic( $bic ) {
+		_deprecated_function( __FUNCTION__, '2.2.6', 'Payment::set_consumer_bank_details()->set_bic()' );
+
+		$consumer_bank_details = $this->get_consumer_bank_details();
+
+		if ( null === $consumer_bank_details ) {
+			$consumer_bank_details = new BankAccountDetails();
+
+			$this->set_consumer_bank_details( $consumer_bank_details );
+		}
+
+		$consumer_bank_details->set_bic( $bic );
+	}
+
+	/**
+	 * Set consumer city.
+	 *
+	 * @deprecated 2.2.6 Use Payment::set_consumer_bank_details()->set_city() instead.
+	 *
+	 * @param string|null $city City.
+	 * @return void
+	 */
+	public function set_consumer_city( $city ) {
+		_deprecated_function( __FUNCTION__, '2.2.6', 'Payment::set_consumer_bank_details()->set_city()' );
+
+		$consumer_bank_details = $this->get_consumer_bank_details();
+
+		if ( null === $consumer_bank_details ) {
+			$consumer_bank_details = new BankAccountDetails();
+
+			$this->set_consumer_bank_details( $consumer_bank_details );
+		}
+
+		$consumer_bank_details->set_city( $city );
+	}
+
+	/**
 	 * Get.
 	 *
 	 * @link http://php.net/manual/en/language.oop5.overloading.php#object.get
@@ -319,7 +430,8 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	 * @return mixed
 	 */
 	public function __get( $name ) {
-		$customer = $this->get_customer();
+		$customer              = $this->get_customer();
+		$consumer_bank_details = $this->get_consumer_bank_details();
 
 		switch ( $name ) {
 			case 'language':
@@ -350,6 +462,18 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 				return $this->get_country();
 			case 'telephone_number':
 				return $this->get_telephone_number();
+
+			// @since 2.2.6
+			case 'consumer_name':
+				return ( null === $consumer_bank_details ) ? null : $consumer_bank_details->get_name();
+			case 'consumer_account_number':
+				return ( null === $consumer_bank_details ) ? null : $consumer_bank_details->get_account_number();
+			case 'consumer_iban':
+				return ( null === $consumer_bank_details ) ? null : $consumer_bank_details->get_iban();
+			case 'consumer_bic':
+				return ( null === $consumer_bank_details ) ? null : $consumer_bank_details->get_bic();
+			case 'consumer_city':
+				return ( null === $consumer_bank_details ) ? null : $consumer_bank_details->get_city();
 		}
 
 		return $this->{$name};
@@ -363,7 +487,7 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	 * @param string $name  Name.
 	 * @param mixed  $value Value.
 	 *
-	 * @return null
+	 * @return null|void
 	 */
 	public function __set( $name, $value ) {
 		$legacy_keys = array(
@@ -378,6 +502,11 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 			'city',
 			'address',
 			'user_id',
+			'consumer_name',
+			'consumer_account_number',
+			'consumer_iban',
+			'consumer_bic',
+			'consumer_city',
 		);
 
 		if ( ! in_array( $name, $legacy_keys, true ) ) {
@@ -386,9 +515,10 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 			return null;
 		}
 
-		$customer     = $this->get_customer();
-		$address      = $this->get_billing_address();
-		$contact_name = null;
+		$customer              = $this->get_customer();
+		$address               = $this->get_billing_address();
+		$consumer_bank_details = $this->get_consumer_bank_details();
+		$contact_name          = null;
 
 		if ( in_array( $name, array( 'language', 'locale', 'email', 'first_name', 'last_name', 'user_id' ), true ) ) {
 			if ( null === $value && null === $customer ) {
@@ -428,29 +558,117 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 			}
 		}
 
+		// Consumer.
+		if ( in_array( $name, array( 'consumer_name', 'consumer_account_number', 'consumer_iban', 'consumer_bic', 'consumer_city' ), true ) ) {
+			if ( null === $value && null === $consumer_bank_details ) {
+				return null;
+			}
+
+			if ( null === $consumer_bank_details ) {
+				$consumer_bank_details = new BankAccountDetails();
+
+				$this->set_consumer_bank_details( $consumer_bank_details );
+			}
+		}
+
 		switch ( $name ) {
 			case 'language':
-				return ( null === $customer ) ? null : $customer->set_language( $value );
+				if ( null !== $customer ) {
+					$customer->set_language( $value );
+				}
+
+				return;
 			case 'email':
-				return ( null === $customer ) ? null : $customer->set_email( $value );
+				if ( null !== $customer ) {
+					$customer->set_email( $value );
+				}
+
+				return;
 			case 'first_name':
-				return ( null === $contact_name ) ? null : $contact_name->set_first_name( $value );
+				if ( null !== $contact_name ) {
+					$contact_name->set_first_name( $value );
+				}
+
+				return;
 			case 'last_name':
-				return ( null === $contact_name ) ? null : $contact_name->set_last_name( $value );
+				if ( null !== $contact_name ) {
+					$contact_name->set_last_name( $value );
+				}
+
+				return;
 			case 'locale':
-				return ( null === $customer ) ? null : $customer->set_locale( $value );
+				if ( null !== $customer ) {
+					$customer->set_locale( $value );
+				}
+
+				return;
 			case 'telephone_number':
-				return ( null === $address ) ? null : $address->set_phone( $value );
+				if ( null !== $address ) {
+					$address->set_phone( $value );
+				}
+
+				return;
 			case 'country':
-				return ( null === $address ) ? null : $address->set_country_code( $value );
+				if ( null !== $address ) {
+					$address->set_country_code( $value );
+				}
+
+				return;
 			case 'zip':
-				return ( null === $address ) ? null : $address->set_postal_code( $value );
+				if ( null !== $address ) {
+					$address->set_postal_code( $value );
+				}
+
+				return;
 			case 'city':
-				return ( null === $address ) ? null : $address->set_city( $value );
+				if ( null !== $address ) {
+					$address->set_city( $value );
+				}
+
+				return;
 			case 'address':
-				return ( null === $address ) ? null : $address->set_line_1( $value );
+				if ( null !== $address ) {
+					$address->set_line_1( $value );
+				}
+
+				return;
 			case 'user_id':
-				return ( null === $customer ) ? null : $customer->set_user_id( $value );
+				if ( null !== $customer ) {
+					$customer->set_user_id( $value );
+				}
+
+				return;
+			// @since 2.2.6
+			case 'consumer_name':
+				if ( null !== $consumer_bank_details ) {
+					$consumer_bank_details->set_name( $value );
+				}
+
+				return;
+			case 'consumer_account_number':
+				if ( null !== $consumer_bank_details ) {
+					$consumer_bank_details->set_account_number( $value );
+				}
+
+				return;
+			case 'consumer_iban':
+				if ( null !== $consumer_bank_details ) {
+					$consumer_bank_details->set_iban( $value );
+				}
+
+				return;
+			case 'consumer_bic':
+				if ( null !== $consumer_bank_details ) {
+					$consumer_bank_details->set_bic( $value );
+				}
+
+				return;
+			case 'consumer_city':
+				if ( null !== $consumer_bank_details ) {
+					$consumer_bank_details->set_city( $value );
+				}
+
+				return;
 		}
 
 		$this->{$name} = $value;

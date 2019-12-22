@@ -125,6 +125,26 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 			?>
 		</td>
 	</tr>
+
+	<?php
+
+	$bank_transfer_recipient = $payment->get_bank_transfer_recipient_details();
+
+	?>
+
+	<?php if ( null !== $bank_transfer_recipient ) : ?>
+
+		<tr>
+			<th scope="row">
+				<?php esc_html_e( 'Bank Transfer Recipient', 'pronamic_ideal' ); ?>
+			</th>
+			<td>
+				<?php echo wpautop($bank_transfer_recipient ); ?>
+			</td>
+		</tr>
+
+	<?php endif; ?>
+
 	<tr>
 		<th scope="row">
 			<?php esc_html_e( 'Action URL', 'pronamic_ideal' ); ?>
@@ -273,10 +293,21 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 
 					$user_id = $payment->get_customer()->get_user_id();
 
+					$user_text = sprintf( '#%s', $user_id );
+
+					// User display name.
+					$user = new WP_User( $user_id );
+
+					$display_name = $user->display_name;
+
+					if ( ! empty( $display_name ) ) {
+						$user_text .= sprintf( ' - %s', $display_name );
+					}
+
 					printf(
 						'<a href="%s">%s</a>',
 						esc_url( get_edit_user_link( $user_id ) ),
-						esc_html( $user_id )
+						esc_html( $user_text )
 					);
 
 					?>
@@ -289,109 +320,138 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 
 	<?php
 
-	$account_holder = get_post_meta( $payment_id, '_pronamic_payment_consumer_name', true );
+	$consumer_bank_details = $payment->get_consumer_bank_details();
 
-	if ( ! empty( $account_holder ) ) :
-		?>
+	if ( null !== $consumer_bank_details ) :
 
-		<tr>
-			<th scope="row">
-				<?php esc_html_e( 'Account Holder', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php echo esc_html( $account_holder ); ?>
-			</td>
-		</tr>
+		$consumer_name = $consumer_bank_details->get_name();
 
-	<?php endif; ?>
+		if ( null !== $consumer_name ) :
 
-	<?php
+			?>
 
-	$account_holder_city = get_post_meta( $payment_id, '_pronamic_payment_consumer_city', true );
+			<tr>
+				<th scope="row">
+					<?php esc_html_e( 'Account Holder', 'pronamic_ideal' ); ?>
+				</th>
+				<td>
+					<?php echo esc_html( $consumer_name ); ?>
+				</td>
+			</tr>
 
-	if ( ! empty( $account_holder_city ) ) :
-		?>
+			<?php
 
-		<tr>
-			<th scope="row">
-				<?php esc_html_e( 'Account Holder City', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php echo esc_html( $account_holder_city ); ?>
-			</td>
-		</tr>
+		endif;
 
-	<?php endif; ?>
+		$account_holder_city = $consumer_bank_details->get_city();
 
-	<?php
+		if ( null !== $account_holder_city ) :
+			?>
 
-	$account_number = get_post_meta( $payment_id, '_pronamic_payment_consumer_account_number', true );
+			<tr>
+				<th scope="row">
+					<?php esc_html_e( 'Account Holder City', 'pronamic_ideal' ); ?>
+				</th>
+				<td>
+					<?php echo esc_html( $account_holder_city ); ?>
+				</td>
+			</tr>
 
-	if ( ! empty( $account_number ) ) :
-		?>
+			<?php
 
-		<tr>
-			<th scope="row">
-				<?php esc_html_e( 'Account Number', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php echo esc_html( $account_number ); ?>
-			</td>
-		</tr>
+		endif;
 
-	<?php endif; ?>
+		$account_holder_country = $consumer_bank_details->get_country();
 
-	<?php
+		if ( null !== $account_holder_country ) :
+			?>
 
-	$iban = get_post_meta( $payment_id, '_pronamic_payment_consumer_iban', true );
+			<tr>
+				<th scope="row">
+					<?php esc_html_e( 'Account Holder Country', 'pronamic_ideal' ); ?>
+				</th>
+				<td>
+					<?php echo esc_html( $account_holder_country ); ?>
+				</td>
+			</tr>
 
-	if ( ! empty( $iban ) ) :
-		?>
+			<?php
 
-		<tr>
-			<th scope="row">
-				<?php
+		endif;
 
-				printf(
-					'<abbr title="%s">%s</abbr>',
-					esc_attr( _x( 'International Bank Account Number', 'IBAN abbreviation title', 'pronamic_ideal' ) ),
-					esc_html__( 'IBAN', 'pronamic_ideal' )
-				);
+		$account_number = $consumer_bank_details->get_account_number();
 
-				?>
-			</th>
-			<td>
-				<?php echo esc_html( $iban ); ?>
-			</td>
-		</tr>
+		if ( null !== $account_number ) :
+			?>
 
-	<?php endif; ?>
+			<tr>
+				<th scope="row">
+					<?php esc_html_e( 'Account Number', 'pronamic_ideal' ); ?>
+				</th>
+				<td>
+					<?php echo esc_html( $account_number ); ?>
+				</td>
+			</tr>
 
-	<?php
+			<?php
 
-	$bic = get_post_meta( $payment_id, '_pronamic_payment_consumer_bic', true );
+		endif;
 
-	if ( ! empty( $bic ) ) :
-		?>
+		$iban = $consumer_bank_details->get_iban();
 
-		<tr>
-			<th scope="row">
-				<?php
+		if ( null !== $iban ) :
+			?>
 
-				printf(
-					'<abbr title="%s">%s</abbr>',
-					esc_attr( _x( 'Bank Identifier Code', 'BIC abbreviation title', 'pronamic_ideal' ) ),
-					esc_html__( 'BIC', 'pronamic_ideal' )
-				);
+			<tr>
+				<th scope="row">
+					<?php
 
-				?>
-			</th>
-			<td>
-				<?php echo esc_html( $bic ); ?>
-			</td>
-		</tr>
+					printf(
+						'<abbr title="%s">%s</abbr>',
+						esc_attr( _x( 'International Bank Account Number', 'IBAN abbreviation title', 'pronamic_ideal' ) ),
+						esc_html__( 'IBAN', 'pronamic_ideal' )
+					);
 
-	<?php endif; ?>
+					?>
+				</th>
+				<td>
+					<?php echo esc_html( $iban ); ?>
+				</td>
+			</tr>
+
+			<?php
+
+		endif;
+
+		$bic = $consumer_bank_details->get_bic();
+
+		if ( null !== $bic ) :
+			?>
+
+			<tr>
+				<th scope="row">
+					<?php
+
+					printf(
+						'<abbr title="%s">%s</abbr>',
+						esc_attr( _x( 'Bank Identifier Code', 'BIC abbreviation title', 'pronamic_ideal' ) ),
+						esc_html__( 'BIC', 'pronamic_ideal' )
+					);
+
+					?>
+				</th>
+				<td>
+					<?php echo esc_html( $bic ); ?>
+				</td>
+			</tr>
+
+			<?php
+
+		endif;
+
+	endif;
+
+	?>
 
 	<?php if ( null !== $payment->get_billing_address() ) : ?>
 

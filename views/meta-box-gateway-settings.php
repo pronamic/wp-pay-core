@@ -41,8 +41,8 @@ $sections = array(
 				'section'  => 'payment_methods',
 				'title'    => __( 'Supported Payment Methods', 'pronamic_ideal' ),
 				'type'     => 'html',
-				'callback' => function() use ( $gateway ) {
-					AdminGatewayPostType::settings_payment_methods( $gateway );
+				'callback' => function() use ( $gateway, $gateway_id ) {
+					AdminGatewayPostType::settings_payment_methods( $gateway, $gateway_id );
 				},
 			),
 		),
@@ -290,6 +290,26 @@ $sections = array_filter(
 								case 'password':
 									$attributes['type']  = $field['type'];
 									$attributes['value'] = $value;
+
+									printf(
+										'<input %s />',
+										// @codingStandardsIgnoreStart
+										Util::array_to_html_attributes( $attributes )
+										// @codingStandardsIgnoreEnd
+									);
+
+									break;
+								case 'number':
+									$attributes['type']  = $field['type'];
+									$attributes['value'] = $value;
+
+									if ( isset( $field['min'] ) ) {
+										$attributes['min'] = $field['min'];
+									}
+
+									if ( isset( $field['max'] ) ) {
+										$attributes['max'] = $field['max'];
+									}
 
 									printf(
 										'<input %s />',

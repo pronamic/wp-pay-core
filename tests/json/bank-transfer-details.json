@@ -1,0 +1,10 @@
+{
+	"bank_account": {
+		"name": "Pronamic",
+		"account_number": "1086.34.779",
+		"iban": "NL56 RABO 0108 6347 79",
+		"bic": "RABONL2U",
+		"city": "Drachten"
+	},
+	"reference": "AB12-3456-7890-1234"
+}

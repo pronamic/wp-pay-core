@@ -18,7 +18,7 @@ use Pronamic\WordPress\Pay\Core\Util as Core_Util;
  * Customer helper
  *
  * @author  Remco Tolsma
- * @version 2.1.0
+ * @version 2.2.6
  * @since   2.1.0
  */
 class CustomerHelper {
@@ -26,6 +26,7 @@ class CustomerHelper {
 	 * Complement customer.
 	 *
 	 * @param Customer $customer Customer to complement.
+	 * @return void
 	 */
 	public static function complement_customer( Customer $customer ) {
 		// Name.
@@ -158,6 +159,7 @@ class CustomerHelper {
 	 * Anonymize customer.
 	 *
 	 * @param Customer $customer Customer to anonymize.
+	 * @return void
 	 */
 	public static function anonymize_customer( Customer $customer ) {
 		$customer->set_gender( PrivacyManager::anonymize_data( 'text', $customer->get_gender() ) );

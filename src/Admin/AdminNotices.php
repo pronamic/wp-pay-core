@@ -16,7 +16,7 @@ use Pronamic\WordPress\Pay\Plugin;
  * WordPress admin notices
  *
  * @author Remco Tolsma
- * @version 3.7.0
+ * @version 2.2.6
  * @since 3.7.0
  */
 class AdminNotices {
@@ -45,6 +45,7 @@ class AdminNotices {
 	 * Admin notices.
 	 *
 	 * @link https://github.com/WordPress/WordPress/blob/4.3.1/wp-admin/admin-header.php#L245-L250
+	 * @return void
 	 */
 	public function admin_notices() {
 		// Show notices only to options managers (administrators).
@@ -61,7 +62,7 @@ class AdminNotices {
 
 		// License notice.
 		if ( 'valid' !== get_option( 'pronamic_pay_license_status' ) ) {
-			$class = \Pronamic\WordPress\Pay\Plugin::get_number_payments() > 20 ? 'error' : 'updated';
+			$class = Plugin::get_number_payments() > 20 ? 'error' : 'updated';
 
 			$license = get_option( 'pronamic_pay_license_key' );
 
@@ -88,46 +89,5 @@ class AdminNotices {
 				wp_kses_post( $notice )
 			);
 		}
-
-		// Stored notices.
-		$notices = get_option( 'pronamic_pay_admin_notices', array() );
-
-		foreach ( $notices as $name ) {
-			$file = __DIR__ . '/../../views/notice-' . $name . '.php';
-
-			if ( is_readable( $file ) ) {
-				include $file;
-			}
-		}
-	}
-
-	/**
-	 * Add a notice to show.
-	 *
-	 * @param string $name Name.
-	 */
-	public function add_notice( $name ) {
-		$notices = get_option( 'pronamic_pay_admin_notices', array() );
-
-		$notices = is_array( $notices ) ? $notices : array();
-
-		$notices = array_unique( array_merge( $notices, array( $name ) ) );
-
-		update_option( 'pronamic_pay_admin_notices', $notices );
-	}
-
-	/**
-	 * Remove a notice from being displayed.
-	 *
-	 * @param string $name Name.
-	 */
-	public function remove_notice( $name ) {
-		$notices = get_option( 'pronamic_pay_admin_notices', array() );
-
-		$notices = is_array( $notices ) ? $notices : array();
-
-		$notices = array_diff( $notices, array( $name ) );
-
-		update_option( 'pronamic_pay_admin_notices', $notices );
 	}
 }

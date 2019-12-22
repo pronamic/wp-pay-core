@@ -17,7 +17,7 @@ namespace Pronamic\WordPress\Pay\Payments;
  * Company: Pronamic
  *
  * @author  Remco Tolsma
- * @version 2.0.5
+ * @version 2.2.6
  * @since   3.7.0
  */
 class PaymentPostType {
@@ -26,7 +26,7 @@ class PaymentPostType {
 	 */
 	public function __construct() {
 		/**
-		 * Priotiry of the initial post types function should be set to < 10
+		 * Priority of the initial post types function should be set to < 10
 		 *
 		 * @link https://core.trac.wordpress.org/ticket/28488
 		 * @link https://core.trac.wordpress.org/changeset/29318
@@ -41,6 +41,7 @@ class PaymentPostType {
 	 * Register post types.
 	 *
 	 * @link https://github.com/WordPress/WordPress/blob/4.6.1/wp-includes/post.php#L1277-L1300
+	 * @return void
 	 */
 	public function register_payment_post_type() {
 		register_post_type(
@@ -111,6 +112,8 @@ class PaymentPostType {
 
 	/**
 	 * Register our custom post statuses, used for order status.
+	 *
+	 * @return void
 	 */
 	public function register_post_status() {
 		/**

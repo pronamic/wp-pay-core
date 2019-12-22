@@ -17,7 +17,7 @@ use stdClass;
  * House number
  *
  * @author  Remco Tolsma
- * @version 2.1.6
+ * @version 2.2.6
  * @since   2.1.6
  */
 class HouseNumber {
@@ -64,6 +64,7 @@ class HouseNumber {
 	 * Set value.
 	 *
 	 * @param string|null $value Value.
+	 * @return void
 	 */
 	public function set_value( $value ) {
 		$this->value = $value;
@@ -82,6 +83,7 @@ class HouseNumber {
 	 * Set base.
 	 *
 	 * @param string|null $base Base.
+	 * @return void
 	 */
 	public function set_base( $base ) {
 		$this->base = $base;
@@ -100,6 +102,7 @@ class HouseNumber {
 	 * Set addition.
 	 *
 	 * @param string|null $addition Addition.
+	 * @return void
 	 */
 	public function set_addition( $addition ) {
 		$this->addition = $addition;

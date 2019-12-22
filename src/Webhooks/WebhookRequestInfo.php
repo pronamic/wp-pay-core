@@ -10,7 +10,6 @@
 
 namespace Pronamic\WordPress\Pay\Webhooks;
 
-use InvalidArgumentException;
 use JsonSerializable;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Pay\Payments\Payment;
@@ -19,7 +18,7 @@ use Pronamic\WordPress\Pay\Payments\Payment;
  * Webhook request info class
  *
  * @author  Reüel van der Steege
- * @version 2.1.6
+ * @version 2.2.6
  * @since   2.1.6
  */
 class WebhookRequestInfo implements JsonSerializable {
@@ -95,6 +94,7 @@ class WebhookRequestInfo implements JsonSerializable {
 	 * Set payment.
 	 *
 	 * @param Payment $payment Payment.
+	 * @return void
 	 */
 	public function set_payment( Payment $payment ) {
 		$this->payment = $payment;
@@ -139,14 +139,14 @@ class WebhookRequestInfo implements JsonSerializable {
 	 *
 	 * @return WebhookRequestInfo
 	 *
-	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
-	 * @throws InvalidArgumentException Throws invalid argument exception when JSON does not contain `post_data` property.
-	 * @throws InvalidArgumentException Throws invalid argument exception when JSON does not contain `request_date` property.
-	 * @throws InvalidArgumentException Throws invalid argument exception when JSON does not contain `request_url` property.
+	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON is not an object.
+	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON does not contain `post_data` property.
+	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON does not contain `request_date` property.
+	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON does not contain `request_url` property.
 	 */
 	public static function from_json( $json ) {
 		if ( ! is_object( $json ) ) {
-			throw new InvalidArgumentException(
+			throw new \InvalidArgumentException(
 				sprintf(
 					'JSON value must be an object (%s).',
 					// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export
@@ -156,7 +156,7 @@ class WebhookRequestInfo implements JsonSerializable {
 		}
 
 		if ( ! property_exists( $json, 'post_data' ) ) {
-			throw new InvalidArgumentException(
+			throw new \InvalidArgumentException(
 				sprintf(
 					'JSON must contain `post_data` property (%s).',
 					// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export
@@ -166,7 +166,7 @@ class WebhookRequestInfo implements JsonSerializable {
 		}
 
 		if ( ! isset( $json->request_date ) ) {
-			throw new InvalidArgumentException(
+			throw new \InvalidArgumentException(
 				sprintf(
 					'JSON must contain `request_date` property (%s).',
 					// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export
@@ -176,7 +176,7 @@ class WebhookRequestInfo implements JsonSerializable {
 		}
 
 		if ( ! isset( $json->request_url ) ) {
-			throw new InvalidArgumentException(
+			throw new \InvalidArgumentException(
 				sprintf(
 					'JSON must contain `request_url` property (%s).',
 					// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export

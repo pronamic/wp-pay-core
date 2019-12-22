@@ -31,7 +31,7 @@ use WP_Query;
  * Plugin
  *
  * @author  Remco Tolsma
- * @version 2.1.6
+ * @version 2.2.6
  * @since   2.0.1
  */
 class Plugin {
@@ -163,6 +163,13 @@ class Plugin {
 	public $forms_module;
 
 	/**
+	 * Tracking module.
+	 *
+	 * @var TrackingModule
+	 */
+	public $tracking_module;
+
+	/**
 	 * Payments module.
 	 *
 	 * @var Payments\PaymentsModule
@@ -203,6 +210,13 @@ class Plugin {
 	 * @var array
 	 */
 	private $options;
+
+	/**
+	 * Plugin integrations.
+	 *
+	 * @var array
+	 */
+	public $plugin_integrations;
 
 	/**
 	 * Construct and initialize an Pronamic Pay plugin object.
@@ -265,7 +279,7 @@ class Plugin {
 		add_filter( 'plugin_locale', array( $this, 'plugin_locale' ), 10, 2 );
 
 		// Register styles.
-		add_action( 'wp_loaded', array( $this, 'register_styles' ), 9 );
+		add_action( 'init', array( $this, 'register_styles' ), 9 );
 
 		// If WordPress is loaded check on returns and maybe redirect requests.
 		add_action( 'wp_loaded', array( $this, 'handle_returns' ), 10 );
@@ -321,6 +335,7 @@ class Plugin {
 	 *
 	 * @param Payment $payment      The payment to update.
 	 * @param bool    $can_redirect Flag to indicate if redirect is allowed after the payment update.
+	 * @return void
 	 */
 	public static function update_payment( $payment = null, $can_redirect = true ) {
 		if ( empty( $payment ) ) {
@@ -418,22 +433,7 @@ class Plugin {
 		}
 
 		// Check if we should redirect.
-		$should_redirect = true;
-
-		// Check if the request is an callback request.
-		// Sisow gatway will extend callback requests with querystring "callback=true".
-		if ( filter_has_var( INPUT_GET, 'callback' ) && filter_input( INPUT_GET, 'callback', FILTER_VALIDATE_BOOLEAN ) ) {
-			$should_redirect = false;
-		}
-
-		// Check if the request is an notify request.
-		// Sisow gatway will extend callback requests with querystring "notify=true".
-		if ( filter_has_var( INPUT_GET, 'notify' ) && filter_input( INPUT_GET, 'notify', FILTER_VALIDATE_BOOLEAN ) ) {
-			// Log webhook request.
-			do_action( 'pronamic_pay_webhook_log_payment', $payment );
-
-			$should_redirect = false;
-		}
+		$should_redirect = apply_filters( 'pronamic_pay_return_should_redirect', true, $payment );
 
 		self::update_payment( $payment, $should_redirect );
 	}
@@ -528,6 +528,7 @@ class Plugin {
 	 *
 	 * @link https://developer.wordpress.org/reference/hooks/plugins_loaded/
 	 * @link https://developer.wordpress.org/reference/functions/load_plugin_textdomain/
+	 * @return void
 	 */
 	public function plugins_loaded() {
 		// Load plugin text domain.
@@ -566,6 +567,7 @@ class Plugin {
 		$this->forms_module         = new Forms\FormsModule( $this );
 		$this->payments_module      = new Payments\PaymentsModule( $this );
 		$this->subscriptions_module = new Subscriptions\SubscriptionsModule( $this );
+		$this->tracking_module      = new TrackingModule();
 
 		// Blocks module.
 		if ( function_exists( 'register_block_type' ) ) {
@@ -579,6 +581,15 @@ class Plugin {
 		// Admin.
 		if ( is_admin() ) {
 			$this->admin = new Admin\AdminModule( $this );
+		}
+
+		// Plugin integrations.
+		$this->plugin_integrations = apply_filters( 'pronamic_pay_plugin_integrations', array() );
+
+		foreach ( $this->plugin_integrations as $integration ) {
+			if ( method_exists( $integration, 'plugins_loaded' ) ) {
+				$integration->plugins_loaded();
+			}
 		}
 
 		// Gateway Integrations.
@@ -640,6 +651,7 @@ class Plugin {
 	 * Register styles.
 	 *
 	 * @since 2.1.6
+	 * @return void
 	 */
 	public function register_styles() {
 		$min = SCRIPT_DEBUG ? '' : '.min';
@@ -692,6 +704,7 @@ class Plugin {
 	 * Render errors.
 	 *
 	 * @param array|WP_Error $errors An array with errors to render.
+	 * @return void
 	 */
 	public static function render_errors( $errors = array() ) {
 		if ( ! is_array( $errors ) ) {
@@ -701,6 +714,16 @@ class Plugin {
 		foreach ( $errors as $pay_error ) {
 			include self::$dirname . '/views/error.php';
 		}
+	}
+
+	/**
+	 * Render exception.
+	 *
+	 * @param \Exception $exception An exception.
+	 * @return void
+	 */
+	public static function render_exception( \Exception $exception ) {
+		include self::$dirname . '/views/exception.php';
 	}
 
 	/**
@@ -883,6 +906,7 @@ class Plugin {
 	 * Complement payment.
 	 *
 	 * @param Payment $payment Payment.
+	 * @return void
 	 */
 	private static function complement_payment( Payment $payment ) {
 		// Entrance Code.
@@ -962,12 +986,26 @@ class Plugin {
 	 * @param Gateway $gateway The gateway to start the payment at.
 	 *
 	 * @return Payment
+	 *
+	 * @throws \Exception Throws exception if gateway payment start fails.
 	 */
 	public static function start_payment( Payment $payment, $gateway = null ) {
 		global $pronamic_ideal;
 
+		// Complement payment.
 		self::complement_payment( $payment );
 
+		/**
+		 * Filters the payment gateway configuration ID.
+		 *
+		 * @param int     $configuration_id Gateway configuration ID.
+		 * @param Payment $payment          The payment resource data.
+		 */
+		$config_id = \apply_filters( 'pronamic_payment_gateway_configuration_id', $payment->get_config_id(), $payment );
+
+		$payment->set_config_id( $config_id );
+
+		// Create payment.
 		$pronamic_ideal->payments_data_store->create( $payment );
 
 		// Prevent payment start at gateway if amount is empty.
@@ -978,15 +1016,20 @@ class Plugin {
 
 			$payment->save();
 
+			/**
+			 * Return or throw exception?
+			 *
+			 * @link https://github.com/wp-pay/core/commit/aa6422f0963d9718edd11ac41edbadfd6cd07d49
+			 * @todo Throw exception?
+			 */
+
 			return $payment;
 		}
 
 		// Gateway.
-		if ( null === $gateway ) {
-			$gateway = self::get_gateway( $payment->get_config_id() );
-		}
+		$gateway = self::get_gateway( $payment->get_config_id() );
 
-		if ( ! $gateway ) {
+		if ( null === $gateway ) {
 			$payment->set_status( PaymentStatus::FAILURE );
 
 			$payment->save();
@@ -995,46 +1038,51 @@ class Plugin {
 		}
 
 		// Start payment at the gateway.
-		$result = $gateway->start( $payment );
+		try {
+			$gateway->start( $payment );
 
-		// Add gateway errors as payment notes.
-		$error = $gateway->get_error();
+			// Add gateway errors as payment notes.
+			$error = $gateway->get_error();
 
-		if ( $error instanceof WP_Error ) {
-			foreach ( $error->get_error_codes() as $code ) {
-				$payment->add_note( sprintf( '%s: %s', $code, $error->get_error_message( $code ) ) );
+			if ( $error instanceof \WP_Error ) {
+				$message = $error->get_error_message();
+				$code    = $error->get_error_code();
+
+				if ( ! \is_int( $code ) ) {
+					$message = sprintf( '%s: %s', $code, $message );
+					$code    = 0;
+				}
+
+				throw new \Exception( $message, $code );
 			}
-		}
+		} catch ( \Exception $error ) {
+			$message = $error->getMessage();
 
-		// Set payment status.
-		if ( false === $result ) {
+			// Maybe include error code in message.
+			$code = $error->getCode();
+
+			if ( $code > 0 ) {
+				$message = \sprintf( '%s: %s', $code, $message );
+			}
+
+			// Add note.
+			$payment->add_note( $message );
+
+			// Set payment status.
 			$payment->set_status( PaymentStatus::FAILURE );
 		}
 
 		// Save payment.
 		$payment->save();
 
-		// Update subscription status for failed payments.
-		$subscription = $payment->get_subscription();
-
-		if ( false === $result && is_object( $subscription ) ) {
-			// Reload payment, so subscription is available.
-			$payment = new Payment( $payment->get_id() );
-
-			if ( Recurring::FIRST === $payment->recurring_type ) {
-				// First payment - cancel subscription to prevent unwanted recurring payments
-				// in the future, when a valid customer ID might be set for the user.
-				$subscription->set_status( SubscriptionStatus::CANCELLED );
-			} else {
-				$subscription->set_status( SubscriptionStatus::FAILURE );
-			}
-
-			$subscription->save();
-		}
-
 		// Schedule payment status check.
 		if ( $gateway->supports( 'payment_status_request' ) ) {
 			StatusChecker::schedule_event( $payment );
+		}
+
+		// Throw/rethrow exception.
+		if ( $error instanceof \Exception ) {
+			throw $error;
 		}
 
 		return $payment;

@@ -29,10 +29,12 @@
 					<p>
 						<?php
 
-						sprintf(
-							/* translators: %s: expiry date */
-							__( 'The subscription epxires at %s.', 'pronamic_ideal' ),
-							$subscription->get_expiry_date()->format_i18n()
+						echo esc_html(
+							sprintf(
+								/* translators: %s: expiry date */
+								__( 'The subscription epxires at %s.', 'pronamic_ideal' ),
+								$subscription->get_expiry_date()->format_i18n()
+							)
 						);
 
 						?>
@@ -116,6 +118,8 @@
 					echo $gateway->get_input_html();
 
 					?>
+
+					<input type="submit" value="<?php esc_html_e( 'Pay', 'pronamic_ideal' ); ?>"/>
 				</form>
 			</div>
 		</div>

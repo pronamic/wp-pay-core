@@ -17,7 +17,7 @@ use VIISON\AddressSplitter\AddressSplitter;
  * Address helper
  *
  * @author  Remco Tolsma
- * @version 2.1.0
+ * @version 2.2.6
  * @since   2.1.0
  */
 class AddressHelper {
@@ -25,6 +25,7 @@ class AddressHelper {
 	 * Complement address.
 	 *
 	 * @param Address $address Address to complement.
+	 * @return void
 	 */
 	public static function complement_address( Address $address ) {
 		// Name.
@@ -74,6 +75,7 @@ class AddressHelper {
 	 * Anonymize address.
 	 *
 	 * @param Address $address Address to complement.
+	 * @return void
 	 */
 	public static function anonymize_address( Address $address ) {
 		$address->set_company_name( PrivacyManager::anonymize_data( 'text', $address->get_company_name() ) );

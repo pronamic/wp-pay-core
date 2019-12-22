@@ -12,7 +12,6 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DateInterval;
 use DatePeriod;
-use Exception;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Pay\Core\Gateway;
@@ -22,7 +21,6 @@ use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
-use UnexpectedValueException;
 use WP_CLI;
 use WP_Error;
 use WP_Query;
@@ -36,7 +34,7 @@ use WP_Query;
  * @link https://woocommerce.com/2017/04/woocommerce-3-0-release/
  * @link https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
  * @author  Remco Tolsma
- * @version 2.1.0
+ * @version 2.2.6
  * @since   2.0.1
  */
 class SubscriptionsModule {
@@ -101,6 +99,8 @@ class SubscriptionsModule {
 	 *
 	 * Extensions like Gravity Forms can send action links in for example
 	 * email notifications so users can cancel or renew their subscription.
+	 *
+	 * @return void
 	 */
 	public function handle_subscription() {
 		if ( ! Util::input_has_vars( INPUT_GET, array( 'subscription', 'action', 'key' ) ) ) {
@@ -125,9 +125,13 @@ class SubscriptionsModule {
 		// Handle action.
 		switch ( $action ) {
 			case 'cancel':
-				return $this->handle_subscription_cancel( $subscription );
+				$this->handle_subscription_cancel( $subscription );
+
+				break;
 			case 'renew':
-				return $this->handle_subscription_renew( $subscription );
+				$this->handle_subscription_renew( $subscription );
+
+				break;
 		}
 	}
 
@@ -135,6 +139,7 @@ class SubscriptionsModule {
 	 * Handle cancel subscription action request.
 	 *
 	 * @param Subscription $subscription Subscription to cancel.
+	 * @return void
 	 */
 	private function handle_subscription_cancel( Subscription $subscription ) {
 		if ( SubscriptionStatus::CANCELLED !== $subscription->get_status() ) {
@@ -152,6 +157,8 @@ class SubscriptionsModule {
 	 * Handle renew subscription action request.
 	 *
 	 * @param Subscription $subscription Subscription to renew.
+	 * @return void
+	 * @throws \Exception Throws exception if unable to redirect (empty payment action URL).
 	 */
 	private function handle_subscription_renew( Subscription $subscription ) {
 		$gateway = Plugin::get_gateway( $subscription->config_id );
@@ -163,7 +170,13 @@ class SubscriptionsModule {
 		}
 
 		if ( 'POST' === Server::get( 'REQUEST_METHOD' ) ) {
-			$payment = $this->start_recurring( $subscription, $gateway, false );
+			try {
+				$payment = $this->start_recurring( $subscription, $gateway, false );
+			} catch ( \Exception $e ) {
+				require __DIR__ . '/../../views/subscription-renew-failed.php';
+
+				exit;
+			}
 
 			$error = $gateway->get_error();
 
@@ -258,7 +271,7 @@ class SubscriptionsModule {
 			$gateway = Plugin::get_gateway( $payment->get_config_id() );
 		}
 
-		if ( false === $payment->get_recurring() && ( ! $gateway || ! $gateway->supports( 'recurring' ) ) ) {
+		if ( true === $payment->get_recurring() && ( ! $gateway || ! $gateway->supports( 'recurring' ) ) ) {
 			// @todo
 			return null;
 		}
@@ -273,7 +286,7 @@ class SubscriptionsModule {
 	 * @param Payment      $payment Payment.
 	 * @param Gateway|null $gateway Gateway to start the recurring payment at.
 	 *
-	 * @throws UnexpectedValueException Throw unexpected value exception when no subscription was found in payment.
+	 * @throws \UnexpectedValueException Throw unexpected value exception when no subscription was found in payment.
 	 *
 	 * @return Payment
 	 */
@@ -286,7 +299,7 @@ class SubscriptionsModule {
 		$subscription = $payment->get_subscription();
 
 		if ( empty( $subscription ) ) {
-			throw new UnexpectedValueException( 'No subscription object found in payment.' );
+			throw new \UnexpectedValueException( 'No subscription object found in payment.' );
 		}
 
 		// Calculate payment start and end dates.
@@ -299,7 +312,7 @@ class SubscriptionsModule {
 		$interval = $subscription->get_date_interval();
 
 		if ( null === $interval ) {
-			throw new UnexpectedValueException( 'Cannot start a follow-up payment for payment because the subscription does not have a valid date interval.' );
+			throw new \UnexpectedValueException( 'Cannot start a follow-up payment for payment because the subscription does not have a valid date interval.' );
 		}
 
 		$end_date = clone $start_date;
@@ -315,11 +328,13 @@ class SubscriptionsModule {
 		$payment->start_date = $start_date;
 		$payment->end_date   = $end_date;
 
+		// Update payment and subscription.
+		$payment->save();
+
+		$subscription->save();
+
 		// Start payment.
 		$payment = Plugin::start_payment( $payment, $gateway );
-
-		// Update subscription.
-		$subscription->save();
 
 		return $payment;
 	}
@@ -362,7 +377,7 @@ class SubscriptionsModule {
 	 *
 	 * @return void
 	 *
-	 * @throws UnexpectedValueException Throw unexpected value exception if the subscription does not have a valid date interval.
+	 * @throws \UnexpectedValueException Throw unexpected value exception if the subscription does not have a valid date interval.
 	 */
 	public function maybe_create_subscription( $payment ) {
 		// Check if there is already subscription attached to the payment.
@@ -423,7 +438,7 @@ class SubscriptionsModule {
 		$interval = $subscription->get_date_interval();
 
 		if ( null === $interval ) {
-			throw new UnexpectedValueException( 'Cannot create a subscription for payment because the subscription does not have a valid date interval.' );
+			throw new \UnexpectedValueException( 'Cannot create a subscription for payment because the subscription does not have a valid date interval.' );
 		}
 
 		$start_date  = clone $payment->date;
@@ -463,10 +478,16 @@ class SubscriptionsModule {
 				break;
 			case 'Y':
 				if ( is_numeric( $interval_date_month ) ) {
+					$day = $next_date->format( 'd' );
+
+					if ( \is_numeric( $interval_date ) ) {
+						$day = $interval_date;
+					}
+
 					$next_date->setDate(
 						intval( $next_date->format( 'Y' ) ),
 						intval( $interval_date_month ),
-						intval( $next_date->format( 'd' ) )
+						intval( $day )
 					);
 
 					$next_date->setTime( 0, 0 );
@@ -600,13 +621,13 @@ class SubscriptionsModule {
 				break;
 			case PaymentStatus::CANCELLED:
 			case PaymentStatus::EXPIRED:
-				$status_update = SubscriptionStatus::CANCELLED;
+				$status_update = SubscriptionStatus::ON_HOLD;
 
 				break;
 		}
 
 		// The status of canceled or completed subscriptions will not be changed automatically.
-		if ( ! in_array( $status_before, array( SubscriptionStatus::CANCELLED, SubscriptionStatus::COMPLETED ), true ) ) {
+		if ( ! in_array( $status_before, array( SubscriptionStatus::CANCELLED, SubscriptionStatus::COMPLETED, SubscriptionStatus::ON_HOLD ), true ) ) {
 			$subscription->set_status( $status_update );
 		}
 
@@ -654,7 +675,11 @@ class SubscriptionsModule {
 	public function log_subscription_status_update( $subscription, $can_redirect, $old_status, $new_status ) {
 		$note = $this->get_subscription_status_update_note( $old_status, $new_status );
 
-		$subscription->add_note( $note );
+		try {
+			$subscription->add_note( $note );
+		} catch ( \Exception $e ) {
+			return;
+		}
 	}
 
 	/**
@@ -665,6 +690,8 @@ class SubscriptionsModule {
 	 * @link https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/classes/class-sl-emails.php#L41-L126
 	 *
 	 * @return void
+	 *
+	 * @throws \Exception Throws exception on start date error.
 	 */
 	public function send_subscription_renewal_notices() {
 		$interval = new DateInterval( 'P1W' ); // 1 week
@@ -679,7 +706,7 @@ class SubscriptionsModule {
 		foreach ( $expiring_subscription_posts as $post ) {
 			$subscription = new Subscription( $post->ID );
 
-			// If expirary date is null we continue, subscription is not expiring.
+			// If expiry date is null we continue, subscription is not expiring.
 			$expiry_date = $subscription->get_expiry_date();
 
 			if ( null === $expiry_date ) {
@@ -801,7 +828,11 @@ class SubscriptionsModule {
 			}
 
 			// Start payment.
-			$payment = $this->start_recurring( $subscription, $gateway );
+			try {
+				$payment = $this->start_recurring( $subscription, $gateway );
+			} catch ( \Exception $e ) {
+				continue;
+			}
 
 			if ( is_object( $payment ) ) {
 				// Update payment.
@@ -828,6 +859,8 @@ class SubscriptionsModule {
 
 	/**
 	 * CLI subscriptions test.
+	 *
+	 * @return void
 	 */
 	public function cli_subscriptions_test() {
 		$cli_test = true;
@@ -881,7 +914,7 @@ class SubscriptionsModule {
 				'pronamic-pay-subscription-not-found',
 				\sprintf(
 					/* translators: %s: Subscription ID */
-					\__( 'Could not found subscription with ID `%s`.', 'pronamic_ideal' ),
+					\__( 'Could not find subscription with ID `%s`.', 'pronamic_ideal' ),
 					$subscription_id
 				),
 				$subscription_id

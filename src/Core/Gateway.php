@@ -10,13 +10,11 @@
 
 namespace Pronamic\WordPress\Pay\Core;
 
-use Exception;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 use Pronamic\WordPress\Pay\Util as PayUtil;
-use ReflectionClass;
 use WP_Error;
 
 /**
@@ -26,7 +24,7 @@ use WP_Error;
  * Company: Pronamic
  *
  * @author  Remco Tolsma
- * @version 2.1.0
+ * @version 2.2.6
  * @since   1.0.0
  */
 abstract class Gateway {
@@ -161,6 +159,7 @@ abstract class Gateway {
 	 * Set error
 	 *
 	 * @param WP_Error|null $error WordPress error object or null.
+	 * @return void
 	 */
 	public function set_error( WP_Error $error = null ) {
 		$this->error = $error;
@@ -170,6 +169,7 @@ abstract class Gateway {
 	 * Set the method.
 	 *
 	 * @param int $method HTML form or HTTP redirect method.
+	 * @return void
 	 */
 	public function set_method( $method ) {
 		$this->method = $method;
@@ -197,7 +197,7 @@ abstract class Gateway {
 	 * Set has feedback.
 	 *
 	 * @param boolean $has_feedback Feedback from gateway indicator.
-	 *
+	 * @return void
 	 * @deprecated 2.0.5 Not in use anymore.
 	 */
 	public function set_has_feedback( $has_feedback ) {
@@ -207,7 +207,7 @@ abstract class Gateway {
 	 * Set the minimum amount required
 	 *
 	 * @param float $amount Minimum payment amount.
-	 *
+	 * @return void
 	 * @deprecated 2.0.5 Not in use anymore.
 	 */
 	public function set_amount_minimum( $amount ) {
@@ -311,17 +311,17 @@ abstract class Gateway {
 	 * Intended to be overridden by gateway if active payment methods for account can be determined.
 	 *
 	 * @since 1.3.0
-	 * @return array
+	 * @return array|null
 	 */
 	public function get_available_payment_methods() {
-		return $this->get_supported_payment_methods();
+		return null;
 	}
 
 	/**
 	 * Get the payment methods transient
 	 *
 	 * @since 1.3.0
-	 * @return array
+	 * @return array|null
 	 */
 	public function get_transient_available_payment_methods() {
 		// Transient name.
@@ -334,11 +334,13 @@ abstract class Gateway {
 
 			if ( is_array( $methods ) ) {
 				set_transient( $transient, $methods, DAY_IN_SECONDS );
+
+				PaymentMethods::update_active_payment_methods();
 			}
 		}
 
 		if ( empty( $methods ) ) {
-			return array();
+			return null;
 		}
 
 		return $methods;
@@ -363,7 +365,11 @@ abstract class Gateway {
 	public function get_payment_method_field_options( $other_first = false ) {
 		$options = array();
 
-		$payment_methods = $this->get_transient_available_payment_methods();
+		try {
+			$payment_methods = $this->get_transient_available_payment_methods();
+		} catch ( \Exception $e ) {
+			$payment_methods = array();
+		}
 
 		// Use all supported payment methods as fallback.
 		if ( empty( $payment_methods ) ) {
@@ -394,6 +400,7 @@ abstract class Gateway {
 	 * Start transaction/payment
 	 *
 	 * @param Payment $payment The payment to start up at this gateway.
+	 * @return void
 	 */
 	public function start( Payment $payment ) {
 
@@ -403,6 +410,7 @@ abstract class Gateway {
 	 * Handle subscription update.
 	 *
 	 * @param Payment $payment The payment to handle subscription update for.
+	 * @return void
 	 */
 	public function update_subscription( Payment $payment ) {
 
@@ -412,6 +420,7 @@ abstract class Gateway {
 	 * Handle subscription cancellation.
 	 *
 	 * @param Subscription $subscription The subscipriont to handle cancellation for.
+	 * @return void
 	 */
 	public function cancel_subscription( Subscription $subscription ) {
 
@@ -421,13 +430,19 @@ abstract class Gateway {
 	 * Redirect to the gateway action URL.
 	 *
 	 * @param Payment $payment The payment to redirect for.
+	 * @return void
+	 * @throws \Exception Throws exception when action URL for HTTP redirect is empty.
 	 */
 	public function redirect( Payment $payment ) {
 		switch ( $this->method ) {
 			case self::METHOD_HTTP_REDIRECT:
-				return $this->redirect_via_http( $payment );
+				$this->redirect_via_http( $payment );
+
+				break;
 			case self::METHOD_HTML_FORM:
-				return $this->redirect_via_html( $payment );
+				$this->redirect_via_html( $payment );
+
+				break;
 			default:
 				// No idea how to redirect to the gateway.
 		}
@@ -437,7 +452,8 @@ abstract class Gateway {
 	 * Redirect via HTTP.
 	 *
 	 * @param Payment $payment The payment to redirect for.
-	 * @throws Exception When payment action URL is empty.
+	 * @return void
+	 * @throws \Exception When payment action URL is empty.
 	 */
 	public function redirect_via_http( Payment $payment ) {
 		if ( headers_sent() ) {
@@ -447,7 +463,7 @@ abstract class Gateway {
 		$action_url = $payment->get_action_url();
 
 		if ( empty( $action_url ) ) {
-			throw new Exception( 'Action URL is empty, can not redirect.' );
+			throw new \Exception( 'Action URL is empty, can not redirect.' );
 		}
 
 		// Redirect, See Other.
@@ -461,6 +477,7 @@ abstract class Gateway {
 	 * Redirect via HTML.
 	 *
 	 * @param Payment $payment The payment to redirect for.
+	 * @return void
 	 */
 	public function redirect_via_html( Payment $payment ) {
 		if ( headers_sent() ) {
@@ -617,6 +634,7 @@ abstract class Gateway {
 	 * @since 1.2.3
 	 *
 	 * @param string|null $payment_method One of the PaymentMethods constants.
+	 * @return void
 	 */
 	public function set_payment_method( $payment_method ) {
 		$this->payment_method = $payment_method;
@@ -675,10 +693,10 @@ abstract class Gateway {
 	 * @param Payment $payment     Payment to get form HTML for.
 	 * @param bool    $auto_submit Flag to auto submit.
 	 * @return string
-	 * @throws Exception When payment action URL is empty.
+	 * @throws \Exception When payment action URL is empty.
 	 */
 	public function get_form_html( Payment $payment, $auto_submit = false ) {
-		$form_inner = $this->get_output_html();
+		$form_inner = $this->get_output_html( $payment );
 
 		$form_inner .= sprintf(
 			'<input class="pronamic-pay-btn" type="submit" name="pay" value="%s" />',
@@ -688,7 +706,7 @@ abstract class Gateway {
 		$action_url = $payment->get_action_url();
 
 		if ( empty( $action_url ) ) {
-			throw new Exception( 'Action URL is empty, can not get form HTML.' );
+			throw new \Exception( 'Action URL is empty, can not get form HTML.' );
 		}
 
 		$html = sprintf(
@@ -707,20 +725,24 @@ abstract class Gateway {
 	/**
 	 * Get output inputs.
 	 *
-	 * @since 1.2.0
+	 * @param Payment $payment Payment.
+	 *
 	 * @return array
+	 * @since 1.2.0
 	 */
-	public function get_output_fields() {
+	public function get_output_fields( Payment $payment ) {
 		return array();
 	}
 
 	/**
 	 * Get the output HTML
 	 *
+	 * @param Payment $payment Payment.
+	 *
 	 * @return string
 	 */
-	public function get_output_html() {
-		$fields = $this->get_output_fields();
+	public function get_output_html( Payment $payment ) {
+		$fields = $this->get_output_fields( $payment );
 
 		return PayUtil::html_hidden_fields( $fields );
 	}
@@ -729,6 +751,7 @@ abstract class Gateway {
 	 * Update status of the specified payment
 	 *
 	 * @param Payment $payment Payment.
+	 * @return void
 	 */
 	public function update_status( Payment $payment ) {
 
@@ -738,17 +761,19 @@ abstract class Gateway {
 	 * Create invoice.
 	 *
 	 * @param Payment $payment Payment.
+	 * @return bool
 	 */
 	public function create_invoice( $payment ) {
-
+		return false;
 	}
 
 	/**
 	 * Cancel reservation.
 	 *
 	 * @param Payment $payment Payment.
+	 * @return bool
 	 */
 	public function cancel_reservation( $payment ) {
-
+		return false;
 	}
 }

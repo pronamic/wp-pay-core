@@ -8,25 +8,90 @@
  * @package   Pronamic\WordPress\Pay
  */
 
+use Pronamic\WordPress\Pay\Core\PaymentMethods;
+
+$columns = array(
+	'payment_method' => __( 'Payment method', 'pronamic_ideal' ),
+	'active'         => __( 'Active', 'pronamic_ideal' ),
+);
+
+$integration = pronamic_pay_plugin()->gateway_integrations->get_integration( $gateway_id );
+
+if ( $integration->supports( 'recurring' ) ) :
+	$columns['recurring'] = __( 'Recurring', 'pronamic_ideal' );
+endif;
+
 ?>
-<ul class="pronamic-pay-payment-methods">
+<table class="form-table widefat pronamic-pay-payment-methods">
+	<thead>
+		<tr>
+			<?php foreach ( $columns as $column ) : ?>
 
-	<?php
+				<th><?php echo esc_html( $column ); ?></th>
 
-	foreach ( $payment_methods as $payment_method => $details ) {
-		$class = $payment_method;
+			<?php endforeach; ?>
+		</tr>
+	</thead>
 
-		if ( $details->available ) {
-			$class .= ' available';
+	<tbody>
+		<?php
+
+		foreach ( $payment_methods as $method ) {
+			?>
+
+			<tr>
+
+				<?php
+
+				foreach ( $columns as $key => $column ) :
+					$value = '';
+
+					switch ( $key ) :
+						case 'payment_method':
+							$value = $method->name;
+
+							break;
+						case 'active':
+							$icon = 'question-mark';
+
+							if ( $supports_methods_request ) {
+								$icon = ( $method->available ? 'completed' : 'cancelled' );
+							}
+
+							$value = sprintf( '<span class="pronamic-pay-icon pronamic-pay-icon-%s"></span>', esc_attr( $icon ) );
+
+							break;
+						case 'recurring':
+							$icon = 'cancelled';
+
+							if ( PaymentMethods::is_recurring_method( $method->id ) ) :
+								$icon = 'completed';
+							endif;
+
+							$value = sprintf( '<span class="pronamic-pay-icon pronamic-pay-icon-%s"></span>', esc_attr( $icon ) );
+
+							break;
+					endswitch;
+
+					printf(
+						'<td>%s</td>',
+						wp_kses(
+							$value,
+							array( 'span' => array( 'class' => array() ) )
+						)
+					);
+
+				endforeach;
+
+				?>
+
+			</tr>
+
+			<?php
+
 		}
 
-		printf(
-			'<li class="%1$s"><span class="pronamic-pay-icon pronamic-pay-icon-completed"></span> %2$s</li>',
-			esc_attr( $class ),
-			esc_html( $details->name )
-		);
-	}
+		?>
+	</tbody>
 
-	?>
-
-</ul>
+</table>

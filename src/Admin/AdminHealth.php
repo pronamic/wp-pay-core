@@ -18,7 +18,7 @@ use Pronamic\WordPress\Pay\Plugin;
  * @link https://make.wordpress.org/core/2019/04/25/site-health-check-in-5-2/
  *
  * @author  Reüel van der Steege
- * @version 2.2.4
+ * @version 2.2.6
  * @since   2.2.4
  */
 class AdminHealth {
@@ -73,8 +73,8 @@ class AdminHealth {
 
 		// Time.
 		$fields['pronamic_pay_time'] = array(
-			'label' => __( 'Time', 'pronamic_ideal' ),
-			'value' => esc_html( date( __( 'Y/m/d g:i:s A', 'pronamic_ideal' ) ) ),
+			'label' => __( 'Time (UTC)', 'pronamic_ideal' ),
+			'value' => esc_html( gmdate( __( 'Y/m/d g:i:s A', 'pronamic_ideal' ) ) ),
 		);
 
 		// OpenSSL version.
@@ -147,6 +147,8 @@ class AdminHealth {
 
 	/**
 	 * Test if configuration exists.
+	 *
+	 * @return array<string, array<string,string>|string>
 	 */
 	public function test_valid_license() {
 		// Good.
@@ -201,7 +203,7 @@ class AdminHealth {
 	/**
 	 * Test WordPress version.
 	 *
-	 * @return array
+	 * @return array<string, array<string,string>|string>
 	 */
 	public function test_wordpress_version() {
 		// Good.
@@ -233,7 +235,7 @@ class AdminHealth {
 	/**
 	 * Test WordPress memory limit.
 	 *
-	 * @return array
+	 * @return array<string, array<string,string>|string>
 	 */
 	public function test_memory_limit() {
 		$memory = pronamic_pay_let_to_num( strval( WP_MEMORY_LIMIT ) );
@@ -272,7 +274,7 @@ class AdminHealth {
 	/**
 	 * Test UTF-8 character set.
 	 *
-	 * @return array
+	 * @return array<string, array<string,string>|string>
 	 */
 	public function test_character_set() {
 		// Good.
@@ -301,7 +303,7 @@ class AdminHealth {
 	/**
 	 * Test registered hashing algorithms.
 	 *
-	 * @return array
+	 * @return array<string, array<string,string>|string>
 	 */
 	public function test_hashing_algorithms() {
 		// Good.
@@ -331,6 +333,8 @@ class AdminHealth {
 
 	/**
 	 * Test extensions support.
+	 *
+	 * @return array<string, array<string,string>|string>
 	 */
 	public function test_extensions_support() {
 		$extensions_json_path = \dirname( $this->plugin->get_file() ) . '/other/extensions.json';

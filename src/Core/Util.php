@@ -21,7 +21,7 @@ use Pronamic\WordPress\Pay\Util as Pay_Util;
  * Company: Pronamic
  *
  * @author Remco Tolsma
- * @version 2.0.0
+ * @version 2.2.6
  * @since 1.0.0
  */
 class Util {
@@ -57,7 +57,7 @@ class Util {
 		return new \WP_Error(
 			'wrong_response_code',
 			sprintf(
-				/* translators: 1: received responce code, 2: required response code */
+				/* translators: 1: received response code, 2: required response code */
 				__( 'The response code (<code>%1$s<code>) was incorrect, required response code <code>%2$s</code>.', 'pronamic_ideal' ),
 				wp_remote_retrieve_response_code( $result ),
 				$required_response_code
@@ -152,6 +152,8 @@ class Util {
 
 	/**
 	 * No cache.
+	 *
+	 * @return void
 	 */
 	public static function no_cache() {
 		// @link https://github.com/woothemes/woocommerce/blob/2.3.11/includes/class-wc-cache-helper.php
@@ -215,11 +217,15 @@ class Util {
 	 * @return float
 	 */
 	public static function string_to_amount( $value ) {
-		_deprecated_function( __FUNCTION__, '2.0.3', 'Pronamic\WordPress\Money\Parser::parse()->get_amount()' );
+		_deprecated_function( __FUNCTION__, '2.0.3', 'Pronamic\WordPress\Money\Parser::parse()->get_value()' );
 
 		$money_parser = new MoneyParser();
 
-		$amount = $money_parser->parse( $value )->get_value();
+		try {
+			$amount = $money_parser->parse( $value )->get_value();
+		} catch ( \Exception $e ) {
+			$amount = (float) 0;
+		}
 
 		return $amount;
 	}
@@ -267,7 +273,7 @@ class Util {
 	}
 
 	/**
-	 * Convert boolean to an numceric boolean.
+	 * Convert boolean to an numeric boolean.
 	 *
 	 * @link https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
 	 *

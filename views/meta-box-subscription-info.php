@@ -157,6 +157,21 @@ $user_id  = is_null( $customer ) ? null : $customer->get_user_id();
 
 	<?php endif; ?>
 
+	<tr>
+		<th scope="row">
+			<?php esc_html_e( 'Paid up to', 'pronamic_ideal' ); ?>
+		</th>
+		<td>
+			<?php
+
+			$expiry_date = $subscription->get_expiry_date();
+
+			echo empty( $expiry_date ) ? '—' : esc_html( $expiry_date->format_i18n() );
+
+			?>
+		</td>
+	</tr>
+
 	<?php
 
 	// Show next payment (delivery) date if subscription is not cancelled or completed.
@@ -196,21 +211,6 @@ $user_id  = is_null( $customer ) ? null : $customer->get_user_id();
 
 	<?php endif; ?>
 
-	<tr>
-		<th scope="row">
-			<?php esc_html_e( 'Expiry Date', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<?php
-
-			$expiry_date = $subscription->get_expiry_date();
-
-			echo empty( $expiry_date ) ? '—' : esc_html( $expiry_date->format_i18n() );
-
-			?>
-		</td>
-	</tr>
-
 	<?php if ( null !== $user_id ) : ?>
 
 		<tr>
@@ -220,10 +220,21 @@ $user_id  = is_null( $customer ) ? null : $customer->get_user_id();
 			<td>
 				<?php
 
+				$user_text = sprintf( '#%s', $user_id );
+
+				// User display name.
+				$user = new WP_User( $user_id );
+
+				$display_name = $user->display_name;
+
+				if ( ! empty( $display_name ) ) {
+					$user_text .= sprintf( ' - %s', $display_name );
+				}
+
 				printf(
 					'<a href="%s">%s</a>',
 					esc_url( get_edit_user_link( $user_id ) ),
-					esc_html( $user_id )
+					esc_html( $user_text )
 				);
 
 				?>

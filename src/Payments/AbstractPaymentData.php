@@ -19,7 +19,7 @@ use Pronamic\WordPress\Pay\Subscriptions\Subscription;
  * Abstract payment data class
  *
  * @author Remco Tolsma
- * @version 2.0.2
+ * @version 2.2.6
  * @since 1.4.0
  */
 abstract class AbstractPaymentData implements PaymentDataInterface {
@@ -231,7 +231,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	}
 
 	/**
-	 * Get the curreny alphabetic code.
+	 * Get the currency alphabetic code.
 	 *
 	 * @return string|null
 	 */
@@ -247,7 +247,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	}
 
 	/**
-	 * Helper function to get the curreny alphabetic code.
+	 * Helper function to get the currency alphabetic code.
 	 *
 	 * @return string|null
 	 */
@@ -355,6 +355,7 @@ abstract class AbstractPaymentData implements PaymentDataInterface {
 	 * Set recurring.
 	 *
 	 * @param bool|null $recurring Boolean flag which indicates recurring.
+	 * @return void
 	 */
 	public function set_recurring( $recurring ) {
 		$this->recurring = $recurring;

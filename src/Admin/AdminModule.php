@@ -20,7 +20,7 @@ use Pronamic\WordPress\Pay\Webhooks\WebhookManager;
  * WordPress Pay admin
  *
  * @author  Remco Tolsma
- * @version 2.1.0
+ * @version 2.2.6
  * @since   1.0.0
  */
 class AdminModule {
@@ -470,13 +470,22 @@ class AdminModule {
 			),
 		);
 
-		$this->create_pages( $pages );
+		$url_args = array(
+			'page'    => 'pronamic_pay_settings',
+			'message' => 'pages-generated',
+		);
+
+		try {
+			$this->create_pages( $pages );
+		} catch ( \Exception $e ) {
+			$url_args = array(
+				'page'    => 'pronamic_pay_settings',
+				'message' => 'pages-not-generated',
+			);
+		}
 
 		$url = add_query_arg(
-			array(
-				'page'    => 'pronamic_pay_settings',
-				'message' => 'pages-generated',
-			),
+			$url_args,
 			admin_url( 'admin.php' )
 		);
 
@@ -628,8 +637,6 @@ class AdminModule {
 		}
 
 		// Start.
-		$errors = array();
-
 		try {
 			$data = new \Pronamic\WordPress\Pay\Payments\PaymentTestData( wp_get_current_user(), $amount );
 
@@ -637,19 +644,9 @@ class AdminModule {
 
 			$payment = Plugin::start( $id, $gateway, $data, $payment_method );
 
-			$errors[] = $gateway->get_error();
-
-			if ( ! $gateway->has_error() ) {
-				$gateway->redirect( $payment );
-			}
+			$gateway->redirect( $payment );
 		} catch ( \Exception $e ) {
-			$errors[] = new \WP_Error( 'pay_error', $e->getMessage() );
-		}
-
-		$errors = array_filter( $errors );
-
-		if ( ! empty( $errors ) ) {
-			Plugin::render_errors( $errors );
+			Plugin::render_exception( $e );
 
 			exit;
 		}
@@ -836,7 +833,7 @@ class AdminModule {
 			$menu_icon_url
 		);
 
-		// Add submmenu pages.
+		// Add submenu pages.
 		foreach ( $submenu_pages as $page ) {
 			/**
 			 * To keep PHPStan happy we use an if/else statement for
@@ -896,20 +893,10 @@ class AdminModule {
 	 * Render the specified page.
 	 *
 	 * @param string $name Page identifier.
-	 * @return boolean True if a page is rendered, false otherwise.
+	 * @return void
 	 */
 	public function render_page( $name ) {
-		$result = false;
-
-		$file = __DIR__ . '/../../views/page-' . $name . '.php';
-
-		if ( is_readable( $file ) ) {
-			include $file;
-
-			$result = true;
-		}
-
-		return $result;
+		include __DIR__ . '/../../views/page-' . $name . '.php';
 	}
 
 	/**

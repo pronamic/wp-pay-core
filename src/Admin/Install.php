@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
+use Pronamic\WordPress\Pay\AbstractPluginIntegration;
 use Pronamic\WordPress\Pay\Forms\FormPostType;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Plugin;
@@ -18,7 +19,7 @@ use Pronamic\WordPress\Pay\Plugin;
  * WordPress admin install
  *
  * @author  Remco Tolsma
- * @version 2.1.0
+ * @version 2.2.6
  * @since   1.0.0
  */
 class Install {
@@ -63,10 +64,14 @@ class Install {
 
 		// Actions.
 		add_action( 'admin_init', array( $this, 'admin_init' ), 5 );
+
+		add_filter( 'removable_query_args', array( $this, 'removable_query_args' ) );
 	}
 
 	/**
-	 * Admin intialize.
+	 * Admin initialize.
+	 *
+	 * @return void
 	 */
 	public function admin_init() {
 		// Install.
@@ -74,18 +79,62 @@ class Install {
 			$this->install();
 		}
 
+		// Notices.
+		add_action( 'admin_notices', array( $this, 'admin_notice_upgrades_available' ), 20 );
+		add_action( 'admin_notices', array( $this, 'admin_notice_upgraded' ), 20 );
+
 		// Maybe update database.
-		if ( filter_has_var( INPUT_GET, 'pronamic_pay_update_db' ) && wp_verify_nonce( filter_input( INPUT_GET, 'pronamic_pay_nonce', FILTER_SANITIZE_STRING ), 'pronamic_pay_update_db' ) ) {
-			$this->update_db();
+		if ( filter_has_var( INPUT_GET, 'pronamic_pay_upgrade' ) && wp_verify_nonce( filter_input( INPUT_GET, 'pronamic_pay_nonce', FILTER_SANITIZE_STRING ), 'pronamic_pay_upgrade' ) ) {
+			$this->upgrade();
 
-			$this->admin->notices->remove_notice( 'update_db' );
+			/**
+			 * Redirect to admin dashboard or referer.
+			 *
+			 * @link https://developer.wordpress.org/reference/functions/admin_url/
+			 * @link https://developer.wordpress.org/reference/functions/wp_get_referer/
+			 * @link https://developer.wordpress.org/reference/functions/wp_safe_redirect/
+			 */
+			$location = admin_url();
 
-			$this->redirect_to_about();
+			$referer = wp_get_referer();
+
+			if ( false !== $referer ) {
+				$location = $referer;
+			}
+
+			$location = add_query_arg(
+				array(
+					'pronamic_pay_upgrade'  => false,
+					'pronamic_pay_nonce'    => false,
+					'pronamic_pay_upgraded' => true,
+				),
+				$location
+			);
+
+			wp_safe_redirect( $location );
+
+			exit;
 		}
 	}
 
 	/**
+	 * Removable query arguments.
+	 *
+	 * @link https://github.com/WordPress/WordPress/blob/5.3/wp-admin/includes/misc.php#L1204-L1230
+	 * @link https://developer.wordpress.org/reference/functions/wp_removable_query_args/
+	 * @param array $args Arguments.
+	 * @return array
+	 */
+	public function removable_query_args( $args ) {
+		$args[] = 'pronamic_pay_upgraded';
+
+		return $args;
+	}
+
+	/**
 	 * Install.
+	 *
+	 * @return void
 	 */
 	private function install() {
 		// Roles.
@@ -94,28 +143,19 @@ class Install {
 		// Rewrite Rules.
 		flush_rewrite_rules();
 
-		// Database update.
+		// Version.
 		$version = $this->plugin->get_version();
 
-		$current_version    = get_option( 'pronamic_pay_version', null );
-		$current_db_version = get_option( 'pronamic_pay_db_version', null );
-
-		if (
-			$current_db_version
-				&&
-			(
-				// Check for old database version notation without dots, for example `366`.
-				false === strpos( $current_db_version, '.' )
-					||
-				version_compare( $current_db_version, max( $this->db_updates ), '<' )
-			)
-		) {
-			$this->admin->notices->add_notice( 'update_db' );
-		}
+		$current_version = get_option( 'pronamic_pay_version', null );
 
 		// Redirect.
 		if ( null !== $this->admin->about_page ) {
-			$about_page_version        = $this->admin->about_page->get_version();
+			try {
+				$about_page_version = $this->admin->about_page->get_version();
+			} catch ( \Exception $e ) {
+				$about_page_version = '';
+			}
+
 			$about_page_version_viewed = get_option( 'pronamic_pay_about_page_version', null );
 
 			$tab = null;
@@ -148,11 +188,42 @@ class Install {
 	}
 
 	/**
+	 * Admin notice upgrades.
+	 *
+	 * @link https://developer.wordpress.org/reference/hooks/admin_notices/
+	 * @return void
+	 */
+	public function admin_notice_upgrades_available() {
+		if ( ! $this->requires_upgrade() ) {
+			return;
+		}
+
+		include __DIR__ . '/../../views/notice-upgrade.php';
+	}
+
+	/**
+	 * Admin notice upgraded.
+	 *
+	 * @link https://developer.wordpress.org/reference/hooks/admin_notices/
+	 * @return void
+	 */
+	public function admin_notice_upgraded() {
+		$upgraded = filter_input( INPUT_GET, 'pronamic_pay_upgraded', FILTER_VALIDATE_BOOLEAN );
+
+		if ( true !== $upgraded ) {
+			return;
+		}
+
+		include __DIR__ . '/../../views/notice-upgraded.php';
+	}
+
+	/**
 	 * Create roles.
 	 *
 	 * @link https://codex.wordpress.org/Function_Reference/register_post_type
 	 * @link https://github.com/woothemes/woocommerce/blob/v2.2.3/includes/class-wc-install.php#L519-L562
 	 * @link https://github.com/woothemes/woocommerce/blob/v2.2.3/includes/class-wc-post-types.php#L245
+	 * @return void
 	 */
 	private function create_roles() {
 		// Payer role.
@@ -186,9 +257,88 @@ class Install {
 	}
 
 	/**
-	 * Update database.
+	 * Get upgradeable plugin integrations.
+	 *
+	 * @return array<AbstractPluginIntegration>
 	 */
-	public function update_db() {
+	private function get_upgradeable_plugin_integrations() {
+		$plugin_integrations = $this->plugin->plugin_integrations;
+
+		$plugin_integrations = array_filter(
+			$plugin_integrations,
+			/**
+			 * Filter plugin integration with version option name.
+			 *
+			 * @param AbstractPluginIntegration $plugin_integration Plugin integration object.
+			 * @return bool True if plugin integration has version option name, false otherwise.
+			 */
+			function( $plugin_integration ) {
+				if ( ! $plugin_integration->is_active() ) {
+					return false;
+				}
+
+				if ( null === $plugin_integration->get_version_option_name() ) {
+					return false;
+				}
+
+				if ( ! $plugin_integration->get_upgrades()->are_executable() ) {
+					return false;
+				}
+
+				return true;
+			}
+		);
+
+		return $plugin_integrations;
+	}
+
+	/**
+	 * Requires upgrade.
+	 *
+	 * @return bool True if database update is required, false othwerise.
+	 */
+	public function requires_upgrade() {
+		$current_db_version = get_option( 'pronamic_pay_db_version' );
+
+		if (
+			// Check for old database version notation without dots, for example `366`.
+			false === strpos( $current_db_version, '.' )
+				||
+			version_compare( $current_db_version, max( $this->db_updates ), '<' )
+		) {
+			return true;
+		}
+
+		// Plugin integrations.
+		$plugin_integrations = $this->get_upgradeable_plugin_integrations();
+
+		foreach ( $plugin_integrations as $integration ) {
+			$version_option_name = $integration->get_version_option_name();
+
+			if ( null === $version_option_name ) {
+				continue;
+			}
+
+			$current_version = get_option( $version_option_name );
+
+			$upgrades = $integration->get_upgrades();
+
+			foreach ( $upgrades as $upgrade ) {
+				if ( version_compare( $current_version, $upgrade->get_version(), '<' ) ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Upgrade.
+	 *
+	 * @return void
+	 */
+	public function upgrade() {
 		$current_db_version = get_option( 'pronamic_pay_db_version', null );
 
 		if ( $current_db_version ) {
@@ -207,15 +357,33 @@ class Install {
 			}
 		}
 
+		// Plugin integrations.
+		$plugin_integrations = $this->get_upgradeable_plugin_integrations();
+
+		foreach ( $plugin_integrations as $integration ) {
+			$version_option_name = $integration->get_version_option_name();
+
+			if ( null === $version_option_name ) {
+				continue;
+			}
+
+			$current_version = get_option( $version_option_name );
+
+			$upgrades = $integration->get_upgrades();
+
+			foreach ( $upgrades as $upgrade ) {
+				$version = $upgrade->get_version();
+
+				if ( ! version_compare( $current_version, $version, '<' ) ) {
+					continue;
+				}
+
+				$upgrade->execute();
+
+				update_option( $version_option_name, $version );
+			}
+		}
+
 		update_option( 'pronamic_pay_db_version', $this->plugin->get_version() );
-	}
-
-	/**
-	 * Redirect to about.
-	 */
-	private function redirect_to_about() {
-		wp_safe_redirect( admin_url( 'index.php?page=pronamic-pay-about' ) );
-
-		exit;
 	}
 }

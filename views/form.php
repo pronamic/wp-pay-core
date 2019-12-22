@@ -67,7 +67,6 @@ if ( null === $gateway ) {
 						<div>
 							<input class="pronamic-pay-amount-input pronamic-pay-input" id="<?php echo esc_attr( $input_id ); ?>" name="pronamic_pay_amount" type="radio" required="required" value="<?php echo esc_attr( sprintf( '%F', $amount ) ); ?>" />
 							<label for="<?php echo esc_attr( $input_id ); ?>">
-								<span class="pronamic-pay-currency-symbol pronamic-pay-currency-position-before">€</span>
 								<span class="pronamic-pay-amount-value"><?php echo esc_html( $money->format_i18n() ); ?></span>
 							</label>
 						</div>

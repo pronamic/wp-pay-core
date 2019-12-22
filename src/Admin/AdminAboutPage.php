@@ -16,7 +16,7 @@ use Pronamic\WordPress\Pay\Plugin;
  * WordPress admin about
  *
  * @author  Remco Tolsma
- * @version 2.1.0
+ * @version 2.2.6
  * @since   1.0.0
  */
 class AdminAboutPage {
@@ -55,6 +55,8 @@ class AdminAboutPage {
 
 	/**
 	 * Add admin menus/screens.
+	 *
+	 * @return void
 	 */
 	public function admin_menu() {
 		$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
@@ -80,6 +82,8 @@ class AdminAboutPage {
 
 	/**
 	 * Admin head.
+	 *
+	 * @return void
 	 */
 	public function admin_head() {
 		remove_submenu_page( 'index.php', 'pronamic-pay-about' );
@@ -87,6 +91,8 @@ class AdminAboutPage {
 
 	/**
 	 * Admin CSS.
+	 *
+	 * @return void
 	 */
 	public function admin_css() {
 		// @link https://github.com/WordPress/WordPress/blob/4.7/wp-includes/default-constants.php#L83-L93.
@@ -168,6 +174,8 @@ class AdminAboutPage {
 	 * Get version.
 	 *
 	 * @return string
+	 *
+	 * @throws \Exception Throws exception if file could not be opened or read.
 	 */
 	public function get_version() {
 		return $this->get_file_version( $this->get_file() );
@@ -175,6 +183,8 @@ class AdminAboutPage {
 
 	/**
 	 * Render about page.
+	 *
+	 * @return void
 	 */
 	public function render_page() {
 		include $this->get_file();

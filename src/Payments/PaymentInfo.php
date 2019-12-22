@@ -11,23 +11,22 @@
 namespace Pronamic\WordPress\Pay\Payments;
 
 use InvalidArgumentException;
-use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
-use Pronamic\WordPress\Pay\Address;
+use Pronamic\WordPress\Pay\Banks\BankAccountDetails;
+use Pronamic\WordPress\Pay\Banks\BankTransferDetails;
 use Pronamic\WordPress\Pay\Core\Gateway;
-use Pronamic\WordPress\Pay\Customer;
+use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\CreditCard;
-use Pronamic\WordPress\Pay\Payments\PaymentStatus;
-use Pronamic\WordPress\Pay\MoneyJsonTransformer;
-use Pronamic\WordPress\Pay\Subscriptions\Subscription;
+use Pronamic\WordPress\Pay\Customer;
 use WP_Post;
 
 /**
  * Payment info
  *
  * @author  Remco Tolsma
- * @version 2.1.0
+ * @version 2.2.6
  * @since   1.0.0
  */
 abstract class PaymentInfo {
@@ -129,49 +128,18 @@ abstract class PaymentInfo {
 	public $description;
 
 	/**
-	 * The name of the consumer of this payment.
+	 * Bank transfer recipient details.
 	 *
-	 * @todo Is this required and should we add the 'consumer' part?
-	 *
-	 * @var string|null
+	 * @var BankTransferDetails|null
 	 */
-	public $consumer_name;
+	private $bank_transfer_recipient_details;
 
 	/**
-	 * The account number of the consumer of this payment.
+	 * Consumer bank details.
 	 *
-	 * @todo Is this required and should we add the 'consumer' part?
-	 *
-	 * @var string|null
+	 * @var BankAccountDetails|null
 	 */
-	public $consumer_account_number;
-
-	/**
-	 * The IBAN of the consumer of this payment.
-	 *
-	 * @todo Is this required and should we add the 'consumer' part?
-	 *
-	 * @var string|null
-	 */
-	public $consumer_iban;
-
-	/**
-	 * The BIC of the consumer of this payment.
-	 *
-	 * @todo Is this required and should we add the 'consumer' part?
-	 *
-	 * @var string|null
-	 */
-	public $consumer_bic;
-
-	/**
-	 * The city of the consumer of this payment.
-	 *
-	 * @todo Is this required and should we add the 'consumer' part?
-	 *
-	 * @var string|null
-	 */
-	public $consumer_city;
+	private $consumer_bank_details;
 
 	/**
 	 * The Google Analytics client ID of the user who started this payment.
@@ -311,6 +279,7 @@ abstract class PaymentInfo {
 	 * Set the ID of this payment.
 	 *
 	 * @param int $id Unique ID.
+	 * @return void
 	 */
 	public function set_id( $id ) {
 		$this->id = $id;
@@ -329,6 +298,7 @@ abstract class PaymentInfo {
 	 * Set payment date.
 	 *
 	 * @param DateTime $date Date.
+	 * @return void
 	 */
 	public function set_date( $date ) {
 		$this->date = $date;
@@ -347,6 +317,7 @@ abstract class PaymentInfo {
 	 * Set start date.
 	 *
 	 * @param DateTime|null $start_date Start date.
+	 * @return void
 	 */
 	public function set_start_date( $start_date ) {
 		$this->start_date = $start_date;
@@ -365,6 +336,7 @@ abstract class PaymentInfo {
 	 * Set end date.
 	 *
 	 * @param DateTime|null $end_date End date.
+	 * @return void
 	 */
 	public function set_end_date( $end_date ) {
 		$this->end_date = $end_date;
@@ -383,6 +355,7 @@ abstract class PaymentInfo {
 	 * Set the source of this payment.
 	 *
 	 * @param string|null $source Source.
+	 * @return void
 	 */
 	public function set_source( $source ) {
 		$this->source = $source;
@@ -401,6 +374,7 @@ abstract class PaymentInfo {
 	 * Set the source ID of this payment.
 	 *
 	 * @param string|int|null $source_id Source ID.
+	 * @return void
 	 */
 	public function set_source_id( $source_id ) {
 		$this->source_id = $source_id;
@@ -419,6 +393,7 @@ abstract class PaymentInfo {
 	 * Set the config ID of this payment.
 	 *
 	 * @param int|null $config_id Config ID.
+	 * @return void
 	 */
 	public function set_config_id( $config_id ) {
 		$this->config_id = $config_id;
@@ -437,6 +412,7 @@ abstract class PaymentInfo {
 	 * Set customer.
 	 *
 	 * @param Customer|null $customer Contact.
+	 * @return void
 	 */
 	public function set_customer( $customer ) {
 		$this->customer = $customer;
@@ -455,6 +431,7 @@ abstract class PaymentInfo {
 	 * Set billing address.
 	 *
 	 * @param Address|null $billing_address Billing address.
+	 * @return void
 	 */
 	public function set_billing_address( $billing_address ) {
 		$this->billing_address = $billing_address;
@@ -473,6 +450,7 @@ abstract class PaymentInfo {
 	 * Set shipping address.
 	 *
 	 * @param Address|null $shipping_address Shipping address.
+	 * @return void
 	 */
 	public function set_shipping_address( $shipping_address ) {
 		$this->shipping_address = $shipping_address;
@@ -491,6 +469,7 @@ abstract class PaymentInfo {
 	 * Set payment lines.
 	 *
 	 * @param PaymentLines|null $lines Payment lines.
+	 * @return void
 	 */
 	public function set_lines( PaymentLines $lines = null ) {
 		$this->lines = $lines;
@@ -518,6 +497,7 @@ abstract class PaymentInfo {
 	 * Set total amount.
 	 *
 	 * @param TaxedMoney $total_amount Total amount.
+	 * @return void
 	 */
 	public function set_total_amount( TaxedMoney $total_amount ) {
 		$this->total_amount = $total_amount;
@@ -536,6 +516,7 @@ abstract class PaymentInfo {
 	 * Set the shipping amount.
 	 *
 	 * @param Money|null $shipping_amount Money object.
+	 * @return void
 	 */
 	public function set_shipping_amount( Money $shipping_amount = null ) {
 		$this->shipping_amount = $shipping_amount;
@@ -615,48 +596,41 @@ abstract class PaymentInfo {
 	}
 
 	/**
-	 * Set consumer name.
+	 * Get consumer bank details.
 	 *
-	 * @param string|null $name Name.
+	 * @return BankAccountDetails|null
 	 */
-	public function set_consumer_name( $name ) {
-		$this->consumer_name = $name;
+	public function get_consumer_bank_details() {
+		return $this->consumer_bank_details;
 	}
 
 	/**
-	 * Set consumer account number.
+	 * Set consumer bank details.
 	 *
-	 * @param string|null $account_number Account number.
+	 * @param BankAccountDetails|null $bank_details Consumer bank details.
+	 * @return void
 	 */
-	public function set_consumer_account_number( $account_number ) {
-		$this->consumer_account_number = $account_number;
+	public function set_consumer_bank_details( $bank_details ) {
+		$this->consumer_bank_details = $bank_details;
 	}
 
 	/**
-	 * Set consumer IBAN.
+	 * Get bank transfer details.
 	 *
-	 * @param string|null $iban IBAN.
+	 * @return BankTransferDetails|null
 	 */
-	public function set_consumer_iban( $iban ) {
-		$this->consumer_iban = $iban;
+	public function get_bank_transfer_recipient_details() {
+		return $this->bank_transfer_recipient_details;
 	}
 
 	/**
-	 * Set consumer BIC.
+	 * Set bank transfer details.
 	 *
-	 * @param string|null $bic BIC.
+	 * @param BankTransferDetails|null $bank_transfer Bank transfer details.
+	 * @return void
 	 */
-	public function set_consumer_bic( $bic ) {
-		$this->consumer_bic = $bic;
-	}
-
-	/**
-	 * Set consumer city.
-	 *
-	 * @param string|null $city City.
-	 */
-	public function set_consumer_city( $city ) {
-		$this->consumer_city = $city;
+	public function set_bank_transfer_recipient_details( $bank_transfer ) {
+		$this->bank_transfer_recipient_details = $bank_transfer;
 	}
 
 	/**
@@ -681,6 +655,7 @@ abstract class PaymentInfo {
 	 * Set the credit card to use for this payment.
 	 *
 	 * @param CreditCard|null $credit_card Credit Card.
+	 * @return void
 	 */
 	public function set_credit_card( $credit_card ) {
 		$this->credit_card = $credit_card;
@@ -699,6 +674,7 @@ abstract class PaymentInfo {
 	 * Set version.
 	 *
 	 * @param string|null $version Version.
+	 * @return void
 	 */
 	public function set_version( $version ) {
 		$this->version = $version;
@@ -717,7 +693,7 @@ abstract class PaymentInfo {
 	 * Set mode.
 	 *
 	 * @param string|null $mode Mode.
-	 *
+	 * @return void
 	 * @throws InvalidArgumentException Throws invalid argument exception when mode is not a string or not one of the mode constants.
 	 */
 	public function set_mode( $mode ) {
@@ -754,6 +730,7 @@ abstract class PaymentInfo {
 	 * Set anonymized.
 	 *
 	 * @param bool|null $anonymized Anonymized.
+	 * @return void
 	 */
 	public function set_anonymized( $anonymized ) {
 		$this->anonymized = $anonymized;
