@@ -5,7 +5,32 @@ All notable changes to this project will be documented in this file.
 This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
+-
+
+## [2.2.6] - 2019-12-22
+- Added filter `pronamic_payment_gateway_configuration_id` for payment gateway configuration ID.
+- Added filter `pronamic_pay_return_should_redirect` to move return checks to gateway integrations.
+- Added Polylang home URL support in payment return URL.
+- Added user display name in payment info meta boxes.
+- Added consumer and bank transfer bank details.
+- Added support for payment expiry date.
+- Added support for gateway manual URL.
+- Added new dependencies system.
+- Added new upgrades system.
+- Fixed incorrect day of month for yearly recurring payments when using synchronized payment date.
+- Fixed not starting recurring payments for gateways which don't support recurring payments.
+- Fixed default payment method in form processor if required.
+- Fixed empty dashboard widgets for untranslated languages.
+- Fixed submit button for manual subscription renewal.
 - Fixed duplicate currency symbol in payment forms.
+- Fixed stylesheet on payment redirect.
+- Improved payment methods tab in gateway settings.
+- Improved updating active payment methods.
+- Improved error handling with exceptions.
+- Improved update routine.
+- Set subscription status 'On hold' for cancelled and expired payments.
+- Do not auto update subscription status when status is 'On hold'.
+- Renamed 'Expiry Date' to 'Paid up to' in subscription info meta box.
 
 ## [2.2.5] - 2019-10-07
 - Added `pronamic_payment_gateway_configuration_id` WordPress filter.
@@ -225,7 +250,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.2.5...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.2.6...HEAD
+[2.2.6]: https://github.com/wp-pay/core/compare/2.2.5...2.2.6
 [2.2.5]: https://github.com/wp-pay/core/compare/2.2.4...2.2.5
 [2.2.4]: https://github.com/wp-pay/core/compare/2.2.3...2.2.4
 [2.2.3]: https://github.com/wp-pay/core/compare/2.2.2...2.2.3
