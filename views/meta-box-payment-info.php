@@ -143,7 +143,10 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 
 				echo wp_kses(
 					wpautop( $bank_transfer_recipient ),
-					array( 'p' => array() )
+					array(
+						'p'  => array(),
+						'br' => array(),
+					)
 				);
 
 				?>
