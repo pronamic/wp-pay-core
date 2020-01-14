@@ -240,6 +240,13 @@ class Util {
 		$html = '';
 
 		foreach ( $attributes as $key => $value ) {
+			// Check boolean attribute.
+			if ( \is_bool( $value ) && $value ) {
+				$html .= sprintf( '%s ', $key );
+
+				continue;
+			}
+
 			$html .= sprintf( '%s="%s" ', $key, esc_attr( $value ) );
 		}
 

@@ -396,49 +396,46 @@ class Util {
 		$html = '';
 
 		foreach ( $fields as $field ) {
-			if ( ! isset( $field['type'] ) ) {
+			if ( ! isset( $field['type'], $field['name'] ) ) {
 				continue;
 			}
+
+			$field = \wp_parse_args(
+				$field,
+				array(
+					'type'     => 'text',
+					'id'       => $field['name'],
+					'required' => false,
+				)
+			);
+
+			// Field label.
+			$html .= sprintf(
+				'<label for="%s">%s</label> ',
+				esc_attr( $field['id'] ),
+				$field['label']
+			);
 
 			switch ( $field['type'] ) {
 				case 'select':
 					$html .= sprintf(
-						'<label for="%s">%s</label> ',
-						esc_attr( $field['id'] ),
-						$field['label']
-					);
-
-					$html .= sprintf(
-						'<select id="%s" name="%s">%s</select>',
+						'<select id="%s" name="%s" %s>%s</select>',
 						esc_attr( $field['id'] ),
 						esc_attr( $field['name'] ),
+						( $field['required'] ? 'required' : null ),
 						Pay_Util::select_options_grouped( $field['choices'] )
 					);
 
 					break;
 				default:
-					$html .= sprintf(
-						'<label for="%s">%s</label> ',
-						esc_attr( $field['id'] ),
-						$field['label']
-					);
-
-					$type = $field['type'];
-
-					if ( empty( $type ) ) {
-						$type = 'text';
-					}
-
 					$attributes = array(
-						'type' => $type,
-						'id'   => $field['id'],
-						'name' => $field['name'],
+						'type'     => $field['type'],
+						'id'       => $field['id'],
+						'name'     => $field['name'],
+						'required' => $field['required'],
 					);
 
-					$html .= sprintf(
-						'<input %s>',
-						Pay_Util::array_to_html_attributes( $attributes )
-					);
+					$html .= sprintf( '<input %s>', Pay_Util::array_to_html_attributes( $attributes ) );
 
 					break;
 			}
