@@ -405,7 +405,7 @@ class Util {
 				array(
 					'id'       => $field['name'],
 					'type'     => 'text',
-					'value'    => ( isset( $_REQUEST[ $field['name'] ] ) ? $_REQUEST[ $field['name'] ] : null ),
+					'value'    => ( \filter_has_var( INPUT_POST, $field['name'] ) ? \filter_input( INPUT_POST, $field['name'], FILTER_SANITIZE_STRING ) : null ),
 					'required' => false,
 				)
 			);
