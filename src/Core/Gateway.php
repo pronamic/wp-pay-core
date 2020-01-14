@@ -519,11 +519,11 @@ abstract class Gateway {
 
 				if ( ! empty( $issuers ) ) {
 					$field = array(
-						'id'       => 'pronamic_ideal_issuer_id',
-						'name'     => 'pronamic_ideal_issuer_id',
-						'label'    => __( 'Choose your bank', 'pronamic_ideal' ),
-						'type'     => 'select',
-						'choices'  => $issuers,
+						'id'      => 'pronamic_ideal_issuer_id',
+						'name'    => 'pronamic_ideal_issuer_id',
+						'label'   => __( 'Choose your bank', 'pronamic_ideal' ),
+						'type'    => 'select',
+						'choices' => $issuers,
 					);
 				}
 
@@ -533,11 +533,11 @@ abstract class Gateway {
 
 				if ( ! empty( $issuers ) ) {
 					$field = array(
-						'id'       => 'pronamic_credit_card_issuer_id',
-						'name'     => 'pronamic_credit_card_issuer_id',
-						'label'    => __( 'Choose your credit card issuer', 'pronamic_ideal' ),
-						'type'     => 'select',
-						'choices'  => $issuers,
+						'id'      => 'pronamic_credit_card_issuer_id',
+						'name'    => 'pronamic_credit_card_issuer_id',
+						'label'   => __( 'Choose your credit card issuer', 'pronamic_ideal' ),
+						'type'    => 'select',
+						'choices' => $issuers,
 					);
 				}
 
@@ -569,11 +569,11 @@ abstract class Gateway {
 
 		// Return field.
 		return array(
-			'id'       => 'pronamic_pay_gender',
-			'name'     => 'pronamic_pay_gender',
-			'label'    => __( 'Gender', 'pronamic_ideal' ),
-			'type'     => 'select',
-			'choices'  => array(
+			'id'      => 'pronamic_pay_gender',
+			'name'    => 'pronamic_pay_gender',
+			'label'   => __( 'Gender', 'pronamic_ideal' ),
+			'type'    => 'select',
+			'choices' => array(
 				array(
 					'options' => array(
 						''  => __( '— Select gender —', 'pronamic_ideal' ),
@@ -607,11 +607,11 @@ abstract class Gateway {
 
 		// Return field.
 		return array(
-			'id'       => 'pronamic_pay_birth_date',
-			'name'     => 'pronamic_pay_birth_date',
-			'label'    => __( 'Date of birth', 'pronamic_ideal' ),
-			'type'     => 'date',
-			'max'      => gmdate( 'Y-m-d' ),
+			'id'    => 'pronamic_pay_birth_date',
+			'name'  => 'pronamic_pay_birth_date',
+			'label' => __( 'Date of birth', 'pronamic_ideal' ),
+			'type'  => 'date',
+			'max'   => gmdate( 'Y-m-d' ),
 		);
 	}
 
