@@ -403,8 +403,9 @@ class Util {
 			$field = \wp_parse_args(
 				$field,
 				array(
-					'type'     => 'text',
 					'id'       => $field['name'],
+					'type'     => 'text',
+					'value'    => ( isset( $_REQUEST[ $field['name'] ] ) ? $_REQUEST[ $field['name'] ] : null ),
 					'required' => false,
 				)
 			);
@@ -432,6 +433,8 @@ class Util {
 						'type'     => $field['type'],
 						'id'       => $field['id'],
 						'name'     => $field['name'],
+						'value'    => $field['value'],
+						'max'      => $field['max'],
 						'required' => $field['required'],
 					);
 

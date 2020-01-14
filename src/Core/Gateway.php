@@ -615,6 +615,7 @@ abstract class Gateway {
 			'label'    => __( 'Date of birth', 'pronamic_ideal' ),
 			'required' => true,
 			'type'     => 'date',
+			'max'      => gmdate( 'Y-m-d' ),
 		);
 	}
 
