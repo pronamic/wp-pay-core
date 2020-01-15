@@ -817,6 +817,9 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			return;
 		}
 
+		// Clean post cache to prevent duplicate status updates.
+		\clean_post_cache( $id );
+
 		$previous_status = $this->get_meta( $id, 'status' );
 
 		$this->update_meta( $id, 'status', $payment->status );
