@@ -328,9 +328,7 @@ class SubscriptionsModule {
 		$payment->start_date = $start_date;
 		$payment->end_date   = $end_date;
 
-		// Update payment and subscription.
-		$payment->save();
-
+		// Update subscription.
 		$subscription->save();
 
 		// Start payment.
