@@ -977,6 +977,15 @@ class Plugin {
 				$payment->issuer = filter_input( INPUT_POST, 'pronamic_ideal_issuer_id', FILTER_SANITIZE_STRING );
 			}
 		}
+
+		// Payment lines payment.
+		$lines = $payment->get_lines();
+
+		if ( null !== $lines ) {
+			foreach ( $lines as $line ) {
+				$line->set_payment( $payment );
+			}
+		}
 	}
 
 	/**

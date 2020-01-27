@@ -111,6 +111,13 @@ class PaymentLine {
 	private $product_category;
 
 	/**
+	 * Payment
+	 *
+	 * @var Payment|null
+	 */
+	private $payment;
+
+	/**
 	 * Payment line constructor.
 	 */
 	public function __construct() {
@@ -361,6 +368,25 @@ class PaymentLine {
 	 */
 	public function set_product_category( $product_category ) {
 		$this->product_category = $product_category;
+	}
+
+	/**
+	 * Get payment.
+	 *
+	 * @return null|Payment
+	 */
+	public function get_payment() {
+		return $this->payment;
+	}
+
+	/**
+	 * Set payment.
+	 *
+	 * @param Payment $payment Payment.
+	 * @return void
+	 */
+	public function set_payment( Payment $payment ) {
+		$this->payment = $payment;
 	}
 
 	/**

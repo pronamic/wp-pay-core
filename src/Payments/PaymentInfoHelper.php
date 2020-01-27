@@ -155,7 +155,7 @@ class PaymentInfoHelper {
 		}
 
 		if ( isset( $json->lines ) ) {
-			$payment_info->set_lines( PaymentLines::from_json( $json->lines ) );
+			$payment_info->set_lines( PaymentLines::from_json( $json->lines, $payment_info ) );
 		}
 
 		if ( isset( $json->mode ) ) {
