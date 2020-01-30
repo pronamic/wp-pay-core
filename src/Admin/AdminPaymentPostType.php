@@ -144,7 +144,13 @@ class AdminPaymentPostType {
 
 		// Status check action.
 		if ( filter_has_var( INPUT_GET, 'pronamic_pay_check_status' ) && check_admin_referer( 'pronamic_payment_check_status_' . $post_id ) ) {
-			Plugin::update_payment( $payment, false );
+			try {
+				Plugin::update_payment( $payment, false );
+			} catch( \Exception $e ) {
+				Plugin::render_exception( $e );
+
+				exit;
+			}
 
 			$this->admin_notices[] = array(
 				'type'    => 'info',
