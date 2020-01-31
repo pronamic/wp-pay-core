@@ -146,7 +146,7 @@ class AdminPaymentPostType {
 		if ( filter_has_var( INPUT_GET, 'pronamic_pay_check_status' ) && check_admin_referer( 'pronamic_payment_check_status_' . $post_id ) ) {
 			try {
 				Plugin::update_payment( $payment, false );
-			} catch( \Exception $e ) {
+			} catch ( \Exception $e ) {
 				Plugin::render_exception( $e );
 
 				exit;
