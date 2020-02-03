@@ -121,7 +121,9 @@ class CustomerHelper {
 		if ( null === $customer->get_user_agent() && isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
 			$user_agent = filter_var( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) );
 
-			$customer->set_user_agent( $user_agent );
+			if ( false !== $user_agent ) {
+				$customer->set_user_agent( $user_agent );
+			}
 		}
 
 		// User IP.
