@@ -3,7 +3,7 @@
  * Payment lines
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2019 Pronamic
+ * @copyright 2005-2020 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -125,11 +125,13 @@ class PaymentLines implements \Countable, \IteratorAggregate {
 	/**
 	 * Create items from object.
 	 *
-	 * @param mixed $json JSON.
+	 * @param mixed            $json         JSON.
+	 * @param PaymentInfo|null $payment_info Payment info.
+	 *
 	 * @return PaymentLines
 	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON is not an array.
 	 */
-	public static function from_json( $json ) {
+	public static function from_json( $json, PaymentInfo $payment_info = null ) {
 		if ( ! is_array( $json ) ) {
 			throw new \InvalidArgumentException( 'JSON value must be an array.' );
 		}
@@ -150,6 +152,11 @@ class PaymentLines implements \Countable, \IteratorAggregate {
 		);
 
 		foreach ( $lines as $line ) {
+			// Set payment.
+			if ( $payment_info instanceof Payment ) {
+				$line->set_payment( $payment_info );
+			}
+
 			$object->add_line( $line );
 		}
 

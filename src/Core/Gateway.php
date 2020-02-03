@@ -3,7 +3,7 @@
  * Gateway
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2019 Pronamic
+ * @copyright 2005-2020 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Core
  */
@@ -20,7 +20,7 @@ use WP_Error;
 /**
  * Title: Gateway
  * Description:
- * Copyright: 2005-2019 Pronamic
+ * Copyright: 2005-2020 Pronamic
  * Company: Pronamic
  *
  * @author  Remco Tolsma
@@ -519,12 +519,11 @@ abstract class Gateway {
 
 				if ( ! empty( $issuers ) ) {
 					$field = array(
-						'id'       => 'pronamic_ideal_issuer_id',
-						'name'     => 'pronamic_ideal_issuer_id',
-						'label'    => __( 'Choose your bank', 'pronamic_ideal' ),
-						'required' => true,
-						'type'     => 'select',
-						'choices'  => $issuers,
+						'id'      => 'pronamic_ideal_issuer_id',
+						'name'    => 'pronamic_ideal_issuer_id',
+						'label'   => __( 'Choose your bank', 'pronamic_ideal' ),
+						'type'    => 'select',
+						'choices' => $issuers,
 					);
 				}
 
@@ -534,12 +533,11 @@ abstract class Gateway {
 
 				if ( ! empty( $issuers ) ) {
 					$field = array(
-						'id'       => 'pronamic_credit_card_issuer_id',
-						'name'     => 'pronamic_credit_card_issuer_id',
-						'label'    => __( 'Choose your credit card issuer', 'pronamic_ideal' ),
-						'required' => true,
-						'type'     => 'select',
-						'choices'  => $issuers,
+						'id'      => 'pronamic_credit_card_issuer_id',
+						'name'    => 'pronamic_credit_card_issuer_id',
+						'label'   => __( 'Choose your credit card issuer', 'pronamic_ideal' ),
+						'type'    => 'select',
+						'choices' => $issuers,
 					);
 				}
 
@@ -571,12 +569,11 @@ abstract class Gateway {
 
 		// Return field.
 		return array(
-			'id'       => 'pronamic_pay_gender',
-			'name'     => 'pronamic_pay_gender',
-			'label'    => __( 'Gender', 'pronamic_ideal' ),
-			'required' => true,
-			'type'     => 'select',
-			'choices'  => array(
+			'id'      => 'pronamic_pay_gender',
+			'name'    => 'pronamic_pay_gender',
+			'label'   => __( 'Gender', 'pronamic_ideal' ),
+			'type'    => 'select',
+			'choices' => array(
 				array(
 					'options' => array(
 						''  => __( '— Select gender —', 'pronamic_ideal' ),
@@ -610,11 +607,11 @@ abstract class Gateway {
 
 		// Return field.
 		return array(
-			'id'       => 'pronamic_pay_birth_date',
-			'name'     => 'pronamic_pay_birth_date',
-			'label'    => __( 'Date of birth', 'pronamic_ideal' ),
-			'required' => true,
-			'type'     => 'date',
+			'id'    => 'pronamic_pay_birth_date',
+			'name'  => 'pronamic_pay_birth_date',
+			'label' => __( 'Date of birth', 'pronamic_ideal' ),
+			'type'  => 'date',
+			'max'   => gmdate( 'Y-m-d' ),
 		);
 	}
 
@@ -649,6 +646,16 @@ abstract class Gateway {
 	 * @return array
 	 */
 	public function get_input_fields() {
+		// Make sure to use input for first payment method.
+		$payment_method = $this->get_payment_method();
+
+		$first_payment_method = PaymentMethods::get_first_payment_method( $payment_method );
+
+		$this->set_payment_method( $first_payment_method );
+
+		/*
+		 * Fields.
+		 */
 		$fields = array();
 
 		// Issuer field.
@@ -663,6 +670,9 @@ abstract class Gateway {
 		// Remove empty input fields.
 		$fields = array_filter( $fields );
 
+		// Restore payment method to original value.
+		$this->set_payment_method( $payment_method );
+
 		return $fields;
 	}
 
@@ -674,15 +684,7 @@ abstract class Gateway {
 	 * @return string
 	 */
 	public function get_input_html() {
-		$payment_method = $this->get_payment_method();
-
-		$first_payment_method = PaymentMethods::get_first_payment_method( $payment_method );
-
-		$this->set_payment_method( $first_payment_method );
-
 		$fields = $this->get_input_fields();
-
-		$this->set_payment_method( $payment_method );
 
 		return Util::input_fields_html( $fields );
 	}

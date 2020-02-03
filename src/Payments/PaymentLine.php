@@ -3,7 +3,7 @@
  * Payment line
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2019 Pronamic
+ * @copyright 2005-2020 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -109,6 +109,13 @@ class PaymentLine {
 	 * @var string|null
 	 */
 	private $product_category;
+
+	/**
+	 * Payment
+	 *
+	 * @var Payment|null
+	 */
+	private $payment;
 
 	/**
 	 * Payment line constructor.
@@ -361,6 +368,25 @@ class PaymentLine {
 	 */
 	public function set_product_category( $product_category ) {
 		$this->product_category = $product_category;
+	}
+
+	/**
+	 * Get payment.
+	 *
+	 * @return null|Payment
+	 */
+	public function get_payment() {
+		return $this->payment;
+	}
+
+	/**
+	 * Set payment.
+	 *
+	 * @param Payment $payment Payment.
+	 * @return void
+	 */
+	public function set_payment( Payment $payment ) {
+		$this->payment = $payment;
 	}
 
 	/**

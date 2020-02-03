@@ -3,7 +3,7 @@
  * Abstract Integration
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2019 Pronamic
+ * @copyright 2005-2020 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Gateways\Common
  */
@@ -12,11 +12,12 @@ namespace Pronamic\WordPress\Pay\Gateways\Common;
 
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\GatewayConfig;
+use Pronamic\WordPress\Pay\Dependencies\Dependencies;
 
 /**
  * Title: Abstract Integration
  * Description:
- * Copyright: 2005-2019 Pronamic
+ * Copyright: 2005-2020 Pronamic
  * Company: Pronamic
  *
  * @author  Remco Tolsma
@@ -80,6 +81,46 @@ abstract class AbstractIntegration {
 	 * @var array
 	 */
 	protected $supports = array();
+
+	/**
+	 * Dependencies.
+	 *
+	 * @var Dependencies
+	 */
+	private $dependencies;
+
+	/**
+	 * Construct.
+	 *
+	 * @param array $args Arguments.
+	 */
+	public function __construct( $args = array() ) {
+		$args = wp_parse_args(
+			$args,
+			array()
+		);
+
+		// Dependencies.
+		$this->dependencies = new Dependencies();
+	}
+
+	/**
+	 * Get the dependencies of this integration.
+	 *
+	 * @return Dependencies
+	 */
+	public function get_dependencies() {
+		return $this->dependencies;
+	}
+
+	/**
+	 * Is active.
+	 *
+	 * @return bool True if dependencies are met, false othwerise.
+	 */
+	public function is_active() {
+		return $this->dependencies->are_met();
+	}
 
 	/**
 	 * Get ID.

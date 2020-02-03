@@ -3,7 +3,7 @@
  * Meta Box Payment Info
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2019 Pronamic
+ * @copyright 2005-2020 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -139,7 +139,17 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 				<?php esc_html_e( 'Bank Transfer Recipient', 'pronamic_ideal' ); ?>
 			</th>
 			<td>
-				<?php echo wpautop($bank_transfer_recipient ); ?>
+				<?php
+
+				echo wp_kses(
+					wpautop( $bank_transfer_recipient ),
+					array(
+						'p'  => array(),
+						'br' => array(),
+					)
+				);
+
+				?>
 			</td>
 		</tr>
 

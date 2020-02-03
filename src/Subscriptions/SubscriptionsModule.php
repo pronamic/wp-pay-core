@@ -3,7 +3,7 @@
  * Subscriptions Module
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2019 Pronamic
+ * @copyright 2005-2020 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Subscriptions
  */
@@ -28,7 +28,7 @@ use WP_Query;
 /**
  * Title: Subscriptions module
  * Description:
- * Copyright: 2005-2019 Pronamic
+ * Copyright: 2005-2020 Pronamic
  * Company: Pronamic
  *
  * @link https://woocommerce.com/2017/04/woocommerce-3-0-release/
@@ -328,9 +328,7 @@ class SubscriptionsModule {
 		$payment->start_date = $start_date;
 		$payment->end_date   = $end_date;
 
-		// Update payment and subscription.
-		$payment->save();
-
+		// Update subscription.
 		$subscription->save();
 
 		// Start payment.

@@ -3,7 +3,7 @@
  * Google Analytics E-Commerce
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2019 Pronamic
+ * @copyright 2005-2020 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -205,7 +205,7 @@ class GoogleAnalyticsEcommerce {
 				 * Item Name - Required for item hit type. - Specifies the item name.
 				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#in
 				 */
-				$item['in'] = $line->get_name();
+				$item['in'] = \apply_filters( 'pronamic_pay_google_analytics_ecommerce_item_name', $line->get_name(), $line );
 
 				/*
 				 * Item Price - Optional. - Specifies the price for a single item / unit.
@@ -241,8 +241,10 @@ class GoogleAnalyticsEcommerce {
 				 * Item Category - Optional. - Specifies the category that the item belongs to.
 				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#iv
 				 */
-				if ( null !== $line->get_product_category() ) {
-					$item['iv'] = $line->get_product_category();
+				$product_category = \apply_filters( 'pronamic_pay_google_analytics_ecommerce_item_product_category', $line->get_product_category(), $line );
+
+				if ( null !== $product_category ) {
+					$item['iv'] = $product_category;
 				}
 
 				wp_remote_post(

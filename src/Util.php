@@ -3,7 +3,7 @@
  * Util
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2019 Pronamic
+ * @copyright 2005-2020 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -240,6 +240,15 @@ class Util {
 		$html = '';
 
 		foreach ( $attributes as $key => $value ) {
+			// Check boolean attribute.
+			if ( \is_bool( $value ) ) {
+				if ( $value ) {
+					$html .= sprintf( '%s ', $key );
+				}
+
+				continue;
+			}
+
 			$html .= sprintf( '%s="%s" ', $key, esc_attr( $value ) );
 		}
 

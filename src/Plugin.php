@@ -3,7 +3,7 @@
  * Plugin
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2019 Pronamic
+ * @copyright 2005-2020 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -975,6 +975,15 @@ class Plugin {
 
 			if ( PaymentMethods::IDEAL === $payment->method && filter_has_var( INPUT_POST, 'pronamic_ideal_issuer_id' ) ) {
 				$payment->issuer = filter_input( INPUT_POST, 'pronamic_ideal_issuer_id', FILTER_SANITIZE_STRING );
+			}
+		}
+
+		// Payment lines payment.
+		$lines = $payment->get_lines();
+
+		if ( null !== $lines ) {
+			foreach ( $lines as $line ) {
+				$line->set_payment( $payment );
 			}
 		}
 	}

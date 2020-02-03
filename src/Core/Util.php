@@ -3,7 +3,7 @@
  * Util
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2019 Pronamic
+ * @copyright 2005-2020 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Core
  */
@@ -17,7 +17,7 @@ use Pronamic\WordPress\Pay\Util as Pay_Util;
 /**
  * Title: WordPress utility class
  * Description:
- * Copyright: 2005-2019 Pronamic
+ * Copyright: 2005-2020 Pronamic
  * Company: Pronamic
  *
  * @author Remco Tolsma
@@ -364,7 +364,7 @@ class Util {
 				 * addresses. The first one is the original client. It can't be
 				 * trusted for authenticity, but we don't need to for this purpose.
 				 */
-				$addresses = explode( ',', filter_var( wp_unslash( $_SERVER[ $header ] ) ) );
+				$addresses = explode( ',', (string) filter_var( wp_unslash( $_SERVER[ $header ] ) ) );
 
 				$addresses = array_slice( $addresses, 0, 1 );
 
@@ -396,49 +396,49 @@ class Util {
 		$html = '';
 
 		foreach ( $fields as $field ) {
-			if ( ! isset( $field['type'] ) ) {
+			if ( ! isset( $field['type'], $field['name'] ) ) {
 				continue;
 			}
+
+			$field = \wp_parse_args(
+				$field,
+				array(
+					'id'       => $field['name'],
+					'type'     => 'text',
+					'value'    => ( \filter_has_var( INPUT_POST, $field['name'] ) ? \filter_input( INPUT_POST, $field['name'], FILTER_SANITIZE_STRING ) : null ),
+					'required' => false,
+				)
+			);
+
+			// Field label.
+			$html .= sprintf(
+				'<label for="%s">%s</label> ',
+				esc_attr( $field['id'] ),
+				$field['label']
+			);
 
 			switch ( $field['type'] ) {
 				case 'select':
 					$html .= sprintf(
-						'<label for="%s">%s</label> ',
-						esc_attr( $field['id'] ),
-						$field['label']
-					);
-
-					$html .= sprintf(
-						'<select id="%s" name="%s">%s</select>',
+						'<select id="%s" name="%s" %s>%s</select>',
 						esc_attr( $field['id'] ),
 						esc_attr( $field['name'] ),
+						( $field['required'] ? 'required' : null ),
 						Pay_Util::select_options_grouped( $field['choices'] )
 					);
 
 					break;
 				default:
-					$html .= sprintf(
-						'<label for="%s">%s</label> ',
-						esc_attr( $field['id'] ),
-						$field['label']
-					);
-
-					$type = $field['type'];
-
-					if ( empty( $type ) ) {
-						$type = 'text';
-					}
-
 					$attributes = array(
-						'type' => $type,
-						'id'   => $field['id'],
-						'name' => $field['name'],
+						'type'     => $field['type'],
+						'id'       => $field['id'],
+						'name'     => $field['name'],
+						'value'    => $field['value'],
+						'max'      => $field['max'],
+						'required' => $field['required'],
 					);
 
-					$html .= sprintf(
-						'<input %s>',
-						Pay_Util::array_to_html_attributes( $attributes )
-					);
+					$html .= sprintf( '<input %s>', Pay_Util::array_to_html_attributes( $attributes ) );
 
 					break;
 			}

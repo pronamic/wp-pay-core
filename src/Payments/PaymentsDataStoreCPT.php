@@ -3,7 +3,7 @@
  * Payments Data Store Custom Post Type
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2019 Pronamic
+ * @copyright 2005-2020 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -17,7 +17,7 @@ use Pronamic\WordPress\Pay\Customer;
 /**
  * Title: Payments data store CPT
  * Description:
- * Copyright: 2005-2019 Pronamic
+ * Copyright: 2005-2020 Pronamic
  * Company: Pronamic
  *
  * @see     https://woocommerce.com/2017/04/woocommerce-3-0-release/
@@ -816,6 +816,9 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		if ( empty( $id ) ) {
 			return;
 		}
+
+		// Clean post cache to prevent duplicate status updates.
+		\clean_post_cache( $id );
 
 		$previous_status = $this->get_meta( $id, 'status' );
 
