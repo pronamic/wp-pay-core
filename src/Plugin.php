@@ -597,6 +597,12 @@ class Plugin {
 
 		$this->gateway_integrations = new GatewayIntegrations( $gateways );
 
+		foreach ( $this->gateway_integrations as $integration ) {
+			if ( method_exists( $integration, 'plugins_loaded' ) ) {
+				$integration->plugins_loaded();
+			}
+		}
+
 		// Maybes.
 		PaymentMethods::maybe_update_active_payment_methods();
 	}
