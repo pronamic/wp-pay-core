@@ -119,6 +119,10 @@ abstract class AbstractIntegration {
 	 * @return bool True if dependencies are met, false othwerise.
 	 */
 	public function is_active() {
+		if ( null === $this->dependencies ) {
+			return true;
+		}
+
 		return $this->dependencies->are_met();
 	}
 

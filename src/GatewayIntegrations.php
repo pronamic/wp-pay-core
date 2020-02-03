@@ -48,7 +48,12 @@ class GatewayIntegrations implements \IteratorAggregate {
 				continue;
 			}
 
-			$this->integrations[ $integration->get_id() ] = $integration;
+			/**
+			 * Only add active integrations.
+			 */
+			if ( $integration->is_active() ) {
+				$this->integrations[ $integration->get_id() ] = $integration;
+			}
 		}
 	}
 
