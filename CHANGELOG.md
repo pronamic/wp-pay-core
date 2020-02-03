@@ -7,6 +7,14 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.2.7] - 2020-02-03
+- Added Google Analytics e-commerce `pronamic_pay_google_analytics_ecommerce_item_name` and `pronamic_pay_google_analytics_ecommerce_item_category` filters.
+- Added support for dependencies in the abstract gateway integration class.
+- Improved error handling for manual payment status check.
+- Updated custom gender and date of birth input fields.
+- Clean post cache to prevent duplicate status updates.
+- Fixed duplicate payment for recurring payment.
+
 ## [2.2.6] - 2019-12-22
 - Added filter `pronamic_payment_gateway_configuration_id` for payment gateway configuration ID.
 - Added filter `pronamic_pay_return_should_redirect` to move return checks to gateway integrations.
@@ -250,7 +258,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.2.6...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.2.7...HEAD
+[2.2.7]: https://github.com/wp-pay/core/compare/2.2.6...2.2.7
 [2.2.6]: https://github.com/wp-pay/core/compare/2.2.5...2.2.6
 [2.2.5]: https://github.com/wp-pay/core/compare/2.2.4...2.2.5
 [2.2.4]: https://github.com/wp-pay/core/compare/2.2.3...2.2.4
