@@ -181,6 +181,13 @@ class PaymentMethods {
 	const GIROPAY = 'giropay';
 
 	/**
+	 * Constant for the Google Pay payment method.
+	 *
+	 * @var string
+	 */
+	const GOOGLE_PAY = 'google_pay';
+
+	/**
 	 * Constant for the Gulden payment method.
 	 *
 	 * @var string
@@ -281,6 +288,7 @@ class PaymentMethods {
 			self::EPS                     => __( 'EPS', 'pronamic_ideal' ),
 			self::FOCUM                   => __( 'Focum', 'pronamic_ideal' ),
 			self::GIROPAY                 => __( 'Giropay', 'pronamic_ideal' ),
+			self::GOOGLE_PAY              => __( 'Google Pay', 'pronamic_ideal' ),
 			self::GULDEN                  => __( 'Gulden', 'pronamic_ideal' ),
 			self::IDEAL                   => __( 'iDEAL', 'pronamic_ideal' ),
 			self::IDEALQR                 => __( 'iDEAL QR', 'pronamic_ideal' ),
