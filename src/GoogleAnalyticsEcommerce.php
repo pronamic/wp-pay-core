@@ -214,7 +214,7 @@ class GoogleAnalyticsEcommerce {
 				$unit_price = $line->get_unit_price();
 
 				if ( null !== $unit_price ) {
-					$item['ip'] = sprintf( '%F', $unit_price->get_amount() );
+					$item['ip'] = sprintf( '%F', $unit_price->get_value() );
 				}
 
 				/*
