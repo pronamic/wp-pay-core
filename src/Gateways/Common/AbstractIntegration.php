@@ -12,7 +12,6 @@ namespace Pronamic\WordPress\Pay\Gateways\Common;
 
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\GatewayConfig;
-use Pronamic\WordPress\Pay\Dependencies\Dependencies;
 
 /**
  * Title: Abstract Integration
@@ -25,7 +24,7 @@ use Pronamic\WordPress\Pay\Dependencies\Dependencies;
  * @since   1.0.0
  * @link    https://github.com/thephpleague/omnipay-common/blob/master/src/Omnipay/Common/AbstractGateway.php
  */
-abstract class AbstractIntegration {
+abstract class AbstractIntegration extends \Pronamic\WordPress\Pay\AbstractIntegration {
 	/**
 	 * ID.
 	 *
@@ -81,50 +80,6 @@ abstract class AbstractIntegration {
 	 * @var array
 	 */
 	protected $supports = array();
-
-	/**
-	 * Dependencies.
-	 *
-	 * @var Dependencies
-	 */
-	private $dependencies;
-
-	/**
-	 * Construct.
-	 *
-	 * @param array $args Arguments.
-	 */
-	public function __construct( $args = array() ) {
-		$args = wp_parse_args(
-			$args,
-			array()
-		);
-
-		// Dependencies.
-		$this->dependencies = new Dependencies();
-	}
-
-	/**
-	 * Get the dependencies of this integration.
-	 *
-	 * @return Dependencies
-	 */
-	public function get_dependencies() {
-		return $this->dependencies;
-	}
-
-	/**
-	 * Is active.
-	 *
-	 * @return bool True if dependencies are met, false othwerise.
-	 */
-	public function is_active() {
-		if ( null === $this->dependencies ) {
-			return true;
-		}
-
-		return $this->dependencies->are_met();
-	}
 
 	/**
 	 * Get ID.
