@@ -227,9 +227,8 @@ class Plugin {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'file'       => null,
-				'extensions' => array(),
-				'options'    => array(),
+				'file'    => null,
+				'options' => array(),
 			)
 		);
 
@@ -248,15 +247,6 @@ class Plugin {
 
 		// Options.
 		$this->options = $args['options'];
-
-		// Bootstrap the add-ons.
-		$extensions = $args['extensions'];
-
-		if ( is_array( $extensions ) ) {
-			foreach ( $extensions as $extension ) {
-				call_user_func( $extension );
-			}
-		}
 
 		/*
 		 * Plugins loaded.
