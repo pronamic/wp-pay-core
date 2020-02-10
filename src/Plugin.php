@@ -13,16 +13,13 @@ namespace Pronamic\WordPress\Pay;
 use Pronamic\WordPress\Pay\Admin\AdminModule;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
-use Pronamic\WordPress\Pay\Core\Recurring;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
-use Pronamic\WordPress\Pay\Gateways\Common\AbstractIntegration;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentData;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Payments\StatusChecker;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
-use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
 use Pronamic\WordPress\Pay\Webhooks\WebhookLogger;
 use WP_Error;
 use WP_Query;
@@ -573,21 +570,21 @@ class Plugin {
 			$this->admin = new Admin\AdminModule( $this );
 		}
 
-		// Plugin integrations.
-		$this->plugin_integrations = apply_filters( 'pronamic_pay_plugin_integrations', array() );
-
-		foreach ( $this->plugin_integrations as $integration ) {
-			if ( method_exists( $integration, 'plugins_loaded' ) ) {
-				$integration->plugins_loaded();
-			}
-		}
-
 		// Gateway Integrations.
 		$gateways = apply_filters( 'pronamic_pay_gateways', array() );
 
 		$this->gateway_integrations = new GatewayIntegrations( $gateways );
 
 		foreach ( $this->gateway_integrations as $integration ) {
+			if ( method_exists( $integration, 'plugins_loaded' ) ) {
+				$integration->plugins_loaded();
+			}
+		}
+
+		// Plugin integrations.
+		$this->plugin_integrations = apply_filters( 'pronamic_pay_plugin_integrations', array() );
+
+		foreach ( $this->plugin_integrations as $integration ) {
 			if ( method_exists( $integration, 'plugins_loaded' ) ) {
 				$integration->plugins_loaded();
 			}
