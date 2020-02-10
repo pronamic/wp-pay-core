@@ -26,6 +26,20 @@ use Pronamic\WordPress\Pay\Upgrades\Upgrades;
  */
 abstract class AbstractIntegration {
 	/**
+	 * ID.
+	 *
+	 * @var string|null
+	 */
+	protected $id;
+
+	/**
+	 * Name.
+	 *
+	 * @var string|null
+	 */
+	protected $name;
+
+	/**
 	 * Dependencies.
 	 *
 	 * @var Dependencies
@@ -56,9 +70,15 @@ abstract class AbstractIntegration {
 		$args = wp_parse_args(
 			$args,
 			array(
+				'id'                  => null,
+				'name'                => null,
 				'version_option_name' => null,
 			)
 		);
+
+		// ID.
+		$this->set_id( $args['id'] );
+		$this->set_name( $args['name'] );
 
 		// Dependencies.
 		$this->dependencies = new Dependencies();
@@ -68,6 +88,44 @@ abstract class AbstractIntegration {
 
 		// Version option name.
 		$this->set_version_option_name( $args['version_option_name'] );
+	}
+
+	/**
+	 * Get ID.
+	 *
+	 * @return string|null
+	 */
+	public function get_id() {
+		return $this->id;
+	}
+
+	/**
+	 * Set ID.
+	 *
+	 * @param string|null $id ID.
+	 * @return void
+	 */
+	public function set_id( $id ) {
+		$this->id = $id;
+	}
+
+	/**
+	 * Get name.
+	 *
+	 * @return string|null
+	 */
+	public function get_name() {
+		return $this->name;
+	}
+
+	/**
+	 * Set name.
+	 *
+	 * @param string|null $name Name.
+	 * @return void
+	 */
+	public function set_name( $name ) {
+		$this->name = $name;
 	}
 
 	/**
