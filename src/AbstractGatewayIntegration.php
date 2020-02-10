@@ -1,6 +1,6 @@
 <?php
 /**
- * Abstract Integration
+ * Abstract gateway integration
  *
  * @author    Pronamic <info@pronamic.eu>
  * @copyright 2005-2020 Pronamic
@@ -8,13 +8,13 @@
  * @package   Pronamic\WordPress\Pay\Gateways\Common
  */
 
-namespace Pronamic\WordPress\Pay\Gateways\Common;
+namespace Pronamic\WordPress\Pay;
 
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\GatewayConfig;
 
 /**
- * Title: Abstract Integration
+ * Title: Abstract gateway integration
  * Description:
  * Copyright: 2005-2020 Pronamic
  * Company: Pronamic
@@ -24,21 +24,7 @@ use Pronamic\WordPress\Pay\Core\GatewayConfig;
  * @since   1.0.0
  * @link    https://github.com/thephpleague/omnipay-common/blob/master/src/Omnipay/Common/AbstractGateway.php
  */
-abstract class AbstractIntegration extends \Pronamic\WordPress\Pay\AbstractIntegration {
-	/**
-	 * ID.
-	 *
-	 * @var string
-	 */
-	protected $id;
-
-	/**
-	 * Name.
-	 *
-	 * @var string
-	 */
-	protected $name;
-
+abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	/**
 	 * URL.
 	 *
@@ -82,41 +68,36 @@ abstract class AbstractIntegration extends \Pronamic\WordPress\Pay\AbstractInteg
 	protected $supports = array();
 
 	/**
-	 * Get ID.
+	 * Construct.
 	 *
-	 * @return string
+	 * @param array $args Arguments.
 	 */
-	public function get_id() {
-		return $this->id;
-	}
+	public function __construct( $args = array() ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'provider'      => null,
+				'url'           => __( 'https://www.adyen.com/', 'pronamic_ideal' ),
+				'product_url'   => __( 'https://www.adyen.com/pricing', 'pronamic_ideal' ),
+				'dashboard_url' => array(),
+				'manual_url'    => null,
+				'supports'      => array(),
+			)
+		);
 
-	/**
-	 * Set ID.
-	 *
-	 * @param string $id ID.
-	 * @return void
-	 */
-	public function set_id( $id ) {
-		$this->id = $id;
-	}
+		parent::__construct( $args );
 
-	/**
-	 * Get name.
-	 *
-	 * @return string
-	 */
-	public function get_name() {
-		return $this->name;
-	}
+		// Provider.
+		$this->provider = $args['provider'];
 
-	/**
-	 * Set name.
-	 *
-	 * @param string $name Name.
-	 * @return void
-	 */
-	public function set_name( $name ) {
-		$this->name = $name;
+		// URL's.
+		$this->url           = $args['url'];
+		$this->product_url   = $args['product_url'];
+		$this->dashboard_url = $args['dashboard_url'];
+		$this->manual_url    = $args['manual_url'];
+
+		// Supports.
+		$this->supports = $args['supports'];
 	}
 
 	/**

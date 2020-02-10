@@ -10,8 +10,6 @@
 
 namespace Pronamic\WordPress\Pay;
 
-use Pronamic\WordPress\Pay\Gateways\Common\AbstractIntegration;
-
 /**
  * Title: WordPress gateway integrations class.
  *
@@ -44,7 +42,7 @@ class GatewayIntegrations implements \IteratorAggregate {
 			 *
 			 * @todo Consider throwing exception?
 			 */
-			if ( ! ( $integration instanceof AbstractIntegration ) ) {
+			if ( ! ( $integration instanceof AbstractGatewayIntegration ) ) {
 				continue;
 			}
 

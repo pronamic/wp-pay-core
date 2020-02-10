@@ -30,14 +30,21 @@ abstract class AbstractIntegration {
 	 *
 	 * @var string|null
 	 */
-	protected $id;
+	public $id;
 
 	/**
 	 * Name.
 	 *
 	 * @var string|null
 	 */
-	protected $name;
+	public $name;
+
+	/**
+	 * Deprecated boolean flag to mark an integration as deprecated.
+	 *
+	 * @var boolean
+	 */
+	public $deprecated;
 
 	/**
 	 * Dependencies.
@@ -73,21 +80,27 @@ abstract class AbstractIntegration {
 				'id'                  => null,
 				'name'                => null,
 				'version_option_name' => null,
+				'deprecated'          => false,
 			)
 		);
 
 		// ID.
 		$this->set_id( $args['id'] );
+
+		// Name.
 		$this->set_name( $args['name'] );
+
+		// Version option name.
+		$this->set_version_option_name( $args['version_option_name'] );
+
+		// Deprecated.
+		$this->deprecated = $args['deprecated'];
 
 		// Dependencies.
 		$this->dependencies = new Dependencies();
 
 		// Upgrades.
 		$this->upgrades = new Upgrades();
-
-		// Version option name.
-		$this->set_version_option_name( $args['version_option_name'] );
 	}
 
 	/**
