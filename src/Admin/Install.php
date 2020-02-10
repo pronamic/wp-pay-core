@@ -257,31 +257,31 @@ class Install {
 	}
 
 	/**
-	 * Get upgradeable plugin integrations.
+	 * Get upgradeable integrations.
 	 *
-	 * @return array<AbstractPluginIntegration>
+	 * @return array<AbstractIntegration>
 	 */
-	private function get_upgradeable_plugin_integrations() {
-		$plugin_integrations = $this->plugin->plugin_integrations;
+	private function get_upgradeable_integrations() {
+		$integrations = $this->plugin->integrations;
 
-		$plugin_integrations = array_filter(
-			$plugin_integrations,
+		$integrations = array_filter(
+			$integrations,
 			/**
-			 * Filter plugin integration with version option name.
+			 * Filter integration with version option name.
 			 *
-			 * @param AbstractPluginIntegration $plugin_integration Plugin integration object.
-			 * @return bool True if plugin integration has version option name, false otherwise.
+			 * @param AbstractIntegration $integration Integration object.
+			 * @return bool True if integration has version option name, false otherwise.
 			 */
-			function( $plugin_integration ) {
-				if ( ! $plugin_integration->is_active() ) {
+			function( $integration ) {
+				if ( ! $integration->is_active() ) {
 					return false;
 				}
 
-				if ( null === $plugin_integration->get_version_option_name() ) {
+				if ( null === $integration->get_version_option_name() ) {
 					return false;
 				}
 
-				if ( ! $plugin_integration->get_upgrades()->are_executable() ) {
+				if ( ! $integration->get_upgrades()->are_executable() ) {
 					return false;
 				}
 
@@ -289,7 +289,7 @@ class Install {
 			}
 		);
 
-		return $plugin_integrations;
+		return $integrations;
 	}
 
 	/**
@@ -309,10 +309,10 @@ class Install {
 			return true;
 		}
 
-		// Plugin integrations.
-		$plugin_integrations = $this->get_upgradeable_plugin_integrations();
+		// Integrations.
+		$integrations = $this->get_upgradeable_integrations();
 
-		foreach ( $plugin_integrations as $integration ) {
+		foreach ( $integrations as $integration ) {
 			$version_option_name = $integration->get_version_option_name();
 
 			if ( null === $version_option_name ) {
@@ -357,10 +357,10 @@ class Install {
 			}
 		}
 
-		// Plugin integrations.
-		$plugin_integrations = $this->get_upgradeable_plugin_integrations();
+		// Integrations.
+		$integrations = $this->get_upgradeable_integrations();
 
-		foreach ( $plugin_integrations as $integration ) {
+		foreach ( $integrations as $integration ) {
 			$version_option_name = $integration->get_version_option_name();
 
 			if ( null === $version_option_name ) {

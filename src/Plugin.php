@@ -245,6 +245,9 @@ class Plugin {
 		// Options.
 		$this->options = $args['options'];
 
+		// Integrations.
+		$this->integrations = array();
+
 		/*
 		 * Plugins loaded.
 		 *
@@ -581,7 +584,7 @@ class Plugin {
 			}
 		}
 
-		// Plugin integrations.
+		// Plugin Integrations.
 		$this->plugin_integrations = apply_filters( 'pronamic_pay_plugin_integrations', array() );
 
 		foreach ( $this->plugin_integrations as $integration ) {
@@ -589,6 +592,9 @@ class Plugin {
 				$integration->plugins_loaded();
 			}
 		}
+
+		// Integrations.
+		$this->integrations = array_merge( $gateways, $this->plugin_integrations );
 
 		// Maybes.
 		PaymentMethods::maybe_update_active_payment_methods();
