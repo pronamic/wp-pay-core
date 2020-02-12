@@ -594,7 +594,9 @@ class Plugin {
 		}
 
 		// Integrations.
-		$this->integrations = array_merge( $gateways, $this->plugin_integrations );
+		$gateway_integrations = \iterator_to_array( $this->gateway_integrations );
+
+		$this->integrations = array_merge( $gateway_integrations, $this->plugin_integrations );
 
 		// Maybes.
 		PaymentMethods::maybe_update_active_payment_methods();
