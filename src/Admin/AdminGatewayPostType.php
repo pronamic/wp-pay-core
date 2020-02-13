@@ -446,7 +446,11 @@ class AdminGatewayPostType {
 			// Get filtered input and update post meta.
 			$value = \filter_input( INPUT_POST, $name, $filter, $options );
 
-			\update_post_meta( $post_id, $name, $value );
+			if ( '' !== $value ) {
+				\update_post_meta( $post_id, $name, $value );
+			} else {
+				\delete_post_meta( $post_id, $name );
+			}
 		}
 
 		$integration->save_post( $post_id );
