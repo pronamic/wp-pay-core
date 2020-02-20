@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay;
 
 use Pronamic\WordPress\Pay\Admin\AdminModule;
+use Pronamic\WordPress\Pay\Banks\BankAccountDetails;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
@@ -978,6 +979,23 @@ class Plugin {
 				$payment->issuer = filter_input( INPUT_POST, 'pronamic_ideal_issuer_id', FILTER_SANITIZE_STRING );
 			}
 		}
+
+		// Consumer bank details.
+		$consumer_bank_details = $payment->get_consumer_bank_details();
+
+		if ( null === $consumer_bank_details ) {
+			$consumer_bank_details = new BankAccountDetails();
+		}
+
+		if ( null === $consumer_bank_details->get_name() && filter_has_var( INPUT_POST, 'pronamic_pay_consumer_bank_details_name' ) ) {
+			$consumer_bank_details->set_name( filter_input( INPUT_POST, 'pronamic_pay_consumer_bank_details_name', FILTER_SANITIZE_STRING ) );
+		}
+
+		if ( null === $consumer_bank_details->get_iban() && filter_has_var( INPUT_POST, 'pronamic_pay_consumer_bank_details_iban' ) ) {
+			$consumer_bank_details->set_iban( filter_input( INPUT_POST, 'pronamic_pay_consumer_bank_details_iban', FILTER_SANITIZE_STRING ) );
+		}
+
+		$payment->set_consumer_bank_details( $consumer_bank_details );
 
 		// Payment lines payment.
 		$lines = $payment->get_lines();
