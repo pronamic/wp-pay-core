@@ -107,21 +107,11 @@ $user_id  = is_null( $customer ) ? null : $customer->get_user_id();
 		<td>
 			<?php
 
-			$interval        = $subscription->get_interval();
-			$interval_period = $subscription->get_interval_period();
-			$frequency       = $subscription->get_frequency();
-
-			$recurrence = array();
-
-			if ( null !== $interval && null !== $interval_period ) {
-				$recurrence[] = strval( Util::format_interval( $interval, $interval_period ) );
-			}
-
-			if ( null !== $frequency ) {
-				$recurrence[] = strval( Util::format_frequency( $frequency ) );
-			}
-
-			echo esc_html( implode( ', ', $recurrence ) );
+			printf(
+			        '%s, %s',
+					esc_html( strval( Util::format_interval( $subscription->get_interval(), $subscription->get_interval_period() ) ) ),
+					esc_html( strval( Util::format_frequency( $subscription->get_frequency() ) ) )
+            );
 
 			?>
 		</td>
