@@ -102,18 +102,28 @@ $user_id  = is_null( $customer ) ? null : $customer->get_user_id();
 	</tr>
 	<tr>
 		<th scope="row">
-			<?php echo esc_html_x( 'Interval', 'Recurring payment', 'pronamic_ideal' ); ?>
+			<?php echo esc_html__( 'Recurrence', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
-			<?php echo esc_html( Util::format_interval( $subscription->get_interval(), $subscription->get_interval_period() ) ); ?>
-		</td>
-	</tr>
-	<tr>
-		<th scope="row">
-			<?php echo esc_html_x( 'Frequency', 'Recurring payment', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<?php echo esc_html( Util::format_frequency( $subscription->get_frequency() ) ); ?>
+			<?php
+
+			$interval        = $subscription->get_interval();
+			$interval_period = $subscription->get_interval_period();
+			$frequency       = $subscription->get_frequency();
+
+			$recurrence = array();
+
+			if ( null !== $interval && null !== $interval_period ) {
+				$recurrence[] = strval( Util::format_interval( $interval, $interval_period ) );
+			}
+
+			if ( null !== $frequency ) {
+				$recurrence[] = strval( Util::format_frequency( $frequency ) );
+			}
+
+			echo esc_html( implode( ', ', $recurrence ) );
+
+			?>
 		</td>
 	</tr>
 	<tr>
