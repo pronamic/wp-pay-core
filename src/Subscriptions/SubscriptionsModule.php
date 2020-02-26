@@ -209,7 +209,7 @@ class SubscriptionsModule {
 	 */
 	public function new_subscription_payment( Subscription $subscription ) {
 		// Unset the next payment date if next payment date is after the subscription end date.
-		if ( isset( $subscription->end_date, $subscription->next_payment_date ) && $subscription->next_payment_date > $subscription->end_date ) {
+		if ( isset( $subscription->end_date, $subscription->next_payment_date ) && $subscription->next_payment_date >= $subscription->end_date ) {
 			$subscription->next_payment_date = null;
 		}
 
