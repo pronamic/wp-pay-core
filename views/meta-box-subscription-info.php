@@ -90,7 +90,7 @@ $user_id  = is_null( $customer ) ? null : $customer->get_user_id();
 				$amount = $subscription->get_total_amount()->format_i18n( '%2$s' );
 
 				printf(
-					'<input type="text" name="pronamic_subscription_amount" value="%s" size="12" />',
+					' <input type="text" name="pronamic_subscription_amount" value="%s" size="12" />',
 					esc_attr( $amount )
 				);
 			} else {
