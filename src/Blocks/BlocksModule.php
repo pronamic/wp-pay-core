@@ -34,6 +34,8 @@ class BlocksModule {
 		add_action( 'init', array( $this, 'register_scripts' ) );
 		add_action( 'init', array( $this, 'register_block_types' ) );
 
+		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_styles' ) );
+
 		// Source text and description.
 		add_filter( 'pronamic_payment_source_url_' . FormsSource::BLOCK_PAYMENT_FORM, array( $this, 'source_url' ), 10, 2 );
 		add_filter( 'pronamic_payment_source_text_' . FormsSource::BLOCK_PAYMENT_FORM, array( $this, 'source_text' ), 10, 2 );
@@ -80,7 +82,6 @@ class BlocksModule {
 			array(
 				'render_callback' => array( $this, 'render_payment_form_block' ),
 				'editor_script'   => 'pronamic-payment-form-editor',
-				'style'           => array( 'pronamic-pay-forms' ),
 				'attributes'      => array(
 					'amount' => array(
 						'type'    => 'string',
@@ -89,6 +90,15 @@ class BlocksModule {
 				),
 			)
 		);
+	}
+
+	/**
+	 * Enqueue styles.
+	 *
+	 * @return void
+	 */
+	public function enqueue_styles() {
+		\wp_enqueue_style( 'pronamic-pay-forms' );
 	}
 
 	/**
@@ -141,6 +151,8 @@ class BlocksModule {
 
 			return $output;
 		endif;
+
+		$this->enqueue_styles();
 
 		// Return form output.
 		return pronamic_pay_plugin()->forms_module->get_form_output( $args );
