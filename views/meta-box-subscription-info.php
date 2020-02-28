@@ -108,10 +108,10 @@ $user_id  = is_null( $customer ) ? null : $customer->get_user_id();
 			<?php
 
 			printf(
-			        '%s, %s',
+					'%s, %s',
 					esc_html( strval( Util::format_interval( $subscription->get_interval(), $subscription->get_interval_period() ) ) ),
 					esc_html( strval( Util::format_frequency( $subscription->get_frequency() ) ) )
-            );
+			);
 
 			?>
 		</td>
