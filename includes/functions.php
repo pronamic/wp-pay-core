@@ -117,18 +117,12 @@ function get_pronamic_payments_by_meta( $meta_key, $meta_value, $args = array() 
 
 	$query = new WP_Query( $args );
 
-	if ( $query->have_posts() ) {
-		while ( $query->have_posts() ) {
-			$query->the_post();
+	foreach ( $query->posts as $p ) {
+		$payment = get_pronamic_payment( $p->ID );
 
-			$payment = get_pronamic_payment( get_the_ID() );
-
-			if ( null !== $payment ) {
-				$payments[] = $payment;
-			}
+		if ( null !== $payment ) {
+			$payments[] = $payment;
 		}
-
-		wp_reset_postdata();
 	}
 
 	return $payments;
