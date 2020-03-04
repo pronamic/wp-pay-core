@@ -41,6 +41,14 @@ class PaymentMethods {
 	const ALIPAY = 'alipay';
 
 	/**
+	 * Apple Pay
+	 *
+	 * @var string
+	 * @since 2.2.8
+	 */
+	const APPLE_PAY = 'apple_pay';
+
+	/**
 	 * Bancontact
 	 *
 	 * @var string
@@ -260,6 +268,7 @@ class PaymentMethods {
 		$payment_methods = array(
 			self::AFTERPAY                => __( 'AfterPay', 'pronamic_ideal' ),
 			self::ALIPAY                  => __( 'Alipay', 'pronamic_ideal' ),
+			self::APPLE_PAY               => __( 'Apple Pay', 'pronamic_ideal' ),
 			self::BANCONTACT              => __( 'Bancontact', 'pronamic_ideal' ),
 			self::BANK_TRANSFER           => __( 'Bank Transfer', 'pronamic_ideal' ),
 			self::BELFIUS                 => __( 'Belfius Direct Net', 'pronamic_ideal' ),
