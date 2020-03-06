@@ -1,6 +1,6 @@
 <?php
 /**
- * Abstract integration test
+ * Abstract gateway integration test
  *
  * @author    Reüel van der Steege
  * @copyright 2005-2020 Pronamic
@@ -8,20 +8,20 @@
  * @package   Pronamic\WordPress\Pay\Gateways\Common
  */
 
-namespace Pronamic\WordPress\Pay\Gateways\Common;
+namespace Pronamic\WordPress\Pay;
 
 /**
- * Abstract integration test
+ * Abstract gateway integration test
  *
  * @author  Reüel van der Steege
- * @version 2.2.6
+ * @version 2.2.8
  * @since   2.2.6
  */
-class AbstractIntegrationTest extends \WP_UnitTestCase {
+class AbstractGatewayIntegrationTest extends \WP_UnitTestCase {
 	/**
-	 * Integration mock.
+	 * Gateway integration mock.
 	 *
-	 * @var AbstractIntegration
+	 * @var AbstractGatewayIntegration
 	 */
 	private $integration;
 
@@ -30,7 +30,7 @@ class AbstractIntegrationTest extends \WP_UnitTestCase {
 	 */
 	public function setUp() {
 		// Abstract integration class mock.
-		$this->integration = $this->getMockForAbstractClass( 'Pronamic\WordPress\Pay\Gateways\Common\AbstractIntegration' );
+		$this->integration = $this->getMockForAbstractClass( AbstractGatewayIntegration::class );
 
 		$this->integration->set_manual_url( 'https://domain.tld/manuals/test/' );
 	}

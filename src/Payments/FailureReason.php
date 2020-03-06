@@ -23,14 +23,14 @@ class FailureReason {
 	 *
 	 * @var string
 	 */
-	public $code;
+	private $code;
 
 	/**
 	 * Message.
 	 *
 	 * @var string
 	 */
-	public $message;
+	private $message;
 
 	/**
 	 * Get code.

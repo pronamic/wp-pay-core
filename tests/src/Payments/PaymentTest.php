@@ -89,6 +89,7 @@ class PaymentTest extends WP_UnitTestCase {
 			array( 'set_ga_tracked', 'get_ga_tracked', true ),
 			array( 'set_consumer_bank_details', 'get_consumer_bank_details', new BankAccountDetails() ),
 			array( 'set_bank_transfer_recipient_details', 'get_bank_transfer_recipient_details', new BankTransferDetails() ),
+			array( 'set_failure_reason', 'get_failure_reason', new FailureReason() ),
 
 			// Deprecated.
 			array( 'set_amount', 'get_amount', new TaxedMoney( 89.95, 'EUR' ), true ),
@@ -308,6 +309,13 @@ class PaymentTest extends WP_UnitTestCase {
 		$bank_transfer_recipient_details->set_reference( 'ABCD-1234-EFGH-5678' );
 
 		$payment->set_bank_transfer_recipient_details( $bank_transfer_recipient_details );
+
+		$failure_reason = new FailureReason();
+
+		$failure_reason->set_code( 'invalid_cvv' );
+		$failure_reason->set_message( 'De veiligheidscode (CVV) is ongeldig.' );
+
+		$payment->set_failure_reason( $failure_reason );
 
 		// Test.
 		$json_file = __DIR__ . '/../../json/payment.json';
