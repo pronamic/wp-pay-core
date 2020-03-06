@@ -10,6 +10,7 @@
 
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Gender;
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 
 $payment_id = get_the_ID();
 
@@ -223,6 +224,18 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 			} else {
 				echo '—';
 			}
+
+			// Failure reason.
+			$failure_reason = $payment->get_failure_reason();
+
+			if ( PaymentStatus::FAILURE === $payment->get_status() && null !== $failure_reason ) :
+
+				printf(
+					' — %s',
+					esc_html( $failure_reason )
+				);
+
+			endif;
 
 			?>
 		</td>

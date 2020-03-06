@@ -115,6 +115,13 @@ class Payment extends LegacyPayment {
 	public $status;
 
 	/**
+	 * Failure reason.
+	 *
+	 * @var FailureReason
+	 */
+	public $failure_reason;
+
+	/**
 	 * The email of the user who started this payment.
 	 *
 	 * @var string|null
@@ -365,6 +372,24 @@ class Payment extends LegacyPayment {
 	 */
 	public function set_status( $status ) {
 		$this->status = $status;
+	}
+
+	/**
+	 * Get failure reason.
+	 *
+	 * @return FailureReason
+	 */
+	public function get_failure_reason() {
+		return $this->failure_reason;
+	}
+
+	/**
+	 * Set failure reason.
+	 *
+	 * @param FailureReason $failure_reason Failure reason.
+	 */
+	public function set_failure_reason( $failure_reason ) {
+		$this->failure_reason = $failure_reason;
 	}
 
 	/**
@@ -716,6 +741,10 @@ class Payment extends LegacyPayment {
 			$payment->set_status( $json->status );
 		}
 
+		if ( isset( $json->failure_reason ) ) {
+			$payment->set_failure_reason( FailureReason::from_json( $json->failure_reason ) );
+		}
+
 		if ( isset( $json->ga_tracked ) ) {
 			$payment->set_ga_tracked( $json->ga_tracked );
 		}
@@ -741,6 +770,12 @@ class Payment extends LegacyPayment {
 
 		if ( null !== $this->get_status() ) {
 			$properties['status'] = $this->get_status();
+		}
+
+		$failure_reason  = $this->get_failure_reason();
+
+		if ( null !== $failure_reason ) {
+			$properties['failure_reason'] = $failure_reason->get_json();
 		}
 
 		if ( null !== $this->get_ga_tracked() ) {
