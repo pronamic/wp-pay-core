@@ -52,16 +52,18 @@ class ContactNameHelper {
 
 			$names = array_filter( $names );
 
-			$names = explode( ' ', implode( ' ', $names ) );
+			if ( ! empty( $names ) ) {
+				$names = explode( ' ', implode( ' ', $names ) );
 
-			$initials = array_map(
-				function( $name ) {
-					return strtoupper( mb_substr( $name, 0, 1 ) ) . '.';
-				},
-				$names
-			);
+				$initials = array_map(
+					function ( $name ) {
+						return strtoupper( mb_substr( $name, 0, 1 ) ) . '.';
+					},
+					$names
+				);
 
-			$name->set_initials( implode( '', $initials ) );
+				$name->set_initials( implode( '', $initials ) );
+			}
 		}
 
 		/*
