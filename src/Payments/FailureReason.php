@@ -122,7 +122,7 @@ class FailureReason {
 		$code    = $this->get_code();
 		$message = $this->get_message();
 
-		if ( null === $code && null == $message ) {
+		if ( null === $code && null === $message ) {
 			return '';
 		}
 

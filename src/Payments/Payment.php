@@ -772,7 +772,7 @@ class Payment extends LegacyPayment {
 			$properties['status'] = $this->get_status();
 		}
 
-		$failure_reason  = $this->get_failure_reason();
+		$failure_reason = $this->get_failure_reason();
 
 		if ( null !== $failure_reason ) {
 			$properties['failure_reason'] = $failure_reason->get_json();
