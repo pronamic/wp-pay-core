@@ -277,7 +277,7 @@ class Install {
 					return false;
 				}
 
-				if ( null === $integration->get_version_option_name() ) {
+				if ( null === $integration->get_db_version_option_name() ) {
 					return false;
 				}
 
@@ -313,18 +313,16 @@ class Install {
 		$integrations = $this->get_upgradeable_integrations();
 
 		foreach ( $integrations as $integration ) {
-			$version_option_name = $integration->get_version_option_name();
+			$version_option = $integration->get_db_version_option();
 
-			if ( null === $version_option_name ) {
+			if ( null === $version_option ) {
 				continue;
 			}
-
-			$current_version = get_option( $version_option_name );
 
 			$upgrades = $integration->get_upgrades();
 
 			foreach ( $upgrades as $upgrade ) {
-				if ( version_compare( $current_version, $upgrade->get_version(), '<' ) ) {
+				if ( version_compare( $version_option, $upgrade->get_version(), '<' ) ) {
 					return true;
 				}
 			}
@@ -361,26 +359,26 @@ class Install {
 		$integrations = $this->get_upgradeable_integrations();
 
 		foreach ( $integrations as $integration ) {
-			$version_option_name = $integration->get_version_option_name();
+			$db_version_option_name = $integration->get_db_version_option_name();
 
-			if ( null === $version_option_name ) {
+			if ( null === $db_version_option_name ) {
 				continue;
 			}
 
-			$current_version = get_option( $version_option_name );
+			$db_version_option = $integration->get_db_version_option();
 
 			$upgrades = $integration->get_upgrades();
 
 			foreach ( $upgrades as $upgrade ) {
 				$version = $upgrade->get_version();
 
-				if ( ! version_compare( $current_version, $version, '<' ) ) {
+				if ( ! version_compare( $db_version_option, $version, '<' ) ) {
 					continue;
 				}
 
 				$upgrade->execute();
 
-				update_option( $version_option_name, $version );
+				update_option( $db_version_option_name, $version );
 			}
 		}
 

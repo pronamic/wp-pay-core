@@ -40,6 +40,13 @@ abstract class AbstractIntegration {
 	public $name;
 
 	/**
+	 * Version.
+	 *
+	 * @var string|null
+	 */
+	private $version;
+
+	/**
 	 * Deprecated boolean flag to mark an integration as deprecated.
 	 *
 	 * @var boolean
@@ -77,10 +84,12 @@ abstract class AbstractIntegration {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'id'                  => null,
-				'name'                => null,
-				'version_option_name' => null,
-				'deprecated'          => false,
+				'id'                     => null,
+				'name'                   => null,
+				'version'                => null,
+				'version_option_name'    => null,
+				'db_version_option_name' => null,
+				'deprecated'             => false,
 			)
 		);
 
@@ -90,8 +99,14 @@ abstract class AbstractIntegration {
 		// Name.
 		$this->set_name( $args['name'] );
 
+		// Version.
+		$this->set_version( $args['version'] );
+
 		// Version option name.
 		$this->set_version_option_name( $args['version_option_name'] );
+
+		// Database version option name.
+		$this->set_db_version_option_name( $args['db_version_option_name'] );
 
 		// Deprecated.
 		$this->deprecated = $args['deprecated'];
@@ -142,6 +157,25 @@ abstract class AbstractIntegration {
 	}
 
 	/**
+	 * Get version.
+	 *
+	 * @return string|null
+	 */
+	public function get_version() {
+		return $this->version;
+	}
+
+	/**
+	 * Set version.
+	 *
+	 * @param string|null $version Version.
+	 * @return void
+	 */
+	public function set_version( $version ) {
+		$this->version = $version;
+	}
+
+	/**
 	 * Get the dependencies of this plugin integration.
 	 *
 	 * @return Dependencies
@@ -176,6 +210,68 @@ abstract class AbstractIntegration {
 	 */
 	public function set_version_option_name( $option_name ) {
 		$this->version_option_name = $option_name;
+	}
+
+	/**
+	 * Get version option.
+	 *
+	 * @return string|null
+	 */
+	public function get_version_option() {
+		if ( null === $this->version_option_name ) {
+			return null;
+		}
+
+		return \get_option( $this->version_option_name );
+	}
+
+	/**
+	 * Update database version option.
+	 *
+	 * @link https://github.com/woocommerce/woocommerce/blob/4.0.0/includes/class-wc-install.php#L396-L402
+	 */
+	public function update_version_option() {
+		if ( null === $this->version_option_name ) {
+			return;
+		}
+
+		if ( null === $this->version ) {
+			return;
+		}
+
+		\update_option( $this->version_option_name, $this->version );
+	}
+
+	/**
+	 * Get database version option name.
+	 *
+	 * @return string|null
+	 */
+	public function get_db_version_option_name() {
+		return $this->db_version_option_name;
+	}
+
+	/**
+	 * Set database version option name.
+	 *
+	 * @param string $option_name Option name.
+	 * @return void
+	 */
+	public function set_db_version_option_name( $option_name ) {
+		$this->db_version_option_name = $option_name;
+	}
+
+	/**
+	 * Get database version option.
+	 *
+	 * @return string|null
+	 */
+	public function get_db_version_option() {
+		if ( null === $this->db_version_option_name ) {
+			return null;
+		}
+
+		return \get_option( $this->db_version_option_name );
 	}
 
 	/**
