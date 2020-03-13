@@ -14,8 +14,8 @@ namespace Pronamic\WordPress\Pay;
  * Abstract gateway integration test
  *
  * @author  Remco Tolsma
- * @version 2.2.6
- * @since   1.0.0
+ * @version 2.2.8
+ * @since   2.2.8
  */
 class AbstractGatewayIntegrationTest extends \PHPUnit\Framework\TestCase {
 	/**

@@ -14,8 +14,8 @@ namespace Pronamic\WordPress\Pay\Payments;
  * Failure reason test
  *
  * @author  Remco Tolsma
- * @version 2.3.0
- * @since   2.3.0
+ * @version 2.2.8
+ * @since   2.2.8
  */
 class FailureReasonTest extends \PHPUnit\Framework\TestCase {
 	/**
