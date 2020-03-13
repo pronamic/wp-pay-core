@@ -580,18 +580,14 @@ class Plugin {
 		$this->gateway_integrations = new GatewayIntegrations( $gateways );
 
 		foreach ( $this->gateway_integrations as $integration ) {
-			if ( method_exists( $integration, 'plugins_loaded' ) ) {
-				$integration->plugins_loaded();
-			}
+			$integration->setup();
 		}
 
 		// Plugin Integrations.
 		$this->plugin_integrations = apply_filters( 'pronamic_pay_plugin_integrations', array() );
 
 		foreach ( $this->plugin_integrations as $integration ) {
-			if ( method_exists( $integration, 'plugins_loaded' ) ) {
-				$integration->plugins_loaded();
-			}
+			$integration->setup();
 		}
 
 		// Integrations.
