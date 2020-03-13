@@ -30,8 +30,8 @@ class ContactNameHelper {
 	 */
 	public static function complement_name( ContactName $name ) {
 		// Name.
-		if ( is_user_logged_in() ) {
-			$user = wp_get_current_user();
+		if ( \is_user_logged_in() ) {
+			$user = \wp_get_current_user();
 
 			if ( null === $name->get_first_name() && ! empty( $user->user_firstname ) ) {
 				$name->set_first_name( $user->user_firstname );
@@ -45,19 +45,19 @@ class ContactNameHelper {
 		// Initials.
 		if ( null === $name->get_initials() ) {
 			// First and middle name could contain multiple names.
-			$names = array(
-				$name->get_first_name(),
-				$name->get_middle_name(),
-			);
+			$names = array();
 
-			$names = array_filter( $names );
+			$names = \array_merge( $names, \explode( ' ', $name->get_first_name() ) );
+			$names = \array_merge( $names, \explode( ' ', $name->get_middle_name() ) );
+
+			$names = \array_map( 'trim', $names );
+
+			$names = \array_filter( $names );
 
 			if ( \count( $names ) > 0 ) {
-				$names = explode( ' ', implode( ' ', $names ) );
-
 				$initials = array_map(
 					function ( $name ) {
-						return strtoupper( mb_substr( $name, 0, 1 ) ) . '.';
+						return self::string_to_uppercase( \mb_substr( $name, 0, 1 ) ) . '.';
 					},
 					$names
 				);
@@ -74,6 +74,20 @@ class ContactNameHelper {
 		 * @link https://github.com/jasonpriem/HumanNameParser.php
 		 * @todo
 		 */
+	}
+
+	/**
+	 * Convert string to uppercase.
+	 *
+	 * @param string $string String.
+	 * @return string
+	 */
+	private static function string_to_uppercase( $string ) {
+		if ( \function_exists( 'mb_strtoupper' ) ) {
+			return \mb_strtoupper( $string );
+		}
+
+		return \strtoupper( $string );
 	}
 
 	/**

@@ -21,12 +21,54 @@ class ContactNameHelperTest extends \PHPUnit\Framework\TestCase {
 	/**
 	 * Test empty name.
 	 */
-	public function test_empty_name() {
+	public function test_complement_empty_name_initials() {
 		$name = new ContactName();
 
 		ContactNameHelper::complement_name( $name );
 
 		$this->assertNull( $name->get_initials() );
+	}
+
+	/**
+	 * Test multiple first names initials.
+	 */
+	public function test_complement_multiple_first_names_initials() {
+		$name = new ContactName();
+
+		$name->set_first_name( 'John Jane Test' );
+		$name->set_middle_name( 'Fitzgerald' );
+
+		ContactNameHelper::complement_name( $name );
+
+		$this->assertEquals( 'J.J.T.F.', $name->get_initials() );
+	}
+
+	/**
+	 * Test spacy name initials.
+	 */
+	public function test_complement_spacy_name_initials() {
+		$name = new ContactName();
+
+		$name->set_first_name( '     John     Jane     ' );
+		$name->set_middle_name( '     Fitzgerald     ' );
+
+		ContactNameHelper::complement_name( $name );
+
+		$this->assertEquals( 'J.J.F.', $name->get_initials() );
+	}
+
+	/**
+	 * Test mutlibyte name initials.
+	 */
+	public function test_complement_mb_name_initials() {
+		$name = new ContactName();
+
+		$name->set_first_name( '𝔍𝔬𝔥𝔫' );
+		$name->set_middle_name( '𝔉𝔦𝔱𝔷𝔤𝔢𝔯𝔞𝔩𝔡' );
+
+		ContactNameHelper::complement_name( $name );
+
+		$this->assertEquals( '𝔍.𝔉.', $name->get_initials() );
 	}
 
 	/**
