@@ -194,6 +194,16 @@ abstract class AbstractIntegration {
 	}
 
 	/**
+	 * Setup integration.
+	 * Called from `plugins_loaded` with priority `0`, intended to be overridden.
+	 *
+	 * @see Plugin::plugins_loaded()
+	 * @return void
+	 */
+	public function setup() {
+	}
+
+	/**
 	 * Get version option name.
 	 *
 	 * @return string|null
