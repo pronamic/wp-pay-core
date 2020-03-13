@@ -52,7 +52,7 @@ class ContactNameHelper {
 
 			$names = array_filter( $names );
 
-			if ( ! empty( $names ) ) {
+			if ( \count( $names ) > 0 ) {
 				$names = explode( ' ', implode( ' ', $names ) );
 
 				$initials = array_map(
