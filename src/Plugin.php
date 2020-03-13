@@ -264,7 +264,7 @@ class Plugin {
 		 * @link https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L54
 		 * @link https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L296-L297
 		 */
-		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ), 5 );
+		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ), 0 );
 
 		// Plugin locale.
 		add_filter( 'plugin_locale', array( $this, 'plugin_locale' ), 10, 2 );
