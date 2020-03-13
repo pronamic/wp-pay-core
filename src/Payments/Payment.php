@@ -117,7 +117,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Failure reason.
 	 *
-	 * @var FailureReason
+	 * @var FailureReason|null
 	 */
 	public $failure_reason;
 
@@ -377,7 +377,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Get failure reason.
 	 *
-	 * @return FailureReason
+	 * @return FailureReason|null
 	 */
 	public function get_failure_reason() {
 		return $this->failure_reason;
@@ -386,9 +386,9 @@ class Payment extends LegacyPayment {
 	/**
 	 * Set failure reason.
 	 *
-	 * @param FailureReason $failure_reason Failure reason.
+	 * @param FailureReason|null $failure_reason Failure reason.
 	 */
-	public function set_failure_reason( $failure_reason ) {
+	public function set_failure_reason( FailureReason $failure_reason = null ) {
 		$this->failure_reason = $failure_reason;
 	}
 
