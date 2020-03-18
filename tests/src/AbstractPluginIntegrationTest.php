@@ -22,12 +22,24 @@ class AbstractPluginIntegrationTest extends \WP_UnitTestCase {
 	 * Test plugin integration.
 	 */
 	public function test_plugin_integration() {
-		$mock = $this->getMockForAbstractClass( AbstractPluginIntegration::class );
+		$mock = $this->getMockForAbstractClass( AbstractGatewayIntegration::class );
 
 		$this->assertNull( $mock->get_version_option_name() );
+		$this->assertNull( $mock->get_db_version_option_name() );
 
-		$mock->set_version_option_name( 'pronamic_pay_restrictcontentpro_db_version' );
+		$mock->set_version( '1.0.0' );
+		$mock->set_version_option_name( 'pronamic_pay_restrictcontentpro_version' );
+		$mock->set_db_version_option_name( 'pronamic_pay_restrictcontentpro_db_version' );
 
-		$this->assertEquals( 'pronamic_pay_restrictcontentpro_db_version', $mock->get_version_option_name() );
+		$this->assertEquals( '1.0.0', $mock->get_version() );
+		$this->assertEquals( 'pronamic_pay_restrictcontentpro_version', $mock->get_version_option_name() );
+		$this->assertEquals( 'pronamic_pay_restrictcontentpro_db_version', $mock->get_db_version_option_name() );
+
+		$this->assertEquals( '', $mock->get_version_option() );
+		$this->assertEquals( '', $mock->get_db_version_option() );
+
+		$mock->update_version_option();
+
+		$this->assertEquals( '1.0.0', $mock->get_version_option() );
 	}
 }

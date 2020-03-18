@@ -52,7 +52,7 @@
 		"viison/address-splitter": "^0.3.4"
 	},
 	"require-dev": {
-		"dealerdirect/phpcodesniffer-composer-installer": "^0.5.0",
+		"dealerdirect/phpcodesniffer-composer-installer": "^0.6.2",
 		"overtrue/phplint": "^1.1",
 		"php-coveralls/php-coveralls": "^2.1",
 		"phpcompatibility/php-compatibility": "^9.3",
