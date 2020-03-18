@@ -407,6 +407,7 @@ class Util {
 					'type'     => 'text',
 					'value'    => ( \filter_has_var( INPUT_POST, $field['name'] ) ? \filter_input( INPUT_POST, $field['name'], FILTER_SANITIZE_STRING ) : null ),
 					'required' => false,
+					'max'      => null,
 				)
 			);
 

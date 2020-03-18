@@ -110,5 +110,9 @@
   "end_date": "2100-05-05T00:00:00+00:00",
   "expiry_date": "2005-05-05T00:30:00+00:00",
   "status":"Open",
+  "failure_reason": {
+    "code": "invalid_cvv",
+    "message": "De veiligheidscode (CVV) is ongeldig."
+  },
   "ga_tracked":true
 }

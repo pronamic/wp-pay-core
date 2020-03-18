@@ -11,18 +11,16 @@
 namespace Pronamic\WordPress\Pay;
 
 use Pronamic\WordPress\Pay\Admin\AdminModule;
+use Pronamic\WordPress\Pay\Banks\BankAccountDetails;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
-use Pronamic\WordPress\Pay\Core\Recurring;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
-use Pronamic\WordPress\Pay\Gateways\Common\AbstractIntegration;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentData;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Payments\StatusChecker;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
-use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
 use Pronamic\WordPress\Pay\Webhooks\WebhookLogger;
 use WP_Error;
 use WP_Query;
@@ -198,6 +196,13 @@ class Plugin {
 	public $gateway_integrations;
 
 	/**
+	 * Integrations
+	 *
+	 * @var AbstractIntegration[]
+	 */
+	public $integrations;
+
+	/**
 	 * Webhook logger.
 	 *
 	 * @var WebhookLogger
@@ -227,9 +232,8 @@ class Plugin {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'file'       => null,
-				'extensions' => array(),
-				'options'    => array(),
+				'file'    => null,
+				'options' => array(),
 			)
 		);
 
@@ -249,14 +253,8 @@ class Plugin {
 		// Options.
 		$this->options = $args['options'];
 
-		// Bootstrap the add-ons.
-		$extensions = $args['extensions'];
-
-		if ( is_array( $extensions ) ) {
-			foreach ( $extensions as $extension ) {
-				call_user_func( $extension );
-			}
-		}
+		// Integrations.
+		$this->integrations = array();
 
 		/*
 		 * Plugins loaded.
@@ -273,7 +271,7 @@ class Plugin {
 		 * @link https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L54
 		 * @link https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L296-L297
 		 */
-		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ), 5 );
+		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ), 0 );
 
 		// Plugin locale.
 		add_filter( 'plugin_locale', array( $this, 'plugin_locale' ), 10, 2 );
@@ -583,19 +581,26 @@ class Plugin {
 			$this->admin = new Admin\AdminModule( $this );
 		}
 
-		// Plugin integrations.
-		$this->plugin_integrations = apply_filters( 'pronamic_pay_plugin_integrations', array() );
-
-		foreach ( $this->plugin_integrations as $integration ) {
-			if ( method_exists( $integration, 'plugins_loaded' ) ) {
-				$integration->plugins_loaded();
-			}
-		}
-
 		// Gateway Integrations.
 		$gateways = apply_filters( 'pronamic_pay_gateways', array() );
 
 		$this->gateway_integrations = new GatewayIntegrations( $gateways );
+
+		foreach ( $this->gateway_integrations as $integration ) {
+			$integration->setup();
+		}
+
+		// Plugin Integrations.
+		$this->plugin_integrations = apply_filters( 'pronamic_pay_plugin_integrations', array() );
+
+		foreach ( $this->plugin_integrations as $integration ) {
+			$integration->setup();
+		}
+
+		// Integrations.
+		$gateway_integrations = \iterator_to_array( $this->gateway_integrations );
+
+		$this->integrations = array_merge( $gateway_integrations, $this->plugin_integrations );
 
 		// Maybes.
 		PaymentMethods::maybe_update_active_payment_methods();
@@ -977,6 +982,23 @@ class Plugin {
 				$payment->issuer = filter_input( INPUT_POST, 'pronamic_ideal_issuer_id', FILTER_SANITIZE_STRING );
 			}
 		}
+
+		// Consumer bank details.
+		$consumer_bank_details = $payment->get_consumer_bank_details();
+
+		if ( null === $consumer_bank_details ) {
+			$consumer_bank_details = new BankAccountDetails();
+		}
+
+		if ( null === $consumer_bank_details->get_name() && filter_has_var( INPUT_POST, 'pronamic_pay_consumer_bank_details_name' ) ) {
+			$consumer_bank_details->set_name( filter_input( INPUT_POST, 'pronamic_pay_consumer_bank_details_name', FILTER_SANITIZE_STRING ) );
+		}
+
+		if ( null === $consumer_bank_details->get_iban() && filter_has_var( INPUT_POST, 'pronamic_pay_consumer_bank_details_iban' ) ) {
+			$consumer_bank_details->set_iban( filter_input( INPUT_POST, 'pronamic_pay_consumer_bank_details_iban', FILTER_SANITIZE_STRING ) );
+		}
+
+		$payment->set_consumer_bank_details( $consumer_bank_details );
 
 		// Payment lines payment.
 		$lines = $payment->get_lines();

@@ -1,6 +1,6 @@
 <?php
 /**
- * Abstract Integration
+ * Abstract gateway integration
  *
  * @author    Pronamic <info@pronamic.eu>
  * @copyright 2005-2020 Pronamic
@@ -8,14 +8,13 @@
  * @package   Pronamic\WordPress\Pay\Gateways\Common
  */
 
-namespace Pronamic\WordPress\Pay\Gateways\Common;
+namespace Pronamic\WordPress\Pay;
 
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\GatewayConfig;
-use Pronamic\WordPress\Pay\Dependencies\Dependencies;
 
 /**
- * Title: Abstract Integration
+ * Title: Abstract gateway integration
  * Description:
  * Copyright: 2005-2020 Pronamic
  * Company: Pronamic
@@ -25,21 +24,7 @@ use Pronamic\WordPress\Pay\Dependencies\Dependencies;
  * @since   1.0.0
  * @link    https://github.com/thephpleague/omnipay-common/blob/master/src/Omnipay/Common/AbstractGateway.php
  */
-abstract class AbstractIntegration {
-	/**
-	 * ID.
-	 *
-	 * @var string
-	 */
-	protected $id;
-
-	/**
-	 * Name.
-	 *
-	 * @var string
-	 */
-	protected $name;
-
+abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	/**
 	 * URL.
 	 *
@@ -83,13 +68,6 @@ abstract class AbstractIntegration {
 	protected $supports = array();
 
 	/**
-	 * Dependencies.
-	 *
-	 * @var Dependencies
-	 */
-	private $dependencies;
-
-	/**
 	 * Construct.
 	 *
 	 * @param array $args Arguments.
@@ -97,67 +75,29 @@ abstract class AbstractIntegration {
 	public function __construct( $args = array() ) {
 		$args = wp_parse_args(
 			$args,
-			array()
+			array(
+				'provider'      => null,
+				'url'           => __( 'https://www.adyen.com/', 'pronamic_ideal' ),
+				'product_url'   => __( 'https://www.adyen.com/pricing', 'pronamic_ideal' ),
+				'dashboard_url' => array(),
+				'manual_url'    => null,
+				'supports'      => array(),
+			)
 		);
 
-		// Dependencies.
-		$this->dependencies = new Dependencies();
-	}
+		parent::__construct( $args );
 
-	/**
-	 * Get the dependencies of this integration.
-	 *
-	 * @return Dependencies
-	 */
-	public function get_dependencies() {
-		return $this->dependencies;
-	}
+		// Provider.
+		$this->provider = $args['provider'];
 
-	/**
-	 * Is active.
-	 *
-	 * @return bool True if dependencies are met, false othwerise.
-	 */
-	public function is_active() {
-		return $this->dependencies->are_met();
-	}
+		// URL's.
+		$this->url           = $args['url'];
+		$this->product_url   = $args['product_url'];
+		$this->dashboard_url = $args['dashboard_url'];
+		$this->manual_url    = $args['manual_url'];
 
-	/**
-	 * Get ID.
-	 *
-	 * @return string
-	 */
-	public function get_id() {
-		return $this->id;
-	}
-
-	/**
-	 * Set ID.
-	 *
-	 * @param string $id ID.
-	 * @return void
-	 */
-	public function set_id( $id ) {
-		$this->id = $id;
-	}
-
-	/**
-	 * Get name.
-	 *
-	 * @return string
-	 */
-	public function get_name() {
-		return $this->name;
-	}
-
-	/**
-	 * Set name.
-	 *
-	 * @param string $name Name.
-	 * @return void
-	 */
-	public function set_name( $name ) {
-		$this->name = $name;
+		// Supports.
+		$this->supports = $args['supports'];
 	}
 
 	/**

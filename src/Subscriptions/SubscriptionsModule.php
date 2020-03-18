@@ -66,7 +66,7 @@ class SubscriptionsModule {
 		// Actions.
 		add_action( 'wp_loaded', array( $this, 'handle_subscription' ) );
 
-		add_action( 'plugins_loaded', array( $this, 'maybe_schedule_subscription_payments' ), 6 );
+		add_action( 'plugins_loaded', array( $this, 'maybe_schedule_subscription_events' ), 6 );
 
 		// Exclude subscription notes.
 		add_filter( 'comments_clauses', array( $this, 'exclude_subscription_comment_notes' ), 10, 2 );
@@ -75,6 +75,9 @@ class SubscriptionsModule {
 
 		// The 'pronamic_pay_update_subscription_payments' hook adds subscription payments and sends renewal notices.
 		add_action( 'pronamic_pay_update_subscription_payments', array( $this, 'update_subscription_payments' ) );
+
+		// The 'pronamic_pay_complete_subscriptions' hook completes active subscriptions.
+		add_action( 'pronamic_pay_complete_subscriptions', array( $this, 'complete_subscriptions' ) );
 
 		// Listen to payment status changes so we can update related subscriptions.
 		add_action( 'pronamic_payment_status_update', array( $this, 'payment_status_update' ) );
@@ -205,23 +208,19 @@ class SubscriptionsModule {
 	 * Create a new subscription payment.
 	 *
 	 * @param Subscription $subscription Subscription.
-	 * @return false|Payment
+	 * @return null|Payment
 	 */
 	public function new_subscription_payment( Subscription $subscription ) {
-		// Unset the next payment date if next payment date is after the subscription end date.
-		if ( isset( $subscription->end_date, $subscription->next_payment_date ) && $subscription->next_payment_date > $subscription->end_date ) {
-			$subscription->next_payment_date = null;
-		}
-
-		// Set the subscription status to `completed` if there is no next payment date.
-		if ( empty( $subscription->next_payment_date ) ) {
-			$subscription->status                     = PaymentStatus::COMPLETED;
-			$subscription->expiry_date                = $subscription->end_date;
+		// Prevent creating a new subscription payment if next payment date is (later than) the subscription end date.
+		if ( isset( $subscription->end_date, $subscription->next_payment_date ) && $subscription->next_payment_date >= $subscription->end_date ) {
+			$subscription->next_payment_date          = null;
 			$subscription->next_payment_delivery_date = null;
 
-			$subscription->save();
+			// Delete next payment post meta.
+			$subscription->set_meta( 'next_payment', null );
+			$subscription->set_meta( 'next_payment_delivery_date', null );
 
-			return false;
+			return null;
 		}
 
 		// Create payment.
@@ -260,7 +259,7 @@ class SubscriptionsModule {
 	public function start_recurring( Subscription $subscription, $gateway = null, $recurring = true ) {
 		$payment = $this->new_subscription_payment( $subscription );
 
-		if ( empty( $payment ) ) {
+		if ( null === $payment ) {
 			return null;
 		}
 
@@ -325,6 +324,16 @@ class SubscriptionsModule {
 		$subscription->next_payment_date          = $end_date;
 		$subscription->next_payment_delivery_date = apply_filters( 'pronamic_pay_subscription_next_payment_delivery_date', clone $end_date, $payment );
 
+		// Remove next payment (delivery) date if this is the last payment according to subscription end date.
+		if ( $subscription->next_payment_date >= $subscription->end_date ) {
+			$subscription->next_payment_date          = null;
+			$subscription->next_payment_delivery_date = null;
+
+			// Delete next payment post meta.
+			$subscription->set_meta( 'next_payment', null );
+			$subscription->set_meta( 'next_payment_delivery_date', null );
+		}
+
 		$payment->start_date = $start_date;
 		$payment->end_date   = $end_date;
 
@@ -360,12 +369,14 @@ class SubscriptionsModule {
 	 *
 	 * @return void
 	 */
-	public function maybe_schedule_subscription_payments() {
-		if ( wp_next_scheduled( 'pronamic_pay_update_subscription_payments' ) ) {
-			return;
+	public function maybe_schedule_subscription_events() {
+		if ( ! wp_next_scheduled( 'pronamic_pay_update_subscription_payments' ) ) {
+			wp_schedule_event( time(), 'hourly', 'pronamic_pay_update_subscription_payments' );
 		}
 
-		wp_schedule_event( time(), 'hourly', 'pronamic_pay_update_subscription_payments' );
+		if ( ! wp_next_scheduled( 'pronamic_pay_complete_subscriptions' ) ) {
+			wp_schedule_event( time(), 'hourly', 'pronamic_pay_complete_subscriptions' );
+		}
 	}
 
 	/**
@@ -856,6 +867,68 @@ class SubscriptionsModule {
 	}
 
 	/**
+	 * Complete subscriptions.
+	 *
+	 * @param bool $cli_test Whether or not this a CLI test.
+	 * @return void
+	 */
+	public function complete_subscriptions( $cli_test = false ) {
+		$args = array(
+			'post_type'   => 'pronamic_pay_subscr',
+			'nopaging'    => true,
+			'orderby'     => 'post_date',
+			'order'       => 'ASC',
+			'post_status' => 'subscr_active',
+			'meta_query'  => array(
+				array(
+					'key'     => '_pronamic_subscription_source',
+					'compare' => 'NOT IN',
+					'value'   => array(
+						// Don't create payments for sources which schedule payments.
+						'woocommerce',
+					),
+				),
+				array(
+					'relation' => 'AND',
+					array(
+						'key'     => '_pronamic_subscription_next_payment',
+						'compare' => 'NOT EXISTS',
+					),
+				),
+			),
+		);
+
+		if ( ! $cli_test ) {
+			$args['meta_query'][1][] = array(
+				'key'     => '_pronamic_subscription_end_date',
+				'compare' => '<=',
+				'value'   => current_time( 'mysql', true ),
+				'type'    => 'DATETIME',
+			);
+		}
+
+		$query = new WP_Query( $args );
+
+		foreach ( $query->posts as $post ) {
+			if ( $cli_test ) {
+				WP_CLI::log( sprintf( 'Processing post `%d` - "%s"…', $post->ID, get_the_title( $post ) ) );
+			}
+
+			// Complete subscription.
+			try {
+				$subscription = new Subscription( $post->ID );
+
+				$subscription->status      = SubscriptionStatus::COMPLETED;
+				$subscription->expiry_date = $subscription->end_date;
+
+				$subscription->save();
+			} catch ( \Exception $e ) {
+				continue;
+			}
+		}
+	}
+
+	/**
 	 * CLI subscriptions test.
 	 *
 	 * @return void
@@ -863,7 +936,13 @@ class SubscriptionsModule {
 	public function cli_subscriptions_test() {
 		$cli_test = true;
 
+		WP_CLI::log( 'Updating subscription payments…' );
+
 		$this->update_subscription_payments( $cli_test );
+
+		WP_CLI::log( 'Completing subscriptions…' );
+
+		$this->complete_subscriptions( $cli_test );
 
 		WP_CLI::success( 'Pronamic Pay subscriptions test.' );
 	}

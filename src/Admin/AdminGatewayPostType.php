@@ -103,11 +103,17 @@ class AdminGatewayPostType {
 
 		switch ( $column ) {
 			case 'pronamic_gateway_variant':
+				$value = \strval( $id );
+
 				if ( isset( $integration ) ) {
-					echo esc_html( $integration->get_name() );
-				} else {
-					echo esc_html( strval( $id ) );
+					$name = $integration->get_name();
+
+					if ( null !== $name ) {
+						$value = $name;
+					}
 				}
+
+				echo \esc_html( $value );
 
 				break;
 			case 'pronamic_gateway_id':
@@ -446,7 +452,11 @@ class AdminGatewayPostType {
 			// Get filtered input and update post meta.
 			$value = \filter_input( INPUT_POST, $name, $filter, $options );
 
-			\update_post_meta( $post_id, $name, $value );
+			if ( '' !== $value ) {
+				\update_post_meta( $post_id, $name, $value );
+			} else {
+				\delete_post_meta( $post_id, $name );
+			}
 		}
 
 		$integration->save_post( $post_id );

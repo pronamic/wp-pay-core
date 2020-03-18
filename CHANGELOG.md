@@ -7,6 +7,15 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.3.0] - 2020-03-18
+- Added Google Pay support.
+- Added Apple Pay payment method.
+- Added support for payment failure reason.
+- Added input fields for consumer bank details name and IBAN.
+- Simplify recurrence details in subscription info meta box.
+- Fixed setting initials if no first and last name are given.
+- Abstracted plugin and gateway integration classes.
+
 ## [2.2.7] - 2020-02-03
 - Added Google Analytics e-commerce `pronamic_pay_google_analytics_ecommerce_item_name` and `pronamic_pay_google_analytics_ecommerce_item_category` filters.
 - Added support for dependencies in the abstract gateway integration class.
@@ -258,7 +267,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.2.7...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.2.8...HEAD
+[2.2.8]: https://github.com/wp-pay/core/compare/2.2.7...2.2.8
 [2.2.7]: https://github.com/wp-pay/core/compare/2.2.6...2.2.7
 [2.2.6]: https://github.com/wp-pay/core/compare/2.2.5...2.2.6
 [2.2.5]: https://github.com/wp-pay/core/compare/2.2.4...2.2.5

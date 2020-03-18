@@ -10,7 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
-use Pronamic\WordPress\Pay\AbstractPluginIntegration;
+use Pronamic\WordPress\Pay\AbstractIntegration;
 use Pronamic\WordPress\Pay\Forms\FormPostType;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Plugin;
@@ -257,31 +257,31 @@ class Install {
 	}
 
 	/**
-	 * Get upgradeable plugin integrations.
+	 * Get upgradeable integrations.
 	 *
-	 * @return array<AbstractPluginIntegration>
+	 * @return array<AbstractIntegration>
 	 */
-	private function get_upgradeable_plugin_integrations() {
-		$plugin_integrations = $this->plugin->plugin_integrations;
+	private function get_upgradeable_integrations() {
+		$integrations = $this->plugin->integrations;
 
-		$plugin_integrations = array_filter(
-			$plugin_integrations,
+		$integrations = array_filter(
+			$integrations,
 			/**
-			 * Filter plugin integration with version option name.
+			 * Filter integration with version option name.
 			 *
-			 * @param AbstractPluginIntegration $plugin_integration Plugin integration object.
-			 * @return bool True if plugin integration has version option name, false otherwise.
+			 * @param AbstractIntegration $integration Integration object.
+			 * @return bool True if integration has version option name, false otherwise.
 			 */
-			function( $plugin_integration ) {
-				if ( ! $plugin_integration->is_active() ) {
+			function( $integration ) {
+				if ( ! $integration->is_active() ) {
 					return false;
 				}
 
-				if ( null === $plugin_integration->get_version_option_name() ) {
+				if ( null === $integration->get_db_version_option_name() ) {
 					return false;
 				}
 
-				if ( ! $plugin_integration->get_upgrades()->are_executable() ) {
+				if ( ! $integration->get_upgrades()->are_executable() ) {
 					return false;
 				}
 
@@ -289,7 +289,7 @@ class Install {
 			}
 		);
 
-		return $plugin_integrations;
+		return $integrations;
 	}
 
 	/**
@@ -309,22 +309,20 @@ class Install {
 			return true;
 		}
 
-		// Plugin integrations.
-		$plugin_integrations = $this->get_upgradeable_plugin_integrations();
+		// Integrations.
+		$integrations = $this->get_upgradeable_integrations();
 
-		foreach ( $plugin_integrations as $integration ) {
-			$version_option_name = $integration->get_version_option_name();
+		foreach ( $integrations as $integration ) {
+			$version_option = $integration->get_db_version_option();
 
-			if ( null === $version_option_name ) {
+			if ( null === $version_option ) {
 				continue;
 			}
-
-			$current_version = get_option( $version_option_name );
 
 			$upgrades = $integration->get_upgrades();
 
 			foreach ( $upgrades as $upgrade ) {
-				if ( version_compare( $current_version, $upgrade->get_version(), '<' ) ) {
+				if ( version_compare( $version_option, $upgrade->get_version(), '<' ) ) {
 					return true;
 				}
 			}
@@ -357,30 +355,30 @@ class Install {
 			}
 		}
 
-		// Plugin integrations.
-		$plugin_integrations = $this->get_upgradeable_plugin_integrations();
+		// Integrations.
+		$integrations = $this->get_upgradeable_integrations();
 
-		foreach ( $plugin_integrations as $integration ) {
-			$version_option_name = $integration->get_version_option_name();
+		foreach ( $integrations as $integration ) {
+			$db_version_option_name = $integration->get_db_version_option_name();
 
-			if ( null === $version_option_name ) {
+			if ( null === $db_version_option_name ) {
 				continue;
 			}
 
-			$current_version = get_option( $version_option_name );
+			$db_version_option = \strval( $integration->get_db_version_option() );
 
 			$upgrades = $integration->get_upgrades();
 
 			foreach ( $upgrades as $upgrade ) {
 				$version = $upgrade->get_version();
 
-				if ( ! version_compare( $current_version, $version, '<' ) ) {
+				if ( ! version_compare( $db_version_option, $version, '<' ) ) {
 					continue;
 				}
 
 				$upgrade->execute();
 
-				update_option( $version_option_name, $version );
+				update_option( $db_version_option_name, $version );
 			}
 		}
 

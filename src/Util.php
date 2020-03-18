@@ -193,7 +193,7 @@ class Util {
 		}
 
 		/* translators: %s: frequency */
-		return sprintf( _n( '%s time', '%s times', $frequency, 'pronamic_ideal' ), $frequency );
+		return sprintf( _n( '%s period', '%s periods', $frequency, 'pronamic_ideal' ), $frequency );
 	}
 
 	/**

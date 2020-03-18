@@ -90,7 +90,7 @@ $user_id  = is_null( $customer ) ? null : $customer->get_user_id();
 				$amount = $subscription->get_total_amount()->format_i18n( '%2$s' );
 
 				printf(
-					'<input type="text" name="pronamic_subscription_amount" value="%s" size="12" />',
+					' <input type="text" name="pronamic_subscription_amount" value="%s" size="12" />',
 					esc_attr( $amount )
 				);
 			} else {
@@ -102,18 +102,18 @@ $user_id  = is_null( $customer ) ? null : $customer->get_user_id();
 	</tr>
 	<tr>
 		<th scope="row">
-			<?php echo esc_html_x( 'Interval', 'Recurring payment', 'pronamic_ideal' ); ?>
+			<?php echo esc_html__( 'Recurrence', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
-			<?php echo esc_html( Util::format_interval( $subscription->get_interval(), $subscription->get_interval_period() ) ); ?>
-		</td>
-	</tr>
-	<tr>
-		<th scope="row">
-			<?php echo esc_html_x( 'Frequency', 'Recurring payment', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<?php echo esc_html( Util::format_frequency( $subscription->get_frequency() ) ); ?>
+			<?php
+
+			printf(
+				'%s, %s',
+				esc_html( strval( Util::format_interval( $subscription->get_interval(), $subscription->get_interval_period() ) ) ),
+				esc_html( strval( Util::format_frequency( $subscription->get_frequency() ) ) )
+			);
+
+			?>
 		</td>
 	</tr>
 	<tr>
