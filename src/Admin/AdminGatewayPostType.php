@@ -103,11 +103,17 @@ class AdminGatewayPostType {
 
 		switch ( $column ) {
 			case 'pronamic_gateway_variant':
+				$value = \strval( $id );
+
 				if ( isset( $integration ) ) {
-					echo esc_html( $integration->get_name() );
-				} else {
-					echo esc_html( strval( $id ) );
+					$name = $integration->get_name();
+
+					if ( null !== $name ) {
+						$value = $name;
+					}
 				}
+
+				echo \esc_html( $value );
 
 				break;
 			case 'pronamic_gateway_id':

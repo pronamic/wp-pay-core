@@ -16,13 +16,13 @@ namespace Pronamic\WordPress\Pay;
  * @author     Reüel van der Steege
  * @version    2.2.6
  * @since      1.0.0
- * @implements \IteratorAggregate<string, AbstractIntegration>
+ * @implements \IteratorAggregate<string, AbstractGatewayIntegration>
  */
 class GatewayIntegrations implements \IteratorAggregate {
 	/**
 	 * Integrations.
 	 *
-	 * @var AbstractIntegration[]
+	 * @var AbstractGatewayIntegration[]
 	 */
 	private $integrations = array();
 
@@ -59,8 +59,7 @@ class GatewayIntegrations implements \IteratorAggregate {
 	 * Get integration by ID.
 	 *
 	 * @param string $id Integration ID.
-	 *
-	 * @return AbstractIntegration|null
+	 * @return AbstractGatewayIntegration|null
 	 */
 	public function get_integration( $id ) {
 		if ( array_key_exists( $id, $this->integrations ) ) {
@@ -73,7 +72,7 @@ class GatewayIntegrations implements \IteratorAggregate {
 	/**
 	 * Get iterator.
 	 *
-	 * @return \ArrayIterator<string, AbstractIntegration>
+	 * @return \ArrayIterator<string, AbstractGatewayIntegration>
 	 */
 	public function getIterator() {
 		return new \ArrayIterator( $this->integrations );

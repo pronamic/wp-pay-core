@@ -47,8 +47,17 @@ class ContactNameHelper {
 			// First and middle name could contain multiple names.
 			$names = array();
 
-			$names = \array_merge( $names, \explode( ' ', $name->get_first_name() ) );
-			$names = \array_merge( $names, \explode( ' ', $name->get_middle_name() ) );
+			$first_name = $name->get_first_name();
+
+			if ( null !== $first_name ) {
+				$names = \array_merge( $names, \explode( ' ', $first_name ) );
+			}
+
+			$middle_name = $name->get_middle_name();
+
+			if ( null !== $middle_name ) {
+				$names = \array_merge( $names, \explode( ' ', $middle_name ) );
+			}
 
 			$names = \array_map( 'trim', $names );
 

@@ -76,6 +76,13 @@ abstract class AbstractIntegration {
 	private $version_option_name;
 
 	/**
+	 * Data version option nane.
+	 *
+	 * @var string|null
+	 */
+	private $db_version_option_name;
+
+	/**
 	 * Construct.
 	 *
 	 * @param array $args Arguments.
@@ -239,6 +246,7 @@ abstract class AbstractIntegration {
 	 * Update database version option.
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/4.0.0/includes/class-wc-install.php#L396-L402
+	 * @return void
 	 */
 	public function update_version_option() {
 		if ( null === $this->version_option_name ) {

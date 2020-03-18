@@ -387,6 +387,7 @@ class Payment extends LegacyPayment {
 	 * Set failure reason.
 	 *
 	 * @param FailureReason|null $failure_reason Failure reason.
+	 * @return void
 	 */
 	public function set_failure_reason( FailureReason $failure_reason = null ) {
 		$this->failure_reason = $failure_reason;

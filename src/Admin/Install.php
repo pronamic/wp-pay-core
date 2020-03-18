@@ -10,7 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
-use Pronamic\WordPress\Pay\AbstractPluginIntegration;
+use Pronamic\WordPress\Pay\AbstractIntegration;
 use Pronamic\WordPress\Pay\Forms\FormPostType;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Plugin;
@@ -365,7 +365,7 @@ class Install {
 				continue;
 			}
 
-			$db_version_option = $integration->get_db_version_option();
+			$db_version_option = \strval( $integration->get_db_version_option() );
 
 			$upgrades = $integration->get_upgrades();
 

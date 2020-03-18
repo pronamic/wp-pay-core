@@ -196,6 +196,13 @@ class Plugin {
 	public $gateway_integrations;
 
 	/**
+	 * Integrations
+	 *
+	 * @var AbstractIntegration[]
+	 */
+	public $integrations;
+
+	/**
 	 * Webhook logger.
 	 *
 	 * @var WebhookLogger

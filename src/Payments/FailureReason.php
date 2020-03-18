@@ -21,21 +21,21 @@ class FailureReason {
 	/**
 	 * Code.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $code;
 
 	/**
 	 * Message.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $message;
 
 	/**
 	 * Get code.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_code() {
 		return $this->code;
@@ -44,7 +44,8 @@ class FailureReason {
 	/**
 	 * Set code.
 	 *
-	 * @param string $code Code.
+	 * @param string|null $code Code.
+	 * @return void
 	 */
 	public function set_code( $code ) {
 		$this->code = $code;
@@ -53,7 +54,7 @@ class FailureReason {
 	/**
 	 * Get message.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_message() {
 		return $this->message;
@@ -62,7 +63,8 @@ class FailureReason {
 	/**
 	 * Set message.
 	 *
-	 * @param string $message Message.
+	 * @param string|null $message Message.
+	 * @return void
 	 */
 	public function set_message( $message ) {
 		$this->message = $message;
@@ -93,11 +95,11 @@ class FailureReason {
 	 *
 	 * @param mixed $json JSON.
 	 * @return FailureReason
-	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
+	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
 	public static function from_json( $json ) {
-		if ( ! is_object( $json ) ) {
-			throw new InvalidArgumentException( 'JSON value must be an array.' );
+		if ( ! \is_object( $json ) ) {
+			throw new \InvalidArgumentException( 'JSON value must be an array.' );
 		}
 
 		$failure_reason = new self();
@@ -122,18 +124,18 @@ class FailureReason {
 		$code    = $this->get_code();
 		$message = $this->get_message();
 
-		if ( null === $code && null === $message ) {
-			return '';
+		if ( null !== $code && null !== $message ) {
+			return sprintf( '%1$s (`%2$s`)', $message, $code );
 		}
 
-		if ( null === $code ) {
-			return $message;
-		}
-
-		if ( null === $message ) {
+		if ( null !== $code ) {
 			return $code;
 		}
 
-		return sprintf( '%1$s (`%2$s`)', $message, $code );
+		if ( null !== $message ) {
+			return $message;
+		}
+
+		return '';
 	}
 }

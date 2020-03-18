@@ -7,7 +7,7 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
-## [2.2.8] - 2020-03-18
+## [2.3.0] - 2020-03-18
 - Added Google Pay support.
 - Added Apple Pay payment method.
 - Added support for payment failure reason.
