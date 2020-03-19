@@ -183,6 +183,13 @@ class Install {
 			update_option( 'pronamic_pay_about_page_version', $about_page_version );
 		}
 
+		// Set database version option.
+		$db_version = \get_option( 'pronamic_pay_db_version', null );
+
+		if ( null === $db_version ) {
+			\update_option( 'pronamic_pay_db_version', $this->plugin->get_version() );
+		}
+
 		// Update version.
 		update_option( 'pronamic_pay_version', $version );
 	}
