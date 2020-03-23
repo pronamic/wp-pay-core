@@ -53,26 +53,26 @@ class AdminHealth {
 		$fields = array();
 
 		// License key.
-		$fields['pronamic_pay_license_key'] = array(
+		$fields['license_key'] = array(
 			'label'   => __( 'Support license key', 'pronamic_ideal' ),
 			'value'   => esc_html( get_option( 'pronamic_pay_license_key', __( 'No license key found', 'pronamic_ideal' ) ) ),
 			'private' => true,
 		);
 
 		// License status.
-		$fields['pronamic_pay_license_status'] = array(
+		$fields['license_status'] = array(
 			'label' => __( 'License status', 'pronamic_ideal' ),
 			'value' => esc_html( $this->plugin->license_manager->get_formatted_license_status() ),
 		);
 
 		// Next scheduled license check.
-		$fields['pronamic_pay_next_license_check'] = array(
+		$fields['next_license_check'] = array(
 			'label' => __( 'Next scheduled license check', 'pronamic_ideal' ),
 			'value' => esc_html( $this->plugin->license_manager->get_formatted_next_license_check() ),
 		);
 
 		// Time.
-		$fields['pronamic_pay_time'] = array(
+		$fields['time'] = array(
 			'label' => __( 'Time (UTC)', 'pronamic_ideal' ),
 			'value' => esc_html( gmdate( __( 'Y/m/d g:i:s A', 'pronamic_ideal' ) ) ),
 		);
@@ -84,7 +84,7 @@ class AdminHealth {
 			$openssl_version = OPENSSL_VERSION_TEXT;
 		}
 
-		$fields['pronamic_pay_openssl_version'] = array(
+		$fields['openssl_version'] = array(
 			'label' => __( 'OpenSSL version', 'pronamic_ideal' ),
 			'value' => esc_html( $openssl_version ),
 		);
