@@ -89,6 +89,12 @@ class AdminHealth {
 			'value' => esc_html( $openssl_version ),
 		);
 
+		// Active plugin integrations.
+		$fields['active_plugin_integrations'] = array(
+			'label' => __( 'Active plugin integrations', 'pronamic_ideal' ),
+			'value' => $this->get_active_plugin_integrations_debug(),
+		);
+
 		// Add debug information section.
 		$debug_information['pronamic-pay'] = array(
 			'label'  => __( 'Pronamic Pay', 'pronamic_ideal' ),
@@ -96,6 +102,33 @@ class AdminHealth {
 		);
 
 		return $debug_information;
+	}
+
+	/**
+	 * Get active plugin integrations debug.
+	 *
+	 * @return string
+	 */
+	private function get_active_plugin_integrations_debug() {
+		$active = array();
+
+		// Check integrations.
+		foreach ( $this->plugin->plugin_integrations as $integration ) {
+			if ( ! $integration->is_active() ) {
+				continue;
+			}
+
+			$active[] = $integration->get_name();
+		}
+
+		// Default result no active integrations.
+		if ( empty( $active ) ) {
+			$active[] = __( 'None', 'pronamic_ideal' );
+		}
+
+		$result = \implode( ', ', $active );
+
+		return $result;
 	}
 
 	/**
