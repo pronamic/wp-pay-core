@@ -53,35 +53,21 @@ function get_pronamic_payment( $post_id ) {
  *
  * @param string     $meta_key   The meta key to query for.
  * @param string|int $meta_value The Meta value to query for.
+ * @param array      $args       Query arguments.
  * @return Payment|null
  */
-function get_pronamic_payment_by_meta( $meta_key, $meta_value ) {
-	$payment = null;
+function get_pronamic_payment_by_meta( $meta_key, $meta_value, $args = array() ) {
+	$args['posts_per_page'] = 1;
 
-	$query = new WP_Query(
-		array(
-			'post_type'      => 'pronamic_payment',
-			'post_status'    => 'any',
-			'posts_per_page' => 1,
-			'no_found_rows'  => true,
-			'meta_query'     => array(
-				array(
-					'key'   => $meta_key,
-					'value' => $meta_value,
-				),
-			),
-		)
-	);
+	$payments = get_pronamic_payments_by_meta( $meta_key, $meta_value, $args );
 
-	if ( $query->have_posts() ) {
-		while ( $query->have_posts() ) {
-			$query->the_post();
-
-			$payment = get_pronamic_payment( get_the_ID() );
-		}
-
-		wp_reset_postdata();
+	// No payments found.
+	if ( empty( $payments ) ) {
+		return null;
 	}
+
+	// Get first (and only) payment.
+	$payment = array_shift( $payments );
 
 	return $payment;
 }
@@ -105,15 +91,20 @@ function get_pronamic_payments_by_meta( $meta_key, $meta_value, $args = array() 
 		'post_status'    => 'any',
 		'posts_per_page' => -1,
 		'no_found_rows'  => true,
-		'meta_query'     => array(
-			array(
-				'key'   => $meta_key,
-				'value' => $meta_value,
-			),
-		),
+		'meta_query'     => array(),
 	);
 
 	$args = wp_parse_args( $args, $defaults );
+
+	// Add meta query for given meta key and value.
+	if ( ! is_array( $args['meta_query'] ) ) {
+		$args['meta_query'] = array();
+	}
+
+	$args['meta_query'][] = array(
+		'key'   => $meta_key,
+		'value' => $meta_value,
+	);
 
 	$query = new WP_Query( $args );
 
