@@ -7,6 +7,11 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.3.1] - 2020-04-03
+- Added optional `$args` parameter to `get_pronamic_payment_by_meta()` function.
+- Added active plugin integrations to Site Health debug fields.
+- Fixed unnecessarily showing upgrade button in new installations.
+
 ## [2.3.0] - 2020-03-18
 - Added Google Pay support.
 - Added Apple Pay payment method.
@@ -268,6 +273,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 - First release.
 
 [unreleased]: https://github.com/wp-pay/core/compare/2.2.8...HEAD
+[2.3.1]: https://github.com/wp-pay/core/compare/2.3.0...2.3.1
+[2.3.0]: https://github.com/wp-pay/core/compare/2.2.8...2.3.0
 [2.2.8]: https://github.com/wp-pay/core/compare/2.2.7...2.2.8
 [2.2.7]: https://github.com/wp-pay/core/compare/2.2.6...2.2.7
 [2.2.6]: https://github.com/wp-pay/core/compare/2.2.5...2.2.6
