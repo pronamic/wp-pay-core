@@ -64,7 +64,7 @@ class BlocksModule {
 			'pronamic-payment-form-editor',
 			'pronamic_payment_form',
 			array(
-				'title'          => __( 'Payment Form', 'pronamic_ideal' ),
+				'title'          => _x( 'Payment Form', 'Block', 'pronamic_ideal' ),
 				'label_add_form' => __( 'Add form', 'pronamic_ideal' ),
 				'label_amount'   => __( 'Amount', 'pronamic_ideal' ),
 			)
