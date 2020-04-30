@@ -47,7 +47,8 @@ class BlocksModule {
 	/**
 	 * Block categories.
 	 *
-	 * @param array $categories Block categories.
+	 * @param array    $categories Block categories.
+	 * @param \WP_Post $post       Post being loaded.
 	 *
 	 * @return array
 	 */
