@@ -36,10 +36,29 @@ class BlocksModule {
 
 		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_styles' ) );
 
+		add_filter( 'block_categories', array( $this, 'block_categories' ), 10, 2 );
+
 		// Source text and description.
 		add_filter( 'pronamic_payment_source_url_' . FormsSource::BLOCK_PAYMENT_FORM, array( $this, 'source_url' ), 10, 2 );
 		add_filter( 'pronamic_payment_source_text_' . FormsSource::BLOCK_PAYMENT_FORM, array( $this, 'source_text' ), 10, 2 );
 		add_filter( 'pronamic_payment_source_description_' . FormsSource::BLOCK_PAYMENT_FORM, array( $this, 'source_description' ), 10, 2 );
+	}
+
+	/**
+	 * Block categories.
+	 *
+	 * @param array $categories Block categories.
+	 *
+	 * @return array
+	 */
+	public function block_categories( $categories, $post ) {
+		$categories[] = array(
+			'slug'  => 'pronamic-pay',
+			'title' => __( 'Pronamic Pay', 'pronamic-ideal' ),
+			'icon'  => null,
+		);
+
+		return $categories;
 	}
 
 	/**
