@@ -59,6 +59,8 @@ class PaymentLinksModule {
 
 	/**
 	 * Initialize module.
+	 *
+	 * @return void
 	 */
 	public function init() {
 		/*
@@ -232,7 +234,7 @@ class PaymentLinksModule {
 	 *
 	 * @param string       $amount      Amount.
 	 * @param string|false $description Description.
-	 *
+	 * @return void
 	 * @throws \Exception Throws error on invalid amount.
 	 */
 	public function handle_payment_link( $amount, $description ) {
@@ -281,7 +283,9 @@ class PaymentLinksModule {
 		// Redirect.
 		$gateway = Plugin::get_gateway( $payment->get_config_id() );
 
-		$gateway->redirect( $payment );
+		if ( null !== $gateway ) {
+			$gateway->redirect( $payment );
+		}
 	}
 
 	/**

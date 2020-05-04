@@ -575,8 +575,8 @@ class Plugin {
 		$this->tracking_module      = new TrackingModule();
 
 		// Payment links module.
-		$this->payments_links_module = new PaymentLinksModule();
-		$this->payments_links_module->setup();
+		$this->payment_links_module = new PaymentLinksModule();
+		$this->payment_links_module->setup();
 
 		// Blocks module.
 		if ( function_exists( 'register_block_type' ) ) {
