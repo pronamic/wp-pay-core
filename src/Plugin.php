@@ -168,6 +168,13 @@ class Plugin {
 	public $tracking_module;
 
 	/**
+	 * Payment links module.
+	 *
+	 * @var PaymentLinksModule
+	 */
+	public $payment_links_module;
+
+	/**
 	 * Payments module.
 	 *
 	 * @var Payments\PaymentsModule
@@ -566,6 +573,10 @@ class Plugin {
 		$this->payments_module      = new Payments\PaymentsModule( $this );
 		$this->subscriptions_module = new Subscriptions\SubscriptionsModule( $this );
 		$this->tracking_module      = new TrackingModule();
+
+		// Payment links module.
+		$this->payments_links_module = new PaymentLinksModule();
+		$this->payments_links_module->setup();
 
 		// Blocks module.
 		if ( function_exists( 'register_block_type' ) ) {
