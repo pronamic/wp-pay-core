@@ -56,20 +56,6 @@ class Payment extends LegacyPayment {
 	public $order_id;
 
 	/**
-	 * The total amount of this payment.
-	 *
-	 * @var TaxedMoney
-	 */
-	private $total_amount;
-
-	/**
-	 * The shipping amount of this payment.
-	 *
-	 * @var Money|null
-	 */
-	private $shipping_amount;
-
-	/**
 	 * The expiration period of this payment.
 	 *
 	 * @todo Is this required/used?
