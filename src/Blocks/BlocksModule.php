@@ -142,7 +142,7 @@ class BlocksModule {
 
 		// Form settings.
 		$args = array(
-			'amount'    => $amount,
+			'amount'    => $amount->get_minor_units(),
 			'html_id'   => sprintf( 'pronamic-pay-payment-form-%s', get_the_ID() ),
 			'source'    => FormsSource::BLOCK_PAYMENT_FORM,
 			'source_id' => get_the_ID(),
