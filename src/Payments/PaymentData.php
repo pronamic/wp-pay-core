@@ -207,6 +207,15 @@ abstract class PaymentData extends AbstractPaymentData {
 	}
 
 	/**
+	 * Get origin post ID.
+	 *
+	 * @return int|null
+	 */
+	public function get_origin_id() {
+		return null;
+	}
+
+	/**
 	 * Get subscription source ID.
 	 *
 	 * @return string|int|null

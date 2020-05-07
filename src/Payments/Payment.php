@@ -206,6 +206,13 @@ class Payment extends LegacyPayment {
 	public $lines;
 
 	/**
+	 * Origin post ID.
+	 *
+	 * @var int|null
+	 */
+	private $origin_id;
+
+	/**
 	 * Version.
 	 *
 	 * @var string|null
@@ -396,6 +403,25 @@ class Payment extends LegacyPayment {
 	 */
 	public function set_ga_tracked( $tracked ) {
 		$this->ga_tracked = $tracked;
+	}
+
+	/**
+	 * Get origin post ID.
+	 *
+	 * @return int|null
+	 */
+	public function get_origin_id() {
+		return $this->origin_id;
+	}
+
+	/**
+	 * Set origin post ID.
+	 *
+	 * @param int|null $origin_id Origin post ID.
+	 * @return void
+	 */
+	public function set_origin_id( $origin_id ) {
+		$this->origin_id = $origin_id;
 	}
 
 	/**
@@ -736,6 +762,10 @@ class Payment extends LegacyPayment {
 			$payment->set_ga_tracked( $json->ga_tracked );
 		}
 
+		if ( isset( $json->origin_id ) ) {
+			$payment->set_origin_id( $json->origin_id );
+		}
+
 		return $payment;
 	}
 
@@ -767,6 +797,12 @@ class Payment extends LegacyPayment {
 
 		if ( null !== $this->get_ga_tracked() ) {
 			$properties['ga_tracked'] = $this->get_ga_tracked();
+		}
+
+		$origin_id = $this->get_origin_id();
+
+		if ( null !== $origin_id ) {
+			$properties['origin_id'] = $origin_id;
 		}
 
 		$object = (object) $properties;

@@ -126,6 +126,7 @@ class FormProcessor {
 		$payment->order_id    = $order_id;
 		$payment->source      = $source;
 		$payment->source_id   = $source_id;
+		$payment->set_origin_id( $source_id );
 
 		// Set default payment method if required.
 		if ( $gateway->payment_method_is_required() ) {
