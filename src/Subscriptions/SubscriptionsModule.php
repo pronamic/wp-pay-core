@@ -325,7 +325,7 @@ class SubscriptionsModule {
 		$subscription->next_payment_delivery_date = apply_filters( 'pronamic_pay_subscription_next_payment_delivery_date', clone $end_date, $payment );
 
 		// Remove next payment (delivery) date if this is the last payment according to subscription end date.
-		if ( $subscription->next_payment_date >= $subscription->end_date ) {
+		if ( null !== $subscription->end_date && $subscription->next_payment_date >= $subscription->end_date ) {
 			$subscription->next_payment_date          = null;
 			$subscription->next_payment_delivery_date = null;
 
