@@ -206,13 +206,6 @@ class Payment extends LegacyPayment {
 	public $lines;
 
 	/**
-	 * Origin post ID.
-	 *
-	 * @var int|null
-	 */
-	private $origin_id;
-
-	/**
 	 * Version.
 	 *
 	 * @var string|null
@@ -403,25 +396,6 @@ class Payment extends LegacyPayment {
 	 */
 	public function set_ga_tracked( $tracked ) {
 		$this->ga_tracked = $tracked;
-	}
-
-	/**
-	 * Get origin post ID.
-	 *
-	 * @return int|null
-	 */
-	public function get_origin_id() {
-		return $this->origin_id;
-	}
-
-	/**
-	 * Set origin post ID.
-	 *
-	 * @param int|null $origin_id Origin post ID.
-	 * @return void
-	 */
-	public function set_origin_id( $origin_id ) {
-		$this->origin_id = $origin_id;
 	}
 
 	/**

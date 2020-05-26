@@ -238,6 +238,7 @@ class SubscriptionsModule {
 		$payment->subscription    = $subscription;
 		$payment->subscription_id = $subscription->get_id();
 
+		$payment->set_origin_id( $subscription->get_origin_id() );
 		$payment->set_total_amount( $subscription->get_total_amount() );
 		$payment->set_customer( $subscription->get_customer() );
 		$payment->set_billing_address( $subscription->get_billing_address() );
@@ -429,6 +430,8 @@ class SubscriptionsModule {
 		);
 
 		$subscription->key = uniqid( 'subscr_' );
+
+		$subscription->set_origin_id( $payment->get_origin_id() );
 
 		if ( empty( $subscription->source ) && empty( $subscription->source_id ) ) {
 			$subscription->source    = $payment->source;

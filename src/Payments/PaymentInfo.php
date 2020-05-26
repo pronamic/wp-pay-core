@@ -91,6 +91,13 @@ abstract class PaymentInfo {
 	public $source_id;
 
 	/**
+	 * Origin post ID.
+	 *
+	 * @var int|null
+	 */
+	private $origin_id;
+
+	/**
 	 * The order ID of this payment.
 	 *
 	 * @todo Is this required/used?
@@ -368,6 +375,25 @@ abstract class PaymentInfo {
 	 */
 	public function get_source_id() {
 		return $this->source_id;
+	}
+
+	/**
+	 * Get origin post ID.
+	 *
+	 * @return int|null
+	 */
+	public function get_origin_id() {
+		return $this->origin_id;
+	}
+
+	/**
+	 * Set origin post ID.
+	 *
+	 * @param int|null $origin_id Origin post ID.
+	 * @return void
+	 */
+	public function set_origin_id( $origin_id ) {
+		$this->origin_id = $origin_id;
 	}
 
 	/**
