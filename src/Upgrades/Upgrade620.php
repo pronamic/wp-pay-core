@@ -64,6 +64,10 @@ class Upgrade620 extends Upgrade {
 			// Update subscription.
 			$subscription = get_pronamic_subscription( (int) get_the_ID() );
 
+			if ( null === $subscription ) {
+				continue;
+			}
+
 			$expiry_date = $subscription->get_expiry_date();
 
 			if ( null === $expiry_date ) {
@@ -74,9 +78,14 @@ class Upgrade620 extends Upgrade {
 
 			$subscription->save();
 
+			if ( null === $subscription->next_payment_date ) {
+				continue;
+			}
+
 			// Add note.
 			$subscription->add_note(
 				\sprintf(
+					/* translators: %s: formatted next payment date */
 					__( 'Missing subscription next payment date restored to %s.', 'pronamic_ideal' ),
 					$subscription->next_payment_date->format_i18n()
 				)
