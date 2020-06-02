@@ -14,8 +14,8 @@ namespace Pronamic\WordPress\Pay\Upgrades;
  * Upgrade 6.2.0.
  *
  * @author  Reüel van der Steege
- * @since   6.2.0
- * @version 6.2.0
+ * @since   2.3.2
+ * @version 2.3.2
  */
 class Upgrade620 extends Upgrade {
 	/**

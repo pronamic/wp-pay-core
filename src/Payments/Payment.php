@@ -11,24 +11,16 @@
 namespace Pronamic\WordPress\Pay\Payments;
 
 use InvalidArgumentException;
-use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\DateTime\DateTime;
-use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Address;
-use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Customer;
-use Pronamic\WordPress\Pay\CreditCard;
-use Pronamic\WordPress\Pay\Payments\PaymentStatus;
-use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
-use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
-use WP_Post;
 
 /**
  * Payment
  *
  * @author  Remco Tolsma
- * @version 2.2.6
+ * @version 2.3.2
  * @since   1.0.0
  */
 class Payment extends LegacyPayment {
