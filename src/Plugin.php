@@ -29,7 +29,7 @@ use WP_Query;
  * Plugin
  *
  * @author  Remco Tolsma
- * @version 2.2.6
+ * @version 2.3.2
  * @since   2.0.1
  */
 class Plugin {
