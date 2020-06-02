@@ -20,7 +20,7 @@ use WP_Error;
  * Blocks
  *
  * @author  Reüel van der Steege
- * @since   2.2.6
+ * @since   2.3.2
  * @version 2.1.7
  */
 class BlocksModule {
@@ -36,10 +36,30 @@ class BlocksModule {
 
 		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_styles' ) );
 
+		add_filter( 'block_categories', array( $this, 'block_categories' ), 10, 2 );
+
 		// Source text and description.
 		add_filter( 'pronamic_payment_source_url_' . FormsSource::BLOCK_PAYMENT_FORM, array( $this, 'source_url' ), 10, 2 );
 		add_filter( 'pronamic_payment_source_text_' . FormsSource::BLOCK_PAYMENT_FORM, array( $this, 'source_text' ), 10, 2 );
 		add_filter( 'pronamic_payment_source_description_' . FormsSource::BLOCK_PAYMENT_FORM, array( $this, 'source_description' ), 10, 2 );
+	}
+
+	/**
+	 * Block categories.
+	 *
+	 * @param array    $categories Block categories.
+	 * @param \WP_Post $post       Post being loaded.
+	 *
+	 * @return array
+	 */
+	public function block_categories( $categories, $post ) {
+		$categories[] = array(
+			'slug'  => 'pronamic-pay',
+			'title' => __( 'Pronamic Pay', 'pronamic-ideal' ),
+			'icon'  => null,
+		);
+
+		return $categories;
 	}
 
 	/**
@@ -64,7 +84,7 @@ class BlocksModule {
 			'pronamic-payment-form-editor',
 			'pronamic_payment_form',
 			array(
-				'title'          => __( 'Payment Form', 'pronamic_ideal' ),
+				'title'          => _x( 'Payment Form', 'Block', 'pronamic_ideal' ),
 				'label_add_form' => __( 'Add form', 'pronamic_ideal' ),
 				'label_amount'   => __( 'Amount', 'pronamic_ideal' ),
 			)
@@ -117,7 +137,7 @@ class BlocksModule {
 		$amount = '';
 
 		if ( ! empty( $attributes['amount'] ) ) {
-			$amount = $money_parser->parse( $attributes['amount'] );
+			$amount = $money_parser->parse( $attributes['amount'] )->get_minor_units();
 		}
 
 		// Form settings.

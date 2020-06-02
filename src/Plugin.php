@@ -29,7 +29,7 @@ use WP_Query;
  * Plugin
  *
  * @author  Remco Tolsma
- * @version 2.2.6
+ * @version 2.3.2
  * @since   2.0.1
  */
 class Plugin {
@@ -813,6 +813,7 @@ class Plugin {
 		$payment->subscription           = $data->get_subscription();
 		$payment->subscription_id        = $data->get_subscription_id();
 		$payment->subscription_source_id = $data->get_subscription_source_id();
+		$payment->set_origin_id( $data->get_origin_id() );
 		$payment->set_total_amount( $data->get_amount() );
 		$payment->set_credit_card( $data->get_credit_card() );
 
@@ -927,6 +928,32 @@ class Plugin {
 		// User ID.
 		if ( null === $payment->user_id && is_user_logged_in() ) {
 			$payment->user_id = get_current_user_id();
+		}
+
+		$origin_id = $payment->get_origin_id();
+
+		if ( null === $origin_id ) {
+			// Queried object.
+			$queried_object    = \get_queried_object();
+			$queried_object_id = \get_queried_object_id();
+
+			if ( null !== $queried_object && $queried_object_id > 0 ) {
+				$origin_id = $queried_object_id;
+			}
+
+			// Referer.
+			$referer = \wp_get_referer();
+
+			if ( null === $origin_id && false !== $referer ) {
+				$post_id = \url_to_postid( $referer );
+
+				if ( $post_id > 0 ) {
+					$origin_id = $post_id;
+				}
+			}
+
+			// Set origin ID.
+			$payment->set_origin_id( $origin_id );
 		}
 
 		// Google Analytics client ID.

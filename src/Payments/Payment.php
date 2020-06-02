@@ -11,24 +11,16 @@
 namespace Pronamic\WordPress\Pay\Payments;
 
 use InvalidArgumentException;
-use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\DateTime\DateTime;
-use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Address;
-use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Customer;
-use Pronamic\WordPress\Pay\CreditCard;
-use Pronamic\WordPress\Pay\Payments\PaymentStatus;
-use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
-use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
-use WP_Post;
 
 /**
  * Payment
  *
  * @author  Remco Tolsma
- * @version 2.2.6
+ * @version 2.3.2
  * @since   1.0.0
  */
 class Payment extends LegacyPayment {
@@ -54,20 +46,6 @@ class Payment extends LegacyPayment {
 	 * @var string|int|null
 	 */
 	public $order_id;
-
-	/**
-	 * The total amount of this payment.
-	 *
-	 * @var TaxedMoney
-	 */
-	private $total_amount;
-
-	/**
-	 * The shipping amount of this payment.
-	 *
-	 * @var Money|null
-	 */
-	private $shipping_amount;
 
 	/**
 	 * The expiration period of this payment.
@@ -750,6 +728,10 @@ class Payment extends LegacyPayment {
 			$payment->set_ga_tracked( $json->ga_tracked );
 		}
 
+		if ( isset( $json->origin_id ) ) {
+			$payment->set_origin_id( $json->origin_id );
+		}
+
 		return $payment;
 	}
 
@@ -781,6 +763,12 @@ class Payment extends LegacyPayment {
 
 		if ( null !== $this->get_ga_tracked() ) {
 			$properties['ga_tracked'] = $this->get_ga_tracked();
+		}
+
+		$origin_id = $this->get_origin_id();
+
+		if ( null !== $origin_id ) {
+			$properties['origin_id'] = $origin_id;
 		}
 
 		$object = (object) $properties;

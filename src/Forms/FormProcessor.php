@@ -25,7 +25,7 @@ use WP_User;
  * Form Processor
  *
  * @author Remco Tolsma
- * @version 2.2.6
+ * @version 2.3.2
  * @since 3.7.0
  */
 class FormProcessor {
@@ -126,6 +126,7 @@ class FormProcessor {
 		$payment->order_id    = $order_id;
 		$payment->source      = $source;
 		$payment->source_id   = $source_id;
+		$payment->set_origin_id( $source_id );
 
 		// Set default payment method if required.
 		if ( $gateway->payment_method_is_required() ) {

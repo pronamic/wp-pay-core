@@ -19,7 +19,7 @@
 	blocks.registerBlockType( 'pronamic-pay/payment-form', {
 		title: pronamic_payment_form.title,
 		icon: 'money',
-		category: 'common',
+		category: 'pronamic-pay',
 
 		// Attributes.
 		attributes: {

@@ -22,7 +22,7 @@ use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
  * Payment info helper
  *
  * @author  Remco Tolsma
- * @version 2.2.6
+ * @version 2.3.2
  * @since   2.1.0
  */
 class PaymentInfoHelper {
@@ -37,6 +37,12 @@ class PaymentInfoHelper {
 
 		if ( null !== $payment_info->get_id() ) {
 			$object->id = $payment_info->get_id();
+		}
+
+		$origin_id = $payment_info->get_origin_id();
+
+		if ( null !== $origin_id ) {
+			$object->origin_id = $origin_id;
 		}
 
 		$object->total_amount = TaxedMoneyJsonTransformer::to_json( $payment_info->get_total_amount() );
@@ -120,6 +126,10 @@ class PaymentInfoHelper {
 	public static function from_json( $json, PaymentInfo $payment_info ) {
 		if ( isset( $json->id ) ) {
 			$payment_info->set_id( $json->id );
+		}
+
+		if ( isset( $json->origin_id ) ) {
+			$payment_info->set_origin_id( $json->origin_id );
 		}
 
 		if ( isset( $json->total_amount ) ) {

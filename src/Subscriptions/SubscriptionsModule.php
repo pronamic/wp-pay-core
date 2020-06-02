@@ -34,7 +34,7 @@ use WP_Query;
  * @link https://woocommerce.com/2017/04/woocommerce-3-0-release/
  * @link https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
  * @author  Remco Tolsma
- * @version 2.2.6
+ * @version 2.3.2
  * @since   2.0.1
  */
 class SubscriptionsModule {
@@ -238,6 +238,7 @@ class SubscriptionsModule {
 		$payment->subscription    = $subscription;
 		$payment->subscription_id = $subscription->get_id();
 
+		$payment->set_origin_id( $subscription->get_origin_id() );
 		$payment->set_total_amount( $subscription->get_total_amount() );
 		$payment->set_customer( $subscription->get_customer() );
 		$payment->set_billing_address( $subscription->get_billing_address() );
@@ -325,7 +326,7 @@ class SubscriptionsModule {
 		$subscription->next_payment_delivery_date = apply_filters( 'pronamic_pay_subscription_next_payment_delivery_date', clone $end_date, $payment );
 
 		// Remove next payment (delivery) date if this is the last payment according to subscription end date.
-		if ( $subscription->next_payment_date >= $subscription->end_date ) {
+		if ( null !== $subscription->end_date && $subscription->next_payment_date >= $subscription->end_date ) {
 			$subscription->next_payment_date          = null;
 			$subscription->next_payment_delivery_date = null;
 
@@ -429,6 +430,8 @@ class SubscriptionsModule {
 		);
 
 		$subscription->key = uniqid( 'subscr_' );
+
+		$subscription->set_origin_id( $payment->get_origin_id() );
 
 		if ( empty( $subscription->source ) && empty( $subscription->source_id ) ) {
 			$subscription->source    = $payment->source;
