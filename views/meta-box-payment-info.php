@@ -241,24 +241,38 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 		</td>
 	</tr>
 
-	<?php if ( null !== $payment->get_customer() ) : ?>
+	<?php 
 
-		<tr>
-			<th scope="row">
-				<?php esc_html_e( 'Customer', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php
+	$customer = $payment->get_customer();
 
-				if ( null !== $payment->get_customer()->get_name() ) {
-					echo esc_html( $payment->get_customer()->get_name() );
-				}
+	if ( null !== $customer ) : ?>
 
-				?>
-			</td>
-		</tr>
+		<?php
 
-		<?php if ( null !== $payment->get_customer()->get_birth_date() ) : ?>
+		$name = $customer->get_name();
+
+		if ( null !== $name ) : ?>
+
+			<tr>
+				<th scope="row">
+					<?php esc_html_e( 'Customer', 'pronamic_ideal' ); ?>
+				</th>
+				<td>
+					<?php
+
+					if ( null !== $customer->get_name() ) {
+						echo esc_html( $customer->get_name() );
+					}
+
+					?>
+				</td>
+			</tr>
+
+		<?php endif;
+
+		$birth_date = $customer->get_birth_date();
+
+		if ( null !== $birth_date ) : ?>
 
 			<tr>
 				<th scope="row">
@@ -267,7 +281,7 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 				<td>
 					<?php
 
-					echo esc_html( $payment->get_customer()->get_birth_date()->format_i18n( 'D j M Y' ) )
+					echo esc_html( $birth_date->format_i18n( 'D j M Y' ) )
 
 					?>
 				</td>
@@ -275,7 +289,11 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 
 		<?php endif; ?>
 
-		<?php if ( null !== $payment->get_customer()->get_gender() ) : ?>
+		<?php 
+
+		$gender = $customer->get_gender();
+
+		if ( null !== $gender ) : ?>
 
 			<tr>
 				<th scope="row">
@@ -284,7 +302,7 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 				<td>
 					<?php
 
-					switch ( $payment->get_customer()->get_gender() ) {
+					switch ( $gender ) {
 						case Gender::FEMALE:
 							echo esc_html( __( 'Female', 'pronamic_ideal' ) );
 
@@ -305,7 +323,11 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 
 		<?php endif; ?>
 
-		<?php if ( null !== $payment->get_customer()->get_user_id() ) : ?>
+		<?php 
+
+		$user_id = $customer->get_user_id();
+
+		if ( null !== $user_id ) : ?>
 
 			<tr>
 				<th scope="row">
@@ -313,8 +335,6 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 				</th>
 				<td>
 					<?php
-
-					$user_id = $payment->get_customer()->get_user_id();
 
 					$user_text = sprintf( '#%s', $user_id );
 
