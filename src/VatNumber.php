@@ -61,6 +61,18 @@ class VatNumber {
 	}
 
 	/**
+	 * Get the number without the 2 digit prefix.
+	 *
+	 * @link https://en.wikipedia.org/wiki/VAT_identification_number
+	 * @return string
+	 */
+	public function normalized_without_prefix() {
+		$value = self::normalize( $this->value );
+
+		return \substr( $value, 2 );
+	}
+
+	/**
 	 * Get JSON.
 	 *
 	 * @return object|null

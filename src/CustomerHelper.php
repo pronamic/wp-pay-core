@@ -55,6 +55,17 @@ class CustomerHelper {
 			ContactNameHelper::complement_name( $name );
 		}
 
+		// VAT Number validity.
+		$vat_number = $customer->get_vat_number();
+
+		$vat_number_validity = $customer->get_vat_number_validity();
+
+		if ( null !== $vat_number && null === $vat_number_validity ) {
+			$vat_number_validity = VatNumberValidator::validate( $vat_number );
+
+			$customer->set_vat_number_validity( $vat_number_validity );
+		}
+
 		// Locale.
 		if ( null === $customer->get_locale() ) {
 			$locales = array();

@@ -102,6 +102,16 @@ class VatNumberValidity {
 	}
 
 	/**
+	 * Set valid.
+	 *
+	 * @param bool $valid Valid.
+	 * @return void
+	 */
+	public function set_valid( $valid ) {
+		$this->valid = $valid;
+	}
+
+	/**
 	 * Get name.
 	 *
 	 * @return string|null
