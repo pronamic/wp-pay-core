@@ -313,7 +313,7 @@ class Customer {
 	/**
 	 * Set company name.
 	 *
-	 * @param ContactName|null $company_name Company name.
+	 * @param string|null $company_name Company name.
 	 * @return void
 	 */
 	public function set_company_name( $company_name = null ) {
@@ -332,10 +332,14 @@ class Customer {
 	/**
 	 * Set VAT number.
 	 *
-	 * @param VatNumber|null $vat_number VAT number.
+	 * @param VatNumber|string|null $vat_number VAT number.
 	 * @return void
 	 */
 	public function set_vat_number( $vat_number = null ) {
+		if ( \is_string( $vat_number ) ) {
+			$vat_number = new VatNumber( $vat_number );
+		}
+
 		$this->vat_number = $vat_number;
 	}
 
