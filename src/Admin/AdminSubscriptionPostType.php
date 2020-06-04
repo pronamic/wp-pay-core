@@ -325,7 +325,19 @@ class AdminSubscriptionPostType {
 
 				break;
 			case 'pronamic_subscription_customer':
-				echo esc_html( get_post_meta( $post_id, '_pronamic_subscription_customer_name', true ) );
+				$customer_name = get_post_meta( $post_id, '_pronamic_subscription_customer_name', true );
+
+				$customer = $subscription->get_customer();
+
+				if ( null !== $customer ) {
+					$contact_name = $customer->get_name();
+
+					if ( null !== $contact_name ) {
+						$customer_name = strval( $contact_name );
+					}
+				}
+
+				echo esc_html( $customer_name );
 
 				break;
 		}
