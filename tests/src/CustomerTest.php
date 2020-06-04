@@ -45,6 +45,7 @@ class CustomerTest extends WP_UnitTestCase {
 		$this->name->set_last_name( 'Tolsma' );
 
 		$this->customer->set_name( $this->name );
+		$this->customer->set_company_name( 'Pronamic' );
 		$this->customer->set_gender( 'M' );
 		$this->customer->set_birth_date( new DateTime( '31-12-1970' ) );
 		$this->customer->set_email( 'remco@pronamic.nl' );
@@ -63,6 +64,7 @@ class CustomerTest extends WP_UnitTestCase {
 		$this->assertInstanceOf( __NAMESPACE__ . '\Customer', $this->customer );
 
 		$this->assertEquals( $this->name, $this->customer->get_name() );
+		$this->assertEquals( 'Pronamic', $this->customer->get_company_name() );
 		$this->assertEquals( 'M', $this->customer->get_gender() );
 		$this->assertEquals( '31-12-1970', $this->customer->get_birth_date()->format( 'd-m-Y' ) );
 		$this->assertEquals( 'remco@pronamic.nl', $this->customer->get_email() );

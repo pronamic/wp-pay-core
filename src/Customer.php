@@ -92,6 +92,13 @@ class Customer {
 	private $user_id;
 
 	/**
+	 * Company name.
+	 *
+	 * @var string
+	 */
+	private $company_name;
+
+	/**
 	 * Get contact name.
 	 *
 	 * @return ContactName|null
@@ -282,22 +289,42 @@ class Customer {
 	}
 
 	/**
+	 * Get company name.
+	 *
+	 * @return string|null
+	 */
+	public function get_company_name() {
+		return $this->company_name;
+	}
+
+	/**
+	 * Set company name.
+	 *
+	 * @param ContactName|null $company_name Company name.
+	 * @return void
+	 */
+	public function set_company_name( $company_name = null ) {
+		$this->company_name = $company_name;
+	}
+
+	/**
 	 * Get JSON.
 	 *
 	 * @return object|null
 	 */
 	public function get_json() {
 		$data = array(
-			'name'       => ( null === $this->name ) ? null : $this->name->get_json(),
-			'gender'     => $this->get_gender(),
-			'birth_date' => ( null === $this->birth_date ) ? null : $this->birth_date->format( DATE_RFC3339 ),
-			'email'      => $this->get_email(),
-			'phone'      => $this->get_phone(),
-			'ip_address' => $this->get_ip_address(),
-			'user_agent' => $this->get_user_agent(),
-			'language'   => $this->get_language(),
-			'locale'     => $this->get_locale(),
-			'user_id'    => $this->get_user_id(),
+			'name'         => ( null === $this->name ) ? null : $this->name->get_json(),
+			'gender'       => $this->get_gender(),
+			'birth_date'   => ( null === $this->birth_date ) ? null : $this->birth_date->format( DATE_RFC3339 ),
+			'email'        => $this->get_email(),
+			'phone'        => $this->get_phone(),
+			'ip_address'   => $this->get_ip_address(),
+			'user_agent'   => $this->get_user_agent(),
+			'language'     => $this->get_language(),
+			'locale'       => $this->get_locale(),
+			'user_id'      => $this->get_user_id(),
+			'company_name' => $this->get_company_name(),
 		);
 
 		$data = array_filter( $data );
