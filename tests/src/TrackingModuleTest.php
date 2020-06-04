@@ -10,8 +10,6 @@
 
 namespace Pronamic\WordPress\Pay;
 
-namespace Pronamic\WordPress\Pay;
-
 /**
  * Tracking module test
  *
