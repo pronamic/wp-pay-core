@@ -10,7 +10,6 @@
 
 namespace Pronamic\WordPress\Pay;
 
-use InvalidArgumentException;
 use Pronamic\WordPress\DateTime\DateTime;
 
 /**
@@ -341,11 +340,11 @@ class Customer {
 	 *
 	 * @param mixed $json JSON.
 	 * @return Customer
-	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
+	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
 	public static function from_json( $json ) {
 		if ( ! is_object( $json ) ) {
-			throw new InvalidArgumentException( 'JSON value must be an array.' );
+			throw new \InvalidArgumentException( 'JSON value must be an array.' );
 		}
 
 		$customer = new self();
