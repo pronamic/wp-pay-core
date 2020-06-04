@@ -26,23 +26,24 @@ class VatNumberValidator {
 	/**
 	 * Validate VAT number.
 	 *
-	 * @param VatNumber $vat_number
+	 * @param VatNumber $vat_number VAT number.
 	 * @return VatNumberValidity
 	 * @throws \Exception SOAP error.
 	 */
 	public static function validate( VatNumber $vat_number ) {
-		// Client
+		// Client.
 		$client = new \SoapClient( self::API_URL );
 
-		// Parameters
+		// Parameters.
 		$parameters = array(
 			'countryCode' => $vat_number->get_2_digit_prefix(),
 			'vatNumber'   => $vat_number->normalized_without_prefix(),
 		);
 
-		// Response
+		// Response.
 		$response = $client->checkVat( $parameters );
 
+		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- VIES response object.
 		$request_date = new \DateTime( $response->requestDate );
 
 		$validity = new VatNumberValidity( $vat_number, $request_date, $response->valid );

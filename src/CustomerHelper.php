@@ -63,11 +63,12 @@ class CustomerHelper {
 		if ( null !== $vat_number && null === $vat_number_validity ) {
 			try {
 				$vat_number_validity = VatNumberValidator::validate( $vat_number );
-
-				$customer->set_vat_number_validity( $vat_number_validity );
 			} catch ( \Exception $e ) {
 				// On exceptions we have no VAT number validity info, no problem.
+				$vat_number_validity = null;
 			}
+
+			$customer->set_vat_number_validity( $vat_number_validity );
 		}
 
 		// Locale.
