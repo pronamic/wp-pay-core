@@ -241,38 +241,173 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 		</td>
 	</tr>
 
-	<?php 
+	<?php
 
 	$customer = $payment->get_customer();
 
-	if ( null !== $customer ) : ?>
-
-		<?php
+	if ( null !== $customer ) :
 
 		$name = $customer->get_name();
 
-		if ( null !== $name ) : ?>
+		if ( null !== $name ) :
+			?>
 
 			<tr>
 				<th scope="row">
 					<?php esc_html_e( 'Customer', 'pronamic_ideal' ); ?>
 				</th>
 				<td>
-					<?php
-
-					if ( null !== $customer->get_name() ) {
-						echo esc_html( $customer->get_name() );
-					}
-
-					?>
+					<?php echo \esc_html( $name ); ?>
 				</td>
 			</tr>
 
-		<?php endif;
+			<?php
+		endif;
+
+		$company_name = $customer->get_company_name();
+
+		if ( null !== $company_name ) :
+			?>
+
+			<tr>
+				<th scope="row">
+					<?php \esc_html_e( 'Company', 'pronamic_ideal' ); ?>
+				</th>
+				<td>
+					<?php echo \esc_html( $company_name ); ?>
+				</td>
+			</tr>
+
+			<?php
+		endif;
+
+		$vat_number = $customer->get_vat_number();
+
+		if ( null !== $vat_number ) :
+			?>
+
+			<tr>
+				<th scope="row">
+					<?php esc_html_e( 'VAT Number', 'pronamic_ideal' ); ?>
+				</th>
+				<td>
+					<?php echo \esc_html( $vat_number ); ?>
+				</td>
+			</tr>
+
+			<?php
+		endif;
+
+		$vat_number_validity = $customer->get_vat_number_validity();
+
+		if ( null !== $vat_number_validity ) :
+			?>
+
+			<tr>
+				<th scope="row">
+					<?php esc_html_e( 'VAT Number Validity', 'pronamic_ideal' ); ?>
+				</th>
+				<td style="padding-top: 20px">
+					<style type="text/css">
+						.pronamic-pay-form-sub-table th,
+						.pronamic-pay-form-sub-table td {
+							padding: 0;
+						}
+					</style>
+
+					<table class="pronamic-pay-form-sub-table">
+						<tr>
+							<th scope="row">
+								<?php esc_html_e( 'VAT Number', 'pronamic_ideal' ); ?>
+							</th>
+							<td>
+								<?php echo esc_html( $vat_number_validity->get_vat_number() ); ?>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">
+								<?php esc_html_e( 'Request Date', 'pronamic_ideal' ); ?>
+							</th>
+							<td>
+								<?php echo esc_html( $vat_number_validity->get_request_date()->format( 'd-m-Y H:i:s' ) ); ?>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">
+								<?php esc_html_e( 'Valid', 'pronamic_ideal' ); ?>
+							</th>
+							<td>
+								<?php echo esc_html( $vat_number_validity->is_valid() ? __( 'Yes', 'pronamic_ideal' ) : __( 'No', 'pronamic_ideal' ) ); ?>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">
+								<?php esc_html_e( 'Name', 'pronamic_ideal' ); ?>
+							</th>
+							<td>
+								<?php echo esc_html( $vat_number_validity->get_name() ); ?>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">
+								<?php esc_html_e( 'Address', 'pronamic_ideal' ); ?>
+							</th>
+							<td>
+								<?php
+
+								echo \wp_kses(
+									\nl2br( $vat_number_validity->get_address() ),
+									array(
+										'br' => array(),
+									)
+								);
+
+								?>
+							</td>
+						</tr>
+
+						<?php
+
+						$service = $vat_number_validity->get_service();
+
+						if ( null !== $service ) :
+							?>
+
+							<tr>
+								<th scope="row">
+									<?php esc_html_e( 'Validation Service', 'pronamic_ideal' ); ?>
+								</th>
+								<td>
+									<?php
+
+									switch ( $service ) {
+										case \Pronamic\WordPress\Pay\VatNumberValidationService::VIES:
+											echo esc_html( __( 'VIES', 'pronamic_ideal' ) );
+
+											break;
+										default:
+											echo \esc_html( $service );
+
+											break;
+									}
+
+									?>
+								</td>
+							</tr>
+
+						<?php endif; ?>
+
+					</table>
+				</td>
+			</tr>
+
+			<?php
+		endif;
 
 		$birth_date = $customer->get_birth_date();
 
-		if ( null !== $birth_date ) : ?>
+		if ( null !== $birth_date ) :
+			?>
 
 			<tr>
 				<th scope="row">
@@ -289,11 +424,12 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 
 		<?php endif; ?>
 
-		<?php 
+		<?php
 
 		$gender = $customer->get_gender();
 
-		if ( null !== $gender ) : ?>
+		if ( null !== $gender ) :
+			?>
 
 			<tr>
 				<th scope="row">
@@ -323,11 +459,12 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 
 		<?php endif; ?>
 
-		<?php 
+		<?php
 
 		$user_id = $customer->get_user_id();
 
-		if ( null !== $user_id ) : ?>
+		if ( null !== $user_id ) :
+			?>
 
 			<tr>
 				<th scope="row">

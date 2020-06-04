@@ -93,9 +93,23 @@ class Customer {
 	/**
 	 * Company name.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $company_name;
+
+	/**
+	 * VAT Number.
+	 *
+	 * @var VatNumber|null
+	 */
+	private $vat_number;
+
+	/**
+	 * VAT Number validity.
+	 *
+	 * @var VatNumberValidity|null
+	 */
+	private $vat_number_validity;
 
 	/**
 	 * Get contact name.
@@ -307,23 +321,63 @@ class Customer {
 	}
 
 	/**
+	 * Get VAT number.
+	 *
+	 * @return VatNumber|null
+	 */
+	public function get_vat_number() {
+		return $this->vat_number;
+	}
+
+	/**
+	 * Set VAT number.
+	 *
+	 * @param VatNumber|null $vat_number VAT number.
+	 * @return void
+	 */
+	public function set_vat_number( $vat_number = null ) {
+		$this->vat_number = $vat_number;
+	}
+
+	/**
+	 * Get VAT number validity.
+	 *
+	 * @return VatNumberValidity|null
+	 */
+	public function get_vat_number_validity() {
+		return $this->vat_number_validity;
+	}
+
+	/**
+	 * Set VAT number validity.
+	 *
+	 * @param VatNumberValidity|null $vat_number_validity VAT number validity.
+	 * @return void
+	 */
+	public function set_vat_number_validity( $vat_number_validity = null ) {
+		$this->vat_number_validity = $vat_number_validity;
+	}
+
+	/**
 	 * Get JSON.
 	 *
 	 * @return object|null
 	 */
 	public function get_json() {
 		$data = array(
-			'name'         => ( null === $this->name ) ? null : $this->name->get_json(),
-			'gender'       => $this->get_gender(),
-			'birth_date'   => ( null === $this->birth_date ) ? null : $this->birth_date->format( DATE_RFC3339 ),
-			'email'        => $this->get_email(),
-			'phone'        => $this->get_phone(),
-			'ip_address'   => $this->get_ip_address(),
-			'user_agent'   => $this->get_user_agent(),
-			'language'     => $this->get_language(),
-			'locale'       => $this->get_locale(),
-			'user_id'      => $this->get_user_id(),
-			'company_name' => $this->get_company_name(),
+			'name'                => ( null === $this->name ) ? null : $this->name->get_json(),
+			'gender'              => $this->get_gender(),
+			'birth_date'          => ( null === $this->birth_date ) ? null : $this->birth_date->format( DATE_RFC3339 ),
+			'email'               => $this->get_email(),
+			'phone'               => $this->get_phone(),
+			'ip_address'          => $this->get_ip_address(),
+			'user_agent'          => $this->get_user_agent(),
+			'language'            => $this->get_language(),
+			'locale'              => $this->get_locale(),
+			'user_id'             => $this->get_user_id(),
+			'company_name'        => $this->get_company_name(),
+			'vat_number'          => ( null === $this->vat_number ) ? null : $this->vat_number->get_json(),
+			'vat_number_validity' => ( null === $this->vat_number_validity ) ? null : $this->vat_number_validity->get_json(),
 		);
 
 		$data = array_filter( $data );
@@ -363,6 +417,14 @@ class Customer {
 
 				if ( 'birth_date' === $key ) {
 					$value = new DateTime( $value );
+				}
+
+				if ( 'vat_number' === $key ) {
+					$value = VatNumber::from_json( $value );
+				}
+
+				if ( 'vat_number_validity' === $key ) {
+					$value = VatNumberValidity::from_json( $value );
 				}
 
 				call_user_func( $callable, $value );

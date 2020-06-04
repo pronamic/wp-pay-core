@@ -121,4 +121,27 @@ class CustomerTest extends WP_UnitTestCase {
 
 		$this->assertJsonStringEqualsJsonFile( $json_file, $json_string );
 	}
+
+	/**
+	 * Test VAT number.
+	 */
+	public function test_vat_number() {
+		$customer = new Customer();
+
+		$vat_number = new VatNumber( 'NL999999999B01' );
+
+		$request_date = new \DateTimeImmutable( '2020-06-04 14:00:00', new \DateTimeZone( 'UTC' ) );
+
+		$validity = new VatNumberValidity( $vat_number, $request_date, true );
+		$validity->set_name( 'Pronamic' );
+		$validity->set_address( "BURGEMEESTER WUITEWEG 00039 B\r\n9203KA DRACHTEN" );
+		$validity->set_service( VatNumberValidationService::VIES );
+
+		$customer->set_vat_number( $vat_number );
+		$customer->set_vat_number_validity( $validity );
+
+		$this->assertEquals( $vat_number, $customer->get_vat_number() );
+		$this->assertEquals( $validity, $customer->get_vat_number_validity() );
+		$this->assertEquals( $vat_number, $customer->get_vat_number_validity()->get_vat_number() );
+	}
 }
