@@ -329,7 +329,7 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 								<?php esc_html_e( 'Request Date', 'pronamic_ideal' ); ?>
 							</th>
 							<td>
-								<?php echo esc_html( $vat_number_validity->get_request_date()->format( 'd-m-Y H:i:s' ) ); ?>
+								<?php echo esc_html( $vat_number_validity->get_request_date()->format( 'd-m-Y' ) ); ?>
 							</td>
 						</tr>
 						<tr>

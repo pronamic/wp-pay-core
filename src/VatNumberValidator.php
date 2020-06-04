@@ -28,34 +28,28 @@ class VatNumberValidator {
 	 *
 	 * @param VatNumber $vat_number
 	 * @return VatNumberValidity
+	 * @throws \Exception SOAP error.
 	 */
 	public static function validate( VatNumber $vat_number ) {
-		$valid = false;
+		// Client
+		$client = new \SoapClient( self::API_URL );
 
-		$request_date = new \DateTimeImmutable();
+		// Parameters
+		$parameters = array(
+			'countryCode' => $vat_number->get_2_digit_prefix(),
+			'vatNumber'   => $vat_number->normalized_without_prefix(),
+		);
 
-		$validity = new VatNumberValidity( $vat_number, $request_date, $valid );
+		// Response
+		$response = $client->checkVat( $parameters );
+
+		$request_date = new \DateTime( $response->requestDate );
+
+		$validity = new VatNumberValidity( $vat_number, $request_date, $response->valid );
+
+		$validity->set_name( $response->name );
+		$validity->set_address( $response->address );
 		$validity->set_service( VatNumberValidationService::VIES );
-
-		try {
-			// Client
-			$client = new \SoapClient( self::API_URL );
-
-			// Parameters
-			$parameters = array(
-				'countryCode' => $vat_number->get_2_digit_prefix(),
-				'vatNumber'   => $vat_number->normalized_without_prefix(),
-			);
-
-			// Response
-			$response = $client->checkVat( $parameters );
-
-			$validity->set_valid( $response->valid );
-			$validity->set_name( $response->name );
-			$validity->set_address( $response->address );
-		} catch ( \Exception $exception ) {
-			$validity->error = $exception->getMessage();
-		}
 
 		return $validity;
 	}
