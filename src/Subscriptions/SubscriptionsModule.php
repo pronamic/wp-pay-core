@@ -135,6 +135,12 @@ class SubscriptionsModule {
 				$this->handle_subscription_renew( $subscription );
 
 				break;
+			case 'mandate':
+				include __DIR__ . '/../../views/subscription-mandate.php';
+
+				exit;
+
+				break;
 		}
 	}
 
