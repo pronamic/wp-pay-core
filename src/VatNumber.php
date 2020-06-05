@@ -75,7 +75,7 @@ class VatNumber {
 	/**
 	 * Get JSON.
 	 *
-	 * @return object|null
+	 * @return string
 	 */
 	public function get_json() {
 		return $this->value;

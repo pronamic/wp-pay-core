@@ -639,7 +639,12 @@ class SubscriptionsModule {
 				break;
 			case PaymentStatus::CANCELLED:
 			case PaymentStatus::EXPIRED:
-				$status_update = SubscriptionStatus::ON_HOLD;
+				$first_payment = $subscription->get_first_payment();
+
+				// Set subscription status to 'On Hold' only if the subscription is not already active when processing the first payment.
+				if ( ! ( null !== $first_payment && $first_payment->get_id() === $payment->get_id() && SubscriptionStatus::ACTIVE === $subscription->get_status() ) ) {
+					$status_update = SubscriptionStatus::ON_HOLD;
+				}
 
 				break;
 		}
