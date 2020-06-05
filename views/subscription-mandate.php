@@ -10,9 +10,9 @@
 
 global $wpdb;
 
-$post_id = $subscription->get_id();
+$subscription_id = $subscription->get_id();
 
-$mollie_customer_id = \get_post_meta( $post_id, '_pronamic_subscription_mollie_customer_id', true );
+$mollie_customer_id = \get_post_meta( $subscription_id, '_pronamic_subscription_mollie_customer_id', true );
 
 if ( empty( $mollie_customer_id ) ) {
 	include \get_404_template();

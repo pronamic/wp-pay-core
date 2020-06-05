@@ -136,11 +136,9 @@ class SubscriptionsModule {
 
 				break;
 			case 'mandate':
-				include __DIR__ . '/../../views/subscription-mandate.php';
+				require __DIR__ . '/../../views/subscription-mandate.php';
 
 				exit;
-
-				break;
 		}
 	}
 
