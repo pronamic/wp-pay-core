@@ -36,6 +36,8 @@ class VatNumberTest extends \WP_UnitTestCase {
 
 		$this->assertEquals( 'NL999999999B01', VatNumber::normalize( $vat_number->get_value() ) );
 		$this->assertEquals( 'NL', $vat_number->get_2_digit_prefix() );
+		$this->assertEquals( 'NL999999999B01', $vat_number->normalized() );
+		$this->assertEquals( '999999999B01', $vat_number->normalized_without_prefix() );
 	}
 
 	/**
