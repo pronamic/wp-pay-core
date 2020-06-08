@@ -27,6 +27,13 @@ class VatNumber {
 	private $value;
 
 	/**
+	 * Validity.
+	 *
+	 * @var VatNumberValidity|null
+	 */
+	private $validity;
+
+	/**
 	 * Construct VAT number object.
 	 *
 	 * @param string $value VAT identification number.
@@ -82,23 +89,92 @@ class VatNumber {
 	}
 
 	/**
+	 * Get validity.
+	 *
+	 * @return VatNumberValidity|null
+	 */
+	public function get_validity() {
+		return $this->validity;
+	}
+
+	/**
+	 * Set validity
+	 *
+	 * @param VatNumberValidity|null $validity Validity.
+	 * @return void
+	 */
+	public function set_validity( VatNumberValidity $validity = null ) {
+		$this->validity = $validity;
+	}
+
+	/**
 	 * Get JSON.
 	 *
 	 * @return string
 	 */
 	public function get_json() {
-		return $this->value;
+		if ( null === $this->validity ) {
+			return $this->value;
+		}
+
+		$data = array(
+			'value'    => $this->value,
+			'validity' => $this->validity->get_json(),
+		);
+
+		return (object) $data;
 	}
 
 	/**
-	 * Create contact name from object.
+	 * Create VAT number from JSON.
 	 *
 	 * @param mixed $json JSON.
 	 * @return VatNumber
 	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
 	public static function from_json( $json ) {
-		return new self( $json );
+		if ( \is_string( $json ) ) {
+			return new self( $json );	
+		}
+
+		if ( ! \is_object( $json ) ) {
+			throw new \InvalidArgumentException( 'JSON value must be either a string or object.' );
+		}
+		
+		if ( ! \property_exists( $json, 'value' ) ) {
+			throw new \InvalidArgumentException( 'JSON object must contain value property.' );	
+		}
+
+		$vat_number = new self( $json->value );
+
+		if ( property_exists( $json, 'validity' ) ) {
+			$validity = VatNumberValidity::from_json( $json->validity );
+
+			$vat_number->set_validity( $validity );
+		}
+
+		return $vat_number;
+	}
+
+	/**
+	 * Create VAT number from string.
+	 *
+	 * @param string $string VAT number string.
+	 * @return VatNumber
+	 */
+	public static function from_string( $string ) {
+		return new self( $string );
+	}
+
+	/**
+	 * Create VAT number from prefix and number.
+	 *
+	 * @param string $prefix Prefix (country code).
+	 * @param string $value  VAT number.
+	 * @return VatNumber
+	 */
+	public static function from_prefix_and_number( $prefix, $value ) {
+		return new self( $prefix . $value );
 	}
 
 	/**

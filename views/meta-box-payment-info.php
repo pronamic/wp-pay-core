@@ -284,6 +284,8 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 		$vat_number = $customer->get_vat_number();
 
 		if ( null !== $vat_number ) :
+			$vat_number_validity = $vat_number->get_validity();
+
 			?>
 
 			<tr>
@@ -295,113 +297,108 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 				</td>
 			</tr>
 
-			<?php
-		endif;
+			<?php if ( null !== $vat_number_validity ) : ?>
 
-		$vat_number_validity = $customer->get_vat_number_validity();
+				<tr>
+					<th scope="row">
+						<?php esc_html_e( 'VAT Number Validity', 'pronamic_ideal' ); ?>
+					</th>
+					<td style="padding-top: 20px">
+						<style type="text/css">
+							.pronamic-pay-form-sub-table th,
+							.pronamic-pay-form-sub-table td {
+								padding: 0;
+							}
+						</style>
 
-		if ( null !== $vat_number_validity ) :
-			?>
-
-			<tr>
-				<th scope="row">
-					<?php esc_html_e( 'VAT Number Validity', 'pronamic_ideal' ); ?>
-				</th>
-				<td style="padding-top: 20px">
-					<style type="text/css">
-						.pronamic-pay-form-sub-table th,
-						.pronamic-pay-form-sub-table td {
-							padding: 0;
-						}
-					</style>
-
-					<table class="pronamic-pay-form-sub-table">
-						<tr>
-							<th scope="row">
-								<?php esc_html_e( 'VAT Number', 'pronamic_ideal' ); ?>
-							</th>
-							<td>
-								<?php echo esc_html( $vat_number_validity->get_vat_number() ); ?>
-							</td>
-						</tr>
-						<tr>
-							<th scope="row">
-								<?php esc_html_e( 'Request Date', 'pronamic_ideal' ); ?>
-							</th>
-							<td>
-								<?php echo esc_html( $vat_number_validity->get_request_date()->format( 'd-m-Y' ) ); ?>
-							</td>
-						</tr>
-						<tr>
-							<th scope="row">
-								<?php esc_html_e( 'Valid', 'pronamic_ideal' ); ?>
-							</th>
-							<td>
-								<?php echo esc_html( $vat_number_validity->is_valid() ? __( 'Yes', 'pronamic_ideal' ) : __( 'No', 'pronamic_ideal' ) ); ?>
-							</td>
-						</tr>
-						<tr>
-							<th scope="row">
-								<?php esc_html_e( 'Name', 'pronamic_ideal' ); ?>
-							</th>
-							<td>
-								<?php echo esc_html( $vat_number_validity->get_name() ); ?>
-							</td>
-						</tr>
-						<tr>
-							<th scope="row">
-								<?php esc_html_e( 'Address', 'pronamic_ideal' ); ?>
-							</th>
-							<td>
-								<?php
-
-								echo \wp_kses(
-									\nl2br( $vat_number_validity->get_address() ),
-									array(
-										'br' => array(),
-									)
-								);
-
-								?>
-							</td>
-						</tr>
-
-						<?php
-
-						$service = $vat_number_validity->get_service();
-
-						if ( null !== $service ) :
-							?>
-
+						<table class="pronamic-pay-form-sub-table">
 							<tr>
 								<th scope="row">
-									<?php esc_html_e( 'Validation Service', 'pronamic_ideal' ); ?>
+									<?php esc_html_e( 'VAT Number', 'pronamic_ideal' ); ?>
+								</th>
+								<td>
+									<?php echo esc_html( $vat_number_validity->get_vat_number() ); ?>
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">
+									<?php esc_html_e( 'Request Date', 'pronamic_ideal' ); ?>
+								</th>
+								<td>
+									<?php echo esc_html( $vat_number_validity->get_request_date()->format( 'd-m-Y' ) ); ?>
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">
+									<?php esc_html_e( 'Valid', 'pronamic_ideal' ); ?>
+								</th>
+								<td>
+									<?php echo esc_html( $vat_number_validity->is_valid() ? __( 'Yes', 'pronamic_ideal' ) : __( 'No', 'pronamic_ideal' ) ); ?>
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">
+									<?php esc_html_e( 'Name', 'pronamic_ideal' ); ?>
+								</th>
+								<td>
+									<?php echo esc_html( $vat_number_validity->get_name() ); ?>
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">
+									<?php esc_html_e( 'Address', 'pronamic_ideal' ); ?>
 								</th>
 								<td>
 									<?php
 
-									switch ( $service ) {
-										case \Pronamic\WordPress\Pay\VatNumberValidationService::VIES:
-											echo esc_html( __( 'VIES', 'pronamic_ideal' ) );
-
-											break;
-										default:
-											echo \esc_html( $service );
-
-											break;
-									}
+									echo \wp_kses(
+										\nl2br( $vat_number_validity->get_address() ),
+										array(
+											'br' => array(),
+										)
+									);
 
 									?>
 								</td>
 							</tr>
 
-						<?php endif; ?>
+							<?php
 
-					</table>
-				</td>
-			</tr>
+							$service = $vat_number_validity->get_service();
 
-			<?php
+							if ( null !== $service ) :
+								?>
+
+								<tr>
+									<th scope="row">
+										<?php esc_html_e( 'Validation Service', 'pronamic_ideal' ); ?>
+									</th>
+									<td>
+										<?php
+
+										switch ( $service ) {
+											case \Pronamic\WordPress\Pay\VatNumberValidationService::VIES:
+												echo esc_html( __( 'VIES', 'pronamic_ideal' ) );
+
+												break;
+											default:
+												echo \esc_html( $service );
+
+												break;
+										}
+
+										?>
+									</td>
+								</tr>
+
+							<?php endif; ?>
+
+						</table>
+					</td>
+				</tr>
+
+			<?php endif;
+
 		endif;
 
 		$birth_date = $customer->get_birth_date();

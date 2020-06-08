@@ -175,8 +175,8 @@ class VatNumberValidity {
 	 */
 	public function get_json() {
 		$data = array(
-			'vat_number'   => $this->vat_number->get_json(),
-			'request_date' => $this->request_date->format( DATE_RFC3339 ),
+			'vat_number'   => $this->vat_number->get_value(),
+			'request_date' => $this->request_date->format( 'Y-m-d' ),
 			'valid'        => $this->valid,
 			'name'         => $this->name,
 			'address'      => $this->address,

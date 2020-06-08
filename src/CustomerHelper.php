@@ -58,17 +58,19 @@ class CustomerHelper {
 		// VAT Number validity.
 		$vat_number = $customer->get_vat_number();
 
-		$vat_number_validity = $customer->get_vat_number_validity();
+		if ( null !== $vat_number ) {
+			$vat_number_validity = $vat_number->get_validity();
 
-		if ( null !== $vat_number && null === $vat_number_validity ) {
-			try {
-				$vat_number_validity = VatNumberValidator::validate( $vat_number );
-			} catch ( \Exception $e ) {
-				// On exceptions we have no VAT number validity info, no problem.
-				$vat_number_validity = null;
+			if ( null === $vat_number_validity ) {
+				try {
+					$vat_number_validity = VatNumberValidator::validate( $vat_number );
+				} catch ( \Exception $e ) {
+					// On exceptions we have no VAT number validity info, no problem.
+					$vat_number_validity = null;
+				}
+
+				$vat_number->set_validity( $vat_number_validity );
 			}
-
-			$customer->set_vat_number_validity( $vat_number_validity );
 		}
 
 		// Locale.

@@ -137,11 +137,11 @@ class CustomerTest extends WP_UnitTestCase {
 		$validity->set_address( "BURGEMEESTER WUITEWEG 00039 B\r\n9203KA DRACHTEN" );
 		$validity->set_service( VatNumberValidationService::VIES );
 
+		$vat_number->set_validity( $validity );
+
 		$customer->set_vat_number( $vat_number );
-		$customer->set_vat_number_validity( $validity );
 
 		$this->assertEquals( $vat_number, $customer->get_vat_number() );
-		$this->assertEquals( $validity, $customer->get_vat_number_validity() );
-		$this->assertEquals( $vat_number, $customer->get_vat_number_validity()->get_vat_number() );
+		$this->assertEquals( $validity, $customer->get_vat_number()->get_validity() );
 	}
 }

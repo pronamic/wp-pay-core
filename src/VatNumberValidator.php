@@ -44,6 +44,9 @@ class VatNumberValidator {
 		$response = $client->checkVat( $parameters );
 
 		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- VIES response object.
+		$vat_number = VatNumber::from_prefix_and_number( $response->countryCode, $response->vatNumber );
+
+		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- VIES response object.
 		$request_date = new \DateTime( $response->requestDate );
 
 		$validity = new VatNumberValidity( $vat_number, $request_date, $response->valid );
