@@ -8,7 +8,7 @@
  * @package   Pronamic\WordPress\Pay
  */
 
-namespace Pronamic\WordPress\Pay;
+namespace Pronamic\WordPress\Pay\VatNumbers;
 
 /**
  * VAT Number validity

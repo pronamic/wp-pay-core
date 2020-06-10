@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay;
 
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\Pay\VatNumbers\VatNumber;
 
 /**
  * Contact.

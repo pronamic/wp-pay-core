@@ -8,7 +8,7 @@
  * @package   Pronamic\WordPress\Pay
  */
 
-namespace Pronamic\WordPress\Pay;
+namespace Pronamic\WordPress\Pay\VatNumbers;
 
 /**
  * VAT Number
@@ -134,15 +134,15 @@ class VatNumber {
 	 */
 	public static function from_json( $json ) {
 		if ( \is_string( $json ) ) {
-			return new self( $json );	
+			return new self( $json );
 		}
 
 		if ( ! \is_object( $json ) ) {
 			throw new \InvalidArgumentException( 'JSON value must be either a string or object.' );
 		}
-		
+
 		if ( ! \property_exists( $json, 'value' ) ) {
-			throw new \InvalidArgumentException( 'JSON object must contain value property.' );	
+			throw new \InvalidArgumentException( 'JSON object must contain value property.' );
 		}
 
 		$vat_number = new self( $json->value );

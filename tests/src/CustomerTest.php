@@ -11,6 +11,9 @@
 namespace Pronamic\WordPress\Pay;
 
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\Pay\VatNumbers\VatNumber;
+use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidity;
+use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 use WP_UnitTestCase;
 
 /**

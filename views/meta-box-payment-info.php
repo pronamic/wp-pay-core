@@ -11,6 +11,7 @@
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Gender;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
+use \Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 
 $payment_id = get_the_ID();
 
@@ -377,7 +378,7 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 										<?php
 
 										switch ( $service ) {
-											case \Pronamic\WordPress\Pay\VatNumberValidationService::VIES:
+											case VatNumberValidationService::VIES:
 												echo esc_html( __( 'VIES', 'pronamic_ideal' ) );
 
 												break;
@@ -397,7 +398,8 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 					</td>
 				</tr>
 
-			<?php endif;
+				<?php
+			endif;
 
 		endif;
 

@@ -8,16 +8,16 @@
  * @package   Pronamic\WordPress\Pay
  */
 
-namespace Pronamic\WordPress\Pay;
+namespace Pronamic\WordPress\Pay\VatNumbers;
 
 /**
- * VAT Number validator
+ * VAT Number VIES validator
  *
  * @author  Remco Tolsma
  * @version 2.2.6
  * @since   1.4.0
  */
-class VatNumberValidator {
+class VatNumberViesValidator {
 	/**
 	 * API URL
 	 */
