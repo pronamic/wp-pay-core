@@ -11,7 +11,7 @@
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Gender;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
-use \Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
+use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 
 $payment_id = get_the_ID();
 

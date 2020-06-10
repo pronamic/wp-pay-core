@@ -13,6 +13,7 @@ namespace Pronamic\WordPress\Pay;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Pay\Core\Server;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
+use Pronamic\WordPress\Pay\VatNumbers\VatNumberViesValidator;
 
 /**
  * Customer helper
@@ -63,7 +64,7 @@ class CustomerHelper {
 
 			if ( null === $vat_number_validity ) {
 				try {
-					$vat_number_validity = VatNumberValidator::validate( $vat_number );
+					$vat_number_validity = VatNumberViesValidator::validate( $vat_number );
 				} catch ( \Exception $e ) {
 					// On exceptions we have no VAT number validity info, no problem.
 					$vat_number_validity = null;
