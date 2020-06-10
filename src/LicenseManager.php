@@ -126,7 +126,7 @@ class LicenseManager {
 		// Request.
 		$args = array(
 			'license' => $license,
-			'name'    => 'Pronamic iDEAL',
+			'name'    => 'Pronamic Pay',
 			'url'     => home_url(),
 		);
 
@@ -174,7 +174,7 @@ class LicenseManager {
 	public function deactivate_license( $license ) {
 		$args = array(
 			'license' => $license,
-			'name'    => 'Pronamic iDEAL',
+			'name'    => 'Pronamic Pay',
 			'url'     => home_url(),
 		);
 
@@ -198,7 +198,7 @@ class LicenseManager {
 		// Request.
 		$args = array(
 			'license' => $license,
-			'name'    => 'Pronamic iDEAL',
+			'name'    => 'Pronamic Pay',
 			'url'     => home_url(),
 		);
 
