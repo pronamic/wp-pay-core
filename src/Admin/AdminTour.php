@@ -147,7 +147,7 @@ class AdminTour {
 						$pointers = array(
 							array(
 								// @link https://github.com/WordPress/WordPress/blob/4.7/wp-admin/edit.php#L321
-								'selector' => '#dashboard-widgets-wrap',
+								'selector' => '.wrap h1',
 								'options'  => (object) array(
 									'content'      => $this->get_content( 'pointer-dashboard' ),
 									'position'     => (object) array(
