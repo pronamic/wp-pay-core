@@ -314,6 +314,24 @@ $user_id  = is_null( $customer ) ? null : $customer->get_user_id();
 			?>
 		</td>
 	</tr>
+	<tr>
+		<th scope="row">
+			<?php esc_html_e( 'Mandate Selection URL', 'pronamic_ideal' ); ?>
+		</th>
+		<td>
+			<?php
+
+			$url = $subscription->get_mandate_selection_url();
+
+			printf(
+				'<a href="%s">%s</a>',
+				esc_attr( $url ),
+				esc_html( $url )
+			);
+
+			?>
+		</td>
+	</tr>
 
 	<?php if ( PRONAMIC_PAY_DEBUG ) : ?>
 
