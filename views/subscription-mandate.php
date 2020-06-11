@@ -104,10 +104,10 @@ $subscription_mandate_id = $subscription->get_meta( 'mollie_mandate_id' );
 
 									<tr>
 										<td>
-											<input type="radio" id="mandate-<?php esc_attr_e( $mandate->id ); ?>" name="pronamic_pay_subscription_mandate" value="<?php esc_attr_e( $mandate->id ); ?>" <?php echo checked( $mandate->id, $subscription_mandate_id ); ?>>
+											<input type="radio" id="mandate-<?php echo \esc_attr( $mandate->id ); ?>" name="pronamic_pay_subscription_mandate" value="<?php echo \esc_attr( $mandate->id ); ?>" <?php echo checked( $mandate->id, $subscription_mandate_id ); ?>>
 										</td>
 										<td>
-											<label for="mandate-<?php esc_attr_e( $mandate->id ); ?>">
+											<label for="mandate-<?php echo \esc_attr( $mandate->id ); ?>">
 												<code><?php echo \esc_html( $mandate->id ); ?></code>
 											</label>
 										</td>

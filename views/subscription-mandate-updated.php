@@ -28,8 +28,8 @@
 				</p>
 
 				<p>
-					<a href="<?php echo home_url(); ?>">
-						<?php esc_html_e('Return to home page', 'pronamic_ieal' ); ?>
+					<a href="<?php echo esc_url( home_url() ); ?>">
+						<?php esc_html_e( 'Return to home page', 'pronamic_ieal' ); ?>
 					</a>
 				</p>
 			</div>
