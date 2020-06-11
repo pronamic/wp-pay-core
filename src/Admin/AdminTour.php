@@ -247,26 +247,6 @@ class AdminTour {
 				}
 
 				break;
-			case 'pronamic_pay_tools':
-				try {
-					$pointers = array(
-						array(
-							'selector' => '.wrap .wp-header-end',
-							'options'  => (object) array(
-								'content'      => $this->get_content( 'pointer-tools' ),
-								'position'     => (object) array(
-									'edge'  => 'top',
-									'align' => ( is_rtl() ) ? 'left' : 'right',
-								),
-								'pointerWidth' => 450,
-							),
-						),
-					);
-				} catch ( \Exception $e ) {
-					$pointers = array();
-				}
-
-				break;
 			case 'pronamic_pay_reports':
 				try {
 					$pointers = array(
