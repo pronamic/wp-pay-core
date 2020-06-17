@@ -521,6 +521,37 @@ class Subscription extends LegacySubscription {
 	}
 
 	/**
+	 * Create new subscription period.
+	 *
+	 * @return SubscriptionPeriod
+	 */
+	public function new_period() {
+		// Calculate payment start and end dates.
+		$start_date = new DateTime();
+
+		if ( ! empty( $this->next_payment_date ) ) {
+			$start_date = clone $this->next_payment_date;
+		}
+
+		$interval = $this->get_date_interval();
+
+		if ( null === $interval ) {
+			throw new \UnexpectedValueException( 'Cannot create new subscription period because the subscription does not have a valid date interval.' );
+		}
+
+		$end_date = clone $start_date;
+		$end_date->add( $interval );
+
+		if ( 'last' === $this->get_interval_date() ) {
+			$end_date->modify( 'last day of ' . $end_date->format( 'F Y' ) );
+		}
+
+		$period = new SubscriptionPeriod( $this, $start_date, $end_date );
+
+		return $period;
+	}
+
+	/**
 	 * Save subscription.
 	 *
 	 * @return void

@@ -307,24 +307,10 @@ class SubscriptionsModule {
 		}
 
 		// Calculate payment start and end dates.
-		$start_date = new DateTime();
+		$period = $subscription->new_period();
 
-		if ( ! empty( $subscription->next_payment_date ) ) {
-			$start_date = clone $subscription->next_payment_date;
-		}
-
-		$interval = $subscription->get_date_interval();
-
-		if ( null === $interval ) {
-			throw new \UnexpectedValueException( 'Cannot start a follow-up payment for payment because the subscription does not have a valid date interval.' );
-		}
-
-		$end_date = clone $start_date;
-		$end_date->add( $interval );
-
-		if ( 'last' === $subscription->get_interval_date() ) {
-			$end_date->modify( 'last day of ' . $end_date->format( 'F Y' ) );
-		}
+		$start_date = $period->get_start_date();
+		$end_date   = $period->get_end_date();
 
 		$subscription->next_payment_date          = $end_date;
 		$subscription->next_payment_delivery_date = apply_filters( 'pronamic_pay_subscription_next_payment_delivery_date', clone $end_date, $payment );
