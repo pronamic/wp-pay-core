@@ -424,6 +424,24 @@ class Subscription extends LegacySubscription {
 	}
 
 	/**
+	 * Get mandate selection URL for this subscription.
+	 *
+	 * @return string
+	 */
+	public function get_mandate_selection_url() {
+		$renewal_url = add_query_arg(
+			array(
+				'subscription' => $this->get_id(),
+				'key'          => $this->get_key(),
+				'action'       => 'mandate',
+			),
+			home_url()
+		);
+
+		return $renewal_url;
+	}
+
+	/**
 	 * Get all the payments for this subscription.
 	 *
 	 * @return array

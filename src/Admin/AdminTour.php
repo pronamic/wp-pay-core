@@ -147,7 +147,7 @@ class AdminTour {
 						$pointers = array(
 							array(
 								// @link https://github.com/WordPress/WordPress/blob/4.7/wp-admin/edit.php#L321
-								'selector' => '.wrap .wp-header-end',
+								'selector' => '.wrap h1',
 								'options'  => (object) array(
 									'content'      => $this->get_content( 'pointer-dashboard' ),
 									'position'     => (object) array(
@@ -234,26 +234,6 @@ class AdminTour {
 							'selector' => '.wrap .wp-header-end',
 							'options'  => (object) array(
 								'content'      => $this->get_content( 'pointer-settings' ),
-								'position'     => (object) array(
-									'edge'  => 'top',
-									'align' => ( is_rtl() ) ? 'left' : 'right',
-								),
-								'pointerWidth' => 450,
-							),
-						),
-					);
-				} catch ( \Exception $e ) {
-					$pointers = array();
-				}
-
-				break;
-			case 'pronamic_pay_tools':
-				try {
-					$pointers = array(
-						array(
-							'selector' => '.wrap .wp-header-end',
-							'options'  => (object) array(
-								'content'      => $this->get_content( 'pointer-tools' ),
 								'position'     => (object) array(
 									'edge'  => 'top',
 									'align' => ( is_rtl() ) ? 'left' : 'right',

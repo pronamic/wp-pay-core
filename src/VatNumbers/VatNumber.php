@@ -110,7 +110,7 @@ class VatNumber {
 	/**
 	 * Get JSON.
 	 *
-	 * @return string
+	 * @return string|object
 	 */
 	public function get_json() {
 		if ( null === $this->validity ) {

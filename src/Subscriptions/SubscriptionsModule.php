@@ -14,6 +14,7 @@ use DateInterval;
 use DatePeriod;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
+use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\Recurring;
 use Pronamic\WordPress\Pay\Core\Server;
@@ -136,7 +137,7 @@ class SubscriptionsModule {
 
 				break;
 			case 'mandate':
-				require __DIR__ . '/../../views/subscription-mandate.php';
+				$this->handle_subscription_mandate( $subscription );
 
 				exit;
 		}
@@ -204,6 +205,102 @@ class SubscriptionsModule {
 		$gateway->set_payment_method( $subscription->payment_method );
 
 		require __DIR__ . '/../../views/subscription-renew.php';
+
+		exit;
+	}
+
+	/**
+	 * Handle subscription mandate update action request.
+	 *
+	 * @param Subscription $subscription Subscription to update mandate for.
+	 * @return void
+	 * @throws \Exception Throws exception if unable to redirect (empty payment action URL).
+	 */
+	private function handle_subscription_mandate( Subscription $subscription ) {
+		$gateway = Plugin::get_gateway( $subscription->config_id );
+
+		if ( empty( $gateway ) ) {
+			require __DIR__ . '/../../views/subscription-mandate-failed.php';
+
+			exit;
+		}
+
+		$nonce = filter_input( \INPUT_POST, 'pronamic_pay_nonce', \FILTER_SANITIZE_STRING );
+
+		if ( \wp_verify_nonce( $nonce, 'pronamic_pay_update_subscription_mandate' ) ) {
+			$mandate_id = \filter_input( \INPUT_POST, 'pronamic_pay_subscription_mandate', \FILTER_SANITIZE_STRING );
+
+			if ( ! empty( $mandate_id ) ) {
+				try {
+					if ( ! \is_callable( array( $gateway, 'update_subscription_mandate' ) ) ) {
+						throw new \Exception( __( 'Gateway does not support subscription mandate updates.', 'pronamic_ideal' ) );
+					}
+
+					$gateway->update_subscription_mandate( $mandate_id );
+
+					require __DIR__ . '/../../views/subscription-mandate-updated.php';
+
+					exit;
+				} catch ( \Exception $e ) {
+					require __DIR__ . '/../../views/subscription-mandate-failed.php';
+
+					exit;
+				}
+			}
+
+			// Start new first payment.
+			try {
+				$payment = $this->new_subscription_payment( $subscription );
+
+				if ( null === $payment ) {
+					require __DIR__ . '/../../views/subscription-mandate-failed.php';
+
+					exit;
+				}
+
+				$payment->recurring = false;
+
+				$payment->set_total_amount(
+					new TaxedMoney(
+						0.01,
+						$payment->get_total_amount()->get_currency()
+					)
+				);
+
+				// Make sure to only start payments for supported gateways.
+				$gateway = Plugin::get_gateway( $payment->get_config_id() );
+
+				if ( null === $gateway ) {
+					require __DIR__ . '/../../views/subscription-mandate-failed.php';
+
+					exit;
+				}
+
+				// Start payment.
+				$payment = Plugin::start_payment( $payment, $gateway );
+			} catch ( \Exception $e ) {
+				require __DIR__ . '/../../views/subscription-mandate-failed.php';
+
+				exit;
+			}
+
+			$error = $gateway->get_error();
+
+			if ( $error instanceof WP_Error ) {
+				Plugin::render_errors( $error );
+
+				exit;
+			}
+
+			$gateway->redirect( $payment );
+
+			return;
+		}
+
+		// Payment method input HTML.
+		$gateway->set_payment_method( $subscription->payment_method );
+
+		require __DIR__ . '/../../views/subscription-mandate.php';
 
 		exit;
 	}
