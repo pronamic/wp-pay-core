@@ -232,6 +232,10 @@ class SubscriptionsModule {
 
 			if ( ! empty( $mandate_id ) ) {
 				try {
+					if ( ! \is_callable( array( $gateway, 'update_subscription_mandate' ) ) ) {
+						throw new \Exception( __( 'Gateway does not support subscription mandate updates.', 'pronamic_ideal' ) );
+					}
+
 					$gateway->update_subscription_mandate( $mandate_id );
 
 					require __DIR__ . '/../../views/subscription-mandate-updated.php';
@@ -247,6 +251,12 @@ class SubscriptionsModule {
 			// Start new first payment.
 			try {
 				$payment = $this->new_subscription_payment( $subscription );
+
+				if ( null === $payment ) {
+					require __DIR__ . '/../../views/subscription-mandate-failed.php';
+
+					exit;
+				}
 
 				$payment->recurring = false;
 
@@ -270,6 +280,8 @@ class SubscriptionsModule {
 				$payment = Plugin::start_payment( $payment, $gateway );
 			} catch ( \Exception $e ) {
 				require __DIR__ . '/../../views/subscription-mandate-failed.php';
+
+				exit;
 			}
 
 			$error = $gateway->get_error();
@@ -280,9 +292,7 @@ class SubscriptionsModule {
 				exit;
 			}
 
-			if ( $payment ) {
-				$gateway->redirect( $payment );
-			}
+			$gateway->redirect( $payment );
 
 			return;
 		}

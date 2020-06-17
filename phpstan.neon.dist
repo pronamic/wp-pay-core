@@ -17,6 +17,6 @@ parameters:
 			message: '#Function pll_home_url not found\.#'
 			path: %currentWorkingDirectory%/src/Payments/Payment.php
 		-
-			message: '#Call to an undefined method SoapClient::#'
-			path: %currentWorkingDirectory%/src/VatNumberValidator.php
+			message: '#Call to an undefined method SoapClient::.+\(\)\.#'
+			path: %currentWorkingDirectory%/src/VatNumbers/VatNumberViesValidator.php
 	checkMissingIterableValueType: false
