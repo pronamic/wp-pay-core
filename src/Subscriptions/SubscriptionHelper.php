@@ -19,6 +19,28 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
  */
 class SubscriptionHelper {
 	/**
+	 * Construct subscription helper.
+	 *
+	 * @param Subscription $subscription Subscription.
+	 */
+	public function __construct( Subscription $subscription ) {
+		$this->subscription = $subscription;
+	}
+
+	/**
+	 * Set start date.
+	 *
+	 * @param \DateTimeInterface $start_date Start date.
+	 */
+	public function set_start_date( \DateTimeInterface $start_date ) {
+		$this->subscription->set_start_date( $start_date );
+		$this->subscription->set_end_date( self::calculate_end_date( $this->subscription ) );
+		$this->subscription->set_expiry_date( self::calculate_expiry_date( $this->subscription ) );
+		$this->subscription->set_next_payment_date( self::calculate_next_payment_date( $this->subscription ) );
+		$this->subscription->set_next_payment_delivery_date( self::calculate_next_payment_delivery_date( $this->subscription ) );
+	}
+
+	/**
 	 * Calculate end date of subscription.
 	 *
 	 * @param Subscription $subscription Subscription.
@@ -167,6 +189,14 @@ class SubscriptionHelper {
 
 		$next_payment_delivery_date = clone $next_payment_date;
 
+		/**
+		 * Filters the subscription next payment delivery date.
+		 *
+		 * @since unreleased
+		 *
+		 * @param \DateTimeInterface $next_payment_delivery_date Next payment delivery date.
+		 * @param Subscription       $subscription               Subscription.
+		 */
 		$next_payment_delivery_date = \apply_filters( 'pronamic_pay_subscription_next_payment_delivery_date', $next_payment_delivery_date, $subscription );
 
 		return $next_payment_delivery_date;

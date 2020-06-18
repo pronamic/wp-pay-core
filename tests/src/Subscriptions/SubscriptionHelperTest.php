@@ -214,4 +214,30 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 		$this->assertInstanceOf( \DateTimeInterface::class, $next_payment_delivery_date );
 		$this->assertEquals( '1970-01-01', $next_payment_delivery_date->format( 'Y-m-d' ) );
 	}
+
+	/**
+	 * Test helper start date.
+	 */
+	public function test_helper_set_start_date() {
+		$subscription = new Subscription();
+
+		// Date Interval.
+		$subscription->interval = 1;
+		$subscription->interval_period = 'M';
+
+		// Recurrences.
+		$subscription->frequency = 12;
+
+		// Helper.
+		$subscription_helper = new SubscriptionHelper( $subscription );
+
+		// Start Date.
+		$subscription_helper->set_start_date( new \Pronamic\WordPress\DateTime\DateTime( '2005-05-05 00:00:00' ) );
+
+		$this->assertEquals( '2005-05-05', $subscription->get_start_date()->format( 'Y-m-d' ) );
+		$this->assertEquals( '2006-05-05', $subscription->get_end_date()->format( 'Y-m-d' ) );
+		$this->assertEquals( '2005-05-05', $subscription->get_expiry_date()->format( 'Y-m-d' ) );
+		$this->assertEquals( '2005-06-05', $subscription->get_next_payment_date()->format( 'Y-m-d' ) );
+		$this->assertEquals( '2005-06-05', $subscription->get_next_payment_delivery_date()->format( 'Y-m-d' ) );
+	}
 }

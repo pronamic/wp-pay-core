@@ -410,7 +410,7 @@ class SubscriptionsModule {
 		$end_date   = $period->get_end_date();
 
 		$subscription->next_payment_date          = $end_date;
-		$subscription->next_payment_delivery_date = apply_filters( 'pronamic_pay_subscription_next_payment_delivery_date', clone $end_date, $payment );
+		$subscription->next_payment_delivery_date = SubscriptionHelper::calculate_next_payment_delivery_date( $subscription );
 
 		// Remove next payment (delivery) date if this is the last payment according to subscription end date.
 		if ( null !== $subscription->end_date && $subscription->next_payment_date >= $subscription->end_date ) {
@@ -540,85 +540,9 @@ class SubscriptionsModule {
 			throw new \UnexpectedValueException( 'Cannot create a subscription for payment because the subscription does not have a valid date interval.' );
 		}
 
-		$start_date  = clone $payment->date;
-		$expiry_date = clone $start_date;
+		$subscription_helper = new SubscriptionHelper( $subscription );
 
-		$next_date = clone $start_date;
-		$next_date->add( $interval );
-
-		$interval_date       = $subscription->get_interval_date();
-		$interval_date_day   = $subscription->get_interval_date_day();
-		$interval_date_month = $subscription->get_interval_date_month();
-
-		switch ( $subscription->interval_period ) {
-			case 'W':
-				if ( is_numeric( $interval_date_day ) ) {
-					$days_delta = (int) $interval_date_day - (int) $next_date->format( 'w' );
-
-					$next_date->modify( sprintf( '+%s days', $days_delta ) );
-					$next_date->setTime( 0, 0 );
-				}
-
-				break;
-			case 'M':
-				if ( is_numeric( $interval_date ) ) {
-					$next_date->setDate(
-						intval( $next_date->format( 'Y' ) ),
-						intval( $next_date->format( 'm' ) ),
-						intval( $interval_date )
-					);
-
-					$next_date->setTime( 0, 0 );
-				} elseif ( 'last' === $interval_date ) {
-					$next_date->modify( 'last day of ' . $next_date->format( 'F Y' ) );
-					$next_date->setTime( 0, 0 );
-				}
-
-				break;
-			case 'Y':
-				if ( is_numeric( $interval_date_month ) ) {
-					$day = $next_date->format( 'd' );
-
-					if ( \is_numeric( $interval_date ) ) {
-						$day = $interval_date;
-					}
-
-					$next_date->setDate(
-						intval( $next_date->format( 'Y' ) ),
-						intval( $interval_date_month ),
-						intval( $day )
-					);
-
-					$next_date->setTime( 0, 0 );
-
-					if ( 'last' === $interval_date ) {
-						$next_date->modify( 'last day of ' . $next_date->format( 'F Y' ) );
-					}
-				}
-
-				break;
-		}
-
-		$end_date = null;
-
-		if ( null !== $subscription->frequency ) {
-			// @link https://stackoverflow.com/a/10818981/6411283
-			$period = new DatePeriod( $start_date, $interval, $subscription->frequency );
-
-			$dates = iterator_to_array( $period );
-
-			$end_date = end( $dates );
-
-			if ( 'last' === $subscription->get_interval_date() ) {
-				$end_date->modify( 'last day of ' . $end_date->format( 'F Y' ) );
-			}
-		}
-
-		$subscription->start_date                 = $start_date;
-		$subscription->end_date                   = $end_date;
-		$subscription->expiry_date                = $expiry_date;
-		$subscription->next_payment_date          = $next_date;
-		$subscription->next_payment_delivery_date = apply_filters( 'pronamic_pay_subscription_next_payment_delivery_date', clone $next_date, $payment );
+		$subscription_helper->set_start_date( clone $payment->date );
 
 		// Create.
 		$result = $this->plugin->subscriptions_data_store->create( $subscription );
