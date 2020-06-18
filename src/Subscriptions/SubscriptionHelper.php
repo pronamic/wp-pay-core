@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
+use Pronamic\WordPress\Pay\Payments\Payment;
+
 /**
  * Subscription Helper
  *
@@ -19,25 +21,128 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
  */
 class SubscriptionHelper {
 	/**
-	 * Construct subscription helper.
+	 * Complement subscription.
 	 *
 	 * @param Subscription $subscription Subscription.
+	 * @return void
 	 */
-	public function __construct( Subscription $subscription ) {
-		$this->subscription = $subscription;
+	public static function complement_subscription( Subscription $subscription ) {
+		// Key.
+		if ( null === $subscription->key ) {
+			$subscription->key = uniqid( 'subscr_' );
+		}
+
+		// Status.
+		if ( null === $subscription->status ) {
+			$subscription->status = PaymentStatus::OPEN;
+		}
 	}
 
 	/**
-	 * Set start date.
+	 * Complement subscription by payment.
 	 *
-	 * @param \DateTimeInterface $start_date Start date.
+	 * @param Subscription $subscription Subscription.
+	 * @param Payment      $payment      Payment.
+	 * @return void
 	 */
-	public function set_start_date( \DateTimeInterface $start_date ) {
-		$this->subscription->set_start_date( $start_date );
-		$this->subscription->set_end_date( self::calculate_end_date( $this->subscription ) );
-		$this->subscription->set_expiry_date( self::calculate_expiry_date( $this->subscription ) );
-		$this->subscription->set_next_payment_date( self::calculate_next_payment_date( $this->subscription ) );
-		$this->subscription->set_next_payment_delivery_date( self::calculate_next_payment_delivery_date( $this->subscription ) );
+	public static function complement_subscription_by_payment( Subscription $subscription, Payment $payment ) {
+		// Gateway confiuration ID.
+		if ( null === $subscription->config_id ) {
+			$subscription->config_id = $payment->config_id;
+		}
+
+		// Title.
+		if ( null === $subscription->title ) {
+			$subscription->title = sprintf(
+				/* translators: %s: payment title */
+				__( 'Subscription for %s', 'pronamic_ideal' ),
+				$payment->title
+			);
+		}
+
+		// Customer.
+		$user_id       = null;
+		$customer_name = null;
+
+		$customer = $payment->get_customer();
+
+		if ( null !== $customer ) {
+			$user_id = $customer->get_user_id();
+			$name    = $customer->get_name();
+
+			if ( null !== $name ) {
+				$customer_name = strval( $name );
+			}
+		}
+
+		// WordPress user ID.
+		if ( null === $subscription->user_id ) {
+			$subscription->user_id = $user_id;
+		}
+
+		// Customer name.
+		if ( null === $subscription->customer_name ) {
+			$subscription->customer_name = $customer_name;
+		}
+
+		// Origin.
+		if ( null === $subscription->get_origin_id() ) {
+			$subscription->set_origin_id( $payment->get_origin_id() );
+		}
+
+		// Source.
+		if ( empty( $subscription->source ) && empty( $subscription->source_id ) ) {
+			$subscription->source    = $payment->source;
+			$subscription->source_id = $payment->subscription_source_id;
+		}
+
+		// Description.
+		if ( null === $subscription->description ) {
+			$subscription->description = $payment->description;
+		}
+
+		// Email.
+		if ( null === $subscription->email ) {
+			$subscription->email = $payment->email;
+		}
+
+		// Payment method.
+		if ( null === $subscription->payment_method ) {
+			$subscription->payment_method = $payment->method;
+		}
+
+		// Start date.
+		if ( null === $subscription->start_date ) {
+			$subscription->start_date = clone $payment->date;
+		}
+	}
+
+	/**
+	 * Complement subscription dates.
+	 *
+	 * @param Subscription $subscription Subscription.
+	 * @return void
+	 */
+	public static function complement_subscription_dates( Subscription $subscription ) {
+		// End date.
+		if ( null === $subscription->end_date ) {
+			$subscription->set_end_date( self::calculate_end_date( $subscription ) );
+		}
+
+		// Expiry date.
+		if ( null === $subscription->expiry_date ) {
+			$subscription->set_expiry_date( self::calculate_expiry_date( $subscription ) );
+		}
+
+		// Next payment date.
+		if ( null === $subscription->next_payment_date ) {
+			$subscription->set_next_payment_date( self::calculate_next_payment_date( $subscription ) );
+		}
+
+		// Next payment delivery date.
+		if ( null === $subscription->next_payment_delivery_date ) {
+			$subscription->set_next_payment_delivery_date( self::calculate_next_payment_delivery_date( $subscription ) );
+		}
 	}
 
 	/**
@@ -100,6 +205,7 @@ class SubscriptionHelper {
 	 *
 	 * @param Subscription $subscription Subscription.
 	 * @return \DateTimeInterface|null
+	 * @throws \InvalidArgumentException Throws exception when start or date interval are not available.
 	 */
 	public static function calculate_next_payment_date( Subscription $subscription ) {
 		$start_date = $subscription->get_start_date();
@@ -179,6 +285,7 @@ class SubscriptionHelper {
 	 *
 	 * @param Subscription $subscription Subscription.
 	 * @return \DateTimeInterface
+	 * @throws \InvalidArgumentException Throws exception when next payment date is null.
 	 */
 	public static function calculate_next_payment_delivery_date( $subscription ) {
 		$next_payment_date = $subscription->get_next_payment_date();

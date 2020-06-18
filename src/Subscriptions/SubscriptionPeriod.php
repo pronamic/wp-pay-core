@@ -53,7 +53,9 @@ class SubscriptionPeriod {
 	/**
 	 * Construct and initialize subscription period object.
 	 *
-	 * @param Subscription $subscription Subscription.
+	 * @param Subscription      $subscription Subscription.
+	 * @param DateTimeInterface $start_date   Start date.
+	 * @param DateTimeInterface $end_date     End date.
 	 */
 	public function __construct( Subscription $subscription, DateTimeInterface $start_date, DateTimeInterface $end_date ) {
 		$this->subscription = $subscription;

@@ -51,7 +51,7 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 		$subscription->set_start_date( new \DateTime( '2005-05-05 00:00:00' ) );
 
 		// Date Interval.
-		$subscription->interval = 1;
+		$subscription->interval        = 1;
 		$subscription->interval_period = 'M';
 
 		// Recurrences.
@@ -123,6 +123,11 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 	 * Test calculate next payment.
 	 *
 	 * @dataProvider subscription_interval_provider
+	 * @param string $start_date      Start date.
+	 * @param int    $interval        Interval.
+	 * @param string $interval_period Interval period.
+	 * @param int    $recurrences     Recurrences.
+	 * @param string $expected_date   Expected date.
 	 */
 	public function test_calculate_next_payment_date( $start_date, $interval, $interval_period, $recurrences, $expected_date ) {
 		$subscription = new Subscription();
@@ -131,7 +136,7 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 		$subscription->set_start_date( new \DateTime( $start_date ) );
 
 		// Date Interval.
-		$subscription->interval = $interval;
+		$subscription->interval        = $interval;
 		$subscription->interval_period = $interval_period;
 
 		// Recurrences.
@@ -198,7 +203,7 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 		// Next Payment Date.
 		$subscription->set_next_payment_date( new \Pronamic\WordPress\DateTime\DateTime( '2005-05-05' ) );
 
-		// Filter
+		// Filter.
 		\add_filter(
 			'pronamic_pay_subscription_next_payment_delivery_date',
 			function( $next_payment_delivery_date, $subscription ) {
@@ -213,31 +218,5 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 
 		$this->assertInstanceOf( \DateTimeInterface::class, $next_payment_delivery_date );
 		$this->assertEquals( '1970-01-01', $next_payment_delivery_date->format( 'Y-m-d' ) );
-	}
-
-	/**
-	 * Test helper start date.
-	 */
-	public function test_helper_set_start_date() {
-		$subscription = new Subscription();
-
-		// Date Interval.
-		$subscription->interval = 1;
-		$subscription->interval_period = 'M';
-
-		// Recurrences.
-		$subscription->frequency = 12;
-
-		// Helper.
-		$subscription_helper = new SubscriptionHelper( $subscription );
-
-		// Start Date.
-		$subscription_helper->set_start_date( new \Pronamic\WordPress\DateTime\DateTime( '2005-05-05 00:00:00' ) );
-
-		$this->assertEquals( '2005-05-05', $subscription->get_start_date()->format( 'Y-m-d' ) );
-		$this->assertEquals( '2006-05-05', $subscription->get_end_date()->format( 'Y-m-d' ) );
-		$this->assertEquals( '2005-05-05', $subscription->get_expiry_date()->format( 'Y-m-d' ) );
-		$this->assertEquals( '2005-06-05', $subscription->get_next_payment_date()->format( 'Y-m-d' ) );
-		$this->assertEquals( '2005-06-05', $subscription->get_next_payment_delivery_date()->format( 'Y-m-d' ) );
 	}
 }

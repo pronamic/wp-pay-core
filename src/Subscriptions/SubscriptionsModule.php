@@ -492,57 +492,10 @@ class SubscriptionsModule {
 			return;
 		}
 
-		// Customer.
-		$user_id       = null;
-		$customer_name = null;
-
-		$customer = $payment->get_customer();
-
-		if ( null !== $customer ) {
-			$user_id = $customer->get_user_id();
-			$name    = $customer->get_name();
-
-			if ( null !== $name ) {
-				$customer_name = strval( $name );
-			}
-		}
-
 		// Complement subscription.
-		$subscription->config_id = $payment->config_id;
-		$subscription->user_id   = $user_id;
-		$subscription->title     = sprintf(
-			/* translators: %s: payment title */
-			__( 'Subscription for %s', 'pronamic_ideal' ),
-			$payment->title
-		);
-
-		$subscription->key = uniqid( 'subscr_' );
-
-		$subscription->set_origin_id( $payment->get_origin_id() );
-
-		if ( empty( $subscription->source ) && empty( $subscription->source_id ) ) {
-			$subscription->source    = $payment->source;
-			$subscription->source_id = $payment->subscription_source_id;
-		}
-
-		$subscription->description    = $payment->description;
-		$subscription->email          = $payment->email;
-		$subscription->customer_name  = $customer_name;
-		$subscription->payment_method = $payment->method;
-		$subscription->status         = PaymentStatus::OPEN;
-
-		// @todo
-		// Calculate dates
-		// @link https://github.com/pronamic/wp-pronamic-ideal/blob/4.7.0/classes/Pronamic/WP/Pay/Plugin.php#L883-L964
-		$interval = $subscription->get_date_interval();
-
-		if ( null === $interval ) {
-			throw new \UnexpectedValueException( 'Cannot create a subscription for payment because the subscription does not have a valid date interval.' );
-		}
-
-		$subscription_helper = new SubscriptionHelper( $subscription );
-
-		$subscription_helper->set_start_date( clone $payment->date );
+		SubscriptionHelper::complement_subscription( $subscription );
+		SubscriptionHelper::complement_subscription_by_payment( $subscription, $payment );
+		SubscriptionHelper::complement_subscription_dates( $subscription );
 
 		// Create.
 		$result = $this->plugin->subscriptions_data_store->create( $subscription );

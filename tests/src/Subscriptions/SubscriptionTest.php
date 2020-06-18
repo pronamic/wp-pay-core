@@ -193,7 +193,7 @@ class SubscriptionTest extends WP_UnitTestCase {
 		$subscription = new Subscription();
 
 		// Interval.
-		$subscription->interval = 1;
+		$subscription->interval        = 1;
 		$subscription->interval_period = 'M';
 
 		// Dates.

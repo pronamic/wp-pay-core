@@ -542,6 +542,7 @@ class Subscription extends LegacySubscription {
 	 * Create new subscription period.
 	 *
 	 * @return SubscriptionPeriod
+	 * @throws \UnexpectedValueException Throws exception when not date inverval is available for this subscription.
 	 */
 	public function new_period() {
 		// Calculate payment start and end dates.
