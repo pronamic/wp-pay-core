@@ -468,6 +468,7 @@ class AdminPaymentPostType {
 				$source_id          = $payment->get_source_id();
 				$source_description = $payment->get_source_description();
 
+				// Post ID text.
 				$text = sprintf(
 					'<strong>#%s</strong>',
 					esc_html( strval( $post_id ) )
@@ -483,7 +484,12 @@ class AdminPaymentPostType {
 					);
 				}
 
-				$source_id_text = '#' . strval( $source_id );
+				// Source text.
+				$source_id_text = '';
+
+				if ( null !== $source_id ) {
+					$source_id_text = '#' . strval( $source_id );
+				}
 
 				$source_link = $payment->get_source_link();
 
@@ -495,6 +501,7 @@ class AdminPaymentPostType {
 					);
 				}
 
+				// Output.
 				echo wp_kses(
 					sprintf(
 						/* translators: 1: Payment edit post link with post ID, 2: Payment source description, 3: Payment source ID text */
