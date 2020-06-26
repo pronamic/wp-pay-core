@@ -113,22 +113,28 @@ jobs:
         run: composer run-script phplint
 
       - name: PHP Code Sniffer
+        if: env.PHPCS == '1'
         run: composer run-script phpcs
 
       - name: PHP Mess Detector
+        if: env.PHPMD == '1'
         run: composer run-script phpmd
 
       - name: PHPUnit test suite
         run: composer run-script phpunit
 
       - name: PHPStan static code analysis
+        if: env.PHPSTAN == '1'
         run: composer bin phpstan install && composer run-script phpstan
 
       - name: Psalm static code analysis
+        if: env.PSALM == '1'
         run: composer bin psalm install && composer run-script psalm
 
       - name: ESLint
+        if: env.ESLINT == '1'
         run: npm run-script eslint
 
       - name: Sass Lint
+        if: env.SASS_LINT == '1'
         run: npm run-script eslint
