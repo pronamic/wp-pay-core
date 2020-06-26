@@ -15,46 +15,36 @@ jobs:
         include:
           # WordPress and PHP 7.4: https://make.wordpress.org/core/2019/10/11/wordpress-and-php-7-4/.
           - php: 7.4
-            env: |
-              WP_VERSION: 5.3.*
-              COVERAGE: 1
-              PHPCS: 1
-              PHPSTAN: 1
-              ESLINT: 1
-              SASS_LINT: 1
+            WP_VERSION: 5.3.*
+            COVERAGE: 1
+            PHPCS: 1
+            PHPSTAN: 1
+            ESLINT: 1
+            SASS_LINT: 1
           # WordPress 5.2 (or lower) will trigger PHP 7.4 (or higher) errors.
           # @link https://make.wordpress.org/core/2019/10/11/wordpress-and-php-7-4/.
           - php: 7.3
-            env: |
-              WP_VERSION: 5.2.*
+            WP_VERSION: 5.2.*
           - php: 7.3
-            env: |
-              WP_VERSION=5.1.*
+            WP_VERSION: 5.1.*
           - php: 7.3
-            env: |
-              WP_VERSION=5.0.*
+            WP_VERSION: 5.0.*
           - php: 7.3
-            env: |
-              WP_VERSION=4.9.*
+            WP_VERSION: 4.9.*
           # WordPress 4.8 (or lower) will trigger PHP 7.2 (or higher) errors.
           # @link https://make.wordpress.org/core/2018/10/15/wordpress-and-php-7-3/
           # @link https://make.wordpress.org/core/handbook/best-practices/coding-standards/php/
           # @link https://make.wordpress.org/core/tag/4-9/?s=7.2
           - php: 7.1
-            env: |
-              WP_VERSION=4.8.*
+            WP_VERSION: 4.8.*
           - php: 7.1
-            env: |
-              WP_VERSION=4.7.*
+            WP_VERSION: 4.7.*
           - php: 7.4
-            env: |
-              WP_MULTISITE=1
+            WP_MULTISITE: 1
           - php: 7.4
-            env: |
-              PHPMD=1
+            PHPMD: 1
           - php: 7.4
-            env: |
-              PSALM=1
+            PSALM: 1
           - php: 7.3
           - php: 7.2
           - php: 7.1
@@ -100,9 +90,9 @@ jobs:
           path: |
             **/node_modules
             **/vendor
-          key: ${{ runner.os }}-PHP${{ matrix.php}}-WP${{ env.WP_VERSION }}-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-PHP${{ matrix.php}}-WP${{ matrix.WP_VERSION }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-PHP${{ matrix.php }}-WP${{ env.WP_VERSION }}-
+            ${{ runner.os }}-PHP${{ matrix.php }}-WP${{ matrix.WP_VERSION }}-
 
       - name: Start MySQL service
         run: sudo /etc/init.d/mysql start
@@ -112,7 +102,7 @@ jobs:
         run: composer install --no-progress --no-suggest
 
       - name: Require WordPress
-        run: composer require --dev --update-with-dependencies --no-progress --no-suggest roots/wordpress:${{ env.WP_VERSION }} wp-phpunit/wp-phpunit:${{ env.WP_VERSION }}
+        run: composer require --dev --update-with-dependencies --no-progress --no-suggest roots/wordpress:${{ matrix.WP_VERSION }} wp-phpunit/wp-phpunit:${{ matrix.WP_VERSION }}
 
       - name: List Composer packages
         run: composer show
@@ -132,11 +122,11 @@ jobs:
         run: composer run-script phplint
 
       - name: PHP Code Sniffer
-        if: env.PHPCS
+        if: matrix.PHPCS
         run: composer run-script phpcs
 
       - name: PHP Mess Detector
-        if: env.PHPMD == 1
+        if: matrix.PHPMD == 1
         run: composer run-script phpmd
 
       - name: PHPUnit test suite
@@ -145,17 +135,17 @@ jobs:
         run: composer run-script phpunit
 
       - name: PHPStan static code analysis
-        if: env.PHPSTAN == 1
+        if: matrix.PHPSTAN == '1'
         run: composer bin phpstan install && composer run-script phpstan
 
       - name: Psalm static code analysis
-        if: env.PSALM == 1
+        if: matrix.PSALM == 1
         run: composer bin psalm install && composer run-script psalm
 
       - name: ESLint
-        if: env.ESLINT == 1
+        if: matrix.ESLINT == 1
         run: npm run-script eslint
 
       - name: Sass Lint
-        if: env.SASS_LINT == 1
+        if: matrix.SASS_LINT == 1
         run: npm run-script eslint
