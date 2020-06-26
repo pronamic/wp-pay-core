@@ -47,7 +47,7 @@ jobs:
           - php: nightly
           - php: hhvm
 
-    name: PHP ${{ matrix.php }}
+    name: PHP ${{ matrix.php }} ${{ matrix.env }}
     runs-on: ubuntu-latest
     continue-on-error: true
 
