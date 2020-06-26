@@ -5,6 +5,7 @@ on: [ push, pull_request ]
 env:
   COMPOSER_NO_INTERACTION: 1
   WP_VERSION: '*'
+  WP_TESTS_DB_PASS: password
 
 jobs:
   test:
@@ -55,7 +56,8 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: true
+          MYSQL_ALLOW_EMPTY_PASSWORD: false
+          MYSQL_ROOT_PASSWORD: password
           MYSQL_DATABASE: wp_phpunit_tests
         ports:
           - 3306/tcp
@@ -125,7 +127,7 @@ jobs:
 
       - name: PHPUnit test suite
         env:
-          WP_TESTS_DB_HOST: localhost:${{ job.services.mysql.ports['3306'] }}
+          WP_TESTS_DB_HOST: 127.0.01:${{ job.services.mysql.ports['3306'] }}
         run: composer run-script phpunit
 
       - name: PHPStan static code analysis
