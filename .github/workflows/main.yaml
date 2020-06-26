@@ -15,38 +15,52 @@ jobs:
         include:
           # WordPress and PHP 7.4: https://make.wordpress.org/core/2019/10/11/wordpress-and-php-7-4/.
           - php: 7.4
-            env: WP_VERSION=5.3.* COVERAGE=1 PHPCS=1 PHPSTAN=1 ESLINT=1 SASS_LINT=1
+            env: |
+              WP_VERSION: 5.3.*
+              COVERAGE: 1
+              PHPCS: 1
+              PHPSTAN: 1
+              ESLINT: 1
+              SASS_LINT: 1
           # WordPress 5.2 (or lower) will trigger PHP 7.4 (or higher) errors.
           # @link https://make.wordpress.org/core/2019/10/11/wordpress-and-php-7-4/.
           - php: 7.3
-            env: WP_VERSION=5.2.*
+            env: |
+              WP_VERSION: 5.2.*
           - php: 7.3
-            env: WP_VERSION=5.1.*
+            env: |
+              WP_VERSION=5.1.*
           - php: 7.3
-            env: WP_VERSION=5.0.*
+            env: |
+              WP_VERSION=5.0.*
           - php: 7.3
-            env: WP_VERSION=4.9.*
+            env: |
+              WP_VERSION=4.9.*
           # WordPress 4.8 (or lower) will trigger PHP 7.2 (or higher) errors.
           # @link https://make.wordpress.org/core/2018/10/15/wordpress-and-php-7-3/
           # @link https://make.wordpress.org/core/handbook/best-practices/coding-standards/php/
           # @link https://make.wordpress.org/core/tag/4-9/?s=7.2
           - php: 7.1
-            env: WP_VERSION=4.8.*
+            env: |
+              WP_VERSION=4.8.*
           - php: 7.1
-            env: WP_VERSION=4.7.*
+            env: |
+              WP_VERSION=4.7.*
           - php: 7.4
-            env: WP_MULTISITE=1
+            env: |
+              WP_MULTISITE=1
           - php: 7.4
-            env: PHPMD=1
+            env: |
+              PHPMD=1
           - php: 7.4
-            env: PSALM=1
+            env: |
+              PSALM=1
           - php: 7.3
           - php: 7.2
           - php: 7.1
           - php: 7.0
           - php: 5.6
-          - php: nightly
-          - php: hhvm
+          - php: 8.0
 
     name: PHP ${{ matrix.php }} ${{ matrix.env }}
     runs-on: ubuntu-latest
@@ -69,7 +83,7 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: mbstring, bcmath, intl
+          extensions: bcmath, intl, mbstring, mysql
           ini-values: memory_limit=2048M
           tools: composer, phpcs
           coverage: none
@@ -98,7 +112,7 @@ jobs:
         run: composer install --no-progress --no-suggest
 
       - name: Require WordPress
-        run: composer require --dev --update-with-dependencies --no-progress --no-suggest roots/wordpress:$WP_VERSION wp-phpunit/wp-phpunit:$WP_VERSION
+        run: composer require --dev --update-with-dependencies --no-progress --no-suggest roots/wordpress:${{ env.WP_VERSION }} wp-phpunit/wp-phpunit:${{ env.WP_VERSION }}
 
       - name: List Composer packages
         run: composer show
