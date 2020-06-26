@@ -1,4 +1,4 @@
-name: Quality Assurance
+name: QA
 
 on: [ push, pull_request ]
 
@@ -55,10 +55,10 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
           MYSQL_DATABASE: wp_phpunit_tests
         ports:
-          - 3306
+          - 3306/tcp
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
@@ -87,6 +87,9 @@ jobs:
           key: ${{ runner.os }}-PHP${{ matrix.php}}-WP${{ env.WP_VERSION }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-PHP${{ matrix.php }}-WP${{ env.WP_VERSION }}-
+
+      - name: Start MySQL service
+        run: sudo /etc/init.d/mysql start
 
       - name: Install Composer dependencies
         if: steps.test-cache.outputs.cache-hit != 'true'
@@ -121,6 +124,8 @@ jobs:
         run: composer run-script phpmd
 
       - name: PHPUnit test suite
+        env:
+          WP_TESTS_DB_HOST: localhost:${{ job.services.mysql.ports['3306'] }}
         run: composer run-script phpunit
 
       - name: PHPStan static code analysis
