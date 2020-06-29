@@ -505,8 +505,12 @@ class SubscriptionsModule {
 			$payment->subscription_id = $subscription->get_id();
 
 			$payment->recurring_type = Recurring::FIRST;
-			$payment->start_date     = clone $subscription->get_start_date();
-			$payment->end_date       = clone $subscription->get_next_payment_date();
+
+			$start_date = $subscription->get_start_date();
+			$end_date   = $subscription->get_next_payment_date();
+
+			$payment->start_date = ( null === $start_date ) ? null : clone $start_date;
+			$payment->end_date   = ( null === $end_date ) ? null : clone $end_date;
 
 			$payment->save();
 		}

@@ -32,32 +32,32 @@ class SubscriptionPeriod {
 	/**
 	 * The start date of this period.
 	 *
-	 * @var DateTimeInterface
+	 * @var DateTime
 	 */
 	private $start_date;
 
 	/**
 	 * The end date of this period.
 	 *
-	 * @var DateTimeInterface
+	 * @var DateTime
 	 */
 	private $end_date;
 
 	/**
 	 * The amount to pay for this period.
 	 *
-	 * @var Amount
+	 * @var Money
 	 */
 	private $amount;
 
 	/**
 	 * Construct and initialize subscription period object.
 	 *
-	 * @param Subscription      $subscription Subscription.
-	 * @param DateTimeInterface $start_date   Start date.
-	 * @param DateTimeInterface $end_date     End date.
+	 * @param Subscription $subscription Subscription.
+	 * @param DateTime     $start_date   Start date.
+	 * @param DateTime     $end_date     End date.
 	 */
-	public function __construct( Subscription $subscription, DateTimeInterface $start_date, DateTimeInterface $end_date ) {
+	public function __construct( Subscription $subscription, DateTime $start_date, DateTime $end_date ) {
 		$this->subscription = $subscription;
 		$this->start_date   = $start_date;
 		$this->end_date     = $end_date;
@@ -77,7 +77,7 @@ class SubscriptionPeriod {
 	/**
 	 * Get start date.
 	 *
-	 * @return DateTimeInterface
+	 * @return DateTime
 	 */
 	public function get_start_date() {
 		return $this->start_date;
@@ -86,7 +86,7 @@ class SubscriptionPeriod {
 	/**
 	 * Get end date.
 	 *
-	 * @return DateTimeInterface
+	 * @return DateTime
 	 */
 	public function get_end_date() {
 		return $this->end_date;
@@ -95,7 +95,7 @@ class SubscriptionPeriod {
 	/**
 	 * Get amount.
 	 *
-	 * @return Amount
+	 * @return Money
 	 */
 	public function get_amount() {
 		return $this->amount;

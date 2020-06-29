@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
+use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 
@@ -150,7 +151,7 @@ class SubscriptionHelper {
 	 * Calculate end date of subscription.
 	 *
 	 * @param Subscription $subscription Subscription.
-	 * @return \DateTimeInterface|null
+	 * @return DateTime|null
 	 */
 	public static function calculate_end_date( Subscription $subscription ) {
 		$start_date = $subscription->get_start_date();
@@ -187,7 +188,7 @@ class SubscriptionHelper {
 	 * Calculate expirty date.
 	 *
 	 * @param Subscription $subscription Subscription.
-	 * @return \DateTimeInterface|null
+	 * @return DateTime|null
 	 */
 	public static function calculate_expiry_date( Subscription $subscription ) {
 		$start_date = $subscription->get_start_date();
@@ -205,7 +206,7 @@ class SubscriptionHelper {
 	 * Calculate next payment date.
 	 *
 	 * @param Subscription $subscription Subscription.
-	 * @return \DateTimeInterface|null
+	 * @return DateTime|null
 	 * @throws \InvalidArgumentException Throws exception when start or date interval are not available.
 	 */
 	public static function calculate_next_payment_date( Subscription $subscription ) {
@@ -285,7 +286,7 @@ class SubscriptionHelper {
 	 * Calculate next payment delivery date.
 	 *
 	 * @param Subscription $subscription Subscription.
-	 * @return \DateTimeInterface
+	 * @return DateTime
 	 * @throws \InvalidArgumentException Throws exception when next payment date is null.
 	 */
 	public static function calculate_next_payment_delivery_date( $subscription ) {

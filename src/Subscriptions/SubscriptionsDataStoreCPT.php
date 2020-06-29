@@ -124,7 +124,7 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 		$key = array_search( $post_status, $this->status_map, true );
 
 		if ( false !== $key ) {
-			return $key;
+			return \strval( $key );
 		}
 
 		return null;
