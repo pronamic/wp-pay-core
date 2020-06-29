@@ -4,6 +4,8 @@ $white: #fff;
 $gray-very-light-mostly-white: #f6f6f6;
 // Light gray (http://www.colorhexa.com/c3c3c3)
 $gray-light: #c3c3c3;
+// Light gray (http://www.colorhexa.com/777)
+$gray-dark: #777;
 // Strong blue (http://www.colorhexa.com/008ec2)
 // @see https://github.com/WordPress/WordPress/blob/4.6/wp-includes/css/buttons.css#L240
 $wp-button-primary-background-focus-color: #008ec2;
@@ -40,6 +42,10 @@ body {
 		clear: both;
 		content: '';
 		display: table;
+	}
+
+	> p {
+		color: $gray-dark;
 	}
 }
 

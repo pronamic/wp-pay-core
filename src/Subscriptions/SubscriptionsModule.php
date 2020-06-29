@@ -11,11 +11,11 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DateInterval;
-use DatePeriod;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Core\Gateway;
+use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Core\Recurring;
 use Pronamic\WordPress\Pay\Core\Server;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
@@ -236,7 +236,7 @@ class SubscriptionsModule {
 						throw new \Exception( __( 'Gateway does not support subscription mandate updates.', 'pronamic_ideal' ) );
 					}
 
-					$gateway->update_subscription_mandate( $mandate_id );
+					$gateway->update_subscription_mandate( $subscription, $mandate_id );
 
 					require __DIR__ . '/../../views/subscription-mandate-updated.php';
 
@@ -252,6 +252,12 @@ class SubscriptionsModule {
 			try {
 				$payment = $this->new_subscription_payment( $subscription );
 
+				$payment_method = \filter_input( \INPUT_POST, 'pronamic_pay_subscription_payment_method', \FILTER_SANITIZE_STRING );
+
+				if ( ! empty( $payment_method ) ) {
+					$payment->method = $payment_method;
+				}
+
 				if ( null === $payment ) {
 					require __DIR__ . '/../../views/subscription-mandate-failed.php';
 
@@ -260,9 +266,27 @@ class SubscriptionsModule {
 
 				$payment->recurring = false;
 
+				/*
+				 * Use payment method minimum amount for verification payment.
+				 *
+				 * @link https://help.mollie.com/hc/en-us/articles/115000667365-What-are-the-minimum-and-maximum-amounts-per-payment-method-
+				 */
+				switch ( $payment->method ) {
+					case PaymentMethods::DIRECT_DEBIT_BANCONTACT:
+						$amount = 0.02;
+
+						break;
+					case PaymentMethods::DIRECT_DEBIT_SOFORT:
+						$amount = 0.10;
+
+						break;
+					default:
+						$amount = 0.01;
+				}
+
 				$payment->set_total_amount(
 					new TaxedMoney(
-						0.01,
+						$amount,
 						$payment->get_total_amount()->get_currency()
 					)
 				);
@@ -297,8 +321,34 @@ class SubscriptionsModule {
 			return;
 		}
 
-		// Payment method input HTML.
-		$gateway->set_payment_method( $subscription->payment_method );
+		\wp_register_script(
+			'pronamic-pay-subscription-mandate',
+			'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js',
+			array( 'jquery' ),
+			$this->plugin->get_version(),
+			false
+		);
+
+		\wp_register_style(
+			'pronamic-pay-card-slider-slick',
+			'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css',
+			array(),
+			$this->plugin->get_version()
+		);
+
+		\wp_register_style(
+			'pronamic-pay-card-slider-google-font',
+			'https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap',
+			array(),
+			$this->plugin->get_version()
+		);
+
+		\wp_register_style(
+			'pronamic-pay-subscription-mandate',
+			plugins_url( 'css/card-slider.css', dirname( dirname( __FILE__ ) ) ),
+			array( 'pronamic-pay-redirect', 'pronamic-pay-card-slider-slick', 'pronamic-pay-card-slider-google-font' ),
+			$this->plugin->get_version()
+		);
 
 		require __DIR__ . '/../../views/subscription-mandate.php';
 

@@ -8,28 +8,22 @@
  * @package   Pronamic\WordPress\Pay
  */
 
-global $wpdb;
+use Pronamic\WordPress\Pay\Cards;
+use Pronamic\WordPress\Pay\Core\PaymentMethods;
 
 $subscription_id = $subscription->get_id();
 
 $mollie_customer_id = \get_post_meta( $subscription_id, '_pronamic_subscription_mollie_customer_id', true );
 
-if ( empty( $mollie_customer_id ) ) {
+if ( empty( $mollie_customer_id ) ) :
 	include \get_404_template();
 
 	exit;
-}
+endif;
 
 $api_key = \get_post_meta( $subscription->config_id, '_pronamic_gateway_mollie_api_key', true );
 
 $client = new \Pronamic\WordPress\Pay\Gateways\Mollie\Client( $api_key );
-
-/**
- * Customer.
- *
- * @link https://docs.mollie.com/reference/v2/customers-api/get-customer
- */
-$mollie_customer = $client->get_customer( $mollie_customer_id );
 
 /**
  * Mandates.
@@ -42,6 +36,15 @@ $mollie_customer_mandates = $response->_embedded->mandates;
 
 $subscription_mandate_id = $subscription->get_meta( 'mollie_mandate_id' );
 
+// Set current subscription mandate as first item.
+$current_mandate = wp_list_filter( $mollie_customer_mandates, array( 'id' => $subscription_mandate_id ) );
+
+if ( is_array( $current_mandate ) ) :
+	unset( $mollie_customer_mandates[ key( $current_mandate ) ] );
+
+	$mollie_customer_mandates = array_merge( $current_mandate, $mollie_customer_mandates );
+endif;
+
 ?>
 <!DOCTYPE html>
 
@@ -49,288 +52,203 @@ $subscription_mandate_id = $subscription->get_meta( 'mollie_mandate_id' );
 	<head>
 		<meta charset="<?php bloginfo( 'charset' ); ?>" />
 
-		<title><?php esc_html_e( 'Subscription Mandate', 'pronamic_ideal' ); ?></title>
+		<title><?php esc_html_e( 'Change subscription payment method', 'pronamic_ideal' ); ?></title>
 
-		<?php wp_print_styles( 'pronamic-pay-redirect' ); ?>
-
-		<style type="text/css">
-			.pronamic-pay-table {
-				border-collapse: collapse;
-			}
-
-			.pronamic-pay-table th,
-			.pronamic-pay-table td {
-				border-bottom: 1px solid #c3c3c3;
-
-				padding: 5px;
-			}
-		</style>
+		<?php wp_print_styles( 'pronamic-pay-subscription-mandate' ); ?>
 	</head>
 
 	<body>
-		<div class="pronamic-pay-redirect-page" style="max-width: 100%;">
-			<div class="pronamic-pay-redirect-container alignleft">
+		<div class="pronamic-pay-redirect-page">
+			<div class="pronamic-pay-redirect-container">
 
-				<h3><?php \esc_html_e( 'Mandates', 'pronamic_ideal' ); ?></h3>
+				<h1>
+					<?php \esc_html_e( 'Change subscription payment method', 'pronamic_ideal' ); ?>
+				</h1>
 
-				<form method="post">
+				<p>
+					<?php \esc_html_e( 'Select an existing payment method or add a new one.', 'pronamic_ideal' ); ?>
+				</p>
 
-					<table class="pronamic-pay-table">
-						<thead>
-							<tr>
-								<th></th>
-								<th><?php \esc_html_e( 'ID', 'pronamic_ideal' ); ?></th>
-								<th><?php \esc_html_e( 'Mode', 'pronamic_ideal' ); ?></th>
-								<th><?php \esc_html_e( 'Status', 'pronamic_ideal' ); ?></th>
-								<th><?php \esc_html_e( 'Method', 'pronamic_ideal' ); ?></th>
-								<th><?php \esc_html_e( 'Details', 'pronamic_ideal' ); ?></th>
-								<th><?php \esc_html_e( 'Mandate Reference', 'pronamic_ideal' ); ?></th>
-								<th><?php \esc_html_e( 'Signature Date', 'pronamic_ideal' ); ?></th>
-								<th><?php \esc_html_e( 'Created On', 'pronamic_ideal' ); ?></th>
-							</tr>
-						</thead>
+				<div class="pp-card-slider-container">
+					<div class="pp-card-slider-wrapper">
+						<form method="post">
+							<h2>
+								<?php \esc_html_e( 'Select existing payment method', 'pronamic_ideal' ); ?>
+							</h2>
 
-						<tbody>
+							<div class="pp-card-slider alignleft">
+								<?php
 
-							<?php if ( empty( $mollie_customer_mandates ) ) : ?>
+								$cards = new Cards();
 
-								<tr>
-									<td colspan="4"><?php esc_html_e( 'No mandates found.', 'pronamic_ideal' ); ?></td>
-								</tr>
+								foreach ( $mollie_customer_mandates as $mandate ) :
+									if ( 'valid' !== $mandate->status ) :
+										continue;
+									endif;
 
-							<?php else : ?>
+									$card_name      = null;
+									$account_number = null;
+									$account_label  = null;
+									$bic_or_brand   = null;
+									$logo_url       = null;
 
-								<?php foreach ( $mollie_customer_mandates as $mandate ) : ?>
+									switch ( $mandate->method ) :
+										case 'creditcard':
+											$card_name      = $mandate->details->cardHolder;
+											$account_number = $mandate->details->cardNumber;
+											$account_label  = _x( 'Card Number', 'Card selector', 'pronamic_ideal' );
 
-									<tr>
-										<td>
-											<input type="radio" id="mandate-<?php echo \esc_attr( $mandate->id ); ?>" name="pronamic_pay_subscription_mandate" value="<?php echo \esc_attr( $mandate->id ); ?>" <?php echo checked( $mandate->id, $subscription_mandate_id ); ?>>
-										</td>
-										<td>
-											<label for="mandate-<?php echo \esc_attr( $mandate->id ); ?>">
-												<code><?php echo \esc_html( $mandate->id ); ?></code>
-											</label>
-										</td>
-										<td>
-											<?php
+											$bic_or_brand = $mandate->details->cardLabel;
 
-											switch ( $mandate->mode ) {
-												case 'test':
-													\esc_html_e( 'Test', 'pronamic_ideal' );
+											break;
+										case 'directdebit':
+											$card_name      = $mandate->details->consumerName;
+											$account_number = \chunk_split( $mandate->details->consumerAccount, 4, ' ' );
+											$account_label  = _x( 'Account Number', 'Card selector', 'pronamic_ideal' );
 
-													break;
-												case 'live':
-													\esc_html_e( 'Live', 'pronamic_ideal' );
+											$bic_or_brand = substr( $mandate->details->consumerAccount, 4, 4 );
 
-													break;
-												default:
-													echo \esc_html( $mandate->mode );
+											break;
+									endswitch;
 
-													break;
-											}
+									$classes = array( 'pp-card' );
 
-											?>
-										</td>
-										<td>
-											<?php
+									$card = $cards->get_card( $bic_or_brand );
 
-											switch ( $mandate->status ) {
-												case 'pending':
-													\esc_html_e( 'Pending', 'pronamic_ideal' );
+									// Set card brand specific details.
+									if ( null !== $card ) :
+										$classes[] = 'brand-' . $card['brand'];
 
-													break;
-												case 'valid':
-													\esc_html_e( 'Valid', 'pronamic_ideal' );
+										$logo_url = $cards->get_card_logo_url( $card['brand'] );
+									endif;
 
-													break;
-												default:
-													echo \esc_html( $mandate->status );
+									?>
 
-													break;
-											}
+									<div class="pp-card-container">
+										<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>" style="background: purple;">
+											<div class="pp-card__background"></div>
 
-											?>
-										</td>
-										<td>
-											<?php
+											<div class="pp-card__content">
+												<input class="pp-card__input" name="pronamic_pay_subscription_mandate" value="<?php echo esc_html( $mandate->id ); ?>" type="radio">
 
-											switch ( $mandate->method ) {
-												case 'creditcard':
-													\esc_html_e( 'Credit Card', 'pronamic_ideal' );
+												<div class="pt-card__indicator"></div>
 
-													break;
-												case 'directdebit':
-													\esc_html_e( 'Direct Debit', 'pronamic_ideal' );
+												<h3 class="pp-card__title"><?php echo esc_html( $title ); ?></h3>
 
-													break;
-												default:
-													echo \esc_html( $mandate->method );
+												<figure class="pp-card__logo">
+													<?php if ( null !== $logo_url && array_key_exists( 'title', $card ) ) : ?>
 
-													break;
-											}
+														<img class="pp-card__logo__img" src="<?php echo esc_url( $logo_url ); ?>" alt="<?php echo esc_attr( $card['title'] ); ?>"/>
 
-											?>
-										</td>
-										<td>
-											<?php
+													<?php endif; ?>
+												</figure>
 
-											switch ( $mandate->method ) {
-												case 'creditcard':
-													?>
-													<dl style="margin: 0;">
+												<dl class="pp-card__name">
+													<dt class="pp-card__label"><?php echo esc_html_x( 'Name', 'Card selector', 'pronamic_ideal' ); ?></dt>
+													<dd class="pp-card__value"><?php echo esc_html( $card_name ); ?></dd>
+												</dl>
 
-														<?php if ( ! empty( $mandate->details->cardHolder ) ) : ?>
-
-															<dt><?php \esc_html_e( 'Card Holder', 'pronamic_ideal' ); ?></dt>
-															<dd>
-																<?php echo \esc_html( $mandate->details->cardHolder ); ?>
-															</dd>
-
-														<?php endif; ?>
-
-														<?php if ( ! empty( $mandate->details->cardNumber ) ) : ?>
-
-															<dt><?php \esc_html_e( 'Card Number', 'pronamic_ideal' ); ?></dt>
-															<dd>
-																<?php echo \esc_html( $mandate->details->cardNumber ); ?>
-															</dd>
-
-														<?php endif; ?>
-
-														<?php if ( ! empty( $mandate->details->cardLabel ) ) : ?>
-
-															<dt><?php \esc_html_e( 'Card Label', 'pronamic_ideal' ); ?></dt>
-															<dd>
-																<?php echo \esc_html( $mandate->details->cardLabel ); ?>
-															</dd>
-
-														<?php endif; ?>
-
-														<?php if ( ! empty( $mandate->details->cardFingerprint ) ) : ?>
-
-															<dt><?php \esc_html_e( 'Card Fingerprint', 'pronamic_ideal' ); ?></dt>
-															<dd>
-																<?php echo \esc_html( $mandate->details->cardFingerprint ); ?>
-															</dd>
-
-														<?php endif; ?>
-
-														<?php if ( ! empty( $mandate->details->cardExpiryDate ) ) : ?>
-
-															<dt><?php \esc_html_e( 'Card Expiry Date', 'pronamic_ideal' ); ?></dt>
-															<dd>
-																<?php echo \esc_html( $mandate->details->cardExpiryDate ); ?>
-															</dd>
-
-														<?php endif; ?>
-													</dl>
-													<?php
-
-													break;
-												case 'directdebit':
-													?>
-													<dl style="margin: 0;">
-
-														<?php if ( ! empty( $mandate->details->consumerName ) ) : ?>
-
-															<dt><?php \esc_html_e( 'Consumer Name', 'pronamic_ideal' ); ?></dt>
-															<dd>
-																<?php echo \esc_html( $mandate->details->consumerName ); ?>
-															</dd>
-
-														<?php endif; ?>
-
-														<?php if ( ! empty( $mandate->details->consumerAccount ) ) : ?>
-
-															<dt><?php \esc_html_e( 'Consumer Account', 'pronamic_ideal' ); ?></dt>
-															<dd>
-																<?php echo \esc_html( $mandate->details->consumerAccount ); ?>
-															</dd>
-
-														<?php endif; ?>
-
-														<?php if ( ! empty( $mandate->details->consumerBic ) ) : ?>
-
-															<dt><?php \esc_html_e( 'Consumer BIC', 'pronamic_ideal' ); ?></dt>
-															<dd>
-																<?php echo \esc_html( $mandate->details->consumerBic ); ?>
-															</dd>
-
-														<?php endif; ?>
-													</dl>
-													<?php
-
-													break;
-												default:
-													?>
-													<pre><?php echo \esc_html( \wp_json_encode( $mandate->details, \JSON_PRETTY_PRINT ) ); ?></pre>
-													<?php
-
-													break;
-											}
-
-											?>
-										</td>
-										<td>
-											<?php
-
-											// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- Mollie.
-											echo \esc_html( $mandate->mandateReference );
-
-											?>
-										</td>
-										<td>
-											<?php
-
-											// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- Mollie.
-											$signature_date = new \DateTime( $mandate->signatureDate, new \DateTimeZone( 'UTC' ) );
-
-											$signature_date->setTimezone( \Pronamic\WordPress\DateTime\DateTimeZone::get_default() );
-
-											echo \esc_html( $signature_date->format( 'd-m-Y' ) );
-
-											?>
-										</td>
-										<td>
-											<?php
-
-											// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- Mollie.
-											$created_on = new \DateTime( $mandate->createdAt, new \DateTimeZone( 'UTC' ) );
-
-											$created_on->setTimezone( \Pronamic\WordPress\DateTime\DateTimeZone::get_default() );
-
-											echo \esc_html( $created_on->format( 'd-m-Y H:i:s' ) );
-
-											?>
-										</td>
-									</tr>
+												<dl class="pp-card__number">
+													<dt class="pp-card__label"><?php echo esc_html( $account_label ); ?></dt>
+													<dd class="pp-card__value"><?php echo esc_html( $account_number ); ?></dd>
+												</dl>
+											</div>
+										</div>
+									</div>
 
 								<?php endforeach; ?>
 
-							<?php endif; ?>
+							</div>
 
-							<tr>
-								<td>
-									<input type="radio" id="mandate-new" name="pronamic_pay_subscription_mandate" value="">
-								</td>
-								<td colspan="8">
-									<label for="mandate-new">
-										<?php esc_html_e( 'New mandate' ); ?>
-									</label>
-								</td>
-							</tr>
+							<p>
+								<?php wp_nonce_field( 'pronamic_pay_update_subscription_mandate', 'pronamic_pay_nonce' ); ?>
 
-						</tbody>
-					</table>
+								<input type="submit" value="<?php esc_html_e( 'Use selected payment method', 'pronamic_ideal' ); ?>"/>
+							</p>
+						</form>
+					</div>
+				</div>
 
-					<?php wp_nonce_field( 'pronamic_pay_update_subscription_mandate', 'pronamic_pay_nonce' ); ?>
+				<div class="pp-new-payment-method-container">
+					<div class="pp-new-payment-method-wrapper">
+						<form method="post">
+							<h2>
+								<?php \esc_html_e( 'Add new payment method', 'pronamic_ideal' ); ?>
+							</h2>
 
-					<p>
-						<input type="submit" value="<?php esc_attr_e( 'Submit', 'pronamic_ideal' ); ?>">
-					</p>
-				</form>
+							<label>
+								<p>
+									<?php esc_html_e( 'Select payment method for verification payment.', 'pronamic_ideal' ); ?>
+								</p>
 
+								<select name="pronamic_pay_subscription_payment_method">
+									<?php
+
+									$recurring_methods = array_keys( PaymentMethods::get_recurring_methods() );
+
+									$active_methods = $gateway->get_transient_available_payment_methods();
+
+									foreach ( $active_methods as $method ) :
+										if ( ! in_array( $method, $recurring_methods, true ) ) :
+											continue;
+										endif;
+
+										printf(
+											'<option value="%s">%s</option>',
+											esc_attr( $method ),
+											esc_html( PaymentMethods::get_name( $method ) )
+										);
+
+									endforeach;
+
+									?>
+								</select>
+							</label>
+
+							<?php
+
+							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Complex input HTML.
+							echo $gateway->get_input_html();
+
+							?>
+
+							<p>
+								<?php wp_nonce_field( 'pronamic_pay_update_subscription_mandate', 'pronamic_pay_nonce' ); ?>
+
+								<input type="submit" value="<?php esc_html_e( 'Pay', 'pronamic_ideal' ); ?>"/>
+							</p>
+						</form>
+					</div>
+				</div>
 			</div>
 		</div>
+
+		<?php wp_print_scripts( 'pronamic-pay-subscription-mandate' ); ?>
+
+		<script type="text/javascript">
+		jQuery( document ).ready( function () {
+			var $slider = jQuery( '.pp-card-slider' ).slick( {
+				dots: true,
+				arrows: false,
+				infinite: false,
+				slidesToShow: 1,
+				centerMode: true,
+			} );
+
+			$slider.find( '.slick-current input[type="radio"]' ).attr( 'checked', 'checked' );
+
+			$slider.find( '.slick-slide' ).on( 'click', function () {
+				var index = jQuery( this ).data( 'slick-index' );
+
+				$slider.slick( 'slickGoTo', index );
+			} );
+
+			$slider.on( 'afterChange', function ( event, slick, currentSlide, nextSlide ) {
+				$slider.find( 'input[type="radio"]' ).removeAttr( 'checked' );
+
+				$slider.find( '.slick-slide' ).eq( currentSlide ).find( 'input[type="radio"]' ).attr( 'checked', 'checked' );
+			} );
+		} );
+		</script>
 	</body>
 </html>
