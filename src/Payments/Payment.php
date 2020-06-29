@@ -632,6 +632,8 @@ class Payment extends LegacyPayment {
 		);
 
 		// Find and replace.
+		$count = 0;
+
 		$string = str_replace(
 			array_keys( $replacements ),
 			array_values( $replacements ),
