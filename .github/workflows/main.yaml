@@ -97,22 +97,30 @@ jobs:
       - name: Composer validation
         run: composer validate --strict
 
-      - name: Cache Composer and Node packages
-        id: test-cache
-        uses: actions/cache@v2
+      # https://github.com/actions/cache/blob/master/examples.md#php---composer
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - uses: actions/cache@v2
         with:
-          path: |
-            **/node_modules
-            **/vendor
-          key: ${{ runner.os }}-PHP${{ matrix.php }}-WP${{ matrix.WP_VERSION || env.WP_VERSION }}-${{ hashFiles('**/composer.lock') }}
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-PHP${{ matrix.php }}-WP${{ matrix.WP_VERSION || env.WP_VERSION }}-
+            ${{ runner.os }}-composer-
+
+      # https://github.com/actions/cache/blob/master/examples.md#macos-and-ubuntu
+      - uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Start MySQL service
         run: sudo /etc/init.d/mysql start
 
       - name: Install Composer dependencies
-        if: steps.test-cache.outputs.cache-hit != 'true'
         run: composer install --no-progress --no-suggest
 
       - name: Require WordPress
@@ -129,7 +137,6 @@ jobs:
         run: npm install -g grunt-cli
 
       - name: Install Node packages
-        if: steps.test-cache.outputs.cache-hit != 'true'
         run: npm install
 
       - name: PHPLint
