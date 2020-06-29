@@ -60,6 +60,7 @@
   },
   "scripts": {
     "build-image": "npm-run-all build-image-*",
+    "build-image-svg-cards": "mkdir -p images/dist/cards; svgo -f images/src/cards/ -o images/dist/cards/",
     "build-image-svg-default": "svgo images/src/wp-pay.svg -o images/dist/wp-pay.svgo-min.svg",
     "build-image-svg-white": "svgo images/src/wp-pay-white.svg -o images/dist/wp-pay-white.svgo-min.svg",
     "build-image-svg-wp-admin": "svgo images/src/wp-pay-wp-admin-fresh-base.svg -o images/dist/wp-pay-wp-admin-fresh-base.svgo-min.svg",
