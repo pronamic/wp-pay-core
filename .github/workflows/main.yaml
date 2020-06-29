@@ -13,15 +13,19 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # WordPress and PHP 7.4: https://make.wordpress.org/core/2019/10/11/wordpress-and-php-7-4/.
-          - name: WP 5.3, PHPCS, PHPStan, coverage, ESLint, Sass Lint
+          # PHP Compatibility and WordPress Versions: https://make.wordpress.org/core/handbook/references/php-compatibility-and-wordpress-versions/
+          - name: WP 5.4, PHPCS, PHPStan, coverage, ESLint, Sass Lint
             php: 7.4
-            WP_VERSION: 5.3.*
+            WP_VERSION: 5.4.*
             COVERAGE: 1
             PHPCS: 1
             PHPSTAN: 1
             ESLINT: 1
             SASS_LINT: 1
+          # WordPress and PHP 7.4: https://make.wordpress.org/core/2019/10/11/wordpress-and-php-7-4/.
+          - name: WP 5.3
+            php: 7.4
+            WP_VERSION: 5.3.*
           # WordPress 5.2 (or lower) will trigger PHP 7.4 (or higher) errors.
           # @link https://make.wordpress.org/core/2019/10/11/wordpress-and-php-7-4/.
           - name: WP 5.2
