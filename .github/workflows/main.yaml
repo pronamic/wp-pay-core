@@ -9,6 +9,8 @@ env:
 
 jobs:
   test:
+    name: PHP ${{ matrix.php }} ${{ matrix.name }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -64,9 +66,8 @@ jobs:
           - php: 7.1
           - php: 7.0
           - php: 5.6
-
-    name: PHP ${{ matrix.php }} ${{ matrix.name }}
-    runs-on: ubuntu-latest
+            continue-on-error: true
+    continue-on-error: ${{ matrix.continue-on-error }}
 
     services:
       mysql:
