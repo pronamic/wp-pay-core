@@ -254,7 +254,7 @@ class SubscriptionsModule {
 
 				$payment_method = \filter_input( \INPUT_POST, 'pronamic_pay_subscription_payment_method', \FILTER_SANITIZE_STRING );
 
-				if ( ! empty( $payment_method ) ) {
+				if ( null !== $payment && ! empty( $payment_method ) ) {
 					$payment->method = $payment_method;
 				}
 

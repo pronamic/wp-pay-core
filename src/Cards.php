@@ -34,6 +34,8 @@ class Cards {
 
 	/**
 	 * Register cards.
+	 *
+	 * @return void
 	 */
 	private function register_cards() {
 		$this->cards = array(
