@@ -95,7 +95,7 @@ endif;
 									switch ( $mandate->method ) :
 										case 'creditcard':
 											$card_name      = $mandate->details->cardHolder;
-											$account_number = $mandate->details->cardNumber;
+											$account_number = str_pad( $mandate->details->cardNumber, 16, '*', \STR_PAD_LEFT );
 											$account_label  = _x( 'Card Number', 'Card selector', 'pronamic_ideal' );
 
 											$bic_or_brand = $mandate->details->cardLabel;
@@ -103,13 +103,18 @@ endif;
 											break;
 										case 'directdebit':
 											$card_name      = $mandate->details->consumerName;
-											$account_number = \chunk_split( $mandate->details->consumerAccount, 4, ' ' );
+											$account_number = $mandate->details->consumerAccount;
 											$account_label  = _x( 'Account Number', 'Card selector', 'pronamic_ideal' );
 
 											$bic_or_brand = substr( $mandate->details->consumerAccount, 4, 4 );
 
 											break;
 									endswitch;
+
+									// Split account number in chunks.
+									if ( null !== $account_number ) :
+										$account_number = \chunk_split( $account_number, 4, ' ' );
+									endif;
 
 									$classes = array( 'pp-card' );
 
