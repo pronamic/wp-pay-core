@@ -119,7 +119,7 @@ class Cards {
 			),
 			array(
 				'bic'   => 'ingb',
-				'brand' => 'ing-bank',
+				'brand' => 'ing',
 				'title' => __( 'ING Bank', 'pronamic_ideal' ),
 			),
 			array(
@@ -144,7 +144,7 @@ class Cards {
 			),
 			array(
 				'bic'   => 'snsb',
-				'brand' => 'sns-bank',
+				'brand' => 'sns',
 				'title' => __( 'SNS Bank', 'pronamic_ideal' ),
 			),
 			array(
@@ -201,8 +201,9 @@ class Cards {
 	 * @return string|null
 	 */
 	public function get_card_logo_url( $brand ) {
-		$path = sprintf( 'images/dist/cards/logo-%s.svg', $brand );
-
-		return plugins_url( $path, dirname( __FILE__ ) );
+		return sprintf(
+			'https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/%1$s/card-%1$s-logo-_x80.svg',
+			$brand
+		);
 	}
 }
