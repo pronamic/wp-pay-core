@@ -111,6 +111,10 @@ class Upgrade620 extends Upgrade {
 				}
 			}
 
+			if ( null === $subscription->next_payment_date ) {
+				continue;
+			}
+
 			// Add note.
 			$subscription->add_note(
 				\sprintf(
