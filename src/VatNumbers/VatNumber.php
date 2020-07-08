@@ -15,7 +15,7 @@ namespace Pronamic\WordPress\Pay\VatNumbers;
  *
  * @link    https://en.wikipedia.org/wiki/VAT_identification_number
  * @author  Remco Tolsma
- * @version 2.2.6
+ * @version 2.4.0
  * @since   1.4.0
  */
 class VatNumber {

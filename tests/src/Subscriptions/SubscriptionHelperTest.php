@@ -14,7 +14,7 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
  * Subscription Helper Test
  *
  * @author Remco Tolsma
- * @version 2.2.6
+ * @version 2.4.0
  */
 class SubscriptionHelperTest extends \WP_UnitTestCase {
 	/**

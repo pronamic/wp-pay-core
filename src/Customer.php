@@ -17,7 +17,7 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumber;
  * Contact.
  *
  * @author  Reüel van der Steege.
- * @version 2.2.6
+ * @version 2.4.0
  * @since   2.1.0
  */
 class Customer {
