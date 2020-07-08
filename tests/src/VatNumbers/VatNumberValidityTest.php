@@ -14,7 +14,7 @@ namespace Pronamic\WordPress\Pay\VatNumbers;
  * VAT Number validity test
  *
  * @author  Remco Tolsma
- * @version 2.1.6
+ * @version 2.4.0
  * @since   2.1.6
  */
 class VatNumberValidityTest extends \WP_UnitTestCase {

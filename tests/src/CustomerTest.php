@@ -20,7 +20,7 @@ use WP_UnitTestCase;
  * Customer test
  *
  * @author Remco Tolsma
- * @version 1.0
+ * @version 2.4.0
  */
 class CustomerTest extends WP_UnitTestCase {
 	/**

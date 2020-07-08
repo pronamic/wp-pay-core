@@ -14,7 +14,7 @@ namespace Pronamic\WordPress\Pay\VatNumbers;
  * VAT Number VIES validator
  *
  * @author  Remco Tolsma
- * @version 2.2.6
+ * @version 2.4.0
  * @since   1.4.0
  */
 class VatNumberViesValidator {

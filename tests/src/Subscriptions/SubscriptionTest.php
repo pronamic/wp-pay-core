@@ -19,7 +19,7 @@ use WP_UnitTestCase;
  * Subscription test
  *
  * @author Remco Tolsma
- * @version 2.2.6
+ * @version 2.4.0
  */
 class SubscriptionTest extends WP_UnitTestCase {
 	/**

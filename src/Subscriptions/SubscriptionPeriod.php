@@ -18,8 +18,8 @@ use Pronamic\WordPress\DateTime\DateTime;
  * Subscription Period
  *
  * @author  Remco Tolsma
- * @version unreleased
- * @since   unreleased
+ * @version 2.4.0
+ * @since   2.4.0
  */
 class SubscriptionPeriod {
 	/**
