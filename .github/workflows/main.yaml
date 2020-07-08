@@ -1,0 +1,175 @@
+name: QA
+
+on: [ push, pull_request ]
+
+env:
+  COMPOSER_NO_INTERACTION: 1
+  WP_VERSION: '*'
+  WP_TESTS_DB_PASS: password
+
+jobs:
+  test:
+    name: PHP ${{ matrix.php }} ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # PHP Compatibility and WordPress Versions: https://make.wordpress.org/core/handbook/references/php-compatibility-and-wordpress-versions/
+          - name: WP 5.4, PHPCS, PHPStan, coverage, ESLint, Sass Lint
+            php: 7.4
+            WP_VERSION: 5.4.*
+            COVERAGE: 1
+            PHPCS: 1
+            PHPSTAN: 1
+            ESLINT: 1
+            SASS_LINT: 1
+          # WordPress and PHP 7.4: https://make.wordpress.org/core/2019/10/11/wordpress-and-php-7-4/.
+          - name: WP 5.3
+            php: 7.4
+            WP_VERSION: 5.3.*
+          # WordPress 5.2 (or lower) will trigger PHP 7.4 (or higher) errors.
+          # @link https://make.wordpress.org/core/2019/10/11/wordpress-and-php-7-4/.
+          - name: WP 5.2
+            php: 7.3
+            WP_VERSION: 5.2.*
+          - name: WP 5.1
+            php: 7.3
+            WP_VERSION: 5.1.*
+          - name: WP 5.0
+            php: 7.3
+            WP_VERSION: 5.0.*
+          - name: WP 4.9
+            php: 7.3
+            WP_VERSION: 4.9.*
+          # WordPress 4.8 (or lower) will trigger PHP 7.2 (or higher) errors.
+          # @link https://make.wordpress.org/core/2018/10/15/wordpress-and-php-7-3/
+          # @link https://make.wordpress.org/core/handbook/best-practices/coding-standards/php/
+          # @link https://make.wordpress.org/core/tag/4-9/?s=7.2
+          - name: WP 4.8
+            php: 7.1
+            WP_VERSION: 4.8.*
+          - name: WP 4.7
+            php: 7.1
+            WP_VERSION: 4.7.*
+          - name: Multisite
+            php: 7.4
+            WP_MULTISITE: 1
+          - name: PHPMD
+            php: 7.4
+            PHPMD: 1
+          - name: Psalm
+            php: 7.4
+            PSALM: 1
+          - php: 7.3
+          - php: 7.2
+          - php: 7.1
+          - php: 7.0
+          - php: 5.6
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: false
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: wp_phpunit_tests
+        ports:
+          - 3306/tcp
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: bcmath, intl, mbstring, mysql
+          ini-values: memory_limit=2048M
+          tools: composer, phpcs
+          coverage: none
+
+      - run: composer self-update
+
+      - name: Composer validation
+        run: composer validate --strict
+
+      # https://github.com/actions/cache/blob/master/examples.md#php---composer
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      # https://github.com/actions/cache/blob/master/examples.md#macos-and-ubuntu
+      - uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Start MySQL service
+        run: sudo /etc/init.d/mysql start
+
+      - name: Install Composer dependencies
+        run: composer install --no-progress --no-suggest
+
+      - name: Require WordPress
+        run: composer require --dev --update-with-dependencies --no-progress --no-suggest roots/wordpress:${{ matrix.WP_VERSION || env.WP_VERSION }} wp-phpunit/wp-phpunit:${{ matrix.WP_VERSION || env.WP_VERSION }}
+
+      - name: List Composer packages
+        run: composer show
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+
+      - name: Install Grunt CLI
+        run: npm install -g grunt-cli
+
+      - name: Install Node packages
+        run: npm install
+
+      - name: PHPLint
+        run: composer run-script phplint
+
+      - name: PHP Code Sniffer
+        if: matrix.PHPCS
+        run: composer run-script phpcs
+
+      - name: PHP Mess Detector
+        if: matrix.PHPMD
+        continue-on-error: true
+        run: composer run-script phpmd
+
+      - name: PHPUnit test suite
+        env:
+          WP_TESTS_DB_HOST: 127.0.01:${{ job.services.mysql.ports['3306'] }}
+        run: composer run-script phpunit
+
+      - name: PHPStan static code analysis
+        if: matrix.PHPSTAN
+        env:
+          WP_TESTS_DB_HOST: 127.0.01:${{ job.services.mysql.ports['3306'] }}
+        run: composer bin phpstan install && composer run-script phpstan
+
+      - name: Psalm static code analysis
+        if: matrix.PSALM
+        continue-on-error: true
+        env:
+          WP_TESTS_DB_HOST: 127.0.01:${{ job.services.mysql.ports['3306'] }}
+        run: composer bin psalm install && composer run-script psalm
+
+      - name: ESLint
+        if: matrix.ESLINT
+        run: npm run-script eslint
+
+      - name: Sass Lint
+        if: matrix.SASS_LINT
+        run: npm run-script eslint

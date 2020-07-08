@@ -1,4 +1,8 @@
 /bin               export-ignore
+/fonts/src         export-ignore
+/images/src        export-ignore
+/js/src            export-ignore
+/scss              export-ignore
 /tests             export-ignore
 /.gitattributes    export-ignore
 /.gitignore        export-ignore

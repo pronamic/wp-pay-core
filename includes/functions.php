@@ -245,6 +245,50 @@ function get_pronamic_subscriptions_by_meta( $meta_key, $meta_value ) {
 }
 
 /**
+ * Get subscription by the specified source and value.
+ *
+ * @param string      $source    The source to query for.
+ * @param string|null $source_id The source ID to query for.
+ * @return Subscription|null
+ */
+function get_pronamic_subscriptions_by_source( $source, $source_id = null ) {
+	$subscriptions = array();
+
+	$query = new \WP_Query(
+		array(
+			'post_type'     => 'pronamic_pay_subscr',
+			'post_status'   => 'any',
+			'meta_query'    => array(
+				array(
+					'key'   => '_pronamic_subscription_source',
+					'value' => $source,
+				),
+				array(
+					'key'   => '_pronamic_subscription_source_id',
+					'value' => $source_id,
+				),
+			),
+			'nopaging'      => true,
+			'no_found_rows' => true,
+			'order'         => 'DESC',
+			'orderby'       => 'ID',
+		)
+	);
+
+	if ( $query->have_posts() ) {
+		while ( $query->have_posts() ) {
+			$query->the_post();
+
+			$subscriptions[] = get_pronamic_subscription( (int) get_the_ID() );
+		}
+
+		wp_reset_postdata();
+	}
+
+	return $subscriptions;
+}
+
+/**
  * Bind the global providers and gateways together.
  */
 function bind_providers_and_gateways() {

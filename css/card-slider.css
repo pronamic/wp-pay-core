@@ -1,0 +1,315 @@
+@charset "UTF-8";
+.pp-card-slider-container *,
+.pp-new-payment-method-container * {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+.pp-card-slider-container input[type="submit"],
+.pp-card-slider-container select,
+.pp-new-payment-method-container input[type="submit"],
+.pp-new-payment-method-container select {
+  padding: 10px;
+}
+
+.pp-card-slider-wrapper,
+.pp-new-payment-method-wrapper {
+  background: #fff;
+  border-radius: 20px;
+  -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  color: #333;
+  max-width: 600px;
+  margin: 3em auto 0 auto;
+  padding: 40px;
+}
+
+.pp-card-slider {
+  margin: 0 -40px;
+}
+
+.pp-card-container {
+  max-width: 600px;
+}
+.pp-card-container * {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.pp-card {
+  background: #000;
+  border-radius: 10px;
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  font-family: sans-serif;
+  margin: 0;
+  padding-top: 56.25%;
+  overflow: hidden;
+  position: relative;
+}
+.pp-card .pp-card__content {
+  color: #fff;
+  cursor: pointer;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  margin: 0;
+  padding: 8%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.pp-card .pp-card__content .pt-card__indicator {
+  background: #fff;
+  border-radius: 100%;
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  color: #81cf1f;
+  content: '';
+  line-height: 40px;
+  opacity: 0;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  text-align: center;
+  -webkit-transition: opacity .2s;
+  transition: opacity .2s;
+  width: 40px;
+  height: 40px;
+}
+.pp-card .pp-card__content .pt-card__indicator::after {
+  content: '✓';
+}
+.pp-card .pp-card__input {
+  position: absolute;
+  left: -9999px;
+}
+.pp-card .pp-card__input:checked + .pt-card__indicator {
+  opacity: 1;
+}
+.pp-card .pp-card__title {
+  display: none;
+}
+.pp-card .pp-card__name,
+.pp-card .pp-card__number {
+  margin: 0;
+}
+.pp-card .pp-card__label {
+  font-size: 14px;
+  font-weight: normal;
+  opacity: .6;
+  margin: 0;
+}
+.pp-card .pp-card__value {
+  font-family: 'Roboto Mono';
+  font-size: 20px;
+  margin: 0;
+}
+.pp-card .pp-card__logo {
+  margin: 0;
+  padding: 0;
+}
+.pp-card .pp-card__logo img {
+  max-width: 20%;
+  height: auto;
+}
+.pp-card .pp-card__background {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.pp-card.brand-american-express .pp-card__background {
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/american-express/card-american-express-background-480x270.svg");
+}
+.pp-card.brand-carta-si .pp-card__background {
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/carta-si/card-carta-si-background-480x270.svg");
+}
+.pp-card.brand-carte-bleue .pp-card__background {
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/carte-bleue/card-carte-bleue-background-480x270.svg");
+}
+.pp-card.brand-dankort .pp-card__background {
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/dankort/card-dankort-background-480x270.svg");
+}
+.pp-card.brand-diners-club .pp-card__background {
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/diners-club/card-diners-club-background-480x270.svg");
+}
+.pp-card.brand-diners-club .pp-card__content {
+  color: #000;
+}
+.pp-card.brand-discover .pp-card__background {
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/discover/card-discover-background-480x270.svg");
+}
+.pp-card.brand-discover .pp-card__content {
+  color: #000;
+}
+.pp-card.brand-jcb .pp-card__background {
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/jcb/card-jcb-background-480x270.svg");
+}
+.pp-card.brand-maestro .pp-card__background {
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/maestro/card-maestro-background-480x270.svg");
+}
+.pp-card.brand-mastercard .pp-card__background {
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/mastercard/card-mastercard-background-480x270.svg");
+}
+.pp-card.brand-mastercard .pp-card__content {
+  color: #000;
+}
+.pp-card.brand-unionpay .pp-card__background {
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/unionpay/card-unionpay-background-480x270.svg");
+}
+.pp-card.brand-unionpay .pp-card__content {
+  color: #000;
+}
+.pp-card.brand-visa .pp-card__background {
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/visa/card-visa-background-480x270.svg");
+}
+.pp-card.brand-abn-amro .pp-card__background {
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/abn-amro/card-abn-amro-background-480x270.svg");
+}
+.pp-card.brand-abn-amro .pp-card__value {
+  color: #000;
+}
+.pp-card.brand-asn-bank .pp-card__background {
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/asn-bank/card-asn-bank-background-480x270.svg");
+}
+.pp-card.brand-asn-bank .pp-card__content {
+  color: #000;
+  opacity: .6;
+}
+.pp-card.brand-bunq .pp-card__background {
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/bunq/card-bunq-background-480x270.svg");
+}
+.pp-card.brand-handelsbanken .pp-card__background {
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/handelsbanken/card-handelsbanken-background-480x270.svg");
+}
+.pp-card.brand-ing .pp-card__background {
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/ing/card-ing-background-480x270.svg");
+}
+.pp-card.brand-ing .pp-card__value {
+  color: #000;
+}
+.pp-card.brand-knab .pp-card__background {
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/knab/card-knab-background-480x270.svg");
+}
+.pp-card.brand-knab .pp-card__label {
+  color: #ec5f7d;
+}
+.pp-card.brand-knab .pp-card__value {
+  color: #003b5a;
+}
+.pp-card.brand-moneyou .pp-card__background {
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/moneyou/card-moneyou-background-480x270.svg");
+}
+.pp-card.brand-moneyou .pp-card__label {
+  color: #000;
+  opacity: .4;
+}
+.pp-card.brand-moneyou .pp-card__value {
+  color: #000;
+}
+.pp-card.brand-rabobank .pp-card__background {
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/rabobank/card-rabobank-background-480x270.svg");
+}
+.pp-card.brand-rabobank .pp-card__content {
+  color: #000;
+}
+.pp-card.brand-regiobank .pp-card__background {
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/regiobank/card-regiobank-background-480x270.svg");
+}
+.pp-card.brand-regiobank .pp-card__value {
+  color: #000;
+}
+.pp-card.brand-sns .pp-card__background {
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/sns/card-sns-background-480x270.svg");
+}
+.pp-card.brand-triodos-bank .pp-card__background {
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/triodos-bank/card-triodos-bank-background-480x270.svg");
+}
+.pp-card.brand-triodos-bank .pp-card__content {
+  color: #000;
+}
+.pp-card.brand-van-lanschot .pp-card__background {
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/van-lanschot/card-van-lanschot-background-480x270.svg");
+}
+
+.slick-slide {
+  padding: 0 15px;
+  outline: none;
+}
+.slick-slide.slick-current .pt-card__indicator {
+  opacity: 1;
+}
+
+.slick-dots {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  list-style: none;
+  margin: 30px 0 0;
+  padding: 0;
+}
+.slick-dots li {
+  cursor: pointer;
+  display: block;
+  margin: 0 5px;
+  position: relative;
+  width: 20px;
+  height: 20px;
+}
+.slick-dots li button {
+  background: transparent;
+  border: 0;
+  color: transparent;
+  cursor: pointer;
+  display: block;
+  font-size: 0;
+  line-height: 0;
+  outline: none;
+  padding: 5px;
+  width: 20px;
+  height: 20px;
+}
+.slick-dots li button:before {
+  color: #f9461c;
+  content: '•';
+  font-size: 20px;
+  line-height: 20px;
+  opacity: .25;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+}
+.slick-dots li button:hover, .slick-dots li button:focus {
+  outline: none;
+}
+.slick-dots li button:hover:before, .slick-dots li button:focus:before {
+  opacity: 1;
+}
+.slick-dots li.slick-active button:before {
+  color: #f9461c;
+  opacity: 1;
+}
+
+.pronamic-pay-redirect-container {
+  background: #f6f6f6;
+  border: 0;
+}

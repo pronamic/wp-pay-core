@@ -10,11 +10,13 @@
 
 namespace Pronamic\WordPress\Pay\Upgrades;
 
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
+
 /**
  * Upgrade 6.2.0.
  *
  * @author  Reüel van der Steege
- * @since   2.3.2
+ * @since   2.4.0
  * @version 2.3.2
  */
 class Upgrade620 extends Upgrade {
@@ -68,6 +70,12 @@ class Upgrade620 extends Upgrade {
 				continue;
 			}
 
+			$subscription_id = $subscription->get_id();
+
+			if ( null === $subscription_id ) {
+				continue;
+			}
+
 			$expiry_date = $subscription->get_expiry_date();
 
 			if ( null === $expiry_date ) {
@@ -77,6 +85,31 @@ class Upgrade620 extends Upgrade {
 			$subscription->next_payment_date = $expiry_date;
 
 			$subscription->save();
+
+			if ( null === $subscription->next_payment_date ) {
+				continue;
+			}
+
+			// Increase next payment date with an interval period if there already is a pending payment.
+			$args = array(
+				'posts_per_page' => 1,
+				'orderby'        => 'post_date',
+				'order'          => 'DESC',
+			);
+
+			$last_payment = get_pronamic_payments_by_meta( '_pronamic_payment_subscription_id', $subscription_id, $args );
+
+			if ( ! empty( $last_payment ) ) {
+				$last_payment = \array_shift( $last_payment );
+
+				$date_interval = $subscription->get_date_interval();
+
+				if ( null !== $last_payment && null !== $date_interval && PaymentStatus::OPEN === $last_payment->get_status() ) {
+					$subscription->next_payment_date->add( $date_interval );
+
+					$subscription->save();
+				}
+			}
 
 			if ( null === $subscription->next_payment_date ) {
 				continue;

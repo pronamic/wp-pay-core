@@ -13,12 +13,13 @@ namespace Pronamic\WordPress\Pay;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Pay\Core\Server;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
+use Pronamic\WordPress\Pay\VatNumbers\VatNumberViesValidator;
 
 /**
  * Customer helper
  *
  * @author  Remco Tolsma
- * @version 2.2.6
+ * @version 2.4.0
  * @since   2.1.0
  */
 class CustomerHelper {
@@ -53,6 +54,24 @@ class CustomerHelper {
 
 		if ( null !== $name ) {
 			ContactNameHelper::complement_name( $name );
+		}
+
+		// VAT Number validity.
+		$vat_number = $customer->get_vat_number();
+
+		if ( null !== $vat_number ) {
+			$vat_number_validity = $vat_number->get_validity();
+
+			if ( null === $vat_number_validity ) {
+				try {
+					$vat_number_validity = VatNumberViesValidator::validate( $vat_number );
+				} catch ( \Exception $e ) {
+					// On exceptions we have no VAT number validity info, no problem.
+					$vat_number_validity = null;
+				}
+
+				$vat_number->set_validity( $vat_number_validity );
+			}
 		}
 
 		// Locale.

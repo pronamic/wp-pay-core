@@ -10,13 +10,11 @@
 
 namespace Pronamic\WordPress\Pay;
 
-namespace Pronamic\WordPress\Pay;
-
 /**
  * Tracking module test
  *
  * @author  Reüel van der Steege
- * @version 2.2.6
+ * @version 2.4.0
  */
 class TrackingModuleTest extends \PHPUnit_Framework_TestCase {
 	/**

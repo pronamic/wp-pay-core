@@ -11,13 +11,16 @@
 namespace Pronamic\WordPress\Pay;
 
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\Pay\VatNumbers\VatNumber;
+use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidity;
+use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 use WP_UnitTestCase;
 
 /**
  * Customer test
  *
  * @author Remco Tolsma
- * @version 1.0
+ * @version 2.4.0
  */
 class CustomerTest extends WP_UnitTestCase {
 	/**
@@ -45,6 +48,7 @@ class CustomerTest extends WP_UnitTestCase {
 		$this->name->set_last_name( 'Tolsma' );
 
 		$this->customer->set_name( $this->name );
+		$this->customer->set_company_name( 'Pronamic' );
 		$this->customer->set_gender( 'M' );
 		$this->customer->set_birth_date( new DateTime( '31-12-1970' ) );
 		$this->customer->set_email( 'remco@pronamic.nl' );
@@ -63,6 +67,7 @@ class CustomerTest extends WP_UnitTestCase {
 		$this->assertInstanceOf( __NAMESPACE__ . '\Customer', $this->customer );
 
 		$this->assertEquals( $this->name, $this->customer->get_name() );
+		$this->assertEquals( 'Pronamic', $this->customer->get_company_name() );
 		$this->assertEquals( 'M', $this->customer->get_gender() );
 		$this->assertEquals( '31-12-1970', $this->customer->get_birth_date()->format( 'd-m-Y' ) );
 		$this->assertEquals( 'remco@pronamic.nl', $this->customer->get_email() );
@@ -118,5 +123,28 @@ class CustomerTest extends WP_UnitTestCase {
 		$this->assertEquals( wp_json_encode( $json_data, JSON_PRETTY_PRINT ), $json_string );
 
 		$this->assertJsonStringEqualsJsonFile( $json_file, $json_string );
+	}
+
+	/**
+	 * Test VAT number.
+	 */
+	public function test_vat_number() {
+		$customer = new Customer();
+
+		$vat_number = new VatNumber( 'NL999999999B01' );
+
+		$request_date = new \DateTimeImmutable( '2020-06-04 14:00:00', new \DateTimeZone( 'UTC' ) );
+
+		$validity = new VatNumberValidity( $vat_number, $request_date, true );
+		$validity->set_name( 'Pronamic' );
+		$validity->set_address( "BURGEMEESTER WUITEWEG 00039 B\r\n9203KA DRACHTEN" );
+		$validity->set_service( VatNumberValidationService::VIES );
+
+		$vat_number->set_validity( $validity );
+
+		$customer->set_vat_number( $vat_number );
+
+		$this->assertEquals( $vat_number, $customer->get_vat_number() );
+		$this->assertEquals( $validity, $customer->get_vat_number()->get_validity() );
 	}
 }

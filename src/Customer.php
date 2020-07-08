@@ -10,14 +10,14 @@
 
 namespace Pronamic\WordPress\Pay;
 
-use InvalidArgumentException;
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\Pay\VatNumbers\VatNumber;
 
 /**
  * Contact.
  *
  * @author  Reüel van der Steege.
- * @version 2.2.6
+ * @version 2.4.0
  * @since   2.1.0
  */
 class Customer {
@@ -90,6 +90,20 @@ class Customer {
 	 * @var integer|null
 	 */
 	private $user_id;
+
+	/**
+	 * Company name.
+	 *
+	 * @var string|null
+	 */
+	private $company_name;
+
+	/**
+	 * VAT Number.
+	 *
+	 * @var VatNumber|null
+	 */
+	private $vat_number;
 
 	/**
 	 * Get contact name.
@@ -282,22 +296,66 @@ class Customer {
 	}
 
 	/**
+	 * Get company name.
+	 *
+	 * @return string|null
+	 */
+	public function get_company_name() {
+		return $this->company_name;
+	}
+
+	/**
+	 * Set company name.
+	 *
+	 * @param string|null $company_name Company name.
+	 * @return void
+	 */
+	public function set_company_name( $company_name = null ) {
+		$this->company_name = $company_name;
+	}
+
+	/**
+	 * Get VAT number.
+	 *
+	 * @return VatNumber|null
+	 */
+	public function get_vat_number() {
+		return $this->vat_number;
+	}
+
+	/**
+	 * Set VAT number.
+	 *
+	 * @param VatNumber|string|null $vat_number VAT number.
+	 * @return void
+	 */
+	public function set_vat_number( $vat_number = null ) {
+		if ( \is_string( $vat_number ) ) {
+			$vat_number = new VatNumber( $vat_number );
+		}
+
+		$this->vat_number = $vat_number;
+	}
+
+	/**
 	 * Get JSON.
 	 *
 	 * @return object|null
 	 */
 	public function get_json() {
 		$data = array(
-			'name'       => ( null === $this->name ) ? null : $this->name->get_json(),
-			'gender'     => $this->get_gender(),
-			'birth_date' => ( null === $this->birth_date ) ? null : $this->birth_date->format( DATE_RFC3339 ),
-			'email'      => $this->get_email(),
-			'phone'      => $this->get_phone(),
-			'ip_address' => $this->get_ip_address(),
-			'user_agent' => $this->get_user_agent(),
-			'language'   => $this->get_language(),
-			'locale'     => $this->get_locale(),
-			'user_id'    => $this->get_user_id(),
+			'name'         => ( null === $this->name ) ? null : $this->name->get_json(),
+			'gender'       => $this->get_gender(),
+			'birth_date'   => ( null === $this->birth_date ) ? null : $this->birth_date->format( DATE_RFC3339 ),
+			'email'        => $this->get_email(),
+			'phone'        => $this->get_phone(),
+			'ip_address'   => $this->get_ip_address(),
+			'user_agent'   => $this->get_user_agent(),
+			'language'     => $this->get_language(),
+			'locale'       => $this->get_locale(),
+			'user_id'      => $this->get_user_id(),
+			'company_name' => $this->get_company_name(),
+			'vat_number'   => ( null === $this->vat_number ) ? null : $this->vat_number->get_json(),
 		);
 
 		$data = array_filter( $data );
@@ -314,11 +372,11 @@ class Customer {
 	 *
 	 * @param mixed $json JSON.
 	 * @return Customer
-	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
+	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
 	public static function from_json( $json ) {
 		if ( ! is_object( $json ) ) {
-			throw new InvalidArgumentException( 'JSON value must be an array.' );
+			throw new \InvalidArgumentException( 'JSON value must be an array.' );
 		}
 
 		$customer = new self();
@@ -337,6 +395,10 @@ class Customer {
 
 				if ( 'birth_date' === $key ) {
 					$value = new DateTime( $value );
+				}
+
+				if ( 'vat_number' === $key ) {
+					$value = VatNumber::from_json( $value );
 				}
 
 				call_user_func( $callable, $value );

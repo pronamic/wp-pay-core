@@ -11,10 +11,11 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DateInterval;
-use DatePeriod;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
+use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Core\Gateway;
+use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Core\Recurring;
 use Pronamic\WordPress\Pay\Core\Server;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
@@ -34,7 +35,7 @@ use WP_Query;
  * @link https://woocommerce.com/2017/04/woocommerce-3-0-release/
  * @link https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
  * @author  Remco Tolsma
- * @version 2.3.2
+ * @version 2.4.0
  * @since   2.0.1
  */
 class SubscriptionsModule {
@@ -135,6 +136,10 @@ class SubscriptionsModule {
 				$this->handle_subscription_renew( $subscription );
 
 				break;
+			case 'mandate':
+				$this->handle_subscription_mandate( $subscription );
+
+				exit;
 		}
 	}
 
@@ -200,6 +205,152 @@ class SubscriptionsModule {
 		$gateway->set_payment_method( $subscription->payment_method );
 
 		require __DIR__ . '/../../views/subscription-renew.php';
+
+		exit;
+	}
+
+	/**
+	 * Handle subscription mandate update action request.
+	 *
+	 * @param Subscription $subscription Subscription to update mandate for.
+	 * @return void
+	 * @throws \Exception Throws exception if unable to redirect (empty payment action URL).
+	 */
+	private function handle_subscription_mandate( Subscription $subscription ) {
+		$gateway = Plugin::get_gateway( $subscription->config_id );
+
+		if ( empty( $gateway ) ) {
+			require __DIR__ . '/../../views/subscription-mandate-failed.php';
+
+			exit;
+		}
+
+		$nonce = filter_input( \INPUT_POST, 'pronamic_pay_nonce', \FILTER_SANITIZE_STRING );
+
+		if ( \wp_verify_nonce( $nonce, 'pronamic_pay_update_subscription_mandate' ) ) {
+			$mandate_id = \filter_input( \INPUT_POST, 'pronamic_pay_subscription_mandate', \FILTER_SANITIZE_STRING );
+
+			if ( ! empty( $mandate_id ) ) {
+				try {
+					if ( ! \is_callable( array( $gateway, 'update_subscription_mandate' ) ) ) {
+						throw new \Exception( __( 'Gateway does not support subscription mandate updates.', 'pronamic_ideal' ) );
+					}
+
+					$gateway->update_subscription_mandate( $subscription, $mandate_id );
+
+					require __DIR__ . '/../../views/subscription-mandate-updated.php';
+
+					exit;
+				} catch ( \Exception $e ) {
+					require __DIR__ . '/../../views/subscription-mandate-failed.php';
+
+					exit;
+				}
+			}
+
+			// Start new first payment.
+			try {
+				$payment = $this->new_subscription_payment( $subscription );
+
+				$payment_method = \filter_input( \INPUT_POST, 'pronamic_pay_subscription_payment_method', \FILTER_SANITIZE_STRING );
+
+				if ( null !== $payment && ! empty( $payment_method ) ) {
+					$payment->method = $payment_method;
+				}
+
+				if ( null === $payment ) {
+					require __DIR__ . '/../../views/subscription-mandate-failed.php';
+
+					exit;
+				}
+
+				$payment->recurring = false;
+
+				/*
+				 * Use payment method minimum amount for verification payment.
+				 *
+				 * @link https://help.mollie.com/hc/en-us/articles/115000667365-What-are-the-minimum-and-maximum-amounts-per-payment-method-
+				 */
+				switch ( $payment->method ) {
+					case PaymentMethods::DIRECT_DEBIT_BANCONTACT:
+						$amount = 0.02;
+
+						break;
+					case PaymentMethods::DIRECT_DEBIT_SOFORT:
+						$amount = 0.10;
+
+						break;
+					default:
+						$amount = 0.01;
+				}
+
+				$payment->set_total_amount(
+					new TaxedMoney(
+						$amount,
+						$payment->get_total_amount()->get_currency()
+					)
+				);
+
+				// Make sure to only start payments for supported gateways.
+				$gateway = Plugin::get_gateway( $payment->get_config_id() );
+
+				if ( null === $gateway ) {
+					require __DIR__ . '/../../views/subscription-mandate-failed.php';
+
+					exit;
+				}
+
+				// Start payment.
+				$payment = Plugin::start_payment( $payment, $gateway );
+			} catch ( \Exception $e ) {
+				require __DIR__ . '/../../views/subscription-mandate-failed.php';
+
+				exit;
+			}
+
+			$error = $gateway->get_error();
+
+			if ( $error instanceof WP_Error ) {
+				Plugin::render_errors( $error );
+
+				exit;
+			}
+
+			$gateway->redirect( $payment );
+
+			return;
+		}
+
+		\wp_register_script(
+			'pronamic-pay-subscription-mandate',
+			'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js',
+			array( 'jquery' ),
+			$this->plugin->get_version(),
+			false
+		);
+
+		\wp_register_style(
+			'pronamic-pay-card-slider-slick',
+			'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css',
+			array(),
+			$this->plugin->get_version()
+		);
+
+		\wp_register_style(
+			'pronamic-pay-card-slider-google-font',
+			'https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap',
+			array(),
+			$this->plugin->get_version()
+		);
+
+		\wp_register_style(
+			'pronamic-pay-subscription-mandate',
+			plugins_url( 'css/card-slider.css', dirname( dirname( __FILE__ ) ) ),
+			array( 'pronamic-pay-redirect', 'pronamic-pay-card-slider-slick', 'pronamic-pay-card-slider-google-font' ),
+			$this->plugin->get_version()
+		);
+
+		require __DIR__ . '/../../views/subscription-mandate.php';
 
 		exit;
 	}
@@ -303,27 +454,13 @@ class SubscriptionsModule {
 		}
 
 		// Calculate payment start and end dates.
-		$start_date = new DateTime();
+		$period = $subscription->new_period();
 
-		if ( ! empty( $subscription->next_payment_date ) ) {
-			$start_date = clone $subscription->next_payment_date;
-		}
-
-		$interval = $subscription->get_date_interval();
-
-		if ( null === $interval ) {
-			throw new \UnexpectedValueException( 'Cannot start a follow-up payment for payment because the subscription does not have a valid date interval.' );
-		}
-
-		$end_date = clone $start_date;
-		$end_date->add( $interval );
-
-		if ( 'last' === $subscription->get_interval_date() ) {
-			$end_date->modify( 'last day of ' . $end_date->format( 'F Y' ) );
-		}
+		$start_date = $period->get_start_date();
+		$end_date   = $period->get_end_date();
 
 		$subscription->next_payment_date          = $end_date;
-		$subscription->next_payment_delivery_date = apply_filters( 'pronamic_pay_subscription_next_payment_delivery_date', clone $end_date, $payment );
+		$subscription->next_payment_delivery_date = SubscriptionHelper::calculate_next_payment_delivery_date( $subscription );
 
 		// Remove next payment (delivery) date if this is the last payment according to subscription end date.
 		if ( null !== $subscription->end_date && $subscription->next_payment_date >= $subscription->end_date ) {
@@ -405,133 +542,10 @@ class SubscriptionsModule {
 			return;
 		}
 
-		// Customer.
-		$user_id       = null;
-		$customer_name = null;
-
-		$customer = $payment->get_customer();
-
-		if ( null !== $customer ) {
-			$user_id = $customer->get_user_id();
-			$name    = $customer->get_name();
-
-			if ( null !== $name ) {
-				$customer_name = strval( $name );
-			}
-		}
-
 		// Complement subscription.
-		$subscription->config_id = $payment->config_id;
-		$subscription->user_id   = $user_id;
-		$subscription->title     = sprintf(
-			/* translators: %s: payment title */
-			__( 'Subscription for %s', 'pronamic_ideal' ),
-			$payment->title
-		);
-
-		$subscription->key = uniqid( 'subscr_' );
-
-		$subscription->set_origin_id( $payment->get_origin_id() );
-
-		if ( empty( $subscription->source ) && empty( $subscription->source_id ) ) {
-			$subscription->source    = $payment->source;
-			$subscription->source_id = $payment->subscription_source_id;
-		}
-
-		$subscription->description    = $payment->description;
-		$subscription->email          = $payment->email;
-		$subscription->customer_name  = $customer_name;
-		$subscription->payment_method = $payment->method;
-		$subscription->status         = PaymentStatus::OPEN;
-
-		// @todo
-		// Calculate dates
-		// @link https://github.com/pronamic/wp-pronamic-ideal/blob/4.7.0/classes/Pronamic/WP/Pay/Plugin.php#L883-L964
-		$interval = $subscription->get_date_interval();
-
-		if ( null === $interval ) {
-			throw new \UnexpectedValueException( 'Cannot create a subscription for payment because the subscription does not have a valid date interval.' );
-		}
-
-		$start_date  = clone $payment->date;
-		$expiry_date = clone $start_date;
-
-		$next_date = clone $start_date;
-		$next_date->add( $interval );
-
-		$interval_date       = $subscription->get_interval_date();
-		$interval_date_day   = $subscription->get_interval_date_day();
-		$interval_date_month = $subscription->get_interval_date_month();
-
-		switch ( $subscription->interval_period ) {
-			case 'W':
-				if ( is_numeric( $interval_date_day ) ) {
-					$days_delta = (int) $interval_date_day - (int) $next_date->format( 'w' );
-
-					$next_date->modify( sprintf( '+%s days', $days_delta ) );
-					$next_date->setTime( 0, 0 );
-				}
-
-				break;
-			case 'M':
-				if ( is_numeric( $interval_date ) ) {
-					$next_date->setDate(
-						intval( $next_date->format( 'Y' ) ),
-						intval( $next_date->format( 'm' ) ),
-						intval( $interval_date )
-					);
-
-					$next_date->setTime( 0, 0 );
-				} elseif ( 'last' === $interval_date ) {
-					$next_date->modify( 'last day of ' . $next_date->format( 'F Y' ) );
-					$next_date->setTime( 0, 0 );
-				}
-
-				break;
-			case 'Y':
-				if ( is_numeric( $interval_date_month ) ) {
-					$day = $next_date->format( 'd' );
-
-					if ( \is_numeric( $interval_date ) ) {
-						$day = $interval_date;
-					}
-
-					$next_date->setDate(
-						intval( $next_date->format( 'Y' ) ),
-						intval( $interval_date_month ),
-						intval( $day )
-					);
-
-					$next_date->setTime( 0, 0 );
-
-					if ( 'last' === $interval_date ) {
-						$next_date->modify( 'last day of ' . $next_date->format( 'F Y' ) );
-					}
-				}
-
-				break;
-		}
-
-		$end_date = null;
-
-		if ( null !== $subscription->frequency ) {
-			// @link https://stackoverflow.com/a/10818981/6411283
-			$period = new DatePeriod( $start_date, $interval, $subscription->frequency );
-
-			$dates = iterator_to_array( $period );
-
-			$end_date = end( $dates );
-
-			if ( 'last' === $subscription->get_interval_date() ) {
-				$end_date->modify( 'last day of ' . $end_date->format( 'F Y' ) );
-			}
-		}
-
-		$subscription->start_date                 = $start_date;
-		$subscription->end_date                   = $end_date;
-		$subscription->expiry_date                = $expiry_date;
-		$subscription->next_payment_date          = $next_date;
-		$subscription->next_payment_delivery_date = apply_filters( 'pronamic_pay_subscription_next_payment_delivery_date', clone $next_date, $payment );
+		SubscriptionHelper::complement_subscription( $subscription );
+		SubscriptionHelper::complement_subscription_by_payment( $subscription, $payment );
+		SubscriptionHelper::complement_subscription_dates( $subscription );
 
 		// Create.
 		$result = $this->plugin->subscriptions_data_store->create( $subscription );
@@ -541,8 +555,12 @@ class SubscriptionsModule {
 			$payment->subscription_id = $subscription->get_id();
 
 			$payment->recurring_type = Recurring::FIRST;
-			$payment->start_date     = $start_date;
-			$payment->end_date       = $next_date;
+
+			$start_date = $subscription->get_start_date();
+			$end_date   = $subscription->get_next_payment_date();
+
+			$payment->start_date = ( null === $start_date ) ? null : clone $start_date;
+			$payment->end_date   = ( null === $end_date ) ? null : clone $end_date;
 
 			$payment->save();
 		}
@@ -633,7 +651,12 @@ class SubscriptionsModule {
 				break;
 			case PaymentStatus::CANCELLED:
 			case PaymentStatus::EXPIRED:
-				$status_update = SubscriptionStatus::ON_HOLD;
+				$first_payment = $subscription->get_first_payment();
+
+				// Set subscription status to 'On Hold' only if the subscription is not already active when processing the first payment.
+				if ( ! ( null !== $first_payment && $first_payment->get_id() === $payment->get_id() && SubscriptionStatus::ACTIVE === $subscription->get_status() ) ) {
+					$status_update = SubscriptionStatus::ON_HOLD;
+				}
 
 				break;
 		}

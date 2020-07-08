@@ -20,7 +20,7 @@ use Pronamic\WordPress\Pay\Subscriptions\Subscription;
  * Payment
  *
  * @author  Remco Tolsma
- * @version 2.3.2
+ * @version 2.4.0
  * @since   1.0.0
  */
 class Payment extends LegacyPayment {
@@ -632,6 +632,8 @@ class Payment extends LegacyPayment {
 		);
 
 		// Find and replace.
+		$count = 0;
+
 		$string = str_replace(
 			array_keys( $replacements ),
 			array_values( $replacements ),

@@ -9,20 +9,23 @@
     "packages-dev": [
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.17",
+            "version": "0.12.31",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "b2c37bda79fdb11d801ce208ce391cffc0f572e6"
+                "reference": "776c8056b401e1b67f277b9e9fb334d1a274671d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/b2c37bda79fdb11d801ce208ce391cffc0f572e6",
-                "reference": "b2c37bda79fdb11d801ce208ce391cffc0f572e6",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/776c8056b401e1b67f277b9e9fb334d1a274671d",
+                "reference": "776c8056b401e1b67f277b9e9fb334d1a274671d",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1"
+            },
+            "conflict": {
+                "phpstan/phpstan-shim": "*"
             },
             "bin": [
                 "phpstan",
@@ -58,7 +61,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-03-17T15:39:11+00:00"
+            "time": "2020-06-24T20:55:29+00:00"
         }
     ],
     "aliases": [],

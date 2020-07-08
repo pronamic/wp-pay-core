@@ -21,7 +21,7 @@ use Pronamic\WordPress\Pay\Payments\PaymentInfoHelper;
  * Subscription
  *
  * @author  Remco Tolsma
- * @version 2.2.6
+ * @version 2.4.0
  * @since   1.0.0
  */
 class Subscription extends LegacySubscription {
@@ -424,6 +424,24 @@ class Subscription extends LegacySubscription {
 	}
 
 	/**
+	 * Get mandate selection URL for this subscription.
+	 *
+	 * @return string
+	 */
+	public function get_mandate_selection_url() {
+		$renewal_url = add_query_arg(
+			array(
+				'subscription' => $this->get_id(),
+				'key'          => $this->get_key(),
+				'action'       => 'mandate',
+			),
+			home_url()
+		);
+
+		return $renewal_url;
+	}
+
+	/**
 	 * Get all the payments for this subscription.
 	 *
 	 * @return array
@@ -518,6 +536,38 @@ class Subscription extends LegacySubscription {
 	 */
 	public function get_next_payment_delivery_date() {
 		return $this->next_payment_delivery_date;
+	}
+
+	/**
+	 * Create new subscription period.
+	 *
+	 * @return SubscriptionPeriod
+	 * @throws \UnexpectedValueException Throws exception when not date inverval is available for this subscription.
+	 */
+	public function new_period() {
+		// Calculate payment start and end dates.
+		$start_date = new DateTime();
+
+		if ( ! empty( $this->next_payment_date ) ) {
+			$start_date = clone $this->next_payment_date;
+		}
+
+		$interval = $this->get_date_interval();
+
+		if ( null === $interval ) {
+			throw new \UnexpectedValueException( 'Cannot create new subscription period because the subscription does not have a valid date interval.' );
+		}
+
+		$end_date = clone $start_date;
+		$end_date->add( $interval );
+
+		if ( 'last' === $this->get_interval_date() ) {
+			$end_date->modify( 'last day of ' . $end_date->format( 'F Y' ) );
+		}
+
+		$period = new SubscriptionPeriod( $this, $start_date, $end_date );
+
+		return $period;
 	}
 
 	/**

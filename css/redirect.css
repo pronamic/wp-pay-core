@@ -24,6 +24,9 @@ body {
   content: "";
   display: table;
 }
+.pronamic-pay-redirect-container > p {
+  color: #777;
+}
 
 hr {
   background: #c3c3c3;

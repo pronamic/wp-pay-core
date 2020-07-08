@@ -18,7 +18,7 @@ use WP_Error;
  * License Manager
  *
  * @author  Remco Tolsma
- * @version 2.2.6
+ * @version 2.4.0
  * @since   2.0.1
  */
 class LicenseManager {
@@ -126,7 +126,7 @@ class LicenseManager {
 		// Request.
 		$args = array(
 			'license' => $license,
-			'name'    => 'Pronamic iDEAL',
+			'name'    => 'Pronamic Pay',
 			'url'     => home_url(),
 		);
 
@@ -174,7 +174,7 @@ class LicenseManager {
 	public function deactivate_license( $license ) {
 		$args = array(
 			'license' => $license,
-			'name'    => 'Pronamic iDEAL',
+			'name'    => 'Pronamic Pay',
 			'url'     => home_url(),
 		);
 
@@ -198,7 +198,7 @@ class LicenseManager {
 		// Request.
 		$args = array(
 			'license' => $license,
-			'name'    => 'Pronamic iDEAL',
+			'name'    => 'Pronamic Pay',
 			'url'     => home_url(),
 		);
 
