@@ -211,6 +211,37 @@ $user_id  = is_null( $customer ) ? null : $customer->get_user_id();
 
 	<?php endif; ?>
 
+	<?php
+
+	$customer = $subscription->get_customer();
+
+	if ( null !== $customer ) :
+
+		$text = \strval( $customer->get_name() );
+
+		if ( empty( $text ) ) :
+
+			$text = $customer->get_email();
+
+		endif;
+
+		if ( ! empty( $text ) ) :
+
+			?>
+
+			<tr>
+				<th scope="row">
+					<?php esc_html_e( 'Customer', 'pronamic_ideal' ); ?>
+				</th>
+				<td>
+					<?php echo \esc_html( $text ); ?>
+				</td>
+			</tr>
+
+		<?php endif; ?>
+
+	<?php endif; ?>
+
 	<?php if ( null !== $user_id ) : ?>
 
 		<tr>
