@@ -48,7 +48,7 @@ class SubscriptionHelper {
 	 * @return void
 	 */
 	public static function complement_subscription_by_payment( Subscription $subscription, Payment $payment ) {
-		// Gateway confiuration ID.
+		// Gateway configuration ID.
 		if ( null === $subscription->config_id ) {
 			$subscription->config_id = $payment->config_id;
 		}
