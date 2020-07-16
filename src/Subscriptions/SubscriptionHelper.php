@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 
@@ -63,28 +64,30 @@ class SubscriptionHelper {
 		}
 
 		// Customer.
-		$user_id       = null;
-		$customer_name = null;
+		$payment_customer = $payment->get_customer();
 
-		$customer = $payment->get_customer();
+		if ( null !== $payment_customer ) {
+			$customer = $subscription->get_customer();
 
-		if ( null !== $customer ) {
-			$user_id = $customer->get_user_id();
-			$name    = $customer->get_name();
-
-			if ( null !== $name ) {
-				$customer_name = strval( $name );
+			if ( null === $customer ) {
+				$customer = new Customer();
 			}
-		}
 
-		// WordPress user ID.
-		if ( null === $subscription->user_id ) {
-			$subscription->user_id = $user_id;
-		}
+			// Contact name.
+			$customer_name = $customer->get_name();
 
-		// Customer name.
-		if ( null === $subscription->customer_name ) {
-			$subscription->customer_name = $customer_name;
+			if ( null === $customer_name ) {
+				$customer->set_name( $payment_customer->get_name() );
+			}
+
+			// WordPress user ID.
+			$user_id = $customer->get_user_id();
+
+			if ( null === $user_id ) {
+				$customer->set_user_id( $payment_customer->get_user_id() );
+			}
+
+			$subscription->set_customer( $customer );
 		}
 
 		// Origin.
