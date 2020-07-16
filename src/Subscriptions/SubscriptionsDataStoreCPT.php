@@ -551,12 +551,20 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 				$subscription->config_id = $first_payment->config_id;
 			}
 
-			if ( empty( $subscription->user_id ) ) {
-				$subscription->user_id = $first_payment->user_id;
-			}
-
 			if ( empty( $subscription->payment_method ) ) {
 				$subscription->payment_method = $first_payment->method;
+			}
+
+			$customer = $subscription->get_customer();
+
+			$first_customer = $first_payment->get_customer();
+
+			if ( null !== $customer && null !== $first_customer ) {
+				$user_id = $customer->get_user_id();
+
+				if ( empty( $user_id ) ) {
+					$customer->set_user_id( $first_customer->get_user_id() );
+				}
 			}
 		}
 
