@@ -635,6 +635,8 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 			return;
 		}
 
+		$customer = $subscription->get_customer();
+
 		$this->update_meta( $id, 'config_id', $subscription->config_id );
 		$this->update_meta( $id, 'key', $subscription->key );
 		$this->update_meta( $id, 'source', $subscription->source );
@@ -645,8 +647,8 @@ class SubscriptionsDataStoreCPT extends LegacySubscriptionsDataStoreCPT {
 		$this->update_meta( $id, 'currency', $subscription->get_total_amount()->get_currency()->get_alphabetic_code() );
 		$this->update_meta( $id, 'amount', $subscription->get_total_amount()->format() );
 		$this->update_meta( $id, 'description', $subscription->description );
-		$this->update_meta( $id, 'email', $subscription->email );
-		$this->update_meta( $id, 'customer_name', $subscription->customer_name );
+		$this->update_meta( $id, 'email', ( null === $customer ? null : $customer->get_email() ) );
+		$this->update_meta( $id, 'customer_name', ( null === $customer ? null : strval( $customer->get_name() ) ) );
 		$this->update_meta( $id, 'payment_method', $subscription->payment_method );
 		$this->update_meta( $id, 'start_date', $subscription->start_date );
 		$this->update_meta( $id, 'end_date', $subscription->end_date );

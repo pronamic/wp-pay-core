@@ -63,16 +63,16 @@ class SubscriptionHelper {
 			);
 		}
 
+		$customer = $subscription->get_customer();
+
+		if ( null === $customer ) {
+			$customer = new Customer();
+		}
+
 		// Customer.
 		$payment_customer = $payment->get_customer();
 
 		if ( null !== $payment_customer ) {
-			$customer = $subscription->get_customer();
-
-			if ( null === $customer ) {
-				$customer = new Customer();
-			}
-
 			// Contact name.
 			$customer_name = $customer->get_name();
 
@@ -107,8 +107,12 @@ class SubscriptionHelper {
 		}
 
 		// Email.
-		if ( null === $subscription->email ) {
-			$subscription->email = $payment->email;
+		$email = $customer->get_email();
+
+		if ( null === $email ) {
+			$customer->set_email( $payment->email );
+
+			$subscription->set_customer( $customer );
 		}
 
 		// Payment method.
