@@ -564,13 +564,13 @@ class AdminPaymentPostType {
 				$customer = $payment->get_customer();
 
 				if ( null !== $customer ) {
-					$text = strval( $customer->get_name() );
+					$text = \strval( $customer->get_name() );
 
 					if ( empty( $text ) ) {
-						$text = $customer->get_email();
+						$text = \strval( $customer->get_email() );
 					}
 
-					echo esc_html( $text );
+					echo \esc_html( $text );
 				}
 
 				break;
