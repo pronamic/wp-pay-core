@@ -178,12 +178,19 @@ class VatNumberValidity {
 			'vat_number'   => $this->vat_number->get_value(),
 			'request_date' => $this->request_date->format( 'Y-m-d' ),
 			'valid'        => $this->valid,
-			'name'         => $this->name,
-			'address'      => $this->address,
-			'service'      => $this->service,
 		);
 
-		$data = array_filter( $data );
+		if ( null !== $this->name ) {
+			$data['name'] = $this->name;
+		}
+
+		if ( null !== $this->address ) {
+			$data['address'] = $this->address;
+		}
+
+		if ( null !== $this->service ) {
+			$data['service'] = $this->service;
+		}
 
 		if ( empty( $data ) ) {
 			return null;
