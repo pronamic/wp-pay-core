@@ -248,9 +248,16 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 
 	if ( null !== $customer ) :
 
-		$name = $customer->get_name();
+		$text = \strval( $customer->get_name() );
 
-		if ( null !== $name ) :
+		if ( empty( $text ) ) :
+
+			$text = $customer->get_email();
+
+		endif;
+
+		if ( ! empty( $text ) ) :
+
 			?>
 
 			<tr>
@@ -258,7 +265,7 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 					<?php esc_html_e( 'Customer', 'pronamic_ideal' ); ?>
 				</th>
 				<td>
-					<?php echo \esc_html( $name ); ?>
+					<?php echo \esc_html( $text ); ?>
 				</td>
 			</tr>
 

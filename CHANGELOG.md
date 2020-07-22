@@ -7,6 +7,10 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.4.1] - 2020-07-22
+- Display email address as customer in payments and subscriptions list and details for unknown customers.
+- Fix using deprecated `email` and `customer_name` properties.
+
 ## [2.4.0] - 2020-07-08
 - Added support for customer company name.
 - Added support for updating subscription mandate.
@@ -288,7 +292,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.4.0...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.4.1...HEAD
+[2.4.1]: https://github.com/wp-pay/core/compare/2.4.0...2.4.1
 [2.4.0]: https://github.com/wp-pay/core/compare/2.3.2...2.4.0
 [2.3.2]: https://github.com/wp-pay/core/compare/2.3.1...2.3.2
 [2.3.1]: https://github.com/wp-pay/core/compare/2.3.0...2.3.1

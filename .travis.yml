@@ -44,9 +44,7 @@ jobs:
     - php: 7.0
     - php: 5.6
     - php: nightly
-    - php: hhvm
   allow_failures:
-    - php: hhvm
     - php: nightly
     - env: PHPMD=1
     - env: PSALM=1
