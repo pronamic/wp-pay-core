@@ -120,7 +120,7 @@ if ( empty( $lines ) ) : ?>
 
 						$tip = array(
 							sprintf(
-								/* translators: %s: unit price excluding tax */
+								/* translators: %s: price excluding tax */
 								__( 'Exclusive tax: %s', 'pronamic_ideal' ),
 								$total_exclusive
 							),
@@ -137,7 +137,7 @@ if ( empty( $lines ) ) : ?>
 							$total_inclusive = new Money( array_sum( $values ), $payment->get_total_amount()->get_currency() );
 
 							$tip[] = sprintf(
-								/* translators: %s: unit price including tax */
+								/* translators: %s: price including tax */
 								__( 'Inclusive tax: %s', 'pronamic_ideal' ),
 								$total_inclusive
 							);
@@ -237,7 +237,7 @@ if ( empty( $lines ) ) : ?>
 
 								$tip = array(
 									sprintf(
-										/* translators: %s: unit price excluding tax */
+										/* translators: %s: price excluding tax */
 										__( 'Exclusive tax: %s', 'pronamic_ideal' ),
 										$line->get_unit_price()->get_excluding_tax()
 									),
@@ -245,7 +245,7 @@ if ( empty( $lines ) ) : ?>
 
 								if ( $line->get_unit_price()->has_tax() ) {
 									$tip[] = sprintf(
-										/* translators: %s: unit price including tax */
+										/* translators: %s: price including tax */
 										__( 'Inclusive tax: %s', 'pronamic_ideal' ),
 										$line->get_unit_price()->get_including_tax()
 									);
@@ -276,7 +276,7 @@ if ( empty( $lines ) ) : ?>
 
 							$tip = array(
 								sprintf(
-									/* translators: %s: total amount excluding tax */
+									/* translators: %s: price excluding tax */
 									__( 'Exclusive tax: %s', 'pronamic_ideal' ),
 									$line->get_total_amount()->get_excluding_tax()
 								),
@@ -284,7 +284,7 @@ if ( empty( $lines ) ) : ?>
 
 							if ( $line->get_total_amount()->has_tax() ) {
 								$tip[] = sprintf(
-									/* translators: %s: total amount including tax */
+									/* translators: %s: price including tax */
 									__( 'Inclusive tax: %s', 'pronamic_ideal' ),
 									$line->get_total_amount()->get_including_tax()
 								);

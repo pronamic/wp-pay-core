@@ -250,7 +250,7 @@ class PaymentsModule {
 			return new \WP_Error(
 				'pronamic-pay-payment-not-found',
 				\sprintf(
-					/* translators: %s: Payment ID */
+					/* translators: %s: payment ID */
 					\__( 'Could not find payment with ID `%s`.', 'pronamic_ideal' ),
 					$payment_id
 				),

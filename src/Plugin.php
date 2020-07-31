@@ -795,8 +795,11 @@ class Plugin {
 		$title = $data->get_title();
 
 		if ( ! empty( $title ) ) {
-			/* translators: %s: payment data title */
-			$payment->title = sprintf( __( 'Payment for %s', 'pronamic_ideal' ), $title );
+			$payment->title = sprintf(
+				/* translators: %s: payment data title */
+				__( 'Payment for %s', 'pronamic_ideal' ),
+				$title
+			);
 		}
 
 		// Other.
