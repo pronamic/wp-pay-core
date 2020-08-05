@@ -13,6 +13,7 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 use DateInterval;
 use InvalidArgumentException;
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\Pay\Payments\LegacyPaymentInfo;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentInfoHelper;
@@ -24,7 +25,7 @@ use Pronamic\WordPress\Pay\Payments\PaymentInfoHelper;
  * @version 2.4.0
  * @since   1.0.0
  */
-class Subscription extends LegacySubscription {
+class Subscription extends LegacyPaymentInfo {
 	/**
 	 * The key of this subscription, used in URL's for security.
 	 *
