@@ -25,6 +25,8 @@ use Pronamic\WordPress\Pay\Payments\PaymentInfoHelper;
  * @since   1.0.0
  */
 class Subscription extends LegacyPaymentInfo {
+	use SubscriptionTrait;
+
 	/**
 	 * The key of this subscription, used in URL's for security.
 	 *
@@ -626,6 +628,8 @@ class Subscription extends LegacyPaymentInfo {
 		$object = PaymentInfoHelper::to_json( $this );
 
 		$properties = (array) $object;
+
+		$properties['period_definitions'] = $this->period_definitions;
 
 		if ( null !== $this->expiry_date ) {
 			$properties['expiry_date'] = $this->expiry_date->format( \DATE_ATOM );

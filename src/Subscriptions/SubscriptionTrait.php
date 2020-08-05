@@ -1,6 +1,6 @@
 <?php
 /**
- * Subscription 2
+ * Subscription Trait
  *
  * @author    Pronamic <info@pronamic.eu>
  * @copyright 2005-2020 Pronamic
@@ -13,26 +13,19 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 use Pronamic\WordPress\Money\Money;
 
 /**
- * Subscription 2
+ * Subscription Trait
  *
  * @author  Remco Tolsma
  * @version unreleased
  * @since   unreleased
  */
-class Subscription2 {
+trait SubscriptionTrait {
 	/**
 	 * Period definitions.
 	 *
 	 * @var array
 	 */
-	public $period_definitions;
-
-	/**
-	 * Construct subscription.
-	 */
-	public function __construct() {
-		$this->period_definitions = array();
-	}
+	public $period_definitions = array();
 
 	/**
 	 * Create new period definition for this subscription.

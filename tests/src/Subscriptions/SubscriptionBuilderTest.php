@@ -37,7 +37,7 @@ class Subscription2BuilderTest extends \WP_UnitTestCase {
 			->with_interval( 1, 'Y' )
 			->create();
 
-		$subscription = Subscription2Builder::new()
+		$subscription = SubscriptionBuilder::new()
 			->with_period_definition( $trial )
 			->with_period_definition( $regular )
 			->create();

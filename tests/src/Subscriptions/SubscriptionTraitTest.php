@@ -18,14 +18,14 @@ use Pronamic\WordPress\Money\Money;
  * @author Remco Tolsma
  * @version unreleased
  */
-class Subscription2Test extends \WP_UnitTestCase {
+class SubscriptionTraitTest extends \WP_UnitTestCase {
 	/**
 	 * Create new subscription.
 	 *
-	 * @return Subscription2
+	 * @return Subscription
 	 */
 	private function new_subscription() {
-		$subscription = new Subscription2();
+		$subscription = new Subscription();
 
 		return $subscription;
 	}

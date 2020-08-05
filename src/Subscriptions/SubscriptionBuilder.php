@@ -1,6 +1,6 @@
 <?php
 /**
- * Subscription 2 Builder
+ * Subscription Builder
  *
  * @author    Pronamic <info@pronamic.eu>
  * @copyright 2005-2020 Pronamic
@@ -13,13 +13,13 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 use Pronamic\WordPress\Money\Money;
 
 /**
- * Subscription 2 Builder
+ * Subscription Builder
  *
  * @author  Remco Tolsma
  * @version unreleased
  * @since   unreleased
  */
-class Subscription2Builder {
+class SubscriptionBuilder {
 	/**
 	 * Period definitions.
 	 *
@@ -45,7 +45,7 @@ class Subscription2Builder {
 	}
 
 	public function create() {
-		$subscription = new Subscription2();
+		$subscription = new Subscription();
 
 		$subscription->period_definitions = $this->period_definitions;
 
