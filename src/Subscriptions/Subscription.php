@@ -11,7 +11,6 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DateInterval;
-use InvalidArgumentException;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Pay\Payments\LegacyPaymentInfo;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
@@ -586,11 +585,11 @@ class Subscription extends LegacyPaymentInfo {
 	 * @param mixed             $json         JSON.
 	 * @param Subscription|null $subscription Subscription.
 	 * @return Subscription
-	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
+	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
 	public static function from_json( $json, $subscription = null ) {
 		if ( ! is_object( $json ) ) {
-			throw new InvalidArgumentException( 'JSON value must be an object.' );
+			throw new \InvalidArgumentException( 'JSON value must be an object.' );
 		}
 
 		if ( null === $subscription ) {
