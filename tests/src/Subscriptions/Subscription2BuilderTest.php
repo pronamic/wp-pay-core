@@ -86,6 +86,7 @@ class Subscription2BuilderTest extends \WP_UnitTestCase {
 	 * year.
 	 *
 	 * @link https://docs.woocommerce.com/document/subscriptions/renewal-synchronisation/
+	 * @link https://github.com/wp-pay-extensions/gravityforms/blob/2.4.1/src/PaymentData.php#L269-L337
 	 */
 	public function test_prorating_first_payment() {
 		/**

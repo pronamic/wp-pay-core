@@ -30,6 +30,10 @@ use WP_Post;
  * @since   1.0.0
  */
 abstract class PaymentInfo {
+	use \Pronamic\WordPress\Pay\Privacy\AnonymizedTrait;
+
+	use \Pronamic\WordPress\Pay\Payments\PaymentInfoTrait;
+
 	/**
 	 * The post object.
 	 *
@@ -224,13 +228,6 @@ abstract class PaymentInfo {
 	 * @var string|null
 	 */
 	private $mode;
-
-	/**
-	 * Is anonymized.
-	 *
-	 * @var bool|null
-	 */
-	private $anonymized;
 
 	/**
 	 * Credit card
@@ -741,24 +738,5 @@ abstract class PaymentInfo {
 	 */
 	public function get_mode() {
 		return $this->mode;
-	}
-
-	/**
-	 * Is anonymized?
-	 *
-	 * @return bool
-	 */
-	public function is_anonymized() {
-		return ( true === $this->anonymized );
-	}
-
-	/**
-	 * Set anonymized.
-	 *
-	 * @param bool|null $anonymized Anonymized.
-	 * @return void
-	 */
-	public function set_anonymized( $anonymized ) {
-		$this->anonymized = $anonymized;
 	}
 }

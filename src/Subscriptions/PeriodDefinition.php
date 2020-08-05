@@ -218,7 +218,7 @@ class PeriodDefinition {
 	 * @return bool True if canceled, false otherwise.
 	 */
 	public function is_canceled() {
-		return ( 'completed' === $this->status );
+		return ( 'canceled' === $this->status );
 	}
 
 	/**
