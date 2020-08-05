@@ -10,7 +10,6 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
-use InvalidArgumentException;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
@@ -693,15 +692,15 @@ abstract class PaymentInfo {
 	 *
 	 * @param string|null $mode Mode.
 	 * @return void
-	 * @throws InvalidArgumentException Throws invalid argument exception when mode is not a string or not one of the mode constants.
+	 * @throws \InvalidArgumentException Throws invalid argument exception when mode is not a string or not one of the mode constants.
 	 */
 	public function set_mode( $mode ) {
 		if ( ! is_string( $mode ) ) {
-			throw new InvalidArgumentException( 'Mode must be a string.' );
+			throw new \InvalidArgumentException( 'Mode must be a string.' );
 		}
 
 		if ( ! in_array( $mode, array( Gateway::MODE_TEST, Gateway::MODE_LIVE ), true ) ) {
-			throw new InvalidArgumentException( 'Invalid mode.' );
+			throw new \InvalidArgumentException( 'Invalid mode.' );
 		}
 
 		$this->mode = $mode;
