@@ -306,6 +306,7 @@ class PeriodDefinition implements \JsonSerializable {
 			'type'           => $this->type,
 			'name'           => $this->name,
 			'status'         => $this->status,
+			'start_date'     => $this->start_date->format( \DATE_ATOM ),
 			'interval_unit'  => $this->interval_unit,
 			'interval_value' => $this->interval_value,
 			'amount'         => MoneyJsonTransformer::to_json( $this->amount ),
