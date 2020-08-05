@@ -30,6 +30,8 @@ use WP_Post;
  * @since   1.0.0
  */
 abstract class PaymentInfo {
+	use \Pronamic\WordPress\Pay\Core\VersionTrait;
+
 	use \Pronamic\WordPress\Pay\Privacy\AnonymizedTrait;
 
 	use \Pronamic\WordPress\Pay\Payments\PaymentInfoTrait;
@@ -214,13 +216,6 @@ abstract class PaymentInfo {
 	 * @var PaymentLines|null
 	 */
 	public $lines;
-
-	/**
-	 * Version.
-	 *
-	 * @var string|null
-	 */
-	private $version;
 
 	/**
 	 * Mode.
@@ -691,25 +686,6 @@ abstract class PaymentInfo {
 	 */
 	public function get_credit_card() {
 		return $this->credit_card;
-	}
-
-	/**
-	 * Set version.
-	 *
-	 * @param string|null $version Version.
-	 * @return void
-	 */
-	public function set_version( $version ) {
-		$this->version = $version;
-	}
-
-	/**
-	 * Get version.
-	 *
-	 * @return string|null
-	 */
-	public function get_version() {
-		return $this->version;
 	}
 
 	/**
