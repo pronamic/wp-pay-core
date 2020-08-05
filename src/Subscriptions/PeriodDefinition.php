@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 
 /**
  * Period Definition
@@ -19,7 +20,7 @@ use Pronamic\WordPress\Money\Money;
  * @version unreleased
  * @since   unreleased
  */
-class PeriodDefinition {
+class PeriodDefinition implements \JsonSerializable {
 	/**
 	 * The sequence number.
 	 *
@@ -298,5 +299,21 @@ class PeriodDefinition {
 		}
 
 		return $next_period;
+	}
+
+	public function jsonSerialize() {
+		return (object) array(
+			'type'           => $this->type,
+			'name'           => $this->name,
+			'status'         => $this->status,
+			'interval_unit'  => $this->interval_unit,
+			'interval_value' => $this->interval_value,
+			'amount'         => MoneyJsonTransformer::to_json( $this->amount ),
+			// Readonly.
+			'is_infinite'    => $this->is_infinite(),
+			'is_completed'   => $this->is_completed(),
+			'is_canceled'    => $this->is_canceled(),
+			'is_trial'       => $this->is_trial(),
+		);
 	}
 }
