@@ -28,11 +28,11 @@ class Period {
 	private $subscription;
 
 	/**
-	 * Period definition.
+	 * Phase.
 	 *
-	 * @var PeriodDefinition
+	 * @var SubscriptionPhase
 	 */
-	private $period_definition;
+	private $phase;
 
 	/**
 	 * Start date.
@@ -58,12 +58,12 @@ class Period {
 	/**
 	 * Construct period.
 	 */
-	public function __construct( $subscription, $period_definition, $start_date, $end_date, $amount ) {
-		$this->subscription      = $subscription;
-		$this->period_definition = $period_definition;
-		$this->start_date        = clone $start_date;
-		$this->end_date          = clone $end_date;
-		$this->amount            = $amount;
+	public function __construct( $subscription, $phase, $start_date, $end_date, $amount ) {
+		$this->subscription = $subscription;
+		$this->phase        = $phase;
+		$this->start_date   = clone $start_date;
+		$this->end_date     = clone $end_date;
+		$this->amount       = $amount;
 	}
 
 	public function get_start_date() {
@@ -75,6 +75,6 @@ class Period {
 	}
 
 	public function is_trial() {
-		return $this->period_definition->is_trial();
+		return $this->phase->is_trial();
 	}
 }
