@@ -629,6 +629,8 @@ class Subscription extends LegacyPaymentInfo {
 
 		$properties = (array) $object;
 
+		$properties['phases'] = $this->phases;
+
 		if ( null !== $this->expiry_date ) {
 			$properties['expiry_date'] = $this->expiry_date->format( \DATE_ATOM );
 		}

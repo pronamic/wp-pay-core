@@ -366,15 +366,15 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		$this->read_post_meta( $subscription );
 
-		// Period definitions.
-		$period_definition = $subscription->new_period_definition(
+		// Phases.
+		$phase = $subscription->new_phase(
 			$subscription->start_date,
 			$subscription->get_interval_period(),
 			$subscription->get_interval(),
 			$subscription->get_total_amount(),
 		);
 
-		$period_definition->set_type( 'regular' );
+		$phase->set_type( 'regular' );
 	}
 
 	/**
