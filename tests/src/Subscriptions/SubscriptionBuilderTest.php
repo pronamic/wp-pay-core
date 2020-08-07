@@ -87,6 +87,8 @@ class SubscriptionBuilderTest extends \WP_UnitTestCase {
 	 *
 	 * @link https://docs.woocommerce.com/document/subscriptions/renewal-synchronisation/
 	 * @link https://github.com/wp-pay-extensions/gravityforms/blob/2.4.1/src/PaymentData.php#L269-L337
+	 * @link https://knowledgecenter.zuora.com/Billing/Subscriptions/Subscriptions/G_Proration
+	 * @link https://stripe.com/docs/billing/subscriptions/prorations
 	 */
 	public function test_prorating_first_payment() {
 		/**
