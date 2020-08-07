@@ -1,6 +1,6 @@
 <?php
 /**
- * Period Definition
+ * Subscription Phase
  *
  * @author    Pronamic <info@pronamic.eu>
  * @copyright 2005-2020 Pronamic
@@ -14,13 +14,13 @@ use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 
 /**
- * Period Definition
+ * Subscription Phase
  *
  * @author  Remco Tolsma
  * @version unreleased
  * @since   unreleased
  */
-class PeriodDefinition implements \JsonSerializable {
+class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * The sequence number.
 	 *
@@ -109,7 +109,7 @@ class PeriodDefinition implements \JsonSerializable {
 	private $next_date;
 
 	/**
-	 * Construct period defintion.
+	 * Construct subscription phase.
 	 */
 	public function __construct( $start_date, $interval_unit, $interval_value, $amount ) {
 		$this->sequence_number = 1;

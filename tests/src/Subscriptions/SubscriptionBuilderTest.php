@@ -1,6 +1,6 @@
 <?php
 /**
- * Subscription 2 Builder Test
+ * Subscription Builder Test
  *
  * @author    Pronamic <info@pronamic.eu>
  * @copyright 2005-2020 Pronamic
@@ -13,17 +13,17 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 use Pronamic\WordPress\Money\Money;
 
 /**
- * Subscription 2 Builder Test
+ * Subscription Builder Test
  *
  * @author Remco Tolsma
  * @version unreleased
  */
-class Subscription2BuilderTest extends \WP_UnitTestCase {
+class SubscriptionBuilderTest extends \WP_UnitTestCase {
 	/**
 	 * Test builder.
 	 */
 	public function test_builder() {
-		$trial = PeriodDefinitionBuilder::new()
+		$trial = SubscriptionPhaseBuilder::new()
 			->with_start_date( new \DateTimeImmutable( '2020-05-05 00:00:00' ) )
 			->with_type( 'trial' )
 			->with_number_recurrences( 1 )
@@ -31,21 +31,21 @@ class Subscription2BuilderTest extends \WP_UnitTestCase {
 			->with_interval( 1, 'M' )
 			->create();
 
-		$regular = PeriodDefinitionBuilder::new()
+		$regular = SubscriptionPhaseBuilder::new()
 			->with_start_date( $trial->get_end_date() )
 			->with_amount( new Money( 100, 'EUR' ) )
 			->with_interval( 1, 'Y' )
 			->create();
 
 		$subscription = SubscriptionBuilder::new()
-			->with_period_definition( $trial )
-			->with_period_definition( $regular )
+			->with_phase( $trial )
+			->with_phase( $regular )
 			->create();
 
-		$current_period_definition = $subscription->get_current_period_definition();
+		$current_phase = $subscription->get_current_phase();
 
-		$this->assertInstanceOf( PeriodDefinition::class, $current_period_definition );
-		$this->assertTrue( $current_period_definition->is_trial() );
+		$this->assertInstanceOf( SubscriptionPhase::class, $current_phase );
+		$this->assertTrue( $current_phase->is_trial() );
 		$this->assertTrue( $subscription->in_trial_period() );
 
 		$period = $subscription->next_period();

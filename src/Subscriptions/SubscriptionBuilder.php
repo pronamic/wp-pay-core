@@ -21,25 +21,25 @@ use Pronamic\WordPress\Money\Money;
  */
 class SubscriptionBuilder {
 	/**
-	 * Period definitions.
+	 * Phases.
 	 *
 	 * @var array
 	 */
-	private $period_definitions;
+	private $phases;
 
 	/**
 	 * Construct subscription.
 	 */
 	public function __construct() {
-		$this->period_definitions = array();
+		$this->phases = array();
 	}
 
 	public static function new() {
 		return new self();
 	}
 
-	public function with_period_definition( PeriodDefinition $period_definition ) {
-		$this->period_definitions[] = $period_definition;
+	public function with_phase( SubscriptionPhase $phase ) {
+		$this->phases[] = $phase;
 
 		return $this;
 	}
@@ -47,7 +47,7 @@ class SubscriptionBuilder {
 	public function create() {
 		$subscription = new Subscription();
 
-		$subscription->period_definitions = $this->period_definitions;
+		$subscription->phases = $this->phases;
 
 		return $subscription;
 	}

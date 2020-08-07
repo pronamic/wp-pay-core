@@ -1,6 +1,6 @@
 <?php
 /**
- * Period Definition Builder
+ * Subscription Phase Builder
  *
  * @author    Pronamic <info@pronamic.eu>
  * @copyright 2005-2020 Pronamic
@@ -13,13 +13,13 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 use Pronamic\WordPress\Money\Money;
 
 /**
- * Period Definition Builder
+ * Subscription Phase Builder
  *
  * @author  Remco Tolsma
  * @version unreleased
  * @since   unreleased
  */
-class PeriodDefinitionBuilder {
+class SubscriptionPhaseBuilder {
 	private $start_date;
 
 	private $type;
@@ -62,7 +62,7 @@ class PeriodDefinitionBuilder {
 	}
 
 	public function create() {
-		$period_definition = new PeriodDefinition( $this->start_date, $this->interval_unit, $this->interval_value, $this->amount );
+		$period_definition = new SubscriptionPhase( $this->start_date, $this->interval_unit, $this->interval_value, $this->amount );
 
 		$period_definition->set_type( $this->type );
 		$period_definition->set_number_recurrences( $this->number_recurrences );
