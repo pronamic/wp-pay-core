@@ -97,9 +97,16 @@ class SubscriptionBuilderTest extends \WP_UnitTestCase {
 		 */
 		$amount = new Money( 100, 'USD' );
 
-		$start_date = new \DateTimeImmutable( '2020-07-01 00:00:00' );
-		$align_date = new \DateTimeImmutable( '2021-01-01 00:00:00' );
+		$prorating_rule = new ProratingRule( 'Y' );
 
+		$prorating_rule->by_numeric_month( 1 );
+		$prorating_rule->by_numeric_day_of_the_month( 1 );
+
+		$start_date = new \DateTimeImmutable( '2020-07-01 00:00:00' );
+
+		$align_date = $prorating_rule->get_date( $start_date );
+
+		// `z` » The day of the year (starting from 0).
 		$days_in_year = 1 + $start_date->modify( 'last day of december this year' )->format( 'z' );
 
 		$date_interval = $start_date->diff( $align_date, true );
@@ -113,5 +120,15 @@ class SubscriptionBuilderTest extends \WP_UnitTestCase {
 		$prorate_amount = $amount->divide( $days_in_year )->multiply( $date_interval->days );
 
 		$this->assertEquals( 50.27, round( $prorate_amount->get_value(), 2 ) );
+
+		// Phase alignment.
+		$phase_alignment = SubscriptionPhaseBuilder::new()
+			->with_start_date( $start_date )
+			->with_amount( $prorate_amount )
+			->with_interval( $date_interval->days, 'D' )
+			->with_number_recurrences( 1 )
+			->create();
+
+		$this->assertEquals( '2021-01-01', $phase_alignment->get_end_date()->format( 'Y-m-d' ) );
 	}
 }
