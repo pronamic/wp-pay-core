@@ -109,6 +109,13 @@ class SubscriptionPhase implements \JsonSerializable {
 	private $next_date;
 
 	/**
+	 * Proration.
+	 *
+	 * @var bool
+	 */
+	private $proration;
+
+	/**
 	 * Construct subscription phase.
 	 */
 	public function __construct( $start_date, $interval_unit, $interval_value, $amount ) {
@@ -183,6 +190,15 @@ class SubscriptionPhase implements \JsonSerializable {
 	 */
 	public function set_number_recurrences( $number_recurrences ) {
 		$this->number_recurrences = $number_recurrences;
+	}
+
+	/**
+	 * Set proration
+	 *
+	 * @var bool $proration Proration.
+	 */
+	public function set_proration( $proration ) {
+		$this->proration = $proration;
 	}
 
 	/**
@@ -310,6 +326,7 @@ class SubscriptionPhase implements \JsonSerializable {
 			'interval_unit'  => $this->interval_unit,
 			'interval_value' => $this->interval_value,
 			'amount'         => MoneyJsonTransformer::to_json( $this->amount ),
+			'proration'      => $this->proration,
 			// Readonly.
 			'is_infinite'    => $this->is_infinite(),
 			'is_completed'   => $this->is_completed(),

@@ -26,6 +26,8 @@ class SubscriptionPhaseBuilder {
 
 	private $number_recurrences;
 
+	private $proration;
+
 	public static function new() {
 		return new self();
 	}
@@ -61,11 +63,18 @@ class SubscriptionPhaseBuilder {
 		return $this;
 	}
 
+	public function with_proration() {
+		$this->proration = true;
+
+		return $this;
+	}
+
 	public function create() {
 		$period_definition = new SubscriptionPhase( $this->start_date, $this->interval_unit, $this->interval_value, $this->amount );
 
 		$period_definition->set_type( $this->type );
 		$period_definition->set_number_recurrences( $this->number_recurrences );
+		$period_definition->set_proration( $this->proration );
 
 		return $period_definition;
 	}

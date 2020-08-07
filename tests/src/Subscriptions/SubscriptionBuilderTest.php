@@ -127,6 +127,7 @@ class SubscriptionBuilderTest extends \WP_UnitTestCase {
 			->with_amount( $prorate_amount )
 			->with_interval( $date_interval->days, 'D' )
 			->with_number_recurrences( 1 )
+			->with_proration()
 			->create();
 
 		$this->assertEquals( '2021-01-01', $phase_alignment->get_end_date()->format( 'Y-m-d' ) );
