@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
+use DateTimeImmutable;
 use Pronamic\WordPress\Money\Money;
 
 /**
@@ -37,14 +38,14 @@ class Period {
 	/**
 	 * Start date.
 	 *
-	 * @var \DateTimeImmutable
+	 * @var DateTimeImmutable
 	 */
 	private $start_date;
 
 	/**
 	 * End date.
 	 *
-	 * @var \DateTimeImmutable
+	 * @var DateTimeImmutable
 	 */
 	private $end_date;
 
@@ -57,6 +58,13 @@ class Period {
 
 	/**
 	 * Construct period.
+	 *
+	 * @param Subscription      $subscription Subscription.
+	 * @param SubscriptionPhase $phase        Subscription phase.
+	 * @param DateTimeImmutable $start_date   Start date.
+	 * @param DateTimeImmutable $end_date     End date.
+	 * @param Money             $amount       Amount.
+	 * @return void
 	 */
 	public function __construct( $subscription, $phase, $start_date, $end_date, $amount ) {
 		$this->subscription = $subscription;
@@ -66,14 +74,29 @@ class Period {
 		$this->amount       = $amount;
 	}
 
+	/**
+	 * Get start date.
+	 *
+	 * @return DateTimeImmutable
+	 */
 	public function get_start_date() {
 		return $this->start_date;
 	}
 
+	/**
+	 * Get end date.
+	 *
+	 * @return DateTimeImmutable
+	 */
 	public function get_end_date() {
 		return $this->end_date;
 	}
 
+	/**
+	 * Is trial period?
+	 *
+	 * @return bool
+	 */
 	public function is_trial() {
 		return $this->phase->is_trial();
 	}

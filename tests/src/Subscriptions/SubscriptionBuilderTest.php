@@ -73,8 +73,8 @@ class SubscriptionBuilderTest extends \WP_UnitTestCase {
 	/**
 	 * Test prorating first payment.
 	 *
-	 * For example, for a $100 per year subscription that 
-	 * is synchronized to the 1st of January each year, 
+	 * For example, for a $100 per year subscription that
+	 * is synchronized to the 1st of January each year,
 	 * if a customer signs up on the 1st July, they will
 	 * be charged $50.41 at the time of signup (or $50.27
 	 * in a leap year). This is because there are 184 days
