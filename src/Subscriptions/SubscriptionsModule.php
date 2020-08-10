@@ -812,7 +812,6 @@ class SubscriptionsModule {
 			'order'       => 'ASC',
 			'post_status' => array(
 				'subscr_pending',
-				'subscr_expired',
 				'subscr_failed',
 				'subscr_active',
 			),
