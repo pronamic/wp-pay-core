@@ -10,8 +10,6 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
-use Pronamic\WordPress\Money\Money;
-
 /**
  * Subscription Builder
  *
@@ -34,12 +32,24 @@ class SubscriptionBuilder {
 		$this->phases = array();
 	}
 
+	/**
+	 * With phase.
+	 *
+	 * @param SubscriptionPhase $phase Subscription phase.
+	 * @return $this
+	 */
 	public function with_phase( SubscriptionPhase $phase ) {
 		$this->phases[] = $phase;
 
 		return $this;
 	}
 
+	/**
+	 * Create subscription.
+	 *
+	 * @return Subscription
+	 * @throws \Exception Throws exception on date error.
+	 */
 	public function create() {
 		$subscription = new Subscription();
 

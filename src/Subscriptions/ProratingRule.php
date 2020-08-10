@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
+use DateTimeImmutable;
+
 /**
  * Prorating Rule
  *
@@ -21,7 +23,7 @@ class ProratingRule {
 	/**
 	 * Weekdays indexed 0 (for Sunday) through 6 (for Saturday).
 	 *
-	 * @var array
+	 * @var array<int, string>
 	 */
 	private static $weekdays = array(
 		0 => 'Sunday',
@@ -34,49 +36,109 @@ class ProratingRule {
 	);
 
 	/**
+	 * Frequency.
+	 *
+	 * @var string
+	 */
+	private $frequency;
+
+	/**
 	 * Boolean flag to allow month overflow.
 	 *
 	 * @link https://carbon.nesbot.com/docs/#overflow-static-helpers
+	 * @var bool
 	 */
 	private $month_overflow = false;
 
+	/**
+	 * Day of the week.
+	 *
+	 * @var int
+	 */
 	private $by_day_of_the_week;
 
+	/**
+	 * Day of the month.
+	 *
+	 * @var int
+	 */
 	private $by_day_of_the_month;
 
+	/**
+	 * Number of month.
+	 *
+	 * @var int
+	 */
 	private $by_month;
 
+	/**
+	 * Construct prorating rule.
+	 *
+	 * @param string $frequency Frequency.
+	 */
 	public function __construct( $frequency ) {
 		$this->frequency = $frequency;
 	}
 
+	/**
+	 * By numeric day of the week.
+	 *
+	 * @param int $number Number of day in the week (0 = Sunday).
+	 *
+	 * @return $this
+	 */
 	public function by_numeric_day_of_the_week( $number ) {
 		$this->by_day_of_the_week = self::$weekdays[ $number ];
 
 		return $this;
 	}
 
+	/**
+	 * By numeric day of the month.
+	 *
+	 * @param int $number Day of the month.
+	 * @return $this
+	 */
 	public function by_numeric_day_of_the_month( $number ) {
 		$this->by_day_of_the_month = $number;
 
 		return $this;
 	}
 
+	/**
+	 * By numeric month.
+	 *
+	 * @param int $number Number of month.
+	 * @return $this
+	 */
 	public function by_numeric_month( $number ) {
 		$this->by_month = $number;
 
 		return $this;
 	}
 
-	public function get_date( \DateTimeImmutable $date = null ) {
+	/**
+	 * Get date.
+	 *
+	 * @param DateTimeImmutable|null $date Date.
+	 * @return DateTimeImmutable|false
+	 * @throws \Exception Throws exception on date error.
+	 */
+	public function get_date( DateTimeImmutable $date = null ) {
 		if ( null === $date ) {
-			$date = new \DateTimeImmutable();
+			$date = new DateTimeImmutable();
 		}
 
 		return $this->apply_properties( $date );
 	}
 
-	private function apply_properties( \DateTimeImmutable $date ) {
+	/**
+	 * Apply properties.
+	 *
+	 * @param DateTimeImmutable $date Date.
+	 * @return DateTimeImmutable|false
+	 */
+	private function apply_properties( DateTimeImmutable $date ) {
 		$year  = $date->format( 'Y' );
 		$month = $date->format( 'm' );
 		$day   = $date->format( 'd' );

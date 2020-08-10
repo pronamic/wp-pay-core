@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
+use DateTime;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 
@@ -92,6 +93,11 @@ class SubscriptionPhase implements \JsonSerializable {
 	 */
 	private $number_recurrences;
 
+	/**
+	 * Number recurrences created.
+	 *
+	 * @var int
+	 */
 	private $number_recurrences_created;
 
 	/**
@@ -105,7 +111,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * The date the create the next period.
 	 *
 	 * @var \DateTimeImmutable|null
-	 */ 
+	 */
 	private $next_date;
 
 	/**
@@ -117,6 +123,12 @@ class SubscriptionPhase implements \JsonSerializable {
 
 	/**
 	 * Construct subscription phase.
+	 *
+	 * @param DateTime $start_date     Start date.
+	 * @param string   $interval_unit  Interval unit.
+	 * @param int      $interval_value Interval value.
+	 * @param Money    $amount         Amount.
+	 * @return void
 	 */
 	public function __construct( $start_date, $interval_unit, $interval_value, $amount ) {
 		$this->sequence_number = 1;
@@ -150,7 +162,8 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Set status.
 	 *
-	 * @var string $status Status.
+	 * @param string $status Status.
+	 * @return void
 	 */
 	public function set_status( $status ) {
 		$this->status = $status;
@@ -159,7 +172,8 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Set type.
 	 *
-	 * @var string $type Type.
+	 * @param string $type Type.
+	 * @return void
 	 */
 	public function set_type( $type ) {
 		$this->type = $type;
@@ -178,6 +192,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * Set amount.
 	 *
 	 * @param Money $amount Amount.
+	 * @return void
 	 */
 	public function set_amount( $amount ) {
 		$this->amount = $amount;
@@ -186,7 +201,8 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Set number recurrences
 	 *
-	 * @var int|null $number_recurrences Number recurrences.
+	 * @param int|null $number_recurrences Number recurrences.
+	 * @return void
 	 */
 	public function set_number_recurrences( $number_recurrences ) {
 		$this->number_recurrences = $number_recurrences;
@@ -195,7 +211,8 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Set proration
 	 *
-	 * @var bool $proration Proration.
+	 * @param bool $proration Proration.
+	 * @return void
 	 */
 	public function set_proration( $proration ) {
 		$this->proration = $proration;
@@ -244,7 +261,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return bool True if trial, false otherwise.
 	 */
 	public function is_trial() {
-		return ( 'trial' === $this->type );	
+		return ( 'trial' === $this->type );
 	}
 
 	/**
@@ -253,6 +270,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @link https://www.php.net/manual/en/class.dateinterval.php
 	 * @link https://www.php.net/manual/en/dateinterval.construct.php
 	 * @return \DateInterval
+	 * @throws \Exception Throws exception on invalid interval spec.
 	 */
 	public function get_date_interval() {
 		$duration = 'P' . $this->interval_value . $this->interval_unit;
@@ -260,6 +278,12 @@ class SubscriptionPhase implements \JsonSerializable {
 		return new \DateInterval( $duration );
 	}
 
+	/**
+	 * Get end date.
+	 *
+	 * @return \DateTimeImmutable|null
+	 * @throws \Exception Throws exception on invalid interval spec.
+	 */
 	public function get_end_date() {
 		if ( null === $this->number_recurrences ) {
 			return null;
@@ -278,6 +302,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * Get next period.
 	 *
 	 * @return Period
+	 * @throws \Exception Throws exception on invalid date interval.
 	 */
 	public function get_next_period() {
 		if ( null === $this->next_date ) {
@@ -299,6 +324,11 @@ class SubscriptionPhase implements \JsonSerializable {
 		return $period;
 	}
 
+	/**
+	 * Next period.
+	 *
+	 * @return Period|null
+	 */
 	public function next_period() {
 		$next_period = $this->get_next_period();
 
@@ -317,6 +347,11 @@ class SubscriptionPhase implements \JsonSerializable {
 		return $next_period;
 	}
 
+	/**
+	 * Get JSON object.
+	 *
+	 * @return object
+	 */
 	public function jsonSerialize() {
 		return (object) array(
 			'type'         => $this->type,
