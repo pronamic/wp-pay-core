@@ -10,7 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
-use DateTime;
+use DateTimeImmutable;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 
@@ -103,14 +103,14 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * The date this period defintion will start.
 	 *
-	 * @var \DateTimeImmutable|null
+	 * @var DateTimeImmutable|null
 	 */
 	private $start_date;
 
 	/**
 	 * The date the create the next period.
 	 *
-	 * @var \DateTimeImmutable|null
+	 * @var DateTimeImmutable|null
 	 */
 	private $next_date;
 
@@ -124,10 +124,10 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Construct subscription phase.
 	 *
-	 * @param DateTime $start_date     Start date.
-	 * @param string   $interval_unit  Interval unit.
-	 * @param int      $interval_value Interval value.
-	 * @param Money    $amount         Amount.
+	 * @param DateTimeImmutable $start_date     Start date.
+	 * @param string            $interval_unit  Interval unit.
+	 * @param int               $interval_value Interval value.
+	 * @param Money             $amount         Amount.
 	 * @return void
 	 */
 	public function __construct( $start_date, $interval_unit, $interval_value, $amount ) {
@@ -157,6 +157,24 @@ class SubscriptionPhase implements \JsonSerializable {
 	 */
 	public function set_sequence_number( $sequence_number ) {
 		$this->sequence_number = $sequence_number;
+	}
+
+	/**
+	 * Get start date.
+	 *
+	 * @return DateTimeImmutable
+	 */
+	public function get_start_date() {
+		return $this->start_date;
+	}
+
+	/**
+	 * Set start date.
+	 *
+	 * @param DateTimeImmutable $start_date Start date.
+	 */
+	public function set_start_date( $start_date ) {
+		$this->start_date = $start_date;
 	}
 
 	/**
@@ -281,7 +299,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Get end date.
 	 *
-	 * @return \DateTimeImmutable|null
+	 * @return DateTimeImmutable|null
 	 * @throws \Exception Throws exception on invalid interval spec.
 	 */
 	public function get_end_date() {
@@ -370,5 +388,40 @@ class SubscriptionPhase implements \JsonSerializable {
 			'is_canceled'  => $this->is_canceled(),
 			'is_trial'     => $this->is_trial(),
 		);
+	}
+
+	/**
+	 * Prorate the phase to align date.
+	 *
+	 * @param SubscriptionPhase $phase          The phase to align.
+	 * @param DateTimeImmutable $align_date     The alignment date.
+	 * @param bool              $prorate_amount Flag to prorate the amount.
+	 * @return 
+	 */
+	public static function prorate( self $phase, DateTimeImmutable $align_date, $prorate_amount ) {
+		$start_date = $phase->get_start_date();
+
+		$next_date = $start_date->add( $phase->get_date_interval() );
+
+		$regular_difference   = $start_date->diff( $next_date, true );
+		$proration_difference = $start_date->diff( $align_date, true );
+
+		$proration_amount = clone $phase->get_amount();
+
+		if ( $prorate_amount ) {
+			$proration_amount = $proration_amount->divide( $regular_difference->days )->multiply( $proration_difference->days );
+		}
+
+		$proration_phase = ( new SubscriptionPhaseBuilder() )
+			->with_start_date( $start_date )
+			->with_amount( $proration_amount )
+			->with_interval( $proration_difference->days, 'D' )
+			->with_number_recurrences( 1 )
+			->with_proration()
+			->create();
+
+		$phase->set_start_date( $proration_phase->get_end_date() );
+
+		return $proration_phase;
 	}
 }
