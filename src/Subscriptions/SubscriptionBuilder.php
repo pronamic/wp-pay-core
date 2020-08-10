@@ -34,10 +34,6 @@ class SubscriptionBuilder {
 		$this->phases = array();
 	}
 
-	public static function new() {
-		return new self();
-	}
-
 	public function with_phase( SubscriptionPhase $phase ) {
 		$this->phases[] = $phase;
 

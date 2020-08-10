@@ -28,10 +28,6 @@ class SubscriptionPhaseBuilder {
 
 	private $proration;
 
-	public static function new() {
-		return new self();
-	}
-
 	public function with_start_date( \DateTimeImmutable $start_date ) {
 		$this->start_date = $start_date;
 
