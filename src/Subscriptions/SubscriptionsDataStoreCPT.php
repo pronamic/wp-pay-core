@@ -371,7 +371,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			$subscription->start_date,
 			$subscription->get_interval_period(),
 			$subscription->get_interval(),
-			$subscription->get_total_amount(),
+			$subscription->get_total_amount()
 		);
 
 		$phase->set_type( 'regular' );
