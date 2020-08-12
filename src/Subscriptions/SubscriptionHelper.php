@@ -217,74 +217,19 @@ class SubscriptionHelper {
 	 * @throws \InvalidArgumentException Throws exception when start or date interval are not available.
 	 */
 	public static function calculate_next_payment_date( Subscription $subscription ) {
-		$start_date = $subscription->get_start_date();
+		$next_period = $subscription->get_next_period();
 
-		if ( null === $start_date ) {
-			throw new \InvalidArgumentException( 'Can not calculate next payment date of subscription without start date.' );
+		if ( null === $next_period ) {
+			throw new \InvalidArgumentException( 'Can not calculate next payment date of subscription without next period.' );
 		}
 
-		$date_interval = $subscription->get_date_interval();
+		/**
+		 * @todo What about month overlflow? Previously interval date 'last' was used.
+		 * @link https://carbon.nesbot.com/docs/#overflow-static-helpers
+		 */
+		$next_date = $next_period->get_start_date();
 
-		if ( null === $date_interval ) {
-			throw new \InvalidArgumentException( 'Can not calculate next payment date of subscription without date interval.' );
-		}
-
-		$next_date = clone $start_date;
-
-		$next_date->add( $date_interval );
-
-		$interval_date       = $subscription->get_interval_date();
-		$interval_date_day   = $subscription->get_interval_date_day();
-		$interval_date_month = $subscription->get_interval_date_month();
-
-		switch ( $subscription->interval_period ) {
-			case 'W':
-				if ( is_numeric( $interval_date_day ) ) {
-					$days_delta = (int) $interval_date_day - (int) $next_date->format( 'w' );
-
-					$next_date->modify( sprintf( '+%s days', $days_delta ) );
-					$next_date->setTime( 0, 0 );
-				}
-
-				break;
-			case 'M':
-				if ( is_numeric( $interval_date ) ) {
-					$next_date->setDate(
-						intval( $next_date->format( 'Y' ) ),
-						intval( $next_date->format( 'm' ) ),
-						intval( $interval_date )
-					);
-
-					$next_date->setTime( 0, 0 );
-				} elseif ( 'last' === $interval_date ) {
-					$next_date->modify( 'last day of ' . $next_date->format( 'F Y' ) );
-					$next_date->setTime( 0, 0 );
-				}
-
-				break;
-			case 'Y':
-				if ( is_numeric( $interval_date_month ) ) {
-					$day = $next_date->format( 'd' );
-
-					if ( \is_numeric( $interval_date ) ) {
-						$day = $interval_date;
-					}
-
-					$next_date->setDate(
-						intval( $next_date->format( 'Y' ) ),
-						intval( $interval_date_month ),
-						intval( $day )
-					);
-
-					$next_date->setTime( 0, 0 );
-
-					if ( 'last' === $interval_date ) {
-						$next_date->modify( 'last day of ' . $next_date->format( 'F Y' ) );
-					}
-				}
-
-				break;
-		}
+		$next_date = new \Pronamic\WordPress\DateTime\DateTime( $next_date->format( \DateTimeInterface::ATOM ) );
 
 		return $next_date;
 	}

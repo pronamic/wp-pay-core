@@ -119,6 +119,21 @@ trait SubscriptionPhasesTrait {
 	}
 
 	/**
+	 * Get the next period.
+	 *
+	 * @return Period|null
+	 */
+	public function get_next_period() {
+		$current_phase = $this->get_current_phase();
+
+		if ( null === $current_phase ) {
+			return null;
+		}
+
+		return $current_phase->get_next_period();
+	}
+
+	/**
 	 * Next period.
 	 *
 	 * @return Period|null

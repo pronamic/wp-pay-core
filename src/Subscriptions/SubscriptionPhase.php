@@ -335,6 +335,10 @@ class SubscriptionPhase implements \JsonSerializable {
 
 		$end = clone $this->next_date;
 
+		/**
+		 * @todo What about month overlflow?
+		 * @link https://carbon.nesbot.com/docs/#overflow-static-helpers
+		 */
 		$end = $end->add( $this->get_date_interval() );
 
 		$period = new Period( null, $this, $start, $end, clone $this->amount );
@@ -380,14 +384,60 @@ class SubscriptionPhase implements \JsonSerializable {
 				'unit'  => $this->interval_unit,
 				'value' => $this->interval_value,
 			),
-			'amount'       => MoneyJsonTransformer::to_json( $this->amount ),
-			'proration'    => $this->proration,
+			'number_recurrences' => $this->number_recurrences,
+			'amount'             => MoneyJsonTransformer::to_json( $this->amount ),
+			'proration'          => $this->proration,
 			// Readonly.
 			'is_infinite'  => $this->is_infinite(),
 			'is_completed' => $this->is_completed(),
 			'is_canceled'  => $this->is_canceled(),
 			'is_trial'     => $this->is_trial(),
 		);
+	}
+
+	/**
+	 * Create subscription phase from object.
+	 *
+	 * @param mixed $json JSON.
+	 * @return SubscriptionPhase
+	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON is not an object.
+	 */
+	public static function from_json( $json ) {
+		if ( ! is_object( $json ) ) {
+			throw new \InvalidArgumentException( 'JSON value must be an object.' );
+		}
+
+		$builder = new SubscriptionPhaseBuilder();
+
+		if ( property_exists( $json, 'type' ) ) {
+			$builder->with_type( $json->type );
+		}
+
+		if ( property_exists( $json, 'name' ) ) {
+			$builder->with_name( $json->name );
+		}
+
+		if ( property_exists( $json, 'status' ) ) {
+			$builder->with_status( $json->status );
+		}
+
+		if ( property_exists( $json, 'start_date' ) ) {
+			$builder->with_start_date( new \DateTimeImmutable( $json->start_date ) );
+		}
+
+		if ( property_exists( $json, 'interval' ) ) {
+			$builder->with_interval( $json->interval->value, $json->interval->unit );
+		}
+
+		if ( property_exists( $json, 'amount' ) ) {
+			$builder->with_amount( MoneyJsonTransformer::from_json( $json->amount ) );
+		}
+
+		if ( property_exists( $json, 'number_recurrences' ) ) {
+			$builder->with_number_recurrences( $json->number_recurrences );
+		}
+
+		return $builder->create();
 	}
 
 	/**

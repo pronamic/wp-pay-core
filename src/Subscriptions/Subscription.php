@@ -616,6 +616,12 @@ class Subscription extends LegacyPaymentInfo {
 			$subscription->set_status( $json->status );
 		}
 
+		if ( isset( $json->phases ) ) {
+			foreach ( $json->phases as $json_phase ) {
+				$subscription->add_phase( SubscriptionPhase::from_json( $json_phase ) );
+			}
+		}
+
 		return $subscription;
 	}
 

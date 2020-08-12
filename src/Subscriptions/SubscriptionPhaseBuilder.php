@@ -83,6 +83,30 @@ class SubscriptionPhaseBuilder {
 	}
 
 	/**
+	 * With name.
+	 *
+	 * @param string $name Name.
+	 * @return $this
+	 */
+	public function with_name( $name ) {
+		$this->name = $name;
+
+		return $this;
+	}
+
+	/**
+	 * With status.
+	 *
+	 * @param string $status Status.
+	 * @return $this
+	 */
+	public function with_status( $status ) {
+		$this->status = $status;
+
+		return $this;
+	}
+
+	/**
 	 * With type.
 	 *
 	 * @param string $type Type.
