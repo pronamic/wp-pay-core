@@ -129,7 +129,7 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 		$this->assertEquals( 50.41, round( $proration_phase->get_amount()->get_value(), 2 ) );
 		$this->assertEquals( '2020-07-01 00:00:00', $proration_phase->get_start_date()->format( 'Y-m-d H:i:s' ) );
 		$this->assertEquals( '2021-01-01 00:00:00', $proration_phase->get_end_date()->format( 'Y-m-d H:i:s' ) );
-		
+
 		$this->assertEquals( 100.00, round( $regular_phase->get_amount()->get_value(), 2 ) );
 		$this->assertEquals( '2021-01-01 00:00:00', $regular_phase->get_start_date()->format( 'Y-m-d H:i:s' ) );
 	}

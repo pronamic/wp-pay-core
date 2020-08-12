@@ -393,10 +393,11 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Prorate the phase to align date.
 	 *
-	 * @param SubscriptionPhase $phase          The phase to align.
+	 * @param self              $phase          The phase to align.
 	 * @param DateTimeImmutable $align_date     The alignment date.
 	 * @param bool              $prorate_amount Flag to prorate the amount.
-	 * @return 
+	 * @return SubscriptionPhase
+	 * @throws \Exception Throws exception on invalid date interval.
 	 */
 	public static function prorate( self $phase, DateTimeImmutable $align_date, $prorate_amount ) {
 		$start_date = $phase->get_start_date();
