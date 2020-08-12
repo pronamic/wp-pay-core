@@ -26,7 +26,16 @@ trait SubscriptionPhasesTrait {
 	 *
 	 * @var array
 	 */
-	public $phases = array();
+	private $phases = array();
+
+	/**
+	 * Add the specified phase to this subscription.
+	 *
+	 * @param SubscriptionPhase $phase Phase.
+	 */
+	public function add_phase( SubscriptionPhase $phase ) {
+		$this->phases[] = $phase;
+	}
 
 	/**
 	 * Create new phase for this subscription.
