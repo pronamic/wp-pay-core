@@ -53,7 +53,9 @@ class SubscriptionBuilder {
 	public function create() {
 		$subscription = new Subscription();
 
-		$subscription->phases = $this->phases;
+		foreach ( $this->phases as $phase ) {
+			$subscription->add_phase( $phase );
+		}
 
 		return $subscription;
 	}
