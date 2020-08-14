@@ -50,7 +50,7 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 
 		$this->assertTrue( $subscription_phase->is_infinite() );
 
-		$subscription_phase->set_number_recurrences( 5 );
+		$subscription_phase->set_total_periods( 5 );
 
 		$this->assertFalse( $subscription_phase->is_infinite() );
 	}

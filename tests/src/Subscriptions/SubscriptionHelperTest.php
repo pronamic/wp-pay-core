@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
+use Pronamic\WordPress\Money\Money;
+
 /**
  * Subscription Helper Test
  *
@@ -99,7 +101,7 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 
 		// Calculate.
 		$this->expectException( \InvalidArgumentException::class );
-		$this->expectExceptionMessage( 'Can not calculate next payment date of subscription without start date.' );
+		$this->expectExceptionMessage( 'Can not calculate next payment date of subscription without next period.' );
 
 		$next_payment_date = SubscriptionHelper::calculate_next_payment_date( $subscription );
 	}
@@ -114,7 +116,7 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 
 		// Calculate.
 		$this->expectException( \InvalidArgumentException::class );
-		$this->expectExceptionMessage( 'Can not calculate next payment date of subscription without date interval.' );
+		$this->expectExceptionMessage( 'Can not calculate next payment date of subscription without next period.' );
 
 		$next_payment_date = SubscriptionHelper::calculate_next_payment_date( $subscription );
 	}
@@ -141,6 +143,18 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 
 		// Recurrences.
 		$subscription->frequency = $recurrences;
+
+		// Phase.
+		$phase = ( new SubscriptionPhaseBuilder() )
+			->with_start_date( new \DateTimeImmutable( $start_date ) )
+			->with_amount( new Money( 100, 'USD' ) )
+			->with_interval( $interval, $interval_period )
+			->with_total_periods( $recurrences )
+			->create();
+
+		$subscription->add_phase( $phase );
+
+		$phase->next_period();
 
 		// Calculate.
 		$next_payment_date = SubscriptionHelper::calculate_next_payment_date( $subscription );

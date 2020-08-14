@@ -78,7 +78,8 @@ class SubscriptionPhase implements \JsonSerializable {
 	private $interval_value;
 
 	/**
-	 * Number recurrences, also known as:
+	 * Total periods, also known as:
+	 * - Number recurrences
 	 * - Frequency.
 	 * - Times.
 	 * - Recurrences.
@@ -91,24 +92,26 @@ class SubscriptionPhase implements \JsonSerializable {
 	 *
 	 * @var int|null
 	 */
-	private $number_recurrences;
+	private $total_periods;
 
 	/**
-	 * Number recurrences created.
+	 * Number periods created, also known as:
+	 * - Number recurrences created.
 	 *
 	 * @var int
 	 */
-	private $number_recurrences_created;
+	private $periods_created;
 
 	/**
-	 * The date this period defintion will start.
+	 * The date this phase will start.
 	 *
 	 * @var DateTimeImmutable|null
 	 */
 	private $start_date;
 
 	/**
-	 * The date the create the next period.
+	 * The start date of the next period, also known as:
+	 * - Billing cycle anchor (billing_cycle_anchor).
 	 *
 	 * @var DateTimeImmutable|null
 	 */
@@ -138,7 +141,7 @@ class SubscriptionPhase implements \JsonSerializable {
 		$this->interval_value  = $interval_value;
 		$this->amount          = $amount;
 
-		$this->number_recurrences_created = 0;
+		$this->periods_created = 0;
 	}
 
 	/**
@@ -217,13 +220,36 @@ class SubscriptionPhase implements \JsonSerializable {
 	}
 
 	/**
-	 * Set number recurrences
+	 * Set total periods.
 	 *
-	 * @param int|null $number_recurrences Number recurrences.
+	 * @param int|null $total_periods Total periods to create.
 	 * @return void
 	 */
-	public function set_number_recurrences( $number_recurrences ) {
-		$this->number_recurrences = $number_recurrences;
+	public function set_total_periods( $total_periods ) {
+		$this->total_periods = $total_periods;
+	}
+
+	/**
+	 * Set periods created.
+	 *
+	 * @param int|null $periods_created The number of periods created.
+	 * @return void
+	 */
+	public function set_periods_created( $periods_created ) {
+		$this->periods_created = $periods_created;
+	}
+
+	/**
+	 * Get the number of periods that are remaining.
+	 *
+	 * @return int|null
+	 */
+	public function get_periods_remaining() {
+		if ( null === $this->total_periods ) {
+			return null;
+		}
+
+		return $this->total_periods - $this->periods_created;
 	}
 
 	/**
@@ -237,16 +263,16 @@ class SubscriptionPhase implements \JsonSerializable {
 	}
 
 	/**
-	 * The period defintion is infinite when the number recurrences is undefined.
+	 * The subscription phase is infinite when the total periods number is undefined.
 	 *
 	 * @return bool True if infinite, false otherwise.
 	 */
 	public function is_infinite() {
-		return ( null === $this->number_recurrences );
+		return ( null === $this->total_periods );
 	}
 
 	/**
-	 * Check if this period definition is completed.
+	 * Check if this phase is completed.
 	 *
 	 * @return bool True if completed, false otherwise.
 	 */
@@ -255,7 +281,7 @@ class SubscriptionPhase implements \JsonSerializable {
 			return true;
 		}
 
-		if ( $this->number_recurrences === $this->number_recurrences_created ) {
+		if ( $this->total_periods === $this->periods_created ) {
 			return true;
 		}
 
@@ -263,7 +289,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	}
 
 	/**
-	 * Check if this period definition is canceled.
+	 * Check if this phase is canceled.
 	 *
 	 * @link https://www.grammarly.com/blog/canceled-vs-cancelled/
 	 * @link https://docs.mollie.com/reference/v2/subscriptions-api/cancel-subscription
@@ -274,7 +300,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	}
 
 	/**
-	 * Check if this period definition is a trial.
+	 * Check if this phase is a trial.
 	 *
 	 * @return bool True if trial, false otherwise.
 	 */
@@ -303,13 +329,13 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @throws \Exception Throws exception on invalid interval spec.
 	 */
 	public function get_end_date() {
-		if ( null === $this->number_recurrences ) {
+		if ( null === $this->total_periods ) {
 			return null;
 		}
 
 		$date = clone $this->start_date;
 
-		$interval = new \DateInterval( 'P' . ( $this->interval_value * $this->number_recurrences ) . $this->interval_unit );
+		$interval = new \DateInterval( 'P' . ( $this->interval_value * $this->total_periods ) . $this->interval_unit );
 
 		$date = $date->add( $interval );
 
@@ -358,7 +384,7 @@ class SubscriptionPhase implements \JsonSerializable {
 			return null;
 		}
 
-		$this->number_recurrences_created++;
+		$this->periods_created++;
 
 		$this->next_date = null;
 
@@ -384,9 +410,12 @@ class SubscriptionPhase implements \JsonSerializable {
 				'unit'  => $this->interval_unit,
 				'value' => $this->interval_value,
 			),
-			'number_recurrences' => $this->number_recurrences,
 			'amount'             => MoneyJsonTransformer::to_json( $this->amount ),
 			'proration'          => $this->proration,
+			// Numbers.
+			'total_periods'     => $this->total_periods,
+			'periods_created'   => $this->periods_created,
+			'periods_remaining' => $this->get_periods_remaining(),
 			// Readonly.
 			'is_infinite'  => $this->is_infinite(),
 			'is_completed' => $this->is_completed(),
@@ -433,8 +462,8 @@ class SubscriptionPhase implements \JsonSerializable {
 			$builder->with_amount( MoneyJsonTransformer::from_json( $json->amount ) );
 		}
 
-		if ( property_exists( $json, 'number_recurrences' ) ) {
-			$builder->with_number_recurrences( $json->number_recurrences );
+		if ( property_exists( $json, 'total_periods' ) ) {
+			$builder->with_total_periods( $json->total_periods );
 		}
 
 		return $builder->create();
@@ -467,7 +496,7 @@ class SubscriptionPhase implements \JsonSerializable {
 			->with_start_date( $start_date )
 			->with_amount( $proration_amount )
 			->with_interval( $proration_difference->days, 'D' )
-			->with_number_recurrences( 1 )
+			->with_total_periods( 1 )
 			->with_proration()
 			->create();
 

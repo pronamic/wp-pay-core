@@ -36,11 +36,18 @@ class SubscriptionPhaseBuilder {
 	private $type;
 
 	/**
-	 * Number of recurrences.
+	 * Total periods.
 	 *
 	 * @var int|null
 	 */
-	private $number_recurrences;
+	private $total_periods;
+
+	/**
+	 * Periods created.
+	 *
+	 * @var int|null
+	 */
+	private $periods_created;
 
 	/**
 	 * Amount.
@@ -119,13 +126,25 @@ class SubscriptionPhaseBuilder {
 	}
 
 	/**
-	 * With number of recurrences.
+	 * With total periods.
 	 *
-	 * @param int $number_recurrences Number of recurrences.
+	 * @param int $total_periods Number of periods to create.
 	 * @return $this
 	 */
-	public function with_number_recurrences( $number_recurrences ) {
-		$this->number_recurrences = $number_recurrences;
+	public function with_total_periods( $total_periods ) {
+		$this->total_periods = $total_periods;
+
+		return $this;
+	}
+
+	/**
+	 * With periods created.
+	 *
+	 * @param int $periods_created Number of periods created.
+	 * @return $this
+	 */
+	public function with_periods_created( $periods_created ) {
+		$this->periods_created = $periods_created;
 
 		return $this;
 	}
@@ -173,12 +192,16 @@ class SubscriptionPhaseBuilder {
 	 * @return SubscriptionPhase
 	 */
 	public function create() {
-		$period_definition = new SubscriptionPhase( $this->start_date, $this->interval_unit, $this->interval_value, $this->amount );
+		$phase = new SubscriptionPhase( $this->start_date, $this->interval_unit, $this->interval_value, $this->amount );
 
-		$period_definition->set_type( $this->type );
-		$period_definition->set_number_recurrences( $this->number_recurrences );
-		$period_definition->set_proration( $this->proration );
+		$phase->set_type( $this->type );
+		$phase->set_total_periods( $this->total_periods );
+		$phase->set_proration( $this->proration );
 
-		return $period_definition;
+		if ( null !== $this->periods_created ) {
+			$phase->set_periods_created( $this->periods_created );
+		}
+
+		return $phase;
 	}
 }

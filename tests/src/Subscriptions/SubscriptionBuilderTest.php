@@ -26,7 +26,7 @@ class SubscriptionBuilderTest extends \WP_UnitTestCase {
 		$trial = ( new SubscriptionPhaseBuilder() )
 			->with_start_date( new \DateTimeImmutable( '2020-05-05 00:00:00' ) )
 			->with_type( 'trial' )
-			->with_number_recurrences( 1 )
+			->with_total_periods( 1 )
 			->with_amount( new Money( 50, 'EUR' ) )
 			->with_interval( 1, 'M' )
 			->create();
@@ -128,7 +128,7 @@ class SubscriptionBuilderTest extends \WP_UnitTestCase {
 			->with_start_date( $start_date )
 			->with_amount( $prorate_amount )
 			->with_interval( $date_interval->days, 'D' )
-			->with_number_recurrences( 1 )
+			->with_total_periods( 1 )
 			->with_proration()
 			->create();
 
