@@ -373,7 +373,7 @@ class SubscriptionPhase implements \JsonSerializable {
 		 * @link https://carbon.nesbot.com/docs/#overflow-static-helpers
 		 * @link https://github.com/briannesbitt/Carbon/blob/2.38.0/src/Carbon/Traits/Units.php#L309-L311
 		 */
-		if ( false === $this->month_overflow ) {
+		if ( false === $this->month_overflow && 'M' === $this->interval_unit ) {
 			$day_1 = $this->start_date->format( 'd' );
 			$day_2 = $date->format( 'd' );
 
