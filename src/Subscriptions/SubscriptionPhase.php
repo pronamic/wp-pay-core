@@ -23,6 +23,14 @@ use Pronamic\WordPress\Pay\MoneyJsonTransformer;
  */
 class SubscriptionPhase implements \JsonSerializable {
 	/**
+	 * Boolean flag to allow month overflow.
+	 *
+	 * @link https://carbon.nesbot.com/docs/#overflow-static-helpers
+	 * @var bool
+	 */
+	private $month_overflow = false;
+
+	/**
 	 * The sequence number.
 	 *
 	 * @var int
@@ -343,29 +351,54 @@ class SubscriptionPhase implements \JsonSerializable {
 	}
 
 	/**
+	 * Get start date of specific period number.
+	 *
+	 * @param int $period Period number.
+	 * @return \DateTimeImmutable
+	 */
+	private function get_date( $period ) {
+		$date = clone $this->start_date;
+
+		if ( 1 === $period ) {
+			return $date;
+		}
+
+		$interval = new \DateInterval( 'P' . ( $this->interval_value * $period - 1 ) . $this->interval_unit );
+
+		$date = $date->add( $interval );
+
+		/**
+		 * Month overflow.
+		 *
+		 * @link https://carbon.nesbot.com/docs/#overflow-static-helpers
+		 * @link https://github.com/briannesbitt/Carbon/blob/2.38.0/src/Carbon/Traits/Units.php#L309-L311
+		 */
+		if ( false === $this->month_overflow ) {
+			$day_1 = $this->start_date->format( 'd' );
+			$day_2 = $date->format( 'd' );
+
+			if ( $day_1 !== $day_2 ) {
+				$date = $date->modify( 'last day of previous month' );
+			}
+		}
+
+		return $date;
+	}
+
+	/**
 	 * Get next period.
 	 *
 	 * @return Period
 	 * @throws \Exception Throws exception on invalid date interval.
 	 */
 	public function get_next_period() {
-		if ( null === $this->next_date ) {
-			return null;
-		}
-
 		if ( $this->is_completed() ) {
 			return null;
 		}
 
-		$start = clone $this->next_date;
+		$start = $this->get_date( $this->periods_created + 1 );
 
-		$end = clone $this->next_date;
-
-		/**
-		 * @todo What about month overlflow?
-		 * @link https://carbon.nesbot.com/docs/#overflow-static-helpers
-		 */
-		$end = $end->add( $this->get_date_interval() );
+		$end = $this->get_date( $this->periods_created + 2 );
 
 		$period = new Period( null, $this, $start, $end, clone $this->amount );
 

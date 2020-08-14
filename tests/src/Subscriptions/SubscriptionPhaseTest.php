@@ -133,4 +133,50 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 		$this->assertEquals( 100.00, round( $regular_phase->get_amount()->get_value(), 2 ) );
 		$this->assertEquals( '2021-01-01 00:00:00', $regular_phase->get_start_date()->format( 'Y-m-d H:i:s' ) );
 	}
+
+	/**
+	 * Test month overflow.
+	 */
+	public function test_month_overflow() {
+		$amount = new Money( 100, 'USD' );
+
+		$start_date = new \DateTimeImmutable( '2020-01-31 00:00:00' );
+
+		$phase = ( new SubscriptionPhaseBuilder() )
+			->with_start_date( $start_date )
+			->with_amount( $amount )
+			->with_interval( 1, 'M' )
+			->create();
+
+		$period_1 = $phase->next_period();
+		$period_2 = $phase->next_period();
+		$period_3 = $phase->next_period();
+
+		$this->assertEquals( '2020-01-31 00:00:00', $period_1->get_start_date()->format( 'Y-m-d H:i:s' ) );
+		$this->assertEquals( '2020-02-29 00:00:00', $period_2->get_start_date()->format( 'Y-m-d H:i:s' ) );
+		$this->assertEquals( '2020-03-31 00:00:00', $period_3->get_start_date()->format( 'Y-m-d H:i:s' ) );
+	}
+
+	/**
+	 * Test month overflow.
+	 */
+	public function test_month_overflow_29() {
+		$amount = new Money( 100, 'USD' );
+
+		$start_date = new \DateTimeImmutable( '2020-01-29 00:00:00' );
+
+		$phase = ( new SubscriptionPhaseBuilder() )
+			->with_start_date( $start_date )
+			->with_amount( $amount )
+			->with_interval( 1, 'M' )
+			->create();
+
+		$period_1 = $phase->next_period();
+		$period_2 = $phase->next_period();
+		$period_3 = $phase->next_period();
+
+		$this->assertEquals( '2020-01-29 00:00:00', $period_1->get_start_date()->format( 'Y-m-d H:i:s' ) );
+		$this->assertEquals( '2020-02-29 00:00:00', $period_2->get_start_date()->format( 'Y-m-d H:i:s' ) );
+		$this->assertEquals( '2020-03-29 00:00:00', $period_3->get_start_date()->format( 'Y-m-d H:i:s' ) );
+	}
 }

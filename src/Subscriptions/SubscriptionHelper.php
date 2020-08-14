@@ -223,10 +223,6 @@ class SubscriptionHelper {
 			throw new \InvalidArgumentException( 'Can not calculate next payment date of subscription without next period.' );
 		}
 
-		/**
-		 * @todo What about month overlflow? Previously interval date 'last' was used.
-		 * @link https://carbon.nesbot.com/docs/#overflow-static-helpers
-		 */
 		$next_date = $next_period->get_start_date();
 
 		$next_date = new \Pronamic\WordPress\DateTime\DateTime( $next_date->format( \DateTimeInterface::ATOM ) );
