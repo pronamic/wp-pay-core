@@ -435,25 +435,25 @@ class SubscriptionPhase implements \JsonSerializable {
 	 */
 	public function jsonSerialize() {
 		return (object) array(
-			'type'         => $this->type,
-			'name'         => $this->name,
-			'status'       => $this->status,
-			'start_date'   => $this->start_date->format( \DATE_ATOM ),
-			'interval'     => (object) array(
+			'type'              => $this->type,
+			'name'              => $this->name,
+			'status'            => $this->status,
+			'start_date'        => $this->start_date->format( \DATE_ATOM ),
+			'interval'          => (object) array(
 				'unit'  => $this->interval_unit,
 				'value' => $this->interval_value,
 			),
-			'amount'             => MoneyJsonTransformer::to_json( $this->amount ),
-			'proration'          => $this->proration,
+			'amount'            => MoneyJsonTransformer::to_json( $this->amount ),
+			'proration'         => $this->proration,
 			// Numbers.
 			'total_periods'     => $this->total_periods,
 			'periods_created'   => $this->periods_created,
 			'periods_remaining' => $this->get_periods_remaining(),
 			// Readonly.
-			'is_infinite'  => $this->is_infinite(),
-			'is_completed' => $this->is_completed(),
-			'is_canceled'  => $this->is_canceled(),
-			'is_trial'     => $this->is_trial(),
+			'is_infinite'       => $this->is_infinite(),
+			'is_completed'      => $this->is_completed(),
+			'is_canceled'       => $this->is_canceled(),
+			'is_trial'          => $this->is_trial(),
 		);
 	}
 
