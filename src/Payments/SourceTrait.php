@@ -8,7 +8,7 @@
  * @package   Pronamic\WordPress\Pay\Privacy
  */
 
-namespace Pronamic\WordPress\Pay\Privacy;
+namespace Pronamic\WordPress\Pay\Payments;
 
 /**
  * Source Trait
