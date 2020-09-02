@@ -35,6 +35,8 @@ abstract class PaymentInfo {
 
 	use \Pronamic\WordPress\Pay\Payments\PaymentInfoTrait;
 
+	use \Pronamic\WordPress\Pay\Payments\SourceTrait;
+
 	/**
 	 * The post object.
 	 *
@@ -76,24 +78,6 @@ abstract class PaymentInfo {
 	 * @var string|null
 	 */
 	public $key;
-
-	/**
-	 * Identifier for the source which started this payment info.
-	 * For example: 'woocommerce', 'gravityforms', 'easydigitaldownloads', etc.
-	 *
-	 * @var string|null
-	 */
-	public $source;
-
-	/**
-	 * Unique ID at the source which started this payment info, for example:
-	 * - WooCommerce order ID.
-	 * - Easy Digital Downloads payment ID.
-	 * - Gravity Forms entry ID.
-	 *
-	 * @var string|int|null
-	 */
-	public $source_id;
 
 	/**
 	 * Origin post ID.
@@ -341,34 +325,6 @@ abstract class PaymentInfo {
 	}
 
 	/**
-	 * Get the source identifier of this payment.
-	 *
-	 * @return string|null
-	 */
-	public function get_source() {
-		return $this->source;
-	}
-
-	/**
-	 * Set the source of this payment.
-	 *
-	 * @param string|null $source Source.
-	 * @return void
-	 */
-	public function set_source( $source ) {
-		$this->source = $source;
-	}
-
-	/**
-	 * Get the source ID of this payment.
-	 *
-	 * @return string|int|null
-	 */
-	public function get_source_id() {
-		return $this->source_id;
-	}
-
-	/**
 	 * Get origin post ID.
 	 *
 	 * @return int|null
@@ -385,16 +341,6 @@ abstract class PaymentInfo {
 	 */
 	public function set_origin_id( $origin_id ) {
 		$this->origin_id = $origin_id;
-	}
-
-	/**
-	 * Set the source ID of this payment.
-	 *
-	 * @param string|int|null $source_id Source ID.
-	 * @return void
-	 */
-	public function set_source_id( $source_id ) {
-		$this->source_id = $source_id;
 	}
 
 	/**
