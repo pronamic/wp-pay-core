@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Payments;
 
 use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Money\TaxedMoney;
 
 /**
  * Payment lines
@@ -88,10 +89,11 @@ class PaymentLines implements \Countable, \IteratorAggregate {
 	/**
 	 * Calculate the total amount of all lines.
 	 *
-	 * @return Money
+	 * @todo Calculate tax.
+	 * @return TaxedMoney
 	 */
 	public function get_amount() {
-		$amount = new Money();
+		$amount = new TaxedMoney();
 
 		foreach ( $this->lines as $line ) {
 			$amount = $amount->add( $line->get_total_amount() );
