@@ -132,8 +132,6 @@ class Util {
 	 * @return string
 	 */
 	public static function format_date_interval( DateInterval $date_interval ) {
-		$date_interval = new DateInterval( 'P2M1DT3H' );
-
 		// Periods.
 		$periods = array();
 
@@ -150,26 +148,32 @@ class Util {
 
 			switch ( $period ) {
 				case 'y':
+					/* translators: %s: number of years */
 					$format = _n( '%s year', '%s years', $value, 'pronamic_ideal' );
 
 					break;
 				case 'm':
+					/* translators: %s: number of months */
 					$format = _n( '%s month', '%s months', $value, 'pronamic_ideal' );
 
 					break;
 				case 'd':
+					/* translators: %s: number of days */
 					$format = _n( '%s day', '%s days', $value, 'pronamic_ideal' );
 
 					break;
 				case 'h':
+					/* translators: %s: number of hours */
 					$format = _n( '%s hour', '%s hours', $value, 'pronamic_ideal' );
 
 					break;
 				case 'i':
+					/* translators: %s: number of minutes */
 					$format = _n( '%s minute', '%s minutes', $value, 'pronamic_ideal' );
 
 					break;
 				case 's':
+					/* translators: %s: number of seconds */
 					$format = _n( '%s second', '%s seconds', $value, 'pronamic_ideal' );
 
 					break;
@@ -180,21 +184,27 @@ class Util {
 		}
 
 		// Multiple periods.
-		if ( count( $periods ) > 1) {
+		if ( count( $periods ) > 1 ) {
 			$last_period = \array_pop( $periods );
 
 			$formatted = \implode( ', ', $periods );
 
 			return sprintf(
 				/* translators: 1: formatted periods, 2: last formatted period */
-				__( 'Every %1$s and %2$s', 'pronamic_ideal' ), $formatted, $last_period
+				__( 'Every %1$s and %2$s', 'pronamic_ideal' ),
+				$formatted,
+				$last_period
 			);
 		}
 
 		// Single period.
 		$formatted = \implode( ', ', $periods );
 
-		return sprintf( __( 'Every %s', 'pronamic_ideal' ), $formatted );
+		return sprintf(
+			/* translators: %s: formatted date interval periods */
+			__( 'Every %s', 'pronamic_ideal' ),
+			$formatted
+		);
 	}
 
 	/**
