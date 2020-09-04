@@ -24,9 +24,18 @@ trait SubscriptionPhasesTrait {
 	/**
 	 * Phases.
 	 *
-	 * @var array
+	 * @var array<int, SubscriptionPhase>
 	 */
 	private $phases = array();
+
+	/**
+	 * Get phases.
+	 *
+	 * @return array<int, SubscriptionPhase>
+	 */
+	public function get_phases() {
+		return $this->phases;
+	}
 
 	/**
 	 * Add the specified phase to this subscription.

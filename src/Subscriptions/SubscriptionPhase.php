@@ -47,7 +47,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Name.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $name;
 
@@ -153,6 +153,15 @@ class SubscriptionPhase implements \JsonSerializable {
 	}
 
 	/**
+	 * Get name.
+	 *
+	 * @return string|null
+	 */
+	public function get_name() {
+		return $this->name;
+	}
+
+	/**
 	 * Get sequence number.
 	 *
 	 * @return int
@@ -186,6 +195,15 @@ class SubscriptionPhase implements \JsonSerializable {
 	 */
 	public function set_start_date( $start_date ) {
 		$this->start_date = $start_date;
+	}
+
+	/**
+	 * Get next date.
+	 *
+	 * @return DateTimeImmutable
+	 */
+	public function get_next_date() {
+		return $this->next_date;
 	}
 
 	/**
@@ -247,6 +265,15 @@ class SubscriptionPhase implements \JsonSerializable {
 	}
 
 	/**
+	 * Get periods created.
+	 *
+	 * @return int
+	 */
+	public function get_periods_created() {
+		return $this->periods_created;
+	}
+
+	/**
 	 * Set periods created.
 	 *
 	 * @param int|null $periods_created The number of periods created.
@@ -267,6 +294,15 @@ class SubscriptionPhase implements \JsonSerializable {
 		}
 
 		return $this->total_periods - $this->periods_created;
+	}
+
+	/**
+	 * Is proration?
+	 *
+	 * @return bool
+	 */
+	public function is_proration() {
+		return $this->proration;
 	}
 
 	/**
