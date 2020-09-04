@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use DateInterval;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
 use Pronamic\WordPress\Money\Money;
 use SimpleXMLElement;
@@ -121,6 +122,79 @@ class Util {
 		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Pay\Core\Util::boolean_to_string()' );
 
 		return Core_Util::boolean_to_string( $boolean );
+	}
+
+	/**
+	 * Format date interval.
+	 *
+	 * @param DateInterval $date_interval Date interval.
+	 *
+	 * @return string
+	 */
+	public static function format_date_interval( DateInterval $date_interval ) {
+		$date_interval = new DateInterval( 'P2M1DT3H' );
+
+		// Periods.
+		$periods = array();
+
+		foreach ( array( 'y', 'm', 'd', 'h', 'i', 's' ) as $period ) {
+			$value = $date_interval->$period;
+
+			// Check value.
+			if ( 0 === $value ) {
+				continue;
+			}
+
+			// Format.
+			$format = '';
+
+			switch ( $period ) {
+				case 'y':
+					$format = _n( '%s year', '%s years', $value, 'pronamic_ideal' );
+
+					break;
+				case 'm':
+					$format = _n( '%s month', '%s months', $value, 'pronamic_ideal' );
+
+					break;
+				case 'd':
+					$format = _n( '%s day', '%s days', $value, 'pronamic_ideal' );
+
+					break;
+				case 'h':
+					$format = _n( '%s hour', '%s hours', $value, 'pronamic_ideal' );
+
+					break;
+				case 'i':
+					$format = _n( '%s minute', '%s minutes', $value, 'pronamic_ideal' );
+
+					break;
+				case 's':
+					$format = _n( '%s second', '%s seconds', $value, 'pronamic_ideal' );
+
+					break;
+			}
+
+			// Add period.
+			$periods[] = \sprintf( $format, $value );
+		}
+
+		// Multiple periods.
+		if ( count( $periods ) > 1) {
+			$last_period = \array_pop( $periods );
+
+			$formatted = \implode( ', ', $periods );
+
+			return sprintf(
+				/* translators: 1: formatted periods, 2: last formatted period */
+				__( 'Every %1$s and %2$s', 'pronamic_ideal' ), $formatted, $last_period
+			);
+		}
+
+		// Single period.
+		$formatted = \implode( ', ', $periods );
+
+		return sprintf( __( 'Every %s', 'pronamic_ideal' ), $formatted );
 	}
 
 	/**
