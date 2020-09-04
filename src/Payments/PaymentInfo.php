@@ -29,6 +29,8 @@ use WP_Post;
  * @since   1.0.0
  */
 abstract class PaymentInfo {
+	use \Pronamic\WordPress\Pay\Core\TimestampsTrait;
+
 	use \Pronamic\WordPress\Pay\Core\VersionTrait;
 
 	use \Pronamic\WordPress\Pay\Privacy\AnonymizedTrait;
@@ -244,6 +246,8 @@ abstract class PaymentInfo {
 		$this->id   = $post_id;
 		$this->date = new DateTime();
 		$this->meta = array();
+
+		$this->touch();
 
 		$this->set_total_amount( new TaxedMoney() );
 	}
