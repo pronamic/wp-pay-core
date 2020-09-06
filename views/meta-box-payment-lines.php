@@ -100,7 +100,7 @@ if ( empty( $lines ) ) : ?>
 							$lines->get_array()
 						);
 
-						$discount_amount = new Money( array_sum( $values ), $payment->get_total_amount()->get_currency() );
+						$discount_amount = new Money( array_sum( $values ), $lines->get_amount()->get_currency() );
 
 						echo esc_html( $discount_amount );
 
@@ -116,7 +116,7 @@ if ( empty( $lines ) ) : ?>
 							$lines->get_array()
 						);
 
-						$total_exclusive = new Money( array_sum( $values ), $payment->get_total_amount()->get_currency() );
+						$total_exclusive = new Money( array_sum( $values ), $lines->get_amount()->get_currency() );
 
 						$tip = array(
 							sprintf(
@@ -126,7 +126,7 @@ if ( empty( $lines ) ) : ?>
 							),
 						);
 
-						if ( $payment->get_total_amount()->has_tax() ) {
+						if ( $lines->get_amount()->has_tax() ) {
 							$values = array_map(
 								function ( PaymentLine $line ) {
 									return $line->get_total_amount()->get_including_tax()->get_value();
@@ -134,7 +134,7 @@ if ( empty( $lines ) ) : ?>
 								$lines->get_array()
 							);
 
-							$total_inclusive = new Money( array_sum( $values ), $payment->get_total_amount()->get_currency() );
+							$total_inclusive = new Money( array_sum( $values ), $lines->get_amount()->get_currency() );
 
 							$tip[] = sprintf(
 								/* translators: %s: price including tax */
@@ -161,7 +161,7 @@ if ( empty( $lines ) ) : ?>
 							$lines->get_array()
 						);
 
-						$tax_amount = new Money( array_sum( $values ), $payment->get_total_amount()->get_currency()->get_alphabetic_code() );
+						$tax_amount = new Money( array_sum( $values ), $lines->get_amount()->get_currency()->get_alphabetic_code() );
 
 						echo esc_html( $tax_amount );
 
