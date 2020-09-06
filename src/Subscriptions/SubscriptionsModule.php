@@ -542,6 +542,13 @@ class SubscriptionsModule {
 			return;
 		}
 
+		// Set periods created in current phase.
+		$current_phase = $subscription->get_current_phase();
+
+		if ( null !== $current_phase && 0 === $current_phase->get_periods_created() ) {
+			$current_phase->set_periods_created( 1 );
+		}
+
 		// Complement subscription.
 		SubscriptionHelper::complement_subscription( $subscription );
 		SubscriptionHelper::complement_subscription_by_payment( $subscription, $payment );
