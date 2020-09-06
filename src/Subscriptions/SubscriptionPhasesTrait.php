@@ -24,7 +24,7 @@ trait SubscriptionPhasesTrait {
 	/**
 	 * Phases.
 	 *
-	 * @var array<int, SubscriptionPhase>
+	 * @var SubscriptionPhase[]
 	 */
 	private $phases = array();
 
