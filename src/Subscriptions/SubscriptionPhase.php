@@ -544,6 +544,10 @@ class SubscriptionPhase implements \JsonSerializable {
 			$builder->with_total_periods( $json->total_periods );
 		}
 
+		if ( property_exists( $json, 'periods_created' ) ) {
+			$builder->with_periods_created( $json->periods_created );
+		}
+
 		return $builder->create();
 	}
 
