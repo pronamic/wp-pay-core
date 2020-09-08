@@ -994,7 +994,7 @@ class SubscriptionsModule {
 				'methods'             => 'GET',
 				'callback'            => array( $this, 'rest_api_subscription' ),
 				'permission_callback' => function() {
-					return \current_user_can( 'manage_options' );
+					return \current_user_can( 'edit_payments' );
 				},
 				'args'                => array(
 					'subscription_id' => array(
