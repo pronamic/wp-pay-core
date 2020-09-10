@@ -1,23 +1,24 @@
+includes:
+	- vendor/szepeviktor/phpstan-wordpress/extension.neon
 parameters:
-	customRulesetUsed: false
 	level: max
-	bootstrapFiles:
-		- tests/bootstrap.php
-	paths:
-		- src
+	checkMissingIterableValueType: false
 	dynamicConstantNames:
 		- SCRIPT_DEBUG
+	bootstrapFiles:
+		- vendor/php-stubs/wp-cli-stubs/wp-cli-stubs.php
+		- tests/phpstan/bootstrap.php
+	paths:
+		- src/
 	ignoreErrors:
+		# Uses func_get_args()
+		- '#^Function apply_filters(_ref_array)? invoked with [34567] parameters, 2 required\.$#'
 		-
 			message: '#Function shortcode_ui_register_for_shortcode not found\.#'
-			path: %currentWorkingDirectory%/src/Forms/FormShortcode.php
-		-
-			message: '#Function wp_add_dashboard_widget not found\.#'
-			path: %currentWorkingDirectory%/src/Admin/AdminDashboard.php
+			path: src/Forms/FormShortcode.php
 		-
 			message: '#Function pll_home_url not found\.#'
-			path: %currentWorkingDirectory%/src/Payments/Payment.php
+			path: src/Payments/Payment.php
 		-
 			message: '#Call to an undefined method SoapClient::.+\(\)\.#'
-			path: %currentWorkingDirectory%/src/VatNumbers/VatNumberViesValidator.php
-	checkMissingIterableValueType: false
+			path: src/VatNumbers/VatNumberViesValidator.php
