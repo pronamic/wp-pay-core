@@ -8,7 +8,6 @@
  * @package   Pronamic\WordPress\Pay
  */
 
-use Pronamic\WordPress\Pay\Admin\AdminPaymentPostType;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 
@@ -52,7 +51,7 @@ function get_pronamic_payment( $post_id ) {
  * @link https://developer.wordpress.org/reference/functions/wp_reset_postdata/
  *
  * @param string     $meta_key   The meta key to query for.
- * @param string|int $meta_value The Meta value to query for.
+ * @param string|int $meta_value The meta value to query for.
  * @param array      $args       Query arguments.
  * @return Payment|null
  */
@@ -79,7 +78,7 @@ function get_pronamic_payment_by_meta( $meta_key, $meta_value, $args = array() )
  * @link https://developer.wordpress.org/reference/functions/wp_reset_postdata/
  *
  * @param string     $meta_key   The meta key to query for.
- * @param string|int $meta_value The Meta value to query for.
+ * @param string|int $meta_value The meta value to query for.
  * @param array      $args       Query arguments.
  * @return Payment[]
  */
@@ -249,7 +248,7 @@ function get_pronamic_subscriptions_by_meta( $meta_key, $meta_value ) {
  *
  * @param string      $source    The source to query for.
  * @param string|null $source_id The source ID to query for.
- * @return Subscription|null
+ * @return Subscription[]|null
  */
 function get_pronamic_subscriptions_by_source( $source, $source_id = null ) {
 	$subscriptions = array();
@@ -391,4 +390,3 @@ function pronamic_pay_update_post_meta_data( $post_id, array $data ) {
 		}
 	}
 }
-
