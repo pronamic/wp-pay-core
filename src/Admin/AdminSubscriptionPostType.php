@@ -303,18 +303,18 @@ class AdminSubscriptionPostType {
 
 				break;
 			case 'pronamic_subscription_recurring':
-				$interval        = $subscription->get_interval();
-				$interval_period = $subscription->get_interval_period();
-				$frequency       = $subscription->get_frequency();
+				// Current phase.
+				$phase = $subscription->get_current_phase();
 
-				if ( null !== $interval && null !== $interval_period ) {
-					echo esc_html( strval( Util::format_interval( $interval, $interval_period ) ) );
-				}
+				$date_interval = $phase->get_date_interval();
+				$total_periods = $phase->get_total_periods();
 
-				echo '<br />';
+				echo esc_html( strval( Util::format_date_interval( $date_interval ) ) );
 
-				if ( null !== $frequency ) {
-					echo esc_html( strval( Util::format_frequency( $frequency ) ) );
+				if ( null !== $total_periods ) {
+					echo '<br />';
+
+					echo esc_html( strval( Util::format_frequency( $total_periods ) ) );
 				}
 
 				break;
