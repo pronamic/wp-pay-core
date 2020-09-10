@@ -410,19 +410,11 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Get start date of specific period number.
 	 *
-	 * @param int $period Period number.
+	 * @param \DateTimeImmutable $date Date.
 	 * @return \DateTimeImmutable
 	 */
-	private function get_date( $period ) {
-		$date = clone $this->start_date;
-
-		if ( 1 === $period ) {
-			return $date;
-		}
-
-		$interval = new \DateInterval( 'P' . ( $this->interval_value * $period - 1 ) . $this->interval_unit );
-
-		$date = $date->add( $interval );
+	private function add_interval( $date ) {
+		$date = $date->add( $this->interval );
 
 		/**
 		 * Month overflow.
@@ -430,12 +422,20 @@ class SubscriptionPhase implements \JsonSerializable {
 		 * @link https://carbon.nesbot.com/docs/#overflow-static-helpers
 		 * @link https://github.com/briannesbitt/Carbon/blob/2.38.0/src/Carbon/Traits/Units.php#L309-L311
 		 */
-		if ( false === $this->month_overflow && 'M' === $this->interval_unit ) {
+		if ( false === $this->month_overflow && $this->interval->m > 0 ) {
 			$day_1 = $this->start_date->format( 'd' );
 			$day_2 = $date->format( 'd' );
 
-			if ( $day_1 !== $day_2 ) {
+			if ( $day_1 > 28 && $day_2 < 3 ) {
 				$date = $date->modify( 'last day of previous month' );
+
+				return $date;
+			}
+
+			if ( $day_1 !== $day_2 ) {
+				$date = $date->modify( 'last day of this month' );
+
+				return $date;
 			}
 		}
 
@@ -453,9 +453,8 @@ class SubscriptionPhase implements \JsonSerializable {
 			return null;
 		}
 
-		$start = $this->get_date( $this->periods_created + 1 );
-
-		$end = $this->get_date( $this->periods_created + 2 );
+		$start = $this->next_date;
+		$end   = $this->add_interval( $this->next_date );
 
 		$period = new Period( null, $this, $start, $end, clone $this->amount );
 
