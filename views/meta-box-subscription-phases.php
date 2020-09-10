@@ -41,7 +41,11 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 		<tbody>
 
 			<?php
-			/** @var SubscriptionPhase $phase */
+			/**
+			 * Subscription phase.
+			 *
+			 * @var SubscriptionPhase $phase
+			 */
 			foreach ( $phases as $phase ) :
 				?>
 
