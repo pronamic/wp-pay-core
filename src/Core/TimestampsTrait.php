@@ -22,21 +22,21 @@ trait TimestampsTrait {
 	/**
 	 * Created At.
 	 *
-	 * @var DateTime|null
+	 * @var \DateTime|null
 	 */
 	private $created_at;
 
 	/**
 	 * Updated At.
 	 *
-	 * @var DateTime|null
+	 * @var \DateTime|null
 	 */
 	private $updated_at;
 
 	/**
 	 * Set created at.
 	 *
-	 * @param DateTime|null $created_at Created at.
+	 * @param \DateTime|null $created_at Created at.
 	 */
 	public function set_created_at( $created_at ) {
 		$this->created_at = $created_at;
@@ -45,7 +45,7 @@ trait TimestampsTrait {
 	/**
 	 * Get created at.
 	 *
-	 * @return DateTime|null
+	 * @return \DateTime|null
 	 */
 	public function get_created_at() {
 		return $this->created_at;
@@ -54,7 +54,7 @@ trait TimestampsTrait {
 	/**
 	 * Set updated at.
 	 *
-	 * @param DateTime|null $updated_at Updated at.
+	 * @param \DateTime|null $updated_at Updated at.
 	 */
 	public function set_updated_at( $updated_at ) {
 		$this->updated_at = $updated_at;
@@ -63,7 +63,7 @@ trait TimestampsTrait {
 	/**
 	 * Get updated at.
 	 *
-	 * @return DateTime|null
+	 * @return \DateTime|null
 	 */
 	public function get_updated_at() {
 		return $this->updated_at;
