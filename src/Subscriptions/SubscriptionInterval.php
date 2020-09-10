@@ -31,7 +31,7 @@ class SubscriptionInterval extends \DateInterval implements \JsonSerializable {
 	 * @link https://en.wikipedia.org/wiki/ISO_8601#Durations
 	 * @link https://www.php.net/manual/en/dateinterval.construct.php
 	 * @link https://github.com/php/php-src/blob/php-7.4.10/ext/date/php_date.c#L414-L416
-	 * @var string $specification An interval specification.
+	 * @param string $specification An interval specification.
 	 */
 	public function __construct( $specification ) {
 		$this->specification = $specification;
