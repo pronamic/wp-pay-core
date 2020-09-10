@@ -24,6 +24,6 @@ class SubscriptionIntervalTest extends \WP_UnitTestCase {
 		$interval = new SubscriptionInterval( 'P2Y6M' );
 
 		$this->assertEquals( 'P2Y6M', \strval( $interval ) );
-		$this->assertEquals( '"P2Y6M"', \json_encode( $interval ) );
+		$this->assertEquals( '"P2Y6M"', \wp_json_encode( $interval ) );
 	}
 }

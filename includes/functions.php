@@ -233,7 +233,7 @@ function get_pronamic_subscriptions_by_meta( $meta_key, $meta_value, $args = arr
 		'value' => $meta_value,
 	);
 
-	$query  = new WP_Query( $args );
+	$query = new WP_Query( $args );
 
 	foreach ( $query->posts as $p ) {
 		$subscription = get_pronamic_subscription( $p->ID );
