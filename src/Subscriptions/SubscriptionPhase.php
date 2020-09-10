@@ -86,6 +86,13 @@ class SubscriptionPhase implements \JsonSerializable {
 	private $interval_value;
 
 	/**
+	 * Interval.
+	 *
+	 * @var SubscriptionInterval
+	 */
+	private $interval;
+
+	/**
 	 * Total periods, also known as:
 	 * - Number recurrences
 	 * - Frequency.
@@ -120,8 +127,11 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * The start date of the next period, also known as:
 	 * - Billing cycle anchor (billing_cycle_anchor).
+	 * - Period anchor.
 	 *
-	 * @var DateTimeImmutable|null
+	 * @link https://stripe.com/docs/billing/subscriptions/billing-cycle
+	 * @link https://stripe.com/docs/api/subscriptions/create#create_subscription-billing_cycle_anchor
+	 * @var DateTimeImmutable
 	 */
 	private $next_date;
 
@@ -150,6 +160,8 @@ class SubscriptionPhase implements \JsonSerializable {
 		$this->amount          = $amount;
 
 		$this->periods_created = 0;
+
+		$this->interval = new SubscriptionInterval( 'P' . $this->interval_value . $this->interval_unit );
 	}
 
 	/**
