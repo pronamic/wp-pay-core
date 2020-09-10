@@ -140,6 +140,21 @@ function get_pronamic_payment_by_transaction_id( $transaction_id ) {
 }
 
 /**
+ * Get payments by the specified user ID.
+ *
+ * @param string|int $user_id The user ID to query for.
+ *
+ * @return Payment[]
+ */
+function get_pronamic_payments_by_user_id( $user_id = null ) {
+	if ( null === $user_id ) {
+		$user_id = \get_current_user_id();
+	}
+
+	return get_pronamic_payments_by_meta( null, null, array( 'author' => $user_id ) );
+}
+
+/**
  * Get subscription by the specified post ID.
  *
  * @param int $post_id A subscription post ID.
@@ -229,6 +244,21 @@ function get_pronamic_subscriptions_by_meta( $meta_key, $meta_value, $args = arr
 	}
 
 	return $subscriptions;
+}
+
+/**
+ * Get subscriptions by the specified user ID.
+ *
+ * @param string|int $user_id The user ID to query for.
+ *
+ * @return Subscription[]
+ */
+function get_pronamic_subscriptions_by_user_id( $user_id = null ) {
+	if ( null === $user_id ) {
+		$user_id = \get_current_user_id();
+	}
+
+	return get_pronamic_subscriptions_by_meta( null, null, array( 'author' => $user_id ) );
 }
 
 /**
