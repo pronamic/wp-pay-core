@@ -421,6 +421,7 @@ class SubscriptionPhase implements \JsonSerializable {
 		 *
 		 * @link https://carbon.nesbot.com/docs/#overflow-static-helpers
 		 * @link https://github.com/briannesbitt/Carbon/blob/2.38.0/src/Carbon/Traits/Units.php#L309-L311
+		 * @link https://stackoverflow.com/questions/3602405/php-datetimemodify-adding-and-subtracting-months
 		 */
 		if ( false === $this->month_overflow && $this->interval->m > 0 ) {
 			$day_1 = $this->start_date->format( 'd' );
