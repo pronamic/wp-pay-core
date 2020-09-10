@@ -186,6 +186,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * Set sequence number.
 	 *
 	 * @param int $sequence_number Sequence number.
+	 * @return void
 	 */
 	public function set_sequence_number( $sequence_number ) {
 		$this->sequence_number = $sequence_number;
@@ -204,6 +205,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * Set start date.
 	 *
 	 * @param DateTimeImmutable $start_date Start date.
+	 * @return void
 	 */
 	public function set_start_date( $start_date ) {
 		$this->start_date = $start_date;

@@ -41,6 +41,7 @@ trait SubscriptionPhasesTrait {
 	 * Add the specified phase to this subscription.
 	 *
 	 * @param SubscriptionPhase $phase Phase.
+	 * @return void
 	 */
 	public function add_phase( SubscriptionPhase $phase ) {
 		$this->phases[] = $phase;

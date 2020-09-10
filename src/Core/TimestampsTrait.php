@@ -37,6 +37,7 @@ trait TimestampsTrait {
 	 * Set created at.
 	 *
 	 * @param \DateTime|null $created_at Created at.
+	 * @return void
 	 */
 	public function set_created_at( $created_at ) {
 		$this->created_at = $created_at;
@@ -55,6 +56,7 @@ trait TimestampsTrait {
 	 * Set updated at.
 	 *
 	 * @param \DateTime|null $updated_at Updated at.
+	 * @return void
 	 */
 	public function set_updated_at( $updated_at ) {
 		$this->updated_at = $updated_at;
@@ -71,6 +73,8 @@ trait TimestampsTrait {
 
 	/**
 	 * Touch.
+	 *
+	 * @return void
 	 */
 	public function touch() {
 		if ( null === $this->created_at ) {

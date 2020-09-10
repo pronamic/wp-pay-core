@@ -29,6 +29,13 @@ class SubscriptionPhaseBuilder {
 	private $start_date;
 
 	/**
+	 * Name.
+	 *
+	 * @var string|null
+	 */
+	private $name;
+
+	/**
 	 * Type.
 	 *
 	 * @var string|null
