@@ -229,7 +229,7 @@ abstract class AbstractDataStoreCPT {
 			return false;
 		}
 
-		if ( $value instanceof \DateTime ) {
+		if ( $value instanceof \DateTimeInterface ) {
 			$value = $this->get_mysql_utc_date( $value );
 		}
 

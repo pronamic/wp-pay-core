@@ -92,9 +92,9 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 					<td>
 						<?php
 
-						$next_period = $phase->get_next_period();
+						$next_date = $phase->get_next_date();
 
-						echo esc_html( null === $next_period ? '—' : ( new \Pronamic\WordPress\DateTime\DateTime( '@' . $next_period->get_start_date()->getTimestamp() ) )->format_i18n() );
+						echo esc_html( null === $next_date ? '—' : ( new \Pronamic\WordPress\DateTime\DateTime( '@' . $next_date->getTimestamp() ) )->format_i18n() );
 
 						?>
 					</td>

@@ -101,7 +101,7 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 
 		// Calculate.
 		$this->expectException( \InvalidArgumentException::class );
-		$this->expectExceptionMessage( 'Can not calculate next payment date of subscription without next period.' );
+		$this->expectExceptionMessage( 'Can not calculate next payment date of subscription without phases.' );
 
 		$next_payment_date = SubscriptionHelper::calculate_next_payment_date( $subscription );
 	}
@@ -116,7 +116,7 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 
 		// Calculate.
 		$this->expectException( \InvalidArgumentException::class );
-		$this->expectExceptionMessage( 'Can not calculate next payment date of subscription without next period.' );
+		$this->expectExceptionMessage( 'Can not calculate next payment date of subscription without phases.' );
 
 		$next_payment_date = SubscriptionHelper::calculate_next_payment_date( $subscription );
 	}
@@ -154,8 +154,13 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 		// Calculate.
 		$next_payment_date = SubscriptionHelper::calculate_next_payment_date( $subscription );
 
-		$this->assertInstanceOf( \DateTimeInterface::class, $next_payment_date );
-		$this->assertEquals( $expected_date, $next_payment_date->format( 'Y-m-d' ) );
+		if ( null !== $next_payment_date ) {
+			$this->assertInstanceOf( \DateTimeInterface::class, $next_payment_date );
+
+			$next_payment_date = $next_payment_date->format( 'Y-m-d' );
+		}
+
+		$this->assertEquals( $expected_date, $next_payment_date );
 	}
 
 	/**
@@ -165,12 +170,12 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 	 */
 	public function subscription_interval_provider() {
 		return array(
-			array( '2005-05-05', 1, 'W', 1, '2005-05-12' ),
-			array( '2005-05-05', 3, 'W', 2, '2005-05-26' ),
-			array( '2005-05-05', 1, 'M', 3, '2005-06-05' ),
-			array( '2005-05-05', 1, 'M', 6, '2005-06-05' ),
-			array( '2005-05-05', 1, 'Y', 1, '2006-05-05' ),
-			array( '2005-05-05', 1, 'Y', 4, '2006-05-05' ),
+			array( '2005-05-05', 'P1W', 1, null ),
+			array( '2005-05-05', 'P3W', 2, '2005-05-26' ),
+			array( '2005-05-05', 'P1M', 3, '2005-06-05' ),
+			array( '2005-05-05', 'P1M', 6, '2005-06-05' ),
+			array( '2005-05-05', 'P1Y', 1, null ),
+			array( '2005-05-05', 'P1Y', 4, '2006-05-05' ),
 		);
 	}
 
@@ -181,10 +186,9 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 		$subscription = new Subscription();
 
 		// Calculate.
-		$this->expectException( \InvalidArgumentException::class );
-		$this->expectExceptionMessage( 'Can not calculate next payment delivery date of subscription without next payment date.' );
-
 		$next_payment_delivery_date = SubscriptionHelper::calculate_next_payment_delivery_date( $subscription );
+
+		$this->assertNull( $next_payment_delivery_date );
 	}
 
 	/**

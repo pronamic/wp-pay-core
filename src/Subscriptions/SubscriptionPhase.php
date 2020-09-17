@@ -193,7 +193,24 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return DateTimeImmutable
 	 */
 	public function get_next_date() {
-		return $this->next_date;
+		$start = $this->start_date;
+
+		if ( null === $start ) {
+			throw new \InvalidArgumentException( 'Can not get next date of subscription phase without start date.' );
+		}
+
+		// Calculate next date.
+		$next_date = null;
+
+		if ( ! $this->is_completed() ) {
+			if ( 0 === $this->periods_created ) {
+				return $start;
+			}
+
+			$next_date = $this->add_interval( $start, $this->periods_created );
+		}
+
+		return $next_date;
 	}
 
 	/**
@@ -435,8 +452,8 @@ class SubscriptionPhase implements \JsonSerializable {
 			return null;
 		}
 
-		$start = $this->next_date;
-		$end   = $this->add_interval( $this->next_date );
+		$start = $this->get_next_date();
+		$end   = $this->add_interval( $start );
 
 		$period = new Period( null, $this, $start, $end, clone $this->amount );
 
@@ -456,12 +473,6 @@ class SubscriptionPhase implements \JsonSerializable {
 		}
 
 		$this->periods_created++;
-
-		$this->next_date = null;
-
-		if ( ! $this->is_completed() ) {
-			$this->next_date = clone $next_period->get_end_date();
-		}
 
 		return $next_period;
 	}

@@ -214,18 +214,27 @@ class SubscriptionHelper {
 	 *
 	 * @param Subscription $subscription Subscription.
 	 * @return DateTime|null
-	 * @throws \InvalidArgumentException Throws exception when start or date interval are not available.
+	 * @throws \Exception Throws exception on next payment date error.
+	 * @throws \InvalidArgumentException Throws invalid argument exception if no phases are defined.
 	 */
 	public static function calculate_next_payment_date( Subscription $subscription ) {
+		// Throw exception if phases are not defined.
+		$phases = $subscription->get_phases();
+
+		if ( 0 === count( $phases ) ) {
+			throw new \InvalidArgumentException( 'Can not calculate next payment date of subscription without phases.' );
+		}
+
+		// Get start of next period as next payment date.
 		$next_period = $subscription->get_next_period();
 
 		if ( null === $next_period ) {
-			throw new \InvalidArgumentException( 'Can not calculate next payment date of subscription without next period.' );
+			return null;
 		}
 
 		$next_date = $next_period->get_start_date();
 
-		$next_date = new \Pronamic\WordPress\DateTime\DateTime( $next_date->format( \DateTimeInterface::ATOM ) );
+		$next_date = new DateTime( $next_date->format( \DateTimeInterface::ATOM ) );
 
 		return $next_date;
 	}
@@ -234,14 +243,14 @@ class SubscriptionHelper {
 	 * Calculate next payment delivery date.
 	 *
 	 * @param Subscription $subscription Subscription.
-	 * @return DateTime
-	 * @throws \InvalidArgumentException Throws exception when next payment date is null.
+	 * @return DateTime|null
 	 */
 	public static function calculate_next_payment_delivery_date( $subscription ) {
 		$next_payment_date = $subscription->get_next_payment_date();
 
+		// Check if there is next payment date.
 		if ( null === $next_payment_date ) {
-			throw new \InvalidArgumentException( 'Can not calculate next payment delivery date of subscription without next payment date.' );
+			return null;
 		}
 
 		$next_payment_delivery_date = clone $next_payment_date;
