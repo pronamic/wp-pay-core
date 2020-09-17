@@ -64,18 +64,11 @@ class SubscriptionPhaseBuilder {
 	private $amount;
 
 	/**
-	 * Interval value.
-	 *
-	 * @var int|null
-	 */
-	private $interval_value;
-
-	/**
-	 * Interval unit.
+	 * Interval specification.
 	 *
 	 * @var string|null
 	 */
-	private $interval_unit;
+	private $interval_spec;
 
 	/**
 	 * Whether to prorate amount.
@@ -171,13 +164,11 @@ class SubscriptionPhaseBuilder {
 	/**
 	 * With interval.
 	 *
-	 * @param int    $interval_value Interval value.
-	 * @param string $interval_unit  Interval unit.
+	 * @param int    $interval_spec Interval specification.
 	 * @return $this
 	 */
-	public function with_interval( $interval_value, $interval_unit ) {
-		$this->interval_value = $interval_value;
-		$this->interval_unit  = $interval_unit;
+	public function with_interval( $interval_spec ) {
+		$this->interval_spec = $interval_spec;
 
 		return $this;
 	}
@@ -199,7 +190,7 @@ class SubscriptionPhaseBuilder {
 	 * @return SubscriptionPhase
 	 */
 	public function create() {
-		$phase = new SubscriptionPhase( $this->start_date, $this->interval_unit, $this->interval_value, $this->amount );
+		$phase = new SubscriptionPhase( $this->start_date, $this->interval_spec, $this->amount );
 
 		$phase->set_type( $this->type );
 		$phase->set_total_periods( $this->total_periods );

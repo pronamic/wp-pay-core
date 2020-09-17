@@ -28,13 +28,13 @@ class SubscriptionBuilderTest extends \WP_UnitTestCase {
 			->with_type( 'trial' )
 			->with_total_periods( 1 )
 			->with_amount( new Money( 50, 'EUR' ) )
-			->with_interval( 1, 'M' )
+			->with_interval( 'P1M' )
 			->create();
 
 		$regular = ( new SubscriptionPhaseBuilder() )
 			->with_start_date( $trial->get_end_date() )
 			->with_amount( new Money( 100, 'EUR' ) )
-			->with_interval( 1, 'Y' )
+			->with_interval( 'P1Y' )
 			->create();
 
 		$subscription = ( new SubscriptionBuilder() )
@@ -127,7 +127,7 @@ class SubscriptionBuilderTest extends \WP_UnitTestCase {
 		$phase_alignment = ( new SubscriptionPhaseBuilder() )
 			->with_start_date( $start_date )
 			->with_amount( $prorate_amount )
-			->with_interval( $date_interval->days, 'D' )
+			->with_interval( 'P' . $date_interval->days . 'D' )
 			->with_total_periods( 1 )
 			->with_proration()
 			->create();

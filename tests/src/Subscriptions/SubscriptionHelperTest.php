@@ -125,21 +125,16 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 	 * Test calculate next payment.
 	 *
 	 * @dataProvider subscription_interval_provider
-	 * @param string $start_date      Start date.
-	 * @param int    $interval        Interval.
-	 * @param string $interval_period Interval period.
-	 * @param int    $recurrences     Recurrences.
-	 * @param string $expected_date   Expected date.
+	 * @param string $start_date    Start date.
+	 * @param string $interval_spec Interval specification.
+	 * @param int    $recurrences   Recurrences.
+	 * @param string $expected_date Expected date.
 	 */
-	public function test_calculate_next_payment_date( $start_date, $interval, $interval_period, $recurrences, $expected_date ) {
+	public function test_calculate_next_payment_date( $start_date, $interval_spec, $recurrences, $expected_date ) {
 		$subscription = new Subscription();
 
 		// Start Date.
 		$subscription->set_start_date( new \DateTime( $start_date ) );
-
-		// Date Interval.
-		$subscription->interval        = $interval;
-		$subscription->interval_period = $interval_period;
 
 		// Recurrences.
 		$subscription->frequency = $recurrences;
@@ -148,7 +143,7 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 		$phase = ( new SubscriptionPhaseBuilder() )
 			->with_start_date( new \DateTimeImmutable( $start_date ) )
 			->with_amount( new Money( 100, 'USD' ) )
-			->with_interval( $interval, $interval_period )
+			->with_interval( $interval_spec )
 			->with_total_periods( $recurrences )
 			->create();
 

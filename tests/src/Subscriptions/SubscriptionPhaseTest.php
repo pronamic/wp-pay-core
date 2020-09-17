@@ -25,7 +25,7 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 	 * @return SubscriptionPhase
 	 */
 	private function new_subscription_phase() {
-		$subscription_phase = new SubscriptionPhase( new \DateTimeImmutable(), 'Y', 5, new Money( 50, 'EUR' ) );
+		$subscription_phase = new SubscriptionPhase( new \DateTimeImmutable(), 'P5Y', new Money( 50, 'EUR' ) );
 
 		return $subscription_phase;
 	}
@@ -119,7 +119,7 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 		$regular_phase = ( new SubscriptionPhaseBuilder() )
 			->with_start_date( $start_date )
 			->with_amount( $amount )
-			->with_interval( 1, 'Y' )
+			->with_interval( 'P1Y' )
 			->create();
 
 		// Proration phase.
@@ -145,7 +145,7 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 		$phase = ( new SubscriptionPhaseBuilder() )
 			->with_start_date( $start_date )
 			->with_amount( $amount )
-			->with_interval( 1, 'M' )
+			->with_interval( 'P1M' )
 			->create();
 
 		$period_1 = $phase->next_period();
@@ -168,7 +168,7 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 		$phase = ( new SubscriptionPhaseBuilder() )
 			->with_start_date( $start_date )
 			->with_amount( $amount )
-			->with_interval( 1, 'M' )
+			->with_interval( 'P1M' )
 			->create();
 
 		$period_1 = $phase->next_period();
@@ -191,7 +191,7 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 		$phase = ( new SubscriptionPhaseBuilder() )
 			->with_start_date( $start_date )
 			->with_amount( $amount )
-			->with_interval( 1, 'W' )
+			->with_interval( 'P1W' )
 			->create();
 
 		$period_1 = $phase->next_period();

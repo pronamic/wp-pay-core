@@ -66,26 +66,6 @@ class SubscriptionPhase implements \JsonSerializable {
 	private $amount;
 
 	/**
-	 * Interval unit, also know as:
-	 * - Period designator.
-	 *
-	 * @link https://www.php.net/manual/en/dateinterval.construct.php
-	 * @link https://dev.mysql.com/doc/refman/8.0/en/date-and-time-functions.html#function_date-add
-	 * @var string
-	 */
-	private $interval_unit;
-
-	/**
-	 * Interval value, also known as:
-	 * - Interval number.
-	 * - Interval count.
-	 * - Interval expression.
-	 *
-	 * @var int
-	 */
-	private $interval_value;
-
-	/**
 	 * Interval.
 	 *
 	 * @var SubscriptionInterval
@@ -145,23 +125,19 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Construct subscription phase.
 	 *
-	 * @param DateTimeImmutable $start_date     Start date.
-	 * @param string            $interval_unit  Interval unit.
-	 * @param int               $interval_value Interval value.
-	 * @param Money             $amount         Amount.
+	 * @param DateTimeImmutable $start_date    Start date.
+	 * @param string            $interval_spec Interval specification.
+	 * @param Money             $amount        Amount.
 	 * @return void
 	 */
-	public function __construct( $start_date, $interval_unit, $interval_value, $amount ) {
+	public function __construct( $start_date, $interval_spec, $amount ) {
 		$this->sequence_number = 1;
 		$this->start_date      = clone $start_date;
-		$this->next_date       = clone $start_date;
-		$this->interval_unit   = $interval_unit;
-		$this->interval_value  = $interval_value;
 		$this->amount          = $amount;
 
 		$this->periods_created = 0;
 
-		$this->interval = new SubscriptionInterval( 'P' . $this->interval_value . $this->interval_unit );
+		$this->interval = new SubscriptionInterval( $interval_spec );
 	}
 
 	/**
@@ -380,13 +356,10 @@ class SubscriptionPhase implements \JsonSerializable {
 	 *
 	 * @link https://www.php.net/manual/en/class.dateinterval.php
 	 * @link https://www.php.net/manual/en/dateinterval.construct.php
-	 * @return \DateInterval
-	 * @throws \Exception Throws exception on invalid interval spec.
+	 * @return SubscriptionInterval
 	 */
 	public function get_date_interval() {
-		$duration = 'P' . $this->interval_value . $this->interval_unit;
-
-		return new \DateInterval( $duration );
+		return $this->interval;
 	}
 
 	/**
@@ -400,23 +373,29 @@ class SubscriptionPhase implements \JsonSerializable {
 			return null;
 		}
 
-		$date = clone $this->start_date;
+		$start_date = clone $this->start_date;
 
-		$interval = new \DateInterval( 'P' . ( $this->interval_value * $this->total_periods ) . $this->interval_unit );
+		$end_date = $this->add_interval( $start_date, $this->total_periods );
 
-		$date = $date->add( $interval );
-
-		return $date;
+		return $end_date;
 	}
 
 	/**
-	 * Get start date of specific period number.
+	 * Add subscription phase interval to date.
 	 *
-	 * @param \DateTimeImmutable $date Date.
+	 * @param \DateTimeImmutable $date  Date to add interval period to.
+	 * @param int                $times Number of times to add interval.
 	 * @return \DateTimeImmutable
 	 */
-	private function add_interval( $date ) {
-		$date = $date->add( $this->interval );
+	private function add_interval( $date, $times = 1 ) {
+		$interval = $this->interval;
+
+		// Multiply date interval.
+		if ( 1 !== $times ) {
+			$interval = $interval->multiply( $times );
+		}
+
+		$date = $date->add( $interval );
 
 		/**
 		 * Month overflow.
@@ -498,10 +477,7 @@ class SubscriptionPhase implements \JsonSerializable {
 			'name'              => $this->name,
 			'status'            => $this->status,
 			'start_date'        => $this->start_date->format( \DATE_ATOM ),
-			'interval'          => (object) array(
-				'unit'  => $this->interval_unit,
-				'value' => $this->interval_value,
-			),
+			'interval'          => $this->interval->get_specification(),
 			'amount'            => MoneyJsonTransformer::to_json( $this->amount ),
 			'proration'         => $this->proration,
 			// Numbers.
@@ -547,7 +523,14 @@ class SubscriptionPhase implements \JsonSerializable {
 		}
 
 		if ( property_exists( $json, 'interval' ) ) {
-			$builder->with_interval( $json->interval->value, $json->interval->unit );
+			$interval = $json->interval;
+
+			// @todo Remove development transform from interval object to interval specification.
+			if ( \is_object( $interval ) ) {
+				$interval = 'P' . $interval->value . $interval->unit;
+			}
+
+			$builder->with_interval( $interval );
 		}
 
 		if ( property_exists( $json, 'amount' ) ) {
@@ -591,7 +574,7 @@ class SubscriptionPhase implements \JsonSerializable {
 		$proration_phase = ( new SubscriptionPhaseBuilder() )
 			->with_start_date( $start_date )
 			->with_amount( $proration_amount )
-			->with_interval( $proration_difference->days, 'D' )
+			->with_interval( 'P' . $proration_difference->days . 'D' )
 			->with_total_periods( 1 )
 			->with_proration()
 			->create();

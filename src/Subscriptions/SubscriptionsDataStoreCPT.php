@@ -370,8 +370,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		if ( is_object( $json ) && ! property_exists( $json, 'phases' ) ) {
 			$phase = $subscription->new_phase(
 				$subscription->start_date,
-				$subscription->get_interval_period(),
-				$subscription->get_interval(),
+				'P' . $subscription->get_interval() . $subscription->get_interval_period(),
 				$subscription->get_total_amount()
 			);
 

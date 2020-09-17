@@ -40,6 +40,62 @@ class SubscriptionInterval extends \DateInterval implements \JsonSerializable {
 	}
 
 	/**
+	 * Get specification.
+	 *
+	 * @return string
+	 */
+	public function get_specification() {
+		return $this->specification;
+	}
+
+	/**
+	 * Multiply.
+	 *
+	 * @param $times Number of times to multiply with.
+	 * @return SubscriptionInterval
+	 */
+	public function multiply( $times ) {
+		$interval_spec = 'P';
+
+		// Date.
+		$date = array(
+			'Y' => $this->y * $times,
+			'M' => $this->m * $times,
+			'D' => $this->d * $times,
+		);
+
+		foreach ( $date as $unit => $value ) {
+			if ( 0 === $value ) {
+				continue;
+			}
+
+			$interval_spec .= $value . $unit;
+		}
+
+		// Time.
+		$time = array(
+			'H' => $this->h * $times,
+			'M' => $this->i * $times,
+			'S' => $this->s * $times,
+		);
+
+		foreach ( $time as $unit => $value ) {
+			if ( 0 === $value ) {
+				continue;
+			}
+
+			// Add time designator.
+			if ( false === \strpos( $interval_spec, 'T' ) ) {
+				$interval_spec .= 'T';
+			}
+
+			$interval_spec .= $value . $unit;
+		}
+
+		return new self( $interval_spec );
+	}
+
+	/**
 	 * JSON serialize.
 	 *
 	 * @link https://www.php.net/manual/en/jsonserializable.jsonserialize.php

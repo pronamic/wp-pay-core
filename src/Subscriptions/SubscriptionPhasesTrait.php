@@ -51,13 +51,12 @@ trait SubscriptionPhasesTrait {
 	 * Create new phase for this subscription.
 	 *
 	 * @param DateTime $start_date     Start date.
-	 * @param string   $interval_unit  Interval unit.
-	 * @param int      $interval_value Interval value.
+	 * @param string   $interval_spec  Interval specification.
 	 * @param Money    $amount         Amount.
 	 * @return SubscriptionPhase
 	 */
-	public function new_phase( $start_date, $interval_unit, $interval_value, $amount ) {
-		$phase = new SubscriptionPhase( $start_date, $interval_unit, $interval_value, $amount );
+	public function new_phase( $start_date, $interval_spec, $amount ) {
+		$phase = new SubscriptionPhase( $start_date, $interval_spec, $amount );
 
 		$sequence_number = \count( $this->phases ) + 1;
 
