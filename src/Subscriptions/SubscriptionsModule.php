@@ -871,6 +871,10 @@ class SubscriptionsModule {
 			try {
 				$payment = $this->start_recurring( $subscription, $gateway );
 			} catch ( \Exception $e ) {
+				if ( $cli_test ) {
+					WP_CLI::error( $e->getMessage() , false );
+				}
+
 				continue;
 			}
 
