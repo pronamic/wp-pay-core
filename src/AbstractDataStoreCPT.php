@@ -78,9 +78,7 @@ abstract class AbstractDataStoreCPT {
 	protected function get_mysql_utc_date( \DateTimeInterface $date ) {
 		$date = clone $date;
 
-		if ( ! ( $date instanceof \DateTimeImmutable ) ) {
-			$date->setTimezone( new DateTimeZone( 'UTC' ) );
-		}
+		$date = $date->setTimezone( new DateTimeZone( 'UTC' ) );
 
 		return $date->format( DateTime::MYSQL );
 	}
