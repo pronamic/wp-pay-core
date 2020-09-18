@@ -227,18 +227,16 @@ class Subscription extends LegacyPaymentInfo {
 	 *
 	 * @link http://php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters
 	 *
-	 * @return DateInterval|null
+	 * @return SubscriptionInterval|null
 	 */
 	public function get_date_interval() {
-		$interval_spec = 'P' . $this->interval . $this->interval_period;
+		$phase = $this->get_current_phase();
 
-		try {
-			$interval = new DateInterval( $interval_spec );
-		} catch ( \Exception $e ) {
-			$interval = null;
+		if ( null === $phase ) {
+			return null;
 		}
 
-		return $interval;
+		return $phase->get_date_interval();
 	}
 
 	/**
