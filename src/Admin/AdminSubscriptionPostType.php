@@ -306,6 +306,12 @@ class AdminSubscriptionPostType {
 				// Current phase.
 				$phase = $subscription->get_current_phase();
 
+				if ( null === $phase ) {
+					echo '—';
+
+					return;
+				}
+
 				$date_interval = $phase->get_date_interval();
 				$total_periods = $phase->get_total_periods();
 
