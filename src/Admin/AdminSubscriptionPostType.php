@@ -386,15 +386,6 @@ class AdminSubscriptionPostType {
 		);
 
 		add_meta_box(
-			'pronamic_subscription_periods_payments',
-			__( 'Payments by period', 'pronamic_ideal' ),
-			array( $this, 'meta_box_periods_payments' ),
-			$post_type,
-			'normal',
-			'high'
-		);
-
-		add_meta_box(
 			'pronamic_subscription_payments',
 			__( 'Payments', 'pronamic_ideal' ),
 			array( $this, 'meta_box_payments' ),
@@ -493,25 +484,6 @@ class AdminSubscriptionPostType {
 		$phases = $subscription->get_phases();
 
 		include __DIR__ . '/../../views/meta-box-subscription-phases.php';
-	}
-
-	/**
-	 * Pronamic Pay subscription periods payments meta box.
-	 *
-	 * @param WP_Post $post The object for the current post/page.
-	 * @return void
-	 */
-	public function meta_box_periods_payments( $post ) {
-		$subscription = get_pronamic_subscription( $post->ID );
-
-		if ( null === $subscription ) {
-			return;
-		}
-
-		$phases   = $subscription->get_phases();
-		$payments = $subscription->get_payments();
-
-		include __DIR__ . '/../../views/meta-box-subscription-periods-payments.php';
 	}
 
 	/**
