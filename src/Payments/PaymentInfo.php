@@ -519,6 +519,15 @@ abstract class PaymentInfo {
 	}
 
 	/**
+	 * Set the payment description.
+	 *
+	 * @param string $description Description.
+	 */
+	public function set_description( $description ) {
+		$this->description = $description;
+	}
+
+	/**
 	 * Get the meta value of this specified meta key.
 	 *
 	 * @param string $key Meta key.
