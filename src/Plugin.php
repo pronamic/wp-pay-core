@@ -433,7 +433,13 @@ class Plugin {
 		// Check if we should redirect.
 		$should_redirect = apply_filters( 'pronamic_pay_return_should_redirect', true, $payment );
 
-		self::update_payment( $payment, $should_redirect );
+		try {
+			self::update_payment( $payment, $should_redirect );
+		} catch ( \Exception $e ) {
+			self::render_exception( $e );
+
+			exit;
+		}
 	}
 
 	/**
