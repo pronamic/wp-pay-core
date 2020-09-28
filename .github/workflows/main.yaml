@@ -4,6 +4,7 @@ on: [ push, pull_request ]
 
 env:
   COMPOSER_NO_INTERACTION: 1
+  WP_TESTS_DB_PASS: password
   wp-version: '*'
 
 jobs:
@@ -131,6 +132,7 @@ jobs:
         run: composer run-script phplint
 
       - name: PHPStan static code analysis
+        continue-on-error: true
         env:
           WP_TESTS_DB_HOST: 127.0.01:${{ job.services.mysql.ports['3306'] }}
         run: composer bin phpstan install && composer run-script phpstan
