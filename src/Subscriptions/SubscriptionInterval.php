@@ -51,7 +51,7 @@ class SubscriptionInterval extends \DateInterval implements \JsonSerializable {
 	/**
 	 * Multiply.
 	 *
-	 * @param $times Number of times to multiply with.
+	 * @param int $times Number of times to multiply with.
 	 * @return SubscriptionInterval
 	 */
 	public function multiply( $times ) {

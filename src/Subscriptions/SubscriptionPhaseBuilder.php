@@ -164,7 +164,7 @@ class SubscriptionPhaseBuilder {
 	/**
 	 * With interval.
 	 *
-	 * @param int    $interval_spec Interval specification.
+	 * @param int $interval_spec Interval specification.
 	 * @return $this
 	 */
 	public function with_interval( $interval_spec ) {

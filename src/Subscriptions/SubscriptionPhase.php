@@ -191,6 +191,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * Get next date.
 	 *
 	 * @return DateTimeImmutable
+	 * @throws \InvalidArgumentException Throws invalid argument exception without start date.
 	 */
 	public function get_next_date() {
 		$start = $this->start_date;
