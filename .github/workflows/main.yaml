@@ -224,6 +224,10 @@ jobs:
       - name: Start MySQL service
         run: sudo service mysql start
 
+      - name: Remove PHP 7.1+ packages
+        if: ${{ matrix.php-version == '7.0' || matrix.php-version == '5.6' }}
+        run: composer remove --dev --no-update --no-progress szepeviktor/phpstan-wordpress
+
       - name: Require WordPress
         run: composer require --dev --no-update --no-progress --no-suggest roots/wordpress:${{ matrix.wp-version || env.wp-version }} wp-phpunit/wp-phpunit:${{ matrix.wp-version || env.wp-version }}
 
