@@ -125,12 +125,12 @@ jobs:
 
       - name: PHPStan static code analysis
         env:
-          WP_TESTS_DB_HOST: 127.0.01:${{ job.services.mysql.ports['3306'] }}
+          WP_TESTS_DB_HOST: 127.0.0.1:${{ job.services.mysql.ports['3306'] }}
         run: composer bin phpstan install && composer run-script phpstan
 
       - name: Psalm static code analysis
         env:
-          WP_TESTS_DB_HOST: 127.0.01:${{ job.services.mysql.ports['3306'] }}
+          WP_TESTS_DB_HOST: 127.0.0.1:${{ job.services.mysql.ports['3306'] }}
         run: composer bin psalm install && composer run-script psalm
 
   tests:
@@ -238,7 +238,7 @@ jobs:
 
       - name: PHPUnit test suite
         env:
-          WP_TESTS_DB_HOST: 127.0.01:${{ job.services.mysql.ports['3306'] }}
+          WP_TESTS_DB_HOST: 127.0.0.1:${{ job.services.mysql.ports['3306'] }}
         run: composer run-script phpunit
 
   code-coverage:
@@ -303,7 +303,7 @@ jobs:
 
       - name: PHPUnit test suite
         env:
-          WP_TESTS_DB_HOST: 127.0.01:${{ job.services.mysql.ports['3306'] }}
+          WP_TESTS_DB_HOST: 127.0.0.1:${{ job.services.mysql.ports['3306'] }}
         run: composer run-script phpunit
 
       - name: Coveralls code coverage
