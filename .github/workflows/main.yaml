@@ -15,7 +15,6 @@ jobs:
 
     strategy:
       fail-fast: false
-
       matrix:
         php-version:
           - 7.4
@@ -97,9 +96,6 @@ jobs:
           tools: composer
           coverage: none
 
-      - name: Composer validation
-        run: composer validate --strict
-
       # https://github.com/actions/cache/blob/master/examples.md#php---composer
       - name: Get Composer Cache Directory
         id: composer-cache
@@ -144,7 +140,6 @@ jobs:
 
     strategy:
       fail-fast: false
-
       matrix:
         include:
           # PHP Compatibility and WordPress Versions: https://make.wordpress.org/core/handbook/references/php-compatibility-and-wordpress-versions/
@@ -214,9 +209,6 @@ jobs:
           tools: composer
           coverage: none
 
-      - name: Composer validation
-        run: composer validate --strict
-
       # https://github.com/actions/cache/blob/master/examples.md#php---composer
       - name: Get Composer Cache Directory
         id: composer-cache
@@ -256,7 +248,6 @@ jobs:
 
     strategy:
       fail-fast: false
-
       matrix:
         php-version:
           - 7.4
@@ -282,9 +273,6 @@ jobs:
           ini-values: memory_limit=2048M
           tools: composer
           coverage: xdebug
-
-      - name: Composer validation
-        run: composer validate --strict
 
       # https://github.com/actions/cache/blob/master/examples.md#php---composer
       - name: Get Composer Cache Directory
