@@ -31,8 +31,6 @@ jobs:
           tools: composer, phpcs
           coverage: none
 
-      - run: composer self-update
-
       - name: Composer validation
         run: composer validate --strict
 
@@ -98,8 +96,6 @@ jobs:
           ini-values: memory_limit=2048M
           tools: composer
           coverage: none
-
-      - run: composer self-update
 
       - name: Composer validation
         run: composer validate --strict
@@ -218,8 +214,6 @@ jobs:
           tools: composer
           coverage: none
 
-      - run: composer self-update
-
       - name: Composer validation
         run: composer validate --strict
 
@@ -288,8 +282,6 @@ jobs:
           ini-values: memory_limit=2048M
           tools: composer
           coverage: xdebug
-
-      - run: composer self-update
 
       - name: Composer validation
         run: composer validate --strict
