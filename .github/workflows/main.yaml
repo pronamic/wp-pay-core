@@ -113,7 +113,7 @@ jobs:
             ${{ runner.os }}-composer-
 
       - name: Start MySQL service
-        run: sudo /etc/init.d/mysql start
+        run: sudo service mysql start
 
       - name: Install Composer dependencies
         run: composer install --no-progress --no-suggest
@@ -230,7 +230,7 @@ jobs:
             ${{ runner.os }}-composer-
 
       - name: Start MySQL service
-        run: sudo /etc/init.d/mysql start
+        run: sudo service mysql start
 
       - name: Install Composer dependencies
         run: composer install --no-progress --no-suggest
@@ -299,7 +299,7 @@ jobs:
             ${{ runner.os }}-composer-
 
       - name: Start MySQL service
-        run: sudo /etc/init.d/mysql start
+        run: sudo service mysql start
 
       - name: Install Composer dependencies
         run: composer install --no-progress --no-suggest
