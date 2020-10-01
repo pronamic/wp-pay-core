@@ -72,9 +72,9 @@ trait SubscriptionPhasesTrait {
 	 *
 	 * @return bool True if all created, false otherwise.
 	 */
-	public function are_all_periods_created() {
+	public function all_periods_created() {
 		foreach ( $this->phases as $phase ) {
-			if ( ! $phase->are_all_periods_created() ) {
+			if ( ! $phase->all_periods_created() ) {
 				return false;
 			}
 		}

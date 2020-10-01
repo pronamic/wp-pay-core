@@ -202,7 +202,7 @@ class SubscriptionPhase implements \JsonSerializable {
 		// Calculate next date.
 		$next_date = null;
 
-		if ( ! $this->are_all_periods_created() ) {
+		if ( ! $this->all_periods_created() ) {
 			if ( 0 === $this->periods_created ) {
 				return $start;
 			}
@@ -336,7 +336,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 *
 	 * @return bool True if all periods are created, false otherwise.
 	 */
-	public function are_all_periods_created() {
+	public function all_periods_created() {
 		return ( $this->total_periods === $this->periods_created );
 	}
 
@@ -440,7 +440,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @throws \Exception Throws exception on invalid date interval.
 	 */
 	public function get_next_period() {
-		if ( $this->are_all_periods_created() ) {
+		if ( $this->all_periods_created() ) {
 			return null;
 		}
 
