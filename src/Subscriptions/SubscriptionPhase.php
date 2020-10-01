@@ -23,14 +23,6 @@ use Pronamic\WordPress\Pay\MoneyJsonTransformer;
  */
 class SubscriptionPhase implements \JsonSerializable {
 	/**
-	 * Boolean flag to allow month overflow.
-	 *
-	 * @link https://carbon.nesbot.com/docs/#overflow-static-helpers
-	 * @var bool
-	 */
-	private $month_overflow = false;
-
-	/**
 	 * The sequence number.
 	 *
 	 * @var int
@@ -411,30 +403,6 @@ class SubscriptionPhase implements \JsonSerializable {
 		}
 
 		$date = $date->add( $interval );
-
-		/**
-		 * Month overflow.
-		 *
-		 * @link https://carbon.nesbot.com/docs/#overflow-static-helpers
-		 * @link https://github.com/briannesbitt/Carbon/blob/2.38.0/src/Carbon/Traits/Units.php#L309-L311
-		 * @link https://stackoverflow.com/questions/3602405/php-datetimemodify-adding-and-subtracting-months
-		 */
-		if ( false === $this->month_overflow && $this->interval->m > 0 ) {
-			$day_1 = $this->start_date->format( 'd' );
-			$day_2 = $date->format( 'd' );
-
-			if ( $day_1 > 28 && $day_2 < 3 ) {
-				$date = $date->modify( 'last day of previous month' );
-
-				return $date;
-			}
-
-			if ( $day_1 !== $day_2 ) {
-				$date = $date->modify( 'last day of this month' );
-
-				return $date;
-			}
-		}
 
 		return $date;
 	}
