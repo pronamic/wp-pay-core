@@ -62,21 +62,6 @@ class SubscriptionPhasesTraitTest extends \WP_UnitTestCase {
 	}
 
 	/**
-	 * Test completed.
-	 */
-	public function test_completed() {
-		$subscription = $this->new_subscription();
-
-		$phase_1 = $this->new_phase( $subscription );
-		$phase_1->set_status( 'completed' );
-
-		$phase_2 = $this->new_phase( $subscription );
-		$phase_2->set_status( 'completed' );
-
-		$this->assertTrue( $subscription->is_completed() );
-	}
-
-	/**
 	 * Test infinite.
 	 */
 	public function test_infinite() {

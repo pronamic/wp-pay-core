@@ -68,13 +68,13 @@ trait SubscriptionPhasesTrait {
 	}
 
 	/**
-	 * Check if this subscription is completed.
+	 * Check if all the periods within the subscription phases are created.
 	 *
-	 * @return bool True if completed, false otherwise.
+	 * @return bool True if all created, false otherwise.
 	 */
-	public function is_completed() {
+	public function are_all_periods_created() {
 		foreach ( $this->phases as $phase ) {
-			if ( ! $phase->is_completed() ) {
+			if ( ! $phase->are_all_periods_created() ) {
 				return false;
 			}
 		}

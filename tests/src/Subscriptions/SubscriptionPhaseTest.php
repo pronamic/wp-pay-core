@@ -56,19 +56,6 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 	}
 
 	/**
-	 * Test completed.
-	 */
-	public function test_completed() {
-		$subscription_phase = $this->new_subscription_phase();
-
-		$this->assertFalse( $subscription_phase->is_completed() );
-
-		$subscription_phase->set_status( 'completed' );
-
-		$this->assertTrue( $subscription_phase->is_completed() );
-	}
-
-	/**
 	 * Test trial.
 	 */
 	public function test_trial() {
