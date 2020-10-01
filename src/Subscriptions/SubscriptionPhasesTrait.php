@@ -104,7 +104,7 @@ trait SubscriptionPhasesTrait {
 	 */
 	public function get_current_phase() {
 		foreach ( $this->phases as $phase ) {
-			if ( ! $phase->is_completed() ) {
+			if ( ! $phase->all_periods_created() ) {
 				return $phase;
 			}
 		}
