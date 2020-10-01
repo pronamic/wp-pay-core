@@ -199,18 +199,24 @@ class SubscriptionPhase implements \JsonSerializable {
 			throw new \InvalidArgumentException( 'Can not get next date of subscription phase without start date.' );
 		}
 
-		// Calculate next date.
-		$next_date = null;
-
-		if ( ! $this->all_periods_created() ) {
-			if ( 0 === $this->periods_created ) {
-				return $start;
-			}
-
-			$next_date = $this->add_interval( $start, $this->periods_created );
+		/**
+		 * Check whether all periods have been created, if so there is no next date.
+		 */
+		if ( $this->all_periods_created() ) {
+			return null;
 		}
 
-		return $next_date;
+		/**
+		 * If there are no periods created yet, we start with the start. 
+		 */
+		if ( 0 === $this->periods_created ) {
+			return $start;
+		}
+
+		/**
+		 * If there are periods created we add these created periods.
+		 */
+		return $this->add_interval( $start, $this->periods_created );
 	}
 
 	/**
