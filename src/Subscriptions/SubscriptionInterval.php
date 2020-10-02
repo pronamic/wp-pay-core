@@ -62,6 +62,13 @@ class SubscriptionInterval extends \DateInterval implements \JsonSerializable {
 
 		$interval_spec = 'P';
 
+		// Negative times.
+		if ( $times < 0 ) {
+			$interval_spec = '-P';
+
+			$times = \absint( $times );
+		}
+
 		// Date.
 		$date = array(
 			'Y' => $this->y * $times,
