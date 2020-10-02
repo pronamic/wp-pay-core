@@ -408,6 +408,11 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return \DateTimeImmutable
 	 */
 	private function add_interval( $date, $times = 1 ) {
+		// Prevent multiplying by zero.
+		if ( 0 === $times ) {
+			return $date;
+		}
+
 		$interval = $this->interval;
 
 		// Multiply date interval.
