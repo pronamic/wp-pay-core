@@ -63,7 +63,7 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 					<td>
 						<?php
 
-						switch( $phase->get_total_periods() ) :
+						switch ( $phase->get_total_periods() ) :
 							case null:
 								// Unlimited.
 								echo esc_html( strval( Util::format_date_interval( $phase->get_date_interval() ) ) );

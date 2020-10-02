@@ -102,13 +102,13 @@ class SubscriptionPhaseBuilder {
 	}
 
 	/**
-	 * With status.
+	 * With canceled at.
 	 *
-	 * @param string $status Status.
+	 * @param DateTimeImmutable|null $canceled_at Canceled at.
 	 * @return $this
 	 */
-	public function with_status( $status ) {
-		$this->status = $status;
+	public function with_canceled_at( DateTimeImmutable $canceled_at = null ) {
+		$this->canceled_at = $canceled_at;
 
 		return $this;
 	}
@@ -164,7 +164,7 @@ class SubscriptionPhaseBuilder {
 	/**
 	 * With interval.
 	 *
-	 * @param int    $interval_spec Interval specification.
+	 * @param int $interval_spec Interval specification.
 	 * @return $this
 	 */
 	public function with_interval( $interval_spec ) {
@@ -199,6 +199,8 @@ class SubscriptionPhaseBuilder {
 		if ( null !== $this->periods_created ) {
 			$phase->set_periods_created( $this->periods_created );
 		}
+
+		$phase->set_canceled_at( $this->canceled_at );
 
 		return $phase;
 	}
