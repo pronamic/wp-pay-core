@@ -53,8 +53,13 @@ class SubscriptionInterval extends \DateInterval implements \JsonSerializable {
 	 *
 	 * @param int $times Number of times to multiply with.
 	 * @return SubscriptionInterval
+	 * @throws \InvalidArgumentException Throws exception if times to multiply is zero.
 	 */
 	public function multiply( $times ) {
+		if ( 0 === $times ) {
+			throw new \InvalidArgumentException( 'Subscription interval cannot be multiplied by 0.' );
+		}
+
 		$interval_spec = 'P';
 
 		// Date.
