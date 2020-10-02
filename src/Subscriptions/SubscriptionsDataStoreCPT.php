@@ -359,13 +359,30 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		// Phases.
 		if ( is_object( $json ) && ! property_exists( $json, 'phases' ) ) {
-			$phase = $subscription->new_phase(
-				$subscription->start_date,
-				'P' . $subscription->get_interval() . $subscription->get_interval_period(),
-				$subscription->get_total_amount()
+			// Amount.
+			$amount = new TaxedMoney(
+				(string) $this->get_meta( $id, 'amount' ),
+				(string) $this->get_meta_string( $id, 'currency' )
 			);
 
-			$phase->set_type( 'regular' );
+			if ( \property_exists( $json, 'total_amount' ) ) {
+				$amount = TaxedMoneyJsonTransformer::from_json( $json->total_amount );
+			}
+
+			// Phase.
+			$start_date = $subscription->start_date;
+
+			if ( null === $start_date ) {
+				$start_date = clone $subscription->get_date();
+			}
+
+			$phase = $subscription->new_phase(
+				$start_date,
+				'P' . $subscription->get_interval() . $subscription->get_interval_period(),
+				$amount
+			);
+
+			$phase->set_total_periods( $subscription->get_frequency() );
 		}
 	}
 
@@ -535,17 +552,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$subscription->customer_name   = $this->get_meta_string( $id, 'customer_name' );
 		$subscription->payment_method  = $this->get_meta_string( $id, 'payment_method' );
 
-		// Amount.
-		$total_amount = $subscription->get_total_amount();
-
-		$total_amount->set_value( $this->get_meta( $id, 'amount' ) );
-
-		$currency = $this->get_meta_string( $id, 'currency' );
-
-		if ( null !== $currency ) {
-			$total_amount->set_currency( $currency );
-		}
-
 		// First Payment.
 		$first_payment = $subscription->get_first_payment();
 
@@ -647,8 +653,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$this->update_meta( $id, 'frequency', $subscription->frequency );
 		$this->update_meta( $id, 'interval', $subscription->interval );
 		$this->update_meta( $id, 'interval_period', $subscription->interval_period );
-		$this->update_meta( $id, 'currency', $subscription->get_total_amount()->get_currency()->get_alphabetic_code() );
-		$this->update_meta( $id, 'amount', $subscription->get_total_amount()->format() );
 		$this->update_meta( $id, 'description', $subscription->description );
 		$this->update_meta( $id, 'email', ( null === $customer ? null : $customer->get_email() ) );
 		$this->update_meta( $id, 'customer_name', ( null === $customer ? null : strval( $customer->get_name() ) ) );
@@ -658,6 +662,13 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$this->update_meta( $id, 'expiry_date', $subscription->expiry_date );
 		$this->update_meta( $id, 'next_payment', $subscription->next_payment_date );
 		$this->update_meta( $id, 'next_payment_delivery_date', $subscription->next_payment_delivery_date );
+
+		$display_phase = $subscription->get_display_phase();
+
+		if ( null !== $display_phase ) {
+			$this->update_meta( $id, 'currency', $display_phase->get_amount()->get_currency()->get_alphabetic_code() );
+			$this->update_meta( $id, 'amount', $display_phase->get_amount()->format() );
+		}
 
 		$this->update_meta_status( $subscription );
 	}

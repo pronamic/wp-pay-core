@@ -12,9 +12,12 @@ namespace Pronamic\WordPress\Pay\Payments;
 
 use InvalidArgumentException;
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
+use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPeriod;
+use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
 
 /**
  * Payment
@@ -30,6 +33,13 @@ class Payment extends LegacyPayment {
 	 * @var Subscription|null
 	 */
 	public $subscription;
+
+	/**
+	 * The total amount of this payment.
+	 *
+	 * @var TaxedMoney
+	 */
+	private $total_amount;
 
 	/**
 	 * The purchase ID.
@@ -228,6 +238,8 @@ class Payment extends LegacyPayment {
 
 		$this->set_status( PaymentStatus::OPEN );
 
+		$this->set_total_amount( new TaxedMoney() );
+
 		if ( null !== $post_id ) {
 			pronamic_pay_plugin()->payments_data_store->read( $this );
 		}
@@ -321,6 +333,25 @@ class Payment extends LegacyPayment {
 	 */
 	public function get_transaction_id() {
 		return $this->transaction_id;
+	}
+
+	/**
+	 * Get total amount.
+	 *
+	 * @return TaxedMoney
+	 */
+	public function get_total_amount() {
+		return $this->total_amount;
+	}
+
+	/**
+	 * Set total amount.
+	 *
+	 * @param TaxedMoney $total_amount Total amount.
+	 * @return void
+	 */
+	public function set_total_amount( TaxedMoney $total_amount ) {
+		$this->total_amount = $total_amount;
 	}
 
 	/**
@@ -714,6 +745,10 @@ class Payment extends LegacyPayment {
 
 		PaymentInfoHelper::from_json( $json, $payment );
 
+		if ( isset( $json->total_amount ) ) {
+			$payment->set_total_amount( TaxedMoneyJsonTransformer::from_json( $json->total_amount ) );
+		}
+
 		if ( isset( $json->expiry_date ) ) {
 			$payment->set_expiry_date( new DateTime( $json->expiry_date ) );
 		}
@@ -746,6 +781,12 @@ class Payment extends LegacyPayment {
 		$object = PaymentInfoHelper::to_json( $this );
 
 		$properties = (array) $object;
+
+		$total_amount = $this->get_total_amount();
+
+		if ( null !== $total_amount ) {
+			$properties['total_amount'] = TaxedMoneyJsonTransformer::to_json( $total_amount );
+		}
 
 		$expiry_date = $this->get_expiry_date();
 

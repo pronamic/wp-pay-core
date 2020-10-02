@@ -60,7 +60,11 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	public function get_amount() {
 		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_total_amount()' );
 
-		return $this->get_total_amount();
+		if ( \method_exists( $this, 'get_total_amount' ) ) {
+			return $this->get_total_amount();
+		}
+
+		return new Money( 0 );
 	}
 
 	/**
@@ -73,9 +77,11 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	public function set_amount( Money $amount ) {
 		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::set_total_amount()' );
 
-		$money = new TaxedMoney( $amount->get_value(), $amount->get_currency() );
+		if ( \method_exists( $this, 'set_total_amount' ) ) {
+			$money = new TaxedMoney( $amount->get_value(), $amount->get_currency() );
 
-		$this->set_total_amount( $money );
+			$this->set_total_amount( $money );
+		}
 	}
 
 	/**
@@ -88,7 +94,11 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	public function get_currency() {
 		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_total_amount()->get_currency()->get_alphabetic_code()' );
 
-		return $this->get_total_amount()->get_currency()->get_alphabetic_code();
+		if ( \method_exists( $this, 'get_total_amount' ) ) {
+			return $this->get_total_amount()->get_currency()->get_alphabetic_code();
+		}
+
+		return null;
 	}
 
 	/**
@@ -101,7 +111,11 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	public function get_currency_numeric_code() {
 		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_total_amount()->get_currency()->get_numeric_code()' );
 
-		return $this->get_total_amount()->get_currency()->get_numeric_code();
+		if ( \method_exists( $this, 'get_total_amount' ) ) {
+			return $this->get_total_amount()->get_currency()->get_numeric_code();
+		}
+
+		return null;
 	}
 
 	/**

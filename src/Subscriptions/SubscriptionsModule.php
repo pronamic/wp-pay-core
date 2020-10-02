@@ -390,11 +390,19 @@ class SubscriptionsModule {
 		$payment->subscription_id = $subscription->get_id();
 
 		$payment->set_origin_id( $subscription->get_origin_id() );
-		$payment->set_total_amount( $subscription->get_total_amount() );
 		$payment->set_customer( $subscription->get_customer() );
 		$payment->set_billing_address( $subscription->get_billing_address() );
 		$payment->set_shipping_address( $subscription->get_shipping_address() );
 		$payment->set_lines( $subscription->get_lines() );
+
+		// Get amount from current subscription phase.
+		$current_phase = $subscription->get_current_phase();
+
+		if ( null === $current_phase ) {
+			return null;
+		}
+
+		$payment->set_total_amount( $current_phase->get_amount() );
 
 		return $payment;
 	}
