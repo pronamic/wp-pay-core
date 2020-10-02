@@ -222,44 +222,23 @@ class SubscriptionPhase implements \JsonSerializable {
 	}
 
 	/**
+	 * Check if this phase is canceled.
+	 *
+	 * @link https://www.grammarly.com/blog/canceled-vs-cancelled/
+	 * @link https://docs.mollie.com/reference/v2/subscriptions-api/cancel-subscription
+	 * @return bool True if canceled, false otherwise.
+	 */
+	public function is_canceled() {
+		return ( null !== $this->canceled_at );
+	}
+
+	/**
 	 * Get canceled date.
 	 *
 	 * @return DateTimeImmutable|null Canceled date or null if phase is not canceled (yet).
 	 */
 	public function get_canceled_at() {
 		return $this->canceled_at;
-	}
-
-	/**
-	 * Check if this phase is canceled.
-	 *
-	 * @link https://www.grammarly.com/blog/canceled-vs-cancelled/
-	 * @link https://docs.mollie.com/reference/v2/subscriptions-api/cancel-subscription
-	 * @return bool True if canceled, false otherwise.
-	 */
-	public function is_canceled() {
-		return ( null !== $this->canceled_at );
-	}
-
-	/**
-	 * Set canceled date.
-	 *
-	 * @param DateTimeImmutable|null $canceled_at Canceled date.
-	 * @return void
-	 */
-	public function set_canceled_at( DateTimeImmutable $canceled_at = null ) {
-		$this->canceled_at = $canceled_at;
-	}
-
-	/**
-	 * Check if this phase is canceled.
-	 *
-	 * @link https://www.grammarly.com/blog/canceled-vs-cancelled/
-	 * @link https://docs.mollie.com/reference/v2/subscriptions-api/cancel-subscription
-	 * @return bool True if canceled, false otherwise.
-	 */
-	public function is_canceled() {
-		return ( null !== $this->canceled_at );
 	}
 
 	/**

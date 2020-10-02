@@ -123,7 +123,7 @@ class SubscriptionPhaseBuilder {
 	/**
 	 * With total periods.
 	 *
-	 * @param int $total_periods Number of periods to create.
+	 * @param int|null $total_periods Number of periods to create.
 	 * @return $this
 	 */
 	public function with_total_periods( $total_periods ) {
