@@ -145,6 +145,13 @@ class Payment extends LegacyPayment {
 	public $issuer;
 
 	/**
+	 * Subscription periods.
+	 *
+	 * @var null|array<int, SubscriptionPeriod>
+	 */
+	private $periods;
+
+	/**
 	 * Subscription ID.
 	 *
 	 * @todo Is this required?
@@ -709,6 +716,29 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
+	 * Get subscription periods.
+	 *
+	 * @return array<int, SubscriptionPeriod>|null
+	 */
+	public function get_periods() {
+		return $this->periods;
+	}
+
+	/**
+	 * Add subscription period.
+	 *
+	 * @param SubscriptionPeriod $period Subscription period.
+	 * @return void
+	 */
+	public function add_period( SubscriptionPeriod $period ) {
+		if ( null === $this->periods ) {
+			$this->periods = array();
+		}
+
+		$this->periods[] = $period;
+	}
+
+	/**
 	 * Get payment subscription ID.
 	 *
 	 * @return int|null
@@ -757,6 +787,12 @@ class Payment extends LegacyPayment {
 			$payment->set_status( $json->status );
 		}
 
+		if ( isset( $json->periods ) ) {
+			foreach ( $json->periods as $period ) {
+				$payment->add_period( SubscriptionPeriod::from_json( $period ) );
+			}
+		}
+
 		if ( isset( $json->failure_reason ) ) {
 			$payment->set_failure_reason( FailureReason::from_json( $json->failure_reason ) );
 		}
@@ -792,6 +828,14 @@ class Payment extends LegacyPayment {
 
 		if ( null !== $expiry_date ) {
 			$properties['expiry_date'] = $expiry_date->format( \DATE_ATOM );
+		}
+
+		$periods = $this->get_periods();
+
+		if ( null !== $periods ) {
+			foreach ( $periods as $period ) {
+				$properties['periods'][] = $period->to_json();
+			}
 		}
 
 		if ( null !== $this->get_status() ) {

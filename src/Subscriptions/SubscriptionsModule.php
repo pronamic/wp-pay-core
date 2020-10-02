@@ -464,6 +464,12 @@ class SubscriptionsModule {
 		// Calculate payment start and end dates.
 		$period = $subscription->new_period();
 
+		if ( null === $period ) {
+			throw new \UnexpectedValueException( 'Can not create new period for subscription.' );
+		}
+
+		$payment->add_period( $period );
+
 		$start_date = $period->get_start_date();
 		$end_date   = $period->get_end_date();
 
