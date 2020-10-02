@@ -569,7 +569,7 @@ class SubscriptionPhase implements \JsonSerializable {
 		$total_periods = $phase->get_total_periods();
 
 		if ( null !== $total_periods ) {
-			$phase->set_total_periods( --$total_periods );
+			$phase->set_total_periods( $total_periods - 1 );
 		}
 
 		$phase->set_start_date( $proration_phase->get_end_date() );
