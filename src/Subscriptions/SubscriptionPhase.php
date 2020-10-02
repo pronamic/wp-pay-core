@@ -112,20 +112,20 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Construct subscription phase.
 	 *
-	 * @param DateTimeImmutable $start_date    Start date.
-	 * @param string            $interval_spec Interval specification.
-	 * @param TaxedMoney        $amount        Amount.
+	 * @param DateTimeImmutable    $start_date Start date.
+	 * @param SubscriptionInterval $interval   Interval.
+	 * @param TaxedMoney           $amount     Amount.
 	 * @return void
 	 */
-	public function __construct( DateTimeImmutable $start_date, $interval_spec, TaxedMoney $amount ) {
+	public function __construct( DateTimeImmutable $start_date, SubscriptionInterval $interval, TaxedMoney $amount ) {
 		$this->start_date = $start_date;
+		$this->interval   = $interval;
 		$this->amount     = $amount;
 
 		$this->periods_created = 0;
 		$this->proration       = false;
 		$this->trial           = false;
 
-		$this->interval = new SubscriptionInterval( $interval_spec );
 	}
 
 	/**

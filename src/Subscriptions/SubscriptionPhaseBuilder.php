@@ -57,11 +57,11 @@ class SubscriptionPhaseBuilder {
 	private $amount;
 
 	/**
-	 * Interval specification.
+	 * Interval.
 	 *
-	 * @var string|null
+	 * @var SubscriptionInterval|null
 	 */
-	private $interval_spec;
+	private $interval;
 
 	/**
 	 * Whether to prorate amount.
@@ -163,7 +163,7 @@ class SubscriptionPhaseBuilder {
 	 * @return $this
 	 */
 	public function with_interval( $interval_spec ) {
-		$this->interval_spec = $interval_spec;
+		$this->interval = new SubscriptionInterval( $interval_spec );
 
 		return $this;
 	}
@@ -201,7 +201,7 @@ class SubscriptionPhaseBuilder {
 			throw new \InvalidArgumentException( 'Start date is required for subscription phase.' );
 		}
 
-		if ( null === $this->interval_spec ) {
+		if ( null === $this->interval ) {
 			throw new \InvalidArgumentException( 'Interval specification is required for subscription phase.' );
 		}
 
@@ -209,7 +209,7 @@ class SubscriptionPhaseBuilder {
 			throw new \InvalidArgumentException( 'Amount is required for subscription phase.' );
 		}
 
-		$phase = new SubscriptionPhase( $this->start_date, $this->interval_spec, $this->amount );
+		$phase = new SubscriptionPhase( $this->start_date, $this->interval, $this->amount );
 
 		// Name.
 		$phase->set_name( $this->name );
