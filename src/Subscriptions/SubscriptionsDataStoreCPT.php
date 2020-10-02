@@ -11,7 +11,6 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DatePeriod;
-use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Money\TaxedMoney;
@@ -204,16 +203,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		if ( ! check_admin_referer( 'pronamic_subscription_update', 'pronamic_subscription_update_nonce' ) ) {
 			return;
-		}
-
-		if ( isset( $postarr['pronamic_subscription_amount'] ) ) {
-			$amount = sanitize_text_field( stripslashes( $postarr['pronamic_subscription_amount'] ) );
-
-			$money_parser = new MoneyParser();
-
-			$value = $money_parser->parse( $amount )->get_value();
-
-			$subscription->get_total_amount()->set_value( $value );
 		}
 	}
 
