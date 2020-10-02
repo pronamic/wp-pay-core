@@ -36,11 +36,11 @@ class SubscriptionPhaseBuilder {
 	private $name;
 
 	/**
-	 * Type.
+	 * Status.
 	 *
-	 * @var string|null
+	 * @var string
 	 */
-	private $type;
+	protected $status;
 
 	/**
 	 * Total periods.
@@ -197,6 +197,18 @@ class SubscriptionPhaseBuilder {
 	 * @throws \InvalidArgumentException Throws exception if required arguments are not set.
 	 */
 	public function create() {
+		if ( null === $this->start_date ) {
+			throw new \InvalidArgumentException( 'Start date is required for subscription phase.' );
+		}
+
+		if ( null === $this->interval_spec ) {
+			throw new \InvalidArgumentException( 'Interval specification is required for subscription phase.' );
+		}
+
+		if ( null === $this->amount ) {
+			throw new \InvalidArgumentException( 'Amount is required for subscription phase.' );
+		}
+
 		$phase = new SubscriptionPhase( $this->start_date, $this->interval_spec, $this->amount );
 
 		// Name.
