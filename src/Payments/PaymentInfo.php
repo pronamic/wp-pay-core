@@ -522,6 +522,7 @@ abstract class PaymentInfo {
 	 * Set the payment description.
 	 *
 	 * @param string $description Description.
+	 * @return void
 	 */
 	public function set_description( $description ) {
 		$this->description = $description;

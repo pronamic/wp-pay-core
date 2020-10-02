@@ -164,7 +164,7 @@ class SubscriptionPhaseBuilder {
 	/**
 	 * With interval.
 	 *
-	 * @param int    $interval_spec Interval specification.
+	 * @param string $interval_spec Interval specification.
 	 * @return $this
 	 */
 	public function with_interval( $interval_spec ) {
@@ -188,6 +188,7 @@ class SubscriptionPhaseBuilder {
 	 * Create subscription phase.
 	 *
 	 * @return SubscriptionPhase
+	 * @throws \InvalidArgumentException Throws exception if required arguments are not set.
 	 */
 	public function create() {
 		$phase = new SubscriptionPhase( $this->start_date, $this->interval_spec, $this->amount );
@@ -196,6 +197,7 @@ class SubscriptionPhaseBuilder {
 		$phase->set_total_periods( $this->total_periods );
 		$phase->set_proration( $this->proration );
 
+		// Periods created.
 		if ( null !== $this->periods_created ) {
 			$phase->set_periods_created( $this->periods_created );
 		}

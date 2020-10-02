@@ -32,7 +32,7 @@
 						echo esc_html(
 							sprintf(
 								/* translators: %s: expiry date */
-								__( 'The subscription epxires at %s.', 'pronamic_ideal' ),
+								__( 'The subscription expires at %s.', 'pronamic_ideal' ),
 								$subscription->get_expiry_date()->format_i18n()
 							)
 						);

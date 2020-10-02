@@ -92,7 +92,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * The date this phase will start.
 	 *
-	 * @var DateTimeImmutable|null
+	 * @var DateTimeImmutable
 	 */
 	private $start_date;
 
@@ -182,7 +182,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Get next date.
 	 *
-	 * @return DateTimeImmutable
+	 * @return DateTimeImmutable|null
 	 */
 	public function get_next_date() {
 		$start = $this->start_date;
@@ -199,7 +199,7 @@ class SubscriptionPhase implements \JsonSerializable {
 		}
 
 		/**
-		 * If there are no periods created yet, we start with the start. 
+		 * If there are no periods created yet, we start with the start.
 		 */
 		if ( 0 === $this->periods_created ) {
 			return $start;
@@ -281,7 +281,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Set periods created.
 	 *
-	 * @param int|null $periods_created The number of periods created.
+	 * @param int $periods_created The number of periods created.
 	 * @return void
 	 */
 	public function set_periods_created( $periods_created ) {
@@ -294,7 +294,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return int|null
 	 */
 	public function get_periods_remaining() {
-		if ( null === $this->total_periods ) {
+		if ( $this->is_infinite() ) {
 			return null;
 		}
 
@@ -376,13 +376,16 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @throws \Exception Throws exception on invalid interval spec.
 	 */
 	public function get_end_date() {
-		if ( null === $this->total_periods ) {
+		$total_periods = $this->total_periods;
+
+		if ( null === $total_periods ) {
+			// Infinite.
 			return null;
 		}
 
 		$start_date = clone $this->start_date;
 
-		$end_date = $this->add_interval( $start_date, $this->total_periods );
+		$end_date = $this->add_interval( $start_date, $total_periods );
 
 		return $end_date;
 	}
@@ -398,9 +401,7 @@ class SubscriptionPhase implements \JsonSerializable {
 		$interval = $this->interval;
 
 		// Multiply date interval.
-		if ( 1 !== $times ) {
-			$interval = $interval->multiply( $times );
-		}
+		$interval = $interval->multiply( $times );
 
 		$date = $date->add( $interval );
 
@@ -499,14 +500,7 @@ class SubscriptionPhase implements \JsonSerializable {
 		}
 
 		if ( property_exists( $json, 'interval' ) ) {
-			$interval = $json->interval;
-
-			// @todo Remove development transform from interval object to interval specification.
-			if ( \is_object( $interval ) ) {
-				$interval = 'P' . $interval->value . $interval->unit;
-			}
-
-			$builder->with_interval( $interval );
+			$builder->with_interval( $json->interval );
 		}
 
 		if ( property_exists( $json, 'amount' ) ) {

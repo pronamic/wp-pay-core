@@ -105,7 +105,7 @@ class SubscriptionPhasesTraitTest extends \WP_UnitTestCase {
 
 		$this->assertFalse( $subscription->in_trial_period() );
 
-		$phase_1->set_type( 'trial' );
+		$phase_1->set_trial( true );
 
 		$this->assertTrue( $subscription->in_trial_period() );
 
