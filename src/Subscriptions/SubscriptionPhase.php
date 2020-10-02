@@ -206,19 +206,10 @@ class SubscriptionPhase implements \JsonSerializable {
 			return null;
 		}
 
-		$start = $this->start_date;
-
-		/**
-		 * If there are no periods created yet, we start with the start.
-		 */
-		if ( 0 === $this->periods_created ) {
-			return $start;
-		}
-
 		/**
 		 * If there are periods created we add these created periods.
 		 */
-		return $this->add_interval( $start, $this->periods_created );
+		return $this->add_interval( $this->start_date, $this->periods_created );
 	}
 
 	/**
