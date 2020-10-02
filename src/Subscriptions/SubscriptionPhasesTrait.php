@@ -44,6 +44,10 @@ trait SubscriptionPhasesTrait {
 	 * @return void
 	 */
 	public function add_phase( SubscriptionPhase $phase ) {
+		$sequence_number = \count( $this->phases ) + 1;
+
+		$phase->set_sequence_number( $sequence_number );
+
 		$this->phases[] = $phase;
 	}
 
@@ -56,13 +60,11 @@ trait SubscriptionPhasesTrait {
 	 * @return SubscriptionPhase
 	 */
 	public function new_phase( $start_date, $interval_spec, $amount ) {
-		$phase = new SubscriptionPhase( $start_date, $interval_spec, $amount );
+		$start = new \DateTimeImmutable( $start_date->format( \DateTimeInterface::ATOM ) );
 
-		$sequence_number = \count( $this->phases ) + 1;
+		$phase = new SubscriptionPhase( $start, $interval_spec, $amount );
 
-		$phase->set_sequence_number( $sequence_number );
-
-		$this->phases[] = $phase;
+		$this->add_phase( $phase );
 
 		return $phase;
 	}
