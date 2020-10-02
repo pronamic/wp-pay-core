@@ -16,6 +16,9 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
  * @author  Remco Tolsma
  * @version 2.4.0
  * @since   2.4.0
+ * @link    https://github.com/briannesbitt/Carbon/blob/2.40.0/src/Carbon/CarbonInterval.php
+ * @link    https://github.com/frak/s3bk/blob/master/src/S3Bk/Type/StringableInterval.php
+ * @link    https://github.com/stylers-llc/laratask/blob/master/src/Support/DateInterval.php
  */
 class SubscriptionInterval extends \DateInterval implements \JsonSerializable {
 	/**
