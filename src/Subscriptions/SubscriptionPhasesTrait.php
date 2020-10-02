@@ -127,6 +127,11 @@ trait SubscriptionPhasesTrait {
 				continue;
 			}
 
+			// Skip prorated phases.
+			if ( $phase->is_proration() ) {
+				continue;
+			}
+
 			if ( ! $phase->all_periods_created() ) {
 				return $phase;
 			}
@@ -136,6 +141,11 @@ trait SubscriptionPhasesTrait {
 		foreach ( $this->phases as $phase ) {
 			// Skip trial phases.
 			if ( $phase->is_trial() ) {
+				continue;
+			}
+
+			// Skip prorated phases.
+			if ( $phase->is_proration() ) {
 				continue;
 			}
 
