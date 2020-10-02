@@ -199,18 +199,14 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return DateTimeImmutable|null
 	 */
 	public function get_next_date() {
-		$start = $this->start_date;
-
-		if ( null === $start ) {
-			throw new \InvalidArgumentException( 'Can not get next date of subscription phase without start date.' );
-		}
-
 		/**
 		 * Check whether all periods have been created, if so there is no next date.
 		 */
 		if ( $this->all_periods_created() ) {
 			return null;
 		}
+
+		$start = $this->start_date;
 
 		/**
 		 * If there are no periods created yet, we start with the start.
