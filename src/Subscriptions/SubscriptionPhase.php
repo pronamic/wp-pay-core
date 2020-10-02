@@ -25,13 +25,6 @@ use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
  */
 class SubscriptionPhase implements \JsonSerializable {
 	/**
-	 * The sequence number.
-	 *
-	 * @var int
-	 */
-	private $sequence_number;
-
-	/**
 	 * Name.
 	 *
 	 * @var string|null
@@ -125,9 +118,8 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return void
 	 */
 	public function __construct( DateTimeImmutable $start_date, $interval_spec, TaxedMoney $amount ) {
-		$this->sequence_number = 1;
-		$this->start_date      = $start_date;
-		$this->amount          = $amount;
+		$this->start_date = $start_date;
+		$this->amount     = $amount;
 
 		$this->periods_created = 0;
 		$this->proration       = false;
@@ -153,25 +145,6 @@ class SubscriptionPhase implements \JsonSerializable {
 	 */
 	public function set_name( $name ) {
 		$this->name = $name;
-	}
-
-	/**
-	 * Get sequence number.
-	 *
-	 * @return int
-	 */
-	public function get_sequence_number() {
-		return $this->sequence_number;
-	}
-
-	/**
-	 * Set sequence number.
-	 *
-	 * @param int $sequence_number Sequence number.
-	 * @return void
-	 */
-	public function set_sequence_number( $sequence_number ) {
-		$this->sequence_number = $sequence_number;
 	}
 
 	/**
