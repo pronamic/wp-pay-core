@@ -234,10 +234,10 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Set canceled date.
 	 *
-	 * @param DateTimeImmutable $canceled_at Canceled date.
+	 * @param DateTimeImmutable|null $canceled_at Canceled date.
 	 * @return void
 	 */
-	public function set_canceled_at( DateTimeImmutable $canceled_at ) {
+	public function set_canceled_at( DateTimeImmutable $canceled_at = null ) {
 		$this->canceled_at = $canceled_at;
 	}
 
