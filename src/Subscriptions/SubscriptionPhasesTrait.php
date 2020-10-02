@@ -115,6 +115,42 @@ trait SubscriptionPhasesTrait {
 	}
 
 	/**
+	 * Get phase for display.
+	 *
+	 * @return SubscriptionPhase|null
+	 */
+	public function get_display_phase() {
+		// Get first uncompleted regular phase.
+		foreach ( $this->phases as $phase ) {
+			// Skip trial phases.
+			if ( $phase->is_trial() ) {
+				continue;
+			}
+
+			if ( ! $phase->all_periods_created() ) {
+				return $phase;
+			}
+		}
+
+		// Get first regular phase.
+		foreach ( $this->phases as $phase ) {
+			// Skip trial phases.
+			if ( $phase->is_trial() ) {
+				continue;
+			}
+
+			return $phase;
+		}
+
+		// Get first phase.
+		foreach ( $this->phases as $phase ) {
+			return $phase;
+		}
+
+		return null;
+	}
+
+	/**
 	 * Check if subscription is in a trial period.
 	 *
 	 * @return bool True if current period definition is a trial, false otherwise.

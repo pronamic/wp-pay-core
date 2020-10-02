@@ -191,7 +191,7 @@ class Util {
 
 			return sprintf(
 				/* translators: 1: formatted periods, 2: last formatted period */
-				__( 'Every %1$s and %2$s', 'pronamic_ideal' ),
+				__( '%1$s and %2$s', 'pronamic_ideal' ),
 				$formatted,
 				$last_period
 			);
@@ -200,10 +200,28 @@ class Util {
 		// Single period.
 		$formatted = \implode( ', ', $periods );
 
+		return $formatted;
+	}
+
+	/**
+	 * Format recurrences date interval.
+	 *
+	 * @param DateInterval $date_interval Date interval.
+	 *
+	 * @return string
+	 */
+	public static function format_recurrences( DateInterval $date_interval ) {
+		$formatted_interval = self::format_date_interval( $date_interval );
+
+		// Check empty date interval.
+		if ( empty( $formatted_interval ) ) {
+			return '—';
+		}
+
 		return sprintf(
 			/* translators: %s: formatted date interval periods */
 			__( 'Every %s', 'pronamic_ideal' ),
-			$formatted
+			$formatted_interval
 		);
 	}
 

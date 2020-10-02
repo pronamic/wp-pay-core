@@ -8,6 +8,10 @@
  * @package   Pronamic\WordPress\Pay
  */
 
+use Pronamic\WordPress\Pay\Util;
+
+$phase = $subscription->get_current_phase();
+
 ?>
 <!DOCTYPE html>
 
@@ -45,7 +49,7 @@
 					<dl>
 						<?php
 
-						$interval = $subscription->get_interval();
+						$interval = $phase->get_date_interval();
 
 						if ( null !== $interval ) :
 							?>
@@ -54,52 +58,7 @@
 								<?php esc_html_e( 'Subscription Length:', 'pronamic_ideal' ); ?>
 							</dt>
 							<dd>
-								<?php
-
-								switch ( $subscription->get_interval_period() ) {
-									case 'D':
-										echo esc_html(
-											sprintf(
-												/* translators: %s: interval */
-												_n( '%s day', '%s days', $interval, 'pronamic_ideal' ),
-												number_format_i18n( $interval )
-											)
-										);
-
-										break;
-									case 'W':
-										echo esc_html(
-											sprintf(
-												/* translators: %s: interval */
-												_n( '%s week', '%s weeks', $interval, 'pronamic_ideal' ),
-												number_format_i18n( $interval )
-											)
-										);
-
-										break;
-									case 'M':
-										echo esc_html(
-											sprintf(
-												/* translators: %s: interval */
-												_n( '%s month', '%s months', $interval, 'pronamic_ideal' ),
-												number_format_i18n( $interval )
-											)
-										);
-
-										break;
-									case 'Y':
-										echo esc_html(
-											sprintf(
-												/* translators: %s: interval */
-												_n( '%s year', '%s years', $interval, 'pronamic_ideal' ),
-												number_format_i18n( $interval )
-											)
-										);
-
-										break;
-								}
-
-								?>
+								<?php echo esc_html( strval( Util::format_date_interval( $phase->get_date_interval() ) ) ); ?>
 							</dd>
 
 						<?php endif; ?>
@@ -108,7 +67,7 @@
 							<?php esc_html_e( 'Amount:', 'pronamic_ideal' ); ?>
 						</dt>
 						<dd>
-							<?php echo esc_html( $subscription->get_total_amount()->format_i18n() ); ?>
+							<?php echo esc_html( $phase->get_amount()->format_i18n() ); ?>
 						</dd>
 					</dl>
 

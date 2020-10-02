@@ -205,6 +205,8 @@ class AdminSubscriptionPostType {
 			return;
 		}
 
+		$phase = $subscription->get_display_phase();
+
 		switch ( $column ) {
 			case 'pronamic_subscription_status':
 				$post_status = get_post_status( $post_id );
@@ -299,29 +301,29 @@ class AdminSubscriptionPostType {
 
 				break;
 			case 'pronamic_subscription_amount':
-				echo esc_html( $subscription->get_total_amount()->format_i18n() );
+				echo esc_html( null === $phase ? '—' : $phase->get_amount()->format_i18n() );
 
 				break;
 			case 'pronamic_subscription_recurring':
-				// Current phase.
-				$phase = $subscription->get_current_phase();
+				$total_periods = ( null === $phase ? null : $phase->get_total_periods() );
 
-				if ( null === $phase ) {
+				if ( null === $phase || 1 === $total_periods ) :
+					// No recurrence.
 					echo '—';
 
-					return;
-				}
+				elseif ( null === $total_periods ) :
+					// Infinite.
+					echo esc_html( strval( Util::format_recurrences( $phase->get_date_interval() ) ) );
 
-				$date_interval = $phase->get_date_interval();
-				$total_periods = $phase->get_total_periods();
+				else :
+					// Fixed number of recurrences.
+					printf(
+						'%s<br />%s',
+						esc_html( strval( Util::format_recurrences( $phase->get_date_interval() ) ) ),
+						esc_html( strval( Util::format_frequency( $total_periods ) ) )
+					);
 
-				echo esc_html( strval( Util::format_date_interval( $date_interval ) ) );
-
-				if ( null !== $total_periods ) {
-					echo '<br />';
-
-					echo esc_html( strval( Util::format_frequency( $total_periods ) ) );
-				}
+				endif;
 
 				break;
 			case 'pronamic_subscription_date':
