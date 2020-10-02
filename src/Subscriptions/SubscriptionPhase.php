@@ -144,6 +144,16 @@ class SubscriptionPhase implements \JsonSerializable {
 	}
 
 	/**
+	 * Set name.
+	 *
+	 * @param string|null $name Name.
+	 * @return void
+	 */
+	public function set_name( $name ) {
+		$this->name = $name;
+	}
+
+	/**
 	 * Get sequence number.
 	 *
 	 * @return int
