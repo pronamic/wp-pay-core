@@ -39,11 +39,11 @@ class SubscriptionPhase implements \JsonSerializable {
 	private $name;
 
 	/**
-	 * Status.
+	 * Canceled at.
 	 *
-	 * @var string
+	 * @var DateTimeImmutable|null
 	 */
-	private $status;
+	private $canceled_at;
 
 	/**
 	 * Amount.
@@ -222,13 +222,33 @@ class SubscriptionPhase implements \JsonSerializable {
 	}
 
 	/**
-	 * Set status.
+	 * Get canceled date.
 	 *
-	 * @param string $status Status.
+	 * @return DateTimeImmutable|null Canceled date or null if phase is not canceled (yet).
+	 */
+	public function get_canceled_at() {
+		return $this->canceled_at;
+	}
+
+	/**
+	 * Check if this phase is canceled.
+	 *
+	 * @link https://www.grammarly.com/blog/canceled-vs-cancelled/
+	 * @link https://docs.mollie.com/reference/v2/subscriptions-api/cancel-subscription
+	 * @return bool True if canceled, false otherwise.
+	 */
+	public function is_canceled() {
+		return ( null !== $this->canceled_at );
+	}
+
+	/**
+	 * Set canceled date.
+	 *
+	 * @param DateTimeImmutable $canceled_at Canceled date.
 	 * @return void
 	 */
-	public function set_status( $status ) {
-		$this->status = $status;
+	public function set_canceled_at( DateTimeImmutable $canceled_at ) {
+		$this->canceled_at = $canceled_at;
 	}
 
 	/**
@@ -482,7 +502,6 @@ class SubscriptionPhase implements \JsonSerializable {
 	public function jsonSerialize() {
 		return (object) array(
 			'name'              => $this->name,
-			'status'            => $this->status,
 			'start_date'        => $this->start_date->format( \DATE_ATOM ),
 			'interval'          => $this->interval->get_specification(),
 			'amount'            => MoneyJsonTransformer::to_json( $this->amount ),
@@ -491,6 +510,8 @@ class SubscriptionPhase implements \JsonSerializable {
 			'total_periods'     => $this->total_periods,
 			'periods_created'   => $this->periods_created,
 			'periods_remaining' => $this->get_periods_remaining(),
+			// Other.
+			'canceled_at'       => ( null === $this->canceled_at ) ? null : $this->canceled_at->format( \DATE_ATOM ),
 			// Readonly.
 			'is_infinite'       => $this->is_infinite(),
 			'is_canceled'       => $this->is_canceled(),
@@ -514,10 +535,6 @@ class SubscriptionPhase implements \JsonSerializable {
 
 		if ( property_exists( $json, 'name' ) ) {
 			$builder->with_name( $json->name );
-		}
-
-		if ( property_exists( $json, 'status' ) ) {
-			$builder->with_status( $json->status );
 		}
 
 		if ( property_exists( $json, 'start_date' ) ) {
@@ -546,6 +563,10 @@ class SubscriptionPhase implements \JsonSerializable {
 
 		if ( property_exists( $json, 'is_trial' ) && true === $json->is_trial ) {
 			$builder->with_trial();
+		}
+
+		if ( property_exists( $json, 'canceled_at' ) ) {
+			$builder->with_canceled_at( $json->canceled_at );
 		}
 
 		return $builder->create();

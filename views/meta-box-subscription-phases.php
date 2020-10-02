@@ -63,11 +63,13 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 					<td>
 						<?php
 
-						if ( 1 === $phase->get_total_periods() ) :
+						$total_periods = $phase->get_total_periods();
+
+						if ( 1 === $total_periods ) :
 							// No recurrence.
 							echo '—';
 
-						elseif ( $phase->is_infinite() ) :
+						elseif ( null === $total_periods ) :
 							// Unlimited.
 							echo esc_html( strval( Util::format_recurrences( $phase->get_date_interval() ) ) );
 
@@ -76,7 +78,7 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 							printf(
 								'%s (%s)',
 								esc_html( strval( Util::format_recurrences( $phase->get_date_interval() ) ) ),
-								esc_html( strval( Util::format_frequency( $phase->get_total_periods() ) ) )
+								esc_html( strval( Util::format_frequency( $total_periods ) ) )
 							);
 
 						endif;
