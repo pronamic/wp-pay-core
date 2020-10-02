@@ -305,7 +305,8 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return int|null
 	 */
 	public function get_periods_remaining() {
-		if ( $this->is_infinite() ) {
+		if ( null === $this->total_periods ) {
+			// Infinite.
 			return null;
 		}
 
@@ -386,18 +387,12 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @throws \Exception Throws exception on invalid interval spec.
 	 */
 	public function get_end_date() {
-		$total_periods = $this->total_periods;
-
-		if ( null === $total_periods ) {
+		if ( null === $this->total_periods ) {
 			// Infinite.
 			return null;
 		}
 
-		$start_date = clone $this->start_date;
-
-		$end_date = $this->add_interval( $start_date, $total_periods );
-
-		return $end_date;
+		return $this->add_interval( $this->start_date, $this->total_periods );
 	}
 
 	/**
@@ -408,19 +403,13 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return \DateTimeImmutable
 	 */
 	private function add_interval( $date, $times = 1 ) {
-		// Prevent multiplying by zero.
+		// If times is zero there is nothing to add.
 		if ( 0 === $times ) {
 			return $date;
 		}
 
-		$interval = $this->interval;
-
 		// Multiply date interval.
-		$interval = $interval->multiply( $times );
-
-		$date = $date->add( $interval );
-
-		return $date;
+		return $date->add( $this->interval->multiply( $times ) );
 	}
 
 	/**
