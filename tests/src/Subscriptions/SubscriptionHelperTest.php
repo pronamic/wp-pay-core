@@ -10,7 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
-use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Money\TaxedMoney;
 
 /**
  * Subscription Helper Test
@@ -142,7 +142,7 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 		// Phase.
 		$phase = ( new SubscriptionPhaseBuilder() )
 			->with_start_date( new \DateTimeImmutable( $start_date ) )
-			->with_amount( new Money( 100, 'USD' ) )
+			->with_amount( new TaxedMoney( 100, 'USD' ) )
 			->with_interval( $interval_spec )
 			->with_total_periods( $recurrences )
 			->create();

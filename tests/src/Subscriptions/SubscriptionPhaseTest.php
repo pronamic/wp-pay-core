@@ -10,7 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
-use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Money\TaxedMoney;
 
 /**
  * Subscription Phase Test
@@ -25,7 +25,7 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 	 * @return SubscriptionPhase
 	 */
 	private function new_subscription_phase() {
-		$subscription_phase = new SubscriptionPhase( new \DateTimeImmutable(), 'P5Y', new Money( 50, 'EUR' ) );
+		$subscription_phase = new SubscriptionPhase( new \DateTimeImmutable(), 'P5Y', new TaxedMoney( 50, 'EUR' ) );
 
 		return $subscription_phase;
 	}
@@ -91,7 +91,7 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 		 * - Do not charge at sign-up
 		 * - Charge full amount at sign-up
 		 */
-		$amount = new Money( 100, 'USD' );
+		$amount = new TaxedMoney( 100, 'USD' );
 
 		$prorating_rule = new ProratingRule( 'Y' );
 
@@ -125,7 +125,7 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 	 * Test month overflow.
 	 */
 	public function test_month_overflow() {
-		$amount = new Money( 100, 'USD' );
+		$amount = new TaxedMoney( 100, 'USD' );
 
 		$start_date = new \DateTimeImmutable( '2020-01-31 00:00:00' );
 
@@ -148,7 +148,7 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 	 * Test month overflow.
 	 */
 	public function test_month_overflow_29() {
-		$amount = new Money( 100, 'USD' );
+		$amount = new TaxedMoney( 100, 'USD' );
 
 		$start_date = new \DateTimeImmutable( '2020-01-29 00:00:00' );
 
@@ -171,7 +171,7 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 	 * Test month overflow.
 	 */
 	public function test_month_overflow_weekly() {
-		$amount = new Money( 100, 'USD' );
+		$amount = new TaxedMoney( 100, 'USD' );
 
 		$start_date = new \DateTimeImmutable( '2020-01-29 00:00:00' );
 

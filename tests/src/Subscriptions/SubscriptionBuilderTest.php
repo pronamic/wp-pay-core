@@ -10,7 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
-use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Money\TaxedMoney;
 
 /**
  * Subscription Builder Test
@@ -27,13 +27,13 @@ class SubscriptionBuilderTest extends \WP_UnitTestCase {
 			->with_start_date( new \DateTimeImmutable( '2020-05-05 00:00:00' ) )
 			->with_type( 'trial' )
 			->with_total_periods( 1 )
-			->with_amount( new Money( 50, 'EUR' ) )
+			->with_amount( new TaxedMoney( 50, 'EUR' ) )
 			->with_interval( 'P1M' )
 			->create();
 
 		$regular = ( new SubscriptionPhaseBuilder() )
 			->with_start_date( $trial->get_end_date() )
-			->with_amount( new Money( 100, 'EUR' ) )
+			->with_amount( new TaxedMoney( 100, 'EUR' ) )
 			->with_interval( 'P1Y' )
 			->create();
 
@@ -97,7 +97,7 @@ class SubscriptionBuilderTest extends \WP_UnitTestCase {
 		 * - Do not charge at sign-up
 		 * - Charge full amount at sign-up
 		 */
-		$amount = new Money( 100, 'USD' );
+		$amount = new TaxedMoney( 100, 'USD' );
 
 		$prorating_rule = new ProratingRule( 'Y' );
 

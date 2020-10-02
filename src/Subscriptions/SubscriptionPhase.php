@@ -11,8 +11,10 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DateTimeImmutable;
-use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
+use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
 
 /**
  * Subscription Phase
@@ -53,7 +55,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Amount.
 	 *
-	 * @var Money
+	 * @var TaxedMoney
 	 */
 	private $amount;
 
@@ -119,10 +121,10 @@ class SubscriptionPhase implements \JsonSerializable {
 	 *
 	 * @param DateTimeImmutable $start_date    Start date.
 	 * @param string            $interval_spec Interval specification.
-	 * @param Money             $amount        Amount.
+	 * @param TaxedMoney        $amount        Amount.
 	 * @return void
 	 */
-	public function __construct( $start_date, $interval_spec, $amount ) {
+	public function __construct( DateTimeImmutable $start_date, $interval_spec, TaxedMoney $amount ) {
 		$this->sequence_number = 1;
 		$this->start_date      = clone $start_date;
 		$this->amount          = $amount;
@@ -234,7 +236,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Get amount.
 	 *
-	 * @return Money
+	 * @return TaxedMoney
 	 */
 	public function get_amount() {
 		return $this->amount;
@@ -243,7 +245,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Set amount.
 	 *
-	 * @param Money $amount Amount.
+	 * @param TaxedMoney $amount Amount.
 	 * @return void
 	 */
 	public function set_amount( $amount ) {
@@ -411,18 +413,28 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Get next period.
 	 *
-	 * @return Period
-	 * @throws \Exception Throws exception on invalid date interval.
+	 * @param Subscription $subscription Subscription.
+	 * @return SubscriptionPeriod|null
 	 */
-	public function get_next_period() {
+	public function get_next_period( Subscription $subscription ) {
 		if ( $this->all_periods_created() ) {
 			return null;
 		}
 
 		$start = $this->get_next_date();
-		$end   = $this->add_interval( $start );
 
-		$period = new Period( null, $this, $start, $end, clone $this->amount );
+		if ( null === $start ) {
+			return null;
+		}
+
+		$end = $this->add_interval( $start );
+
+		$period = new SubscriptionPeriod(
+			(int) $subscription->get_id(),
+			new DateTime( $start->format( \DateTimeInterface::ATOM ) ),
+			new DateTime( $end->format( \DateTimeInterface::ATOM ) ),
+			$this->get_amount()
+		);
 
 		return $period;
 	}
@@ -430,10 +442,15 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Next period.
 	 *
-	 * @return Period|null
+	 * @param Subscription $subscription Subscription.
+	 * @return SubscriptionPeriod|null
 	 */
-	public function next_period() {
-		$next_period = $this->get_next_period();
+	public function next_period( Subscription $subscription ) {
+		try {
+			$next_period = $this->get_next_period( $subscription );
+		} catch ( \Exception $e ) {
+			return null;
+		}
 
 		if ( null === $next_period ) {
 			return null;
@@ -504,7 +521,7 @@ class SubscriptionPhase implements \JsonSerializable {
 		}
 
 		if ( property_exists( $json, 'amount' ) ) {
-			$builder->with_amount( MoneyJsonTransformer::from_json( $json->amount ) );
+			$builder->with_amount( TaxedMoneyJsonTransformer::from_json( $json->amount ) );
 		}
 
 		if ( property_exists( $json, 'total_periods' ) ) {

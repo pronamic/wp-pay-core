@@ -11,7 +11,7 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DateTimeImmutable;
-use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Money\TaxedMoney;
 
 /**
  * Subscription Phase Builder
@@ -59,7 +59,7 @@ class SubscriptionPhaseBuilder {
 	/**
 	 * Amount.
 	 *
-	 * @var Money|null
+	 * @var TaxedMoney|null
 	 */
 	private $amount;
 
@@ -152,10 +152,10 @@ class SubscriptionPhaseBuilder {
 	/**
 	 * With amount.
 	 *
-	 * @param Money $amount Amount.
+	 * @param TaxedMoney $amount Amount.
 	 * @return $this
 	 */
-	public function with_amount( $amount ) {
+	public function with_amount( TaxedMoney $amount ) {
 		$this->amount = $amount;
 
 		return $this;
