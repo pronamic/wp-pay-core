@@ -60,51 +60,48 @@ class SubscriptionInterval extends \DateInterval implements \JsonSerializable {
 			throw new \InvalidArgumentException( 'Subscription interval cannot be multiplied by 0.' );
 		}
 
+		$invert = ( $times < 0 );
+
+		$times = \absint( $times );
+
 		$interval_spec = 'P';
 
-		// Negative times.
-		if ( $times < 0 ) {
-			$interval_spec = '-P';
-
-			$times = \absint( $times );
-		}
-
 		// Date.
-		$date = array(
-			'Y' => $this->y * $times,
-			'M' => $this->m * $times,
-			'D' => $this->d * $times,
+		$date = \array_filter(
+			array(
+				'Y' => $this->y * $times,
+				'M' => $this->m * $times,
+				'D' => $this->d * $times,
+			)
 		);
 
 		foreach ( $date as $unit => $value ) {
-			if ( 0 === $value ) {
-				continue;
-			}
-
 			$interval_spec .= $value . $unit;
 		}
 
 		// Time.
-		$time = array(
-			'H' => $this->h * $times,
-			'M' => $this->i * $times,
-			'S' => $this->s * $times,
+		$time = \array_filter(
+			array(
+				'H' => $this->h * $times,
+				'M' => $this->i * $times,
+				'S' => $this->s * $times,
+			)
 		);
 
-		foreach ( $time as $unit => $value ) {
-			if ( 0 === $value ) {
-				continue;
-			}
+		if ( count( $time ) > 0 ) {
+			$interval_spec .= 'T';
 
-			// Add time designator.
-			if ( false === \strpos( $interval_spec, 'T' ) ) {
-				$interval_spec .= 'T';
+			foreach ( $time as $unit => $value ) {
+				$interval_spec .= $value . $unit;
 			}
-
-			$interval_spec .= $value . $unit;
 		}
 
-		return new self( $interval_spec );
+		// Interval.
+		$interval = new self( $interval_spec );
+
+		$interval->invert = $invert;
+
+		return $interval;
 	}
 
 	/**

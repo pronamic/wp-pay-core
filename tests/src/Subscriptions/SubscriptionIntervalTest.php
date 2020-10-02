@@ -55,9 +55,10 @@ class SubscriptionIntervalTest extends \WP_UnitTestCase {
 	public function test_multiply_by_zero() {
 		$interval = new SubscriptionInterval( 'P2Y6M' );
 
-		$result = $interval->multiply( 0 );
+		$this->expectException( \InvalidArgumentException::class );
+		$this->expectExceptionMessage( 'Subscription interval cannot be multiplied by 0.' );
 
-		$this->assertEquals( 'P0Y0M', \strval( $result ) );
+		$result = $interval->multiply( 0 );
 	}
 
 	/**
@@ -69,5 +70,12 @@ class SubscriptionIntervalTest extends \WP_UnitTestCase {
 		$result = $interval->multiply( -2 );
 
 		$this->assertEquals( 'P4Y12M', \strval( $result ) );
+		$this->assertEquals( 1, $result->invert );
+
+		$date = new \DateTimeImmutable( '2005-05-05 00:00:00' );
+
+		$result = $date->add( $result );
+
+		$this->assertEquals( '2000-05-05 00:00:00', $result->format( 'Y-m-d H:i:s' ) );
 	}
 }
