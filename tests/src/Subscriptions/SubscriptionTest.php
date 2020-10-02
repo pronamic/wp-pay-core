@@ -190,21 +190,23 @@ class SubscriptionTest extends WP_UnitTestCase {
 	 * @return Subscription
 	 */
 	private function get_monthly_subscription() {
-		$subscription = new Subscription();
+		// Phase.
+		$phase = ( new SubscriptionPhaseBuilder() )
+			->with_start_date( new \DateTimeImmutable( '2005-05-05' ) )
+			->with_amount( new TaxedMoney( 89.95, 'EUR' ) )
+			->with_interval( 'P1M' )
+			->create();
 
-		// Interval.
-		$subscription->interval        = 1;
-		$subscription->interval_period = 'M';
+		// Build subscription.
+		$subscription = ( new SubscriptionBuilder() )
+			->with_phase( $phase )
+			->create();
 
 		// Dates.
-		$subscription->set_start_date( new DateTime( '2005-05-05' ) );
 		$subscription->set_end_date( new DateTime( '2005-06-05' ) );
 		$subscription->set_expiry_date( new DateTime( '2010-05-05' ) );
 		$subscription->set_next_payment_date( new DateTime( '2005-06-05' ) );
 		$subscription->set_next_payment_delivery_date( new DateTime( '2005-06-01' ) );
-
-		// Amount.
-		$subscription->set_total_amount( new TaxedMoney( 89.95, 'EUR' ) );
 
 		return $subscription;
 	}

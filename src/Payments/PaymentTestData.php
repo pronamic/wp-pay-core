@@ -16,6 +16,7 @@ use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Pay\CreditCard;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
+use Pronamic\WordPress\Pay\Subscriptions\SubscriptionBuilder;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhaseBuilder;
 use WP_User;
 
@@ -208,21 +209,20 @@ class PaymentTestData extends PaymentData {
 				break;
 		}
 
-		// Subscription.
-		$subscription = new Subscription();
-
-		$subscription->description = $this->get_description();
-
-		$regular_phase = ( new SubscriptionPhaseBuilder() )
+		// Phase.
+		$phase = ( new SubscriptionPhaseBuilder() )
 			->with_start_date( new \DateTimeImmutable() )
 			->with_amount( $this->get_amount() )
 			->with_interval( 'P' . $interval . Core_Util::to_period( $interval_period ) )
 			->with_total_periods( $total_periods )
 			->create();
 
-		$subscription->add_phase( $regular_phase );
+		// Build subscription.
+		$subscription = ( new SubscriptionBuilder() )
+			->with_phase( $phase )
+			->create();
 
-		$subscription->set_total_amount( $this->get_amount() );
+		$subscription->description = $this->get_description();
 
 		return $subscription;
 	}
