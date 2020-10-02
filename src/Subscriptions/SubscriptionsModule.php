@@ -473,7 +473,7 @@ class SubscriptionsModule {
 		$start_date = $period->get_start_date();
 		$end_date   = $period->get_end_date();
 
-		$subscription->next_payment_date          = $end_date;
+		$subscription->next_payment_date          = SubscriptionHelper::calculate_next_payment_date( $subscription );
 		$subscription->next_payment_delivery_date = SubscriptionHelper::calculate_next_payment_delivery_date( $subscription );
 
 		// Remove next payment (delivery) date if this is the last payment according to subscription end date.
