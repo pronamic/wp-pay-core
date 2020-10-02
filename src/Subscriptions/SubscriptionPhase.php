@@ -32,13 +32,6 @@ class SubscriptionPhase implements \JsonSerializable {
 	private $sequence_number;
 
 	/**
-	 * Type.
-	 *
-	 * @var string
-	 */
-	private $type;
-
-	/**
 	 * Name.
 	 *
 	 * @var string|null
@@ -117,6 +110,13 @@ class SubscriptionPhase implements \JsonSerializable {
 	private $proration;
 
 	/**
+	 * Is trial?
+	 *
+	 * @var bool
+	 */
+	private $trial;
+
+	/**
 	 * Construct subscription phase.
 	 *
 	 * @param DateTimeImmutable $start_date    Start date.
@@ -130,6 +130,8 @@ class SubscriptionPhase implements \JsonSerializable {
 		$this->amount          = $amount;
 
 		$this->periods_created = 0;
+		$this->proration       = false;
+		$this->trial           = false;
 
 		$this->interval = new SubscriptionInterval( $interval_spec );
 	}
@@ -234,16 +236,6 @@ class SubscriptionPhase implements \JsonSerializable {
 	}
 
 	/**
-	 * Set type.
-	 *
-	 * @param string $type Type.
-	 * @return void
-	 */
-	public function set_type( $type ) {
-		$this->type = $type;
-	}
-
-	/**
 	 * Get amount.
 	 *
 	 * @return TaxedMoney
@@ -333,6 +325,25 @@ class SubscriptionPhase implements \JsonSerializable {
 	}
 
 	/**
+	 * Check if this phase is a trial.
+	 *
+	 * @return bool True if trial, false otherwise.
+	 */
+	public function is_trial() {
+		return $this->trial;
+	}
+
+	/**
+	 * Set trial.
+	 *
+	 * @param bool $trial Trial.
+	 * @return void
+	 */
+	public function set_trial( $trial ) {
+		$this->trial = $trial;
+	}
+
+	/**
 	 * The subscription phase is infinite when the total periods number is undefined.
 	 *
 	 * @return bool True if infinite, false otherwise.
@@ -359,15 +370,6 @@ class SubscriptionPhase implements \JsonSerializable {
 	 */
 	public function is_canceled() {
 		return ( 'canceled' === $this->status );
-	}
-
-	/**
-	 * Check if this phase is a trial.
-	 *
-	 * @return bool True if trial, false otherwise.
-	 */
-	public function is_trial() {
-		return ( 'trial' === $this->type );
 	}
 
 	/**
@@ -478,7 +480,6 @@ class SubscriptionPhase implements \JsonSerializable {
 	 */
 	public function jsonSerialize() {
 		return (object) array(
-			'type'              => $this->type,
 			'name'              => $this->name,
 			'status'            => $this->status,
 			'start_date'        => $this->start_date->format( \DATE_ATOM ),
@@ -510,10 +511,6 @@ class SubscriptionPhase implements \JsonSerializable {
 
 		$builder = new SubscriptionPhaseBuilder();
 
-		if ( property_exists( $json, 'type' ) ) {
-			$builder->with_type( $json->type );
-		}
-
 		if ( property_exists( $json, 'name' ) ) {
 			$builder->with_name( $json->name );
 		}
@@ -540,6 +537,14 @@ class SubscriptionPhase implements \JsonSerializable {
 
 		if ( property_exists( $json, 'periods_created' ) ) {
 			$builder->with_periods_created( $json->periods_created );
+		}
+
+		if ( property_exists( $json, 'proration' ) && true === $json->proration ) {
+			$builder->with_proration();
+		}
+
+		if ( property_exists( $json, 'is_trial' ) && true === $json->is_trial ) {
+			$builder->with_trial();
 		}
 
 		return $builder->create();

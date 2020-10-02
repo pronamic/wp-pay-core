@@ -63,7 +63,7 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 
 		$this->assertFalse( $subscription_phase->is_trial() );
 
-		$subscription_phase->set_type( 'trial' );
+		$subscription_phase->set_trial( true );
 
 		$this->assertTrue( $subscription_phase->is_trial() );
 	}

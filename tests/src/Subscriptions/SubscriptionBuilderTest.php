@@ -25,10 +25,10 @@ class SubscriptionBuilderTest extends \WP_UnitTestCase {
 	public function test_builder() {
 		$trial = ( new SubscriptionPhaseBuilder() )
 			->with_start_date( new \DateTimeImmutable( '2020-05-05 00:00:00' ) )
-			->with_type( 'trial' )
 			->with_total_periods( 1 )
 			->with_amount( new TaxedMoney( 50, 'EUR' ) )
 			->with_interval( 'P1M' )
+			->with_trial()
 			->create();
 
 		$regular = ( new SubscriptionPhaseBuilder() )

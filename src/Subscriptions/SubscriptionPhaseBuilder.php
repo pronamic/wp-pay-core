@@ -78,6 +78,13 @@ class SubscriptionPhaseBuilder {
 	private $proration;
 
 	/**
+	 * Trial.
+	 *
+	 * @var bool|null
+	 */
+	private $trial;
+
+	/**
 	 * With start date.
 	 *
 	 * @param DateTimeImmutable $start_date Start date.
@@ -109,18 +116,6 @@ class SubscriptionPhaseBuilder {
 	 */
 	public function with_status( $status ) {
 		$this->status = $status;
-
-		return $this;
-	}
-
-	/**
-	 * With type.
-	 *
-	 * @param string $type Type.
-	 * @return $this
-	 */
-	public function with_type( $type ) {
-		$this->type = $type;
 
 		return $this;
 	}
@@ -185,6 +180,17 @@ class SubscriptionPhaseBuilder {
 	}
 
 	/**
+	 * With trial.
+	 *
+	 * @return $this
+	 */
+	public function with_trial() {
+		$this->trial = true;
+
+		return $this;
+	}
+
+	/**
 	 * Create subscription phase.
 	 *
 	 * @return SubscriptionPhase
@@ -193,9 +199,17 @@ class SubscriptionPhaseBuilder {
 	public function create() {
 		$phase = new SubscriptionPhase( $this->start_date, $this->interval_spec, $this->amount );
 
-		$phase->set_type( $this->type );
+		// Name.
+		$phase->set_name( $this->name );
+
+		// Proration.
+		$phase->set_proration( (bool) $this->proration );
+
+		// Trial.
+		$phase->set_trial( (bool) $this->trial );
+
+		// Total periods.
 		$phase->set_total_periods( $this->total_periods );
-		$phase->set_proration( $this->proration );
 
 		// Periods created.
 		if ( null !== $this->periods_created ) {
