@@ -252,6 +252,27 @@ class SubscriptionPhase implements \JsonSerializable {
 	}
 
 	/**
+	 * Check if this phase is canceled.
+	 *
+	 * @link https://www.grammarly.com/blog/canceled-vs-cancelled/
+	 * @link https://docs.mollie.com/reference/v2/subscriptions-api/cancel-subscription
+	 * @return bool True if canceled, false otherwise.
+	 */
+	public function is_canceled() {
+		return ( null !== $this->canceled_at );
+	}
+
+	/**
+	 * Set canceled date.
+	 *
+	 * @param DateTimeImmutable|null $canceled_at Canceled date.
+	 * @return void
+	 */
+	public function set_canceled_at( DateTimeImmutable $canceled_at = null ) {
+		$this->canceled_at = $canceled_at;
+	}
+
+	/**
 	 * Get amount.
 	 *
 	 * @return TaxedMoney
@@ -375,17 +396,6 @@ class SubscriptionPhase implements \JsonSerializable {
 	 */
 	public function all_periods_created() {
 		return ( $this->total_periods === $this->periods_created );
-	}
-
-	/**
-	 * Check if this phase is canceled.
-	 *
-	 * @link https://www.grammarly.com/blog/canceled-vs-cancelled/
-	 * @link https://docs.mollie.com/reference/v2/subscriptions-api/cancel-subscription
-	 * @return bool True if canceled, false otherwise.
-	 */
-	public function is_canceled() {
-		return ( 'canceled' === $this->status );
 	}
 
 	/**
@@ -607,7 +617,7 @@ class SubscriptionPhase implements \JsonSerializable {
 		$total_periods = $phase->get_total_periods();
 
 		if ( null !== $total_periods ) {
-			$phase->set_total_periods( --$total_periods );
+			$phase->set_total_periods( $total_periods - 1 );
 		}
 
 		$phase->set_start_date( $proration_phase->get_end_date() );

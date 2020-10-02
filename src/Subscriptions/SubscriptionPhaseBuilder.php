@@ -36,13 +36,6 @@ class SubscriptionPhaseBuilder {
 	private $name;
 
 	/**
-	 * Status.
-	 *
-	 * @var string
-	 */
-	protected $status;
-
-	/**
 	 * Total periods.
 	 *
 	 * @var int|null
@@ -83,6 +76,13 @@ class SubscriptionPhaseBuilder {
 	 * @var bool|null
 	 */
 	private $trial;
+
+	/**
+	 * Canceled at.
+	 *
+	 * @var DateTimeImmutable|null
+	 */
+	private $canceled_at;
 
 	/**
 	 * With start date.
