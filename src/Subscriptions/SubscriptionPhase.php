@@ -126,7 +126,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 */
 	public function __construct( DateTimeImmutable $start_date, $interval_spec, TaxedMoney $amount ) {
 		$this->sequence_number = 1;
-		$this->start_date      = clone $start_date;
+		$this->start_date      = $start_date;
 		$this->amount          = $amount;
 
 		$this->periods_created = 0;
