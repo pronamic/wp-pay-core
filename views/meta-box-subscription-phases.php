@@ -121,7 +121,7 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 					<td>
 						<?php
 
-						echo esc_html( $phase->is_proration() ? __( 'Yes', 'pronamic_ideal' ) : __( 'No', 'pronamic_ideal' ) );
+						echo esc_html( $phase->is_prorated() ? __( 'Yes', 'pronamic_ideal' ) : __( 'No', 'pronamic_ideal' ) );
 
 						?>
 					</td>

@@ -126,7 +126,7 @@ trait SubscriptionPhasesTrait {
 			}
 
 			// Skip prorated phases.
-			if ( $phase->is_proration() ) {
+			if ( $phase->is_prorated() ) {
 				continue;
 			}
 
@@ -143,7 +143,7 @@ trait SubscriptionPhasesTrait {
 			}
 
 			// Skip prorated phases.
-			if ( $phase->is_proration() ) {
+			if ( $phase->is_prorated() ) {
 				continue;
 			}
 
