@@ -25,13 +25,6 @@ use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
  */
 class SubscriptionPhase implements \JsonSerializable {
 	/**
-	 * Name.
-	 *
-	 * @var string|null
-	 */
-	private $name;
-
-	/**
 	 * Canceled at.
 	 *
 	 * @var DateTimeImmutable|null
@@ -125,25 +118,6 @@ class SubscriptionPhase implements \JsonSerializable {
 		$this->periods_created = 0;
 		$this->proration       = false;
 		$this->is_trial        = false;
-	}
-
-	/**
-	 * Get name.
-	 *
-	 * @return string|null
-	 */
-	public function get_name() {
-		return $this->name;
-	}
-
-	/**
-	 * Set name.
-	 *
-	 * @param string|null $name Name.
-	 * @return void
-	 */
-	public function set_name( $name ) {
-		$this->name = $name;
 	}
 
 	/**
@@ -442,7 +416,6 @@ class SubscriptionPhase implements \JsonSerializable {
 	 */
 	public function jsonSerialize() {
 		return (object) array(
-			'name'              => $this->name,
 			'start_date'        => $this->start_date->format( \DATE_ATOM ),
 			'interval'          => $this->interval->get_specification(),
 			'amount'            => MoneyJsonTransformer::to_json( $this->amount ),
@@ -473,10 +446,6 @@ class SubscriptionPhase implements \JsonSerializable {
 		}
 
 		$builder = new SubscriptionPhaseBuilder();
-
-		if ( property_exists( $json, 'name' ) ) {
-			$builder->with_name( $json->name );
-		}
 
 		if ( property_exists( $json, 'start_date' ) ) {
 			$builder->with_start_date( new \DateTimeImmutable( $json->start_date ) );

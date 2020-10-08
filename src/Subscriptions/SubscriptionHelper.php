@@ -242,8 +242,8 @@ class SubscriptionHelper {
 		 *
 		 * @since unreleased
 		 *
-		 * @param \DateTimeInterface $next_payment_delivery_date Next payment delivery date.
-		 * @param Subscription       $subscription               Subscription.
+		 * @param DateTime     $next_payment_delivery_date Next payment delivery date.
+		 * @param Subscription $subscription               Subscription.
 		 */
 		$next_payment_delivery_date = \apply_filters( 'pronamic_pay_subscription_next_payment_delivery_date', $next_payment_delivery_date, $subscription );
 

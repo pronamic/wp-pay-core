@@ -53,12 +53,10 @@ class SubscriptionPhasesTraitTest extends \WP_UnitTestCase {
 		$phase_1 = $this->new_phase( $subscription );
 
 		$this->assertInstanceOf( SubscriptionPhase::class, $phase_1 );
-		$this->assertEquals( 1, $phase_1->get_sequence_number() );
 
 		$phase_2 = $this->new_phase( $subscription );
 
 		$this->assertInstanceOf( SubscriptionPhase::class, $phase_2 );
-		$this->assertEquals( 2, $phase_2->get_sequence_number() );
 	}
 
 	/**

@@ -69,19 +69,6 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 	}
 
 	/**
-	 * Test sequence number.
-	 */
-	public function test_sequence_number() {
-		$subscription_phase = $this->new_subscription_phase();
-
-		$this->assertEquals( 1, $subscription_phase->get_sequence_number() );
-
-		$subscription_phase->set_sequence_number( 3 );
-
-		$this->assertEquals( 3, $subscription_phase->get_sequence_number() );
-	}
-
-	/**
 	 * Test prorate.
 	 */
 	public function test_prorate() {
