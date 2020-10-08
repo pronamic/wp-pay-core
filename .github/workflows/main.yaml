@@ -15,7 +15,6 @@ jobs:
 
     strategy:
       fail-fast: false
-
       matrix:
         php-version:
           - 7.4
@@ -30,8 +29,6 @@ jobs:
           ini-values: memory_limit=2048M
           tools: composer, phpcs
           coverage: none
-
-      - run: composer self-update
 
       - name: Composer validation
         run: composer validate --strict
@@ -48,11 +45,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
 
-      - name: Install Composer dependencies
-        run: composer install --no-progress --no-suggest
-
       - name: Require WordPress
-        run: composer require --dev --update-with-dependencies --no-progress --no-suggest roots/wordpress:${{ env.wp-version }} wp-phpunit/wp-phpunit:${{ env.wp-version }}
+        run: composer require --dev --no-update --no-progress --no-suggest roots/wordpress:${{ env.wp-version }} wp-phpunit/wp-phpunit:${{ env.wp-version }}
+
+      - name: Install Composer dependencies
+        run: composer update --no-progress --no-suggest
 
       - name: List Composer packages
         run: composer show
@@ -99,11 +96,6 @@ jobs:
           tools: composer
           coverage: none
 
-      - run: composer self-update
-
-      - name: Composer validation
-        run: composer validate --strict
-
       # https://github.com/actions/cache/blob/master/examples.md#php---composer
       - name: Get Composer Cache Directory
         id: composer-cache
@@ -117,13 +109,13 @@ jobs:
             ${{ runner.os }}-composer-
 
       - name: Start MySQL service
-        run: sudo /etc/init.d/mysql start
-
-      - name: Install Composer dependencies
-        run: composer install --no-progress --no-suggest
+        run: sudo service mysql start
 
       - name: Require WordPress
-        run: composer require --dev --update-with-dependencies --no-progress --no-suggest roots/wordpress:${{ env.wp-version }} wp-phpunit/wp-phpunit:${{ env.wp-version }}
+        run: composer require --dev --no-update --no-progress --no-suggest roots/wordpress:${{ env.wp-version }} wp-phpunit/wp-phpunit:${{ env.wp-version }}
+
+      - name: Install Composer dependencies
+        run: composer update --no-progress --no-suggest
 
       - name: List Composer packages
         run: composer show
@@ -133,12 +125,12 @@ jobs:
 
       - name: PHPStan static code analysis
         env:
-          WP_TESTS_DB_HOST: 127.0.01:${{ job.services.mysql.ports['3306'] }}
+          WP_TESTS_DB_HOST: 127.0.0.1:${{ job.services.mysql.ports['3306'] }}
         run: composer bin phpstan install && composer run-script phpstan
 
       - name: Psalm static code analysis
         env:
-          WP_TESTS_DB_HOST: 127.0.01:${{ job.services.mysql.ports['3306'] }}
+          WP_TESTS_DB_HOST: 127.0.0.1:${{ job.services.mysql.ports['3306'] }}
         run: composer bin psalm install && composer run-script psalm
 
   tests:
@@ -148,7 +140,6 @@ jobs:
 
     strategy:
       fail-fast: false
-
       matrix:
         include:
           # PHP Compatibility and WordPress Versions: https://make.wordpress.org/core/handbook/references/php-compatibility-and-wordpress-versions/
@@ -218,11 +209,6 @@ jobs:
           tools: composer
           coverage: none
 
-      - run: composer self-update
-
-      - name: Composer validation
-        run: composer validate --strict
-
       # https://github.com/actions/cache/blob/master/examples.md#php---composer
       - name: Get Composer Cache Directory
         id: composer-cache
@@ -236,13 +222,17 @@ jobs:
             ${{ runner.os }}-composer-
 
       - name: Start MySQL service
-        run: sudo /etc/init.d/mysql start
+        run: sudo service mysql start
 
-      - name: Install Composer dependencies
-        run: composer install --no-progress --no-suggest
+      - name: Remove PHP 7.1+ packages
+        if: ${{ matrix.php-version == '7.0' || matrix.php-version == '5.6' }}
+        run: composer remove --dev --no-update --no-progress szepeviktor/phpstan-wordpress
 
       - name: Require WordPress
-        run: composer require --dev --update-with-dependencies --no-progress --no-suggest roots/wordpress:${{ matrix.wp-version || env.wp-version }} wp-phpunit/wp-phpunit:${{ matrix.wp-version || env.wp-version }}
+        run: composer require --dev --no-update --no-progress --no-suggest roots/wordpress:${{ matrix.wp-version || env.wp-version }} wp-phpunit/wp-phpunit:${{ matrix.wp-version || env.wp-version }}
+
+      - name: Install Composer dependencies
+        run: composer update --no-progress --no-suggest
 
       - name: List Composer packages
         run: composer show
@@ -252,7 +242,7 @@ jobs:
 
       - name: PHPUnit test suite
         env:
-          WP_TESTS_DB_HOST: 127.0.01:${{ job.services.mysql.ports['3306'] }}
+          WP_TESTS_DB_HOST: 127.0.0.1:${{ job.services.mysql.ports['3306'] }}
         run: composer run-script phpunit
 
   code-coverage:
@@ -262,7 +252,6 @@ jobs:
 
     strategy:
       fail-fast: false
-
       matrix:
         php-version:
           - 7.4
@@ -289,11 +278,6 @@ jobs:
           tools: composer
           coverage: xdebug
 
-      - run: composer self-update
-
-      - name: Composer validation
-        run: composer validate --strict
-
       # https://github.com/actions/cache/blob/master/examples.md#php---composer
       - name: Get Composer Cache Directory
         id: composer-cache
@@ -307,13 +291,13 @@ jobs:
             ${{ runner.os }}-composer-
 
       - name: Start MySQL service
-        run: sudo /etc/init.d/mysql start
-
-      - name: Install Composer dependencies
-        run: composer install --no-progress --no-suggest
+        run: sudo service mysql start
 
       - name: Require WordPress
-        run: composer require --dev --update-with-dependencies --no-progress --no-suggest roots/wordpress:${{ env.wp-version }} wp-phpunit/wp-phpunit:${{ env.wp-version }}
+        run: composer require --dev --no-update --no-progress --no-suggest roots/wordpress:${{ env.wp-version }} wp-phpunit/wp-phpunit:${{ env.wp-version }}
+
+      - name: Install Composer dependencies
+        run: composer update --no-progress --no-suggest
 
       - name: List Composer packages
         run: composer show
@@ -323,7 +307,7 @@ jobs:
 
       - name: PHPUnit test suite
         env:
-          WP_TESTS_DB_HOST: 127.0.01:${{ job.services.mysql.ports['3306'] }}
+          WP_TESTS_DB_HOST: 127.0.0.1:${{ job.services.mysql.ports['3306'] }}
         run: composer run-script phpunit
 
       - name: Coveralls code coverage
