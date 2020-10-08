@@ -93,7 +93,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 *
 	 * @var bool
 	 */
-	private $proration;
+	private $is_prorated;
 
 	/**
 	 * Boolean flag to indicate a trial subscription phase.
@@ -116,7 +116,7 @@ class SubscriptionPhase implements \JsonSerializable {
 		$this->amount     = $amount;
 
 		$this->periods_created = 0;
-		$this->proration       = false;
+		$this->is_prorated     = false;
 		$this->is_trial        = false;
 	}
 
