@@ -44,10 +44,6 @@ trait SubscriptionPhasesTrait {
 	 * @return void
 	 */
 	public function add_phase( SubscriptionPhase $phase ) {
-		$sequence_number = \count( $this->phases ) + 1;
-
-		$phase->set_sequence_number( $sequence_number );
-
 		$this->phases[] = $phase;
 	}
 

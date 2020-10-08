@@ -25,7 +25,6 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 				<th scope="col">
 					<span class="pronamic-pay-tip pronamic-pay-icon pronamic-pay-status" title="<?php esc_attr_e( 'Status', 'pronamic_ideal' ); ?>"><?php esc_html_e( 'Status', 'pronamic_ideal' ); ?></span>
 				</th>
-				<th scope="col"><?php esc_html_e( 'Sequence Number', 'pronamic_ideal' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Name', 'pronamic_ideal' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Amount', 'pronamic_ideal' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Recurrence', 'pronamic_ideal' ); ?></th>
@@ -51,9 +50,6 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 
 				<tr>
 					<td></td>
-					<td>
-						<?php echo esc_html( $phase->get_sequence_number() ); ?>
-					</td>
 					<td>
 						<?php echo esc_html( null === $phase->get_name() ? '—' : $phase->get_name() ); ?>
 					</td>
