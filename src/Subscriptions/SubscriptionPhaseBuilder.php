@@ -29,13 +29,6 @@ class SubscriptionPhaseBuilder {
 	private $start_date;
 
 	/**
-	 * Name.
-	 *
-	 * @var string|null
-	 */
-	private $name;
-
-	/**
 	 * Total periods.
 	 *
 	 * @var int|null
@@ -92,18 +85,6 @@ class SubscriptionPhaseBuilder {
 	 */
 	public function with_start_date( DateTimeImmutable $start_date ) {
 		$this->start_date = $start_date;
-
-		return $this;
-	}
-
-	/**
-	 * With name.
-	 *
-	 * @param string $name Name.
-	 * @return $this
-	 */
-	public function with_name( $name ) {
-		$this->name = $name;
 
 		return $this;
 	}
@@ -210,9 +191,6 @@ class SubscriptionPhaseBuilder {
 		}
 
 		$phase = new SubscriptionPhase( $this->start_date, $this->interval, $this->amount );
-
-		// Name.
-		$phase->set_name( $this->name );
 
 		// Proration.
 		$phase->set_proration( (bool) $this->proration );
