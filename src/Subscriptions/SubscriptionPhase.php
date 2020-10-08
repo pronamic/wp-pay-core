@@ -103,11 +103,11 @@ class SubscriptionPhase implements \JsonSerializable {
 	private $proration;
 
 	/**
-	 * Is trial?
+	 * Boolean flag to indicate a trial subscription phase.
 	 *
 	 * @var bool
 	 */
-	private $trial;
+	private $is_trial;
 
 	/**
 	 * Construct subscription phase.
@@ -124,7 +124,7 @@ class SubscriptionPhase implements \JsonSerializable {
 
 		$this->periods_created = 0;
 		$this->proration       = false;
-		$this->trial           = false;
+		$this->is_trial        = false;
 	}
 
 	/**
@@ -310,17 +310,17 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return bool True if trial, false otherwise.
 	 */
 	public function is_trial() {
-		return $this->trial;
+		return $this->is_trial;
 	}
 
 	/**
 	 * Set trial.
 	 *
-	 * @param bool $trial Trial.
+	 * @param bool $is_trial Trial.
 	 * @return void
 	 */
-	public function set_trial( $trial ) {
-		$this->trial = $trial;
+	public function set_trial( $is_trial ) {
+		$this->is_trial = $is_trial;
 	}
 
 	/**
