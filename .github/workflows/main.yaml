@@ -74,17 +74,6 @@ jobs:
         php-version:
           - 7.4
 
-    services:
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: false
-          MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: wp_phpunit_tests
-        ports:
-          - 3306/tcp
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
     steps:
       - uses: actions/checkout@v2
 
@@ -108,29 +97,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
 
-      - name: Start MySQL service
-        run: sudo service mysql start
-
-      - name: Require WordPress
-        run: composer require --dev --no-update --no-progress --no-suggest roots/wordpress:${{ env.wp-version }} wp-phpunit/wp-phpunit:${{ env.wp-version }}
-
       - name: Install Composer dependencies
         run: composer update --no-progress --no-suggest
 
-      - name: List Composer packages
-        run: composer show
-
-      - name: PHPLint
-        run: composer run-script phplint
-
       - name: PHPStan static code analysis
-        env:
-          WP_TESTS_DB_HOST: 127.0.0.1:${{ job.services.mysql.ports['3306'] }}
         run: composer bin phpstan install && composer run-script phpstan
 
       - name: Psalm static code analysis
-        env:
-          WP_TESTS_DB_HOST: 127.0.0.1:${{ job.services.mysql.ports['3306'] }}
         run: composer bin psalm install && composer run-script psalm
 
   tests:
