@@ -10,7 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
-use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Money\TaxedMoney;
 
 /**
  * Subscription Builder Test
@@ -25,15 +25,15 @@ class SubscriptionBuilderTest extends \WP_UnitTestCase {
 	public function test_builder() {
 		$trial = ( new SubscriptionPhaseBuilder() )
 			->with_start_date( new \DateTimeImmutable( '2020-05-05 00:00:00' ) )
-			->with_type( 'trial' )
 			->with_total_periods( 1 )
-			->with_amount( new Money( 50, 'EUR' ) )
+			->with_amount( new TaxedMoney( 50, 'EUR' ) )
 			->with_interval( 'P1M' )
+			->with_trial()
 			->create();
 
 		$regular = ( new SubscriptionPhaseBuilder() )
 			->with_start_date( $trial->get_end_date() )
-			->with_amount( new Money( 100, 'EUR' ) )
+			->with_amount( new TaxedMoney( 100, 'EUR' ) )
 			->with_interval( 'P1Y' )
 			->create();
 
@@ -48,23 +48,23 @@ class SubscriptionBuilderTest extends \WP_UnitTestCase {
 		$this->assertTrue( $current_phase->is_trial() );
 		$this->assertTrue( $subscription->in_trial_period() );
 
-		$period = $subscription->next_period();
+		$period = $subscription->next_period( $subscription );
 
-		$this->assertInstanceOf( Period::class, $period );
+		$this->assertInstanceOf( SubscriptionPeriod::class, $period );
 		$this->assertTrue( $period->is_trial() );
 		$this->assertEquals( new \DateTimeImmutable( '2020-05-05 00:00:00' ), $period->get_start_date() );
 		$this->assertEquals( new \DateTimeImmutable( '2020-06-05 00:00:00' ), $period->get_end_date() );
 
-		$period = $subscription->next_period();
+		$period = $subscription->next_period( $subscription );
 
-		$this->assertInstanceOf( Period::class, $period );
+		$this->assertInstanceOf( SubscriptionPeriod::class, $period );
 		$this->assertFalse( $period->is_trial() );
 		$this->assertEquals( new \DateTimeImmutable( '2020-06-05 00:00:00' ), $period->get_start_date() );
 		$this->assertEquals( new \DateTimeImmutable( '2021-06-05 00:00:00' ), $period->get_end_date() );
 
-		$period = $subscription->next_period();
+		$period = $subscription->next_period( $subscription );
 
-		$this->assertInstanceOf( Period::class, $period );
+		$this->assertInstanceOf( SubscriptionPeriod::class, $period );
 		$this->assertFalse( $period->is_trial() );
 		$this->assertEquals( new \DateTimeImmutable( '2021-06-05 00:00:00' ), $period->get_start_date() );
 		$this->assertEquals( new \DateTimeImmutable( '2022-06-05 00:00:00' ), $period->get_end_date() );
@@ -97,7 +97,7 @@ class SubscriptionBuilderTest extends \WP_UnitTestCase {
 		 * - Do not charge at sign-up
 		 * - Charge full amount at sign-up
 		 */
-		$amount = new Money( 100, 'USD' );
+		$amount = new TaxedMoney( 100, 'USD' );
 
 		$prorating_rule = new ProratingRule( 'Y' );
 

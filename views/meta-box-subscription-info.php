@@ -8,6 +8,7 @@
  * @package   Pronamic\WordPress\Pay
  */
 
+use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Util;
@@ -16,6 +17,8 @@ $subscription_id = $subscription->get_id();
 
 $customer = $subscription->get_customer();
 $user_id  = is_null( $customer ) ? null : $customer->get_user_id();
+
+$phase = $subscription->get_display_phase();
 
 ?>
 <table class="form-table">
@@ -84,18 +87,11 @@ $user_id  = is_null( $customer ) ? null : $customer->get_user_id();
 		<td>
 			<?php
 
-			if ( current_user_can( 'edit_post', $subscription_id ) && apply_filters( 'pronamic_pay_subscription_amount_editable_' . $subscription->get_source(), false ) ) {
-				echo esc_html( $subscription->get_total_amount()->get_currency()->get_symbol() );
+			if ( null !== $phase ) :
 
-				$amount = $subscription->get_total_amount()->format_i18n( '%2$s' );
+				echo esc_html( $phase->get_amount()->format_i18n() );
 
-				printf(
-					' <input type="text" name="pronamic_subscription_amount" value="%s" size="12" />',
-					esc_attr( $amount )
-				);
-			} else {
-				echo esc_html( $subscription->get_total_amount()->format_i18n() );
-			}
+			endif;
 
 			?>
 		</td>
@@ -107,11 +103,23 @@ $user_id  = is_null( $customer ) ? null : $customer->get_user_id();
 		<td>
 			<?php
 
-			printf(
-				'%s, %s',
-				esc_html( strval( Util::format_interval( $subscription->get_interval(), $subscription->get_interval_period() ) ) ),
-				esc_html( strval( Util::format_frequency( $subscription->get_frequency() ) ) )
-			);
+			if ( null === $phase || 1 === $phase->get_total_periods() ) :
+				// No recurrence.
+				echo '—';
+
+			elseif ( $phase->is_infinite() ) :
+				// Infinite.
+				echo esc_html( strval( Util::format_recurrences( $phase->get_date_interval() ) ) );
+
+			else :
+				// Fixed number of recurrences.
+				printf(
+					'%s (%s)',
+					esc_html( strval( Util::format_recurrences( $phase->get_date_interval() ) ) ),
+					esc_html( strval( Util::format_frequency( $phase->get_total_periods() ) ) )
+				);
+
+			endif;
 
 			?>
 		</td>
@@ -133,10 +141,10 @@ $user_id  = is_null( $customer ) ? null : $customer->get_user_id();
 
 	<?php
 
-	$frequency = $subscription->get_frequency();
+	$end_date = ( null === $phase ? null : $phase->get_end_date() );
 
 	// Show end date if frequency is limited.
-	if ( ! empty( $frequency ) ) :
+	if ( null !== $end_date ) :
 
 		?>
 
@@ -147,9 +155,7 @@ $user_id  = is_null( $customer ) ? null : $customer->get_user_id();
 			<td>
 				<?php
 
-				$end_date = $subscription->get_end_date();
-
-				echo empty( $end_date ) ? '—' : esc_html( $end_date->format_i18n() );
+				echo esc_html( ( new DateTime( $end_date->format( \DateTimeInterface::ATOM ) ) )->format_i18n() );
 
 				?>
 			</td>

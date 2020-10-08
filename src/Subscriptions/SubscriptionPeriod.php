@@ -10,9 +10,9 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
-use DateTimeInterface;
-use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\Money\TaxedMoney;
+use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
 
 /**
  * Subscription Period
@@ -25,9 +25,9 @@ class SubscriptionPeriod {
 	/**
 	 * The subscription this period is part of.
 	 *
-	 * @var Subscription
+	 * @var int
 	 */
-	private $subscription;
+	private $subscription_id;
 
 	/**
 	 * The start date of this period.
@@ -46,32 +46,42 @@ class SubscriptionPeriod {
 	/**
 	 * The amount to pay for this period.
 	 *
-	 * @var Money
+	 * @var TaxedMoney
 	 */
 	private $amount;
 
 	/**
 	 * Construct and initialize subscription period object.
 	 *
-	 * @param Subscription $subscription Subscription.
-	 * @param DateTime     $start_date   Start date.
-	 * @param DateTime     $end_date     End date.
+	 * @param int        $subscription_id Subscription ID.
+	 * @param DateTime   $start_date      Start date.
+	 * @param DateTime   $end_date        End date.
+	 * @param TaxedMoney $amount          Taxed amount.
 	 */
-	public function __construct( Subscription $subscription, DateTime $start_date, DateTime $end_date ) {
-		$this->subscription = $subscription;
-		$this->start_date   = $start_date;
-		$this->end_date     = $end_date;
-
-		$this->amount = clone $subscription->get_total_amount();
+	public function __construct( $subscription_id, DateTime $start_date, DateTime $end_date, TaxedMoney $amount ) {
+		$this->subscription_id = $subscription_id;
+		$this->start_date      = $start_date;
+		$this->end_date        = $end_date;
+		$this->amount          = $amount;
 	}
 
 	/**
-	 * Get subscription.
+	 * Get subscription ID.
 	 *
-	 * @return Subscription
+	 * @return int
 	 */
-	public function get_subscription() {
-		return $this->subscription;
+	public function get_subscription_id() {
+		return $this->subscription_id;
+	}
+
+	/**
+	 * Set subscription ID.
+	 *
+	 * @param int $subscription_id Subscription ID.
+	 * @return void
+	 */
+	public function set_subscription_id( $subscription_id ) {
+		$this->subscription_id = $subscription_id;
 	}
 
 	/**
@@ -95,9 +105,62 @@ class SubscriptionPeriod {
 	/**
 	 * Get amount.
 	 *
-	 * @return Money
+	 * @return TaxedMoney
 	 */
 	public function get_amount() {
 		return $this->amount;
+	}
+
+	/**
+	 * From JSON.
+	 *
+	 * @param object $json Subscription period JSON.
+	 * @return SubscriptionPeriod
+	 * @throws \InvalidArgumentException Throws exception on invalid JSON.
+	 */
+	public static function from_json( $json ) {
+		if ( ! is_object( $json ) ) {
+			throw new \InvalidArgumentException( 'JSON value must be an object.' );
+		}
+
+		if ( ! isset( $json->subscription_id ) ) {
+			throw new \InvalidArgumentException( 'Object must contain `subscription_id` property.' );
+		}
+
+		if ( ! isset( $json->start_date ) ) {
+			throw new \InvalidArgumentException( 'Object must contain `start_date` property.' );
+		}
+
+		if ( ! isset( $json->end_date ) ) {
+			throw new \InvalidArgumentException( 'Object must contain `end_date` property.' );
+		}
+
+		if ( ! isset( $json->amount ) ) {
+			throw new \InvalidArgumentException( 'Object must contain `amount` property.' );
+		}
+
+		$start_date = new DateTime( $json->start_date );
+
+		$end_date = new DateTime( $json->end_date );
+
+		$amount = TaxedMoneyJsonTransformer::from_json( $json->amount );
+
+		return new self( $json->subscription_id, $start_date, $end_date, $amount );
+	}
+
+	/**
+	 * To JSON.
+	 *
+	 * @return object
+	 */
+	public function to_json() {
+		$json = (object) array(
+			'subscription_id' => $this->subscription_id,
+			'start_date'      => $this->start_date->format( \DATE_ATOM ),
+			'end_date'        => $this->end_date->format( \DATE_ATOM ),
+			'amount'          => TaxedMoneyJsonTransformer::to_json( $this->amount ),
+		);
+
+		return $json;
 	}
 }

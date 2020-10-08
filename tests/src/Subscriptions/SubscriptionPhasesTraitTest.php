@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Money\TaxedMoney;
 
 /**
  * Subscription Phases Trait Test
@@ -39,7 +40,7 @@ class SubscriptionPhasesTraitTest extends \WP_UnitTestCase {
 	 * @throws \Exception Throws exception on invalid date interval.
 	 */
 	private function new_phase( $subscription ) {
-		$phase = $subscription->new_phase( new \DateTimeImmutable(), 'P1W', new Money( 50, 'EUR' ) );
+		$phase = $subscription->new_phase( new \DateTimeImmutable(), 'P1W', new TaxedMoney( 50, 'EUR' ) );
 
 		return $phase;
 	}
@@ -53,27 +54,10 @@ class SubscriptionPhasesTraitTest extends \WP_UnitTestCase {
 		$phase_1 = $this->new_phase( $subscription );
 
 		$this->assertInstanceOf( SubscriptionPhase::class, $phase_1 );
-		$this->assertEquals( 1, $phase_1->get_sequence_number() );
 
 		$phase_2 = $this->new_phase( $subscription );
 
 		$this->assertInstanceOf( SubscriptionPhase::class, $phase_2 );
-		$this->assertEquals( 2, $phase_2->get_sequence_number() );
-	}
-
-	/**
-	 * Test completed.
-	 */
-	public function test_completed() {
-		$subscription = $this->new_subscription();
-
-		$phase_1 = $this->new_phase( $subscription );
-		$phase_1->set_status( 'completed' );
-
-		$phase_2 = $this->new_phase( $subscription );
-		$phase_2->set_status( 'completed' );
-
-		$this->assertTrue( $subscription->is_completed() );
 	}
 
 	/**
@@ -95,7 +79,9 @@ class SubscriptionPhasesTraitTest extends \WP_UnitTestCase {
 		$subscription = $this->new_subscription();
 
 		$phase_1 = $this->new_phase( $subscription );
-		$phase_1->set_status( 'completed' );
+
+		$phase_1->set_total_periods( 1 );
+		$phase_1->set_periods_created( 1 );
 
 		$phase_2 = $this->new_phase( $subscription );
 
@@ -120,11 +106,12 @@ class SubscriptionPhasesTraitTest extends \WP_UnitTestCase {
 
 		$this->assertFalse( $subscription->in_trial_period() );
 
-		$phase_1->set_type( 'trial' );
+		$phase_1->set_trial( true );
 
 		$this->assertTrue( $subscription->in_trial_period() );
 
-		$phase_1->set_status( 'completed' );
+		$phase_1->set_total_periods( 1 );
+		$phase_1->set_periods_created( 1 );
 
 		$this->assertFalse( $subscription->in_trial_period() );
 	}

@@ -11,7 +11,7 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DateTimeImmutable;
-use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Money\TaxedMoney;
 
 /**
  * Subscription Phase Builder
@@ -27,20 +27,6 @@ class SubscriptionPhaseBuilder {
 	 * @var DateTimeImmutable|null
 	 */
 	private $start_date;
-
-	/**
-	 * Name.
-	 *
-	 * @var string|null
-	 */
-	private $name;
-
-	/**
-	 * Type.
-	 *
-	 * @var string|null
-	 */
-	private $type;
 
 	/**
 	 * Total periods.
@@ -59,23 +45,44 @@ class SubscriptionPhaseBuilder {
 	/**
 	 * Amount.
 	 *
-	 * @var Money|null
+	 * @var TaxedMoney|null
 	 */
 	private $amount;
 
 	/**
-	 * Interval specification.
+	 * Interval.
 	 *
-	 * @var string|null
+	 * @var SubscriptionInterval|null
 	 */
-	private $interval_spec;
+	private $interval;
 
 	/**
-	 * Whether to prorate amount.
+	 * Boolean flag to indicate a alignment subscription phase.
 	 *
-	 * @var bool|null
+	 * @var bool
 	 */
-	private $proration;
+	private $is_alignment = false;
+
+	/**
+	 * Boolean flag to indicate a prorated subscription phase.
+	 *
+	 * @var bool
+	 */
+	private $is_prorated = false;
+
+	/**
+	 * Boolean flag to indicate a trial subscription phase.
+	 *
+	 * @var bool
+	 */
+	private $is_trial = false;
+
+	/**
+	 * Canceled at.
+	 *
+	 * @var DateTimeImmutable|null
+	 */
+	private $canceled_at;
 
 	/**
 	 * With start date.
@@ -90,37 +97,13 @@ class SubscriptionPhaseBuilder {
 	}
 
 	/**
-	 * With name.
+	 * With canceled at.
 	 *
-	 * @param string $name Name.
+	 * @param DateTimeImmutable|null $canceled_at Canceled at.
 	 * @return $this
 	 */
-	public function with_name( $name ) {
-		$this->name = $name;
-
-		return $this;
-	}
-
-	/**
-	 * With status.
-	 *
-	 * @param string $status Status.
-	 * @return $this
-	 */
-	public function with_status( $status ) {
-		$this->status = $status;
-
-		return $this;
-	}
-
-	/**
-	 * With type.
-	 *
-	 * @param string $type Type.
-	 * @return $this
-	 */
-	public function with_type( $type ) {
-		$this->type = $type;
+	public function with_canceled_at( DateTimeImmutable $canceled_at = null ) {
+		$this->canceled_at = $canceled_at;
 
 		return $this;
 	}
@@ -128,7 +111,7 @@ class SubscriptionPhaseBuilder {
 	/**
 	 * With total periods.
 	 *
-	 * @param int $total_periods Number of periods to create.
+	 * @param int|null $total_periods Number of periods to create.
 	 * @return $this
 	 */
 	public function with_total_periods( $total_periods ) {
@@ -152,10 +135,10 @@ class SubscriptionPhaseBuilder {
 	/**
 	 * With amount.
 	 *
-	 * @param Money $amount Amount.
+	 * @param TaxedMoney $amount Amount.
 	 * @return $this
 	 */
-	public function with_amount( $amount ) {
+	public function with_amount( TaxedMoney $amount ) {
 		$this->amount = $amount;
 
 		return $this;
@@ -164,11 +147,22 @@ class SubscriptionPhaseBuilder {
 	/**
 	 * With interval.
 	 *
-	 * @param int $interval_spec Interval specification.
+	 * @param string $interval_spec Interval specification.
 	 * @return $this
 	 */
 	public function with_interval( $interval_spec ) {
-		$this->interval_spec = $interval_spec;
+		$this->interval = new SubscriptionInterval( $interval_spec );
+
+		return $this;
+	}
+
+	/**
+	 * With alignment.
+	 *
+	 * @return $this
+	 */
+	public function with_alignment( $is_alignment = true ) {
+		$this->is_alignment = $is_alignment;
 
 		return $this;
 	}
@@ -178,8 +172,19 @@ class SubscriptionPhaseBuilder {
 	 *
 	 * @return $this
 	 */
-	public function with_proration() {
-		$this->proration = true;
+	public function with_proration( $is_prorated = true ) {
+		$this->is_prorated = $is_prorated;
+
+		return $this;
+	}
+
+	/**
+	 * With trial.
+	 *
+	 * @return $this
+	 */
+	public function with_trial( $is_trial = true ) {
+		$this->is_trial = $is_trial;
 
 		return $this;
 	}
@@ -188,17 +193,41 @@ class SubscriptionPhaseBuilder {
 	 * Create subscription phase.
 	 *
 	 * @return SubscriptionPhase
+	 * @throws \InvalidArgumentException Throws exception if required arguments are not set.
 	 */
 	public function create() {
-		$phase = new SubscriptionPhase( $this->start_date, $this->interval_spec, $this->amount );
+		if ( null === $this->start_date ) {
+			throw new \InvalidArgumentException( 'Start date is required for subscription phase.' );
+		}
 
-		$phase->set_type( $this->type );
+		if ( null === $this->interval ) {
+			throw new \InvalidArgumentException( 'Interval specification is required for subscription phase.' );
+		}
+
+		if ( null === $this->amount ) {
+			throw new \InvalidArgumentException( 'Amount is required for subscription phase.' );
+		}
+
+		$phase = new SubscriptionPhase( $this->start_date, $this->interval, $this->amount );
+
+		// Alignment.
+		$phase->set_alignment( $this->is_alignment );
+
+		// Prorated.
+		$phase->set_prorated( $this->is_prorated );
+
+		// Trial.
+		$phase->set_trial( $this->is_trial );
+
+		// Total periods.
 		$phase->set_total_periods( $this->total_periods );
-		$phase->set_proration( $this->proration );
 
+		// Periods created.
 		if ( null !== $this->periods_created ) {
 			$phase->set_periods_created( $this->periods_created );
 		}
+
+		$phase->set_canceled_at( $this->canceled_at );
 
 		return $phase;
 	}

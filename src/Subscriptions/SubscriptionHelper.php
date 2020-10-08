@@ -161,31 +161,16 @@ class SubscriptionHelper {
 	 * @return DateTime|null
 	 */
 	public static function calculate_end_date( Subscription $subscription ) {
-		$start_date = $subscription->get_start_date();
+		$end_date = null;
 
-		if ( null === $start_date ) {
-			return null;
-		}
+		$phase = $subscription->get_current_phase();
 
-		$date_interval = $subscription->get_date_interval();
+		if ( null !== $phase ) {
+			$phase_end = $phase->get_end_date();
 
-		if ( null === $date_interval ) {
-			return null;
-		}
-
-		if ( null === $subscription->frequency ) {
-			return null;
-		}
-
-		// @link https://stackoverflow.com/a/10818981/6411283
-		$period = new \DatePeriod( $start_date, $date_interval, $subscription->frequency );
-
-		$dates = iterator_to_array( $period );
-
-		$end_date = end( $dates );
-
-		if ( 'last' === $subscription->get_interval_date() ) {
-			$end_date->modify( 'last day of ' . $end_date->format( 'F Y' ) );
+			if ( null !== $phase_end ) {
+				$end_date = new DateTime( $phase_end->format( \DateTimeInterface::ATOM ) );
+			}
 		}
 
 		return $end_date;
@@ -217,21 +202,25 @@ class SubscriptionHelper {
 	 * @throws \InvalidArgumentException Throws invalid argument exception if no phases are defined.
 	 */
 	public static function calculate_next_payment_date( Subscription $subscription ) {
-		// Throw exception if phases are not defined.
 		$phases = $subscription->get_phases();
 
-		if ( 0 === count( $phases ) ) {
-			throw new \InvalidArgumentException( 'Can not calculate next payment date of subscription without phases.' );
+		if ( empty( $phases ) ) {
+			throw new InvalidArgumentException( 'Can not calculate next payment date of subscription without phases.' );
 		}
 
-		// Get start of next period as next payment date.
-		$next_period = $subscription->get_next_period();
+		// Get current phase.
+		$phase = $subscription->get_current_phase();
 
-		if ( null === $next_period ) {
+		if ( null === $phase ) {
 			return null;
 		}
 
-		$next_date = $next_period->get_start_date();
+		// Get next payment date.
+		$next_date = $phase->get_next_date();
+
+		if ( null === $next_date ) {
+			return null;
+		}
 
 		$next_date = new DateTime( $next_date->format( \DateTimeInterface::ATOM ) );
 
@@ -259,8 +248,8 @@ class SubscriptionHelper {
 		 *
 		 * @since unreleased
 		 *
-		 * @param \DateTimeInterface $next_payment_delivery_date Next payment delivery date.
-		 * @param Subscription       $subscription               Subscription.
+		 * @param DateTime     $next_payment_delivery_date Next payment delivery date.
+		 * @param Subscription $subscription               Subscription.
 		 */
 		$next_payment_delivery_date = \apply_filters( 'pronamic_pay_subscription_next_payment_delivery_date', $next_payment_delivery_date, $subscription );
 

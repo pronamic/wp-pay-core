@@ -25,8 +25,6 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 				<th scope="col">
 					<span class="pronamic-pay-tip pronamic-pay-icon pronamic-pay-status" title="<?php esc_attr_e( 'Status', 'pronamic_ideal' ); ?>"><?php esc_html_e( 'Status', 'pronamic_ideal' ); ?></span>
 				</th>
-				<th scope="col"><?php esc_html_e( 'Sequence Number', 'pronamic_ideal' ); ?></th>
-				<th scope="col"><?php esc_html_e( 'Name', 'pronamic_ideal' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Amount', 'pronamic_ideal' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Recurrence', 'pronamic_ideal' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Start Date', 'pronamic_ideal' ); ?></th>
@@ -52,37 +50,30 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 				<tr>
 					<td></td>
 					<td>
-						<?php echo esc_html( $phase->get_sequence_number() ); ?>
-					</td>
-					<td>
-						<?php echo esc_html( null === $phase->get_name() ? '—' : $phase->get_name() ); ?>
-					</td>
-					<td>
 						<?php echo esc_html( $phase->get_amount()->format_i18n() ); ?>
 					</td>
 					<td>
 						<?php
 
-						switch ( $phase->get_total_periods() ) :
-							case null:
-								// Unlimited.
-								echo esc_html( strval( Util::format_date_interval( $phase->get_date_interval() ) ) );
+						$total_periods = $phase->get_total_periods();
 
-								break;
-							case 1:
-								// Only once, no recurrences.
-								echo '—';
+						if ( 1 === $total_periods ) :
+							// No recurrence.
+							echo '—';
 
-								break;
-							default:
-								// Fixed number of recurrences.
-								printf(
-									'%s (%s)',
-									esc_html( strval( Util::format_date_interval( $phase->get_date_interval() ) ) ),
-									esc_html( strval( Util::format_frequency( $phase->get_total_periods() ) ) )
-								);
+						elseif ( null === $total_periods ) :
+							// Unlimited.
+							echo esc_html( strval( Util::format_recurrences( $phase->get_date_interval() ) ) );
 
-						endswitch;
+						else :
+							// Fixed number of recurrences.
+							printf(
+								'%s (%s)',
+								esc_html( strval( Util::format_recurrences( $phase->get_date_interval() ) ) ),
+								esc_html( strval( Util::format_frequency( $total_periods ) ) )
+							);
+
+						endif;
 
 						?>
 					</td>
@@ -130,7 +121,7 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 					<td>
 						<?php
 
-						echo esc_html( $phase->is_proration() ? __( 'Yes', 'pronamic_ideal' ) : __( 'No', 'pronamic_ideal' ) );
+						echo esc_html( $phase->is_prorated() ? __( 'Yes', 'pronamic_ideal' ) : __( 'No', 'pronamic_ideal' ) );
 
 						?>
 					</td>

@@ -10,7 +10,8 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
-use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\Money\TaxedMoney;
 
 /**
  * Subscription Helper Test
@@ -36,7 +37,7 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 	public function test_calculate_end_date_no_interval() {
 		$subscription = new Subscription();
 
-		$subscription->set_start_date( new \DateTime( '2005-05-05 00:00:00' ) );
+		$subscription->set_start_date( new DateTime( '2005-05-05 00:00:00' ) );
 
 		$end_date = SubscriptionHelper::calculate_end_date( $subscription );
 
@@ -47,17 +48,16 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 	 * Test calculate end date.
 	 */
 	public function test_calculate_end_date() {
-		$subscription = new Subscription();
+		$phase = ( new SubscriptionPhaseBuilder() )
+			->with_start_date( new \DateTimeImmutable( '2005-05-05 00:00:00' ) )
+			->with_interval( 'P1M' )
+			->with_total_periods( 12 )
+			->with_amount( new TaxedMoney( 5, 'EUR' ) )
+			->create();
 
-		// Start Date.
-		$subscription->set_start_date( new \DateTime( '2005-05-05 00:00:00' ) );
-
-		// Date Interval.
-		$subscription->interval        = 1;
-		$subscription->interval_period = 'M';
-
-		// Recurrences.
-		$subscription->frequency = 12;
+		$subscription = ( new SubscriptionBuilder() )
+			->with_phase( $phase )
+			->create();
 
 		// Calculate.
 		$end_date = SubscriptionHelper::calculate_end_date( $subscription );
@@ -79,7 +79,7 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 	}
 
 	/**
-	 * Test calculate expirty date.
+	 * Test calculate expiry date.
 	 */
 	public function test_calculate_expiry_date() {
 		$subscription = new Subscription();
@@ -142,14 +142,14 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 		// Phase.
 		$phase = ( new SubscriptionPhaseBuilder() )
 			->with_start_date( new \DateTimeImmutable( $start_date ) )
-			->with_amount( new Money( 100, 'USD' ) )
+			->with_amount( new TaxedMoney( 100, 'USD' ) )
 			->with_interval( $interval_spec )
 			->with_total_periods( $recurrences )
 			->create();
 
 		$subscription->add_phase( $phase );
 
-		$phase->next_period();
+		$phase->next_period( $subscription );
 
 		// Calculate.
 		$next_payment_date = SubscriptionHelper::calculate_next_payment_date( $subscription );

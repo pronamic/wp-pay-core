@@ -16,6 +16,9 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
  * @author  Remco Tolsma
  * @version 2.4.0
  * @since   2.4.0
+ * @link    https://github.com/briannesbitt/Carbon/blob/2.40.0/src/Carbon/CarbonInterval.php
+ * @link    https://github.com/frak/s3bk/blob/master/src/S3Bk/Type/StringableInterval.php
+ * @link    https://github.com/stylers-llc/laratask/blob/master/src/Support/DateInterval.php
  */
 class SubscriptionInterval extends \DateInterval implements \JsonSerializable {
 	/**
@@ -53,46 +56,55 @@ class SubscriptionInterval extends \DateInterval implements \JsonSerializable {
 	 *
 	 * @param int $times Number of times to multiply with.
 	 * @return SubscriptionInterval
+	 * @throws \InvalidArgumentException Throws exception if times to multiply is zero.
 	 */
 	public function multiply( $times ) {
+		if ( 0 === $times ) {
+			throw new \InvalidArgumentException( 'Subscription interval cannot be multiplied by 0.' );
+		}
+
+		$invert = ( $times < 0 );
+
+		$times = \absint( $times );
+
 		$interval_spec = 'P';
 
 		// Date.
-		$date = array(
-			'Y' => $this->y * $times,
-			'M' => $this->m * $times,
-			'D' => $this->d * $times,
+		$date = \array_filter(
+			array(
+				'Y' => $this->y * $times,
+				'M' => $this->m * $times,
+				'D' => $this->d * $times,
+			)
 		);
 
 		foreach ( $date as $unit => $value ) {
-			if ( 0 === $value ) {
-				continue;
-			}
-
 			$interval_spec .= $value . $unit;
 		}
 
 		// Time.
-		$time = array(
-			'H' => $this->h * $times,
-			'M' => $this->i * $times,
-			'S' => $this->s * $times,
+		$time = \array_filter(
+			array(
+				'H' => $this->h * $times,
+				'M' => $this->i * $times,
+				'S' => $this->s * $times,
+			)
 		);
 
-		foreach ( $time as $unit => $value ) {
-			if ( 0 === $value ) {
-				continue;
-			}
+		if ( count( $time ) > 0 ) {
+			$interval_spec .= 'T';
 
-			// Add time designator.
-			if ( false === \strpos( $interval_spec, 'T' ) ) {
-				$interval_spec .= 'T';
+			foreach ( $time as $unit => $value ) {
+				$interval_spec .= $value . $unit;
 			}
-
-			$interval_spec .= $value . $unit;
 		}
 
-		return new self( $interval_spec );
+		// Interval.
+		$interval = new self( $interval_spec );
+
+		$interval->invert = $invert;
+
+		return $interval;
 	}
 
 	/**

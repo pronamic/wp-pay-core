@@ -11,7 +11,7 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DateTime;
-use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Money\TaxedMoney;
 
 /**
  * Subscription Phases Trait
@@ -50,31 +50,31 @@ trait SubscriptionPhasesTrait {
 	/**
 	 * Create new phase for this subscription.
 	 *
-	 * @param DateTime $start_date     Start date.
-	 * @param string   $interval_spec  Interval specification.
-	 * @param Money    $amount         Amount.
+	 * @param DateTime   $start_date    Start date.
+	 * @param string     $interval_spec Interval specification.
+	 * @param TaxedMoney $amount        Amount.
 	 * @return SubscriptionPhase
 	 */
 	public function new_phase( $start_date, $interval_spec, $amount ) {
-		$phase = new SubscriptionPhase( $start_date, $interval_spec, $amount );
+		$start = new \DateTimeImmutable( $start_date->format( \DateTimeInterface::ATOM ) );
 
-		$sequence_number = \count( $this->phases ) + 1;
+		$interval = new SubscriptionInterval( $interval_spec );
 
-		$phase->set_sequence_number( $sequence_number );
+		$phase = new SubscriptionPhase( $start, $interval, $amount );
 
-		$this->phases[] = $phase;
+		$this->add_phase( $phase );
 
 		return $phase;
 	}
 
 	/**
-	 * Check if this subscription is completed.
+	 * Check if all the periods within the subscription phases are created.
 	 *
-	 * @return bool True if completed, false otherwise.
+	 * @return bool True if all created, false otherwise.
 	 */
-	public function is_completed() {
+	public function all_periods_created() {
 		foreach ( $this->phases as $phase ) {
-			if ( ! $phase->is_completed() ) {
+			if ( ! $phase->all_periods_created() ) {
 				return false;
 			}
 		}
@@ -104,9 +104,55 @@ trait SubscriptionPhasesTrait {
 	 */
 	public function get_current_phase() {
 		foreach ( $this->phases as $phase ) {
-			if ( ! $phase->is_completed() ) {
+			if ( ! $phase->all_periods_created() ) {
 				return $phase;
 			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get phase for display.
+	 *
+	 * @return SubscriptionPhase|null
+	 */
+	public function get_display_phase() {
+		// Get first uncompleted regular phase.
+		foreach ( $this->phases as $phase ) {
+			// Skip trial phases.
+			if ( $phase->is_trial() ) {
+				continue;
+			}
+
+			// Skip prorated phases.
+			if ( $phase->is_prorated() ) {
+				continue;
+			}
+
+			if ( ! $phase->all_periods_created() ) {
+				return $phase;
+			}
+		}
+
+		// Get first regular phase.
+		foreach ( $this->phases as $phase ) {
+			// Skip trial phases.
+			if ( $phase->is_trial() ) {
+				continue;
+			}
+
+			// Skip prorated phases.
+			if ( $phase->is_prorated() ) {
+				continue;
+			}
+
+			return $phase;
+		}
+
+		// Get first phase.
+		foreach ( $this->phases as $phase ) {
+			return $phase;
 		}
 
 		return null;
@@ -130,30 +176,32 @@ trait SubscriptionPhasesTrait {
 	/**
 	 * Get the next period.
 	 *
-	 * @return Period|null
+	 * @param Subscription $subscription Subscription.
+	 * @return SubscriptionPeriod|null
 	 */
-	public function get_next_period() {
+	public function get_next_period( Subscription $subscription ) {
 		$current_phase = $this->get_current_phase();
 
 		if ( null === $current_phase ) {
 			return null;
 		}
 
-		return $current_phase->get_next_period();
+		return $current_phase->get_next_period( $subscription );
 	}
 
 	/**
 	 * Next period.
 	 *
-	 * @return Period|null
+	 * @param Subscription $subscription Subscription.
+	 * @return SubscriptionPeriod|null
 	 */
-	public function next_period() {
+	public function next_period( Subscription $subscription ) {
 		$current_phase = $this->get_current_phase();
 
 		if ( null === $current_phase ) {
 			return null;
 		}
 
-		return $current_phase->next_period();
+		return $current_phase->next_period( $subscription );
 	}
 }

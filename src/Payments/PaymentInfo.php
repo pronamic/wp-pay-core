@@ -105,13 +105,6 @@ abstract class PaymentInfo {
 	public $transaction_id;
 
 	/**
-	 * The total amount of this payment.
-	 *
-	 * @var TaxedMoney
-	 */
-	private $total_amount;
-
-	/**
 	 * The shipping amount of this payment.
 	 *
 	 * @var Money|null
@@ -248,8 +241,6 @@ abstract class PaymentInfo {
 		$this->meta = array();
 
 		$this->touch();
-
-		$this->set_total_amount( new TaxedMoney() );
 	}
 
 	/**
@@ -452,25 +443,6 @@ abstract class PaymentInfo {
 	}
 
 	/**
-	 * Get total amount.
-	 *
-	 * @return TaxedMoney
-	 */
-	public function get_total_amount() {
-		return $this->total_amount;
-	}
-
-	/**
-	 * Set total amount.
-	 *
-	 * @param TaxedMoney $total_amount Total amount.
-	 * @return void
-	 */
-	public function set_total_amount( TaxedMoney $total_amount ) {
-		$this->total_amount = $total_amount;
-	}
-
-	/**
 	 * Get the shipping amount.
 	 *
 	 * @return Money|null
@@ -522,6 +494,7 @@ abstract class PaymentInfo {
 	 * Set the payment description.
 	 *
 	 * @param string $description Description.
+	 * @return void
 	 */
 	public function set_description( $description ) {
 		$this->description = $description;

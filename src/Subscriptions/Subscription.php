@@ -541,31 +541,28 @@ class Subscription extends LegacyPaymentInfo {
 	/**
 	 * Create new subscription period.
 	 *
-	 * @return SubscriptionPeriod
-	 * @throws \UnexpectedValueException Throws exception when not date inverval is available for this subscription.
+	 * @return SubscriptionPeriod|null
+	 * @throws \UnexpectedValueException Throws exception when no date interval is available for this subscription.
 	 */
 	public function new_period() {
-		// Calculate payment start and end dates.
-		$start_date = new DateTime();
+		$phase = $this->get_current_phase();
 
-		if ( ! empty( $this->next_payment_date ) ) {
-			$start_date = clone $this->next_payment_date;
+		if ( null === $phase ) {
+			throw new \UnexpectedValueException( 'Cannot create new subscription period for subscription without phase.' );
 		}
 
-		$interval = $this->get_date_interval();
+		$period = $this->next_period( $this );
 
-		if ( null === $interval ) {
-			throw new \UnexpectedValueException( 'Cannot create new subscription period because the subscription does not have a valid date interval.' );
+		// Set subscription end date.
+		if ( null !== $period ) {
+			$end_date = $phase->get_end_date();
+
+			if ( null !== $end_date ) {
+				$end_date = new DateTime( $end_date->format( \DateTimeInterface::ATOM ) );
+			}
+
+			$this->set_end_date( $end_date );
 		}
-
-		$end_date = clone $start_date;
-		$end_date->add( $interval );
-
-		if ( 'last' === $this->get_interval_date() ) {
-			$end_date->modify( 'last day of ' . $end_date->format( 'F Y' ) );
-		}
-
-		$period = new SubscriptionPeriod( $this, $start_date, $end_date );
 
 		return $period;
 	}

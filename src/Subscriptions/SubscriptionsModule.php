@@ -390,11 +390,19 @@ class SubscriptionsModule {
 		$payment->subscription_id = $subscription->get_id();
 
 		$payment->set_origin_id( $subscription->get_origin_id() );
-		$payment->set_total_amount( $subscription->get_total_amount() );
 		$payment->set_customer( $subscription->get_customer() );
 		$payment->set_billing_address( $subscription->get_billing_address() );
 		$payment->set_shipping_address( $subscription->get_shipping_address() );
 		$payment->set_lines( $subscription->get_lines() );
+
+		// Get amount from current subscription phase.
+		$current_phase = $subscription->get_current_phase();
+
+		if ( null === $current_phase ) {
+			return null;
+		}
+
+		$payment->set_total_amount( $current_phase->get_amount() );
 
 		return $payment;
 	}
@@ -456,10 +464,16 @@ class SubscriptionsModule {
 		// Calculate payment start and end dates.
 		$period = $subscription->new_period();
 
+		if ( null === $period ) {
+			throw new \UnexpectedValueException( 'Can not create new period for subscription.' );
+		}
+
+		$payment->add_period( $period );
+
 		$start_date = $period->get_start_date();
 		$end_date   = $period->get_end_date();
 
-		$subscription->next_payment_date          = $end_date;
+		$subscription->next_payment_date          = SubscriptionHelper::calculate_next_payment_date( $subscription );
 		$subscription->next_payment_delivery_date = SubscriptionHelper::calculate_next_payment_delivery_date( $subscription );
 
 		// Remove next payment (delivery) date if this is the last payment according to subscription end date.

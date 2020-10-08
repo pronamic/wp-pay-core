@@ -11,8 +11,10 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DateTimeImmutable;
-use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
+use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
 
 /**
  * Subscription Phase
@@ -23,45 +25,16 @@ use Pronamic\WordPress\Pay\MoneyJsonTransformer;
  */
 class SubscriptionPhase implements \JsonSerializable {
 	/**
-	 * Boolean flag to allow month overflow.
+	 * Canceled at.
 	 *
-	 * @link https://carbon.nesbot.com/docs/#overflow-static-helpers
-	 * @var bool
+	 * @var DateTimeImmutable|null
 	 */
-	private $month_overflow = false;
-
-	/**
-	 * The sequence number.
-	 *
-	 * @var int
-	 */
-	private $sequence_number;
-
-	/**
-	 * Type.
-	 *
-	 * @var string
-	 */
-	private $type;
-
-	/**
-	 * Name.
-	 *
-	 * @var string|null
-	 */
-	private $name;
-
-	/**
-	 * Status.
-	 *
-	 * @var string
-	 */
-	private $status;
+	private $canceled_at;
 
 	/**
 	 * Amount.
 	 *
-	 * @var Money
+	 * @var TaxedMoney
 	 */
 	private $amount;
 
@@ -100,7 +73,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * The date this phase will start.
 	 *
-	 * @var DateTimeImmutable|null
+	 * @var DateTimeImmutable
 	 */
 	private $start_date;
 
@@ -120,52 +93,31 @@ class SubscriptionPhase implements \JsonSerializable {
 	 *
 	 * @var bool
 	 */
-	private $proration;
+	private $is_prorated;
+
+	/**
+	 * Boolean flag to indicate a trial subscription phase.
+	 *
+	 * @var bool
+	 */
+	private $is_trial;
 
 	/**
 	 * Construct subscription phase.
 	 *
-	 * @param DateTimeImmutable $start_date    Start date.
-	 * @param string            $interval_spec Interval specification.
-	 * @param Money             $amount        Amount.
+	 * @param DateTimeImmutable    $start_date Start date.
+	 * @param SubscriptionInterval $interval   Interval.
+	 * @param TaxedMoney           $amount     Amount.
 	 * @return void
 	 */
-	public function __construct( $start_date, $interval_spec, $amount ) {
-		$this->sequence_number = 1;
-		$this->start_date      = clone $start_date;
-		$this->amount          = $amount;
+	public function __construct( DateTimeImmutable $start_date, SubscriptionInterval $interval, TaxedMoney $amount ) {
+		$this->start_date = $start_date;
+		$this->interval   = $interval;
+		$this->amount     = $amount;
 
 		$this->periods_created = 0;
-
-		$this->interval = new SubscriptionInterval( $interval_spec );
-	}
-
-	/**
-	 * Get name.
-	 *
-	 * @return string|null
-	 */
-	public function get_name() {
-		return $this->name;
-	}
-
-	/**
-	 * Get sequence number.
-	 *
-	 * @return int
-	 */
-	public function get_sequence_number() {
-		return $this->sequence_number;
-	}
-
-	/**
-	 * Set sequence number.
-	 *
-	 * @param int $sequence_number Sequence number.
-	 * @return void
-	 */
-	public function set_sequence_number( $sequence_number ) {
-		$this->sequence_number = $sequence_number;
+		$this->is_prorated     = false;
+		$this->is_trial        = false;
 	}
 
 	/**
@@ -190,54 +142,56 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Get next date.
 	 *
-	 * @return DateTimeImmutable
-	 * @throws \InvalidArgumentException Throws invalid argument exception without start date.
+	 * @return DateTimeImmutable|null
 	 */
 	public function get_next_date() {
-		$start = $this->start_date;
-
-		if ( null === $start ) {
-			throw new \InvalidArgumentException( 'Can not get next date of subscription phase without start date.' );
+		/**
+		 * Check whether all periods have been created, if so there is no next date.
+		 */
+		if ( $this->all_periods_created() ) {
+			return null;
 		}
 
-		// Calculate next date.
-		$next_date = null;
-
-		if ( ! $this->is_completed() ) {
-			if ( 0 === $this->periods_created ) {
-				return $start;
-			}
-
-			$next_date = $this->add_interval( $start, $this->periods_created );
-		}
-
-		return $next_date;
+		/**
+		 * If there are periods created we add these created periods.
+		 */
+		return $this->add_interval( $this->start_date, $this->periods_created );
 	}
 
 	/**
-	 * Set status.
+	 * Check if this phase is canceled.
 	 *
-	 * @param string $status Status.
-	 * @return void
+	 * @link https://www.grammarly.com/blog/canceled-vs-cancelled/
+	 * @link https://docs.mollie.com/reference/v2/subscriptions-api/cancel-subscription
+	 * @return bool True if canceled, false otherwise.
 	 */
-	public function set_status( $status ) {
-		$this->status = $status;
+	public function is_canceled() {
+		return ( null !== $this->canceled_at );
 	}
 
 	/**
-	 * Set type.
+	 * Get canceled date.
 	 *
-	 * @param string $type Type.
+	 * @return DateTimeImmutable|null Canceled date or null if phase is not canceled (yet).
+	 */
+	public function get_canceled_at() {
+		return $this->canceled_at;
+	}
+
+	/**
+	 * Set canceled date.
+	 *
+	 * @param DateTimeImmutable|null $canceled_at Canceled date.
 	 * @return void
 	 */
-	public function set_type( $type ) {
-		$this->type = $type;
+	public function set_canceled_at( DateTimeImmutable $canceled_at = null ) {
+		$this->canceled_at = $canceled_at;
 	}
 
 	/**
 	 * Get amount.
 	 *
-	 * @return Money
+	 * @return TaxedMoney
 	 */
 	public function get_amount() {
 		return $this->amount;
@@ -246,7 +200,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Set amount.
 	 *
-	 * @param Money $amount Amount.
+	 * @param TaxedMoney $amount Amount.
 	 * @return void
 	 */
 	public function set_amount( $amount ) {
@@ -284,7 +238,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Set periods created.
 	 *
-	 * @param int|null $periods_created The number of periods created.
+	 * @param int $periods_created The number of periods created.
 	 * @return void
 	 */
 	public function set_periods_created( $periods_created ) {
@@ -298,6 +252,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 */
 	public function get_periods_remaining() {
 		if ( null === $this->total_periods ) {
+			// Infinite.
 			return null;
 		}
 
@@ -305,22 +260,60 @@ class SubscriptionPhase implements \JsonSerializable {
 	}
 
 	/**
-	 * Is proration?
+	 * Is alignment.
 	 *
 	 * @return bool
 	 */
-	public function is_proration() {
-		return $this->proration;
+	public function is_alignment() {
+		return $this->is_alignment;
 	}
 
 	/**
-	 * Set proration
+	 * Set alignment.
 	 *
-	 * @param bool $proration Proration.
+	 * @param bool $is_alignment Alignment.
 	 * @return void
 	 */
-	public function set_proration( $proration ) {
-		$this->proration = $proration;
+	public function set_alignment( $is_alignment ) {
+		$this->is_alignment = $is_alignment;
+	}
+
+	/**
+	 * Is prorated.
+	 *
+	 * @return bool
+	 */
+	public function is_prorated() {
+		return $this->is_prorated;
+	}
+
+	/**
+	 * Set prorated.
+	 *
+	 * @param bool $is_prorated Proration.
+	 * @return void
+	 */
+	public function set_prorated( $is_prorated ) {
+		$this->is_prorated = $is_prorated;
+	}
+
+	/**
+	 * Check if this phase is a trial.
+	 *
+	 * @return bool True if trial, false otherwise.
+	 */
+	public function is_trial() {
+		return $this->is_trial;
+	}
+
+	/**
+	 * Set trial.
+	 *
+	 * @param bool $is_trial Trial.
+	 * @return void
+	 */
+	public function set_trial( $is_trial ) {
+		$this->is_trial = $is_trial;
 	}
 
 	/**
@@ -333,40 +326,12 @@ class SubscriptionPhase implements \JsonSerializable {
 	}
 
 	/**
-	 * Check if this phase is completed.
+	 * Check if all periods are created.
 	 *
-	 * @return bool True if completed, false otherwise.
+	 * @return bool True if all periods are created, false otherwise.
 	 */
-	public function is_completed() {
-		if ( 'completed' === $this->status ) {
-			return true;
-		}
-
-		if ( $this->total_periods === $this->periods_created ) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Check if this phase is canceled.
-	 *
-	 * @link https://www.grammarly.com/blog/canceled-vs-cancelled/
-	 * @link https://docs.mollie.com/reference/v2/subscriptions-api/cancel-subscription
-	 * @return bool True if canceled, false otherwise.
-	 */
-	public function is_canceled() {
-		return ( 'canceled' === $this->status );
-	}
-
-	/**
-	 * Check if this phase is a trial.
-	 *
-	 * @return bool True if trial, false otherwise.
-	 */
-	public function is_trial() {
-		return ( 'trial' === $this->type );
+	public function all_periods_created() {
+		return ( $this->total_periods === $this->periods_created );
 	}
 
 	/**
@@ -388,14 +353,11 @@ class SubscriptionPhase implements \JsonSerializable {
 	 */
 	public function get_end_date() {
 		if ( null === $this->total_periods ) {
+			// Infinite.
 			return null;
 		}
 
-		$start_date = clone $this->start_date;
-
-		$end_date = $this->add_interval( $start_date, $this->total_periods );
-
-		return $end_date;
+		return $this->add_interval( $this->start_date, $this->total_periods );
 	}
 
 	/**
@@ -406,57 +368,40 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return \DateTimeImmutable
 	 */
 	private function add_interval( $date, $times = 1 ) {
-		$interval = $this->interval;
+		// If times is zero there is nothing to add.
+		if ( 0 === $times ) {
+			return $date;
+		}
 
 		// Multiply date interval.
-		if ( 1 !== $times ) {
-			$interval = $interval->multiply( $times );
-		}
-
-		$date = $date->add( $interval );
-
-		/**
-		 * Month overflow.
-		 *
-		 * @link https://carbon.nesbot.com/docs/#overflow-static-helpers
-		 * @link https://github.com/briannesbitt/Carbon/blob/2.38.0/src/Carbon/Traits/Units.php#L309-L311
-		 * @link https://stackoverflow.com/questions/3602405/php-datetimemodify-adding-and-subtracting-months
-		 */
-		if ( false === $this->month_overflow && $this->interval->m > 0 ) {
-			$day_1 = $this->start_date->format( 'd' );
-			$day_2 = $date->format( 'd' );
-
-			if ( $day_1 > 28 && $day_2 < 3 ) {
-				$date = $date->modify( 'last day of previous month' );
-
-				return $date;
-			}
-
-			if ( $day_1 !== $day_2 ) {
-				$date = $date->modify( 'last day of this month' );
-
-				return $date;
-			}
-		}
-
-		return $date;
+		return $date->add( $this->interval->multiply( $times ) );
 	}
 
 	/**
 	 * Get next period.
 	 *
-	 * @return Period
-	 * @throws \Exception Throws exception on invalid date interval.
+	 * @param Subscription $subscription Subscription.
+	 * @return SubscriptionPeriod|null
 	 */
-	public function get_next_period() {
-		if ( $this->is_completed() ) {
+	public function get_next_period( Subscription $subscription ) {
+		if ( $this->all_periods_created() ) {
 			return null;
 		}
 
 		$start = $this->get_next_date();
-		$end   = $this->add_interval( $start );
 
-		$period = new Period( null, $this, $start, $end, clone $this->amount );
+		if ( null === $start ) {
+			return null;
+		}
+
+		$end = $this->add_interval( $start );
+
+		$period = new SubscriptionPeriod(
+			(int) $subscription->get_id(),
+			new DateTime( $start->format( \DateTimeInterface::ATOM ) ),
+			new DateTime( $end->format( \DateTimeInterface::ATOM ) ),
+			$this->get_amount()
+		);
 
 		return $period;
 	}
@@ -464,10 +409,15 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Next period.
 	 *
-	 * @return Period|null
+	 * @param Subscription $subscription Subscription.
+	 * @return SubscriptionPeriod|null
 	 */
-	public function next_period() {
-		$next_period = $this->get_next_period();
+	public function next_period( Subscription $subscription ) {
+		try {
+			$next_period = $this->get_next_period( $subscription );
+		} catch ( \Exception $e ) {
+			return null;
+		}
 
 		if ( null === $next_period ) {
 			return null;
@@ -485,22 +435,22 @@ class SubscriptionPhase implements \JsonSerializable {
 	 */
 	public function jsonSerialize() {
 		return (object) array(
-			'type'              => $this->type,
-			'name'              => $this->name,
-			'status'            => $this->status,
 			'start_date'        => $this->start_date->format( \DATE_ATOM ),
 			'interval'          => $this->interval->get_specification(),
 			'amount'            => MoneyJsonTransformer::to_json( $this->amount ),
-			'proration'         => $this->proration,
 			// Numbers.
 			'total_periods'     => $this->total_periods,
 			'periods_created'   => $this->periods_created,
 			'periods_remaining' => $this->get_periods_remaining(),
+			// Other.
+			'canceled_at'       => ( null === $this->canceled_at ) ? null : $this->canceled_at->format( \DATE_ATOM ),
+			// Flags.
+			'is_alignment'      => $this->is_alignment(),
+			'is_prorated'       => $this->is_prorated(),
+			'is_trial'          => $this->is_trial(),
 			// Readonly.
 			'is_infinite'       => $this->is_infinite(),
-			'is_completed'      => $this->is_completed(),
 			'is_canceled'       => $this->is_canceled(),
-			'is_trial'          => $this->is_trial(),
 		);
 	}
 
@@ -518,35 +468,16 @@ class SubscriptionPhase implements \JsonSerializable {
 
 		$builder = new SubscriptionPhaseBuilder();
 
-		if ( property_exists( $json, 'type' ) ) {
-			$builder->with_type( $json->type );
-		}
-
-		if ( property_exists( $json, 'name' ) ) {
-			$builder->with_name( $json->name );
-		}
-
-		if ( property_exists( $json, 'status' ) ) {
-			$builder->with_status( $json->status );
-		}
-
 		if ( property_exists( $json, 'start_date' ) ) {
 			$builder->with_start_date( new \DateTimeImmutable( $json->start_date ) );
 		}
 
 		if ( property_exists( $json, 'interval' ) ) {
-			$interval = $json->interval;
-
-			// @todo Remove development transform from interval object to interval specification.
-			if ( \is_object( $interval ) ) {
-				$interval = 'P' . $interval->value . $interval->unit;
-			}
-
-			$builder->with_interval( $interval );
+			$builder->with_interval( $json->interval );
 		}
 
 		if ( property_exists( $json, 'amount' ) ) {
-			$builder->with_amount( MoneyJsonTransformer::from_json( $json->amount ) );
+			$builder->with_amount( TaxedMoneyJsonTransformer::from_json( $json->amount ) );
 		}
 
 		if ( property_exists( $json, 'total_periods' ) ) {
@@ -557,11 +488,27 @@ class SubscriptionPhase implements \JsonSerializable {
 			$builder->with_periods_created( $json->periods_created );
 		}
 
+		if ( property_exists( $json, 'is_alignment' ) ) {
+			$builder->with_alignment( \boolval( $json->is_alignment ) );
+		}
+
+		if ( property_exists( $json, 'is_prorated' ) ) {
+			$builder->with_proration( \boolval( $json->is_prorated ) );
+		}
+
+		if ( property_exists( $json, 'is_trial' ) ) {
+			$builder->with_trial( \boolval( $json->is_trial ) );
+		}
+
+		if ( property_exists( $json, 'canceled_at' ) ) {
+			$builder->with_canceled_at( new \DateTimeImmutable( $json->canceled_at ) );
+		}
+
 		return $builder->create();
 	}
 
 	/**
-	 * Prorate the phase to align date.
+	 * Align the phase to align date.
 	 *
 	 * @param self              $phase          The phase to align.
 	 * @param DateTimeImmutable $align_date     The alignment date.
@@ -569,7 +516,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return SubscriptionPhase
 	 * @throws \Exception Throws exception on invalid date interval.
 	 */
-	public static function prorate( self $phase, DateTimeImmutable $align_date, $prorate_amount ) {
+	public static function align( self $phase, DateTimeImmutable $align_date, $prorate_amount = false ) {
 		$start_date = $phase->get_start_date();
 
 		$next_date = $start_date->add( $phase->get_date_interval() );
@@ -588,14 +535,15 @@ class SubscriptionPhase implements \JsonSerializable {
 			->with_amount( $proration_amount )
 			->with_interval( 'P' . $proration_difference->days . 'D' )
 			->with_total_periods( 1 )
-			->with_proration()
+			->with_alignment( true )
+			->with_proration( $prorate_amount )
 			->create();
 
 		// Remove one period from regular phase.
 		$total_periods = $phase->get_total_periods();
 
 		if ( null !== $total_periods ) {
-			$phase->set_total_periods( --$total_periods );
+			$phase->set_total_periods( $total_periods - 1 );
 		}
 
 		$phase->set_start_date( $proration_phase->get_end_date() );

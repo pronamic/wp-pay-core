@@ -12,9 +12,12 @@ namespace Pronamic\WordPress\Pay\Payments;
 
 use InvalidArgumentException;
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
+use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPeriod;
+use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
 
 /**
  * Payment
@@ -30,6 +33,13 @@ class Payment extends LegacyPayment {
 	 * @var Subscription|null
 	 */
 	public $subscription;
+
+	/**
+	 * The total amount of this payment.
+	 *
+	 * @var TaxedMoney
+	 */
+	private $total_amount;
 
 	/**
 	 * The purchase ID.
@@ -135,6 +145,13 @@ class Payment extends LegacyPayment {
 	public $issuer;
 
 	/**
+	 * Subscription periods.
+	 *
+	 * @var null|array<int, SubscriptionPeriod>
+	 */
+	private $periods;
+
+	/**
 	 * Subscription ID.
 	 *
 	 * @todo Is this required?
@@ -227,6 +244,8 @@ class Payment extends LegacyPayment {
 		parent::__construct( $post_id );
 
 		$this->set_status( PaymentStatus::OPEN );
+
+		$this->set_total_amount( new TaxedMoney() );
 
 		if ( null !== $post_id ) {
 			pronamic_pay_plugin()->payments_data_store->read( $this );
@@ -321,6 +340,25 @@ class Payment extends LegacyPayment {
 	 */
 	public function get_transaction_id() {
 		return $this->transaction_id;
+	}
+
+	/**
+	 * Get total amount.
+	 *
+	 * @return TaxedMoney
+	 */
+	public function get_total_amount() {
+		return $this->total_amount;
+	}
+
+	/**
+	 * Set total amount.
+	 *
+	 * @param TaxedMoney $total_amount Total amount.
+	 * @return void
+	 */
+	public function set_total_amount( TaxedMoney $total_amount ) {
+		$this->total_amount = $total_amount;
 	}
 
 	/**
@@ -678,6 +716,29 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
+	 * Get subscription periods.
+	 *
+	 * @return array<int, SubscriptionPeriod>|null
+	 */
+	public function get_periods() {
+		return $this->periods;
+	}
+
+	/**
+	 * Add subscription period.
+	 *
+	 * @param SubscriptionPeriod $period Subscription period.
+	 * @return void
+	 */
+	public function add_period( SubscriptionPeriod $period ) {
+		if ( null === $this->periods ) {
+			$this->periods = array();
+		}
+
+		$this->periods[] = $period;
+	}
+
+	/**
 	 * Get payment subscription ID.
 	 *
 	 * @return int|null
@@ -714,12 +775,22 @@ class Payment extends LegacyPayment {
 
 		PaymentInfoHelper::from_json( $json, $payment );
 
+		if ( isset( $json->total_amount ) ) {
+			$payment->set_total_amount( TaxedMoneyJsonTransformer::from_json( $json->total_amount ) );
+		}
+
 		if ( isset( $json->expiry_date ) ) {
 			$payment->set_expiry_date( new DateTime( $json->expiry_date ) );
 		}
 
 		if ( isset( $json->status ) ) {
 			$payment->set_status( $json->status );
+		}
+
+		if ( isset( $json->periods ) ) {
+			foreach ( $json->periods as $period ) {
+				$payment->add_period( SubscriptionPeriod::from_json( $period ) );
+			}
 		}
 
 		if ( isset( $json->failure_reason ) ) {
@@ -751,6 +822,20 @@ class Payment extends LegacyPayment {
 
 		if ( null !== $expiry_date ) {
 			$properties['expiry_date'] = $expiry_date->format( \DATE_ATOM );
+		}
+
+		$total_amount = $this->get_total_amount();
+
+		if ( null !== $total_amount ) {
+			$properties['total_amount'] = TaxedMoneyJsonTransformer::to_json( $total_amount );
+		}
+
+		$periods = $this->get_periods();
+
+		if ( null !== $periods ) {
+			foreach ( $periods as $period ) {
+				$properties['periods'][] = $period->to_json();
+			}
 		}
 
 		if ( null !== $this->get_status() ) {

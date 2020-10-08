@@ -11,12 +11,13 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DatePeriod;
-use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
+use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Payments\LegacyPaymentsDataStoreCPT;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Customer;
+use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
 
 /**
  * Title: Subscriptions data store CPT
@@ -203,16 +204,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		if ( ! check_admin_referer( 'pronamic_subscription_update', 'pronamic_subscription_update_nonce' ) ) {
 			return;
 		}
-
-		if ( isset( $postarr['pronamic_subscription_amount'] ) ) {
-			$amount = sanitize_text_field( stripslashes( $postarr['pronamic_subscription_amount'] ) );
-
-			$money_parser = new MoneyParser();
-
-			$value = $money_parser->parse( $amount )->get_value();
-
-			$subscription->get_total_amount()->set_value( $value );
-		}
 	}
 
 	/**
@@ -368,13 +359,43 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		// Phases.
 		if ( is_object( $json ) && ! property_exists( $json, 'phases' ) ) {
-			$phase = $subscription->new_phase(
-				$subscription->start_date,
-				'P' . $subscription->get_interval() . $subscription->get_interval_period(),
-				$subscription->get_total_amount()
+			// Amount.
+			$amount = new TaxedMoney(
+				(string) $this->get_meta( $id, 'amount' ),
+				(string) $this->get_meta_string( $id, 'currency' )
 			);
 
-			$phase->set_type( 'regular' );
+			if ( \property_exists( $json, 'total_amount' ) ) {
+				$amount = TaxedMoneyJsonTransformer::from_json( $json->total_amount );
+			}
+
+			// Phase.
+			$start_date = $subscription->start_date;
+
+			if ( null === $start_date ) {
+				$start_date = clone $subscription->get_date();
+			}
+
+			$interval_spec = 'P' . $subscription->get_interval() . $subscription->get_interval_period();
+
+			$phase = $subscription->new_phase(
+				$start_date,
+				$interval_spec,
+				$amount
+			);
+
+			$phase->set_total_periods( $subscription->get_frequency() );
+
+			// Set periods created.
+			$end_date = $subscription->get_next_payment_date();
+
+			if ( null === $end_date ) {
+				$end_date = $subscription->get_expiry_date();
+			}
+
+			$period = new DatePeriod( $start_date, new \DateInterval( $interval_spec ), $end_date );
+
+			$phase->set_periods_created( \iterator_count( $period ) );
 		}
 	}
 
@@ -544,17 +565,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$subscription->customer_name   = $this->get_meta_string( $id, 'customer_name' );
 		$subscription->payment_method  = $this->get_meta_string( $id, 'payment_method' );
 
-		// Amount.
-		$total_amount = $subscription->get_total_amount();
-
-		$total_amount->set_value( $this->get_meta( $id, 'amount' ) );
-
-		$currency = $this->get_meta_string( $id, 'currency' );
-
-		if ( null !== $currency ) {
-			$total_amount->set_currency( $currency );
-		}
-
 		// First Payment.
 		$first_payment = $subscription->get_first_payment();
 
@@ -656,8 +666,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$this->update_meta( $id, 'frequency', $subscription->frequency );
 		$this->update_meta( $id, 'interval', $subscription->interval );
 		$this->update_meta( $id, 'interval_period', $subscription->interval_period );
-		$this->update_meta( $id, 'currency', $subscription->get_total_amount()->get_currency()->get_alphabetic_code() );
-		$this->update_meta( $id, 'amount', $subscription->get_total_amount()->format() );
 		$this->update_meta( $id, 'description', $subscription->description );
 		$this->update_meta( $id, 'email', ( null === $customer ? null : $customer->get_email() ) );
 		$this->update_meta( $id, 'customer_name', ( null === $customer ? null : strval( $customer->get_name() ) ) );
@@ -667,6 +675,13 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$this->update_meta( $id, 'expiry_date', $subscription->expiry_date );
 		$this->update_meta( $id, 'next_payment', $subscription->next_payment_date );
 		$this->update_meta( $id, 'next_payment_delivery_date', $subscription->next_payment_delivery_date );
+
+		$display_phase = $subscription->get_display_phase();
+
+		if ( null !== $display_phase ) {
+			$this->update_meta( $id, 'currency', $display_phase->get_amount()->get_currency()->get_alphabetic_code() );
+			$this->update_meta( $id, 'amount', $display_phase->get_amount()->format() );
+		}
 
 		$this->update_meta_status( $subscription );
 	}

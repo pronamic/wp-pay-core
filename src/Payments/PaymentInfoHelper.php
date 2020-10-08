@@ -45,8 +45,6 @@ class PaymentInfoHelper {
 			$object->origin_id = $origin_id;
 		}
 
-		$object->total_amount = TaxedMoneyJsonTransformer::to_json( $payment_info->get_total_amount() );
-
 		$shipping_amount = $payment_info->get_shipping_amount();
 
 		if ( null !== $shipping_amount ) {
@@ -130,10 +128,6 @@ class PaymentInfoHelper {
 
 		if ( isset( $json->origin_id ) ) {
 			$payment_info->set_origin_id( $json->origin_id );
-		}
-
-		if ( isset( $json->total_amount ) ) {
-			$payment_info->set_total_amount( TaxedMoneyJsonTransformer::from_json( $json->total_amount ) );
 		}
 
 		if ( isset( $json->shipping_amount ) ) {

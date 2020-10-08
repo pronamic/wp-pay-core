@@ -691,7 +691,9 @@ class Plugin {
 		);
 
 		if ( null !== $payment_method ) {
-			$args['post__in'] = PaymentMethods::get_config_ids( $payment_method );
+			$config_ids = PaymentMethods::get_config_ids( $payment_method );
+
+			$args['post__in'] = empty( $config_ids ) ? array( 0 ) : $config_ids;
 		}
 
 		$query = new WP_Query( $args );

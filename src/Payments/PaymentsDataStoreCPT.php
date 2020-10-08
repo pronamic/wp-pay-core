@@ -12,6 +12,7 @@ namespace Pronamic\WordPress\Pay\Payments;
 
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
+use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Customer;
 
 /**
@@ -731,6 +732,20 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		// Legacy.
 		parent::read_post_meta( $payment );
+
+		// Amount.
+		$amount = $payment->get_meta( 'amount' );
+
+		$amount_value = $payment->get_total_amount()->get_value();
+
+		if ( empty( $amount_value ) && ! empty( $amount ) ) {
+			$payment->set_total_amount(
+				new TaxedMoney(
+					$amount,
+					$payment->get_meta( 'currency' )
+				)
+			);
+		}
 	}
 
 	/**

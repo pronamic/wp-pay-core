@@ -10,7 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
-use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Money\TaxedMoney;
 
 /**
  * Subscription Phase Test
@@ -25,7 +25,7 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 	 * @return SubscriptionPhase
 	 */
 	private function new_subscription_phase() {
-		$subscription_phase = new SubscriptionPhase( new \DateTimeImmutable(), 'P5Y', new Money( 50, 'EUR' ) );
+		$subscription_phase = new SubscriptionPhase( new \DateTimeImmutable(), new SubscriptionInterval( 'P5Y' ), new TaxedMoney( 50, 'EUR' ) );
 
 		return $subscription_phase;
 	}
@@ -56,19 +56,6 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 	}
 
 	/**
-	 * Test completed.
-	 */
-	public function test_completed() {
-		$subscription_phase = $this->new_subscription_phase();
-
-		$this->assertFalse( $subscription_phase->is_completed() );
-
-		$subscription_phase->set_status( 'completed' );
-
-		$this->assertTrue( $subscription_phase->is_completed() );
-	}
-
-	/**
 	 * Test trial.
 	 */
 	public function test_trial() {
@@ -76,22 +63,9 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 
 		$this->assertFalse( $subscription_phase->is_trial() );
 
-		$subscription_phase->set_type( 'trial' );
+		$subscription_phase->set_trial( true );
 
 		$this->assertTrue( $subscription_phase->is_trial() );
-	}
-
-	/**
-	 * Test sequence number.
-	 */
-	public function test_sequence_number() {
-		$subscription_phase = $this->new_subscription_phase();
-
-		$this->assertEquals( 1, $subscription_phase->get_sequence_number() );
-
-		$subscription_phase->set_sequence_number( 3 );
-
-		$this->assertEquals( 3, $subscription_phase->get_sequence_number() );
 	}
 
 	/**
@@ -104,7 +78,7 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 		 * - Do not charge at sign-up
 		 * - Charge full amount at sign-up
 		 */
-		$amount = new Money( 100, 'USD' );
+		$amount = new TaxedMoney( 100, 'USD' );
 
 		$prorating_rule = new ProratingRule( 'Y' );
 
@@ -123,7 +97,7 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 			->create();
 
 		// Proration phase.
-		$proration_phase = SubscriptionPhase::prorate( $regular_phase, $align_date, true );
+		$proration_phase = SubscriptionPhase::align( $regular_phase, $align_date, true );
 
 		// Asserts.
 		$this->assertEquals( 50.41, round( $proration_phase->get_amount()->get_value(), 2 ) );
@@ -138,7 +112,7 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 	 * Test month overflow.
 	 */
 	public function test_month_overflow() {
-		$amount = new Money( 100, 'USD' );
+		$amount = new TaxedMoney( 100, 'USD' );
 
 		$start_date = new \DateTimeImmutable( '2020-01-31 00:00:00' );
 
@@ -148,9 +122,13 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 			->with_interval( 'P1M' )
 			->create();
 
-		$period_1 = $phase->next_period();
-		$period_2 = $phase->next_period();
-		$period_3 = $phase->next_period();
+		$subscription = ( new SubscriptionBuilder() )
+			->with_phase( $phase )
+			->create();
+
+		$period_1 = $phase->next_period( $subscription );
+		$period_2 = $phase->next_period( $subscription );
+		$period_3 = $phase->next_period( $subscription );
 
 		$this->assertEquals( '2020-01-31 00:00:00', $period_1->get_start_date()->format( 'Y-m-d H:i:s' ) );
 		$this->assertEquals( '2020-02-29 00:00:00', $period_2->get_start_date()->format( 'Y-m-d H:i:s' ) );
@@ -161,7 +139,7 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 	 * Test month overflow.
 	 */
 	public function test_month_overflow_29() {
-		$amount = new Money( 100, 'USD' );
+		$amount = new TaxedMoney( 100, 'USD' );
 
 		$start_date = new \DateTimeImmutable( '2020-01-29 00:00:00' );
 
@@ -171,9 +149,13 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 			->with_interval( 'P1M' )
 			->create();
 
-		$period_1 = $phase->next_period();
-		$period_2 = $phase->next_period();
-		$period_3 = $phase->next_period();
+		$subscription = ( new SubscriptionBuilder() )
+			->with_phase( $phase )
+			->create();
+
+		$period_1 = $phase->next_period( $subscription );
+		$period_2 = $phase->next_period( $subscription );
+		$period_3 = $phase->next_period( $subscription );
 
 		$this->assertEquals( '2020-01-29 00:00:00', $period_1->get_start_date()->format( 'Y-m-d H:i:s' ) );
 		$this->assertEquals( '2020-02-29 00:00:00', $period_2->get_start_date()->format( 'Y-m-d H:i:s' ) );
@@ -184,7 +166,7 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 	 * Test month overflow.
 	 */
 	public function test_month_overflow_weekly() {
-		$amount = new Money( 100, 'USD' );
+		$amount = new TaxedMoney( 100, 'USD' );
 
 		$start_date = new \DateTimeImmutable( '2020-01-29 00:00:00' );
 
@@ -194,9 +176,13 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 			->with_interval( 'P1W' )
 			->create();
 
-		$period_1 = $phase->next_period();
-		$period_2 = $phase->next_period();
-		$period_3 = $phase->next_period();
+		$subscription = ( new SubscriptionBuilder() )
+			->with_phase( $phase )
+			->create();
+
+		$period_1 = $phase->next_period( $subscription );
+		$period_2 = $phase->next_period( $subscription );
+		$period_3 = $phase->next_period( $subscription );
 
 		$this->assertEquals( '2020-01-29 00:00:00', $period_1->get_start_date()->format( 'Y-m-d H:i:s' ) );
 		$this->assertEquals( '2020-02-05 00:00:00', $period_2->get_start_date()->format( 'Y-m-d H:i:s' ) );
