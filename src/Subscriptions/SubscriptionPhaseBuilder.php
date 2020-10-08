@@ -159,6 +159,7 @@ class SubscriptionPhaseBuilder {
 	/**
 	 * With alignment.
 	 *
+	 * @param bool $is_alignment With alignment.
 	 * @return $this
 	 */
 	public function with_alignment( $is_alignment = true ) {
@@ -170,6 +171,7 @@ class SubscriptionPhaseBuilder {
 	/**
 	 * With proration.
 	 *
+	 * @param bool $is_prorated With proration.
 	 * @return $this
 	 */
 	public function with_proration( $is_prorated = true ) {
@@ -181,6 +183,7 @@ class SubscriptionPhaseBuilder {
 	/**
 	 * With trial.
 	 *
+	 * @param bool $is_trial With trial.
 	 * @return $this
 	 */
 	public function with_trial( $is_trial = true ) {
