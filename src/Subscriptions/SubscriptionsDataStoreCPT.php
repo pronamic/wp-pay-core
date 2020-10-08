@@ -376,13 +376,26 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 				$start_date = clone $subscription->get_date();
 			}
 
+			$interval_spec = 'P' . $subscription->get_interval() . $subscription->get_interval_period();
+
 			$phase = $subscription->new_phase(
 				$start_date,
-				'P' . $subscription->get_interval() . $subscription->get_interval_period(),
+				$interval_spec,
 				$amount
 			);
 
 			$phase->set_total_periods( $subscription->get_frequency() );
+
+			// Set periods created.
+			$end_date = $subscription->get_next_payment_date();
+
+			if ( null === $end_date ) {
+				$end_date = $subscription->get_expiry_date();
+			}
+
+			$period = new DatePeriod( $start_date, new \DateInterval( $interval_spec ), $end_date );
+
+			$phase->set_periods_created( \iterator_count( $period ) );
 		}
 	}
 
