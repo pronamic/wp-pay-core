@@ -57,18 +57,25 @@ class SubscriptionPhaseBuilder {
 	private $interval;
 
 	/**
-	 * Whether to prorate amount.
+	 * Boolean flag to indicate a alignment subscription phase.
 	 *
-	 * @var bool|null
+	 * @var bool
 	 */
-	private $proration;
+	private $is_alignment = false;
 
 	/**
-	 * Trial.
+	 * Boolean flag to indicate a prorated subscription phase.
 	 *
-	 * @var bool|null
+	 * @var bool
 	 */
-	private $trial;
+	private $is_prorated = false;
+
+	/**
+	 * Boolean flag to indicate a trial subscription phase.
+	 *
+	 * @var bool
+	 */
+	private $is_trial = false;
 
 	/**
 	 * Canceled at.
@@ -150,12 +157,23 @@ class SubscriptionPhaseBuilder {
 	}
 
 	/**
+	 * With alignment.
+	 *
+	 * @return $this
+	 */
+	public function with_alignment( $is_alignment = true ) {
+		$this->is_alignment = $is_alignment;
+
+		return $this;
+	}
+
+	/**
 	 * With proration.
 	 *
 	 * @return $this
 	 */
-	public function with_proration() {
-		$this->proration = true;
+	public function with_proration( $is_prorated = true ) {
+		$this->is_prorated = $is_prorated;
 
 		return $this;
 	}
@@ -165,8 +183,8 @@ class SubscriptionPhaseBuilder {
 	 *
 	 * @return $this
 	 */
-	public function with_trial() {
-		$this->trial = true;
+	public function with_trial( $is_trial = true ) {
+		$this->is_trial = $is_trial;
 
 		return $this;
 	}
@@ -192,11 +210,14 @@ class SubscriptionPhaseBuilder {
 
 		$phase = new SubscriptionPhase( $this->start_date, $this->interval, $this->amount );
 
-		// Proration.
-		$phase->set_proration( (bool) $this->proration );
+		// Alignment.
+		$phase->set_alignment( $this->is_alignment );
+
+		// Prorated.
+		$phase->set_prorated( $this->is_prorated );
 
 		// Trial.
-		$phase->set_trial( (bool) $this->trial );
+		$phase->set_trial( $this->is_trial );
 
 		// Total periods.
 		$phase->set_total_periods( $this->total_periods );

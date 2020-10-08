@@ -260,22 +260,41 @@ class SubscriptionPhase implements \JsonSerializable {
 	}
 
 	/**
-	 * Is proration?
+	 * Is alignment.
 	 *
 	 * @return bool
 	 */
-	public function is_proration() {
-		return $this->proration;
+	public function is_alignment() {
+		return $this->is_alignment;
 	}
 
 	/**
-	 * Set proration
+	 * Set alignment.
 	 *
-	 * @param bool $proration Proration.
+	 * @param bool $is_alignment Alignment.
 	 * @return void
 	 */
-	public function set_proration( $proration ) {
-		$this->proration = $proration;
+	public function set_alignment( $is_alignment ) {
+		$this->is_alignment = $is_alignment;
+	}
+
+	/**
+	 * Is prorated.
+	 *
+	 * @return bool
+	 */
+	public function is_prorated() {
+		return $this->is_prorated;
+	}
+
+	/**
+	 * Set prorated.
+	 *
+	 * @param bool $is_prorated Proration.
+	 * @return void
+	 */
+	public function set_prorated( $is_prorated ) {
+		$this->is_prorated = $is_prorated;
 	}
 
 	/**
@@ -419,17 +438,19 @@ class SubscriptionPhase implements \JsonSerializable {
 			'start_date'        => $this->start_date->format( \DATE_ATOM ),
 			'interval'          => $this->interval->get_specification(),
 			'amount'            => MoneyJsonTransformer::to_json( $this->amount ),
-			'proration'         => $this->proration,
 			// Numbers.
 			'total_periods'     => $this->total_periods,
 			'periods_created'   => $this->periods_created,
 			'periods_remaining' => $this->get_periods_remaining(),
 			// Other.
 			'canceled_at'       => ( null === $this->canceled_at ) ? null : $this->canceled_at->format( \DATE_ATOM ),
+			// Flags.
+			'is_alignment'      => $this->is_alignment(),
+			'is_prorated'       => $this->is_prorated(),
+			'is_trial'          => $this->is_trial(),
 			// Readonly.
 			'is_infinite'       => $this->is_infinite(),
 			'is_canceled'       => $this->is_canceled(),
-			'is_trial'          => $this->is_trial(),
 		);
 	}
 
@@ -467,23 +488,27 @@ class SubscriptionPhase implements \JsonSerializable {
 			$builder->with_periods_created( $json->periods_created );
 		}
 
-		if ( property_exists( $json, 'proration' ) && true === $json->proration ) {
-			$builder->with_proration();
+		if ( property_exists( $json, 'is_alignment' ) ) {
+			$builder->with_alignment( \boolval( $json->is_alignment ) );
 		}
 
-		if ( property_exists( $json, 'is_trial' ) && true === $json->is_trial ) {
-			$builder->with_trial();
+		if ( property_exists( $json, 'is_prorated' ) ) {
+			$builder->with_proration( \boolval( $json->is_prorated ) );
+		}
+
+		if ( property_exists( $json, 'is_trial' ) ) {
+			$builder->with_trial( \boolval( $json->is_trial ) );
 		}
 
 		if ( property_exists( $json, 'canceled_at' ) ) {
-			$builder->with_canceled_at( $json->canceled_at );
+			$builder->with_canceled_at( new \DateTimeImmutable( $json->canceled_at ) );
 		}
 
 		return $builder->create();
 	}
 
 	/**
-	 * Prorate the phase to align date.
+	 * Align the phase to align date.
 	 *
 	 * @param self              $phase          The phase to align.
 	 * @param DateTimeImmutable $align_date     The alignment date.
@@ -491,7 +516,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return SubscriptionPhase
 	 * @throws \Exception Throws exception on invalid date interval.
 	 */
-	public static function prorate( self $phase, DateTimeImmutable $align_date, $prorate_amount ) {
+	public static function align( self $phase, DateTimeImmutable $align_date, $prorate_amount = false ) {
 		$start_date = $phase->get_start_date();
 
 		$next_date = $start_date->add( $phase->get_date_interval() );
@@ -510,7 +535,8 @@ class SubscriptionPhase implements \JsonSerializable {
 			->with_amount( $proration_amount )
 			->with_interval( 'P' . $proration_difference->days . 'D' )
 			->with_total_periods( 1 )
-			->with_proration()
+			->with_alignment( true )
+			->with_proration( $prorate_amount )
 			->create();
 
 		// Remove one period from regular phase.

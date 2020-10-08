@@ -97,7 +97,7 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 			->create();
 
 		// Proration phase.
-		$proration_phase = SubscriptionPhase::prorate( $regular_phase, $align_date, true );
+		$proration_phase = SubscriptionPhase::align( $regular_phase, $align_date, true );
 
 		// Asserts.
 		$this->assertEquals( 50.41, round( $proration_phase->get_amount()->get_value(), 2 ) );
