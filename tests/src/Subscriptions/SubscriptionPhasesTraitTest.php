@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Money\TaxedMoney;
 
 /**
  * Subscription Phases Trait Test
@@ -39,7 +40,7 @@ class SubscriptionPhasesTraitTest extends \WP_UnitTestCase {
 	 * @throws \Exception Throws exception on invalid date interval.
 	 */
 	private function new_phase( $subscription ) {
-		$phase = $subscription->new_phase( new \DateTimeImmutable(), 'P1W', new Money( 50, 'EUR' ) );
+		$phase = $subscription->new_phase( new \DateTimeImmutable(), 'P1W', new TaxedMoney( 50, 'EUR' ) );
 
 		return $phase;
 	}
@@ -78,7 +79,9 @@ class SubscriptionPhasesTraitTest extends \WP_UnitTestCase {
 		$subscription = $this->new_subscription();
 
 		$phase_1 = $this->new_phase( $subscription );
-		$phase_1->set_status( 'completed' );
+
+		$phase_1->set_total_periods( 1 );
+		$phase_1->set_periods_created( 1 );
 
 		$phase_2 = $this->new_phase( $subscription );
 
@@ -107,7 +110,8 @@ class SubscriptionPhasesTraitTest extends \WP_UnitTestCase {
 
 		$this->assertTrue( $subscription->in_trial_period() );
 
-		$phase_1->set_status( 'completed' );
+		$phase_1->set_total_periods( 1 );
+		$phase_1->set_periods_created( 1 );
 
 		$this->assertFalse( $subscription->in_trial_period() );
 	}

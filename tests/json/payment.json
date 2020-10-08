@@ -1,11 +1,5 @@
 {
   "id":1,
-  "total_amount":{
-    "value":242,
-    "currency":"EUR",
-    "tax_value":42,
-    "tax_percentage":21
-  },
   "customer":{
     "name":{
       "first_name":"Remco",
@@ -109,6 +103,12 @@
   "start_date": "2005-05-05T00:00:00+00:00",
   "end_date": "2100-05-05T00:00:00+00:00",
   "expiry_date": "2005-05-05T00:30:00+00:00",
+  "total_amount": {
+    "value": 242,
+    "currency": "EUR",
+    "tax_value": 42,
+    "tax_percentage": 21
+  },
   "status":"Open",
   "failure_reason": {
     "code": "invalid_cvv",

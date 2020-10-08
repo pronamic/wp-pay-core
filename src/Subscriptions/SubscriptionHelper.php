@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
+use InvalidArgumentException;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\Payments\Payment;
@@ -202,6 +203,12 @@ class SubscriptionHelper {
 	 * @throws \Exception Throws exception on next payment date error.
 	 */
 	public static function calculate_next_payment_date( Subscription $subscription ) {
+		$phases = $subscription->get_phases();
+
+		if ( empty( $phases ) ) {
+			throw new InvalidArgumentException( 'Can not calculate next payment date of subscription without phases.' );
+		}
+
 		// Get current phase.
 		$phase = $subscription->get_current_phase();
 

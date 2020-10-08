@@ -55,7 +55,6 @@ class SubscriptionTest extends WP_UnitTestCase {
 	 */
 	public function get_and_set_provider() {
 		return array(
-			array( 'set_total_amount', 'get_total_amount', new TaxedMoney( 89.95, 'EUR' ) ),
 			array( 'set_id', 'get_id', uniqid() ),
 			array( 'set_status', 'get_status', 'completed' ),
 		);

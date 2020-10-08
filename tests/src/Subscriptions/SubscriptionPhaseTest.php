@@ -25,7 +25,7 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 	 * @return SubscriptionPhase
 	 */
 	private function new_subscription_phase() {
-		$subscription_phase = new SubscriptionPhase( new \DateTimeImmutable(), 'P5Y', new TaxedMoney( 50, 'EUR' ) );
+		$subscription_phase = new SubscriptionPhase( new \DateTimeImmutable(), new SubscriptionInterval( 'P5Y' ), new TaxedMoney( 50, 'EUR' ) );
 
 		return $subscription_phase;
 	}
@@ -122,9 +122,13 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 			->with_interval( 'P1M' )
 			->create();
 
-		$period_1 = $phase->next_period();
-		$period_2 = $phase->next_period();
-		$period_3 = $phase->next_period();
+		$subscription = ( new SubscriptionBuilder() )
+			->with_phase( $phase )
+			->create();
+
+		$period_1 = $phase->next_period( $subscription );
+		$period_2 = $phase->next_period( $subscription );
+		$period_3 = $phase->next_period( $subscription );
 
 		$this->assertEquals( '2020-01-31 00:00:00', $period_1->get_start_date()->format( 'Y-m-d H:i:s' ) );
 		$this->assertEquals( '2020-02-29 00:00:00', $period_2->get_start_date()->format( 'Y-m-d H:i:s' ) );
@@ -145,9 +149,13 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 			->with_interval( 'P1M' )
 			->create();
 
-		$period_1 = $phase->next_period();
-		$period_2 = $phase->next_period();
-		$period_3 = $phase->next_period();
+		$subscription = ( new SubscriptionBuilder() )
+			->with_phase( $phase )
+			->create();
+
+		$period_1 = $phase->next_period( $subscription );
+		$period_2 = $phase->next_period( $subscription );
+		$period_3 = $phase->next_period( $subscription );
 
 		$this->assertEquals( '2020-01-29 00:00:00', $period_1->get_start_date()->format( 'Y-m-d H:i:s' ) );
 		$this->assertEquals( '2020-02-29 00:00:00', $period_2->get_start_date()->format( 'Y-m-d H:i:s' ) );
@@ -168,9 +176,13 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 			->with_interval( 'P1W' )
 			->create();
 
-		$period_1 = $phase->next_period();
-		$period_2 = $phase->next_period();
-		$period_3 = $phase->next_period();
+		$subscription = ( new SubscriptionBuilder() )
+			->with_phase( $phase )
+			->create();
+
+		$period_1 = $phase->next_period( $subscription );
+		$period_2 = $phase->next_period( $subscription );
+		$period_3 = $phase->next_period( $subscription );
 
 		$this->assertEquals( '2020-01-29 00:00:00', $period_1->get_start_date()->format( 'Y-m-d H:i:s' ) );
 		$this->assertEquals( '2020-02-05 00:00:00', $period_2->get_start_date()->format( 'Y-m-d H:i:s' ) );

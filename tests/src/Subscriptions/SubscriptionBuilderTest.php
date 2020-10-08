@@ -48,21 +48,21 @@ class SubscriptionBuilderTest extends \WP_UnitTestCase {
 		$this->assertTrue( $current_phase->is_trial() );
 		$this->assertTrue( $subscription->in_trial_period() );
 
-		$period = $subscription->next_period();
+		$period = $subscription->next_period( $subscription );
 
 		$this->assertInstanceOf( SubscriptionPeriod::class, $period );
 		$this->assertTrue( $period->is_trial() );
 		$this->assertEquals( new \DateTimeImmutable( '2020-05-05 00:00:00' ), $period->get_start_date() );
 		$this->assertEquals( new \DateTimeImmutable( '2020-06-05 00:00:00' ), $period->get_end_date() );
 
-		$period = $subscription->next_period();
+		$period = $subscription->next_period( $subscription );
 
 		$this->assertInstanceOf( SubscriptionPeriod::class, $period );
 		$this->assertFalse( $period->is_trial() );
 		$this->assertEquals( new \DateTimeImmutable( '2020-06-05 00:00:00' ), $period->get_start_date() );
 		$this->assertEquals( new \DateTimeImmutable( '2021-06-05 00:00:00' ), $period->get_end_date() );
 
-		$period = $subscription->next_period();
+		$period = $subscription->next_period( $subscription );
 
 		$this->assertInstanceOf( SubscriptionPeriod::class, $period );
 		$this->assertFalse( $period->is_trial() );

@@ -818,16 +818,16 @@ class Payment extends LegacyPayment {
 
 		$properties = (array) $object;
 
-		$total_amount = $this->get_total_amount();
-
-		if ( null !== $total_amount ) {
-			$properties['total_amount'] = TaxedMoneyJsonTransformer::to_json( $total_amount );
-		}
-
 		$expiry_date = $this->get_expiry_date();
 
 		if ( null !== $expiry_date ) {
 			$properties['expiry_date'] = $expiry_date->format( \DATE_ATOM );
+		}
+
+		$total_amount = $this->get_total_amount();
+
+		if ( null !== $total_amount ) {
+			$properties['total_amount'] = TaxedMoneyJsonTransformer::to_json( $total_amount );
 		}
 
 		$periods = $this->get_periods();
