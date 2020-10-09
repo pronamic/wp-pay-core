@@ -102,7 +102,7 @@ class SubscriptionInterval extends \DateInterval implements \JsonSerializable {
 		// Interval.
 		$interval = new self( $interval_spec );
 
-		$interval->invert = $invert;
+		$interval->invert = \intval( $invert );
 
 		return $interval;
 	}
