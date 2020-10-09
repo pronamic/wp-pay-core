@@ -205,7 +205,7 @@ class SubscriptionHelper {
 		$phases = $subscription->get_phases();
 
 		if ( empty( $phases ) ) {
-			throw new InvalidArgumentException( 'Can not calculate next payment date of subscription without phases.' );
+			throw new \InvalidArgumentException( 'Can not calculate next payment date of subscription without phases.' );
 		}
 
 		// Get current phase.

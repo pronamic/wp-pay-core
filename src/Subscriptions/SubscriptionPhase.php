@@ -89,6 +89,13 @@ class SubscriptionPhase implements \JsonSerializable {
 	private $next_date;
 
 	/**
+	 * Alignment.
+	 *
+	 * @var bool
+	 */
+	private $is_alignment;
+
+	/**
 	 * Proration.
 	 *
 	 * @var bool
@@ -116,6 +123,7 @@ class SubscriptionPhase implements \JsonSerializable {
 		$this->amount     = $amount;
 
 		$this->periods_created = 0;
+		$this->is_alignment    = false;
 		$this->is_prorated     = false;
 		$this->is_trial        = false;
 	}
@@ -521,19 +529,40 @@ class SubscriptionPhase implements \JsonSerializable {
 
 		$next_date = $start_date->add( $phase->get_date_interval() );
 
-		$regular_difference   = $start_date->diff( $next_date, true );
-		$proration_difference = $start_date->diff( $align_date, true );
+		$regular_difference = $start_date->diff( $next_date, true );
+
+		/**
+		 * PHPStan fix.
+		 *
+		 * If the DateInterval object was created by DateTime::diff(), then this is the total 
+		 * number of days between the start and end dates. Otherwise, days will be FALSE.
+		 */
+		if ( false === $regular_difference->days ) {
+			throw new \Exception( 'Could not calculate the total number of days between the phase start date and the next period start date.' );
+		}
+
+		$alignment_difference = $start_date->diff( $align_date, true );
+
+		/**
+		 * PHPStan fix.
+		 *
+		 * If the DateInterval object was created by DateTime::diff(), then this is the total 
+		 * number of days between the start and end dates. Otherwise, days will be FALSE.
+		 */
+		if ( false === $alignment_difference->days ) {
+			throw new \Exception( 'Could not calculate the total number of days between the phase start date and the next alignment date.' );
+		}
 
 		$proration_amount = clone $phase->get_amount();
 
 		if ( $prorate_amount ) {
-			$proration_amount = $proration_amount->divide( $regular_difference->days )->multiply( $proration_difference->days );
+			$proration_amount = $proration_amount->divide( $regular_difference->days )->multiply( $alignment_difference->days );
 		}
 
-		$proration_phase = ( new SubscriptionPhaseBuilder() )
+		$alignment_phase = ( new SubscriptionPhaseBuilder() )
 			->with_start_date( $start_date )
 			->with_amount( $proration_amount )
-			->with_interval( 'P' . $proration_difference->days . 'D' )
+			->with_interval( 'P' . $alignment_difference->days . 'D' )
 			->with_total_periods( 1 )
 			->with_alignment( true )
 			->with_proration( $prorate_amount )
@@ -546,8 +575,14 @@ class SubscriptionPhase implements \JsonSerializable {
 			$phase->set_total_periods( $total_periods - 1 );
 		}
 
-		$phase->set_start_date( $proration_phase->get_end_date() );
+		$alignment_end_date = $alignment_phase->get_end_date();
 
-		return $proration_phase;
+		if ( null === $alignment_end_date ) {
+			throw new \Exception( 'The align phase should always end because this phase exists for one period.' );
+		}
+
+		$phase->set_start_date( $alignment_end_date );
+
+		return $alignment_phase;
 	}
 }

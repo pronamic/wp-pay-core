@@ -53,21 +53,21 @@ class ProratingRule {
 	/**
 	 * Day of the week.
 	 *
-	 * @var int
+	 * @var string|null
 	 */
 	private $by_day_of_the_week;
 
 	/**
 	 * Day of the month.
 	 *
-	 * @var int
+	 * @var int|null
 	 */
 	private $by_day_of_the_month;
 
 	/**
 	 * Number of month.
 	 *
-	 * @var int
+	 * @var int|null
 	 */
 	private $by_month;
 
@@ -84,7 +84,6 @@ class ProratingRule {
 	 * By numeric day of the week.
 	 *
 	 * @param int $number Number of day in the week (0 = Sunday).
-	 *
 	 * @return $this
 	 */
 	public function by_numeric_day_of_the_week( $number ) {
@@ -121,7 +120,7 @@ class ProratingRule {
 	 * Get date.
 	 *
 	 * @param DateTimeImmutable|null $date Date.
-	 * @return DateTimeImmutable|false
+	 * @return DateTimeImmutable
 	 * @throws \Exception Throws exception on date error.
 	 */
 	public function get_date( DateTimeImmutable $date = null ) {
@@ -136,12 +135,12 @@ class ProratingRule {
 	 * Apply properties.
 	 *
 	 * @param DateTimeImmutable $date Date.
-	 * @return DateTimeImmutable|false
+	 * @return DateTimeImmutable
 	 */
 	private function apply_properties( DateTimeImmutable $date ) {
-		$year  = $date->format( 'Y' );
-		$month = $date->format( 'm' );
-		$day   = $date->format( 'd' );
+		$year  = \intval( $date->format( 'Y' ) );
+		$month = \intval( $date->format( 'm' ) );
+		$day   = \intval( $date->format( 'd' ) );
 
 		// 1 > null === true
 		if ( $day >= $this->by_day_of_the_month && 'W' !== $this->frequency ) {
@@ -155,7 +154,7 @@ class ProratingRule {
 		if ( false === $this->month_overflow ) {
 			$date = $date->setDate( $year, $month, 1 );
 
-			$days_in_month = $date->format( 't' );
+			$days_in_month = \intval( $date->format( 't' ) );
 
 			if ( $day > $days_in_month ) {
 				$day = $days_in_month;

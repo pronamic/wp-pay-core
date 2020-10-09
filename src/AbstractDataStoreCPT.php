@@ -72,13 +72,15 @@ abstract class AbstractDataStoreCPT {
 	/**
 	 * Get MySQL UTC datetime of the specified date.
 	 *
-	 * @param \DateTime|\DateTimeImmutable $date The date.
+	 * @param \DateTimeInterface $date The date.
 	 * @return string
 	 */
 	protected function get_mysql_utc_date( \DateTimeInterface $date ) {
 		$date = clone $date;
 
-		$date = $date->setTimezone( new DateTimeZone( 'UTC' ) );
+		if ( \method_exists( $date, 'setTimezone' ) ) {
+			$date = $date->setTimezone( new DateTimeZone( 'UTC' ) );
+		}
 
 		return $date->format( DateTime::MYSQL );
 	}
