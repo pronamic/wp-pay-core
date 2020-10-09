@@ -47,7 +47,7 @@
 		"ext-libxml": "*",
 		"ext-simplexml": "*",
 		"composer/installers": "^1.7",
-		"pronamic/wp-datetime": "^1.1",
+		"pronamic/wp-datetime": "^1.2",
 		"pronamic/wp-money": "^1.2",
 		"viison/address-splitter": "^0.3.4"
 	},
