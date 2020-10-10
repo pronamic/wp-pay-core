@@ -534,7 +534,7 @@ class SubscriptionPhase implements \JsonSerializable {
 		/**
 		 * PHPStan fix.
 		 *
-		 * If the DateInterval object was created by DateTime::diff(), then this is the total 
+		 * If the DateInterval object was created by DateTime::diff(), then this is the total
 		 * number of days between the start and end dates. Otherwise, days will be FALSE.
 		 */
 		if ( false === $regular_difference->days ) {
@@ -546,7 +546,7 @@ class SubscriptionPhase implements \JsonSerializable {
 		/**
 		 * PHPStan fix.
 		 *
-		 * If the DateInterval object was created by DateTime::diff(), then this is the total 
+		 * If the DateInterval object was created by DateTime::diff(), then this is the total
 		 * number of days between the start and end dates. Otherwise, days will be FALSE.
 		 */
 		if ( false === $alignment_difference->days ) {
