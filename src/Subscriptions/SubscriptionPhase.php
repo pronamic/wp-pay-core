@@ -277,6 +277,15 @@ class SubscriptionPhase implements \JsonSerializable {
 	}
 
 	/**
+	 * Get alignment rate.
+	 *
+	 * @return float|null
+	 */
+	public function get_alignment_rate() {
+		return $this->alignment_rate;
+	}
+
+	/**
 	 * Set alignment rate.
 	 *
 	 * @param float|null $alignment_rate Alignment rate.
@@ -555,7 +564,7 @@ class SubscriptionPhase implements \JsonSerializable {
 
 		$alignment_phase = ( new SubscriptionPhaseBuilder() )
 			->with_start_date( $start_date )
-			->with_amount( $proration_amount )
+			->with_amount( $phase->get_amount() )
 			->with_interval( 'P' . $alignment_difference->days . 'D' )
 			->with_total_periods( 1 )
 			->with_alignment_rate( $alignment_difference->days / $regular_difference->days )

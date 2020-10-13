@@ -57,11 +57,11 @@ class SubscriptionPhaseBuilder {
 	private $interval;
 
 	/**
-	 * Boolean flag to indicate a alignment subscription phase.
+	 * Alignment rate.
 	 *
-	 * @var bool
+	 * @var float|null
 	 */
-	private $is_alignment = false;
+	private $alignment_rate = false;
 
 	/**
 	 * Boolean flag to indicate a prorated subscription phase.
@@ -157,13 +157,13 @@ class SubscriptionPhaseBuilder {
 	}
 
 	/**
-	 * With alignment.
+	 * With alignment rate
 	 *
-	 * @param bool $is_alignment With alignment.
+	 * @param bool $alignment_rate With alignment rate.
 	 * @return $this
 	 */
-	public function with_alignment( $is_alignment = true ) {
-		$this->is_alignment = $is_alignment;
+	public function with_alignment_rate( $alignment_rate = null ) {
+		$this->alignment_rate = $alignment_rate;
 
 		return $this;
 	}
@@ -213,8 +213,8 @@ class SubscriptionPhaseBuilder {
 
 		$phase = new SubscriptionPhase( $this->start_date, $this->interval, $this->amount );
 
-		// Alignment.
-		$phase->set_alignment( $this->is_alignment );
+		// Alignment rate.
+		$phase->set_alignment_rate( $this->alignment_rate );
 
 		// Prorated.
 		$phase->set_prorated( $this->is_prorated );
