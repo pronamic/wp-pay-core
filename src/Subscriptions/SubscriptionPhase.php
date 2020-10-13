@@ -89,11 +89,11 @@ class SubscriptionPhase implements \JsonSerializable {
 	private $next_date;
 
 	/**
-	 * Alignment.
+	 * Alignment rate.
 	 *
-	 * @var bool
+	 * @var float|null
 	 */
-	private $is_alignment;
+	private $alignment_rate;
 
 	/**
 	 * Proration.
@@ -123,7 +123,7 @@ class SubscriptionPhase implements \JsonSerializable {
 		$this->amount     = $amount;
 
 		$this->periods_created = 0;
-		$this->is_alignment    = false;
+
 		$this->is_prorated     = false;
 		$this->is_trial        = false;
 	}
@@ -273,17 +273,17 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return bool
 	 */
 	public function is_alignment() {
-		return $this->is_alignment;
+		return ( null !== $this->alignment_rate );
 	}
 
 	/**
-	 * Set alignment.
+	 * Set alignment rate.
 	 *
-	 * @param bool $is_alignment Alignment.
+	 * @param float|null $alignment_rate Alignment rate.
 	 * @return void
 	 */
-	public function set_alignment( $is_alignment ) {
-		$this->is_alignment = $is_alignment;
+	public function set_alignment_rate( $alignment_rate ) {
+		$this->alignment_rate = $alignment_rate;
 	}
 
 	/**
@@ -452,6 +452,7 @@ class SubscriptionPhase implements \JsonSerializable {
 			'periods_remaining' => $this->get_periods_remaining(),
 			// Other.
 			'canceled_at'       => ( null === $this->canceled_at ) ? null : $this->canceled_at->format( \DATE_ATOM ),
+			'alignment_rate'    => $this->alignment_rate,
 			// Flags.
 			'is_alignment'      => $this->is_alignment(),
 			'is_prorated'       => $this->is_prorated(),
@@ -496,8 +497,8 @@ class SubscriptionPhase implements \JsonSerializable {
 			$builder->with_periods_created( $json->periods_created );
 		}
 
-		if ( property_exists( $json, 'is_alignment' ) ) {
-			$builder->with_alignment( \boolval( $json->is_alignment ) );
+		if ( property_exists( $json, 'alignment_rate' ) ) {
+			$builder->with_alignment_rate( \floatval( $json->alignment_rate ) );
 		}
 
 		if ( property_exists( $json, 'is_prorated' ) ) {
@@ -520,11 +521,10 @@ class SubscriptionPhase implements \JsonSerializable {
 	 *
 	 * @param self              $phase          The phase to align.
 	 * @param DateTimeImmutable $align_date     The alignment date.
-	 * @param bool              $prorate_amount Flag to prorate the amount.
 	 * @return SubscriptionPhase
 	 * @throws \Exception Throws exception on invalid date interval.
 	 */
-	public static function align( self $phase, DateTimeImmutable $align_date, $prorate_amount = false ) {
+	public static function align( self $phase, DateTimeImmutable $align_date ) {
 		$start_date = $phase->get_start_date();
 
 		$next_date = $start_date->add( $phase->get_date_interval() );
@@ -553,19 +553,12 @@ class SubscriptionPhase implements \JsonSerializable {
 			throw new \Exception( 'Could not calculate the total number of days between the phase start date and the next alignment date.' );
 		}
 
-		$proration_amount = clone $phase->get_amount();
-
-		if ( $prorate_amount ) {
-			$proration_amount = $proration_amount->divide( $regular_difference->days )->multiply( $alignment_difference->days );
-		}
-
 		$alignment_phase = ( new SubscriptionPhaseBuilder() )
 			->with_start_date( $start_date )
 			->with_amount( $proration_amount )
 			->with_interval( 'P' . $alignment_difference->days . 'D' )
 			->with_total_periods( 1 )
-			->with_alignment( true )
-			->with_proration( $prorate_amount )
+			->with_alignment_rate( $alignment_difference->days / $regular_difference->days )
 			->create();
 
 		// Remove one period from regular phase.
