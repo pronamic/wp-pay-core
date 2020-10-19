@@ -61,7 +61,7 @@ class SubscriptionPhaseBuilder {
 	 *
 	 * @var float|null
 	 */
-	private $alignment_rate = false;
+	private $alignment_rate;
 
 	/**
 	 * Boolean flag to indicate a prorated subscription phase.
@@ -159,7 +159,7 @@ class SubscriptionPhaseBuilder {
 	/**
 	 * With alignment rate
 	 *
-	 * @param bool $alignment_rate With alignment rate.
+	 * @param float|null $alignment_rate With alignment rate.
 	 * @return $this
 	 */
 	public function with_alignment_rate( $alignment_rate = null ) {
