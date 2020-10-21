@@ -431,11 +431,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return SubscriptionPeriod|null
 	 */
 	public function next_period( Subscription $subscription ) {
-		try {
-			$next_period = $this->get_next_period( $subscription );
-		} catch ( \Exception $e ) {
-			return null;
-		}
+		$next_period = $this->get_next_period( $subscription );
 
 		if ( null === $next_period ) {
 			return null;
