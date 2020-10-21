@@ -124,8 +124,8 @@ class SubscriptionPhase implements \JsonSerializable {
 
 		$this->periods_created = 0;
 
-		$this->is_prorated     = false;
-		$this->is_trial        = false;
+		$this->is_prorated = false;
+		$this->is_trial    = false;
 	}
 
 	/**
