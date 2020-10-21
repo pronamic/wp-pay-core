@@ -1,6 +1,6 @@
 <?php
 /**
- * Prorating Rule Test
+ * Alignment Rule Test
  *
  * @author    Pronamic <info@pronamic.eu>
  * @copyright 2005-2020 Pronamic
@@ -11,17 +11,17 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 /**
- * Prorating Rule Test
+ * Alignment Rule Test
  *
  * @author Remco Tolsma
  * @version unreleased
  */
-class ProratingRuleTest extends \WP_UnitTestCase {
+class AlignmentRuleTest extends \WP_UnitTestCase {
 	/**
 	 * Test prorating rule week.
 	 */
 	public function test_prorating_rule_week() {
-		$prorating_rule = new ProratingRule( 'W' );
+		$prorating_rule = new AlignmentRule( 'W' );
 
 		// Tuesday 5 May 2020.
 		$date = new \DateTimeImmutable( '2020-05-05' );
@@ -35,7 +35,7 @@ class ProratingRuleTest extends \WP_UnitTestCase {
 	 * Test prorating rule week.
 	 */
 	public function test_prorating_rule_week_day() {
-		$prorating_rule = new ProratingRule( 'W' );
+		$prorating_rule = new AlignmentRule( 'W' );
 
 		// Friday.
 		$prorating_rule->by_numeric_day_of_the_week( 5 );
@@ -52,7 +52,7 @@ class ProratingRuleTest extends \WP_UnitTestCase {
 	 * Test prorating rule month.
 	 */
 	public function test_prorating_rule_month() {
-		$prorating_rule = new ProratingRule( 'M' );
+		$prorating_rule = new AlignmentRule( 'M' );
 
 		// Tuesday 5 May 2020.
 		$date = new \DateTimeImmutable( '2020-05-05' );
@@ -66,7 +66,7 @@ class ProratingRuleTest extends \WP_UnitTestCase {
 	 * Test prorating rule month day.
 	 */
 	public function test_prorating_rule_month_day() {
-		$prorating_rule = new ProratingRule( 'M' );
+		$prorating_rule = new AlignmentRule( 'M' );
 
 		// The 25th day of the month.
 		$prorating_rule->by_numeric_day_of_the_month( 25 );
@@ -83,7 +83,7 @@ class ProratingRuleTest extends \WP_UnitTestCase {
 	 * Test prorating rule month day overflow.
 	 */
 	public function test_prorating_rule_month_day_overflow() {
-		$prorating_rule = new ProratingRule( 'M' );
+		$prorating_rule = new AlignmentRule( 'M' );
 
 		// The 31th day of the month.
 		$prorating_rule->by_numeric_day_of_the_month( 31 );
@@ -93,14 +93,14 @@ class ProratingRuleTest extends \WP_UnitTestCase {
 
 		$next = $prorating_rule->get_date( $date );
 
-		$this->assertEquals( '2020-02-29T00:00:00+00:00', $next->format( DATE_ATOM ) );
+		$this->assertEquals( '2020-03-02T00:00:00+00:00', $next->format( DATE_ATOM ) );
 	}
 
 	/**
 	 * Test prorating rule year.
 	 */
 	public function test_prorating_rule_year_specific_month_this_year() {
-		$prorating_rule = new ProratingRule( 'Y' );
+		$prorating_rule = new AlignmentRule( 'Y' );
 
 		// December.
 		$prorating_rule->by_numeric_month( 12 );
@@ -117,7 +117,7 @@ class ProratingRuleTest extends \WP_UnitTestCase {
 	 * Test prorating rule year.
 	 */
 	public function test_prorating_rule_year_specific_month_next_year() {
-		$prorating_rule = new ProratingRule( 'Y' );
+		$prorating_rule = new AlignmentRule( 'Y' );
 
 		// January.
 		$prorating_rule->by_numeric_month( 1 );
@@ -134,7 +134,7 @@ class ProratingRuleTest extends \WP_UnitTestCase {
 	 * Test prorating rule year.
 	 */
 	public function test_prorating_rule_year_specific_month_and_day() {
-		$prorating_rule = new ProratingRule( 'Y' );
+		$prorating_rule = new AlignmentRule( 'Y' );
 
 		// On the first day of January.
 		$prorating_rule->by_numeric_month( 1 );
@@ -152,7 +152,7 @@ class ProratingRuleTest extends \WP_UnitTestCase {
 	 * Test prorating rule year.
 	 */
 	public function test_prorating_rule_year_same_year() {
-		$prorating_rule = new ProratingRule( 'Y' );
+		$prorating_rule = new AlignmentRule( 'Y' );
 
 		// On the last day of December.
 		$prorating_rule->by_numeric_month( 12 );
@@ -170,7 +170,7 @@ class ProratingRuleTest extends \WP_UnitTestCase {
 	 * Test prorating rule year.
 	 */
 	public function test_prorating_rule_year_same_year_month() {
-		$prorating_rule = new ProratingRule( 'Y' );
+		$prorating_rule = new AlignmentRule( 'Y' );
 
 		// On the last day of May.
 		$prorating_rule->by_numeric_month( 5 );

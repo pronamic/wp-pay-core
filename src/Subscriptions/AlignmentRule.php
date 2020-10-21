@@ -1,6 +1,6 @@
 <?php
 /**
- * Prorating Rule
+ * Alignment Rule
  *
  * @author    Pronamic <info@pronamic.eu>
  * @copyright 2005-2020 Pronamic
@@ -13,13 +13,13 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 use DateTimeImmutable;
 
 /**
- * Prorating Rule
+ * Alignment Rule
  *
  * @author  Remco Tolsma
  * @version unreleased
  * @since   unreleased
  */
-class ProratingRule {
+class AlignmentRule {
 	/**
 	 * Weekdays indexed 0 (for Sunday) through 6 (for Saturday).
 	 *
@@ -41,14 +41,6 @@ class ProratingRule {
 	 * @var string
 	 */
 	private $frequency;
-
-	/**
-	 * Boolean flag to allow month overflow.
-	 *
-	 * @link https://carbon.nesbot.com/docs/#overflow-static-helpers
-	 * @var bool
-	 */
-	private $month_overflow = false;
 
 	/**
 	 * Day of the week.
@@ -149,16 +141,6 @@ class ProratingRule {
 
 		if ( null !== $this->by_day_of_the_month ) {
 			$day = $this->by_day_of_the_month;
-		}
-
-		if ( false === $this->month_overflow ) {
-			$date = $date->setDate( $year, $month, 1 );
-
-			$days_in_month = \intval( $date->format( 't' ) );
-
-			if ( $day > $days_in_month ) {
-				$day = $days_in_month;
-			}
 		}
 
 		if ( null !== $this->by_month ) {

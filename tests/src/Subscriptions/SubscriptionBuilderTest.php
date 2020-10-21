@@ -71,7 +71,7 @@ class SubscriptionBuilderTest extends \WP_UnitTestCase {
 	}
 
 	/**
-	 * Test prorating first payment.
+	 * Test alignment first payment.
 	 *
 	 * For example, for a $100 per year subscription that
 	 * is synchronized to the 1st of January each year,
@@ -99,14 +99,14 @@ class SubscriptionBuilderTest extends \WP_UnitTestCase {
 		 */
 		$amount = new TaxedMoney( 100, 'USD' );
 
-		$prorating_rule = new ProratingRule( 'Y' );
+		$alignment_rule = new AlignmentRule( 'Y' );
 
-		$prorating_rule->by_numeric_month( 1 );
-		$prorating_rule->by_numeric_day_of_the_month( 1 );
+		$alignment_rule->by_numeric_month( 1 );
+		$alignment_rule->by_numeric_day_of_the_month( 1 );
 
 		$start_date = new \DateTimeImmutable( '2020-07-01 00:00:00' );
 
-		$align_date = $prorating_rule->get_date( $start_date );
+		$align_date = $alignment_rule->get_date( $start_date );
 
 		// `z` » The day of the year (starting from 0).
 		$days_in_year = 1 + $start_date->modify( 'last day of december this year' )->format( 'z' );

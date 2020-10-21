@@ -80,14 +80,14 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 		 */
 		$amount = new TaxedMoney( 100, 'USD' );
 
-		$prorating_rule = new ProratingRule( 'Y' );
+		$alignment_rule = new AlignmentRule( 'Y' );
 
-		$prorating_rule->by_numeric_month( 1 );
-		$prorating_rule->by_numeric_day_of_the_month( 1 );
+		$alignment_rule->by_numeric_month( 1 );
+		$alignment_rule->by_numeric_day_of_the_month( 1 );
 
 		$start_date = new \DateTimeImmutable( '2020-07-01 00:00:00' );
 
-		$align_date = $prorating_rule->get_date( $start_date );
+		$align_date = $alignment_rule->get_date( $start_date );
 
 		// Regular phase.
 		$regular_phase = ( new SubscriptionPhaseBuilder() )
@@ -96,13 +96,15 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 			->with_interval( 'P1Y' )
 			->create();
 
-		// Proration phase.
-		$proration_phase = SubscriptionPhase::align( $regular_phase, $align_date, true );
+		// Alignment phase.
+		$alignment_phase = SubscriptionPhase::align( $regular_phase, $align_date, true );
+
+		$alignment_rate = $alignment_phase->get_alignment_rate();
 
 		// Asserts.
-		$this->assertEquals( 50.41, round( $proration_phase->get_amount()->get_value(), 2 ) );
-		$this->assertEquals( '2020-07-01 00:00:00', $proration_phase->get_start_date()->format( 'Y-m-d H:i:s' ) );
-		$this->assertEquals( '2021-01-01 00:00:00', $proration_phase->get_end_date()->format( 'Y-m-d H:i:s' ) );
+		$this->assertEquals( 50.41, round( $alignment_phase->get_amount()->multiply( $alignment_rate )->get_value(), 2 ) );
+		$this->assertEquals( '2020-07-01 00:00:00', $alignment_phase->get_start_date()->format( 'Y-m-d H:i:s' ) );
+		$this->assertEquals( '2021-01-01 00:00:00', $alignment_phase->get_end_date()->format( 'Y-m-d H:i:s' ) );
 
 		$this->assertEquals( 100.00, round( $regular_phase->get_amount()->get_value(), 2 ) );
 		$this->assertEquals( '2021-01-01 00:00:00', $regular_phase->get_start_date()->format( 'Y-m-d H:i:s' ) );
@@ -131,7 +133,7 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 		$period_3 = $phase->next_period( $subscription );
 
 		$this->assertEquals( '2020-01-31 00:00:00', $period_1->get_start_date()->format( 'Y-m-d H:i:s' ) );
-		$this->assertEquals( '2020-02-29 00:00:00', $period_2->get_start_date()->format( 'Y-m-d H:i:s' ) );
+		$this->assertEquals( '2020-03-02 00:00:00', $period_2->get_start_date()->format( 'Y-m-d H:i:s' ) );
 		$this->assertEquals( '2020-03-31 00:00:00', $period_3->get_start_date()->format( 'Y-m-d H:i:s' ) );
 	}
 
