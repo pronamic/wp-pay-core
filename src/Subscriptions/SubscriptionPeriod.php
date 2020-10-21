@@ -90,7 +90,7 @@ class SubscriptionPeriod {
 	 * @return void
 	 */
 	public function set_subscription( Subscription $subscription ) {
-		$this->subscription_id = $subscription_id;
+		$this->subscription = $subscription;
 	}
 
 	/**
