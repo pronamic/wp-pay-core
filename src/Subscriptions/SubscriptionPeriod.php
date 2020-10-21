@@ -23,11 +23,18 @@ use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
  */
 class SubscriptionPeriod {
 	/**
-	 * The subscription this period is part of.
+	 * Subscription.
 	 *
-	 * @var int
+	 * @var Subscription
 	 */
-	private $subscription_id;
+	private $subscription;
+
+	/**
+	 * Phase.
+	 *
+	 * @var SubscriptionPhase
+	 */
+	private $phase;
 
 	/**
 	 * The start date of this period.
@@ -53,35 +60,56 @@ class SubscriptionPeriod {
 	/**
 	 * Construct and initialize subscription period object.
 	 *
-	 * @param int        $subscription_id Subscription ID.
-	 * @param DateTime   $start_date      Start date.
-	 * @param DateTime   $end_date        End date.
-	 * @param TaxedMoney $amount          Taxed amount.
+	 * @param Subscription      $subscription Subscription.
+	 * @param SubscriptionPhase $phase        Subscription phase.
+	 * @param DateTime          $start_date   Start date.
+	 * @param DateTime          $end_date     End date.
+	 * @param TaxedMoney        $amount       Taxed amount.
 	 */
-	public function __construct( $subscription_id, DateTime $start_date, DateTime $end_date, TaxedMoney $amount ) {
-		$this->subscription_id = $subscription_id;
-		$this->start_date      = $start_date;
-		$this->end_date        = $end_date;
-		$this->amount          = $amount;
+	public function __construct( Subscription $subscription, SubscriptionPhase $phase, DateTime $start_date, DateTime $end_date, TaxedMoney $amount ) {
+		$this->subscription = $subscription;
+		$this->phase        = $phase;
+		$this->start_date   = $start_date;
+		$this->end_date     = $end_date;
+		$this->amount       = $amount;
 	}
 
 	/**
-	 * Get subscription ID.
+	 * Get subscription.
 	 *
-	 * @return int
+	 * @return Subscription
 	 */
-	public function get_subscription_id() {
-		return $this->subscription_id;
+	public function get_subscription() {
+		return $this->subscription;
 	}
 
 	/**
-	 * Set subscription ID.
+	 * Set subscription.
 	 *
-	 * @param int $subscription_id Subscription ID.
+	 * @param Subscription $subscription Subscription.
 	 * @return void
 	 */
-	public function set_subscription_id( $subscription_id ) {
+	public function set_subscription( Subscription $subscription ) {
 		$this->subscription_id = $subscription_id;
+	}
+
+	/**
+	 * Get phase.
+	 *
+	 * @return SubscriptionPhase
+	 */
+	public function get_phase() {
+		return $this->phase;
+	}
+
+	/**
+	 * Set phase.
+	 *
+	 * @param SubscriptionPhase $phase Phase.
+	 * @return void
+	 */
+	public function set_phase( SubscriptionPhase $phase ) {
+		$this->phase = $phase;
 	}
 
 	/**
@@ -109,6 +137,15 @@ class SubscriptionPeriod {
 	 */
 	public function get_amount() {
 		return $this->amount;
+	}
+
+	/**
+	 * Is trial period?
+	 *
+	 * @return bool
+	 */
+	public function is_trial() {
+		return $this->phase->is_trial();
 	}
 
 	/**
