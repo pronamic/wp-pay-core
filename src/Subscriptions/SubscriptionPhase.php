@@ -138,6 +138,15 @@ class SubscriptionPhase implements \JsonSerializable {
 	}
 
 	/**
+	 * Get subscription.
+	 *
+	 * @return Subscription
+	 */
+	public function get_subscription() {
+		return $this->subscription;
+	}
+
+	/**
 	 * Get start date.
 	 *
 	 * @return DateTimeImmutable
@@ -455,6 +464,9 @@ class SubscriptionPhase implements \JsonSerializable {
 	 */
 	public function jsonSerialize() {
 		return (object) array(
+			'subscription'      => (object) array(
+				'$ref' => $subscription->get_id(),
+			),
 			'start_date'        => $this->start_date->format( \DATE_ATOM ),
 			'interval'          => $this->interval->get_specification(),
 			'amount'            => MoneyJsonTransformer::to_json( $this->amount ),
@@ -565,13 +577,12 @@ class SubscriptionPhase implements \JsonSerializable {
 			throw new \Exception( 'Could not calculate the total number of days between the phase start date and the next alignment date.' );
 		}
 
-		$alignment_phase = ( new SubscriptionPhaseBuilder() )
-			->with_start_date( $start_date )
-			->with_amount( $phase->get_amount() )
-			->with_interval( 'P' . $alignment_difference->days . 'D' )
-			->with_total_periods( 1 )
-			->with_alignment_rate( $alignment_difference->days / $regular_difference->days )
-			->create();
+		$alignment_interval = new SubscriptionInterval( 'P' . $alignment_difference->days . 'D' );
+
+		$alignment_phase = new static( $phase->get_subscription(), $start_date, $alignment_interval, $phase->get_amount() );
+
+		$alignment_phase->set_total_periods( 1 );
+		$alignment_phase->set_alignment_rate( $alignment_difference->days / $regular_difference->days );
 
 		// Remove one period from regular phase.
 		$total_periods = $phase->get_total_periods();
