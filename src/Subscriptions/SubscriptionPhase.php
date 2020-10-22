@@ -533,45 +533,54 @@ class SubscriptionPhase implements \JsonSerializable {
 			throw new \InvalidArgumentException( 'JSON value must be an object.' );
 		}
 
-		$builder = new SubscriptionPhaseBuilder();
-
-		if ( property_exists( $json, 'start_date' ) ) {
-			$builder->with_start_date( new \DateTimeImmutable( $json->start_date ) );
+		if ( ! isset( $json->subscription ) ) {
+			throw new \InvalidArgumentException( 'Object must contain `subscription` property.' );
 		}
 
-		if ( property_exists( $json, 'interval' ) ) {
-			$builder->with_interval( $json->interval );
+		if ( ! isset( $json->start_date ) ) {
+			throw new \InvalidArgumentException( 'Object must contain `start_date` property.' );
 		}
 
-		if ( property_exists( $json, 'amount' ) ) {
-			$builder->with_amount( TaxedMoneyJsonTransformer::from_json( $json->amount ) );
+		if ( ! isset( $json->interval ) ) {
+			throw new \InvalidArgumentException( 'Object must contain `interval` property.' );
 		}
+
+		if ( ! isset( $json->amount ) ) {
+			throw new \InvalidArgumentException( 'Object must contain `amount` property.' );
+		}
+
+		$phase = new static(
+			$json->subscription,
+			new \DateTimeImmutable( $json->start_date ),
+			new SubscriptionInterval( $json->interval ),
+			TaxedMoneyJsonTransformer::from_json( $json->amount )
+		);
 
 		if ( property_exists( $json, 'total_periods' ) ) {
-			$builder->with_total_periods( $json->total_periods );
+			$phase->set_total_periods( $json->total_periods );
 		}
 
 		if ( property_exists( $json, 'periods_created' ) ) {
-			$builder->with_periods_created( $json->periods_created );
+			$phase->set_periods_created( $json->periods_created );
 		}
 
 		if ( property_exists( $json, 'alignment_rate' ) ) {
-			$builder->with_alignment_rate( \floatval( $json->alignment_rate ) );
+			$phase->set_alignment_rate( \floatval( $json->alignment_rate ) );
 		}
 
 		if ( property_exists( $json, 'is_prorated' ) ) {
-			$builder->with_proration( \boolval( $json->is_prorated ) );
+			$phase->set_prorated( \boolval( $json->is_prorated ) );
 		}
 
 		if ( property_exists( $json, 'is_trial' ) ) {
-			$builder->with_trial( \boolval( $json->is_trial ) );
+			$phase->set_trial( \boolval( $json->is_trial ) );
 		}
 
 		if ( property_exists( $json, 'canceled_at' ) ) {
-			$builder->with_canceled_at( new \DateTimeImmutable( $json->canceled_at ) );
+			$phase->set_canceled_at( new \DateTimeImmutable( $json->canceled_at ) );
 		}
 
-		return $builder->create();
+		return $phase;
 	}
 
 	/**
