@@ -565,7 +565,7 @@ class SubscriptionPhase implements \JsonSerializable {
 		}
 
 		if ( property_exists( $json, 'alignment_rate' ) ) {
-			$phase->set_alignment_rate( \floatval( $json->alignment_rate ) );
+			$phase->set_alignment_rate( $json->alignment_rate );
 		}
 
 		if ( property_exists( $json, 'is_prorated' ) ) {
