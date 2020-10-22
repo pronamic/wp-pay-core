@@ -163,11 +163,33 @@ class SubscriptionPeriod {
 	 * @return object
 	 */
 	public function to_json() {
+		$subscription = $this->phase->get_subscription();
+
 		$json = (object) array(
-			'subscription_id' => $this->subscription_id,
-			'start_date'      => $this->start_date->format( \DATE_ATOM ),
-			'end_date'        => $this->end_date->format( \DATE_ATOM ),
-			'amount'          => TaxedMoneyJsonTransformer::to_json( $this->amount ),
+			'subscription' => (object) array(
+				'$ref' => \rest_url(
+					\sprintf(
+						'/%s/%s/%d',
+						'pronamic-pay/v1',
+						'subscriptions',
+						$subscription->get_id()
+					)
+				),
+			),
+			'phase'      => (object) array(
+				'$ref' => \rest_url(
+					\sprintf(
+						'/%s/%s/%d/%s/phases/%d',
+						'pronamic-pay/v1',
+						'subscriptions',
+						$subscription->get_id(),
+						$this->phase->get_sequence_number()
+					)
+				),
+			),
+			'start_date' => $this->start_date->format( \DATE_ATOM ),
+			'end_date'   => $this->end_date->format( \DATE_ATOM ),
+			'amount'     => TaxedMoneyJsonTransformer::to_json( $this->amount ),
 		);
 
 		return $json;

@@ -31,6 +31,13 @@ class SubscriptionPhase implements \JsonSerializable {
 	 */
 	private $subscription;
 
+	/**	
+	 * The sequence number.	
+	 *	
+	 * @var int|null
+	 */	
+	private $sequence_number;
+
 	/**
 	 * Canceled at.
 	 *
@@ -144,6 +151,25 @@ class SubscriptionPhase implements \JsonSerializable {
 	 */
 	public function get_subscription() {
 		return $this->subscription;
+	}
+
+	/**	
+	 * Get sequence number.	
+	 *	
+	 * @return int|null
+	 */	
+	public function get_sequence_number() {	
+		return $this->sequence_number;	
+	}	
+
+	/**	
+	 * Set sequence number.	
+	 *	
+	 * @param int $sequence_number Sequence number.	
+	 * @return void	
+	 */	
+	public function set_sequence_number( $sequence_number ) {	
+		$this->sequence_number = $sequence_number;	
 	}
 
 	/**
@@ -465,8 +491,16 @@ class SubscriptionPhase implements \JsonSerializable {
 	public function jsonSerialize() {
 		return (object) array(
 			'subscription'      => (object) array(
-				'$ref' => $subscription->get_id(),
+				'$ref' => \rest_url(
+					\sprintf(
+						'/%s/%s/%d',
+						'pronamic-pay/v1',
+						'subscriptions',
+						$this->subscription->get_id()
+					)
+				),
 			),
+			'sequence_number'   => $this->get_sequence_number(),
 			'start_date'        => $this->start_date->format( \DATE_ATOM ),
 			'interval'          => $this->interval->get_specification(),
 			'amount'            => MoneyJsonTransformer::to_json( $this->amount ),

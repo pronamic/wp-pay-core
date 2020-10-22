@@ -45,6 +45,8 @@ trait SubscriptionPhasesTrait {
 	 */
 	public function add_phase( SubscriptionPhase $phase ) {
 		$this->phases[] = $phase;
+
+		$phase->set_sequence_number( \count( $this->phases ) );
 	}
 
 	/**
