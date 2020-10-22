@@ -132,8 +132,8 @@ class SubscriptionPeriod {
 			throw new \InvalidArgumentException( 'JSON value must be an object.' );
 		}
 
-		if ( ! isset( $json->subscription_id ) ) {
-			throw new \InvalidArgumentException( 'Object must contain `subscription_id` property.' );
+		if ( ! isset( $json->phase ) ) {
+			throw new \InvalidArgumentException( 'Object must contain `phase` property.' );
 		}
 
 		if ( ! isset( $json->start_date ) ) {
