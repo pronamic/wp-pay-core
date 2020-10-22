@@ -91,7 +91,7 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 
 						$end_date = $phase->get_end_date();
 
-						echo esc_html( null === $end_date ? '—' : ( new \Pronamic\WordPress\DateTime\DateTime( '@' . $end_date->getTimestamp() ) )->format_i18n() );
+						echo esc_html( null === $end_date ? '∞' : ( new \Pronamic\WordPress\DateTime\DateTime( '@' . $end_date->getTimestamp() ) )->format_i18n() );
 
 						?>
 					</td>
