@@ -25,6 +25,13 @@ use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
  */
 class SubscriptionPhase implements \JsonSerializable {
 	/**
+	 * Subscription.
+	 *
+	 * @var Subscription
+	 */
+	private $subscription;
+
+	/**
 	 * Canceled at.
 	 *
 	 * @var DateTimeImmutable|null
@@ -112,15 +119,17 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Construct subscription phase.
 	 *
-	 * @param DateTimeImmutable    $start_date Start date.
-	 * @param SubscriptionInterval $interval   Interval.
-	 * @param TaxedMoney           $amount     Amount.
+	 * @param Subscription         $subscription Subscription.
+	 * @param DateTimeImmutable    $start_date   Start date.
+	 * @param SubscriptionInterval $interval     Interval.
+	 * @param TaxedMoney           $amount       Amount.
 	 * @return void
 	 */
-	public function __construct( DateTimeImmutable $start_date, SubscriptionInterval $interval, TaxedMoney $amount ) {
-		$this->start_date = $start_date;
-		$this->interval   = $interval;
-		$this->amount     = $amount;
+	public function __construct( Subscription $subscription, DateTimeImmutable $start_date, SubscriptionInterval $interval, TaxedMoney $amount ) {
+		$this->subscription = $subscription;
+		$this->start_date   = $start_date;
+		$this->interval     = $interval;
+		$this->amount       = $amount;
 
 		$this->periods_created = 0;
 
@@ -397,10 +406,9 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Get next period.
 	 *
-	 * @param Subscription $subscription Subscription.
 	 * @return SubscriptionPeriod|null
 	 */
-	public function get_next_period( Subscription $subscription ) {
+	public function get_next_period() {
 		if ( $this->all_periods_created() ) {
 			return null;
 		}
@@ -414,7 +422,6 @@ class SubscriptionPhase implements \JsonSerializable {
 		$end = $this->add_interval( $start );
 
 		$period = new SubscriptionPeriod(
-			$subscription,
 			$this,
 			new DateTime( $start->format( \DateTimeInterface::ATOM ) ),
 			new DateTime( $end->format( \DateTimeInterface::ATOM ) ),
@@ -427,11 +434,10 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Next period.
 	 *
-	 * @param Subscription $subscription Subscription.
 	 * @return SubscriptionPeriod|null
 	 */
-	public function next_period( Subscription $subscription ) {
-		$next_period = $this->get_next_period( $subscription );
+	public function next_period() {
+		$next_period = $this->get_next_period();
 
 		if ( null === $next_period ) {
 			return null;

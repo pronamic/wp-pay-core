@@ -551,7 +551,7 @@ class Subscription extends LegacyPaymentInfo {
 			throw new \UnexpectedValueException( 'Cannot create new subscription period for subscription without phase.' );
 		}
 
-		$period = $this->next_period( $this );
+		$period = $this->next_period();
 
 		// Set subscription end date.
 		if ( null !== $period ) {

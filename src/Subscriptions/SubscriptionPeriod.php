@@ -23,13 +23,6 @@ use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
  */
 class SubscriptionPeriod {
 	/**
-	 * Subscription.
-	 *
-	 * @var Subscription
-	 */
-	private $subscription;
-
-	/**
 	 * Phase.
 	 *
 	 * @var SubscriptionPhase
@@ -60,37 +53,16 @@ class SubscriptionPeriod {
 	/**
 	 * Construct and initialize subscription period object.
 	 *
-	 * @param Subscription      $subscription Subscription.
 	 * @param SubscriptionPhase $phase        Subscription phase.
 	 * @param DateTime          $start_date   Start date.
 	 * @param DateTime          $end_date     End date.
 	 * @param TaxedMoney        $amount       Taxed amount.
 	 */
-	public function __construct( Subscription $subscription, SubscriptionPhase $phase, DateTime $start_date, DateTime $end_date, TaxedMoney $amount ) {
-		$this->subscription = $subscription;
-		$this->phase        = $phase;
-		$this->start_date   = $start_date;
-		$this->end_date     = $end_date;
-		$this->amount       = $amount;
-	}
-
-	/**
-	 * Get subscription.
-	 *
-	 * @return Subscription
-	 */
-	public function get_subscription() {
-		return $this->subscription;
-	}
-
-	/**
-	 * Set subscription.
-	 *
-	 * @param Subscription $subscription Subscription.
-	 * @return void
-	 */
-	public function set_subscription( Subscription $subscription ) {
-		$this->subscription = $subscription;
+	public function __construct( SubscriptionPhase $phase, DateTime $start_date, DateTime $end_date, TaxedMoney $amount ) {
+		$this->phase      = $phase;
+		$this->start_date = $start_date;
+		$this->end_date   = $end_date;
+		$this->amount     = $amount;
 	}
 
 	/**

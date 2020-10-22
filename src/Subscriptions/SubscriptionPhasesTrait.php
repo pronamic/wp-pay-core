@@ -176,32 +176,30 @@ trait SubscriptionPhasesTrait {
 	/**
 	 * Get the next period.
 	 *
-	 * @param Subscription $subscription Subscription.
 	 * @return SubscriptionPeriod|null
 	 */
-	public function get_next_period( Subscription $subscription ) {
+	public function get_next_period() {
 		$current_phase = $this->get_current_phase();
 
 		if ( null === $current_phase ) {
 			return null;
 		}
 
-		return $current_phase->get_next_period( $subscription );
+		return $current_phase->get_next_period();
 	}
 
 	/**
 	 * Next period.
 	 *
-	 * @param Subscription $subscription Subscription.
 	 * @return SubscriptionPeriod|null
 	 */
-	public function next_period( Subscription $subscription ) {
+	public function next_period() {
 		$current_phase = $this->get_current_phase();
 
 		if ( null === $current_phase ) {
 			return null;
 		}
 
-		return $current_phase->next_period( $subscription );
+		return $current_phase->next_period();
 	}
 }
