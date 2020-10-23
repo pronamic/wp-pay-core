@@ -148,13 +148,33 @@ class SubscriptionPeriod {
 			throw new \InvalidArgumentException( 'Object must contain `amount` property.' );
 		}
 
-		$start_date = new DateTime( $json->start_date );
+		/**
+		 * Phase by reference.
+		 */
+		$reference_property = '$ref';
 
-		$end_date = new DateTime( $json->end_date );
+		if ( ! \property_exists( $json->phase, $reference_property ) ) {
+			throw new \InvalidArgumentException( 'The `phase` property must contain a `$ref` property.' );
+		}
+
+		$phase_url = $json->phase->$reference_property;
+
+		$response = \rest_do_request( \WP_REST_Request::from_url( $phase_url ) );
+
+		$data = $response->get_data();
+
+		if ( ! $data instanceof SubscriptionPhase ) {
+			throw new \InvalidArgumentException( 'Unable to find subscription phase.' );
+		}
+
+		$phase = $data;
+
+		$start_date = new DateTime( $json->start_date );
+		$end_date   = new DateTime( $json->end_date );
 
 		$amount = TaxedMoneyJsonTransformer::from_json( $json->amount );
 
-		return new self( $json->subscription_id, $start_date, $end_date, $amount );
+		return new self( $phase, $start_date, $end_date, $amount );
 	}
 
 	/**
@@ -163,26 +183,14 @@ class SubscriptionPeriod {
 	 * @return object
 	 */
 	public function to_json() {
-		$subscription = $this->phase->get_subscription();
-
 		$json = (object) array(
-			'subscription' => (object) array(
-				'$ref' => \rest_url(
-					\sprintf(
-						'/%s/%s/%d',
-						'pronamic-pay/v1',
-						'subscriptions',
-						$subscription->get_id()
-					)
-				),
-			),
 			'phase'      => (object) array(
 				'$ref' => \rest_url(
 					\sprintf(
-						'/%s/%s/%d/%s/phases/%d',
+						'/%s/%s/%d/phases/%d',
 						'pronamic-pay/v1',
 						'subscriptions',
-						$subscription->get_id(),
+						$this->phase->get_subscription()->get_id(),
 						$this->phase->get_sequence_number()
 					)
 				),
