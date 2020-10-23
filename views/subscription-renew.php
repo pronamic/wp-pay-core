@@ -47,21 +47,12 @@ $phase = $subscription->get_current_phase();
 					<hr />
 
 					<dl>
-						<?php
-
-						$interval = $phase->get_interval();
-
-						if ( null !== $interval ) :
-							?>
-
-							<dt>
-								<?php esc_html_e( 'Subscription Length:', 'pronamic_ideal' ); ?>
-							</dt>
-							<dd>
-								<?php echo esc_html( strval( Util::format_date_interval( $phase->get_interval() ) ) ); ?>
-							</dd>
-
-						<?php endif; ?>
+						<dt>
+							<?php esc_html_e( 'Subscription Length:', 'pronamic_ideal' ); ?>
+						</dt>
+						<dd>
+							<?php echo esc_html( strval( Util::format_date_interval( $phase->get_interval() ) ) ); ?>
+						</dd>
 
 						<dt>
 							<?php esc_html_e( 'Amount:', 'pronamic_ideal' ); ?>
