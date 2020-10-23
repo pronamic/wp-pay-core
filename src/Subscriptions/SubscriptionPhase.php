@@ -31,11 +31,11 @@ class SubscriptionPhase implements \JsonSerializable {
 	 */
 	private $subscription;
 
-	/**	
-	 * The sequence number.	
-	 *	
+	/**
+	 * The sequence number.
+	 *
 	 * @var int|null
-	 */	
+	 */
 	private $sequence_number;
 
 	/**
@@ -153,23 +153,23 @@ class SubscriptionPhase implements \JsonSerializable {
 		return $this->subscription;
 	}
 
-	/**	
-	 * Get sequence number.	
-	 *	
+	/**
+	 * Get sequence number.
+	 *
 	 * @return int|null
-	 */	
-	public function get_sequence_number() {	
-		return $this->sequence_number;	
-	}	
+	 */
+	public function get_sequence_number() {
+		return $this->sequence_number;
+	}
 
-	/**	
-	 * Set sequence number.	
-	 *	
-	 * @param int $sequence_number Sequence number.	
-	 * @return void	
-	 */	
-	public function set_sequence_number( $sequence_number ) {	
-		$this->sequence_number = $sequence_number;	
+	/**
+	 * Set sequence number.
+	 *
+	 * @param int $sequence_number Sequence number.
+	 * @return void
+	 */
+	public function set_sequence_number( $sequence_number ) {
+		$this->sequence_number = $sequence_number;
 	}
 
 	/**
@@ -550,7 +550,7 @@ class SubscriptionPhase implements \JsonSerializable {
 		 *
 		 * @todo Remove on release.
 		 */
-		if ( \is_object( $json->interval ) ) {
+		if ( \is_object( $json->interval ) && isset( $json->interval->value, $json->interval->unit ) ) {
 			$json->interval = 'P' . $json->interval->value . $json->interval->unit;
 
 			if ( 'P' === $json->interval ) {
@@ -562,7 +562,7 @@ class SubscriptionPhase implements \JsonSerializable {
 			throw new \InvalidArgumentException( 'Object must contain `amount` property.' );
 		}
 
-		$phase = new static(
+		$phase = new self(
 			$json->subscription,
 			new \DateTimeImmutable( $json->start_date ),
 			new SubscriptionInterval( $json->interval ),
@@ -635,7 +635,7 @@ class SubscriptionPhase implements \JsonSerializable {
 
 		$alignment_interval = new SubscriptionInterval( 'P' . $alignment_difference->days . 'D' );
 
-		$alignment_phase = new static( $phase->get_subscription(), $start_date, $alignment_interval, $phase->get_amount() );
+		$alignment_phase = new self( $phase->get_subscription(), $start_date, $alignment_interval, $phase->get_amount() );
 
 		$alignment_phase->set_total_periods( 1 );
 		$alignment_phase->set_alignment_rate( $alignment_difference->days / $regular_difference->days );

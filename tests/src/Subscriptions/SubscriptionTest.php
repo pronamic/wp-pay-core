@@ -196,7 +196,7 @@ class SubscriptionTest extends WP_UnitTestCase {
 		$phase = new SubscriptionPhase(
 			$subscription,
 			new \DateTimeImmutable( '2005-05-05' ),
-			new SubscriptionInterval( 'P1M'),
+			new SubscriptionInterval( 'P1M' ),
 			new TaxedMoney( 89.95, 'EUR' )
 		);
 
