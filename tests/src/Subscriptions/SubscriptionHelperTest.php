@@ -48,16 +48,18 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 	 * Test calculate end date.
 	 */
 	public function test_calculate_end_date() {
-		$phase = ( new SubscriptionPhaseBuilder() )
-			->with_start_date( new \DateTimeImmutable( '2005-05-05 00:00:00' ) )
-			->with_interval( 'P1M' )
-			->with_total_periods( 12 )
-			->with_amount( new TaxedMoney( 5, 'EUR' ) )
-			->create();
+		$subscription = new Subscription();
 
-		$subscription = ( new SubscriptionBuilder() )
-			->with_phase( $phase )
-			->create();
+		$phase = new SubscriptionPhase(
+			$subscription,
+			new \DateTimeImmutable( '2005-05-05 00:00:00' ),
+			new SubscriptionInterval( 'P1M' ),
+			new TaxedMoney( 5, 'EUR' )
+		);
+
+		$phase->set_total_periods( 12 );
+
+		$subscription->add_phase( $phase );
 
 		// Calculate.
 		$end_date = SubscriptionHelper::calculate_end_date( $subscription );
@@ -140,12 +142,14 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 		$subscription->frequency = $recurrences;
 
 		// Phase.
-		$phase = ( new SubscriptionPhaseBuilder() )
-			->with_start_date( new \DateTimeImmutable( $start_date ) )
-			->with_amount( new TaxedMoney( 100, 'USD' ) )
-			->with_interval( $interval_spec )
-			->with_total_periods( $recurrences )
-			->create();
+		$phase = new SubscriptionPhase(
+			$subscription,
+			new \DateTimeImmutable( $start_date ),
+			new SubscriptionInterval( $interval_spec ),
+			new TaxedMoney( 100, 'USD' )
+		);
+
+		$phase->set_total_periods( $recurrences );
 
 		$subscription->add_phase( $phase );
 

@@ -396,13 +396,13 @@ class SubscriptionPhase implements \JsonSerializable {
 	}
 
 	/**
-	 * Get interval date.
+	 * Get interval.
 	 *
 	 * @link https://www.php.net/manual/en/class.dateinterval.php
 	 * @link https://www.php.net/manual/en/dateinterval.construct.php
 	 * @return SubscriptionInterval
 	 */
-	public function get_date_interval() {
+	public function get_interval() {
 		return $this->interval;
 	}
 
@@ -607,7 +607,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	public static function align( self $phase, DateTimeImmutable $align_date ) {
 		$start_date = $phase->get_start_date();
 
-		$next_date = $start_date->add( $phase->get_date_interval() );
+		$next_date = $start_date->add( $phase->get_interval() );
 
 		$regular_difference = $start_date->diff( $next_date, true );
 

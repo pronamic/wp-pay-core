@@ -313,13 +313,13 @@ class AdminSubscriptionPostType {
 
 				elseif ( null === $total_periods ) :
 					// Infinite.
-					echo esc_html( strval( Util::format_recurrences( $phase->get_date_interval() ) ) );
+					echo esc_html( strval( Util::format_recurrences( $phase->get_interval() ) ) );
 
 				else :
 					// Fixed number of recurrences.
 					printf(
 						'%s<br />%s',
-						esc_html( strval( Util::format_recurrences( $phase->get_date_interval() ) ) ),
+						esc_html( strval( Util::format_recurrences( $phase->get_interval() ) ) ),
 						esc_html( strval( Util::format_frequency( $total_periods ) ) )
 					);
 

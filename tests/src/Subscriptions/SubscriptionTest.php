@@ -189,17 +189,18 @@ class SubscriptionTest extends WP_UnitTestCase {
 	 * @return Subscription
 	 */
 	private function get_monthly_subscription() {
-		// Phase.
-		$phase = ( new SubscriptionPhaseBuilder() )
-			->with_start_date( new \DateTimeImmutable( '2005-05-05' ) )
-			->with_amount( new TaxedMoney( 89.95, 'EUR' ) )
-			->with_interval( 'P1M' )
-			->create();
+		// Subscription.
+		$subscription = new Subscription();
 
-		// Build subscription.
-		$subscription = ( new SubscriptionBuilder() )
-			->with_phase( $phase )
-			->create();
+		// Phase.
+		$phase = new SubscriptionPhase(
+			$subscription,
+			new \DateTimeImmutable( '2005-05-05' ),
+			new SubscriptionInterval( 'P1M'),
+			new TaxedMoney( 89.95, 'EUR' )
+		);
+
+		$subscription->add_phase( $phase );
 
 		// Dates.
 		$subscription->set_end_date( new DateTime( '2005-06-05' ) );
@@ -218,7 +219,7 @@ class SubscriptionTest extends WP_UnitTestCase {
 
 		$period = $subscription->new_period();
 
-		$this->assertEquals( $subscription, $period->get_subscription() );
+		$this->assertEquals( $subscription, $period->get_phase()->get_subscription() );
 		$this->assertEquals( '2005-05-05', $period->get_start_date()->format( 'Y-m-d' ) );
 		$this->assertEquals( '2005-06-05', $period->get_end_date()->format( 'Y-m-d' ) );
 		$this->assertEquals( 89.95, $period->get_amount()->get_value() );

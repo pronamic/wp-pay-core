@@ -236,7 +236,7 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 			return null;
 		}
 
-		return $phase->get_date_interval();
+		return $phase->get_interval();
 	}
 
 	/**

@@ -109,13 +109,13 @@ $phase = $subscription->get_display_phase();
 
 			elseif ( $phase->is_infinite() ) :
 				// Infinite.
-				echo esc_html( strval( Util::format_recurrences( $phase->get_date_interval() ) ) );
+				echo esc_html( strval( Util::format_recurrences( $phase->get_interval() ) ) );
 
 			else :
 				// Fixed number of recurrences.
 				printf(
 					'%s (%s)',
-					esc_html( strval( Util::format_recurrences( $phase->get_date_interval() ) ) ),
+					esc_html( strval( Util::format_recurrences( $phase->get_interval() ) ) ),
 					esc_html( strval( Util::format_frequency( $phase->get_total_periods() ) ) )
 				);
 

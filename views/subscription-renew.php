@@ -49,7 +49,7 @@ $phase = $subscription->get_current_phase();
 					<dl>
 						<?php
 
-						$interval = $phase->get_date_interval();
+						$interval = $phase->get_interval();
 
 						if ( null !== $interval ) :
 							?>
@@ -58,7 +58,7 @@ $phase = $subscription->get_current_phase();
 								<?php esc_html_e( 'Subscription Length:', 'pronamic_ideal' ); ?>
 							</dt>
 							<dd>
-								<?php echo esc_html( strval( Util::format_date_interval( $phase->get_date_interval() ) ) ); ?>
+								<?php echo esc_html( strval( Util::format_date_interval( $phase->get_interval() ) ) ); ?>
 							</dd>
 
 						<?php endif; ?>
