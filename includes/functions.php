@@ -39,9 +39,7 @@ function get_pronamic_payment( $post_id ) {
 		return null;
 	}
 
-	$payment = new Payment( $post_id );
-
-	return $payment;
+	return pronamic_pay_plugin()->payments_data_store->get_payment( $post_id );
 }
 
 /**
