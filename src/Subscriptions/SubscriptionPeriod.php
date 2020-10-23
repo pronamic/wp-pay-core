@@ -159,7 +159,18 @@ class SubscriptionPeriod {
 
 		$phase_url = $json->phase->$reference_property;
 
-		$response = \rest_do_request( \WP_REST_Request::from_url( $phase_url ) );
+		$request = \WP_REST_Request::from_url( $phase_url );
+
+		if ( false === $request ) {
+			throw new \Exception(
+				\sprintf(
+					'Unable to convert `$ref` property to REST request: %s.',
+					$phase_url
+				)
+			);
+		}
+
+		$response = \rest_do_request( $request );
 
 		$data = $response->get_data();
 
