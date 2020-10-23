@@ -164,7 +164,12 @@ class SubscriptionPeriod {
 		$data = $response->get_data();
 
 		if ( ! $data instanceof SubscriptionPhase ) {
-			throw new \InvalidArgumentException( 'Unable to find subscription phase.' );
+			throw new \InvalidArgumentException(
+				\sprintf(
+					'Unable to find subscription phase by `$ref`: %s.',
+					$phase_url
+				)
+			);
 		}
 
 		$phase = $data;
