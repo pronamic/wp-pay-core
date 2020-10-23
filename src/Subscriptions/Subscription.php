@@ -24,7 +24,7 @@ use Pronamic\WordPress\Pay\Payments\PaymentInfoHelper;
  * @version 2.4.0
  * @since   1.0.0
  */
-class Subscription extends LegacyPaymentInfo {
+class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 	use SubscriptionPhasesTrait;
 
 	/**
@@ -653,5 +653,15 @@ class Subscription extends LegacyPaymentInfo {
 		$object = (object) $properties;
 
 		return $object;
+	}
+
+	/**
+	 * JSON serialize.
+	 *
+	 * @link https://www.php.net/manual/en/jsonserializable.jsonserialize.php
+	 * @return object
+	 */
+	public function jsonSerialize() {
+		return $this->get_json();
 	}
 }

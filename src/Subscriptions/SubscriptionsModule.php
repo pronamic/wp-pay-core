@@ -1050,6 +1050,6 @@ class SubscriptionsModule {
 			);
 		}
 
-		return $subscription->get_json();
+		return $subscription;
 	}
 }
