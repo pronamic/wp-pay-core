@@ -204,4 +204,23 @@ trait SubscriptionPhasesTrait {
 
 		return $current_phase->next_period();
 	}
+
+	/**
+	 * Get phase by sequence number.
+	 *
+	 * @param int $sequence_number Sequence number.
+	 * @return SubscriptionPhase|null
+	 */
+	public function get_phase_by_sequence_number( $sequence_number ) {
+		/**
+		 * PHP arrays are zero-based indexed, sequence number starts from 1.
+		 */
+		$key = $sequence_number - 1;
+
+		if ( array_key_exists( $key, $this->phases ) ) {
+			return $this->phases[ $key ];
+		}
+
+		return null;
+	}
 }
