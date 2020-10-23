@@ -62,7 +62,7 @@ trait SubscriptionPhasesTrait {
 
 		$interval = new SubscriptionInterval( $interval_spec );
 
-		$phase = new SubscriptionPhase( $start, $interval, $amount );
+		$phase = new SubscriptionPhase( $this, $start, $interval, $amount );
 
 		$this->add_phase( $phase );
 
