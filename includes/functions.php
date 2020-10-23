@@ -27,18 +27,6 @@ function pronamic_pay_plugin() {
  * @return Payment|null
  */
 function get_pronamic_payment( $post_id ) {
-	if ( empty( $post_id ) ) {
-		return null;
-	}
-
-	$post_id = (int) $post_id;
-
-	$post_type = get_post_type( $post_id );
-
-	if ( 'pronamic_payment' !== $post_type ) {
-		return null;
-	}
-
 	return pronamic_pay_plugin()->payments_data_store->get_payment( $post_id );
 }
 

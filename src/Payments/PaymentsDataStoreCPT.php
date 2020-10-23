@@ -89,6 +89,18 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 */
 	public function get_payment( $id ) {
 		if ( ! isset( $this->payments[ $id ] ) ) {
+			if ( empty( $id ) ) {
+				return null;
+			}
+
+			$id = (int) $id;
+
+			$post_type = get_post_type( $id );
+
+			if ( 'pronamic_payment' !== $post_type ) {
+				return null;
+			}
+
 			$payment = new Payment();
 
 			$payment->set_id( $id );
