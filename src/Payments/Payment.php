@@ -793,7 +793,7 @@ class Payment extends LegacyPayment {
 					continue;
 				}
 
-				$payment->add_period( SubscriptionPeriod::from_json( $period ) );
+				$payment->add_period( SubscriptionPeriod::from_json( $json_period ) );
 			}
 		}
 
