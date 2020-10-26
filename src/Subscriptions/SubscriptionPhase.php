@@ -590,7 +590,9 @@ class SubscriptionPhase implements \JsonSerializable {
 		}
 
 		if ( property_exists( $json, 'canceled_at' ) ) {
-			$phase->set_canceled_at( new \DateTimeImmutable( $json->canceled_at ) );
+			if ( null !== $json->canceled_at ) {
+				$phase->set_canceled_at( new \DateTimeImmutable( $json->canceled_at ) );
+			}
 		}
 
 		return $phase;
