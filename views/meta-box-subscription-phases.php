@@ -31,8 +31,8 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 				<th scope="col"><?php esc_html_e( 'End Date', 'pronamic_ideal' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Next Date', 'pronamic_ideal' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Periods created', 'pronamic_ideal' ); ?></th>
-				<th scope="col"><?php esc_html_e( 'Trial?', 'pronamic_ideal' ); ?></th>
-				<th scope="col"><?php esc_html_e( 'Prorated?', 'pronamic_ideal' ); ?></th>
+				<th scope="col"><?php esc_html_e( 'Trial', 'pronamic_ideal' ); ?></th>
+				<th scope="col"><?php esc_html_e( 'Prorated', 'pronamic_ideal' ); ?></th>
 			</tr>
 		</thead>
 
