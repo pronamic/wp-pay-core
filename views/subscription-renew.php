@@ -12,6 +12,8 @@ use Pronamic\WordPress\Pay\Util;
 
 $phase = $subscription->get_current_phase();
 
+$expiry_date = $subscription->get_expiry_date();
+
 ?>
 <!DOCTYPE html>
 
@@ -30,19 +32,23 @@ $phase = $subscription->get_current_phase();
 				<form id="pronamic_ideal_form" name="pronamic_ideal_form" method="post">
 					<h1><?php esc_html_e( 'Subscription Renewal', 'pronamic_ideal' ); ?></h1>
 
-					<p>
-						<?php
+					<?php if ( null !== $expiry_date ) : ?>
 
-						echo esc_html(
-							sprintf(
-								/* translators: %s: expiry date */
-								__( 'The subscription expires at %s.', 'pronamic_ideal' ),
-								$subscription->get_expiry_date()->format_i18n()
-							)
-						);
+						<p>
+							<?php
 
-						?>
-					</p>
+							echo esc_html(
+								sprintf(
+									/* translators: %s: expiry date */
+									__( 'The subscription expires at %s.', 'pronamic_ideal' ),
+									$expiry_date->format_i18n()
+								)
+							);
+
+							?>
+						</p>
+
+					<?php endif; ?>
 
 					<hr />
 
