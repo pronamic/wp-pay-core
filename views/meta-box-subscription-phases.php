@@ -82,7 +82,7 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 
 						$start_date = $phase->get_start_date();
 
-						echo esc_html( null === $start_date ? '—' : ( new \Pronamic\WordPress\DateTime\DateTime( '@' . $start_date->getTimestamp() ) )->format_i18n() );
+						echo esc_html( ( new \Pronamic\WordPress\DateTime\DateTime( '@' . $start_date->getTimestamp() ) )->format_i18n() );
 
 						?>
 					</td>
