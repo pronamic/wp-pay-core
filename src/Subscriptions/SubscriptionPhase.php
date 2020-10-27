@@ -205,6 +205,13 @@ class SubscriptionPhase implements \JsonSerializable {
 		}
 
 		/**
+		 * Check whether phase has been canceled, if so there is no next date.
+		 */
+		if ( $this->is_canceled() ) {
+			return null;
+		}
+
+		/**
 		 * If there are periods created we add these created periods.
 		 */
 		return $this->add_interval( $this->start_date, $this->periods_created );
