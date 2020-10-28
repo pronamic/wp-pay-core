@@ -88,11 +88,29 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * Get subscription by ID.
 	 *
 	 * @param int $id Payment ID.
-	 * @return Subscription
+	 * @return Subscription|null
 	 */
-	private function get_subscription( $id ) {
+	public function get_subscription( $id ) {
 		if ( ! isset( $this->subscriptions[ $id ] ) ) {
-			$this->subscriptions[ $id ] = get_pronamic_subscription( $id );
+			if ( empty( $id ) ) {
+				return null;
+			}
+
+			$id = (int) $id;
+
+			$post_type = \get_post_type( $id );
+
+			if ( 'pronamic_pay_subscr' !== $post_type ) {
+				return null;
+			}
+
+			$subscription = new Subscription();
+
+			$subscription->set_id( $id );
+
+			$this->subscriptions[ $id ] = $subscription;
+
+			$this->read( $subscription );
 		}
 
 		return $this->subscriptions[ $id ];

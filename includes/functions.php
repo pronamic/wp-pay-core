@@ -147,21 +147,7 @@ function get_pronamic_payments_by_user_id( $user_id = null ) {
  * @return Subscription|null
  */
 function get_pronamic_subscription( $post_id ) {
-	if ( empty( $post_id ) ) {
-		return null;
-	}
-
-	$post_id = (int) $post_id;
-
-	$post_type = get_post_type( $post_id );
-
-	if ( 'pronamic_pay_subscr' !== $post_type ) {
-		return null;
-	}
-
-	$subscription = new Subscription( $post_id );
-
-	return $subscription;
+	return pronamic_pay_plugin()->subscriptions_data_store->get_subscription( $post_id );
 }
 
 /**

@@ -149,41 +149,44 @@ class SubscriptionPeriod {
 		}
 
 		/**
-		 * Phase by reference.
+		 * Phase.
 		 */
-		$reference_property = '$ref';
-
-		if ( ! \property_exists( $json->phase, $reference_property ) ) {
-			throw new \InvalidArgumentException( 'The `phase` property must contain a `$ref` property.' );
+		if ( ! property_exists( $json->phase, 'subscription' ) ) {
+			throw new \InvalidArgumentException( 'The `phase` property must contain a `subscription` property.' );
 		}
 
-		$phase_url = $json->phase->$reference_property;
+		if ( ! property_exists( $json->phase, 'sequence_number' ) ) {
+			throw new \InvalidArgumentException( 'The `phase` property must contain a `sequence_number` property.' );
+		}
 
-		$request = \WP_REST_Request::from_url( $phase_url );
+		/**
+		 * Subscription.
+		 */
+		if ( ! \property_exists( $json->phase->subscription, 'id' ) ) {
+			throw new \InvalidArgumentException( 'The `subscription` property must contain an `id` property.' );
+		}
 
-		if ( false === $request ) {
+		$subscription = \get_pronamic_subscription( $json->phase->subscription->id );
+
+		if ( null === $subscription ) {
 			throw new \Exception(
 				\sprintf(
-					'Unable to convert `$ref` property to REST request: %s.',
-					$phase_url
+					'Unable to find subscription by id: %s.',
+					$json->phase->subscription->id
 				)
 			);
 		}
 
-		$response = \rest_do_request( $request );
+		$phase = $subscription->get_phase_by_sequence_number( $json->phase->sequence_number );
 
-		$data = $response->get_data();
-
-		if ( ! $data instanceof SubscriptionPhase ) {
-			throw new \InvalidArgumentException(
+		if ( null === $subscription ) {
+			throw new \Exception(
 				\sprintf(
-					'Unable to find subscription phase by `$ref`: %s.',
-					$phase_url
+					'Unable to find subscription phase by sequence number: %s.',
+					$json->phase->sequence_number
 				)
 			);
 		}
-
-		$phase = $data;
 
 		$start_date = new DateTime( $json->start_date );
 		$end_date   = new DateTime( $json->end_date );
@@ -210,6 +213,18 @@ class SubscriptionPeriod {
 						$this->phase->get_sequence_number()
 					)
 				),
+				'subscription'    => (object) array(
+					'$ref' => \rest_url(
+						\sprintf(
+							'/%s/%s/%d',
+							'pronamic-pay/v1',
+							'subscriptions',
+							$this->phase->get_subscription()->get_id()
+						)
+					),
+					'id'   => $this->phase->get_subscription()->get_id(),
+				),
+				'sequence_number' => $this->phase->get_sequence_number(),
 			),
 			'start_date' => $this->start_date->format( \DATE_ATOM ),
 			'end_date'   => $this->end_date->format( \DATE_ATOM ),
