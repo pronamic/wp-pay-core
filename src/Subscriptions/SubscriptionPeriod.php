@@ -126,6 +126,7 @@ class SubscriptionPeriod {
 	 * @param object $json Subscription period JSON.
 	 * @return SubscriptionPeriod
 	 * @throws \InvalidArgumentException Throws exception on invalid JSON.
+	 * @throws \Exception                Throws exception on problem.
 	 */
 	public static function from_json( $json ) {
 		if ( ! is_object( $json ) ) {
@@ -204,7 +205,7 @@ class SubscriptionPeriod {
 	public function to_json() {
 		$json = (object) array(
 			'phase'      => (object) array(
-				'$ref' => \rest_url(
+				'$ref'            => \rest_url(
 					\sprintf(
 						'/%s/%s/%d/phases/%d',
 						'pronamic-pay/v1',
