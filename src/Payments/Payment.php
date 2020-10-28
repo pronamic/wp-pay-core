@@ -789,11 +789,12 @@ class Payment extends LegacyPayment {
 
 		if ( isset( $json->periods ) ) {
 			foreach ( $json->periods as $json_period ) {
-				if ( ! property_exists( $json_period, 'phase' ) ) {
+				try {
+					$payment->add_period( SubscriptionPeriod::from_json( $json_period ) );
+				} catch ( \Exception $exception ) {
+					// For now we temporarily ignore subscription period exception due to changes in the JSON schema.
 					continue;
 				}
-
-				$payment->add_period( SubscriptionPeriod::from_json( $json_period ) );
 			}
 		}
 
