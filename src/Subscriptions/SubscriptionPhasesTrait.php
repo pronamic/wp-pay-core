@@ -106,9 +106,15 @@ trait SubscriptionPhasesTrait {
 	 */
 	public function get_current_phase() {
 		foreach ( $this->phases as $phase ) {
-			if ( ! $phase->all_periods_created() ) {
-				return $phase;
+			if ( $phase->all_periods_created() ) {
+				continue;
 			}
+
+			if ( $phase->is_canceled() ) {
+				continue;
+			}
+
+			return $phase;
 		}
 
 		return null;
