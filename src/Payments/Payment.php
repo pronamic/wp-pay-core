@@ -147,7 +147,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Subscription periods.
 	 *
-	 * @var null|array<int, SubscriptionPeriod>
+	 * @var SubscriptionPeriod[]|null
 	 */
 	private $periods;
 
@@ -718,7 +718,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Get subscription periods.
 	 *
-	 * @return array<int, SubscriptionPeriod>|null
+	 * @return SubscriptionPeriod[]|null
 	 */
 	public function get_periods() {
 		return $this->periods;
