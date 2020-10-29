@@ -39,6 +39,7 @@
 
 				$payment_id         = $payment->get_id();
 				$payments_post_type = get_post_type( $payment_id );
+				$period             = $payment->get_period_by_subscription( $subscription );
 
 				?>
 
@@ -59,10 +60,10 @@
 						<?php do_action( 'manage_' . $payments_post_type . '_posts_custom_column', 'pronamic_payment_date', $payment_id ); ?>
 					</td>
 					<td>
-						<?php echo empty( $payment->start_date ) ? '—' : esc_html( $payment->start_date->format_i18n() ); ?>
+						<?php echo ( null === $period ? '—' : esc_html( $period->get_start_date()->format_i18n() ) ); ?>
 					</td>
 					<td>
-						<?php echo empty( $payment->end_date ) ? '—' : esc_html( $payment->end_date->format_i18n() ); ?>
+						<?php echo( null === $period ? '—' : esc_html( $period->get_end_date()->format_i18n() ) ); ?>
 					</td>
 				</tr>
 
