@@ -32,6 +32,7 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 				<th scope="col"><?php esc_html_e( 'Next Date', 'pronamic_ideal' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Periods created', 'pronamic_ideal' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Trial', 'pronamic_ideal' ); ?></th>
+				<th scope="col"><?php esc_html_e( 'Alignment', 'pronamic_ideal' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Prorated', 'pronamic_ideal' ); ?></th>
 			</tr>
 		</thead>
@@ -115,6 +116,13 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 						<?php
 
 						echo esc_html( $phase->is_trial() ? __( 'Yes', 'pronamic_ideal' ) : __( 'No', 'pronamic_ideal' ) );
+
+						?>
+					</td>
+					<td>
+						<?php
+
+						echo esc_html( $phase->is_alignment() ? __( 'Yes', 'pronamic_ideal' ) : __( 'No', 'pronamic_ideal' ) );
 
 						?>
 					</td>
