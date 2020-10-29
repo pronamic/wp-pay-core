@@ -60,10 +60,22 @@
 						<?php do_action( 'manage_' . $payments_post_type . '_posts_custom_column', 'pronamic_payment_date', $payment_id ); ?>
 					</td>
 					<td>
-						<?php echo ( null === $period ? '—' : esc_html( $period->get_start_date()->format_i18n() ) ); ?>
+						<?php
+
+						$start_date = ( null !== $period ? $period->get_start_date() : $payment->start_date );
+
+						echo ( null === $start_date ? '—' : esc_html( $start_date->format_i18n() ) );
+
+						?>
 					</td>
 					<td>
-						<?php echo( null === $period ? '—' : esc_html( $period->get_end_date()->format_i18n() ) ); ?>
+						<?php
+
+						$end_date = ( null !== $period ? $period->get_end_date() : $payment->end_date );
+
+						echo( null === $end_date ? '—' : esc_html( $end_date->format_i18n() ) );
+
+						?>
 					</td>
 				</tr>
 
