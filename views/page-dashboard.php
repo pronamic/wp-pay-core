@@ -23,8 +23,9 @@ $container_index = 1;
 					<div id="normal-sortables" class="meta-box-sortables ui-sortable">
 
 						<div class="postbox">
-							<h2 class="hndle"><span><?php esc_html_e( 'Pronamic Pay Status', 'pronamic_ideal' ); ?></span>
-							</h2>
+							<div class="postbox-header">
+								<h2 class="hndle"><span><?php esc_html_e( 'Pronamic Pay Status', 'pronamic_ideal' ); ?></span></h2>
+							</div>
 
 							<div class="inside">
 								<?php
@@ -39,7 +40,9 @@ $container_index = 1;
 					<div id="normal-sortables" class="meta-box-sortables ui-sortable">
 
 						<div class="postbox">
-							<h2 class="hndle"><span><?php esc_html_e( 'Latest Payments', 'pronamic_ideal' ); ?></span></h2>
+							<div class="postbox-header">
+								<h2 class="hndle"><span><?php esc_html_e( 'Latest Payments', 'pronamic_ideal' ); ?></span></h2>
+							</div>
 
 							<div class="inside">
 								<?php
@@ -189,7 +192,9 @@ $container_index = 1;
 						<div id="normal-sortables" class="meta-box-sortables ui-sortable">
 
 							<div class="postbox">
-								<h2 class="hndle"><span><?php esc_html_e( 'Latest Subscriptions', 'pronamic_ideal' ); ?></span></h2>
+								<div class="postbox-header">
+									<h2 class="hndle"><span><?php esc_html_e( 'Latest Subscriptions', 'pronamic_ideal' ); ?></span></h2>
+								</div>
 
 								<div class="inside">
 									<?php
@@ -314,7 +319,9 @@ $container_index = 1;
 					<?php if ( current_user_can( 'manage_options' ) ) : ?>
 
 						<div class="postbox">
-							<h2 class="hndle"><span><?php esc_html_e( 'Getting Started', 'pronamic_ideal' ); ?></span></h2>
+							<div class="postbox-header">
+								<h2 class="hndle"><span><?php esc_html_e( 'Getting Started', 'pronamic_ideal' ); ?></span></h2>
+							</div>
 
 							<div class="inside">
 								<p>
@@ -408,7 +415,9 @@ $container_index = 1;
 					<?php endif; ?>
 
 					<div class="postbox">
-						<h2 class="hndle"><span><?php esc_html_e( 'Pronamic News', 'pronamic_ideal' ); ?></span></h2>
+						<div class="postbox-header">
+							<h2 class="hndle"><span><?php esc_html_e( 'Pronamic News', 'pronamic_ideal' ); ?></span></h2>
+						</div>
 
 						<div class="inside">
 							<?php
