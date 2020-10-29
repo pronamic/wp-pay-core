@@ -551,20 +551,7 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 			throw new \UnexpectedValueException( 'Cannot create new subscription period for subscription without phase.' );
 		}
 
-		$period = $this->next_period();
-
-		// Set subscription end date.
-		if ( null !== $period ) {
-			$end_date = $phase->get_end_date();
-
-			if ( null !== $end_date ) {
-				$end_date = new DateTime( $end_date->format( \DateTimeInterface::ATOM ) );
-			}
-
-			$this->set_end_date( $end_date );
-		}
-
-		return $period;
+		return $this->next_period();
 	}
 
 	/**
