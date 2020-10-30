@@ -739,29 +739,6 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
-	 * Get period by subscription.
-	 *
-	 * @param Subscription $subscription Subscription.
-	 *
-	 * @return SubscriptionPeriod|null
-	 */
-	public function get_period_by_subscription( Subscription $subscription ) {
-		$subscription_id = $subscription->get_id();
-
-		if ( null === $this->periods ) {
-			return null;
-		}
-
-		foreach ( $this->periods as $period ) {
-			if ( $period->get_phase()->get_subscription()->get_id() === $subscription_id ) {
-				return $period;
-			}
-		}
-
-		return null;
-	}
-
-	/**
 	 * Get payment subscription ID.
 	 *
 	 * @return int|null

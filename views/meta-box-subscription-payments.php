@@ -39,7 +39,27 @@
 
 				$payment_id         = $payment->get_id();
 				$payments_post_type = get_post_type( $payment_id );
-				$period             = $payment->get_period_by_subscription( $subscription );
+
+				// Get subscription period from payment.
+				$period = null;
+
+				$periods = $payment->get_periods();
+
+				if ( null !== $periods ) :
+
+					foreach ( $periods as $subscription_period ) :
+
+						if ( $subscription->get_id() === $subscription_period->get_phase()->get_subscription()->get_id() ) :
+
+							$period = $subscription_period;
+
+							break;
+
+						endif;
+
+					endforeach;
+
+				endif;
 
 				?>
 
@@ -64,7 +84,7 @@
 
 						$start_date = ( null !== $period ? $period->get_start_date() : $payment->start_date );
 
-						echo ( null === $start_date ? '—' : esc_html( $start_date->format_i18n() ) );
+						echo esc_html( null === $start_date ? '—' : $start_date->format_i18n() );
 
 						?>
 					</td>
@@ -73,7 +93,7 @@
 
 						$end_date = ( null !== $period ? $period->get_end_date() : $payment->end_date );
 
-						echo( null === $end_date ? '—' : esc_html( $end_date->format_i18n() ) );
+						echo esc_html( null === $end_date ? '—' : $end_date->format_i18n() );
 
 						?>
 					</td>
