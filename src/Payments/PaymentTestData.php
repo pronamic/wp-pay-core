@@ -145,6 +145,15 @@ class PaymentTestData extends PaymentData {
 	}
 
 	/**
+	 * Get telephone number.
+	 *
+	 * @return null|string
+	 */
+	public function get_telephone_number() {
+		return filter_input( INPUT_POST, 'test_phone', FILTER_SANITIZE_STRING );
+	}
+
+	/**
 	 * Get subscription.
 	 *
 	 * @since 1.2.1
