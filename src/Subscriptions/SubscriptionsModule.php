@@ -390,11 +390,19 @@ class SubscriptionsModule {
 		$payment->subscription_id = $subscription->get_id();
 
 		$payment->set_origin_id( $subscription->get_origin_id() );
-		$payment->set_total_amount( $subscription->get_total_amount() );
 		$payment->set_customer( $subscription->get_customer() );
 		$payment->set_billing_address( $subscription->get_billing_address() );
 		$payment->set_shipping_address( $subscription->get_shipping_address() );
 		$payment->set_lines( $subscription->get_lines() );
+
+		// Get amount from current subscription phase.
+		$current_phase = $subscription->get_current_phase();
+
+		if ( null === $current_phase ) {
+			return null;
+		}
+
+		$payment->set_total_amount( $current_phase->get_amount() );
 
 		return $payment;
 	}
@@ -456,18 +464,27 @@ class SubscriptionsModule {
 		// Calculate payment start and end dates.
 		$period = $subscription->new_period();
 
+		if ( null === $period ) {
+			throw new \UnexpectedValueException( 'Can not create new period for subscription.' );
+		}
+
+		$payment->add_period( $period );
+
 		$start_date = $period->get_start_date();
 		$end_date   = $period->get_end_date();
 
-		$subscription->next_payment_date          = $end_date;
+		$subscription->next_payment_date          = SubscriptionHelper::calculate_next_payment_date( $subscription );
 		$subscription->next_payment_delivery_date = SubscriptionHelper::calculate_next_payment_delivery_date( $subscription );
 
-		// Remove next payment (delivery) date if this is the last payment according to subscription end date.
+		// Unset next payment date if this is the last payment according to subscription end date.
 		if ( null !== $subscription->end_date && $subscription->next_payment_date >= $subscription->end_date ) {
-			$subscription->next_payment_date          = null;
+			$subscription->next_payment_date = null;
+		}
+
+		// Delete next payment post meta if not set.
+		if ( null === $subscription->next_payment_date ) {
 			$subscription->next_payment_delivery_date = null;
 
-			// Delete next payment post meta.
 			$subscription->set_meta( 'next_payment', null );
 			$subscription->set_meta( 'next_payment_delivery_date', null );
 		}
@@ -584,7 +601,6 @@ class SubscriptionsModule {
 			'order'       => 'ASC',
 			'post_status' => array(
 				'subscr_pending',
-				'subscr_expired',
 				'subscr_failed',
 				'subscr_active',
 			),
@@ -812,7 +828,6 @@ class SubscriptionsModule {
 			'order'       => 'ASC',
 			'post_status' => array(
 				'subscr_pending',
-				'subscr_expired',
 				'subscr_failed',
 				'subscr_active',
 			),
@@ -866,6 +881,10 @@ class SubscriptionsModule {
 			try {
 				$payment = $this->start_recurring( $subscription, $gateway );
 			} catch ( \Exception $e ) {
+				if ( $cli_test ) {
+					WP_CLI::error( $e->getMessage(), false );
+				}
+
 				continue;
 			}
 
@@ -989,11 +1008,33 @@ class SubscriptionsModule {
 				'methods'             => 'GET',
 				'callback'            => array( $this, 'rest_api_subscription' ),
 				'permission_callback' => function() {
-					return \current_user_can( 'manage_options' );
+					return \current_user_can( 'edit_payments' );
 				},
 				'args'                => array(
 					'subscription_id' => array(
 						'description' => __( 'Subscription ID.', 'pronamic_ideal' ),
+						'type'        => 'integer',
+					),
+				),
+			)
+		);
+
+		\register_rest_route(
+			'pronamic-pay/v1',
+			'/subscriptions/(?P<subscription_id>\d+)/phases/(?P<sequence_number>\d+)',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $this, 'rest_api_subscription_phase' ),
+				'permission_callback' => function() {
+					return \current_user_can( 'edit_payments' );
+				},
+				'args'                => array(
+					'subscription_id' => array(
+						'description' => __( 'Subscription ID.', 'pronamic_ideal' ),
+						'type'        => 'integer',
+					),
+					'sequence_number' => array(
+						'description' => __( 'Subscription phase sequence number.', 'pronamic_ideal' ),
 						'type'        => 'integer',
 					),
 				),
@@ -1024,6 +1065,48 @@ class SubscriptionsModule {
 			);
 		}
 
-		return $subscription->get_json();
+		return $subscription;
+	}
+
+	/**
+	 * REST API subscription phase.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return object
+	 */
+	public function rest_api_subscription_phase( \WP_REST_Request $request ) {
+		$subscription_id = $request->get_param( 'subscription_id' );
+
+		$subscription = \get_pronamic_subscription( $subscription_id );
+
+		if ( null === $subscription ) {
+			return new \WP_Error(
+				'pronamic-pay-subscription-not-found',
+				\sprintf(
+					/* translators: %s: Subscription ID */
+					\__( 'Could not find subscription with ID `%s`.', 'pronamic_ideal' ),
+					$subscription_id
+				),
+				$subscription_id
+			);
+		}
+
+		$sequence_number = $request->get_param( 'sequence_number' );
+
+		$phase = $subscription->get_phase_by_sequence_number( $sequence_number );
+
+		if ( null === $phase ) {
+			return new \WP_Error(
+				'pronamic-pay-subscription-phase-not-found',
+				\sprintf(
+					/* translators: %s: Subscription ID */
+					\__( 'Could not find subscription phase with sequence number `%s`.', 'pronamic_ideal' ),
+					$sequence_number
+				),
+				$sequence_number
+			);
+		}
+
+		return $phase;
 	}
 }

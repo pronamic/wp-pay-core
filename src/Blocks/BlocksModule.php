@@ -137,7 +137,11 @@ class BlocksModule {
 		$amount = '';
 
 		if ( ! empty( $attributes['amount'] ) ) {
-			$amount = $money_parser->parse( $attributes['amount'] )->get_minor_units();
+			try {
+				$amount = $money_parser->parse( $attributes['amount'] )->get_minor_units();
+			} catch ( \Exception $e ) {
+				return '';
+			}
 		}
 
 		// Form settings.

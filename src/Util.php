@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use DateInterval;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
 use Pronamic\WordPress\Money\Money;
 use SimpleXMLElement;
@@ -121,6 +122,107 @@ class Util {
 		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Pay\Core\Util::boolean_to_string()' );
 
 		return Core_Util::boolean_to_string( $boolean );
+	}
+
+	/**
+	 * Format date interval.
+	 *
+	 * @param DateInterval $date_interval Date interval.
+	 *
+	 * @return string
+	 */
+	public static function format_date_interval( DateInterval $date_interval ) {
+		// Periods.
+		$periods = array();
+
+		foreach ( array( 'y', 'm', 'd', 'h', 'i', 's' ) as $period ) {
+			$value = $date_interval->$period;
+
+			// Check value.
+			if ( 0 === $value ) {
+				continue;
+			}
+
+			// Format.
+			$format = '';
+
+			switch ( $period ) {
+				case 'y':
+					/* translators: %s: number of years */
+					$format = _n( '%s year', '%s years', $value, 'pronamic_ideal' );
+
+					break;
+				case 'm':
+					/* translators: %s: number of months */
+					$format = _n( '%s month', '%s months', $value, 'pronamic_ideal' );
+
+					break;
+				case 'd':
+					/* translators: %s: number of days */
+					$format = _n( '%s day', '%s days', $value, 'pronamic_ideal' );
+
+					break;
+				case 'h':
+					/* translators: %s: number of hours */
+					$format = _n( '%s hour', '%s hours', $value, 'pronamic_ideal' );
+
+					break;
+				case 'i':
+					/* translators: %s: number of minutes */
+					$format = _n( '%s minute', '%s minutes', $value, 'pronamic_ideal' );
+
+					break;
+				case 's':
+					/* translators: %s: number of seconds */
+					$format = _n( '%s second', '%s seconds', $value, 'pronamic_ideal' );
+
+					break;
+			}
+
+			// Add period.
+			$periods[] = \sprintf( $format, $value );
+		}
+
+		// Multiple periods.
+		if ( count( $periods ) > 1 ) {
+			$last_period = \array_pop( $periods );
+
+			$formatted = \implode( ', ', $periods );
+
+			return sprintf(
+				/* translators: 1: formatted periods, 2: last formatted period */
+				__( '%1$s and %2$s', 'pronamic_ideal' ),
+				$formatted,
+				$last_period
+			);
+		}
+
+		// Single period.
+		$formatted = \implode( ', ', $periods );
+
+		return $formatted;
+	}
+
+	/**
+	 * Format recurrences date interval.
+	 *
+	 * @param DateInterval $date_interval Date interval.
+	 *
+	 * @return string
+	 */
+	public static function format_recurrences( DateInterval $date_interval ) {
+		$formatted_interval = self::format_date_interval( $date_interval );
+
+		// Check empty date interval.
+		if ( empty( $formatted_interval ) ) {
+			return '—';
+		}
+
+		return sprintf(
+			/* translators: %s: formatted date interval periods */
+			__( 'Every %s', 'pronamic_ideal' ),
+			$formatted_interval
+		);
 	}
 
 	/**

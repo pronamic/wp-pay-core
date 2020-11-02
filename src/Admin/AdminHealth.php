@@ -271,7 +271,9 @@ class AdminHealth {
 	 * @return array<string, array<string,string>|string>
 	 */
 	public function test_memory_limit() {
-		$memory = pronamic_pay_let_to_num( strval( WP_MEMORY_LIMIT ) );
+		$memory_limit = defined( 'WP_MEMORY_LIMIT' ) ? WP_MEMORY_LIMIT : '';
+
+		$memory = pronamic_pay_let_to_num( strval( $memory_limit ) );
 
 		// Good.
 		$result = array(

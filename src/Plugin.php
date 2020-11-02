@@ -433,7 +433,13 @@ class Plugin {
 		// Check if we should redirect.
 		$should_redirect = apply_filters( 'pronamic_pay_return_should_redirect', true, $payment );
 
-		self::update_payment( $payment, $should_redirect );
+		try {
+			self::update_payment( $payment, $should_redirect );
+		} catch ( \Exception $e ) {
+			self::render_exception( $e );
+
+			exit;
+		}
 	}
 
 	/**
@@ -685,7 +691,9 @@ class Plugin {
 		);
 
 		if ( null !== $payment_method ) {
-			$args['post__in'] = PaymentMethods::get_config_ids( $payment_method );
+			$config_ids = PaymentMethods::get_config_ids( $payment_method );
+
+			$args['post__in'] = empty( $config_ids ) ? array( 0 ) : $config_ids;
 		}
 
 		$query = new WP_Query( $args );
@@ -795,8 +803,11 @@ class Plugin {
 		$title = $data->get_title();
 
 		if ( ! empty( $title ) ) {
-			/* translators: %s: payment data title */
-			$payment->title = sprintf( __( 'Payment for %s', 'pronamic_ideal' ), $title );
+			$payment->title = sprintf(
+				/* translators: %s: payment data title */
+				__( 'Payment for %s', 'pronamic_ideal' ),
+				$title
+			);
 		}
 
 		// Other.
@@ -1008,6 +1019,22 @@ class Plugin {
 			if ( PaymentMethods::IDEAL === $payment->method && filter_has_var( INPUT_POST, 'pronamic_ideal_issuer_id' ) ) {
 				$payment->issuer = filter_input( INPUT_POST, 'pronamic_ideal_issuer_id', FILTER_SANITIZE_STRING );
 			}
+		}
+
+		/**
+		 * If an issuer has been specified and the payment
+		 * method is unknown, we set the payment method to
+		 * iDEAL. This may not be correct in all cases,
+		 * but for now Pronamic Pay works this way.
+		 *
+		 * @link https://github.com/wp-pay-extensions/gravityforms/blob/2.4.0/src/Processor.php#L251-L256
+		 * @link https://github.com/wp-pay-extensions/contact-form-7/blob/1.0.0/src/Pronamic.php#L181-L187
+		 * @link https://github.com/wp-pay-extensions/formidable-forms/blob/2.1.0/src/Extension.php#L318-L329
+		 * @link https://github.com/wp-pay-extensions/ninjaforms/blob/1.2.0/src/PaymentGateway.php#L80-L83
+		 * @link https://github.com/wp-pay/core/blob/2.4.0/src/Forms/FormProcessor.php#L131-L134
+		 */
+		if ( null !== $payment->issuer && null === $payment->method ) {
+			$payment->method = PaymentMethods::IDEAL;
 		}
 
 		// Consumer bank details.

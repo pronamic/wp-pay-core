@@ -11,8 +11,8 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DateInterval;
-use InvalidArgumentException;
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\Pay\Payments\LegacyPaymentInfo;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentInfoHelper;
@@ -24,7 +24,9 @@ use Pronamic\WordPress\Pay\Payments\PaymentInfoHelper;
  * @version 2.4.0
  * @since   1.0.0
  */
-class Subscription extends LegacySubscription {
+class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
+	use SubscriptionPhasesTrait;
+
 	/**
 	 * The key of this subscription, used in URL's for security.
 	 *
@@ -225,18 +227,16 @@ class Subscription extends LegacySubscription {
 	 *
 	 * @link http://php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters
 	 *
-	 * @return DateInterval|null
+	 * @return SubscriptionInterval|null
 	 */
 	public function get_date_interval() {
-		$interval_spec = 'P' . $this->interval . $this->interval_period;
+		$phase = $this->get_current_phase();
 
-		try {
-			$interval = new DateInterval( $interval_spec );
-		} catch ( \Exception $e ) {
-			$interval = null;
+		if ( null === $phase ) {
+			return null;
 		}
 
-		return $interval;
+		return $phase->get_interval();
 	}
 
 	/**
@@ -541,33 +541,17 @@ class Subscription extends LegacySubscription {
 	/**
 	 * Create new subscription period.
 	 *
-	 * @return SubscriptionPeriod
-	 * @throws \UnexpectedValueException Throws exception when not date inverval is available for this subscription.
+	 * @return SubscriptionPeriod|null
+	 * @throws \UnexpectedValueException Throws exception when no date interval is available for this subscription.
 	 */
 	public function new_period() {
-		// Calculate payment start and end dates.
-		$start_date = new DateTime();
+		$phase = $this->get_current_phase();
 
-		if ( ! empty( $this->next_payment_date ) ) {
-			$start_date = clone $this->next_payment_date;
+		if ( null === $phase ) {
+			throw new \UnexpectedValueException( 'Cannot create new subscription period for subscription without phase.' );
 		}
 
-		$interval = $this->get_date_interval();
-
-		if ( null === $interval ) {
-			throw new \UnexpectedValueException( 'Cannot create new subscription period because the subscription does not have a valid date interval.' );
-		}
-
-		$end_date = clone $start_date;
-		$end_date->add( $interval );
-
-		if ( 'last' === $this->get_interval_date() ) {
-			$end_date->modify( 'last day of ' . $end_date->format( 'F Y' ) );
-		}
-
-		$period = new SubscriptionPeriod( $this, $start_date, $end_date );
-
-		return $period;
+		return $this->next_period();
 	}
 
 	/**
@@ -585,11 +569,11 @@ class Subscription extends LegacySubscription {
 	 * @param mixed             $json         JSON.
 	 * @param Subscription|null $subscription Subscription.
 	 * @return Subscription
-	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
+	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
 	public static function from_json( $json, $subscription = null ) {
 		if ( ! is_object( $json ) ) {
-			throw new InvalidArgumentException( 'JSON value must be an object.' );
+			throw new \InvalidArgumentException( 'JSON value must be an object.' );
 		}
 
 		if ( null === $subscription ) {
@@ -614,6 +598,14 @@ class Subscription extends LegacySubscription {
 			$subscription->set_status( $json->status );
 		}
 
+		if ( isset( $json->phases ) ) {
+			foreach ( $json->phases as $json_phase ) {
+				$json_phase->subscription = $subscription;
+
+				$subscription->add_phase( SubscriptionPhase::from_json( $json_phase ) );
+			}
+		}
+
 		return $subscription;
 	}
 
@@ -626,6 +618,8 @@ class Subscription extends LegacySubscription {
 		$object = PaymentInfoHelper::to_json( $this );
 
 		$properties = (array) $object;
+
+		$properties['phases'] = $this->phases;
 
 		if ( null !== $this->expiry_date ) {
 			$properties['expiry_date'] = $this->expiry_date->format( \DATE_ATOM );
@@ -646,5 +640,15 @@ class Subscription extends LegacySubscription {
 		$object = (object) $properties;
 
 		return $object;
+	}
+
+	/**
+	 * JSON serialize.
+	 *
+	 * @link https://www.php.net/manual/en/jsonserializable.jsonserialize.php
+	 * @return object
+	 */
+	public function jsonSerialize() {
+		return $this->get_json();
 	}
 }

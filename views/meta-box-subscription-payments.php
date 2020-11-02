@@ -40,6 +40,27 @@
 				$payment_id         = $payment->get_id();
 				$payments_post_type = get_post_type( $payment_id );
 
+				// Get subscription period from payment.
+				$period = null;
+
+				$periods = $payment->get_periods();
+
+				if ( null !== $periods ) :
+
+					foreach ( $periods as $subscription_period ) :
+
+						if ( $subscription->get_id() === $subscription_period->get_phase()->get_subscription()->get_id() ) :
+
+							$period = $subscription_period;
+
+							break;
+
+						endif;
+
+					endforeach;
+
+				endif;
+
 				?>
 
 				<tr>
@@ -59,10 +80,22 @@
 						<?php do_action( 'manage_' . $payments_post_type . '_posts_custom_column', 'pronamic_payment_date', $payment_id ); ?>
 					</td>
 					<td>
-						<?php echo empty( $payment->start_date ) ? '—' : esc_html( $payment->start_date->format_i18n() ); ?>
+						<?php
+
+						$start_date = ( null !== $period ? $period->get_start_date() : $payment->start_date );
+
+						echo esc_html( null === $start_date ? '—' : $start_date->format_i18n() );
+
+						?>
 					</td>
 					<td>
-						<?php echo empty( $payment->end_date ) ? '—' : esc_html( $payment->end_date->format_i18n() ); ?>
+						<?php
+
+						$end_date = ( null !== $period ? $period->get_end_date() : $payment->end_date );
+
+						echo esc_html( null === $end_date ? '—' : $end_date->format_i18n() );
+
+						?>
 					</td>
 				</tr>
 

@@ -205,6 +205,8 @@ class AdminSubscriptionPostType {
 			return;
 		}
 
+		$phase = $subscription->get_display_phase();
+
 		switch ( $column ) {
 			case 'pronamic_subscription_status':
 				$post_status = get_post_status( $post_id );
@@ -262,7 +264,7 @@ class AdminSubscriptionPostType {
 
 				echo wp_kses(
 					sprintf(
-						/* translators: 1: Subscription edit post link with post ID, 2: Subscription source description, 3: Subscription source ID text */
+						/* translators: 1: edit post link with post ID, 2: source description, 3: source ID text */
 						__( '%1$s for %2$s %3$s', 'pronamic_ideal' ),
 						$text,
 						$source_description,
@@ -299,23 +301,29 @@ class AdminSubscriptionPostType {
 
 				break;
 			case 'pronamic_subscription_amount':
-				echo esc_html( $subscription->get_total_amount()->format_i18n() );
+				echo esc_html( null === $phase ? '—' : $phase->get_amount()->format_i18n() );
 
 				break;
 			case 'pronamic_subscription_recurring':
-				$interval        = $subscription->get_interval();
-				$interval_period = $subscription->get_interval_period();
-				$frequency       = $subscription->get_frequency();
+				$total_periods = ( null === $phase ? null : $phase->get_total_periods() );
 
-				if ( null !== $interval && null !== $interval_period ) {
-					echo esc_html( strval( Util::format_interval( $interval, $interval_period ) ) );
-				}
+				if ( null === $phase || 1 === $total_periods ) :
+					// No recurrence.
+					echo '—';
 
-				echo '<br />';
+				elseif ( null === $total_periods ) :
+					// Infinite.
+					echo esc_html( strval( Util::format_recurrences( $phase->get_interval() ) ) );
 
-				if ( null !== $frequency ) {
-					echo esc_html( strval( Util::format_frequency( $frequency ) ) );
-				}
+				else :
+					// Fixed number of recurrences.
+					printf(
+						'%s<br />%s',
+						esc_html( strval( Util::format_recurrences( $phase->get_interval() ) ) ),
+						esc_html( strval( Util::format_frequency( $total_periods ) ) )
+					);
+
+				endif;
 
 				break;
 			case 'pronamic_subscription_date':
@@ -371,6 +379,15 @@ class AdminSubscriptionPostType {
 			'pronamic_payment_lines',
 			__( 'Payment Lines', 'pronamic_ideal' ),
 			array( $this, 'meta_box_lines' ),
+			$post_type,
+			'normal',
+			'high'
+		);
+
+		add_meta_box(
+			'pronamic_subscription_phases',
+			__( 'Phases', 'pronamic_ideal' ),
+			array( $this, 'meta_box_phases' ),
 			$post_type,
 			'normal',
 			'high'
@@ -457,6 +474,24 @@ class AdminSubscriptionPostType {
 		);
 
 		include __DIR__ . '/../../views/meta-box-notes.php';
+	}
+
+	/**
+	 * Pronamic Pay subscription phases meta box.
+	 *
+	 * @param WP_Post $post The object for the current post/page.
+	 * @return void
+	 */
+	public function meta_box_phases( $post ) {
+		$subscription = get_pronamic_subscription( $post->ID );
+
+		if ( null === $subscription ) {
+			return;
+		}
+
+		$phases = $subscription->get_phases();
+
+		include __DIR__ . '/../../views/meta-box-subscription-phases.php';
 	}
 
 	/**

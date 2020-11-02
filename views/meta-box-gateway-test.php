@@ -269,7 +269,7 @@ require Plugin::$dirname . '/views/errors.php';
 
 						echo wp_kses(
 							sprintf(
-								/* translators: %s: Input field for end date */
+								/* translators: %s: input HTML */
 								__( 'On %s', 'pronamic_ideal' ),
 								sprintf( '<input type="date" id="pronamic_pay_ends_on_date" name="pronamic_pay_ends_on_date" value="%s" />', esc_attr( '' ) )
 							),

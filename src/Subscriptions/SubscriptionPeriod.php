@@ -10,9 +10,9 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
-use DateTimeInterface;
-use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\Money\TaxedMoney;
+use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
 
 /**
  * Subscription Period
@@ -23,11 +23,11 @@ use Pronamic\WordPress\DateTime\DateTime;
  */
 class SubscriptionPeriod {
 	/**
-	 * The subscription this period is part of.
+	 * Phase.
 	 *
-	 * @var Subscription
+	 * @var SubscriptionPhase
 	 */
-	private $subscription;
+	private $phase;
 
 	/**
 	 * The start date of this period.
@@ -46,32 +46,42 @@ class SubscriptionPeriod {
 	/**
 	 * The amount to pay for this period.
 	 *
-	 * @var Money
+	 * @var TaxedMoney
 	 */
 	private $amount;
 
 	/**
 	 * Construct and initialize subscription period object.
 	 *
-	 * @param Subscription $subscription Subscription.
-	 * @param DateTime     $start_date   Start date.
-	 * @param DateTime     $end_date     End date.
+	 * @param SubscriptionPhase $phase        Subscription phase.
+	 * @param DateTime          $start_date   Start date.
+	 * @param DateTime          $end_date     End date.
+	 * @param TaxedMoney        $amount       Taxed amount.
 	 */
-	public function __construct( Subscription $subscription, DateTime $start_date, DateTime $end_date ) {
-		$this->subscription = $subscription;
-		$this->start_date   = $start_date;
-		$this->end_date     = $end_date;
-
-		$this->amount = clone $subscription->get_total_amount();
+	public function __construct( SubscriptionPhase $phase, DateTime $start_date, DateTime $end_date, TaxedMoney $amount ) {
+		$this->phase      = $phase;
+		$this->start_date = $start_date;
+		$this->end_date   = $end_date;
+		$this->amount     = $amount;
 	}
 
 	/**
-	 * Get subscription.
+	 * Get phase.
 	 *
-	 * @return Subscription
+	 * @return SubscriptionPhase
 	 */
-	public function get_subscription() {
-		return $this->subscription;
+	public function get_phase() {
+		return $this->phase;
+	}
+
+	/**
+	 * Set phase.
+	 *
+	 * @param SubscriptionPhase $phase Phase.
+	 * @return void
+	 */
+	public function set_phase( SubscriptionPhase $phase ) {
+		$this->phase = $phase;
 	}
 
 	/**
@@ -95,9 +105,133 @@ class SubscriptionPeriod {
 	/**
 	 * Get amount.
 	 *
-	 * @return Money
+	 * @return TaxedMoney
 	 */
 	public function get_amount() {
 		return $this->amount;
+	}
+
+	/**
+	 * Is trial period?
+	 *
+	 * @return bool
+	 */
+	public function is_trial() {
+		return $this->phase->is_trial();
+	}
+
+	/**
+	 * From JSON.
+	 *
+	 * @param object $json Subscription period JSON.
+	 * @return SubscriptionPeriod
+	 * @throws \InvalidArgumentException Throws exception on invalid JSON.
+	 * @throws \Exception                Throws exception on problem.
+	 */
+	public static function from_json( $json ) {
+		if ( ! is_object( $json ) ) {
+			throw new \InvalidArgumentException( 'JSON value must be an object.' );
+		}
+
+		if ( ! isset( $json->phase ) ) {
+			throw new \InvalidArgumentException( 'Object must contain `phase` property.' );
+		}
+
+		if ( ! isset( $json->start_date ) ) {
+			throw new \InvalidArgumentException( 'Object must contain `start_date` property.' );
+		}
+
+		if ( ! isset( $json->end_date ) ) {
+			throw new \InvalidArgumentException( 'Object must contain `end_date` property.' );
+		}
+
+		if ( ! isset( $json->amount ) ) {
+			throw new \InvalidArgumentException( 'Object must contain `amount` property.' );
+		}
+
+		/**
+		 * Phase.
+		 */
+		if ( ! property_exists( $json->phase, 'subscription' ) ) {
+			throw new \InvalidArgumentException( 'The `phase` property must contain a `subscription` property.' );
+		}
+
+		if ( ! property_exists( $json->phase, 'sequence_number' ) ) {
+			throw new \InvalidArgumentException( 'The `phase` property must contain a `sequence_number` property.' );
+		}
+
+		/**
+		 * Subscription.
+		 */
+		if ( ! \property_exists( $json->phase->subscription, 'id' ) ) {
+			throw new \InvalidArgumentException( 'The `subscription` property must contain an `id` property.' );
+		}
+
+		$subscription = \get_pronamic_subscription( $json->phase->subscription->id );
+
+		if ( null === $subscription ) {
+			throw new \Exception(
+				\sprintf(
+					'Unable to find subscription by id: %s.',
+					$json->phase->subscription->id
+				)
+			);
+		}
+
+		$phase = $subscription->get_phase_by_sequence_number( $json->phase->sequence_number );
+
+		if ( null === $subscription ) {
+			throw new \Exception(
+				\sprintf(
+					'Unable to find subscription phase by sequence number: %s.',
+					$json->phase->sequence_number
+				)
+			);
+		}
+
+		$start_date = new DateTime( $json->start_date );
+		$end_date   = new DateTime( $json->end_date );
+
+		$amount = TaxedMoneyJsonTransformer::from_json( $json->amount );
+
+		return new self( $phase, $start_date, $end_date, $amount );
+	}
+
+	/**
+	 * To JSON.
+	 *
+	 * @return object
+	 */
+	public function to_json() {
+		$json = (object) array(
+			'phase'      => (object) array(
+				'$ref'            => \rest_url(
+					\sprintf(
+						'/%s/%s/%d/phases/%d',
+						'pronamic-pay/v1',
+						'subscriptions',
+						$this->phase->get_subscription()->get_id(),
+						$this->phase->get_sequence_number()
+					)
+				),
+				'subscription'    => (object) array(
+					'$ref' => \rest_url(
+						\sprintf(
+							'/%s/%s/%d',
+							'pronamic-pay/v1',
+							'subscriptions',
+							$this->phase->get_subscription()->get_id()
+						)
+					),
+					'id'   => $this->phase->get_subscription()->get_id(),
+				),
+				'sequence_number' => $this->phase->get_sequence_number(),
+			),
+			'start_date' => $this->start_date->format( \DATE_ATOM ),
+			'end_date'   => $this->end_date->format( \DATE_ATOM ),
+			'amount'     => TaxedMoneyJsonTransformer::to_json( $this->amount ),
+		);
+
+		return $json;
 	}
 }

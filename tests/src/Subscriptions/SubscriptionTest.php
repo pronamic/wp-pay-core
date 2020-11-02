@@ -55,7 +55,6 @@ class SubscriptionTest extends WP_UnitTestCase {
 	 */
 	public function get_and_set_provider() {
 		return array(
-			array( 'set_total_amount', 'get_total_amount', new TaxedMoney( 89.95, 'EUR' ) ),
 			array( 'set_id', 'get_id', uniqid() ),
 			array( 'set_status', 'get_status', 'completed' ),
 		);
@@ -190,21 +189,24 @@ class SubscriptionTest extends WP_UnitTestCase {
 	 * @return Subscription
 	 */
 	private function get_monthly_subscription() {
+		// Subscription.
 		$subscription = new Subscription();
 
-		// Interval.
-		$subscription->interval        = 1;
-		$subscription->interval_period = 'M';
+		// Phase.
+		$phase = new SubscriptionPhase(
+			$subscription,
+			new \DateTimeImmutable( '2005-05-05' ),
+			new SubscriptionInterval( 'P1M' ),
+			new TaxedMoney( 89.95, 'EUR' )
+		);
+
+		$subscription->add_phase( $phase );
 
 		// Dates.
-		$subscription->set_start_date( new DateTime( '2005-05-05' ) );
 		$subscription->set_end_date( new DateTime( '2005-06-05' ) );
 		$subscription->set_expiry_date( new DateTime( '2010-05-05' ) );
 		$subscription->set_next_payment_date( new DateTime( '2005-06-05' ) );
 		$subscription->set_next_payment_delivery_date( new DateTime( '2005-06-01' ) );
-
-		// Amount.
-		$subscription->set_total_amount( new TaxedMoney( 89.95, 'EUR' ) );
 
 		return $subscription;
 	}
@@ -217,25 +219,9 @@ class SubscriptionTest extends WP_UnitTestCase {
 
 		$period = $subscription->new_period();
 
-		$this->assertEquals( $subscription, $period->get_subscription() );
-		$this->assertEquals( '2005-06-05', $period->get_start_date()->format( 'Y-m-d' ) );
-		$this->assertEquals( '2005-07-05', $period->get_end_date()->format( 'Y-m-d' ) );
-		$this->assertEquals( 89.95, $period->get_amount()->get_value() );
-	}
-
-	/**
-	 * Test new period last date.
-	 */
-	public function test_new_period_interval_date_last() {
-		$subscription = $this->get_monthly_subscription();
-
-		$subscription->interval_date = 'last';
-
-		$period = $subscription->new_period();
-
-		$this->assertEquals( $subscription, $period->get_subscription() );
-		$this->assertEquals( '2005-06-05', $period->get_start_date()->format( 'Y-m-d' ) );
-		$this->assertEquals( '2005-07-31', $period->get_end_date()->format( 'Y-m-d' ) );
+		$this->assertEquals( $subscription, $period->get_phase()->get_subscription() );
+		$this->assertEquals( '2005-05-05', $period->get_start_date()->format( 'Y-m-d' ) );
+		$this->assertEquals( '2005-06-05', $period->get_end_date()->format( 'Y-m-d' ) );
 		$this->assertEquals( 89.95, $period->get_amount()->get_value() );
 	}
 }

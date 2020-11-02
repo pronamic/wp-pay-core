@@ -14,8 +14,10 @@ use DateInterval;
 use DatePeriod;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Pay\CreditCard;
-use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
+use Pronamic\WordPress\Pay\Subscriptions\Subscription;
+use Pronamic\WordPress\Pay\Subscriptions\SubscriptionInterval;
+use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 use WP_User;
 
 /**
@@ -186,14 +188,14 @@ class PaymentTestData extends PaymentData {
 		// Ends on.
 		$ends_on = filter_input( INPUT_POST, 'pronamic_pay_ends_on', FILTER_SANITIZE_STRING );
 
-		$times = null;
+		$total_periods = null;
 
 		switch ( $ends_on ) {
 			case 'count':
 				$count = filter_input( INPUT_POST, 'pronamic_pay_ends_on_count', FILTER_VALIDATE_INT );
 
 				if ( ! empty( $count ) ) {
-					$times = $count;
+					$total_periods = $count;
 				}
 
 				break;
@@ -210,7 +212,7 @@ class PaymentTestData extends PaymentData {
 						new DateTime( $end_date )
 					);
 
-					$times = iterator_count( $period );
+					$total_periods = iterator_count( $period );
 				}
 
 				break;
@@ -219,11 +221,17 @@ class PaymentTestData extends PaymentData {
 		// Subscription.
 		$subscription = new Subscription();
 
-		$subscription->description     = $this->get_description();
-		$subscription->frequency       = $times;
-		$subscription->interval        = $interval;
-		$subscription->interval_period = Core_Util::to_period( $interval_period );
-		$subscription->set_total_amount( $this->get_amount() );
+		$subscription->description = $this->get_description();
+
+		// Phase.
+		$phase = new SubscriptionPhase(
+			$subscription,
+			new \DateTimeImmutable(),
+			new SubscriptionInterval( 'P' . $interval . Core_Util::to_period( $interval_period ) ),
+			$this->get_amount()
+		);
+
+		$phase->set_total_periods( $total_periods );
 
 		return $subscription;
 	}

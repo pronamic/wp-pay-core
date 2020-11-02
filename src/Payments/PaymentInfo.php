@@ -10,7 +10,6 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
-use InvalidArgumentException;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
@@ -30,6 +29,16 @@ use WP_Post;
  * @since   1.0.0
  */
 abstract class PaymentInfo {
+	use \Pronamic\WordPress\Pay\Core\TimestampsTrait;
+
+	use \Pronamic\WordPress\Pay\Core\VersionTrait;
+
+	use \Pronamic\WordPress\Pay\Privacy\AnonymizedTrait;
+
+	use \Pronamic\WordPress\Pay\Payments\PaymentInfoTrait;
+
+	use \Pronamic\WordPress\Pay\Payments\SourceTrait;
+
 	/**
 	 * The post object.
 	 *
@@ -73,24 +82,6 @@ abstract class PaymentInfo {
 	public $key;
 
 	/**
-	 * Identifier for the source which started this payment info.
-	 * For example: 'woocommerce', 'gravityforms', 'easydigitaldownloads', etc.
-	 *
-	 * @var string|null
-	 */
-	public $source;
-
-	/**
-	 * Unique ID at the source which started this payment info, for example:
-	 * - WooCommerce order ID.
-	 * - Easy Digital Downloads payment ID.
-	 * - Gravity Forms entry ID.
-	 *
-	 * @var string|int|null
-	 */
-	public $source_id;
-
-	/**
 	 * Origin post ID.
 	 *
 	 * @var int|null
@@ -112,13 +103,6 @@ abstract class PaymentInfo {
 	 * @var string|null
 	 */
 	public $transaction_id;
-
-	/**
-	 * The total amount of this payment.
-	 *
-	 * @var TaxedMoney
-	 */
-	private $total_amount;
 
 	/**
 	 * The shipping amount of this payment.
@@ -212,25 +196,11 @@ abstract class PaymentInfo {
 	public $lines;
 
 	/**
-	 * Version.
-	 *
-	 * @var string|null
-	 */
-	private $version;
-
-	/**
 	 * Mode.
 	 *
 	 * @var string|null
 	 */
 	private $mode;
-
-	/**
-	 * Is anonymized.
-	 *
-	 * @var bool|null
-	 */
-	private $anonymized;
 
 	/**
 	 * Credit card
@@ -270,7 +240,7 @@ abstract class PaymentInfo {
 		$this->date = new DateTime();
 		$this->meta = array();
 
-		$this->set_total_amount( new TaxedMoney() );
+		$this->touch();
 	}
 
 	/**
@@ -350,34 +320,6 @@ abstract class PaymentInfo {
 	}
 
 	/**
-	 * Get the source identifier of this payment.
-	 *
-	 * @return string|null
-	 */
-	public function get_source() {
-		return $this->source;
-	}
-
-	/**
-	 * Set the source of this payment.
-	 *
-	 * @param string|null $source Source.
-	 * @return void
-	 */
-	public function set_source( $source ) {
-		$this->source = $source;
-	}
-
-	/**
-	 * Get the source ID of this payment.
-	 *
-	 * @return string|int|null
-	 */
-	public function get_source_id() {
-		return $this->source_id;
-	}
-
-	/**
 	 * Get origin post ID.
 	 *
 	 * @return int|null
@@ -394,16 +336,6 @@ abstract class PaymentInfo {
 	 */
 	public function set_origin_id( $origin_id ) {
 		$this->origin_id = $origin_id;
-	}
-
-	/**
-	 * Set the source ID of this payment.
-	 *
-	 * @param string|int|null $source_id Source ID.
-	 * @return void
-	 */
-	public function set_source_id( $source_id ) {
-		$this->source_id = $source_id;
 	}
 
 	/**
@@ -511,25 +443,6 @@ abstract class PaymentInfo {
 	}
 
 	/**
-	 * Get total amount.
-	 *
-	 * @return TaxedMoney
-	 */
-	public function get_total_amount() {
-		return $this->total_amount;
-	}
-
-	/**
-	 * Set total amount.
-	 *
-	 * @param TaxedMoney $total_amount Total amount.
-	 * @return void
-	 */
-	public function set_total_amount( TaxedMoney $total_amount ) {
-		$this->total_amount = $total_amount;
-	}
-
-	/**
 	 * Get the shipping amount.
 	 *
 	 * @return Money|null
@@ -575,6 +488,16 @@ abstract class PaymentInfo {
 	 */
 	public function get_description() {
 		return $this->description;
+	}
+
+	/**
+	 * Set the payment description.
+	 *
+	 * @param string $description Description.
+	 * @return void
+	 */
+	public function set_description( $description ) {
+		$this->description = $description;
 	}
 
 	/**
@@ -697,38 +620,19 @@ abstract class PaymentInfo {
 	}
 
 	/**
-	 * Set version.
-	 *
-	 * @param string|null $version Version.
-	 * @return void
-	 */
-	public function set_version( $version ) {
-		$this->version = $version;
-	}
-
-	/**
-	 * Get version.
-	 *
-	 * @return string|null
-	 */
-	public function get_version() {
-		return $this->version;
-	}
-
-	/**
 	 * Set mode.
 	 *
 	 * @param string|null $mode Mode.
 	 * @return void
-	 * @throws InvalidArgumentException Throws invalid argument exception when mode is not a string or not one of the mode constants.
+	 * @throws \InvalidArgumentException Throws invalid argument exception when mode is not a string or not one of the mode constants.
 	 */
 	public function set_mode( $mode ) {
 		if ( ! is_string( $mode ) ) {
-			throw new InvalidArgumentException( 'Mode must be a string.' );
+			throw new \InvalidArgumentException( 'Mode must be a string.' );
 		}
 
 		if ( ! in_array( $mode, array( Gateway::MODE_TEST, Gateway::MODE_LIVE ), true ) ) {
-			throw new InvalidArgumentException( 'Invalid mode.' );
+			throw new \InvalidArgumentException( 'Invalid mode.' );
 		}
 
 		$this->mode = $mode;
@@ -741,24 +645,5 @@ abstract class PaymentInfo {
 	 */
 	public function get_mode() {
 		return $this->mode;
-	}
-
-	/**
-	 * Is anonymized?
-	 *
-	 * @return bool
-	 */
-	public function is_anonymized() {
-		return ( true === $this->anonymized );
-	}
-
-	/**
-	 * Set anonymized.
-	 *
-	 * @param bool|null $anonymized Anonymized.
-	 * @return void
-	 */
-	public function set_anonymized( $anonymized ) {
-		$this->anonymized = $anonymized;
 	}
 }

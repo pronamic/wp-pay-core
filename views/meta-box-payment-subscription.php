@@ -24,7 +24,11 @@ if ( null === $payment ) {
 
 $subscription = $payment->get_subscription();
 
-if ( $subscription ) : ?>
+if ( $subscription ) :
+
+	$phase = $subscription->get_display_phase();
+
+	?>
 
 	<table class="form-table">
 		<tr>
@@ -68,25 +72,41 @@ if ( $subscription ) : ?>
 			<td>
 				<?php
 
-				echo esc_html( $subscription->get_total_amount()->format_i18n() );
+				if ( null !== $phase ) :
+
+					echo esc_html( $phase->get_amount()->format_i18n() );
+
+				endif;
 
 				?>
 			</td>
 		</tr>
 		<tr>
 			<th scope="row">
-				<?php echo esc_html_x( 'Interval', 'Recurring payment', 'pronamic_ideal' ); ?>
+				<?php echo esc_html_x( 'Recurrence', 'Recurring payment', 'pronamic_ideal' ); ?>
 			</th>
 			<td>
-				<?php echo esc_html( Util::format_interval( $subscription->get_interval(), $subscription->get_interval_period() ) ); ?>
-			</td>
-		</tr>
-		<tr>
-			<th scope="row">
-				<?php echo esc_html_x( 'Frequency', 'Recurring payment', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php echo esc_html( Util::format_frequency( $subscription->get_frequency() ) ); ?>
+				<?php
+
+				if ( null === $phase || 1 === $phase->get_total_periods() ) :
+					// No recurrence.
+					echo '—';
+
+				elseif ( $phase->is_infinite() ) :
+					// Infinite.
+					echo esc_html( strval( Util::format_recurrences( $phase->get_interval() ) ) );
+
+				else :
+					// Fixed number of recurrences.
+					printf(
+						'%s (%s)',
+						esc_html( strval( Util::format_recurrences( $phase->get_interval() ) ) ),
+						esc_html( strval( Util::format_frequency( $phase->get_total_periods() ) ) )
+					);
+
+				endif;
+
+				?>
 			</td>
 		</tr>
 		<tr>

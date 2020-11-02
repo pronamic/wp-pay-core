@@ -193,18 +193,19 @@ endif;
 
 									$active_methods = $gateway->get_transient_available_payment_methods();
 
-									foreach ( $active_methods as $method ) :
-										if ( ! in_array( $method, $recurring_methods, true ) ) :
-											continue;
-										endif;
+									if ( null !== $active_methods ) {
+										foreach ( $active_methods as $method ) {
+											if ( ! in_array( $method, $recurring_methods, true ) ) :
+												continue;
+											endif;
 
-										printf(
-											'<option value="%s">%s</option>',
-											esc_attr( $method ),
-											esc_html( PaymentMethods::get_name( $method ) )
-										);
-
-									endforeach;
+											printf(
+												'<option value="%s">%s</option>',
+												esc_attr( $method ),
+												esc_html( PaymentMethods::get_name( $method ) )
+											);
+										}
+									}
 
 									?>
 								</select>

@@ -8,7 +8,6 @@
  * @package   Pronamic\WordPress\Pay
  */
 
-use Pronamic\WordPress\Pay\Admin\AdminPaymentPostType;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 
@@ -28,21 +27,7 @@ function pronamic_pay_plugin() {
  * @return Payment|null
  */
 function get_pronamic_payment( $post_id ) {
-	if ( empty( $post_id ) ) {
-		return null;
-	}
-
-	$post_id = (int) $post_id;
-
-	$post_type = get_post_type( $post_id );
-
-	if ( 'pronamic_payment' !== $post_type ) {
-		return null;
-	}
-
-	$payment = new Payment( $post_id );
-
-	return $payment;
+	return pronamic_pay_plugin()->payments_data_store->get_payment( $post_id );
 }
 
 /**
@@ -52,7 +37,7 @@ function get_pronamic_payment( $post_id ) {
  * @link https://developer.wordpress.org/reference/functions/wp_reset_postdata/
  *
  * @param string     $meta_key   The meta key to query for.
- * @param string|int $meta_value The Meta value to query for.
+ * @param string|int $meta_value The meta value to query for.
  * @param array      $args       Query arguments.
  * @return Payment|null
  */
@@ -79,7 +64,7 @@ function get_pronamic_payment_by_meta( $meta_key, $meta_value, $args = array() )
  * @link https://developer.wordpress.org/reference/functions/wp_reset_postdata/
  *
  * @param string     $meta_key   The meta key to query for.
- * @param string|int $meta_value The Meta value to query for.
+ * @param string|int $meta_value The meta value to query for.
  * @param array      $args       Query arguments.
  * @return Payment[]
  */
@@ -141,63 +126,50 @@ function get_pronamic_payment_by_transaction_id( $transaction_id ) {
 }
 
 /**
+ * Get payments by the specified user ID.
+ *
+ * @param string|int $user_id The user ID to query for.
+ *
+ * @return Payment[]
+ */
+function get_pronamic_payments_by_user_id( $user_id = null ) {
+	if ( null === $user_id ) {
+		$user_id = \get_current_user_id();
+	}
+
+	return get_pronamic_payments_by_meta( null, null, array( 'author' => $user_id ) );
+}
+
+/**
  * Get subscription by the specified post ID.
  *
  * @param int $post_id A subscription post ID.
  * @return Subscription|null
  */
 function get_pronamic_subscription( $post_id ) {
-	if ( empty( $post_id ) ) {
-		return null;
-	}
-
-	$post_id = (int) $post_id;
-
-	$post_type = get_post_type( $post_id );
-
-	if ( 'pronamic_pay_subscr' !== $post_type ) {
-		return null;
-	}
-
-	$subscription = new Subscription( $post_id );
-
-	return $subscription;
+	return pronamic_pay_plugin()->subscriptions_data_store->get_subscription( $post_id );
 }
 
 /**
  * Get subscription by the specified meta key and value.
  *
  * @param string $meta_key   The meta key to query for.
- * @param string $meta_value The Meta value to query for.
+ * @param string $meta_value The meta value to query for.
+ * @param array  $args       Query arguments.
  * @return Subscription|null
  */
-function get_pronamic_subscription_by_meta( $meta_key, $meta_value ) {
-	$subscription = null;
+function get_pronamic_subscription_by_meta( $meta_key, $meta_value, $args = array() ) {
+	$args['posts_per_page'] = 1;
 
-	$query = new WP_Query(
-		array(
-			'post_type'      => 'pronamic_pay_subscr',
-			'post_status'    => 'any',
-			'posts_per_page' => 1,
-			'no_found_rows'  => true,
-			'meta_query'     => array(
-				array(
-					'key'   => $meta_key,
-					'value' => $meta_value,
-				),
-			),
-		)
-	);
+	$subscriptions = get_pronamic_subscriptions_by_meta( $meta_key, $meta_value, $args );
 
-	if ( $query->have_posts() ) {
-		while ( $query->have_posts() ) {
-			$query->the_post();
-
-			$subscription = get_pronamic_subscription( (int) get_the_ID() );
-		}
-
-		wp_reset_postdata();
+	// No subscriptions found.
+	if ( empty( $subscriptions ) ) {
+		return null;
 	}
+
+	// Get first (and only) subscription.
+	$subscription = array_shift( $subscriptions );
 
 	return $subscription;
 }
@@ -206,42 +178,59 @@ function get_pronamic_subscription_by_meta( $meta_key, $meta_value ) {
  * Get subscriptions by specified meta key and value.
  *
  * @param string $meta_key   The meta key to query for.
- * @param string $meta_value The Meta value to query for.
+ * @param string $meta_value The meta value to query for.
+ * @param array  $args       Query arguments.
  * @return Subscription[]
  */
-function get_pronamic_subscriptions_by_meta( $meta_key, $meta_value ) {
+function get_pronamic_subscriptions_by_meta( $meta_key, $meta_value, $args = array() ) {
 	$subscriptions = array();
 
-	$query = new WP_Query(
-		array(
-			'post_type'      => 'pronamic_pay_subscr',
-			'post_status'    => 'any',
-			'posts_per_page' => 1,
-			'no_found_rows'  => true,
-			'meta_query'     => array(
-				array(
-					'key'   => $meta_key,
-					'value' => $meta_value,
-				),
-			),
-		)
+	$defaults = array(
+		'post_type'      => 'pronamic_pay_subscr',
+		'post_status'    => 'any',
+		'posts_per_page' => -1,
+		'no_found_rows'  => true,
+		'meta_query'     => array(),
 	);
 
-	if ( $query->have_posts() ) {
-		while ( $query->have_posts() ) {
-			$query->the_post();
+	$args = wp_parse_args( $args, $defaults );
 
-			$subscription = get_pronamic_subscription( (int) get_the_ID() );
+	// Add meta query for given meta key and value.
+	if ( ! is_array( $args['meta_query'] ) ) {
+		$args['meta_query'] = array();
+	}
 
-			if ( null !== $subscription ) {
-				$subscriptions[] = $subscription;
-			}
+	$args['meta_query'][] = array(
+		'key'   => $meta_key,
+		'value' => $meta_value,
+	);
+
+	$query = new WP_Query( $args );
+
+	foreach ( $query->posts as $p ) {
+		$subscription = get_pronamic_subscription( $p->ID );
+
+		if ( null !== $subscription ) {
+			$subscriptions[] = $subscription;
 		}
-
-		wp_reset_postdata();
 	}
 
 	return $subscriptions;
+}
+
+/**
+ * Get subscriptions by the specified user ID.
+ *
+ * @param string|int $user_id The user ID to query for.
+ *
+ * @return Subscription[]
+ */
+function get_pronamic_subscriptions_by_user_id( $user_id = null ) {
+	if ( null === $user_id ) {
+		$user_id = \get_current_user_id();
+	}
+
+	return get_pronamic_subscriptions_by_meta( null, null, array( 'author' => $user_id ) );
 }
 
 /**
@@ -249,43 +238,33 @@ function get_pronamic_subscriptions_by_meta( $meta_key, $meta_value ) {
  *
  * @param string      $source    The source to query for.
  * @param string|null $source_id The source ID to query for.
- * @return Subscription|null
+ * @return Subscription[]|null
  */
 function get_pronamic_subscriptions_by_source( $source, $source_id = null ) {
-	$subscriptions = array();
-
-	$query = new \WP_Query(
+	// Meta query.
+	$meta_query = array(
 		array(
-			'post_type'     => 'pronamic_pay_subscr',
-			'post_status'   => 'any',
-			'meta_query'    => array(
-				array(
-					'key'   => '_pronamic_subscription_source',
-					'value' => $source,
-				),
-				array(
-					'key'   => '_pronamic_subscription_source_id',
-					'value' => $source_id,
-				),
-			),
-			'nopaging'      => true,
-			'no_found_rows' => true,
-			'order'         => 'DESC',
-			'orderby'       => 'ID',
-		)
+			'key'   => '_pronamic_subscription_source',
+			'value' => $source,
+		),
 	);
 
-	if ( $query->have_posts() ) {
-		while ( $query->have_posts() ) {
-			$query->the_post();
-
-			$subscriptions[] = get_pronamic_subscription( (int) get_the_ID() );
-		}
-
-		wp_reset_postdata();
+	// Add source ID meta query condition.
+	if ( ! empty( $source_id ) ) {
+		$meta_query[] = array(
+			'key'   => '_pronamic_subscription_source_id',
+			'value' => $source_id,
+		);
 	}
 
-	return $subscriptions;
+	// Return.
+	$args = array(
+		'meta_query' => $meta_query,
+		'order'      => 'DESC',
+		'orderby'    => 'ID',
+	);
+
+	return get_pronamic_subscriptions_by_meta( null, null, $args );
 }
 
 /**
@@ -391,4 +370,3 @@ function pronamic_pay_update_post_meta_data( $post_id, array $data ) {
 		}
 	}
 }
-
