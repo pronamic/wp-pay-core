@@ -251,6 +251,14 @@ class PaymentMethods {
 	const PAYPAL = 'paypal';
 
 	/**
+	 * Przelewy24
+	 *
+	 * @var string
+	 * @since 2.5.0
+	 */
+	const PRZELEWY24 = 'przelewy24';
+
+	/**
 	 * SOFORT Banking
 	 *
 	 * @var string
@@ -306,6 +314,7 @@ class PaymentMethods {
 			self::MAESTRO                 => __( 'Maestro', 'pronamic_ideal' ),
 			self::PAYCONIQ                => __( 'Payconiq', 'pronamic_ideal' ),
 			self::PAYPAL                  => __( 'PayPal', 'pronamic_ideal' ),
+			self::PRZELEWY24              => __( 'Przelewy24', 'pronamic_ideal' ),
 			self::SOFORT                  => __( 'SOFORT Banking', 'pronamic_ideal' ),
 		);
 
