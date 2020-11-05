@@ -15,11 +15,11 @@ $subscription_id = $subscription->get_id();
 
 $mollie_customer_id = \get_post_meta( $subscription_id, '_pronamic_subscription_mollie_customer_id', true );
 
-if ( empty( $mollie_customer_id ) ) :
+if ( empty( $mollie_customer_id ) ) {
 	include \get_404_template();
 
 	exit;
-endif;
+}
 
 $api_key = \get_post_meta( $subscription->config_id, '_pronamic_gateway_mollie_api_key', true );
 
@@ -39,11 +39,11 @@ $subscription_mandate_id = $subscription->get_meta( 'mollie_mandate_id' );
 // Set current subscription mandate as first item.
 $current_mandate = wp_list_filter( $mollie_customer_mandates, array( 'id' => $subscription_mandate_id ) );
 
-if ( is_array( $current_mandate ) ) :
+if ( is_array( $current_mandate ) ) {
 	unset( $mollie_customer_mandates[ key( $current_mandate ) ] );
 
 	$mollie_customer_mandates = array_merge( $current_mandate, $mollie_customer_mandates );
-endif;
+}
 
 ?>
 <!DOCTYPE html>
