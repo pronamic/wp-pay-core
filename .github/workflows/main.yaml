@@ -280,6 +280,8 @@ jobs:
         run: composer run-script phpunit
 
       - name: Coveralls code coverage
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           composer run-script coveralls
           bash <(curl -s https://codecov.io/bash)
