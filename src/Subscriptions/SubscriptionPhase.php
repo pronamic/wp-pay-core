@@ -552,19 +552,6 @@ class SubscriptionPhase implements \JsonSerializable {
 			throw new \InvalidArgumentException( 'Object must contain `interval` property.' );
 		}
 
-		/**
-		 * Backward compatibility development.
-		 *
-		 * @todo Remove on release.
-		 */
-		if ( \is_object( $json->interval ) && isset( $json->interval->value, $json->interval->unit ) ) {
-			$json->interval = 'P' . $json->interval->value . $json->interval->unit;
-
-			if ( 'P' === $json->interval ) {
-				$json->interval = 'PT0S';
-			}
-		}
-
 		if ( ! isset( $json->amount ) ) {
 			throw new \InvalidArgumentException( 'Object must contain `amount` property.' );
 		}
