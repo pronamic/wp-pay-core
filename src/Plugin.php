@@ -829,11 +829,15 @@ class Plugin {
 		$payment->set_credit_card( $data->get_credit_card() );
 
 		// Customer.
+		$name = array(
+			'first_name' => $data->get_first_name(),
+			'last_name'  => $data->get_last_name(),
+		);
+
+		$name = array_filter( $name );
+
 		$customer = array(
-			'name'    => (object) array(
-				'first_name' => $data->get_first_name(),
-				'last_name'  => $data->get_last_name(),
-			),
+			'name'    => empty( $name ) ? null : (object) $name,
 			'email'   => $data->get_email(),
 			'phone'   => $data->get_telephone_number(),
 			'user_id' => $data->get_user_id(),
