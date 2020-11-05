@@ -16,8 +16,8 @@ use DateTimeImmutable;
  * Alignment Rule
  *
  * @author  Remco Tolsma
- * @version unreleased
- * @since   unreleased
+ * @version 2.5.0
+ * @since   2.5.0
  */
 class AlignmentRule {
 	/**

@@ -7,6 +7,19 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.5.0] - unreleased
+- Added support for subscription phases.
+- Added support for Przelewy24 payment method.
+- Improved data stores, reuse data from memory.
+- Catch money parser exceptions in blocks.
+- Introduced some traits for the DRY principle.
+- Payments can be linked to multiple subscription periods.
+- Improved support for subscription alignment and proration.
+- Added REST API endpoint for subscription phases.
+- Removed `$subscription->get_total_amount()` in favor of getting amount from phases.
+- Removed ability to manually change subscription amount for now.
+- No longer start recurring payments for expired subscriptions.
+
 ## [2.4.1] - 2020-07-22
 - Display email address as customer in payments and subscriptions list and details for unknown customers.
 - Fix using deprecated `email` and `customer_name` properties.
@@ -292,7 +305,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.4.1...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.5.0...HEAD
+[2.5.0]: https://github.com/wp-pay/core/compare/2.4.1...2.5.0
 [2.4.1]: https://github.com/wp-pay/core/compare/2.4.0...2.4.1
 [2.4.0]: https://github.com/wp-pay/core/compare/2.3.2...2.4.0
 [2.3.2]: https://github.com/wp-pay/core/compare/2.3.1...2.3.2

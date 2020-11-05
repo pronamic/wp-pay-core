@@ -16,8 +16,8 @@ use Pronamic\WordPress\Money\TaxedMoney;
 /**
  * Subscription Helper Test
  *
- * @author Remco Tolsma
- * @version 2.4.0
+ * @author  Remco Tolsma
+ * @version 2.5.0
  */
 class SubscriptionHelperTest extends \WP_UnitTestCase {
 	/**

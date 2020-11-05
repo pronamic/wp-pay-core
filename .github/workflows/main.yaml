@@ -103,9 +103,6 @@ jobs:
       - name: PHPStan static code analysis
         run: composer bin phpstan install && composer run-script phpstan
 
-      - name: Psalm static code analysis
-        run: composer bin psalm install && composer run-script psalm
-
   tests:
     name: Tests — PHP ${{ matrix.php-version }} ${{ matrix.name }}
 
@@ -197,10 +194,6 @@ jobs:
       - name: Start MySQL service
         run: sudo service mysql start
 
-      - name: Remove PHP 7.1+ packages
-        if: ${{ matrix.php-version == '7.0' || matrix.php-version == '5.6' }}
-        run: composer remove --dev --no-update --no-progress szepeviktor/phpstan-wordpress
-
       - name: Require WordPress
         run: composer require --dev --no-update --no-progress --no-suggest roots/wordpress:${{ matrix.wp-version || env.wp-version }} wp-phpunit/wp-phpunit:${{ matrix.wp-version || env.wp-version }}
 
@@ -284,6 +277,8 @@ jobs:
         run: composer run-script phpunit
 
       - name: Coveralls code coverage
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           composer run-script coveralls
           bash <(curl -s https://codecov.io/bash)

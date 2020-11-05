@@ -17,8 +17,8 @@ use Pronamic\WordPress\Money\TaxedMoney;
  * Subscription Phases Trait
  *
  * @author  Remco Tolsma
- * @version unreleased
- * @since   unreleased
+ * @version 2.5.0
+ * @since   2.5.0
  */
 trait SubscriptionPhasesTrait {
 	/**
@@ -67,7 +67,7 @@ trait SubscriptionPhasesTrait {
 	 * @return SubscriptionPhase
 	 */
 	public function new_phase( $start_date, $interval_spec, $amount ) {
-		$start = new \DateTimeImmutable( $start_date->format( \DateTimeInterface::ATOM ) );
+		$start = new \DateTimeImmutable( $start_date->format( \DATE_ATOM ) );
 
 		$interval = new SubscriptionInterval( $interval_spec );
 

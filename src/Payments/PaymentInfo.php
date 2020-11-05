@@ -25,7 +25,7 @@ use WP_Post;
  * Payment info
  *
  * @author  Remco Tolsma
- * @version 2.3.2
+ * @version 2.5.0
  * @since   1.0.0
  */
 abstract class PaymentInfo {

@@ -22,7 +22,7 @@ use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
  * Payment info helper
  *
  * @author  Remco Tolsma
- * @version 2.3.2
+ * @version 2.5.0
  * @since   2.1.0
  */
 class PaymentInfoHelper {

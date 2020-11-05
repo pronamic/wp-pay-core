@@ -18,7 +18,7 @@ use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
  * Subscription Period
  *
  * @author  Remco Tolsma
- * @version 2.4.0
+ * @version 2.5.0
  * @since   2.4.0
  */
 class SubscriptionPeriod {
@@ -180,7 +180,7 @@ class SubscriptionPeriod {
 
 		$phase = $subscription->get_phase_by_sequence_number( $json->phase->sequence_number );
 
-		if ( null === $subscription ) {
+		if ( null === $phase ) {
 			throw new \Exception(
 				\sprintf(
 					'Unable to find subscription phase by sequence number: %s.',

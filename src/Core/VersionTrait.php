@@ -14,8 +14,8 @@ namespace Pronamic\WordPress\Pay\Core;
  * Version Trait
  *
  * @author  Remco Tolsma
- * @version unreleased
- * @since   unreleased
+ * @version 2.5.0
+ * @since   2.5.0
  * @link    https://github.com/search?q=%22trait+VersionTrait%22+language%3APHP&type=Code
  */
 trait VersionTrait {

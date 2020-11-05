@@ -21,7 +21,7 @@ use Pronamic\WordPress\Pay\Payments\PaymentInfoHelper;
  * Subscription
  *
  * @author  Remco Tolsma
- * @version 2.4.0
+ * @version 2.5.0
  * @since   1.0.0
  */
 class Subscription extends LegacyPaymentInfo implements \JsonSerializable {

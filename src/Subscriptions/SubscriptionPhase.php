@@ -20,8 +20,8 @@ use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
  * Subscription Phase
  *
  * @author  Remco Tolsma
- * @version unreleased
- * @since   unreleased
+ * @version 2.5.0
+ * @since   2.5.0
  */
 class SubscriptionPhase implements \JsonSerializable {
 	/**
@@ -465,8 +465,8 @@ class SubscriptionPhase implements \JsonSerializable {
 
 		$period = new SubscriptionPeriod(
 			$this,
-			new DateTime( $start->format( \DateTimeInterface::ATOM ) ),
-			new DateTime( $end->format( \DateTimeInterface::ATOM ) ),
+			new DateTime( $start->format( \DATE_ATOM ) ),
+			new DateTime( $end->format( \DATE_ATOM ) ),
 			$this->get_amount()
 		);
 
@@ -550,19 +550,6 @@ class SubscriptionPhase implements \JsonSerializable {
 
 		if ( ! isset( $json->interval ) ) {
 			throw new \InvalidArgumentException( 'Object must contain `interval` property.' );
-		}
-
-		/**
-		 * Backward compatibility development.
-		 *
-		 * @todo Remove on release.
-		 */
-		if ( \is_object( $json->interval ) && isset( $json->interval->value, $json->interval->unit ) ) {
-			$json->interval = 'P' . $json->interval->value . $json->interval->unit;
-
-			if ( 'P' === $json->interval ) {
-				$json->interval = 'PT0S';
-			}
 		}
 
 		if ( ! isset( $json->amount ) ) {
