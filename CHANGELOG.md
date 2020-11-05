@@ -8,7 +8,14 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 -
 
 ## [2.5.0] - unreleased
+- Added support for subscription phases.
 - Added support for Przelewy24 payment method.
+- Improved data stores, reuse data from memory.
+- Catch money parser exceptions in blocks.
+- Introduced some traits for the DRY principle.
+- Payments can be linked to multiple subscription periods.
+- Improved support for subscription alignment and proration.
+- Added REST API endpoint for subscription phases.
 
 ## [2.4.1] - 2020-07-22
 - Display email address as customer in payments and subscriptions list and details for unknown customers.
