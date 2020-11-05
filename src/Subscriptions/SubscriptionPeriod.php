@@ -180,7 +180,7 @@ class SubscriptionPeriod {
 
 		$phase = $subscription->get_phase_by_sequence_number( $json->phase->sequence_number );
 
-		if ( null === $subscription ) {
+		if ( null === $phase ) {
 			throw new \Exception(
 				\sprintf(
 					'Unable to find subscription phase by sequence number: %s.',
