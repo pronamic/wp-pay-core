@@ -828,39 +828,73 @@ class Plugin {
 		$payment->set_total_amount( $data->get_amount() );
 		$payment->set_credit_card( $data->get_credit_card() );
 
+		// Data.
+		$first_name = $data->get_first_name();
+		$last_name  = $data->get_last_name();
+
+		$email   = $data->get_email();
+		$phone   = $data->get_telephone_number();
+		$user_id = $data->get_user_id();
+
+		$line_1       = $data->get_address();
+		$postal_code  = $data->get_zip();
+		$city         = $data->get_city();
+		$country_name = $data->get_country();
+
+		// Name.
+		$name = null;
+
+		$name_data = array(
+			$first_name,
+			$last_name,
+		);
+
+		$name_data = array_filter( $name_data );
+
+		if ( ! empty( $name_data ) ) {
+			$name = new ContactName();
+
+			if ( ! empty( $first_name ) ) {
+				$name->set_first_name( $first_name );
+			}
+
+			if ( ! empty( $last_name ) ) {
+				$name->set_last_name( $last_name );
+			}
+		}
+
 		// Customer.
-		$name = array(
-			'first_name' => $data->get_first_name(),
-			'last_name'  => $data->get_last_name(),
+		$customer_data = array(
+			$name,
+			$email,
+			$phone,
+			$user_id,
 		);
 
-		$name = array_filter( $name );
+		$customer_data = array_filter( $customer_data );
 
-		$customer = array(
-			'name'    => empty( $name ) ? null : (object) $name,
-			'email'   => $data->get_email(),
-			'phone'   => $data->get_telephone_number(),
-			'user_id' => $data->get_user_id(),
-		);
+		if ( ! empty( $customer_data ) ) {
+			$customer = new Customer();
 
-		$customer = array_filter( $customer );
+			$customer->set_name( $name );
 
-		if ( ! empty( $customer ) ) {
-			$customer = Customer::from_json( (object) $customer );
+			if ( ! empty( $email ) ) {
+				$customer->set_email( $email );
+			}
+
+			if ( ! empty( $phone ) ) {
+				$customer->set_phone( $phone );
+			}
+
+			if ( ! empty( $user_id ) ) {
+				$customer->set_user_id( \intval( $user_id ) );
+			}
 
 			$payment->set_customer( $customer );
 		}
 
 		// Billing address.
-		$name         = ( $customer instanceof Customer ? $customer->get_name() : null );
-		$line_1       = $data->get_address();
-		$postal_code  = $data->get_zip();
-		$city         = $data->get_city();
-		$country_name = $data->get_country();
-		$email        = $data->get_email();
-		$phone        = $data->get_telephone_number();
-
-		$parts = array(
+		$address_data = array(
 			$name,
 			$line_1,
 			$postal_code,
@@ -870,9 +904,9 @@ class Plugin {
 			$phone,
 		);
 
-		$parts = array_filter( $parts );
+		$address_data = array_filter( $address_data );
 
-		if ( ! empty( $parts ) ) {
+		if ( ! empty( $address_data ) ) {
 			$address = new Address();
 
 			if ( ! empty( $name ) ) {
