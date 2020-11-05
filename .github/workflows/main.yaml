@@ -103,9 +103,6 @@ jobs:
       - name: PHPStan static code analysis
         run: composer bin phpstan install && composer run-script phpstan
 
-      - name: Psalm static code analysis
-        run: composer bin psalm install && composer run-script psalm
-
   tests:
     name: Tests — PHP ${{ matrix.php-version }} ${{ matrix.name }}
 
