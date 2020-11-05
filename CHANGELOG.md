@@ -16,6 +16,9 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 - Payments can be linked to multiple subscription periods.
 - Improved support for subscription alignment and proration.
 - Added REST API endpoint for subscription phases.
+- Removed `$subscription->get_total_amount()` in favor of getting amount from phases.
+- Removed ability to manually change subscription amount for now.
+- No longer start recurring payments for expired subscriptions.
 
 ## [2.4.1] - 2020-07-22
 - Display email address as customer in payments and subscriptions list and details for unknown customers.
