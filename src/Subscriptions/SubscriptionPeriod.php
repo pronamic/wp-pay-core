@@ -18,7 +18,7 @@ use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
  * Subscription Period
  *
  * @author  Remco Tolsma
- * @version 2.4.0
+ * @version 2.5.0
  * @since   2.4.0
  */
 class SubscriptionPeriod {

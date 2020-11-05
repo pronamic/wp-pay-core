@@ -20,7 +20,7 @@ use WP_Query;
  * Company: Pronamic
  *
  * @author  Remco Tolsma
- * @version 2.2.6
+ * @version 2.5.0
  * @since   1.0.1
  */
 class PaymentMethods {
@@ -253,8 +253,8 @@ class PaymentMethods {
 	/**
 	 * Przelewy24
 	 *
-	 * @var string
 	 * @since 2.5.0
+	 * @var string
 	 */
 	const PRZELEWY24 = 'przelewy24';
 

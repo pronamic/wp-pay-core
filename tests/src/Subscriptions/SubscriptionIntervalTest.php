@@ -13,8 +13,8 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 /**
  * Subscription Interval Test
  *
- * @author Remco Tolsma
- * @version 2.4.0
+ * @author  Remco Tolsma
+ * @version 2.5.0
  */
 class SubscriptionIntervalTest extends \WP_UnitTestCase {
 	/**

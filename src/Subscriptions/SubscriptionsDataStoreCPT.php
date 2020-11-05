@@ -25,7 +25,7 @@ use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
  * @link https://woocommerce.com/2017/04/woocommerce-3-0-release/
  * @link https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
  * @author  Remco Tolsma
- * @version 2.4.0
+ * @version 2.5.0
  * @since   2.0.1
  */
 class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {

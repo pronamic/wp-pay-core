@@ -13,8 +13,9 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 /**
  * Alignment Rule Test
  *
- * @author Remco Tolsma
- * @version unreleased
+ * @author  Remco Tolsma
+ * @version 2.5.0
+ * @since   2.5.0
  */
 class AlignmentRuleTest extends \WP_UnitTestCase {
 	/**

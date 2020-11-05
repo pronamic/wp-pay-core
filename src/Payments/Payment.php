@@ -23,7 +23,7 @@ use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
  * Payment
  *
  * @author  Remco Tolsma
- * @version 2.4.0
+ * @version 2.5.0
  * @since   1.0.0
  */
 class Payment extends LegacyPayment {
@@ -147,6 +147,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Subscription periods.
 	 *
+	 * @since 2.5.0
 	 * @var SubscriptionPeriod[]|null
 	 */
 	private $periods;
@@ -718,6 +719,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Get subscription periods.
 	 *
+	 * @since 2.5.0
 	 * @return SubscriptionPeriod[]|null
 	 */
 	public function get_periods() {
@@ -727,6 +729,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Add subscription period.
 	 *
+	 * @since 2.5.0
 	 * @param SubscriptionPeriod $period Subscription period.
 	 * @return void
 	 */

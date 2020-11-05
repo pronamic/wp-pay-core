@@ -18,7 +18,7 @@ use Pronamic\WordPress\Pay\Plugin;
  * @link https://make.wordpress.org/core/2019/04/25/site-health-check-in-5-2/
  *
  * @author  Reüel van der Steege
- * @version 2.2.6
+ * @version 2.5.0
  * @since   2.2.4
  */
 class AdminHealth {

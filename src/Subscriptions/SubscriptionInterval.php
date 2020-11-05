@@ -14,7 +14,7 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
  * Subscription Interval
  *
  * @author  Remco Tolsma
- * @version 2.4.0
+ * @version 2.5.0
  * @since   2.4.0
  * @link    https://github.com/briannesbitt/Carbon/blob/2.40.0/src/Carbon/CarbonInterval.php
  * @link    https://github.com/frak/s3bk/blob/master/src/S3Bk/Type/StringableInterval.php

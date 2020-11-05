@@ -20,7 +20,7 @@ use WP_Query;
  * WordPress admin subscription post type
  *
  * @author  Reüel van der Steege
- * @version 2.4.0
+ * @version 2.5.0
  * @since   1.0.0
  */
 class AdminSubscriptionPostType {

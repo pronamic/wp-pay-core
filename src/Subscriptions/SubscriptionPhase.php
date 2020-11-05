@@ -20,8 +20,8 @@ use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
  * Subscription Phase
  *
  * @author  Remco Tolsma
- * @version unreleased
- * @since   unreleased
+ * @version 2.5.0
+ * @since   2.5.0
  */
 class SubscriptionPhase implements \JsonSerializable {
 	/**

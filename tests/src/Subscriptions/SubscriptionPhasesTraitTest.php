@@ -16,8 +16,8 @@ use Pronamic\WordPress\Money\TaxedMoney;
 /**
  * Subscription Phases Trait Test
  *
- * @author Remco Tolsma
- * @version unreleased
+ * @author  Remco Tolsma
+ * @version 2.5.0
  */
 class SubscriptionPhasesTraitTest extends \WP_UnitTestCase {
 	/**
