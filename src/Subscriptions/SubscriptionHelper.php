@@ -169,7 +169,7 @@ class SubscriptionHelper {
 			$phase_end = $phase->get_end_date();
 
 			if ( null !== $phase_end ) {
-				$end_date = new DateTime( $phase_end->format( \DateTimeInterface::ATOM ) );
+				$end_date = new DateTime( $phase_end->format( \DATE_ATOM ) );
 			}
 		}
 
@@ -222,7 +222,7 @@ class SubscriptionHelper {
 			return null;
 		}
 
-		$next_date = new DateTime( $next_date->format( \DateTimeInterface::ATOM ) );
+		$next_date = new DateTime( $next_date->format( \DATE_ATOM ) );
 
 		return $next_date;
 	}

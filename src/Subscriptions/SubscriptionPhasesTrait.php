@@ -67,7 +67,7 @@ trait SubscriptionPhasesTrait {
 	 * @return SubscriptionPhase
 	 */
 	public function new_phase( $start_date, $interval_spec, $amount ) {
-		$start = new \DateTimeImmutable( $start_date->format( \DateTimeInterface::ATOM ) );
+		$start = new \DateTimeImmutable( $start_date->format( \DATE_ATOM ) );
 
 		$interval = new SubscriptionInterval( $interval_spec );
 

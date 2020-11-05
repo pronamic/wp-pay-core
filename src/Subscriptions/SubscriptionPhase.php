@@ -465,8 +465,8 @@ class SubscriptionPhase implements \JsonSerializable {
 
 		$period = new SubscriptionPeriod(
 			$this,
-			new DateTime( $start->format( \DateTimeInterface::ATOM ) ),
-			new DateTime( $end->format( \DateTimeInterface::ATOM ) ),
+			new DateTime( $start->format( \DATE_ATOM ) ),
+			new DateTime( $end->format( \DATE_ATOM ) ),
 			$this->get_amount()
 		);
 
