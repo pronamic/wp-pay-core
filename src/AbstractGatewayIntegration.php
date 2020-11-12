@@ -77,8 +77,8 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 			$args,
 			array(
 				'provider'      => null,
-				'url'           => __( 'https://www.adyen.com/', 'pronamic_ideal' ),
-				'product_url'   => __( 'https://www.adyen.com/pricing', 'pronamic_ideal' ),
+				'url'           => null,
+				'product_url'   => null,
 				'dashboard_url' => array(),
 				'manual_url'    => null,
 				'supports'      => array(),
