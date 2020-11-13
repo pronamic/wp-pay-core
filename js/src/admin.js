@@ -268,7 +268,7 @@
 
 		elements.paymentMethods.change( obj.updateInputVisibility );
 
-		$element.on( 'keydown', 'input[name="test_amount"]', function( e ) {
+		$element.on( 'keydown', 'input[name="test_amount"], input[name="test_phone"]', function( e ) {
 			if ( 13 === e.keyCode) {
 				$element.find('input[name="test_pay_gateway"]').click();
 			}
