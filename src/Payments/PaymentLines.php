@@ -89,28 +89,41 @@ class PaymentLines implements \Countable, \IteratorAggregate {
 	/**
 	 * Calculate the total amount of all lines.
 	 *
-	 * @todo Calculate tax.
 	 * @return TaxedMoney
 	 */
 	public function get_amount() {
-		$total = new Money();
-		$tax   = new Money();
+		$total    = new Money();
+		$tax      = new Money();
+		$currency = null;
 
 		foreach ( $this->lines as $line ) {
+			// Total.
 			$line_total = $line->get_total_amount();
 
 			$total = $total->add( $line_total );
 
+			// Tax.
 			$line_tax = $line_total->get_tax_amount();
 
 			if ( null !== $line_tax ) {
 				$tax = $tax->add( $line_tax );
 			}
+
+			// Currency.
+			if ( null === $currency ) {
+				$currency = $line_total->get_currency();
+			}
 		}
 
+		// Currency.
+		if ( null === $currency ) {
+			$currency = 'EUR';
+		}
+
+		// Return payment lines amount.
 		return new TaxedMoney(
 			$total->get_value(),
-			'EUR',
+			$currency,
 			$tax->get_value()
 		);
 	}
