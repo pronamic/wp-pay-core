@@ -65,6 +65,8 @@ add_filter(
 		}
 
 		return $configuration_id;
-	}
+	},
+	10,
+	2
 );
 ```
