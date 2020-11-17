@@ -156,7 +156,19 @@ class SubscriptionsModule {
 			$subscription->save();
 		}
 
-		wp_safe_redirect( home_url() );
+		$url = \home_url();
+
+		$page_id = \pronamic_pay_get_page_id( 'subscription_canceled' );
+
+		if ( $page_id > 0 ) {
+			$page_url = \get_permalink( $page_id );
+
+			if ( false !== $page_url ) {
+				$url = $page_url;
+			}
+		}
+
+		\wp_safe_redirect( $url );
 
 		exit;
 	}
