@@ -150,25 +150,33 @@ class SubscriptionsModule {
 	 * @return void
 	 */
 	private function handle_subscription_cancel( Subscription $subscription ) {
-		if ( SubscriptionStatus::CANCELLED !== $subscription->get_status() ) {
+		if (
+			'POST' === Server::get( 'REQUEST_METHOD' )
+				&&
+			SubscriptionStatus::CANCELLED !== $subscription->get_status()
+		) {
 			$subscription->set_status( SubscriptionStatus::CANCELLED );
 
 			$subscription->save();
-		}
 
-		$url = \home_url();
+			$url = \home_url();
 
-		$page_id = \pronamic_pay_get_page_id( 'subscription_canceled' );
+			$page_id = \pronamic_pay_get_page_id( 'subscription_canceled' );
 
-		if ( $page_id > 0 ) {
-			$page_url = \get_permalink( $page_id );
+			if ( $page_id > 0 ) {
+				$page_url = \get_permalink( $page_id );
 
-			if ( false !== $page_url ) {
-				$url = $page_url;
+				if ( false !== $page_url ) {
+					$url = $page_url;
+				}
 			}
+
+			\wp_safe_redirect( $url );
+
+			exit;
 		}
 
-		\wp_safe_redirect( $url );
+		require __DIR__ . '/../../views/subscription-cancel.php';
 
 		exit;
 	}
