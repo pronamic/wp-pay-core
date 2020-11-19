@@ -522,6 +522,105 @@ class SubscriptionsModule {
 	}
 
 	/**
+	 * Can payment be retried.
+	 *
+	 * @param Payment $payment Payment to retry.
+	 * @return bool
+	 */
+	public function can_retry_payment( Payment $payment ) {
+		// Check status.
+		if ( PaymentStatus::FAILURE !== $payment->get_status() ) {
+			return false;
+		}
+
+		// Check recurring.
+		if ( ! $payment->get_recurring() ) {
+			return false;
+		}
+
+		// Check parent ID.
+		if ( null !== $payment->get_parent_id() ) {
+			return false;
+		}
+
+		// Check periods.
+		$periods = $payment->get_periods();
+
+		if ( null === $periods ) {
+			return false;
+		}
+
+		// Check for pending and successful child payments.
+		$payments = \get_pronamic_payments_by_meta( '', '', array( 'post_parent' => $payment->get_id() ) );
+
+		foreach ( $payments as $child_payment ) {
+			if ( \in_array( $child_payment->get_status(), array( PaymentStatus::OPEN, PaymentStatus::SUCCESS ), true ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Retry payment.
+	 *
+	 * @param Payment $payment Payment.
+	 * @return Payment|null
+	 */
+	public function retry_payment( Payment $payment ) {
+		// Check if payment can be retried.
+		if ( ! $this->can_retry_payment( $payment ) ) {
+			return null;
+		}
+
+		$periods = $payment->get_periods();
+
+		if ( null === $periods ) {
+			return null;
+		}
+
+		$retry_payment = null;
+
+		foreach ( $periods as $period ) {
+			$subscription = $period->get_phase()->get_subscription();
+
+			$retry_payment = new Payment();
+
+			$retry_payment->email           = $payment->get_email();
+			$retry_payment->method          = $payment->get_method();
+			$retry_payment->issuer          = $payment->get_issuer();
+			$retry_payment->recurring       = $payment->get_recurring();
+			$retry_payment->subscription    = $subscription;
+			$retry_payment->subscription_id = $subscription->get_id();
+
+			$retry_payment->set_description( $payment->get_description() );
+			$retry_payment->set_config_id( $payment->get_config_id() );
+			$retry_payment->set_origin_id( $payment->get_origin_id() );
+			$retry_payment->set_mode( $payment->get_mode() );
+
+			$retry_payment->set_parent_id( $payment->get_id() );
+			$retry_payment->set_source( $payment->get_source() );
+			$retry_payment->set_source_id( $payment->get_source_id() );
+
+			$retry_payment->set_customer( $payment->get_customer() );
+			$retry_payment->set_billing_address( $payment->get_billing_address() );
+			$retry_payment->set_shipping_address( $payment->get_shipping_address() );
+
+			$retry_payment->add_period( $period );
+			$retry_payment->set_start_date( $payment->get_start_date() );
+			$retry_payment->set_end_date( $payment->get_end_date() );
+
+			$retry_payment->set_lines( $payment->get_lines() );
+			$retry_payment->set_total_amount( $payment->get_total_amount() );
+
+			$retry_payment = Plugin::start_payment( $retry_payment );
+		}
+
+		return $retry_payment;
+	}
+
+	/**
 	 * Comments clauses.
 	 *
 	 * @param array             $clauses The database query clauses.

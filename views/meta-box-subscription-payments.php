@@ -33,9 +33,11 @@
 
 		<tbody>
 
-			<?php foreach ( $payments as $payment ) : ?>
+			<?php foreach ( $payments as $payment_data ) : ?>
 
 				<?php
+
+				$payment = $payment_data['payment'];
 
 				$payment_id         = $payment->get_id();
 				$payments_post_type = get_post_type( $payment_id );
@@ -98,6 +100,117 @@
 						?>
 					</td>
 				</tr>
+
+				<?php if ( $this->plugin->subscriptions_module->can_retry_payment( $payment ) ) : ?>
+
+					<tr>
+						<td>&nbsp;</td>
+						<td colspan="6">
+							<?php
+
+							$action_url = \wp_nonce_url(
+								\add_query_arg(
+									array(
+										'post'   => $post->ID,
+										'action' => 'edit',
+										'pronamic_pay_retry' => $payment_id,
+									),
+									\admin_url( 'post.php' )
+								),
+								'pronamic_payment_retry_' . $payment_id
+							);
+
+							\printf(
+								'<p><a class="button" href="%s">%s</a></p>',
+								\esc_url( $action_url ),
+								\esc_html(
+									sprintf(
+										/* translators: %d: payment ID */
+										__( 'Retry payment #%d', 'pronamic_ideal' ),
+										$payment_id
+									)
+								)
+							);
+
+							?>
+						</td>
+					</tr>
+
+				<?php endif; ?>
+
+				<?php if ( null !== $payment_data['children'] ) : ?>
+
+					<?php $payment_data['children'] = \array_reverse( $payment_data['children'] ); ?>
+
+					<?php foreach ( $payment_data['children'] as $child_payment ) : ?>
+
+						<?php
+
+						$child_payment_id = $child_payment->get_id();
+
+						// Get subscription period from payment.
+						$period = null;
+
+						$periods = $child_payment->get_periods();
+
+						if ( null !== $periods ) :
+
+							foreach ( $periods as $subscription_period ) :
+
+								if ( $subscription->get_id() === $subscription_period->get_phase()->get_subscription()->get_id() ) :
+
+									$period = $subscription_period;
+
+									break;
+
+								endif;
+
+							endforeach;
+
+						endif;
+
+						?>
+
+						<tr>
+							<td>
+								<?php \do_action( 'manage_' . $payments_post_type . '_posts_custom_column', 'pronamic_payment_status', $child_payment_id ); ?>
+							</td>
+							<td>
+								&nbsp;&nbsp;&nbsp;
+								<?php \do_action( 'manage_' . $payments_post_type . '_posts_custom_column', 'pronamic_payment_title', $child_payment_id ); ?>
+							</td>
+							<td>
+								<?php \do_action( 'manage_' . $payments_post_type . '_posts_custom_column', 'pronamic_payment_transaction', $child_payment_id ); ?>
+							</td>
+							<td>
+								<?php \do_action( 'manage_' . $payments_post_type . '_posts_custom_column', 'pronamic_payment_amount', $child_payment_id ); ?>
+							</td>
+							<td>
+								<?php \do_action( 'manage_' . $payments_post_type . '_posts_custom_column', 'pronamic_payment_date', $child_payment_id ); ?>
+							</td>
+							<td>
+								<?php
+
+								$start_date = ( null !== $period ? $period->get_start_date() : $payment->start_date );
+
+								echo \esc_html( null === $start_date ? '—' : $start_date->format_i18n() );
+
+								?>
+							</td>
+							<td>
+								<?php
+
+								$end_date = ( null !== $period ? $period->get_end_date() : $payment->end_date );
+
+								echo \esc_html( null === $end_date ? '—' : $end_date->format_i18n() );
+
+								?>
+							</td>
+						</tr>
+
+					<?php endforeach; ?>
+
+				<?php endif; ?>
 
 			<?php endforeach; ?>
 

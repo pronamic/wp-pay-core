@@ -39,6 +39,13 @@ class AdminSubscriptionPostType {
 	private $plugin;
 
 	/**
+	 * Admin notices.
+	 *
+	 * @var array
+	 */
+	private $admin_notices = array();
+
+	/**
 	 * Constructs and initializes an admin payment post type object.
 	 *
 	 * @param Plugin $plugin Plugin.
@@ -53,6 +60,10 @@ class AdminSubscriptionPostType {
 		add_filter( 'list_table_primary_column', array( $this, 'primary_column' ), 10, 2 );
 
 		add_action( 'manage_' . self::POST_TYPE . '_posts_custom_column', array( $this, 'custom_columns' ), 10, 2 );
+
+		add_action( 'load-post.php', array( $this, 'maybe_process_subscription_action' ) );
+
+		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 
@@ -91,6 +102,120 @@ class AdminSubscriptionPostType {
 		$vars['post_status'][] = 'publish';
 
 		return $vars;
+	}
+
+	/**
+	 * Maybe process subscription action.
+	 *
+	 * @return void
+	 */
+	public function maybe_process_subscription_action() {
+		// Current user.
+		if ( ! \current_user_can( 'edit_payments' ) ) {
+			return;
+		}
+
+		// Screen.
+		$screen = \get_current_screen();
+
+		if ( null === $screen ) {
+			return;
+		}
+
+		if ( ! ( 'post' === $screen->base && 'pronamic_pay_subscr' === $screen->post_type ) ) {
+			return;
+		}
+
+		$post_id = \filter_input( \INPUT_GET, 'post', \FILTER_SANITIZE_NUMBER_INT );
+
+		$subscription = \get_pronamic_subscription( $post_id );
+
+		if ( null === $subscription ) {
+			return;
+		}
+
+		// Payment retry action.
+		$payment_id = \filter_input( \INPUT_GET, 'pronamic_pay_retry', \FILTER_SANITIZE_NUMBER_INT );
+
+		if ( null !== $payment_id && \check_admin_referer( 'pronamic_payment_retry_' . $payment_id ) ) {
+			$payment = \get_pronamic_payment( $payment_id );
+
+			if ( null === $payment ) {
+				return;
+			}
+
+			if ( ! $this->plugin->subscriptions_module->can_retry_payment( $payment ) ) {
+				return;
+			}
+
+			$retry_payment = null;
+
+			try {
+				$retry_payment = $this->plugin->subscriptions_module->retry_payment( $payment );
+			} catch ( \Exception $e ) {
+				Plugin::render_exception( $e );
+
+				exit;
+			}
+
+			// Add notice.
+			$parent_payment_url = \add_query_arg(
+				array(
+					'post'   => $payment_id,
+					'action' => 'edit',
+				),
+				\admin_url( 'post.php' )
+			);
+
+			$notice = array(
+				'type'    => 'error',
+				'message' => \sprintf(
+					/* translators: 1: parent payment post edit URL, 2: parent payment ID */
+					__( '<a href="%1$s" title="Payment #%2$d">Payment #%2$d</a> could not be retried.', 'pronamic_ideal' ),
+					$parent_payment_url,
+					$payment_id
+				),
+			);
+
+			if ( null !== $retry_payment ) {
+				$retry_payment_url = \add_query_arg(
+					array(
+						'post'   => $retry_payment->get_id(),
+						'action' => 'edit',
+					),
+					\admin_url( 'post.php' )
+				);
+
+				$notice = array(
+					'type'    => 'info',
+					'message' => \sprintf(
+						/* translators: 1: retry payment post edit URL, 2: retry payment ID, 3: parent payment post edit URL, 4: parent payment ID */
+						__( '<a href="%1$s" title="Payment #%2$d">Payment #%2$d</a> has been created to retry <a href="%3$s" title="Payment #%4$d">payment #%4$d</a>.', 'pronamic_ideal' ),
+						$retry_payment_url,
+						$retry_payment->get_id(),
+						$parent_payment_url,
+						$payment_id
+					),
+				);
+			}
+
+			$this->admin_notices[] = $notice;
+		}
+	}
+
+	/**
+	 * Admin notices.
+	 *
+	 * @return void
+	 */
+	public function admin_notices() {
+		foreach ( $this->admin_notices as $notice ) {
+			printf(
+				'<div class="notice notice-%1$s"><p>%2$s</p></div>',
+				esc_attr( $notice['type'] ),
+				\wp_kses_post( $notice['message'] )
+			);
+		}
 	}
 
 	/**
