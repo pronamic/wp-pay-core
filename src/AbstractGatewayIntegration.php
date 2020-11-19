@@ -20,7 +20,7 @@ use Pronamic\WordPress\Pay\Core\GatewayConfig;
  * Company: Pronamic
  *
  * @author  Remco Tolsma
- * @version 2.2.6
+ * @version 2.5.1
  * @since   1.0.0
  * @link    https://github.com/thephpleague/omnipay-common/blob/master/src/Omnipay/Common/AbstractGateway.php
  */
