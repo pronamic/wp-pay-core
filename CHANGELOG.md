@@ -7,7 +7,11 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
-## [2.5.0] - unreleased
+## [2.5.1] - 2020-11-19
+- Fixed always setting payment customer details.
+- Fixed setting currency in payment lines amount.
+
+## [2.5.0] - 2020-11-05
 - Added support for subscription phases.
 - Added support for Przelewy24 payment method.
 - Improved data stores, reuse data from memory.
@@ -305,7 +309,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.5.0...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.5.1...HEAD
+[2.5.1]: https://github.com/wp-pay/core/compare/2.5.0...2.5.1
 [2.5.0]: https://github.com/wp-pay/core/compare/2.4.1...2.5.0
 [2.4.1]: https://github.com/wp-pay/core/compare/2.4.0...2.4.1
 [2.4.0]: https://github.com/wp-pay/core/compare/2.3.2...2.4.0
