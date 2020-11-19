@@ -28,7 +28,7 @@
 ### pronamic_payment_gateway_configuration_id
 
 ```php
-add_filter(
+\add_filter(
 	'pronamic_payment_gateway_configuration_id',
 	/**
 	 * Filter the payment gateway configuration ID to use specific 
@@ -53,18 +53,20 @@ add_filter(
 
 		switch ( $billing_address->get_country_code() ) {
 			case 'US':
-				$id = get_option( 'custom_us_gateway_configuration_id', $id );
+				$id = \get_option( 'custom_us_gateway_configuration_id', $id );
 				break;
 			case 'AU':
-				$id = get_option( 'custom_au_gateway_configuration_id', $id );
+				$id = \get_option( 'custom_au_gateway_configuration_id', $id );
 				break;
 		}
 
-		if ( 'pronamic_gateway' === get_post_type( $id ) && 'publish' === get_post_status( $id ) ) {
+		if ( 'pronamic_gateway' === \get_post_type( $id ) && 'publish' === \get_post_status( $id ) ) {
 			$configuration_id = $id;
 		}
 
 		return $configuration_id;
-	}
+	},
+	10,
+	2
 );
 ```

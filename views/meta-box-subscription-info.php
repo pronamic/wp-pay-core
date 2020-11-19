@@ -155,7 +155,7 @@ $phase = $subscription->get_display_phase();
 			<td>
 				<?php
 
-				echo esc_html( ( new DateTime( $end_date->format( \DateTimeInterface::ATOM ) ) )->format_i18n() );
+				echo esc_html( ( new DateTime( $end_date->format( \DATE_ATOM ) ) )->format_i18n() );
 
 				?>
 			</td>

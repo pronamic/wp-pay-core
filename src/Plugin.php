@@ -29,7 +29,7 @@ use WP_Query;
  * Plugin
  *
  * @author  Remco Tolsma
- * @version 2.5.0
+ * @version 2.5.1
  * @since   2.0.1
  */
 class Plugin {
@@ -1010,24 +1010,30 @@ class Plugin {
 			$payment->analytics_client_id = GoogleAnalyticsEcommerce::get_cookie_client_id();
 		}
 
-		// Complements.
+		// Customer.
 		$customer = $payment->get_customer();
 
-		if ( null !== $customer ) {
-			CustomerHelper::complement_customer( $customer );
+		if ( null === $customer ) {
+			$customer = new Customer();
 
-			// Email.
-			if ( null === $payment->get_email() ) {
-				$payment->email = $customer->get_email();
-			}
+			$payment->set_customer( $customer );
 		}
 
+		CustomerHelper::complement_customer( $customer );
+
+		// Email.
+		if ( null === $payment->get_email() ) {
+			$payment->email = $customer->get_email();
+		}
+
+		// Billing address.
 		$billing_address = $payment->get_billing_address();
 
 		if ( null !== $billing_address ) {
 			AddressHelper::complement_address( $billing_address );
 		}
 
+		// Shipping address.
 		$shipping_address = $payment->get_shipping_address();
 
 		if ( null !== $shipping_address ) {

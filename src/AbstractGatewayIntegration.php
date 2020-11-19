@@ -20,7 +20,7 @@ use Pronamic\WordPress\Pay\Core\GatewayConfig;
  * Company: Pronamic
  *
  * @author  Remco Tolsma
- * @version 2.2.6
+ * @version 2.5.1
  * @since   1.0.0
  * @link    https://github.com/thephpleague/omnipay-common/blob/master/src/Omnipay/Common/AbstractGateway.php
  */
@@ -77,8 +77,8 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 			$args,
 			array(
 				'provider'      => null,
-				'url'           => __( 'https://www.adyen.com/', 'pronamic_ideal' ),
-				'product_url'   => __( 'https://www.adyen.com/pricing', 'pronamic_ideal' ),
+				'url'           => null,
+				'product_url'   => null,
 				'dashboard_url' => array(),
 				'manual_url'    => null,
 				'supports'      => array(),
