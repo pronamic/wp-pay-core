@@ -543,6 +543,11 @@ class SubscriptionsModule {
 			return false;
 		}
 
+		// Check source.
+		if ( \in_array( $payment->get_source(), array( 'woocommerce' ), true ) ) {
+			return false;
+		}
+
 		// Check periods.
 		$periods = $payment->get_periods();
 
