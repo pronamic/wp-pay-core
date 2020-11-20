@@ -121,7 +121,6 @@ class AdminGatewayPostType {
 					array(
 						get_post_meta( $post_id, '_pronamic_gateway_ems_ecommerce_storename', true ),
 						get_post_meta( $post_id, '_pronamic_gateway_ideal_merchant_id', true ),
-						get_post_meta( $post_id, '_pronamic_gateway_omnikassa_merchant_id', true ),
 						get_post_meta( $post_id, '_pronamic_gateway_buckaroo_website_key', true ),
 						get_post_meta( $post_id, '_pronamic_gateway_icepay_merchant_id', true ),
 						get_post_meta( $post_id, '_pronamic_gateway_mollie_partner_id', true ),
