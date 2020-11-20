@@ -155,7 +155,7 @@ class AdminGatewayPostType {
 				 * @param string $display_value Display value.
 				 * @param int    $post_id       Gateway configuration post ID.
 				 */
-				$display_value = \apply_filters( \sprintf( 'pronamic_gateway_configuration_display_value_%s', $id ), $display_value, $post_id );
+				$display_value = \apply_filters( "pronamic_gateway_configuration_display_value_{$id}", $display_value, $post_id );
 
 				echo \esc_html( $display_value );
 
