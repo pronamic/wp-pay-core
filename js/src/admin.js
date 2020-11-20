@@ -268,8 +268,10 @@
 
 		elements.paymentMethods.change( obj.updateInputVisibility );
 
-		$element.on( 'keydown', 'input[name="test_amount"]', function( e ) {
+		$element.on( 'keydown', 'input, select', function( e ) {
 			if ( 13 === e.keyCode) {
+				e.preventDefault();
+
 				$element.find('input[name="test_pay_gateway"]').click();
 			}
 		});
