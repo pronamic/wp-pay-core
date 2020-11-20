@@ -83,7 +83,12 @@ class Settings {
 			)
 		);
 
-		foreach ( $this->plugin->get_pages() as $id => $label ) {
+		// Pages.
+		$pages = $this->plugin->get_pages();
+
+		$pages['pronamic_pay_subscription_canceled_page_id'] = __( 'Subscription Canceled', 'pronamic_ideal' );
+
+		foreach ( $pages as $id => $label ) {
 			register_setting(
 				'pronamic_pay',
 				$id,

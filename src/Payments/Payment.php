@@ -751,7 +751,7 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
-	 * Get reucrring.
+	 * Get recurring.
 	 *
 	 * @return bool|null
 	 */

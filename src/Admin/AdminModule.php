@@ -468,6 +468,18 @@ class AdminModule {
 					),
 				),
 			),
+			array(
+				'post_title'   => __( 'Subscription Canceled', 'pronamic_ideal' ),
+				'post_name'    => __( 'subscription', 'pronamic_ideal' ),
+				'post_content' => sprintf(
+					'<p>%s</p>',
+					__( 'The subscription has been canceled.', 'pronamic_ideal' )
+				),
+				'post_meta'    => array(
+					'_yoast_wpseo_meta-robots-noindex' => true,
+				),
+				'option_name'  => 'pronamic_pay_subscription_canceled_page_id',
+			),
 		);
 
 		$url_args = array(

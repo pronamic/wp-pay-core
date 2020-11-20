@@ -24,7 +24,7 @@ use WP_Error;
  * Company: Pronamic
  *
  * @author  Remco Tolsma
- * @version 2.2.6
+ * @version 2.5.1
  * @since   1.0.0
  */
 abstract class Gateway {
