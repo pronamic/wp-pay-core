@@ -136,7 +136,30 @@ class AdminGatewayPostType {
 					)
 				);
 
-				echo esc_html( implode( ' ', $data ) );
+				$display_value = \implode( ' ', $data );
+
+				/**
+				 * Filters the gateway configuration display value.
+				 *
+				 * @param string $display_value Display value.
+				 * @param int    $post_id       Gateway configuration post ID.
+				 */
+				$display_value = \apply_filters( 'pronamic_gateway_configuration_display_value', $display_value, $post_id );
+
+				/**
+				 * Filters the gateway configuration display value.
+				 *
+				 * The dynamic portion of the hook name, `$id`, refers to the gateway ID.
+				 * For example, the gateway ID for Payvision is `payvision`, se the filter
+				 * for that gateway would be:
+				 * `pronamic_gateway_configuration_display_value_payvision`
+				 *
+				 * @param string $display_value Display value.
+				 * @param int    $post_id       Gateway configuration post ID.
+				 */
+				$display_value = \apply_filters( \sprintf( 'pronamic_gateway_configuration_display_value_%s', $id ), $display_value, $post_id );
+
+				echo \esc_html( $display_value );
 
 				break;
 			case 'pronamic_gateway_secret':
