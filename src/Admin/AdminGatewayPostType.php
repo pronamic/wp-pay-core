@@ -119,7 +119,6 @@ class AdminGatewayPostType {
 			case 'pronamic_gateway_id':
 				$data = array_filter(
 					array(
-						get_post_meta( $post_id, '_pronamic_gateway_adyen_merchant_account', true ),
 						get_post_meta( $post_id, '_pronamic_gateway_ems_ecommerce_storename', true ),
 						get_post_meta( $post_id, '_pronamic_gateway_ideal_merchant_id', true ),
 						get_post_meta( $post_id, '_pronamic_gateway_omnikassa_merchant_id', true ),
