@@ -434,6 +434,7 @@ class AdminGatewayPostType {
 
 			// Check field in input.
 			if ( ! \filter_has_var( INPUT_POST, $name ) ) {
+				\delete_post_meta( $post_id, $name );
 				continue;
 			}
 
