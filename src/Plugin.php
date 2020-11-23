@@ -1056,11 +1056,15 @@ class Plugin {
 
 		// Issuer.
 		if ( null === $payment->issuer ) {
+			// Credit card.
 			if ( PaymentMethods::CREDIT_CARD === $payment->method && filter_has_var( INPUT_POST, 'pronamic_credit_card_issuer_id' ) ) {
 				$payment->issuer = filter_input( INPUT_POST, 'pronamic_credit_card_issuer_id', FILTER_SANITIZE_STRING );
 			}
 
-			if ( PaymentMethods::IDEAL === $payment->method && filter_has_var( INPUT_POST, 'pronamic_ideal_issuer_id' ) ) {
+			// iDEAL.
+			$ideal_methods = array( PaymentMethods::IDEAL, PaymentMethods::DIRECT_DEBIT_IDEAL );
+
+			if ( \in_array( $payment->method, $ideal_methods, true ) && filter_has_var( INPUT_POST, 'pronamic_ideal_issuer_id' ) ) {
 				$payment->issuer = filter_input( INPUT_POST, 'pronamic_ideal_issuer_id', FILTER_SANITIZE_STRING );
 			}
 		}
