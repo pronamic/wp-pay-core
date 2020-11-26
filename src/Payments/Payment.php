@@ -145,6 +145,13 @@ class Payment extends LegacyPayment {
 	public $issuer;
 
 	/**
+	 * Subscriptions.
+	 *
+	 * @var Subscription[]
+	 */
+	private $subscriptions;
+
+	/**
 	 * Subscription periods.
 	 *
 	 * @since 2.5.0
@@ -243,6 +250,8 @@ class Payment extends LegacyPayment {
 	 */
 	public function __construct( $post_id = null ) {
 		parent::__construct( $post_id );
+
+		$this->subscriptions = array();
 
 		$this->set_status( PaymentStatus::OPEN );
 
@@ -651,6 +660,15 @@ class Payment extends LegacyPayment {
 		$this->subscription = new Subscription( $this->subscription_id );
 
 		return $this->subscription;
+	}
+
+	/**
+	 * Get subscriptions.
+	 *
+	 * @return Subscription[]
+	 */
+	public function get_subscriptions() {
+		return $this->subscriptions;
 	}
 
 	/**
