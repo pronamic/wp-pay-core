@@ -672,6 +672,15 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
+	 * Connect subscription to this payment.
+	 *
+	 * @param Subscription $subscription Subscription.
+	 */
+	public function add_subscription( Subscription $subscription ) {
+		$this->subscriptions[] = $subscription;
+	}
+
+	/**
 	 * Format string
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/v2.2.3/includes/abstracts/abstract-wc-email.php#L187-L195
