@@ -16,7 +16,7 @@ namespace Pronamic\WordPress\Pay\Http;
  * @link https://laravel.com/docs/8.x/http-client
  * @author  Remco Tolsma
  * @version 2.5.0
- * @since   1.0.0
+ * @since   2.5.0
  */
 class Response {
 	/**
