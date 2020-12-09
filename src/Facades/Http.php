@@ -22,6 +22,17 @@ use Pronamic\WordPress\Pay\Http\Response;
  */
 class Http {
 	/**
+	 * Result.
+	 */
+	private static function result( $result ) {
+		if ( $result instanceof \WP_Error ) {
+			throw new \Exception( $result->get_error_message() );
+		}
+
+		return new Response( $result );
+	}
+
+	/**
 	 * Request.
 	 *
 	 * @link https://developer.wordpress.org/reference/functions/wp_remote_request/
@@ -30,12 +41,42 @@ class Http {
 	 * @return Response
 	 */
 	public static function request( $url, $args ) {
-		$result = \wp_remote_request( $url, $args );
+		return self::result( \wp_remote_request( $url, $args ) );
+	}
 
-		if ( $result instanceof \WP_Error ) {
-			throw new \Exception( $result->get_error_message() );
-		}
+	/**
+	 * GET.
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/wp_remote_get/
+	 * @param string $url  URL.
+	 * @param array  $args Arguments.
+	 * @return Response
+	 */
+	public static function get( $url, $args ) {
+		return self::result( \wp_remote_get( $url, $args ) );
+	}
 
-		return new Response( $result );
+	/**
+	 * POST.
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/wp_remote_post/
+	 * @param string $url  URL.
+	 * @param array  $args Arguments.
+	 * @return Response
+	 */
+	public static function post( $url, $args ) {
+		return self::result( \wp_remote_post( $url, $args ) );
+	}
+
+	/**
+	 * HEAD.
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/wp_remote_head/
+	 * @param string $url  URL.
+	 * @param array  $args Arguments.
+	 * @return Response
+	 */
+	public static function head( $url, $args ) {
+		return self::result( \wp_remote_head( $url, $args ) );
 	}
 }
