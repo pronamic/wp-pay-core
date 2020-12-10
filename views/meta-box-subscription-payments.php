@@ -111,13 +111,11 @@
 							$action_url = \wp_nonce_url(
 								\add_query_arg(
 									array(
-										'post'   => $post->ID,
-										'action' => 'edit',
-										'pronamic_pay_retry' => $payment_id,
+										'pronamic_retry_payment' => $payment_id,
 									),
-									\admin_url( 'post.php' )
+									\get_edit_post_link( $post->ID )
 								),
-								'pronamic_payment_retry_' . $payment_id
+								'pronamic_retry_payment_' . $payment_id
 							);
 
 							\printf(

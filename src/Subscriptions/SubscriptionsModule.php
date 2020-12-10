@@ -568,10 +568,94 @@ class SubscriptionsModule {
 	}
 
 	/**
-	 * Retry payment.
+	 * New payment based on period.
+	 *
+	 * @param SubscriptionPeriod $period Subscription period.
+	 * @return Payment|null
+	 * @throws \Exception Throws exception if gateway integration can not be found.
+	 */
+	public function new_period_payment( SubscriptionPeriod $period ) {
+		$payment = null;
+
+		$subscription = $period->get_phase()->get_subscription();
+
+		$config_id = $subscription->get_config_id();
+
+		$integration_id = \get_post_meta( $config_id, '_pronamic_gateway_id', true );
+
+		$integration = $this->plugin->gateway_integrations->get_integration( $integration_id );
+
+		if ( null === $integration ) {
+			throw new \Exception( 'Gateway integration could not be found while creating new subscription period payment.' );
+		}
+
+		$payment = new Payment();
+
+		$payment->email           = $subscription->get_email();
+		$payment->method          = $subscription->payment_method;
+		$payment->issuer          = $subscription->get_issuer();
+		$payment->recurring       = true;
+		$payment->subscription    = $subscription;
+		$payment->subscription_id = $subscription->get_id();
+
+		$payment->set_description( $subscription->get_description() );
+		$payment->set_config_id( $config_id );
+		$payment->set_origin_id( $subscription->get_origin_id() );
+		$payment->set_mode( $integration->get_config( $config_id )->mode );
+
+		$payment->set_source( $subscription->get_source() );
+		$payment->set_source_id( $subscription->get_source_id() );
+
+		$payment->set_customer( $subscription->get_customer() );
+		$payment->set_billing_address( $subscription->get_billing_address() );
+		$payment->set_shipping_address( $subscription->get_shipping_address() );
+
+		$payment->add_period( $period );
+		$payment->set_start_date( $period->get_start_date() );
+		$payment->set_end_date( $period->get_end_date() );
+
+		$payment->set_lines( $subscription->get_lines() );
+		$payment->set_total_amount( $period->get_phase()->get_amount() );
+
+		$payment = Plugin::start_payment( $payment );
+
+		return $payment;
+	}
+
+	/**
+	 * Start payment for next period.
+	 *
+	 * @param Subscription $subscription Subscription.
+	 * @return Payment|null
+	 */
+	public function start_next_period_payment( Subscription $subscription ) {
+		$next_period = $subscription->new_period();
+
+		if ( null === $next_period ) {
+			return null;
+		}
+
+		// Start payment for next period.
+		$payment = null;
+
+		try {
+			$payment = $this->plugin->subscriptions_module->new_period_payment( $next_period );
+
+			$subscription->save();
+		} catch ( \Exception $e ) {
+			Plugin::render_exception( $e );
+
+			exit;
+		}
+
+		return $payment;
+	}
+
+	/**
+	 * Retry a payment by starting a payment for each period of given payment.
 	 *
 	 * @param Payment $payment Payment.
-	 * @return Payment|null
+	 * @return array<int, Payment>|null
 	 */
 	public function retry_payment( Payment $payment ) {
 		// Check if payment can be retried.
@@ -579,50 +663,31 @@ class SubscriptionsModule {
 			return null;
 		}
 
+		// Check periods.
 		$periods = $payment->get_periods();
 
 		if ( null === $periods ) {
 			return null;
 		}
 
-		$retry_payment = null;
+		// Start new payment for period.
+		$payments = array();
 
 		foreach ( $periods as $period ) {
-			$subscription = $period->get_phase()->get_subscription();
+			try {
+				$period_payment = $this->plugin->subscriptions_module->new_period_payment( $period );
 
-			$retry_payment = new Payment();
+				$period_payment->set_source_id( $payment->get_source_id() );
 
-			$retry_payment->email           = $payment->get_email();
-			$retry_payment->method          = $payment->get_method();
-			$retry_payment->issuer          = $payment->get_issuer();
-			$retry_payment->recurring       = $payment->get_recurring();
-			$retry_payment->subscription    = $subscription;
-			$retry_payment->subscription_id = $subscription->get_id();
+				$payments[] = $period_payment;
+			} catch ( \Exception $e ) {
+				Plugin::render_exception( $e );
 
-			$retry_payment->set_description( $payment->get_description() );
-			$retry_payment->set_config_id( $payment->get_config_id() );
-			$retry_payment->set_origin_id( $payment->get_origin_id() );
-			$retry_payment->set_mode( $payment->get_mode() );
-
-			$retry_payment->set_parent_id( $payment->get_id() );
-			$retry_payment->set_source( $payment->get_source() );
-			$retry_payment->set_source_id( $payment->get_source_id() );
-
-			$retry_payment->set_customer( $payment->get_customer() );
-			$retry_payment->set_billing_address( $payment->get_billing_address() );
-			$retry_payment->set_shipping_address( $payment->get_shipping_address() );
-
-			$retry_payment->add_period( $period );
-			$retry_payment->set_start_date( $payment->get_start_date() );
-			$retry_payment->set_end_date( $payment->get_end_date() );
-
-			$retry_payment->set_lines( $payment->get_lines() );
-			$retry_payment->set_total_amount( $payment->get_total_amount() );
-
-			$retry_payment = Plugin::start_payment( $retry_payment );
+				exit;
+			}
 		}
 
-		return $retry_payment;
+		return $payments;
 	}
 
 	/**
