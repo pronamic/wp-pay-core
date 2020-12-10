@@ -522,6 +522,175 @@ class SubscriptionsModule {
 	}
 
 	/**
+	 * Can payment be retried.
+	 *
+	 * @param Payment $payment Payment to retry.
+	 * @return bool
+	 */
+	public function can_retry_payment( Payment $payment ) {
+		// Check status.
+		if ( PaymentStatus::FAILURE !== $payment->get_status() ) {
+			return false;
+		}
+
+		// Check recurring.
+		if ( ! $payment->get_recurring() ) {
+			return false;
+		}
+
+		// Check parent ID.
+		if ( null !== $payment->get_parent_id() ) {
+			return false;
+		}
+
+		// Check source.
+		if ( \in_array( $payment->get_source(), array( 'woocommerce' ), true ) ) {
+			return false;
+		}
+
+		// Check periods.
+		$periods = $payment->get_periods();
+
+		if ( null === $periods ) {
+			return false;
+		}
+
+		// Check for pending and successful child payments.
+		$payments = \get_pronamic_payments_by_meta( '', '', array( 'post_parent' => $payment->get_id() ) );
+
+		foreach ( $payments as $child_payment ) {
+			if ( \in_array( $child_payment->get_status(), array( PaymentStatus::OPEN, PaymentStatus::SUCCESS ), true ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * New payment based on period.
+	 *
+	 * @param SubscriptionPeriod $period Subscription period.
+	 * @return Payment|null
+	 * @throws \Exception Throws exception if gateway integration can not be found.
+	 */
+	public function new_period_payment( SubscriptionPeriod $period ) {
+		$payment = null;
+
+		$subscription = $period->get_phase()->get_subscription();
+
+		$config_id = $subscription->get_config_id();
+
+		$integration_id = \get_post_meta( $config_id, '_pronamic_gateway_id', true );
+
+		$integration = $this->plugin->gateway_integrations->get_integration( $integration_id );
+
+		if ( null === $integration ) {
+			throw new \Exception( 'Gateway integration could not be found while creating new subscription period payment.' );
+		}
+
+		$payment = new Payment();
+
+		$payment->email           = $subscription->get_email();
+		$payment->method          = $subscription->payment_method;
+		$payment->issuer          = $subscription->get_issuer();
+		$payment->recurring       = true;
+		$payment->subscription    = $subscription;
+		$payment->subscription_id = $subscription->get_id();
+
+		$payment->set_description( $subscription->get_description() );
+		$payment->set_config_id( $config_id );
+		$payment->set_origin_id( $subscription->get_origin_id() );
+		$payment->set_mode( $integration->get_config( $config_id )->mode );
+
+		$payment->set_source( $subscription->get_source() );
+		$payment->set_source_id( $subscription->get_source_id() );
+
+		$payment->set_customer( $subscription->get_customer() );
+		$payment->set_billing_address( $subscription->get_billing_address() );
+		$payment->set_shipping_address( $subscription->get_shipping_address() );
+
+		$payment->add_period( $period );
+		$payment->set_start_date( $period->get_start_date() );
+		$payment->set_end_date( $period->get_end_date() );
+
+		$payment->set_lines( $subscription->get_lines() );
+		$payment->set_total_amount( $period->get_phase()->get_amount() );
+
+		$payment = Plugin::start_payment( $payment );
+
+		return $payment;
+	}
+
+	/**
+	 * Start payment for next period.
+	 *
+	 * @param Subscription $subscription Subscription.
+	 * @return Payment|null
+	 */
+	public function start_next_period_payment( Subscription $subscription ) {
+		$next_period = $subscription->new_period();
+
+		if ( null === $next_period ) {
+			return null;
+		}
+
+		// Start payment for next period.
+		$payment = null;
+
+		try {
+			$payment = $this->plugin->subscriptions_module->new_period_payment( $next_period );
+
+			$subscription->save();
+		} catch ( \Exception $e ) {
+			Plugin::render_exception( $e );
+
+			exit;
+		}
+
+		return $payment;
+	}
+
+	/**
+	 * Retry a payment by starting a payment for each period of given payment.
+	 *
+	 * @param Payment $payment Payment.
+	 * @return array<int, Payment>|null
+	 */
+	public function retry_payment( Payment $payment ) {
+		// Check if payment can be retried.
+		if ( ! $this->can_retry_payment( $payment ) ) {
+			return null;
+		}
+
+		// Check periods.
+		$periods = $payment->get_periods();
+
+		if ( null === $periods ) {
+			return null;
+		}
+
+		// Start new payment for period.
+		$payments = array();
+
+		foreach ( $periods as $period ) {
+			try {
+				$period_payment = $this->plugin->subscriptions_module->new_period_payment( $period );
+
+				$period_payment->set_source_id( $payment->get_source_id() );
+
+				$payments[] = $period_payment;
+			} catch ( \Exception $e ) {
+				Plugin::render_exception( $e );
+
+				exit;
+			}
+		}
+
+		return $payments;
+	}
+
+	/**
 	 * Comments clauses.
 	 *
 	 * @param array             $clauses The database query clauses.

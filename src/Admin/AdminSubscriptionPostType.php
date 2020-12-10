@@ -39,6 +39,13 @@ class AdminSubscriptionPostType {
 	private $plugin;
 
 	/**
+	 * Admin notices.
+	 *
+	 * @var array
+	 */
+	private $admin_notices = array();
+
+	/**
 	 * Constructs and initializes an admin payment post type object.
 	 *
 	 * @param Plugin $plugin Plugin.
@@ -54,11 +61,17 @@ class AdminSubscriptionPostType {
 
 		add_action( 'manage_' . self::POST_TYPE . '_posts_custom_column', array( $this, 'custom_columns' ), 10, 2 );
 
+		add_action( 'load-post.php', array( $this, 'maybe_process_subscription_action' ) );
+
+		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
+
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 
 		add_filter( 'post_row_actions', array( $this, 'post_row_actions' ), 10, 2 );
 
 		add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
+
+		add_filter( 'removable_query_args', array( $this, 'removable_query_args' ) );
 	}
 
 	/**
@@ -91,6 +104,134 @@ class AdminSubscriptionPostType {
 		$vars['post_status'][] = 'publish';
 
 		return $vars;
+	}
+
+	/**
+	 * Removable query arguments.
+	 *
+	 * @link https://github.com/WordPress/WordPress/blob/5.3/wp-admin/includes/misc.php#L1204-L1230
+	 * @link https://developer.wordpress.org/reference/functions/wp_removable_query_args/
+	 * @param array $args Arguments.
+	 * @return array
+	 */
+	public function removable_query_args( $args ) {
+		$args[] = 'pronamic_payments_created';
+		$args[] = 'pronamic_payment_created';
+
+		return $args;
+	}
+
+	/**
+	 * Maybe process subscription action.
+	 *
+	 * @return void
+	 */
+	public function maybe_process_subscription_action() {
+		// Current user.
+		if ( ! \current_user_can( 'edit_payments' ) ) {
+			return;
+		}
+
+		// Screen.
+		$screen = \get_current_screen();
+
+		if ( null === $screen ) {
+			return;
+		}
+
+		if ( ! ( 'post' === $screen->base && 'pronamic_pay_subscr' === $screen->post_type ) ) {
+			return;
+		}
+
+		$post_id = \filter_input( \INPUT_GET, 'post', \FILTER_SANITIZE_NUMBER_INT );
+
+		$subscription = \get_pronamic_subscription( $post_id );
+
+		if ( null === $subscription ) {
+			return;
+		}
+
+		// Start payment for next period action.
+		if ( \filter_input( \INPUT_GET, 'pronamic_next_period', \FILTER_VALIDATE_BOOLEAN ) && \check_admin_referer( 'pronamic_next_period_' . $post_id ) ) {
+			$payment = $this->plugin->subscriptions_module->start_next_period_payment( $subscription );
+
+			if ( null !== $payment ) {
+				// Redirect for notice.
+				$url = \add_query_arg(
+					array(
+						'pronamic_payment_created' => $payment->get_id(),
+					),
+					\get_edit_post_link( $subscription->get_id(), 'raw' )
+				);
+
+				\wp_safe_redirect( $url );
+			}
+		}
+
+		// Payment retry action.
+		$payment_id = \filter_input( \INPUT_GET, 'pronamic_retry_payment', \FILTER_SANITIZE_NUMBER_INT );
+
+		if ( null !== $payment_id && \check_admin_referer( 'pronamic_retry_payment_' . $payment_id ) ) {
+			$payment = \get_pronamic_payment( $payment_id );
+
+			$payments = $this->plugin->subscriptions_module->retry_payment( $payment );
+
+			if ( ! empty( $payments ) ) {
+				$payment_ids = array();
+
+				foreach ( $payments as $payment ) {
+					$payment_ids[] = $payment->get_id();
+				}
+
+				// Redirect for notice.
+				$url = \add_query_arg(
+					array(
+						'pronamic_payments_created' => $payment_ids,
+					),
+					\get_edit_post_link( $subscription->get_id(), 'raw' )
+				);
+
+				\wp_safe_redirect( $url );
+			}
+		}
+	}
+
+	/**
+	 * Admin notices.
+	 *
+	 * @return void
+	 */
+	public function admin_notices() {
+		// Payment created for period.
+		$new_payments = \filter_input( \INPUT_GET, 'pronamic_payments_created', \FILTER_FORCE_ARRAY );
+		$new_payment  = \filter_input( \INPUT_GET, 'pronamic_payment_created', \FILTER_SANITIZE_NUMBER_INT );
+
+		if ( empty( $new_payments ) && ! empty( $new_payment ) ) {
+			$new_payments = array( $new_payment );
+		}
+
+		if ( ! empty( $new_payments ) ) {
+			foreach ( $new_payments as $payment_id ) {
+				$this->admin_notices[] = array(
+					'type'    => 'info',
+					'message' => \sprintf(
+						/* translators: 1: payment post edit URL, 2: new payment ID */
+						__( '<a href="%1$s" title="Payment #%2$d">Payment #%2$d</a> has been created.', 'pronamic_ideal' ),
+						\esc_url( \get_edit_post_link( $payment_id ) ),
+						$payment_id
+					),
+				);
+			}
+		}
+
+		// Display notices.
+		foreach ( $this->admin_notices as $notice ) {
+			\printf(
+				'<div class="notice notice-%1$s"><p>%2$s</p></div>',
+				\esc_attr( $notice['type'] ),
+				\wp_kses_post( $notice['message'] )
+			);
+		}
 	}
 
 	/**

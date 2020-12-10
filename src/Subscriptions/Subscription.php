@@ -466,7 +466,41 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 			return array();
 		}
 
-		return get_pronamic_payments_by_meta( '_pronamic_payment_subscription_id', $this->id );
+		$payments = get_pronamic_payments_by_meta( '_pronamic_payment_subscription_id', $this->id );
+
+		// Set child payments.
+		$children = array();
+
+		foreach ( $payments as $payment ) {
+			$parent_id = $payment->get_parent_id();
+
+			if ( null === $parent_id ) {
+				continue;
+			}
+
+			// Add child.
+			if ( ! \array_key_exists( $parent_id, $children ) ) {
+				$children[ $parent_id ] = array();
+			}
+
+			$children[ $parent_id ][] = $payment;
+		}
+
+		// Return.
+		$return = array();
+
+		foreach ( $payments as $payment ) {
+			if ( null !== $payment->get_parent_id() ) {
+				continue;
+			}
+
+			$return[] = array(
+				'payment'  => $payment,
+				'children' => \array_key_exists( (int) $payment->get_id(), $children ) ? $children[ $payment->get_id() ] : null,
+			);
+		}
+
+		return $return;
 	}
 
 	/**
