@@ -51,6 +51,9 @@ class GoogleAnalyticsEcommerce {
 	public function __construct() {
 		// Actions.
 		add_action( 'pronamic_payment_status_update', array( $this, 'maybe_send_transaction' ), 10 );
+
+		// Filters.
+		add_filter( 'pronamic_payment_redirect_url', array( $this, 'payment_redirect_url' ), 10, 2 );
 	}
 
 	/**
@@ -346,5 +349,30 @@ class GoogleAnalyticsEcommerce {
 		}
 
 		return $client_id;
+	}
+
+	/**
+	 * Payment redirect URL.
+	 *
+	 * @param string  $url     Redirect URL.
+	 * @param Payment $payment Payment.
+	 * @return string
+	 */
+	public function payment_redirect_url( $url, Payment $payment ) {
+		/**
+		 * Payment Gateway Referral Exclusions in Google Analytics.
+		 *
+		 * @link https://lmgtfy.com/?q=google+analytics+exclude+payment+providers
+		 * @link https://webvalue.nl/blog/betaalproviders-uitsluiten-google-analytics
+		 * @link https://seeders.nl/lijst-nederlandse-paymentproviders-om-sluiten-google-analytics/
+		 * @link http://blog.analytics-toolkit.com/2015/payment-gateway-referrer-exclusions-google-analytics/
+		 * @link https://andrescholten.nl/a-bank-ideal-ogone-paypal-or-other-payment-providers-getting-all-revenue-in-google-analytics/
+		 * @link https://nicksnell.dev/log/2017/06/exclude-social-login-referrals/
+		 * @link https://bluegg.co.uk/blog/tracking-referrals-when-using-an-external-payment-gatewa
+		 * @link https://github.com/Adyen/adyen-magento2/search?q=utm_nooverride
+		 */
+		$url = \add_query_arg( 'utm_nooverride', '1', $url );
+
+		return $url;
 	}
 }
