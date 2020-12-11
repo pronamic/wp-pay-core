@@ -159,10 +159,9 @@ class AdminSubscriptionPostType {
 			if ( null !== $payment ) {
 				// Redirect for notice.
 				$url = \add_query_arg(
-					array(
-						'pronamic_payment_created' => $payment->get_id(),
-					),
-					\get_edit_post_link( $subscription->get_id(), 'raw' )
+					'pronamic_payment_created',
+					$payment->get_id(),
+					\get_edit_post_link( $post_id, 'raw' )
 				);
 
 				\wp_safe_redirect( $url );
@@ -175,24 +174,25 @@ class AdminSubscriptionPostType {
 		if ( null !== $payment_id && \check_admin_referer( 'pronamic_retry_payment_' . $payment_id ) ) {
 			$payment = \get_pronamic_payment( $payment_id );
 
-			$payments = $this->plugin->subscriptions_module->retry_payment( $payment );
+			if ( null !== $payment ) {
+				$payments = $this->plugin->subscriptions_module->retry_payment( $payment );
 
-			if ( ! empty( $payments ) ) {
-				$payment_ids = array();
+				if ( ! empty( $payments ) ) {
+					$payment_ids = array();
 
-				foreach ( $payments as $payment ) {
-					$payment_ids[] = $payment->get_id();
+					foreach ( $payments as $payment ) {
+						$payment_ids[] = $payment->get_id();
+					}
+
+					// Redirect for notice.
+					$url = \add_query_arg(
+						'pronamic_payments_created',
+						$payment_ids,
+						\get_edit_post_link( $post_id, 'raw' )
+					);
+
+					\wp_safe_redirect( $url );
 				}
-
-				// Redirect for notice.
-				$url = \add_query_arg(
-					array(
-						'pronamic_payments_created' => $payment_ids,
-					),
-					\get_edit_post_link( $subscription->get_id(), 'raw' )
-				);
-
-				\wp_safe_redirect( $url );
 			}
 		}
 	}
@@ -213,13 +213,30 @@ class AdminSubscriptionPostType {
 
 		if ( ! empty( $new_payments ) ) {
 			foreach ( $new_payments as $payment_id ) {
+				$edit_post_link = \sprintf(
+					/* translators: %d: payment ID */
+					__( 'Payment #%d', 'pronamic_ideal' ),
+					$payment_id
+				);
+
+				// Add post edit link.
+				$edit_post_url = \get_edit_post_link( $payment_id );
+
+				if ( null !== $edit_post_url ) {
+					$edit_post_link = \sprintf(
+						'<a href="%1$s" title="%2$s">%2$s</a>',
+						\esc_url( $edit_post_url ),
+						$edit_post_link
+					);
+				}
+
+				// Add notice.
 				$this->admin_notices[] = array(
 					'type'    => 'info',
 					'message' => \sprintf(
-						/* translators: 1: payment post edit URL, 2: new payment ID */
-						__( '<a href="%1$s" title="Payment #%2$d">Payment #%2$d</a> has been created.', 'pronamic_ideal' ),
-						\esc_url( \get_edit_post_link( $payment_id ) ),
-						$payment_id
+						/* translators: %s: payment post edit link */
+						__( '%s has been created.', 'pronamic_ideal' ),
+						\wp_kses_post( $edit_post_link )
 					),
 				);
 			}

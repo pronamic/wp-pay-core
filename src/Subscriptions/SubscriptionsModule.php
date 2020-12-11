@@ -587,7 +587,7 @@ class SubscriptionsModule {
 	public function new_period_payment( SubscriptionPeriod $period ) {
 		$subscription = $period->get_phase()->get_subscription();
 
-		$config_id = $subscription->get_config_id();
+		$config_id = (int) $subscription->get_config_id();
 
 		$integration_id = \get_post_meta( $config_id, '_pronamic_gateway_id', true );
 
@@ -595,6 +595,12 @@ class SubscriptionsModule {
 
 		if ( null === $integration ) {
 			throw new \Exception( 'Gateway integration could not be found while creating new subscription period payment.' );
+		}
+
+		$config = $integration->get_config( $config_id );
+
+		if ( null === $config ) {
+			throw new \Exception( 'Config could not be found while creating new subscription period payment.' );
 		}
 
 		$payment = new Payment();
@@ -609,7 +615,7 @@ class SubscriptionsModule {
 		$payment->set_description( $subscription->get_description() );
 		$payment->set_config_id( $config_id );
 		$payment->set_origin_id( $subscription->get_origin_id() );
-		$payment->set_mode( $integration->get_config( $config_id )->mode );
+		$payment->set_mode( $config->mode );
 
 		$payment->set_source( $subscription->get_source() );
 		$payment->set_source_id( $subscription->get_source_id() );

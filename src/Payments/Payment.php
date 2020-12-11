@@ -675,6 +675,7 @@ class Payment extends LegacyPayment {
 	 * Connect subscription to this payment.
 	 *
 	 * @param Subscription $subscription Subscription.
+	 * @return void
 	 */
 	public function add_subscription( Subscription $subscription ) {
 		$this->subscriptions[] = $subscription;

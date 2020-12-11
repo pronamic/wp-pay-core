@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Facades;
 
 use Pronamic\WordPress\Pay\Http\Response;
+use WP_Error;
 
 /**
  * HTTP
@@ -23,6 +24,9 @@ use Pronamic\WordPress\Pay\Http\Response;
 class Http {
 	/**
 	 * Result.
+	 *
+	 * @param array|WP_Error $result Remote request result.
+	 * @return Response
 	 */
 	private static function result( $result ) {
 		if ( $result instanceof \WP_Error ) {

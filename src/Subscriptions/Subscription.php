@@ -459,7 +459,7 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 	/**
 	 * Get all the payments for this subscription.
 	 *
-	 * @return array
+	 * @return Payment[]
 	 */
 	public function get_payments() {
 		if ( null === $this->id ) {
@@ -751,6 +751,7 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 	 * Set activated datetime.
 	 *
 	 * @param DateTime $activated_at Activated at.
+	 * @return void
 	 */
 	public function set_activated_at( DateTime $activated_at ) {
 		$this->activated_at = $activated_at;

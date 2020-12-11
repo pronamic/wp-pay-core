@@ -29,7 +29,7 @@ class Response {
 	/**
 	 * Construct response array.
 	 *
-	 * @param array WordPress remote request response array.
+	 * @param array $array WordPress remote request response array.
 	 */
 	public function __construct( $array ) {
 		$this->array = $array;
@@ -39,7 +39,7 @@ class Response {
 	 * Status.
 	 *
 	 * @link https://developer.wordpress.org/reference/functions/wp_remote_retrieve_response_code/
-	 * @return int
+	 * @return int|string
 	 */
 	public function status() {
 		return \wp_remote_retrieve_response_code( $this->array );
