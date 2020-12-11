@@ -538,11 +538,6 @@ class SubscriptionsModule {
 			return false;
 		}
 
-		// Check parent ID.
-		if ( null !== $payment->get_parent_id() ) {
-			return false;
-		}
-
 		// Check source.
 		if ( \in_array( $payment->get_source(), array( 'woocommerce' ), true ) ) {
 			return false;

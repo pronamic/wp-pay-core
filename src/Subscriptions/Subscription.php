@@ -468,39 +468,66 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 
 		$payments = get_pronamic_payments_by_meta( '_pronamic_payment_subscription_id', $this->id );
 
-		// Set child payments.
-		$children = array();
+		return $payments;
+	}
+
+	/**
+	 * Get payments by period.
+	 *
+	 * @return array
+	 */
+	public function get_payments_by_period() {
+		$payments = $this->get_payments();
+
+		$periods = array();
 
 		foreach ( $payments as $payment ) {
-			$parent_id = $payment->get_parent_id();
+			// Get period for this subscription.
+			$period = null;
 
-			if ( null === $parent_id ) {
+			$payment_periods = $payment->get_periods();
+
+			if ( null === $payment_periods ) {
+				break;
+			}
+
+			foreach ( $payment_periods as $period ) {
+				if ( $this->get_id() === $period->get_phase()->get_subscription()->get_id() ) {
+					break;
+				}
+			}
+
+			if ( null === $period ) {
 				continue;
 			}
 
-			// Add child.
-			if ( ! \array_key_exists( $parent_id, $children ) ) {
-				$children[ $parent_id ] = array();
+			// Add period to result.
+			$start = $period->get_start_date()->getTimestamp();
+
+			if ( ! \array_key_exists( $start, $periods ) ) {
+				$periods[ $start ] = array(
+					'period'    => $period,
+					'payments'  => array(),
+					'can_retry' => true,
+				);
 			}
 
-			$children[ $parent_id ][] = $payment;
-		}
+			// Add payment to result.
+			$periods[ $start ]['payments'][ $payment->get_date()->getTimestamp() ] = $payment;
 
-		// Return.
-		$return = array();
-
-		foreach ( $payments as $payment ) {
-			if ( null !== $payment->get_parent_id() ) {
-				continue;
+			if ( \in_array( $payment->get_status(), array( PaymentStatus::OPEN, PaymentStatus::SUCCESS ), true ) ) {
+				$periods[ $start ]['can_retry'] = false;
 			}
-
-			$return[] = array(
-				'payment'  => $payment,
-				'children' => \array_key_exists( (int) $payment->get_id(), $children ) ? $children[ $payment->get_id() ] : null,
-			);
 		}
 
-		return $return;
+		// Sort periods and payments.
+		\krsort( $periods );
+
+		foreach ( $periods as &$period ) {
+			\ksort( $period['payments'] );
+		}
+
+		return $periods;
 	}
 
 	/**

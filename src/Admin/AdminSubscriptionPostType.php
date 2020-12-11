@@ -696,7 +696,7 @@ class AdminSubscriptionPostType {
 			return;
 		}
 
-		$payments = $subscription->get_payments();
+		$periods = $subscription->get_payments_by_period();
 
 		include __DIR__ . '/../../views/meta-box-subscription-payments.php';
 	}

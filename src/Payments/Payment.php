@@ -244,13 +244,6 @@ class Payment extends LegacyPayment {
 	private $anonymized;
 
 	/**
-	 * Parent payment ID.
-	 *
-	 * @var int|null
-	 */
-	private $parent_id;
-
-	/**
 	 * Construct and initialize payment object.
 	 *
 	 * @param integer $post_id A payment post ID or null.
@@ -338,25 +331,6 @@ class Payment extends LegacyPayment {
 	 */
 	public function get_description() {
 		return $this->description;
-	}
-
-	/**
-	 * Get parent payment ID.
-	 *
-	 * @return int|null
-	 */
-	public function get_parent_id() {
-		return $this->parent_id;
-	}
-
-	/**
-	 * Set parent payment ID.
-	 *
-	 * @param int|null $parent Parent.
-	 * @return void
-	 */
-	public function set_parent_id( $parent ) {
-		$this->parent_id = $parent;
 	}
 
 	/**

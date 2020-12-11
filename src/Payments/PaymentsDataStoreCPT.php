@@ -269,7 +269,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 				'post_date_gmt'    => $this->get_mysql_utc_date( $payment->date ),
 				'post_title'       => $title,
 				'post_author'      => null === $customer ? null : $customer->get_user_id(),
-				'post_parent'      => $payment->get_parent_id(),
 				'pronamic_payment' => $payment,
 			),
 			true
@@ -357,15 +356,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			get_post_field( 'post_date_gmt', $id, 'raw' ),
 			new DateTimeZone( 'UTC' )
 		);
-
-		// Parent payment ID.
-		if ( null !== $payment->post ) {
-			$parent_id = $payment->post->post_parent;
-
-			if ( $parent_id > 0 ) {
-				$payment->set_parent_id( $parent_id );
-			}
-		}
 
 		$content = get_post_field( 'post_content', $id, 'raw' );
 
