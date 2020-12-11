@@ -234,4 +234,32 @@ class SubscriptionPeriod {
 
 		return $json;
 	}
+
+	/**
+	 * To string.
+	 *
+	 * @return string
+	 */
+	public function __toString() {
+		$start = $this->get_start_date();
+		$end   = $this->get_end_date();
+
+		$format_start = __( 'D j M Y', 'pronamic_ideal' );
+
+		// Check if year is equal.
+		if ( $start->format( 'Y' ) === $end->format( 'Y' ) ) {
+			$format_start = __( 'D j M', 'pronamic_ideal' );
+
+			// Check if month is equal.
+			if ( $start->format( 'm' ) === $end->format( 'm' ) ) {
+				$format_start = __( 'D j', 'pronamic_ideal' );
+			}
+		}
+
+		return sprintf(
+			'%1$s – %2$s',
+			$start->format_i18n( $format_start ),
+			$end->format_i18n()
+		);
+	}
 }
