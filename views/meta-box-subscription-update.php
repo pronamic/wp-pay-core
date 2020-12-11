@@ -8,7 +8,6 @@
  * @package   Pronamic\WordPress\Pay
  */
 
-use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
 
 $states = SubscriptionPostType::get_states();
@@ -39,41 +38,6 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 			?>
 		</select>
 	</p>
-
-	<?php
-
-	/**
-	 * Start payment for next period action.
-	 */
-	$config_id = get_post_meta( $post->ID, '_pronamic_subscription_config_id', true );
-
-	$gateway = Plugin::get_gateway( $config_id );
-
-	$allow_next_period_payment_statuses = array(
-		'subscr_active',
-		'subscr_failed',
-	);
-
-	// Show action button if gateway exists and support recurring payments and starting payments for next periods is allowed for the subscription status.
-	if ( $gateway && $gateway->supports( 'recurring' ) && in_array( $post->post_status,$allow_next_period_payment_statuses, true ) ) {
-		$action_url = wp_nonce_url(
-			add_query_arg(
-				array(
-					'pronamic_next_period' => true,
-				),
-				\get_edit_post_link( get_the_ID() )
-			),
-			'pronamic_next_period_' . get_the_ID()
-		);
-
-		printf(
-			'<p><a class="button" href="%s">%s</a></p>',
-			esc_url( $action_url ),
-			esc_html__( 'Start payment for next period', 'pronamic_ideal' )
-		);
-	}
-
-	?>
 </div>
 
 <div class="pronamic-pay-major-actions">

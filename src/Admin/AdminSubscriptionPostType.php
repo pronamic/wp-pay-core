@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Admin;
 
 use Pronamic\WordPress\Pay\Plugin;
+use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
 use Pronamic\WordPress\Pay\Util;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
 use WP_Post;
@@ -536,7 +537,7 @@ class AdminSubscriptionPostType {
 
 		add_meta_box(
 			'pronamic_subscription_payments',
-			__( 'Payments', 'pronamic_ideal' ),
+			__( 'Payments', 'pronamic_ideal' ) . $this->next_period_payment_button(),
 			array( $this, 'meta_box_payments' ),
 			$post_type,
 			'normal',
@@ -563,6 +564,53 @@ class AdminSubscriptionPostType {
 
 		// @link http://kovshenin.com/2012/how-to-remove-the-publish-box-from-a-post-type/.
 		remove_meta_box( 'submitdiv', $post_type, 'side' );
+	}
+
+	/**
+	 * Next period payment button.
+	 *
+	 * @return string
+	 */
+	public function next_period_payment_button() {
+		$post_id = get_the_ID();
+
+		// Check post ID.
+		if ( false === $post_id ) {
+			return '';
+		}
+
+		$config_id  = get_post_meta( $post_id, '_pronamic_subscription_config_id', true );
+
+		// Check gateway and recurring payment support.
+		$gateway = Plugin::get_gateway( $config_id );
+
+		if ( ! $gateway || ! $gateway->supports( 'recurring' ) ) {
+			return '';
+		}
+
+		// Check subscription.
+		$subscription = \get_pronamic_subscription( $post_id );
+
+		if ( null === $subscription ) {
+			return '';
+		}
+
+		// Check subscription status.
+		if ( ! in_array( $subscription->get_status(),array( SubscriptionStatus::ACTIVE, SubscriptionStatus::FAILURE ), true ) ) {
+			return '';
+		}
+
+		// Return action link if creating payments for next periods is allowed for the subscription status.
+		$action_url = wp_nonce_url(
+			add_query_arg( 'pronamic_next_period', true, \get_edit_post_link( $post_id ) ),
+			'pronamic_next_period_' . $post_id
+		);
+
+		return sprintf(
+			'<a class="button" href="%s">%s</a>',
+			esc_url( $action_url ),
+			esc_html__( 'Create next period payment', 'pronamic_ideal' )
+		);
 	}
 
 	/**
