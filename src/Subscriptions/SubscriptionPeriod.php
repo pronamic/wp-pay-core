@@ -236,11 +236,11 @@ class SubscriptionPeriod {
 	}
 
 	/**
-	 * To string.
+	 * Human readable range.
 	 *
 	 * @return string
 	 */
-	public function __toString() {
+	public function human_readable_range() {
 		$start = $this->get_start_date();
 		$end   = $this->get_end_date();
 
