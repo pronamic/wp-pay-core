@@ -462,7 +462,7 @@ class SubscriptionsModule {
 	/**
 	 * Start payment.
 	 *
-	 * @param Payment      $payment Payment.
+	 * @param Payment $payment Payment.
 	 *
 	 * @throws \UnexpectedValueException Throw unexpected value exception when no subscription was found in payment.
 	 *
@@ -483,7 +483,7 @@ class SubscriptionsModule {
 		// Calculate payment start and end dates.
 		$periods = $payment->get_periods();
 
-		if ( null ===  $periods ) {
+		if ( null === $periods ) {
 			$period = $subscription->new_period();
 
 			if ( null === $period ) {

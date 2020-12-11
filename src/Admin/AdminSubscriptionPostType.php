@@ -596,7 +596,7 @@ class AdminSubscriptionPostType {
 			return '';
 		}
 
-		$config_id  = get_post_meta( $post_id, '_pronamic_subscription_config_id', true );
+		$config_id = get_post_meta( $post_id, '_pronamic_subscription_config_id', true );
 
 		// Check gateway and recurring payment support.
 		$gateway = Plugin::get_gateway( $config_id );
@@ -613,7 +613,7 @@ class AdminSubscriptionPostType {
 		}
 
 		// Check subscription status.
-		if ( ! in_array( $subscription->get_status(),array( SubscriptionStatus::ACTIVE, SubscriptionStatus::FAILURE ), true ) ) {
+		if ( ! in_array( $subscription->get_status(), array( SubscriptionStatus::ACTIVE, SubscriptionStatus::FAILURE ), true ) ) {
 			return '';
 		}
 

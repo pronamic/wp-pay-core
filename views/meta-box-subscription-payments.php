@@ -60,7 +60,15 @@
 							<?php do_action( 'manage_' . $payments_post_type . '_posts_custom_column', 'pronamic_payment_status', $payment_id ); ?>
 						</td>
 						<td>
-							<?php if ( ! $is_first ) :echo esc_html( '⌙ ' );endif; ?>
+							<?php
+
+							if ( ! $is_first ) :
+
+								echo esc_html( '⌙ ' );
+
+							endif;
+
+							?>
 
 							<?php echo esc_html( $period->human_readable_range() ); ?>
 						</td>

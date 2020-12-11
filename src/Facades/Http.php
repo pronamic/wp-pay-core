@@ -27,6 +27,7 @@ class Http {
 	 *
 	 * @param array|WP_Error $result Remote request result.
 	 * @return Response
+	 * @throws \Exception Throw exception on request error.
 	 */
 	private static function result( $result ) {
 		if ( $result instanceof \WP_Error ) {

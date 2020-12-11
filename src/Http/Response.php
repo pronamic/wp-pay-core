@@ -59,6 +59,7 @@ class Response {
 	 * JSON.
 	 *
 	 * @return mixed
+	 * @throws \Exception Throw exception on empty response.
 	 */
 	public function json() {
 		$body = $this->body();
