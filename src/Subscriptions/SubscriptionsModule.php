@@ -456,20 +456,19 @@ class SubscriptionsModule {
 		}
 
 		// Start payment.
-		return $this->start_payment( $payment, $gateway );
+		return $this->start_payment( $payment );
 	}
 
 	/**
 	 * Start payment.
 	 *
 	 * @param Payment      $payment Payment.
-	 * @param Gateway|null $gateway Gateway to start the recurring payment at.
 	 *
 	 * @throws \UnexpectedValueException Throw unexpected value exception when no subscription was found in payment.
 	 *
 	 * @return Payment
 	 */
-	public function start_payment( Payment $payment, $gateway = null ) {
+	public function start_payment( Payment $payment ) {
 		// Set recurring type.
 		if ( $payment->get_recurring() ) {
 			$payment->recurring_type = Recurring::RECURRING;
@@ -482,13 +481,29 @@ class SubscriptionsModule {
 		}
 
 		// Calculate payment start and end dates.
-		$period = $subscription->new_period();
+		$periods = $payment->get_periods();
 
-		if ( null === $period ) {
-			throw new \UnexpectedValueException( 'Can not create new period for subscription.' );
+		if ( null ===  $periods ) {
+			$period = $subscription->new_period();
+
+			if ( null === $period ) {
+				throw new \UnexpectedValueException( 'Can not create new period for subscription.' );
+			}
+
+			$payment->add_period( $period );
 		}
 
-		$payment->add_period( $period );
+		$periods = $payment->get_periods();
+
+		if ( null === $periods ) {
+			throw new \UnexpectedValueException( 'Can not create payment without period for subscription.' );
+		}
+
+		$period = reset( $periods );
+
+		if ( false === $period ) {
+			throw new \UnexpectedValueException( 'Can not create payment without period for subscription.' );
+		}
 
 		$start_date = $period->get_start_date();
 		$end_date   = $period->get_end_date();
@@ -516,7 +531,7 @@ class SubscriptionsModule {
 		$subscription->save();
 
 		// Start payment.
-		$payment = Plugin::start_payment( $payment, $gateway );
+		$payment = Plugin::start_payment( $payment );
 
 		return $payment;
 	}
@@ -566,12 +581,10 @@ class SubscriptionsModule {
 	 * New payment based on period.
 	 *
 	 * @param SubscriptionPeriod $period Subscription period.
-	 * @return Payment|null
+	 * @return Payment
 	 * @throws \Exception Throws exception if gateway integration can not be found.
 	 */
 	public function new_period_payment( SubscriptionPeriod $period ) {
-		$payment = null;
-
 		$subscription = $period->get_phase()->get_subscription();
 
 		$config_id = $subscription->get_config_id();
@@ -612,8 +625,6 @@ class SubscriptionsModule {
 		$payment->set_lines( $subscription->get_lines() );
 		$payment->set_total_amount( $period->get_phase()->get_amount() );
 
-		$payment = Plugin::start_payment( $payment );
-
 		return $payment;
 	}
 
@@ -636,7 +647,7 @@ class SubscriptionsModule {
 		try {
 			$payment = $this->plugin->subscriptions_module->new_period_payment( $next_period );
 
-			$subscription->save();
+			$this->start_payment( $payment );
 		} catch ( \Exception $e ) {
 			Plugin::render_exception( $e );
 
@@ -673,6 +684,8 @@ class SubscriptionsModule {
 				$period_payment = $this->plugin->subscriptions_module->new_period_payment( $period );
 
 				$period_payment->set_source_id( $payment->get_source_id() );
+
+				$period_payment = $this->start_payment( $period_payment );
 
 				$payments[] = $period_payment;
 			} catch ( \Exception $e ) {
