@@ -8,6 +8,9 @@
  * @package   Pronamic\WordPress\Pay
  */
 
+use Pronamic\WordPress\Pay\Plugin;
+use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
+
 ?>
 
 <?php if ( empty( $periods ) ) : ?>
@@ -33,6 +36,47 @@
 		<tbody>
 
 			<?php
+
+			$next_period = $subscription->next_period();
+
+			$gateway = Plugin::get_gateway( $subscription->get_config_id() );
+
+			$allow_next_period_statuses = array( SubscriptionStatus::OPEN, SubscriptionStatus::ACTIVE, SubscriptionStatus::FAILURE );
+
+			if ( null !== $next_period && \in_array( $subscription->get_status(), $allow_next_period_statuses, true ) && null !== $gateway && $gateway->supports( 'recurring' ) ) :
+
+				?>
+
+				<tr>
+					<td>&nbsp;</td>
+					<td><?php echo \esc_html( $next_period->human_readable_range() ); ?></td>
+					<td colspan="2">
+						<?php
+
+						$create_next_payment_url = wp_nonce_url(
+							add_query_arg( 'pronamic_next_period', true, \get_edit_post_link( $subscription->get_id() ) ),
+							'pronamic_next_period_' . $subscription->get_id()
+						);
+
+						\printf(
+							__( 'Will be created on %1$s or %2$s', 'pronamic_ideal' ),
+							\esc_html( $subscription->get_next_payment_delivery_date()->format_i18n() ),
+							\sprintf(
+								'<a href="%1$s">%2$s</a>',
+								\esc_url( $create_next_payment_url ),
+								\esc_html( \__( 'create now', 'pronamic_ideal' ) )
+							)
+						);
+
+						?>
+					</td>
+					<td><?php echo \esc_html( $next_period->get_amount()->format_i18n() ); ?></td>
+					<td>—</td>
+				</tr>
+
+				<?php
+
+			endif;
 
 			foreach ( $periods as $period ) :
 
