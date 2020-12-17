@@ -72,6 +72,7 @@ class LicenseManager {
 	public function pre_update_option_license_key( $newvalue, $oldvalue ) {
 		$newvalue = trim( $newvalue );
 
+		// Deactivate license on changed value.
 		if ( $newvalue !== $oldvalue ) {
 			delete_option( 'pronamic_pay_license_status' );
 
@@ -82,12 +83,12 @@ class LicenseManager {
 
 		delete_transient( 'pronamic_pay_license_data' );
 
+		// Always try to activate the new license, it could be deactivated.
 		if ( ! empty( $newvalue ) ) {
-			// Always try to activate the new license, it could be deactivated.
 			$this->activate_license( $newvalue );
 		}
 
-		// Shedule daily license check.
+		// Schedule daily license check.
 		$time = time() + DAY_IN_SECONDS;
 
 		wp_clear_scheduled_hook( 'pronamic_pay_license_check' );
@@ -95,7 +96,16 @@ class LicenseManager {
 		wp_schedule_event( $time, 'daily', 'pronamic_pay_license_check' );
 
 		// Get and update license status.
+		$old_status = \get_option( 'pronamic_pay_license_status' );
+
 		$this->check_license( $newvalue );
+
+		$new_status = \get_option( 'pronamic_pay_license_status' );
+
+		// Don't show activated notice if option value and valid status have not changed.
+		if ( $oldvalue === $newvalue && $old_status === $new_status && 'valid' === $new_status ) {
+			delete_transient( 'pronamic_pay_license_data' );
+		}
 
 		return $newvalue;
 	}
