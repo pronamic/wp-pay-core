@@ -23,6 +23,7 @@ $class = ( 'valid' === $data->license ) ? 'updated' : 'error';
 		if ( 'valid' === $data->license ) {
 			echo \esc_html(
 				\sprintf(
+					/* translators: %s: Pronamic Pay */
 					\__( 'Thank you for activating your license and using the %s plugin.', 'pronamic_ideal' ),
 					\__( 'Pronamic Pay', 'pronamic_ideal' )
 				)

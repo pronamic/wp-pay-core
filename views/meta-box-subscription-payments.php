@@ -58,13 +58,16 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
 							'pronamic_next_period_' . $subscription->get_id()
 						);
 
-						\printf(
-							__( 'Will be created on %1$s or %2$s', 'pronamic_ideal' ),
-							\esc_html( $subscription->get_next_payment_delivery_date()->format_i18n() ),
-							\sprintf(
-								'<a href="%1$s">%2$s</a>',
-								\esc_url( $create_next_payment_url ),
-								\esc_html( \__( 'create now', 'pronamic_ideal' ) )
+						echo wp_kses_post(
+							sprintf(
+								/* translators: 1: next payment delivery date, 2: create next period payment anchor */
+								__( 'Will be created on %1$s or %2$s', 'pronamic_ideal' ),
+								\esc_html( $subscription->get_next_payment_delivery_date()->format_i18n() ),
+								\sprintf(
+									'<a href="%1$s">%2$s</a>',
+									\esc_url( $create_next_payment_url ),
+									\esc_html( \__( 'create now', 'pronamic_ideal' ) )
+								)
 							)
 						);
 
