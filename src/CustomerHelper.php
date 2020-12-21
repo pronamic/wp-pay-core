@@ -196,4 +196,47 @@ class CustomerHelper {
 			ContactNameHelper::anonymize_name( $name );
 		}
 	}
+
+	/**
+	 * Create a customer from an array.
+	 *
+	 * @param array $data Data.
+	 * @return Customer|null
+	 */
+	public static function from_array( $data ) {
+		$data = \array_filter(
+			$data,
+			function( $value ) {
+				return ( null !== $value ) && ( '' !== $value );
+			}
+		);
+
+		if ( empty( $data ) ) {
+			return null;
+		}
+
+		$customer = new Customer();
+
+		if ( \array_key_exists( 'name', $data ) ) {
+			$name = $data['name'];
+
+			if ( $name instanceof ContactName ) {
+				$customer->set_name( $name );
+			}
+		}
+
+		if ( \array_key_exists( 'email', $data ) ) {
+			$customer->set_email( $data['email'] );
+		}
+
+		if ( \array_key_exists( 'phone', $data ) ) {
+			$customer->set_phone( $data['phone'] );
+		}
+
+		if ( \array_key_exists( 'user_id', $data ) ) {
+			$customer->set_user_id( \intval( $data['user_id'] ) );
+		}
+
+		return $customer;
+	}
 }

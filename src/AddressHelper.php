@@ -119,4 +119,63 @@ class AddressHelper {
 			ContactNameHelper::anonymize_name( $name );
 		}
 	}
+
+	/**
+	 * Create an adress from an array.
+	 *
+	 * @param array $data Data.
+	 * @return Address|null
+	 */
+	public static function from_array( $data ) {
+		$data = \array_filter(
+			$data,
+			function( $value ) {
+				return ( null !== $value ) && ( '' !== $value );
+			}
+		);
+
+		if ( empty( $data ) ) {
+			return null;
+		}
+
+		$address = new Address();
+
+		if ( \array_key_exists( 'name', $data ) ) {
+			$address->set_name( $data['name'] );
+		}
+
+		if ( \array_key_exists( 'line_1', $data ) ) {
+			$address->set_line_1( $data['line_1'] );
+		}
+
+		if ( \array_key_exists( 'line_2', $data ) ) {
+			$address->set_line_2( $data['line_2'] );
+		}
+
+		if ( \array_key_exists( 'postal_code', $data ) ) {
+			$address->set_postal_code( $data['postal_code'] );
+		}
+
+		if ( \array_key_exists( 'city', $data ) ) {
+			$address->set_city( $data['city'] );
+		}
+
+		if ( \array_key_exists( 'region', $data ) ) {
+			$address->set_region( $data['region'] );
+		}
+
+		if ( \array_key_exists( 'country_code', $data ) ) {
+			$address->set_country_code( $data['country_code'] );
+		}
+
+		if ( \array_key_exists( 'email', $data ) ) {
+			$address->set_email( $data['email'] );
+		}
+
+		if ( \array_key_exists( 'phone', $data ) ) {
+			$address->set_phone( $data['phone'] );
+		}
+
+		return $address;
+	}
 }

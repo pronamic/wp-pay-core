@@ -111,4 +111,35 @@ class ContactNameHelper {
 		$name->set_middle_name( PrivacyManager::anonymize_data( 'text', $name->get_middle_name() ) );
 		$name->set_last_name( PrivacyManager::anonymize_data( 'text', $name->get_last_name() ) );
 	}
+
+	/**
+	 * Create a contact name from an array.
+	 *
+	 * @param array $data Data.
+	 * @return ContactName|null
+	 */
+	public static function from_array( $data ) {
+		$data = \array_filter(
+			$data,
+			function( $value ) {
+				return ( null !== $value ) && ( '' !== $value );
+			}
+		);
+
+		if ( empty( $data ) ) {
+			return null;
+		}
+
+		$name = new ContactName();
+
+		if ( \array_key_exists( 'first_name', $data ) ) {
+			$name->set_first_name( $data['first_name'] );
+		}
+
+		if ( \array_key_exists( 'last_name', $data ) ) {
+			$name->set_last_name( $data['last_name'] );
+		}
+
+		return $name;
+	}
 }
