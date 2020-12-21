@@ -201,6 +201,8 @@ class SubscriptionsModule {
 			try {
 				$payment = $this->new_subscription_payment( $subscription );
 
+				$payment->recurring = false;
+
 				$payment = $this->start_payment( $payment );
 			} catch ( \Exception $e ) {
 				require __DIR__ . '/../../views/subscription-renew-failed.php';
