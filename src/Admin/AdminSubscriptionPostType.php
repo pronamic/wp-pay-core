@@ -40,13 +40,6 @@ class AdminSubscriptionPostType {
 	private $plugin;
 
 	/**
-	 * Admin notices.
-	 *
-	 * @var array
-	 */
-	private $admin_notices = array();
-
-	/**
 	 * Constructs and initializes an admin payment post type object.
 	 *
 	 * @param Plugin $plugin Plugin.
@@ -211,6 +204,8 @@ class AdminSubscriptionPostType {
 			$new_payments = array( $new_payment );
 		}
 
+		$admin_notices = array();
+
 		if ( ! empty( $new_payments ) ) {
 			foreach ( $new_payments as $payment_id ) {
 				$edit_post_link = \sprintf(
@@ -231,7 +226,7 @@ class AdminSubscriptionPostType {
 				}
 
 				// Add notice.
-				$this->admin_notices[] = array(
+				$admin_notices[] = array(
 					'type'    => 'info',
 					'message' => \sprintf(
 						/* translators: %s: payment post edit link */
@@ -243,7 +238,7 @@ class AdminSubscriptionPostType {
 		}
 
 		// Display notices.
-		foreach ( $this->admin_notices as $notice ) {
+		foreach ( $admin_notices as $notice ) {
 			\printf(
 				'<div class="notice notice-%1$s"><p>%2$s</p></div>',
 				\esc_attr( $notice['type'] ),
