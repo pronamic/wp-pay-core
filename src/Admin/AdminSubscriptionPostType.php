@@ -109,7 +109,6 @@ class AdminSubscriptionPostType {
 	 * @return array
 	 */
 	public function removable_query_args( $args ) {
-		$args[] = 'pronamic_payments_created';
 		$args[] = 'pronamic_payment_created';
 
 		return $args;
@@ -179,8 +178,8 @@ class AdminSubscriptionPostType {
 
 					// Redirect for notice.
 					$url = \add_query_arg(
-						'pronamic_payments_created',
-						$payment_ids,
+						'pronamic_payment_created',
+						\rawurlencode( \implode( ',', $payment_ids ) ),
 						\get_edit_post_link( $post_id, 'raw' )
 					);
 
@@ -197,45 +196,38 @@ class AdminSubscriptionPostType {
 	 */
 	public function admin_notices() {
 		// Payment created for period.
-		$new_payments = \filter_input( \INPUT_GET, 'pronamic_payments_created', \FILTER_FORCE_ARRAY );
-		$new_payment  = \filter_input( \INPUT_GET, 'pronamic_payment_created', \FILTER_SANITIZE_NUMBER_INT );
+		$payment_ids  = \wp_parse_id_list( \filter_input( \INPUT_GET, 'pronamic_payment_created', \FILTER_SANITIZE_STRING ) );
 
-		if ( empty( $new_payments ) && ! empty( $new_payment ) ) {
-			$new_payments = array( $new_payment );
-		}
+		foreach ( $payment_ids as $payment_id ) {
+			$edit_post_link = \sprintf(
+				/* translators: %d: payment ID */
+				__( 'Payment #%d', 'pronamic_ideal' ),
+				$payment_id
+			);
 
-		if ( ! empty( $new_payments ) ) {
-			foreach ( $new_payments as $payment_id ) {
+			// Add post edit link.
+			$edit_post_url = \get_edit_post_link( $payment_id );
+
+			if ( null !== $edit_post_url ) {
 				$edit_post_link = \sprintf(
-					/* translators: %d: payment ID */
-					__( 'Payment #%d', 'pronamic_ideal' ),
-					$payment_id
-				);
-
-				// Add post edit link.
-				$edit_post_url = \get_edit_post_link( $payment_id );
-
-				if ( null !== $edit_post_url ) {
-					$edit_post_link = \sprintf(
-						'<a href="%1$s" title="%2$s">%2$s</a>',
-						\esc_url( $edit_post_url ),
-						$edit_post_link
-					);
-				}
-
-				// Display notice.
-				\printf(
-					'<div class="notice notice-%1$s"><p>%2$s</p></div>',
-					\esc_attr( 'info' ),
-					\wp_kses_post(
-						\sprintf(
-							/* translators: %s: payment post edit link */
-							__( '%s has been created.', 'pronamic_ideal' ),
-							\wp_kses_post( $edit_post_link )
-						)
-					)
+					'<a href="%1$s" title="%2$s">%2$s</a>',
+					\esc_url( $edit_post_url ),
+					$edit_post_link
 				);
 			}
+
+			// Display notice.
+			\printf(
+				'<div class="notice notice-%1$s"><p>%2$s</p></div>',
+				\esc_attr( 'info' ),
+				\wp_kses_post(
+					\sprintf(
+						/* translators: %s: payment post edit link */
+						__( '%s has been created.', 'pronamic_ideal' ),
+						\wp_kses_post( $edit_post_link )
+					)
+				)
+			);
 		}
 	}
 
