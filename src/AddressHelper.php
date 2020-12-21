@@ -141,7 +141,11 @@ class AddressHelper {
 		$address = new Address();
 
 		if ( \array_key_exists( 'name', $data ) ) {
-			$address->set_name( $data['name'] );
+			$name = $data['name'];
+
+			if ( $name instanceof ContactName ) {
+				$address->set_name( $name );
+			}
 		}
 
 		if ( \array_key_exists( 'line_1', $data ) ) {
