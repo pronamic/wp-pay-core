@@ -26,19 +26,23 @@ class CustomerHelperTest extends \PHPUnit\Framework\TestCase {
 
 		$this->assertNull( $customer );
 
-		$customer = CustomerHelper::from_array( array(
-			'email'   => '',
-			'phone'   => '',
-			'user_id' => '',
-		) );
+		$customer = CustomerHelper::from_array(
+			array(
+				'email'   => '',
+				'phone'   => '',
+				'user_id' => '',
+			)
+		);
 
 		$this->assertNull( $customer );
 
-		$customer = CustomerHelper::from_array( array(
-			'email'   => 'john@example.com',
-			'phone'   => '',
-			'user_id' => '',
-		) );
+		$customer = CustomerHelper::from_array(
+			array(
+				'email'   => 'john@example.com',
+				'phone'   => '',
+				'user_id' => '',
+			)
+		);
 
 		$this->assertEquals( 'john@example.com', $customer->get_email() );
 		$this->assertNull( $customer->get_phone() );

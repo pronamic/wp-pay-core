@@ -103,17 +103,21 @@ class ContactNameHelperTest extends \PHPUnit\Framework\TestCase {
 
 		$this->assertNull( $name );
 
-		$name = ContactNameHelper::from_array( array(
-			'first_name' => '',
-			'last_name'  => '',
-		) );
+		$name = ContactNameHelper::from_array(
+			array(
+				'first_name' => '',
+				'last_name'  => '',
+			)
+		);
 
 		$this->assertNull( $name );
 
-		$name = ContactNameHelper::from_array( array(
-			'first_name' => 'John',
-			'last_name'  => '',
-		) );
+		$name = ContactNameHelper::from_array(
+			array(
+				'first_name' => 'John',
+				'last_name'  => '',
+			)
+		);
 
 		$this->assertEquals( 'John', $name->get_first_name() );
 		$this->assertNull( $name->get_last_name() );
