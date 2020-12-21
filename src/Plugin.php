@@ -787,19 +787,6 @@ class Plugin {
 	}
 
 	/**
-	 * Start recurring payment.
-	 *
-	 * @param Payment $payment Payment or subscription for backwards compatibility.
-	 *
-	 * @throws \Exception Throws an Exception on incorrect date interval.
-	 *
-	 * @return Payment
-	 */
-	public static function start_recurring_payment( Payment $payment ) {
-		return pronamic_pay_plugin()->subscriptions_module->start_payment( $payment );
-	}
-
-	/**
 	 * Complement payment.
 	 *
 	 * @param Payment $payment Payment.
