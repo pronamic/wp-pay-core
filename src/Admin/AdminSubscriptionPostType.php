@@ -204,8 +204,6 @@ class AdminSubscriptionPostType {
 			$new_payments = array( $new_payment );
 		}
 
-		$admin_notices = array();
-
 		if ( ! empty( $new_payments ) ) {
 			foreach ( $new_payments as $payment_id ) {
 				$edit_post_link = \sprintf(
@@ -225,25 +223,19 @@ class AdminSubscriptionPostType {
 					);
 				}
 
-				// Add notice.
-				$admin_notices[] = array(
-					'type'    => 'info',
-					'message' => \sprintf(
-						/* translators: %s: payment post edit link */
-						__( '%s has been created.', 'pronamic_ideal' ),
-						\wp_kses_post( $edit_post_link )
-					),
+				// Display notice.
+				\printf(
+					'<div class="notice notice-%1$s"><p>%2$s</p></div>',
+					\esc_attr( $notice['type'] ),
+					\wp_kses_post(
+						\sprintf(
+							/* translators: %s: payment post edit link */
+							__( '%s has been created.', 'pronamic_ideal' ),
+							\wp_kses_post( $edit_post_link )
+						)
+					)
 				);
 			}
-		}
-
-		// Display notices.
-		foreach ( $admin_notices as $notice ) {
-			\printf(
-				'<div class="notice notice-%1$s"><p>%2$s</p></div>',
-				\esc_attr( $notice['type'] ),
-				\wp_kses_post( $notice['message'] )
-			);
 		}
 	}
 
