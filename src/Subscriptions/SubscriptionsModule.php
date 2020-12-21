@@ -651,7 +651,7 @@ class SubscriptionsModule {
 		$payment = null;
 
 		try {
-			$payment = $this->plugin->subscriptions_module->new_period_payment( $next_period );
+			$payment = $this->new_period_payment( $next_period );
 
 			$this->start_payment( $payment );
 		} catch ( \Exception $e ) {
@@ -687,7 +687,7 @@ class SubscriptionsModule {
 
 		foreach ( $periods as $period ) {
 			try {
-				$period_payment = $this->plugin->subscriptions_module->new_period_payment( $period );
+				$period_payment = $this->new_period_payment( $period );
 
 				$period_payment->set_source_id( $payment->get_source_id() );
 
