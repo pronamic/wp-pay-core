@@ -153,6 +153,7 @@ class SubscriptionTest extends WP_UnitTestCase {
 		$subscription->set_expiry_date( new DateTime( '2010-05-05' ) );
 		$subscription->set_next_payment_date( new DateTime( '2005-06-05' ) );
 		$subscription->set_next_payment_delivery_date( new DateTime( '2005-06-01' ) );
+		$subscription->set_activated_at( new DateTime( '2005-05-05' ) );
 
 		// Test.
 		$json_file = __DIR__ . '/../../json/subscription.json';
