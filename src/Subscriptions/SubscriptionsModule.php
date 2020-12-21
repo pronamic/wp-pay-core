@@ -199,7 +199,9 @@ class SubscriptionsModule {
 
 		if ( 'POST' === Server::get( 'REQUEST_METHOD' ) ) {
 			try {
-				$payment = $this->start_recurring( $subscription, $gateway, false );
+				$payment = $this->new_subscription_payment( $subscription );
+
+				$payment = $this->start_payment( $payment );
 			} catch ( \Exception $e ) {
 				require __DIR__ . '/../../views/subscription-renew-failed.php';
 
@@ -425,38 +427,6 @@ class SubscriptionsModule {
 		$payment->set_total_amount( $current_phase->get_amount() );
 
 		return $payment;
-	}
-
-	/**
-	 * Start a recurring payment at the specified gateway for the specified subscription.
-	 *
-	 * @param Subscription $subscription The subscription to start a recurring payment for.
-	 * @param Gateway|null $gateway      The gateway to start the recurring payment at.
-	 * @param bool         $recurring    Recurring.
-	 * @return Payment|null
-	 * @throws \Exception Throws an Exception on incorrect date interval.
-	 */
-	public function start_recurring( Subscription $subscription, $gateway = null, $recurring = true ) {
-		$payment = $this->new_subscription_payment( $subscription );
-
-		if ( null === $payment ) {
-			return null;
-		}
-
-		$payment->recurring = $recurring;
-
-		// Make sure to only start payments for supported gateways.
-		if ( null === $gateway ) {
-			$gateway = Plugin::get_gateway( $payment->get_config_id() );
-		}
-
-		if ( true === $payment->get_recurring() && ( ! $gateway || ! $gateway->supports( 'recurring' ) ) ) {
-			// @todo
-			return null;
-		}
-
-		// Start payment.
-		return $this->start_payment( $payment );
 	}
 
 	/**
@@ -1083,7 +1053,11 @@ class SubscriptionsModule {
 
 			// Start payment.
 			try {
-				$payment = $this->start_recurring( $subscription, $gateway );
+				$payment = $this->new_subscription_payment( $subscription );
+
+				$payment->recurring = true;
+
+				$payment = $this->start_payment( $payment );
 			} catch ( \Exception $e ) {
 				if ( $cli_test ) {
 					WP_CLI::error( $e->getMessage(), false );

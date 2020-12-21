@@ -1012,6 +1012,11 @@ class Plugin {
 			return $payment;
 		}
 
+		// Recurring.
+		if ( true === $payment->get_recurring() && ! $gateway->supports( 'recurring' ) ) {
+			throw new \Exception( 'Gateway does not support recurring payments.' );
+		}
+
 		// Start payment at the gateway.
 		try {
 			$gateway->start( $payment );
