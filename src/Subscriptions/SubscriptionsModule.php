@@ -689,6 +689,7 @@ class SubscriptionsModule {
 			try {
 				$period_payment = $this->new_period_payment( $period );
 
+				$period_payment->set_source_id( $payment->get_source() );
 				$period_payment->set_source_id( $payment->get_source_id() );
 
 				$period_payment = $this->start_payment( $period_payment );
