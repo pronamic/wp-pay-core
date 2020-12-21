@@ -226,7 +226,7 @@ class AdminSubscriptionPostType {
 				// Display notice.
 				\printf(
 					'<div class="notice notice-%1$s"><p>%2$s</p></div>',
-					\esc_attr( $notice['type'] ),
+					\esc_attr( 'info' ),
 					\wp_kses_post(
 						\sprintf(
 							/* translators: %s: payment post edit link */
