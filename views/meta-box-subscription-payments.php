@@ -68,7 +68,7 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
 								)
 							);
 
-						else:
+						else :
 
 							echo wp_kses_post(
 								sprintf(
