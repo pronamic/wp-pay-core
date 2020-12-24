@@ -196,7 +196,7 @@ class AdminSubscriptionPostType {
 	 */
 	public function admin_notices() {
 		// Payment created for period.
-		$payment_ids  = \wp_parse_id_list( \filter_input( \INPUT_GET, 'pronamic_payment_created', \FILTER_SANITIZE_STRING ) );
+		$payment_ids = \wp_parse_id_list( \filter_input( \INPUT_GET, 'pronamic_payment_created', \FILTER_SANITIZE_STRING ) );
 
 		foreach ( $payment_ids as $payment_id ) {
 			$edit_post_link = \sprintf(
