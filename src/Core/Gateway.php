@@ -366,7 +366,7 @@ abstract class Gateway {
 		$options = array();
 
 		try {
-			$payment_methods = $this->get_transient_available_payment_methods();
+			$payment_methods = \array_intersect( $this->get_transient_available_payment_methods(), $this->get_supported_payment_methods() );
 		} catch ( \Exception $e ) {
 			$payment_methods = array();
 		}
