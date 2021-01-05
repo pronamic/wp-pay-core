@@ -560,7 +560,7 @@ class PaymentMethods {
 			foreach ( $config_ids as $key => $config_id ) {
 				$gateway = Plugin::get_gateway( $config_id );
 
-				if ( ! \in_array( $payment_method, $gateway->get_supported_payment_methods(), true ) ) {
+				if ( null === $gateway || ! \in_array( $payment_method, $gateway->get_supported_payment_methods(), true ) ) {
 					unset( $config_ids[ $key ] );
 				}
 			}
