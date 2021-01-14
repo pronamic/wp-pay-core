@@ -351,8 +351,8 @@ class FormPostType {
 		$data = \filter_input_array( INPUT_POST, $definition );
 
 		if ( ! \is_array( $data ) ) {
-		    return;
-        }
+			return;
+		}
 
 		// Convert amount choices to cents.
 		if ( isset( $data['_pronamic_payment_form_amount_choices'] ) ) {
