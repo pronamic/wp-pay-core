@@ -201,6 +201,10 @@ class SubscriptionsModule {
 			try {
 				$payment = $this->new_subscription_payment( $subscription );
 
+				if ( null === $payment ) {
+					throw new \Exception( 'Unable to create renewal payment for subscription.' );
+				}
+
 				$payment->recurring = false;
 
 				$payment = $this->start_payment( $payment );
@@ -218,9 +222,7 @@ class SubscriptionsModule {
 				exit;
 			}
 
-			if ( $payment ) {
-				$gateway->redirect( $payment );
-			}
+			$gateway->redirect( $payment );
 
 			return;
 		}
@@ -1051,6 +1053,10 @@ class SubscriptionsModule {
 			// Start payment.
 			try {
 				$payment = $this->new_subscription_payment( $subscription );
+
+				if ( null === $payment ) {
+					continue;
+				}
 
 				$payment->recurring = true;
 
