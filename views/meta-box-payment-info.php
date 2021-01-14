@@ -808,14 +808,19 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 
 	<?php if ( PRONAMIC_PAY_DEBUG ) : ?>
 
-		<tr>
-			<th scope="row">
-				<?php esc_html_e( 'User Agent', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php echo esc_html( $payment->user_agent ); ?>
-			</td>
-		</tr>
+		<?php if ( ! empty( $payment->user_agent ) ) : ?>
+
+			<tr>
+				<th scope="row">
+					<?php esc_html_e( 'User Agent', 'pronamic_ideal' ); ?>
+				</th>
+				<td>
+					<?php echo esc_html( $payment->user_agent ); ?>
+				</td>
+			</tr>
+
+		<?php endif; ?>
+
 		<tr>
 			<th scope="row">
 				<?php esc_html_e( 'IP Address', 'pronamic_ideal' ); ?>

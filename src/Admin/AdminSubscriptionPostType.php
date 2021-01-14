@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Admin;
 
 use Pronamic\WordPress\Pay\Plugin;
+use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
 use Pronamic\WordPress\Pay\Util;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
 use WP_Post;
@@ -54,11 +55,17 @@ class AdminSubscriptionPostType {
 
 		add_action( 'manage_' . self::POST_TYPE . '_posts_custom_column', array( $this, 'custom_columns' ), 10, 2 );
 
+		add_action( 'load-post.php', array( $this, 'maybe_process_subscription_action' ) );
+
+		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
+
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 
 		add_filter( 'post_row_actions', array( $this, 'post_row_actions' ), 10, 2 );
 
 		add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
+
+		add_filter( 'removable_query_args', array( $this, 'removable_query_args' ) );
 	}
 
 	/**
@@ -91,6 +98,136 @@ class AdminSubscriptionPostType {
 		$vars['post_status'][] = 'publish';
 
 		return $vars;
+	}
+
+	/**
+	 * Removable query arguments.
+	 *
+	 * @link https://github.com/WordPress/WordPress/blob/5.3/wp-admin/includes/misc.php#L1204-L1230
+	 * @link https://developer.wordpress.org/reference/functions/wp_removable_query_args/
+	 * @param array $args Arguments.
+	 * @return array
+	 */
+	public function removable_query_args( $args ) {
+		$args[] = 'pronamic_payment_created';
+
+		return $args;
+	}
+
+	/**
+	 * Maybe process subscription action.
+	 *
+	 * @return void
+	 */
+	public function maybe_process_subscription_action() {
+		// Current user.
+		if ( ! \current_user_can( 'edit_payments' ) ) {
+			return;
+		}
+
+		// Screen.
+		$screen = \get_current_screen();
+
+		if ( null === $screen ) {
+			return;
+		}
+
+		if ( ! ( 'post' === $screen->base && 'pronamic_pay_subscr' === $screen->post_type ) ) {
+			return;
+		}
+
+		$post_id = \filter_input( \INPUT_GET, 'post', \FILTER_SANITIZE_NUMBER_INT );
+
+		$subscription = \get_pronamic_subscription( $post_id );
+
+		if ( null === $subscription ) {
+			return;
+		}
+
+		// Start payment for next period action.
+		if ( \filter_input( \INPUT_GET, 'pronamic_next_period', \FILTER_VALIDATE_BOOLEAN ) && \check_admin_referer( 'pronamic_next_period_' . $post_id ) ) {
+			$payment = $this->plugin->subscriptions_module->start_next_period_payment( $subscription );
+
+			if ( null !== $payment ) {
+				// Redirect for notice.
+				$url = \add_query_arg(
+					'pronamic_payment_created',
+					$payment->get_id(),
+					\get_edit_post_link( $post_id, 'raw' )
+				);
+
+				\wp_safe_redirect( $url );
+			}
+		}
+
+		// Payment retry action.
+		$payment_id = \filter_input( \INPUT_GET, 'pronamic_retry_payment', \FILTER_SANITIZE_NUMBER_INT );
+
+		if ( null !== $payment_id && \check_admin_referer( 'pronamic_retry_payment_' . $payment_id ) ) {
+			$payment = \get_pronamic_payment( $payment_id );
+
+			if ( null !== $payment ) {
+				$payments = $this->plugin->subscriptions_module->retry_payment( $payment );
+
+				if ( ! empty( $payments ) ) {
+					$payment_ids = array();
+
+					foreach ( $payments as $payment ) {
+						$payment_ids[] = $payment->get_id();
+					}
+
+					// Redirect for notice.
+					$url = \add_query_arg(
+						'pronamic_payment_created',
+						\rawurlencode( \implode( ',', $payment_ids ) ),
+						\get_edit_post_link( $post_id, 'raw' )
+					);
+
+					\wp_safe_redirect( $url );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Admin notices.
+	 *
+	 * @return void
+	 */
+	public function admin_notices() {
+		// Payment created for period.
+		$payment_ids = \wp_parse_id_list( \filter_input( \INPUT_GET, 'pronamic_payment_created', \FILTER_SANITIZE_STRING ) );
+
+		foreach ( $payment_ids as $payment_id ) {
+			$edit_post_link = \sprintf(
+				/* translators: %d: payment ID */
+				__( 'Payment #%d', 'pronamic_ideal' ),
+				$payment_id
+			);
+
+			// Add post edit link.
+			$edit_post_url = \get_edit_post_link( $payment_id );
+
+			if ( null !== $edit_post_url ) {
+				$edit_post_link = \sprintf(
+					'<a href="%1$s" title="%2$s">%2$s</a>',
+					\esc_url( $edit_post_url ),
+					$edit_post_link
+				);
+			}
+
+			// Display notice.
+			\printf(
+				'<div class="notice notice-info"><p>%1$s</p></div>',
+				\wp_kses_post(
+					\sprintf(
+						/* translators: %s: payment post edit link */
+						__( '%s has been created.', 'pronamic_ideal' ),
+						\wp_kses_post( $edit_post_link )
+					)
+				)
+			);
+		}
 	}
 
 	/**
@@ -507,7 +644,7 @@ class AdminSubscriptionPostType {
 			return;
 		}
 
-		$payments = $subscription->get_payments();
+		$periods = $subscription->get_payments_by_period();
 
 		include __DIR__ . '/../../views/meta-box-subscription-payments.php';
 	}

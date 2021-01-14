@@ -150,13 +150,33 @@ class SubscriptionsModule {
 	 * @return void
 	 */
 	private function handle_subscription_cancel( Subscription $subscription ) {
-		if ( SubscriptionStatus::CANCELLED !== $subscription->get_status() ) {
+		if (
+			'POST' === Server::get( 'REQUEST_METHOD' )
+				&&
+			SubscriptionStatus::CANCELLED !== $subscription->get_status()
+		) {
 			$subscription->set_status( SubscriptionStatus::CANCELLED );
 
 			$subscription->save();
+
+			$url = \home_url();
+
+			$page_id = \pronamic_pay_get_page_id( 'subscription_canceled' );
+
+			if ( $page_id > 0 ) {
+				$page_url = \get_permalink( $page_id );
+
+				if ( false !== $page_url ) {
+					$url = $page_url;
+				}
+			}
+
+			\wp_safe_redirect( $url );
+
+			exit;
 		}
 
-		wp_safe_redirect( home_url() );
+		require __DIR__ . '/../../views/subscription-cancel.php';
 
 		exit;
 	}
@@ -179,7 +199,15 @@ class SubscriptionsModule {
 
 		if ( 'POST' === Server::get( 'REQUEST_METHOD' ) ) {
 			try {
-				$payment = $this->start_recurring( $subscription, $gateway, false );
+				$payment = $this->new_subscription_payment( $subscription );
+
+				if ( null === $payment ) {
+					throw new \Exception( 'Unable to create renewal payment for subscription.' );
+				}
+
+				$payment->recurring = false;
+
+				$payment = $this->start_payment( $payment );
 			} catch ( \Exception $e ) {
 				require __DIR__ . '/../../views/subscription-renew-failed.php';
 
@@ -194,9 +222,7 @@ class SubscriptionsModule {
 				exit;
 			}
 
-			if ( $payment ) {
-				$gateway->redirect( $payment );
-			}
+			$gateway->redirect( $payment );
 
 			return;
 		}
@@ -408,48 +434,15 @@ class SubscriptionsModule {
 	}
 
 	/**
-	 * Start a recurring payment at the specified gateway for the specified subscription.
-	 *
-	 * @param Subscription $subscription The subscription to start a recurring payment for.
-	 * @param Gateway|null $gateway      The gateway to start the recurring payment at.
-	 * @param bool         $recurring    Recurring.
-	 * @return Payment|null
-	 * @throws \Exception Throws an Exception on incorrect date interval.
-	 */
-	public function start_recurring( Subscription $subscription, $gateway = null, $recurring = true ) {
-		$payment = $this->new_subscription_payment( $subscription );
-
-		if ( null === $payment ) {
-			return null;
-		}
-
-		$payment->recurring = $recurring;
-
-		// Make sure to only start payments for supported gateways.
-		if ( null === $gateway ) {
-			$gateway = Plugin::get_gateway( $payment->get_config_id() );
-		}
-
-		if ( true === $payment->get_recurring() && ( ! $gateway || ! $gateway->supports( 'recurring' ) ) ) {
-			// @todo
-			return null;
-		}
-
-		// Start payment.
-		return $this->start_payment( $payment, $gateway );
-	}
-
-	/**
 	 * Start payment.
 	 *
-	 * @param Payment      $payment Payment.
-	 * @param Gateway|null $gateway Gateway to start the recurring payment at.
+	 * @param Payment $payment Payment.
 	 *
 	 * @throws \UnexpectedValueException Throw unexpected value exception when no subscription was found in payment.
 	 *
 	 * @return Payment
 	 */
-	public function start_payment( Payment $payment, $gateway = null ) {
+	public function start_payment( Payment $payment ) {
 		// Set recurring type.
 		if ( $payment->get_recurring() ) {
 			$payment->recurring_type = Recurring::RECURRING;
@@ -462,13 +455,29 @@ class SubscriptionsModule {
 		}
 
 		// Calculate payment start and end dates.
-		$period = $subscription->new_period();
+		$periods = $payment->get_periods();
 
-		if ( null === $period ) {
-			throw new \UnexpectedValueException( 'Can not create new period for subscription.' );
+		if ( null === $periods ) {
+			$period = $subscription->new_period();
+
+			if ( null === $period ) {
+				throw new \UnexpectedValueException( 'Can not create new period for subscription.' );
+			}
+
+			$payment->add_period( $period );
 		}
 
-		$payment->add_period( $period );
+		$periods = $payment->get_periods();
+
+		if ( null === $periods ) {
+			throw new \UnexpectedValueException( 'Can not create payment without period for subscription.' );
+		}
+
+		$period = reset( $periods );
+
+		if ( false === $period ) {
+			throw new \UnexpectedValueException( 'Can not create payment without period for subscription.' );
+		}
 
 		$start_date = $period->get_start_date();
 		$end_date   = $period->get_end_date();
@@ -496,9 +505,173 @@ class SubscriptionsModule {
 		$subscription->save();
 
 		// Start payment.
-		$payment = Plugin::start_payment( $payment, $gateway );
+		$payment = Plugin::start_payment( $payment );
 
 		return $payment;
+	}
+
+	/**
+	 * Can payment be retried.
+	 *
+	 * @param Payment $payment Payment to retry.
+	 * @return bool
+	 */
+	public function can_retry_payment( Payment $payment ) {
+		// Check status.
+		if ( PaymentStatus::FAILURE !== $payment->get_status() ) {
+			return false;
+		}
+
+		// Check recurring.
+		if ( ! $payment->get_recurring() ) {
+			return false;
+		}
+
+		// Check periods.
+		$periods = $payment->get_periods();
+
+		if ( null === $periods ) {
+			return false;
+		}
+
+		// Check for pending and successful child payments.
+		$payments = \get_pronamic_payments_by_meta( '', '', array( 'post_parent' => $payment->get_id() ) );
+
+		foreach ( $payments as $child_payment ) {
+			if ( \in_array( $child_payment->get_status(), array( PaymentStatus::OPEN, PaymentStatus::SUCCESS ), true ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * New payment based on period.
+	 *
+	 * @param SubscriptionPeriod $period Subscription period.
+	 * @return Payment
+	 * @throws \Exception Throws exception if gateway integration can not be found.
+	 */
+	public function new_period_payment( SubscriptionPeriod $period ) {
+		$subscription = $period->get_phase()->get_subscription();
+
+		$config_id = (int) $subscription->get_config_id();
+
+		$integration_id = \get_post_meta( $config_id, '_pronamic_gateway_id', true );
+
+		$integration = $this->plugin->gateway_integrations->get_integration( $integration_id );
+
+		if ( null === $integration ) {
+			throw new \Exception( 'Gateway integration could not be found while creating new subscription period payment.' );
+		}
+
+		$config = $integration->get_config( $config_id );
+
+		if ( null === $config ) {
+			throw new \Exception( 'Config could not be found while creating new subscription period payment.' );
+		}
+
+		$payment = new Payment();
+
+		$payment->email           = $subscription->get_email();
+		$payment->method          = $subscription->payment_method;
+		$payment->issuer          = $subscription->get_issuer();
+		$payment->recurring       = true;
+		$payment->subscription    = $subscription;
+		$payment->subscription_id = $subscription->get_id();
+
+		$payment->set_description( $subscription->get_description() );
+		$payment->set_config_id( $config_id );
+		$payment->set_origin_id( $subscription->get_origin_id() );
+		$payment->set_mode( $config->mode );
+
+		$payment->set_source( $subscription->get_source() );
+		$payment->set_source_id( $subscription->get_source_id() );
+
+		$payment->set_customer( $subscription->get_customer() );
+		$payment->set_billing_address( $subscription->get_billing_address() );
+		$payment->set_shipping_address( $subscription->get_shipping_address() );
+
+		$payment->add_period( $period );
+		$payment->set_start_date( $period->get_start_date() );
+		$payment->set_end_date( $period->get_end_date() );
+
+		$payment->set_lines( $subscription->get_lines() );
+		$payment->set_total_amount( $period->get_phase()->get_amount() );
+
+		return $payment;
+	}
+
+	/**
+	 * Start payment for next period.
+	 *
+	 * @param Subscription $subscription Subscription.
+	 * @return Payment|null
+	 */
+	public function start_next_period_payment( Subscription $subscription ) {
+		$next_period = $subscription->new_period();
+
+		if ( null === $next_period ) {
+			return null;
+		}
+
+		// Start payment for next period.
+		$payment = null;
+
+		try {
+			$payment = $this->new_period_payment( $next_period );
+
+			$this->start_payment( $payment );
+		} catch ( \Exception $e ) {
+			Plugin::render_exception( $e );
+
+			exit;
+		}
+
+		return $payment;
+	}
+
+	/**
+	 * Retry a payment by starting a payment for each period of given payment.
+	 *
+	 * @param Payment $payment Payment.
+	 * @return array<int, Payment>|null
+	 */
+	public function retry_payment( Payment $payment ) {
+		// Check if payment can be retried.
+		if ( ! $this->can_retry_payment( $payment ) ) {
+			return null;
+		}
+
+		// Check periods.
+		$periods = $payment->get_periods();
+
+		if ( null === $periods ) {
+			return null;
+		}
+
+		// Start new payment for period.
+		$payments = array();
+
+		foreach ( $periods as $period ) {
+			try {
+				$period_payment = $this->new_period_payment( $period );
+
+				$period_payment->set_source( $payment->get_source() );
+				$period_payment->set_source_id( $payment->get_source_id() );
+
+				$period_payment = $this->start_payment( $period_payment );
+
+				$payments[] = $period_payment;
+			} catch ( \Exception $e ) {
+				Plugin::render_exception( $e );
+
+				exit;
+			}
+		}
+
+		return $payments;
 	}
 
 	/**
@@ -879,7 +1052,15 @@ class SubscriptionsModule {
 
 			// Start payment.
 			try {
-				$payment = $this->start_recurring( $subscription, $gateway );
+				$payment = $this->new_subscription_payment( $subscription );
+
+				if ( null === $payment ) {
+					continue;
+				}
+
+				$payment->recurring = true;
+
+				$payment = $this->start_payment( $payment );
 			} catch ( \Exception $e ) {
 				if ( $cli_test ) {
 					WP_CLI::error( $e->getMessage(), false );

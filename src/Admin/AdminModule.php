@@ -11,9 +11,19 @@
 namespace Pronamic\WordPress\Pay\Admin;
 
 use Pronamic\WordPress\Money\Parser as MoneyParser;
+use Pronamic\WordPress\Money\TaxedMoney;
+use Pronamic\WordPress\Pay\Address;
+use Pronamic\WordPress\Pay\ContactName;
 use Pronamic\WordPress\Pay\Core\Util;
+use Pronamic\WordPress\Pay\CreditCard;
+use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\Forms\FormPostType;
+use Pronamic\WordPress\Pay\Payments\Payment;
+use Pronamic\WordPress\Pay\Payments\PaymentLines;
 use Pronamic\WordPress\Pay\Plugin;
+use Pronamic\WordPress\Pay\Subscriptions\Subscription;
+use Pronamic\WordPress\Pay\Subscriptions\SubscriptionInterval;
+use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 use Pronamic\WordPress\Pay\Webhooks\WebhookManager;
 
 /**
@@ -468,6 +478,18 @@ class AdminModule {
 					),
 				),
 			),
+			array(
+				'post_title'   => __( 'Subscription Canceled', 'pronamic_ideal' ),
+				'post_name'    => __( 'subscription', 'pronamic_ideal' ),
+				'post_content' => sprintf(
+					'<p>%s</p>',
+					__( 'The subscription has been canceled.', 'pronamic_ideal' )
+				),
+				'post_meta'    => array(
+					'_yoast_wpseo_meta-robots-noindex' => true,
+				),
+				'option_name'  => 'pronamic_pay_subscription_canceled_page_id',
+			),
 		);
 
 		$url_args = array(
@@ -606,43 +628,250 @@ class AdminModule {
 	 * @return void
 	 */
 	public function maybe_test_payment() {
-		if ( ! filter_has_var( INPUT_POST, 'test_pay_gateway' ) ) {
+		if ( ! \filter_has_var( \INPUT_POST, 'test_pay_gateway' ) ) {
 			return;
 		}
 
-		if ( ! check_admin_referer( 'test_pay_gateway', 'pronamic_pay_test_nonce' ) ) {
+		if ( ! \check_admin_referer( 'test_pay_gateway', 'pronamic_pay_test_nonce' ) ) {
 			return;
 		}
 
 		// Gateway.
-		$id = filter_input( INPUT_POST, 'post_ID', FILTER_SANITIZE_NUMBER_INT );
+		$config_id = \filter_input( \INPUT_POST, 'post_ID', \FILTER_SANITIZE_NUMBER_INT );
 
-		$gateway = Plugin::get_gateway( $id );
+		$gateway = Plugin::get_gateway( $config_id );
 
 		if ( empty( $gateway ) ) {
 			return;
 		}
 
 		// Amount.
-		$string = filter_input( INPUT_POST, 'test_amount', FILTER_SANITIZE_STRING );
+		$string = \filter_input( INPUT_POST, 'test_amount', \FILTER_SANITIZE_STRING );
 
 		try {
 			$money_parser = new MoneyParser();
 
 			$amount = $money_parser->parse( $string )->get_value();
 		} catch ( \Exception $e ) {
-			wp_die( esc_html( $e->getMessage() ) );
+			\wp_die( \esc_html( $e->getMessage() ) );
+		}
+
+		/*
+		 * Payment.
+		 */
+		$payment = new Payment();
+
+		$order_id = (string) \time();
+
+		$description = \sprintf(
+			/* translators: %s: order ID */
+			__( 'Test %s', 'pronamic_ideal' ),
+			$order_id
+		);
+
+		$payment->set_config_id( $config_id );
+		$payment->set_description( $description );
+
+		$payment->method   = \filter_input( \INPUT_POST, 'pronamic_pay_test_payment_method', \FILTER_SANITIZE_STRING );
+		$payment->order_id = $order_id;
+
+		// Source.
+		$payment->set_source( 'test' );
+		$payment->set_source_id( $order_id );
+
+		/*
+		 * Credit Card.
+		 * Test card to simulate a 3-D Secure registered card.
+		 *
+		 * @link http://www.paypalobjects.com/en_US/vhelp/paypalmanager_help/credit_card_numbers.htm
+		 */
+		$credit_card = new CreditCard();
+
+		$expiration_date = new \DateTime( '+5 years' );
+
+		$credit_card->set_expiration_month( (int) $expiration_date->format( 'n' ) );
+		$credit_card->set_expiration_year( (int) $expiration_date->format( 'Y' ) );
+		$credit_card->set_name( 'Pronamic' );
+		$credit_card->set_number( '5300000000000006' );
+		$credit_card->set_security_code( '123' );
+
+		$payment->set_credit_card( $credit_card );
+
+		// Data.
+		$user = \wp_get_current_user();
+
+		$first_name = $user->first_name;
+		$last_name  = $user->last_name;
+
+		$email   = $user->user_email;
+		$phone   = \filter_input( \INPUT_POST, 'test_phone', \FILTER_SANITIZE_STRING );
+		$user_id = \get_current_user_id();
+
+		// Name.
+		$name = null;
+
+		$name_data = array(
+			$first_name,
+			$last_name,
+		);
+
+		$name_data = array_filter( $name_data );
+
+		if ( ! empty( $name_data ) ) {
+			$name = new ContactName();
+
+			if ( ! empty( $first_name ) ) {
+				$name->set_first_name( $first_name );
+			}
+
+			if ( ! empty( $last_name ) ) {
+				$name->set_last_name( $last_name );
+			}
+		}
+
+		// Customer.
+		$customer_data = array(
+			$name,
+			$email,
+			$phone,
+			$user_id,
+		);
+
+		$customer_data = array_filter( $customer_data );
+
+		if ( ! empty( $customer_data ) ) {
+			$customer = new Customer();
+
+			$customer->set_name( $name );
+
+			if ( ! empty( $email ) ) {
+				$customer->set_email( $email );
+			}
+
+			if ( ! empty( $phone ) ) {
+				$customer->set_phone( $phone );
+			}
+
+			if ( ! empty( $user_id ) ) {
+				$customer->set_user_id( (int) $user_id );
+			}
+
+			$payment->set_customer( $customer );
+		}
+
+		// Billing address.
+		$address_data = array(
+			$name,
+			$email,
+			$phone,
+		);
+
+		$address_data = array_filter( $address_data );
+
+		if ( ! empty( $address_data ) ) {
+			$address = new Address();
+
+			if ( ! empty( $name ) ) {
+				$address->set_name( $name );
+			}
+
+			if ( ! empty( $email ) ) {
+				$address->set_email( $email );
+			}
+
+			if ( ! empty( $phone ) ) {
+				$address->set_phone( $phone );
+			}
+
+			$payment->set_billing_address( $address );
+		}
+
+		// Lines.
+		$payment->lines = new PaymentLines();
+
+		$line = $payment->lines->new_line();
+
+		$price = new TaxedMoney( $amount, 'EUR' );
+
+		$line->set_name( __( 'Test', 'pronamic_ideal' ) );
+		$line->set_unit_price( $price );
+		$line->set_quantity( 1 );
+		$line->set_total_amount( $price );
+
+		$payment->set_total_amount( $payment->lines->get_amount() );
+
+		// Subscription.
+		$test_subscription = \filter_input( \INPUT_POST, 'pronamic_pay_test_subscription', \FILTER_VALIDATE_BOOLEAN );
+		$interval          = \filter_input( \INPUT_POST, 'pronamic_pay_test_repeat_interval', \FILTER_VALIDATE_INT );
+		$interval_period   = \filter_input( \INPUT_POST, 'pronamic_pay_test_repeat_frequency', \FILTER_SANITIZE_STRING );
+
+		if ( ! empty( $test_subscription ) && ! empty( $interval ) && ! empty( $interval_period ) ) {
+			$subscription = new Subscription();
+
+			$subscription->set_description( $description );
+			$subscription->set_lines( $payment->get_lines() );
+
+			// Ends on.
+			$ends_on = \filter_input( \INPUT_POST, 'pronamic_pay_ends_on', \FILTER_SANITIZE_STRING );
+
+			$total_periods = null;
+
+			switch ( $ends_on ) {
+				case 'count':
+					$count = \filter_input( \INPUT_POST, 'pronamic_pay_ends_on_count', \FILTER_VALIDATE_INT );
+
+					if ( ! empty( $count ) ) {
+						$total_periods = $count;
+					}
+
+					break;
+				case 'date':
+					$end_date = \filter_input( \INPUT_POST, 'pronamic_pay_ends_on_date', \FILTER_SANITIZE_STRING );
+
+					if ( ! empty( $end_date ) ) {
+						$interval_spec = 'P' . $interval . Util::to_period( $interval_period );
+
+						$period = new \DatePeriod(
+							new \DateTime(),
+							new \DateInterval( $interval_spec ),
+							new \DateTime( $end_date )
+						);
+
+						$total_periods = iterator_count( $period );
+					}
+
+					break;
+			}
+
+			// Phase.
+			$phase = new SubscriptionPhase(
+				$subscription,
+				new \DateTimeImmutable(),
+				new SubscriptionInterval( 'P' . $interval . Util::to_period( $interval_period ) ),
+				$price
+			);
+
+			$phase->set_total_periods( $total_periods );
+
+			$subscription->add_phase( $phase );
+
+			$period = $subscription->new_period();
+
+			if ( null !== $period ) {
+				$payment->add_period( $period );
+			}
+
+			$payment->subscription           = $subscription;
+			$payment->subscription_source_id = $payment->get_source_id();
 		}
 
 		// Start.
 		try {
-			$data = new \Pronamic\WordPress\Pay\Payments\PaymentTestData( wp_get_current_user(), $amount );
+			$payment = Plugin::start_payment( $payment );
 
-			$payment_method = filter_input( INPUT_POST, 'pronamic_pay_test_payment_method', FILTER_SANITIZE_STRING );
-
-			$payment = Plugin::start( $id, $gateway, $data, $payment_method );
-
-			$gateway->redirect( $payment );
+			if ( null !== $payment ) {
+				$gateway->redirect( $payment );
+			}
 		} catch ( \Exception $e ) {
 			Plugin::render_exception( $e );
 

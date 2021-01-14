@@ -138,6 +138,15 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 	public $meta;
 
 	/**
+	 * Activated at.
+	 *
+	 * The datetime this subscription was activated or reactived.
+	 *
+	 * @var DateTime
+	 */
+	private $activated_at;
+
+	/**
 	 * Construct and initialize subscription object.
 	 *
 	 * @param int|null $post_id A subscription post ID or null.
@@ -148,6 +157,8 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 		parent::__construct( $post_id );
 
 		$this->meta = array();
+
+		$this->activated_at = new DateTime();
 
 		if ( ! empty( $post_id ) ) {
 			pronamic_pay_plugin()->subscriptions_data_store->read( $this );
@@ -259,6 +270,10 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 	 * @return void
 	 */
 	public function set_status( $status ) {
+		if ( SubscriptionStatus::ACTIVE === $status && $this->status !== $status ) {
+			$this->set_activated_at( new DateTime() );
+		}
+
 		$this->status = $status;
 	}
 
@@ -444,14 +459,75 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 	/**
 	 * Get all the payments for this subscription.
 	 *
-	 * @return array
+	 * @return Payment[]
 	 */
 	public function get_payments() {
 		if ( null === $this->id ) {
 			return array();
 		}
 
-		return get_pronamic_payments_by_meta( '_pronamic_payment_subscription_id', $this->id );
+		$payments = get_pronamic_payments_by_meta( '_pronamic_payment_subscription_id', $this->id );
+
+		return $payments;
+	}
+
+	/**
+	 * Get payments by period.
+	 *
+	 * @return array
+	 */
+	public function get_payments_by_period() {
+		$payments = $this->get_payments();
+
+		$periods = array();
+
+		foreach ( $payments as $payment ) {
+			// Get period for this subscription.
+			$period = null;
+
+			$payment_periods = $payment->get_periods();
+
+			if ( null === $payment_periods ) {
+				break;
+			}
+
+			foreach ( $payment_periods as $period ) {
+				if ( $this->get_id() === $period->get_phase()->get_subscription()->get_id() ) {
+					break;
+				}
+			}
+
+			if ( null === $period ) {
+				continue;
+			}
+
+			// Add period to result.
+			$start = $period->get_start_date()->getTimestamp();
+
+			if ( ! \array_key_exists( $start, $periods ) ) {
+				$periods[ $start ] = array(
+					'period'    => $period,
+					'payments'  => array(),
+					'can_retry' => true,
+				);
+			}
+
+			// Add payment to result.
+			$periods[ $start ]['payments'][ $payment->get_date()->getTimestamp() ] = $payment;
+
+			if ( \in_array( $payment->get_status(), array( PaymentStatus::OPEN, PaymentStatus::SUCCESS ), true ) ) {
+				$periods[ $start ]['can_retry'] = false;
+			}
+		}
+
+		// Sort periods and payments.
+		\krsort( $periods );
+
+		foreach ( $periods as &$period ) {
+			\ksort( $period['payments'] );
+		}
+
+		return $periods;
 	}
 
 	/**
@@ -606,6 +682,14 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 			}
 		}
 
+		$activated_at = $subscription->date;
+
+		if ( property_exists( $json, 'activated_at' ) ) {
+			$activated_at = new DateTime( $json->activated_at );
+		}
+
+		$subscription->set_activated_at( $activated_at );
+
 		return $subscription;
 	}
 
@@ -637,6 +721,8 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 			$properties['status'] = $this->get_status();
 		}
 
+		$properties['activated_at'] = $this->get_activated_at()->format( \DATE_ATOM );
+
 		$object = (object) $properties;
 
 		return $object;
@@ -650,5 +736,24 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 	 */
 	public function jsonSerialize() {
 		return $this->get_json();
+	}
+
+	/**
+	 * Get activated datetime.
+	 *
+	 * @return DateTime
+	 */
+	public function get_activated_at() {
+		return $this->activated_at;
+	}
+
+	/**
+	 * Set activated datetime.
+	 *
+	 * @param DateTime $activated_at Activated at.
+	 * @return void
+	 */
+	public function set_activated_at( DateTime $activated_at ) {
+		$this->activated_at = $activated_at;
 	}
 }

@@ -118,7 +118,11 @@ class AdminSettings {
 			'pronamic_pay'
 		);
 
-		foreach ( $this->plugin->get_pages() as $id => $label ) {
+		$pages = $this->plugin->get_pages();
+
+		$pages['pronamic_pay_subscription_canceled_page_id'] = __( 'Subscription Canceled', 'pronamic_ideal' );
+
+		foreach ( $pages as $id => $label ) {
 			add_settings_field(
 				$id,
 				$label,

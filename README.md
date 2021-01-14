@@ -70,3 +70,29 @@
 	2
 );
 ```
+
+### pronamic_gateway_configuration_display_value
+
+```php
+\add_filter(
+	'pronamic_gateway_configuration_display_value',
+	function( $display_value, $post_id ) {
+		return \get_post_meta( $post_id, '_pronamic_gateway_display_value', true );
+	},
+	10,
+	2
+);
+```
+
+### pronamic_gateway_configuration_display_value_$id
+
+```php
+\add_filter(
+	'pronamic_gateway_configuration_display_value_payvision',
+	function( $display_value, $post_id ) {
+		return \get_post_meta( $post_id, '_pronamic_gateway_payvision_business_id', true );
+	},
+	10,
+	2
+);
+```

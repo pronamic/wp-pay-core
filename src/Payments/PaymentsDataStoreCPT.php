@@ -764,6 +764,15 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 				)
 			);
 		}
+
+		// Subscription.
+		if ( ! empty( $payment->subscription_id ) ) {
+			$subscription = get_pronamic_subscription( $payment->subscription_id );
+
+			if ( null !== $subscription ) {
+				$payment->add_subscription( $subscription );
+			}
+		}
 	}
 
 	/**

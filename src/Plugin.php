@@ -17,7 +17,6 @@ use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
 use Pronamic\WordPress\Pay\Payments\Payment;
-use Pronamic\WordPress\Pay\Payments\PaymentData;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Payments\StatusChecker;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
@@ -787,177 +786,6 @@ class Plugin {
 	}
 
 	/**
-	 * Start a payment.
-	 *
-	 * @param int         $config_id      A gateway configuration ID.
-	 * @param Gateway     $gateway        The gateway to start the payment at.
-	 * @param PaymentData $data           A payment data interface object with all the required payment info.
-	 * @param string|null $payment_method The payment method to use to start the payment.
-	 *
-	 * @return Payment
-	 */
-	public static function start( $config_id, Gateway $gateway, PaymentData $data, $payment_method = null ) {
-		$payment = new Payment();
-
-		// Title.
-		$title = $data->get_title();
-
-		if ( ! empty( $title ) ) {
-			$payment->title = sprintf(
-				/* translators: %s: payment data title */
-				__( 'Payment for %s', 'pronamic_ideal' ),
-				$title
-			);
-		}
-
-		// Other.
-		$payment->config_id              = $config_id;
-		$payment->order_id               = $data->get_order_id();
-		$payment->description            = $data->get_description();
-		$payment->source                 = $data->get_source();
-		$payment->source_id              = $data->get_source_id();
-		$payment->email                  = $data->get_email();
-		$payment->method                 = $payment_method;
-		$payment->issuer                 = $data->get_issuer( $payment_method );
-		$payment->analytics_client_id    = $data->get_analytics_client_id();
-		$payment->recurring              = $data->get_recurring();
-		$payment->subscription           = $data->get_subscription();
-		$payment->subscription_id        = $data->get_subscription_id();
-		$payment->subscription_source_id = $data->get_subscription_source_id();
-		$payment->set_origin_id( $data->get_origin_id() );
-		$payment->set_total_amount( $data->get_amount() );
-		$payment->set_credit_card( $data->get_credit_card() );
-
-		// Data.
-		$first_name = $data->get_first_name();
-		$last_name  = $data->get_last_name();
-
-		$email   = $data->get_email();
-		$phone   = $data->get_telephone_number();
-		$user_id = $data->get_user_id();
-
-		$line_1       = $data->get_address();
-		$postal_code  = $data->get_zip();
-		$city         = $data->get_city();
-		$country_name = $data->get_country();
-
-		// Name.
-		$name = null;
-
-		$name_data = array(
-			$first_name,
-			$last_name,
-		);
-
-		$name_data = array_filter( $name_data );
-
-		if ( ! empty( $name_data ) ) {
-			$name = new ContactName();
-
-			if ( ! empty( $first_name ) ) {
-				$name->set_first_name( $first_name );
-			}
-
-			if ( ! empty( $last_name ) ) {
-				$name->set_last_name( $last_name );
-			}
-		}
-
-		// Customer.
-		$customer_data = array(
-			$name,
-			$email,
-			$phone,
-			$user_id,
-		);
-
-		$customer_data = array_filter( $customer_data );
-
-		if ( ! empty( $customer_data ) ) {
-			$customer = new Customer();
-
-			$customer->set_name( $name );
-
-			if ( ! empty( $email ) ) {
-				$customer->set_email( $email );
-			}
-
-			if ( ! empty( $phone ) ) {
-				$customer->set_phone( $phone );
-			}
-
-			if ( ! empty( $user_id ) ) {
-				$customer->set_user_id( \intval( $user_id ) );
-			}
-
-			$payment->set_customer( $customer );
-		}
-
-		// Billing address.
-		$address_data = array(
-			$name,
-			$line_1,
-			$postal_code,
-			$city,
-			$country_name,
-			$email,
-			$phone,
-		);
-
-		$address_data = array_filter( $address_data );
-
-		if ( ! empty( $address_data ) ) {
-			$address = new Address();
-
-			if ( ! empty( $name ) ) {
-				$address->set_name( $name );
-			}
-
-			if ( ! empty( $line_1 ) ) {
-				$address->set_line_1( $line_1 );
-			}
-
-			if ( ! empty( $postal_code ) ) {
-				$address->set_postal_code( $postal_code );
-			}
-
-			if ( ! empty( $city ) ) {
-				$address->set_city( $city );
-			}
-
-			if ( ! empty( $country_name ) ) {
-				$address->set_country_name( $country_name );
-			}
-
-			if ( ! empty( $email ) ) {
-				$address->set_email( $email );
-			}
-
-			if ( ! empty( $phone ) ) {
-				$address->set_phone( $phone );
-			}
-
-			$payment->set_billing_address( $address );
-		}
-
-		// Start payment.
-		return self::start_payment( $payment, $gateway );
-	}
-
-	/**
-	 * Start recurring payment.
-	 *
-	 * @param Payment $payment Payment or subscription for backwards compatibility.
-	 *
-	 * @throws \Exception Throws an Exception on incorrect date interval.
-	 *
-	 * @return Payment
-	 */
-	public static function start_recurring_payment( Payment $payment ) {
-		return pronamic_pay_plugin()->subscriptions_module->start_payment( $payment );
-	}
-
-	/**
 	 * Complement payment.
 	 *
 	 * @param Payment $payment Payment.
@@ -1056,11 +884,15 @@ class Plugin {
 
 		// Issuer.
 		if ( null === $payment->issuer ) {
+			// Credit card.
 			if ( PaymentMethods::CREDIT_CARD === $payment->method && filter_has_var( INPUT_POST, 'pronamic_credit_card_issuer_id' ) ) {
 				$payment->issuer = filter_input( INPUT_POST, 'pronamic_credit_card_issuer_id', FILTER_SANITIZE_STRING );
 			}
 
-			if ( PaymentMethods::IDEAL === $payment->method && filter_has_var( INPUT_POST, 'pronamic_ideal_issuer_id' ) ) {
+			// iDEAL.
+			$ideal_methods = array( PaymentMethods::IDEAL, PaymentMethods::DIRECT_DEBIT_IDEAL );
+
+			if ( \in_array( $payment->method, $ideal_methods, true ) && filter_has_var( INPUT_POST, 'pronamic_ideal_issuer_id' ) ) {
 				$payment->issuer = filter_input( INPUT_POST, 'pronamic_ideal_issuer_id', FILTER_SANITIZE_STRING );
 			}
 		}
@@ -1164,6 +996,11 @@ class Plugin {
 			$payment->save();
 
 			return $payment;
+		}
+
+		// Recurring.
+		if ( true === $payment->get_recurring() && ! $gateway->supports( 'recurring' ) ) {
+			throw new \Exception( 'Gateway does not support recurring payments.' );
 		}
 
 		// Start payment at the gateway.

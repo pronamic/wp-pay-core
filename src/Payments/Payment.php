@@ -145,6 +145,13 @@ class Payment extends LegacyPayment {
 	public $issuer;
 
 	/**
+	 * Subscriptions.
+	 *
+	 * @var Subscription[]
+	 */
+	private $subscriptions;
+
+	/**
 	 * Subscription periods.
 	 *
 	 * @since 2.5.0
@@ -243,6 +250,8 @@ class Payment extends LegacyPayment {
 	 */
 	public function __construct( $post_id = null ) {
 		parent::__construct( $post_id );
+
+		$this->subscriptions = array();
 
 		$this->set_status( PaymentStatus::OPEN );
 
@@ -654,6 +663,25 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
+	 * Get subscriptions.
+	 *
+	 * @return Subscription[]
+	 */
+	public function get_subscriptions() {
+		return $this->subscriptions;
+	}
+
+	/**
+	 * Connect subscription to this payment.
+	 *
+	 * @param Subscription $subscription Subscription.
+	 * @return void
+	 */
+	public function add_subscription( Subscription $subscription ) {
+		$this->subscriptions[] = $subscription;
+	}
+
+	/**
 	 * Format string
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/v2.2.3/includes/abstracts/abstract-wc-email.php#L187-L195
@@ -751,7 +779,7 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
-	 * Get reucrring.
+	 * Get recurring.
 	 *
 	 * @return bool|null
 	 */

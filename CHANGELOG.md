@@ -7,6 +7,38 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.6.0] - 2021-01-14
+- Update wp-pay/logos to version 1.6.5.
+- Removed payment data classes.
+- Add check if gateway exists when getting config IDs for payment method.
+- Only add user agent in payment info meta box if not empty.
+- Make sure available payment method is also supported when adding gateway to active payment methods.
+- Make sure available methods are also supported in payment method field options.
+- Allow retrying payments for WooCommerce source.
+- Prevent manually creating next period payment for WooCommerce subscriptions.
+- Removed `$subscription_module->start_recurring( Subscription $subscription, $gateway = null, $recurring = true )`.
+- Also set source for retry payment (fixes issue with RCP).
+- Added helper `from_array` functions for more DRY programming.
+- Set activated at for testing.
+- Update export ignores in Git attributes.
+- Update license activation notice text.
+- Don't show license activated notice if option value and license status have not changed.
+- Replace create next period payment button with row for next period in subscription payments meta box.
+- Fix updating subscription dates on next period payment creation.
+- Make subscription phases meta box responsive.
+- New `human_readable_range()` method instead of range as `SubscriptionPeriod` string representation.
+- Payment Gateway Referral Exclusions in Google Analytics.
+- Added HTTP helper.
+- Add Santander payment method.
+- Update test payment for subscription phases (removes class `PaymentTestData` and fixes #37).
+- Complement iDEAL issuer for `Direct Debit (mandate via iDEAL)` method.
+- Update handling return key presses in gateway test meta box (resolves #31).
+- Introduced new `pronamic_gateway_configuration_display_value` filter.
+- Make sure to always set payment customer.
+- Ask for confirmation before manually cancelling a subscription.
+- Redirect to new 'Subscription Canceled' status page after cancelling subscriptions.
+- Set currency in payment lines amount from lines.
+
 ## [2.5.1] - 2020-11-19
 - Fixed always setting payment customer details.
 - Fixed setting currency in payment lines amount.
@@ -309,7 +341,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.5.1...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.6.0...HEAD
+[2.6.0]: https://github.com/wp-pay/core/compare/2.5.1...2.6.0
 [2.5.1]: https://github.com/wp-pay/core/compare/2.5.0...2.5.1
 [2.5.0]: https://github.com/wp-pay/core/compare/2.4.1...2.5.0
 [2.4.1]: https://github.com/wp-pay/core/compare/2.4.0...2.4.1
