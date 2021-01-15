@@ -394,6 +394,7 @@ class PaymentMethods {
 		$payment_methods = self::get_direct_debit_methods();
 
 		// Add additional methods suitable for recurring payments.
+		$payment_methods[ self::APPLE_PAY ]   = self::APPLE_PAY;
 		$payment_methods[ self::CREDIT_CARD ] = self::CREDIT_CARD;
 
 		return $payment_methods;
