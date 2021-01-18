@@ -7,6 +7,9 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.6.1] - 2021-01-18
+- Added support for recurring payments with Apple Pay.
+
 ## [2.6.0] - 2021-01-14
 - Update wp-pay/logos to version 1.6.5.
 - Removed payment data classes.
@@ -341,7 +344,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.6.0...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.6.1...HEAD
+[2.6.1]: https://github.com/wp-pay/core/compare/2.6.0...2.6.1
 [2.6.0]: https://github.com/wp-pay/core/compare/2.5.1...2.6.0
 [2.5.1]: https://github.com/wp-pay/core/compare/2.5.0...2.5.1
 [2.5.0]: https://github.com/wp-pay/core/compare/2.4.1...2.5.0
