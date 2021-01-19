@@ -806,7 +806,7 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 
 	<?php endif; ?>
 
-	<?php if ( PRONAMIC_PAY_DEBUG ) : ?>
+	<?php if ( $this->plugin->is_debug_mode() ) : ?>
 
 		<?php if ( ! empty( $payment->user_agent ) ) : ?>
 

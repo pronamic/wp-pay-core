@@ -370,7 +370,7 @@ $phase = $subscription->get_display_phase();
 		</td>
 	</tr>
 
-	<?php if ( PRONAMIC_PAY_DEBUG ) : ?>
+	<?php if ( $this->plugin->is_debug_mode() ) : ?>
 
 		<tr>
 			<th scope="row">

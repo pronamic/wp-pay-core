@@ -1078,4 +1078,20 @@ class Plugin {
 
 		return $return;
 	}
+
+	/**
+	 * Is debug mode.
+	 *
+	 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/blob/2.9.26/includes/misc-functions.php#L26-L38
+	 * @return bool True if debug mode is enabled, false otherwise.
+	 */
+	public function is_debug_mode() {
+		$value = \get_option( 'pronamic_pay_debug_mode', false );
+
+		if ( PRONAMIC_PAY_DEBUG ) {
+			$value = true;
+		}
+
+		return (bool) $value;
+	}
 }

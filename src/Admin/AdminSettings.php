@@ -110,6 +110,21 @@ class AdminSettings {
 			)
 		);
 
+		// Debug mode.
+		\add_settings_field(
+			'pronamic_pay_debug_mode',
+			\__( 'Debug Mode', 'pronamic_ideal' ),
+			array( $this, 'input_checkbox' ),
+			'pronamic_pay',
+			'pronamic_pay_general',
+			array(
+				'legend'      => \__( 'Debug Mode', 'pronamic_ideal' ),
+				'description' => \__( 'Enable debug mode', 'pronamic_ideal' ),
+				'label_for'   => 'pronamic_pay_debug_mode',
+				'type'        => 'checkbox',
+			)
+		);
+
 		// Settings - Pages.
 		add_settings_section(
 			'pronamic_pay_pages',

@@ -83,6 +83,16 @@ class Settings {
 			)
 		);
 
+		\register_setting(
+			'pronamic_pay',
+			'pronamic_pay_debug_mode',
+			array(
+				'type'        => 'boolean',
+				'description' => 'Setting that can be used to trigger the “debug” mode throughout Pronamic Pay.',
+				'default'     => false,
+			)
+		);
+
 		// Pages.
 		$pages = $this->plugin->get_pages();
 
