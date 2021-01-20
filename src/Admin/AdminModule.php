@@ -706,27 +706,33 @@ class AdminModule {
 		$phone = \filter_input( \INPUT_POST, 'test_phone', \FILTER_SANITIZE_STRING );
 
 		// Name.
-		$name = ContactNameHelper::from_array( array(
-			'first_name' => $user->first_name,
-			'last_name'  => $user->last_name,
-		) );
+		$name = ContactNameHelper::from_array(
+			array(
+				'first_name' => $user->first_name,
+				'last_name'  => $user->last_name,
+			)
+		);
 
 		// Customer.
-		$customer = CustomerHelper::from_array( array(
-			'name'    => $name,
-			'email'   => $user->user_email,
-			'phone'   => $phone,
-			'user_id' => $user->ID,
-		) );
+		$customer = CustomerHelper::from_array(
+			array(
+				'name'    => $name,
+				'email'   => $user->user_email,
+				'phone'   => $phone,
+				'user_id' => $user->ID,
+			)
+		);
 
 		$payment->set_customer( $customer );
 
 		// Billing address.
-		$address = AddressHelper::from_array( array(
-			'name'  => $name,
-			'email' => $user->user_email,
-			'phone' => $phone,
-		) );
+		$address = AddressHelper::from_array(
+			array(
+				'name'  => $name,
+				'email' => $user->user_email,
+				'phone' => $phone,
+			)
+		);
 
 		$payment->set_billing_address( $address );
 
