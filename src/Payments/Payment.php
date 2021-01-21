@@ -547,7 +547,6 @@ class Payment extends LegacyPayment {
 		$url = home_url( '/' );
 
 		$url = apply_filters( 'pronamic_payment_redirect_url', $url, $this );
-		$url = apply_filters( 'pronamic_payment_redirect_url_' . $this->source, $url, $this );
 
 		return $url;
 	}

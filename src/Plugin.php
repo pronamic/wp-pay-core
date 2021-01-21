@@ -609,6 +609,9 @@ class Plugin {
 
 		// Maybes.
 		PaymentMethods::maybe_update_active_payment_methods();
+
+		// Filters.
+		\add_filter( 'pronamic_payment_redirect_url', array( $this, 'payment_redirect_url' ), 10, 2 );
 	}
 
 	/**
@@ -1077,6 +1080,19 @@ class Plugin {
 		}
 
 		return $return;
+	}
+
+	/**
+	 * Payment redirect URL.
+	 *
+	 * @param string  $url     Redirect URL.
+	 * @param Payment $payment Payment.
+	 * @return string
+	 */
+	public function payment_redirect_url( $url, Payment $payment ) {
+		$url = \apply_filters( 'pronamic_payment_redirect_url_' . $payment->get_source(), $url, $payment );
+
+		return $url;
 	}
 
 	/**

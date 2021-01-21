@@ -53,7 +53,7 @@ class GoogleAnalyticsEcommerce {
 		add_action( 'pronamic_payment_status_update', array( $this, 'maybe_send_transaction' ), 10 );
 
 		// Filters.
-		add_filter( 'pronamic_payment_redirect_url', array( $this, 'payment_redirect_url' ), 10, 2 );
+		add_filter( 'pronamic_payment_redirect_url', array( $this, 'payment_redirect_url' ), 15, 2 );
 	}
 
 	/**
