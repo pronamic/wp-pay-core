@@ -3,7 +3,7 @@
  * Settings
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2020 Pronamic
+ * @copyright 2005-2021 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -80,6 +80,16 @@ class Settings {
 			array(
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+
+		\register_setting(
+			'pronamic_pay',
+			'pronamic_pay_debug_mode',
+			array(
+				'type'        => 'boolean',
+				'description' => 'Setting that can be used to trigger the “debug” mode throughout Pronamic Pay.',
+				'default'     => false,
 			)
 		);
 

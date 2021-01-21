@@ -3,7 +3,7 @@
  * Plugin
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2020 Pronamic
+ * @copyright 2005-2021 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -609,6 +609,9 @@ class Plugin {
 
 		// Maybes.
 		PaymentMethods::maybe_update_active_payment_methods();
+
+		// Filters.
+		\add_filter( 'pronamic_payment_redirect_url', array( $this, 'payment_redirect_url' ), 10, 2 );
 	}
 
 	/**
@@ -1077,5 +1080,34 @@ class Plugin {
 		}
 
 		return $return;
+	}
+
+	/**
+	 * Payment redirect URL.
+	 *
+	 * @param string  $url     Redirect URL.
+	 * @param Payment $payment Payment.
+	 * @return string
+	 */
+	public function payment_redirect_url( $url, Payment $payment ) {
+		$url = \apply_filters( 'pronamic_payment_redirect_url_' . $payment->get_source(), $url, $payment );
+
+		return $url;
+	}
+
+	/**
+	 * Is debug mode.
+	 *
+	 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/blob/2.9.26/includes/misc-functions.php#L26-L38
+	 * @return bool True if debug mode is enabled, false otherwise.
+	 */
+	public function is_debug_mode() {
+		$value = \get_option( 'pronamic_pay_debug_mode', false );
+
+		if ( PRONAMIC_PAY_DEBUG ) {
+			$value = true;
+		}
+
+		return (bool) $value;
 	}
 }

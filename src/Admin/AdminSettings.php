@@ -3,7 +3,7 @@
  * Admin Settings
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2020 Pronamic
+ * @copyright 2005-2021 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Admin
  */
@@ -108,6 +108,28 @@ class AdminSettings {
 				'classes'     => 'regular-text',
 				'type'        => 'checkbox',
 			)
+		);
+
+		// Debug mode.
+		$debug_mode_args = array(
+			'legend'      => \__( 'Debug Mode', 'pronamic_ideal' ),
+			'description' => \__( 'Enable debug mode', 'pronamic_ideal' ),
+			'label_for'   => 'pronamic_pay_debug_mode',
+			'type'        => 'checkbox',
+		);
+
+		if ( \PRONAMIC_PAY_DEBUG ) {
+			$debug_mode_args['value']    = true;
+			$debug_mode_args['disabled'] = \disabled( \PRONAMIC_PAY_DEBUG, true, false );
+		}
+
+		\add_settings_field(
+			'pronamic_pay_debug_mode',
+			\__( 'Debug Mode', 'pronamic_ideal' ),
+			array( $this, 'input_checkbox' ),
+			'pronamic_pay',
+			'pronamic_pay_general',
+			$debug_mode_args
 		);
 
 		// Settings - Pages.
@@ -226,7 +248,7 @@ class AdminSettings {
 	public function input_checkbox( $args ) {
 		$id     = $args['label_for'];
 		$name   = $args['label_for'];
-		$value  = get_option( $name );
+		$value  = \array_key_exists( 'value', $args ) ? $args['value'] : get_option( $name );
 		$legend = $args['legend'];
 
 		echo '<fieldset>';
@@ -242,10 +264,11 @@ class AdminSettings {
 		);
 
 		printf(
-			'<input name="%s" id="%s" type="checkbox" value="1" %s />',
+			'<input name="%s" id="%s" type="checkbox" value="1" %s %s/>',
 			esc_attr( $name ),
 			esc_attr( $id ),
-			checked( $value, 1, false )
+			checked( $value, 1, false ),
+			\array_key_exists( 'disabled', $args ) ? $args['disabled'] : ''
 		);
 
 		echo esc_html( $args['description'] );

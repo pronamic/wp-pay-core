@@ -4,6 +4,7 @@ parameters:
 	level: max
 	checkMissingIterableValueType: false
 	dynamicConstantNames:
+		- PRONAMIC_PAY_DEBUG
 		- SCRIPT_DEBUG
 	bootstrapFiles:
 		- vendor/php-stubs/wp-cli-stubs/wp-cli-stubs.php

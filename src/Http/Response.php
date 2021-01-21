@@ -3,7 +3,7 @@
  * HTTP Response
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2020 Pronamic
+ * @copyright 2005-2021 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -43,6 +43,16 @@ class Response {
 	 */
 	public function status() {
 		return \wp_remote_retrieve_response_code( $this->array );
+	}
+
+	/**
+	 * Message.
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/wp_remote_retrieve_response_message/
+	 * @return string
+	 */
+	public function message() {
+		return \wp_remote_retrieve_response_message( $this->array );
 	}
 
 	/**

@@ -3,7 +3,7 @@
  * Meta Box Gateway Test
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2020 Pronamic
+ * @copyright 2005-2021 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -156,7 +156,7 @@ require Plugin::$dirname . '/views/errors.php';
 					<legend class="screen-reader-text"><span><?php esc_html_e( 'Test Subscription', 'pronamic_ideal' ); ?></span></legend>
 
 					<label for="pronamic-pay-test-subscription">
-						<input name="pronamic_pay_test_subscription" id="pronamic-pay-test-subscription" value="1" type="checkbox" />		
+						<input name="pronamic_pay_test_subscription" id="pronamic-pay-test-subscription" value="1" type="checkbox" />
 						<?php esc_html_e( 'Start a subscription for this payment.', 'pronamic_ideal' ); ?>
 					</label>
 				</fieldset>

@@ -3,7 +3,7 @@
  * Meta Box Subscription Info
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2020 Pronamic
+ * @copyright 2005-2021 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -370,7 +370,7 @@ $phase = $subscription->get_display_phase();
 		</td>
 	</tr>
 
-	<?php if ( PRONAMIC_PAY_DEBUG ) : ?>
+	<?php if ( $this->plugin->is_debug_mode() ) : ?>
 
 		<tr>
 			<th scope="row">
