@@ -46,6 +46,16 @@ class Response {
 	}
 
 	/**
+	 * Message.
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/wp_remote_retrieve_response_message/
+	 * @return string
+	 */
+	public function message() {
+		return \wp_remote_retrieve_response_message( $this->array );
+	}
+
+	/**
 	 * Body.
 	 *
 	 * @link https://developer.wordpress.org/reference/functions/wp_remote_retrieve_body/
