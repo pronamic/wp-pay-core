@@ -12,9 +12,11 @@ namespace Pronamic\WordPress\Pay\Payments;
 
 use InvalidArgumentException;
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\Customer;
+use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPeriod;
 use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
@@ -40,6 +42,13 @@ class Payment extends LegacyPayment {
 	 * @var TaxedMoney
 	 */
 	private $total_amount;
+
+	/**
+	 * Refunded amount.
+	 *
+	 * @var Money
+	 */
+	private $refunded_amount;
 
 	/**
 	 * The purchase ID.
@@ -369,6 +378,25 @@ class Payment extends LegacyPayment {
 	 */
 	public function set_total_amount( TaxedMoney $total_amount ) {
 		$this->total_amount = $total_amount;
+	}
+
+	/**
+	 * Get refunded amount.
+	 *
+	 * @return Money
+	 */
+	public function get_refunded_amount() {
+		return $this->refunded_amount;
+	}
+
+	/**
+	 * Set refunded amount.
+	 *
+	 * @param Money $refunded_amount Refunded amount.
+	 * @return void
+	 */
+	public function set_refunded_amount( $refunded_amount ) {
+		$this->refunded_amount = $refunded_amount;
 	}
 
 	/**
@@ -853,18 +881,28 @@ class Payment extends LegacyPayment {
 
 		$properties = (array) $object;
 
+		// Expiry date.
 		$expiry_date = $this->get_expiry_date();
 
 		if ( null !== $expiry_date ) {
 			$properties['expiry_date'] = $expiry_date->format( \DATE_ATOM );
 		}
 
+		// Total amount.
 		$total_amount = $this->get_total_amount();
 
 		if ( null !== $total_amount ) {
 			$properties['total_amount'] = TaxedMoneyJsonTransformer::to_json( $total_amount );
 		}
 
+		// Refunded amount.
+		$refunded_amount = $this->get_refunded_amount();
+
+		if ( null !== $refunded_amount ) {
+			$properties['refunded_amount'] = MoneyJsonTransformer::to_json( $refunded_amount );
+		}
+
+		// Periods.
 		$periods = $this->get_periods();
 
 		if ( null !== $periods ) {
@@ -873,20 +911,24 @@ class Payment extends LegacyPayment {
 			}
 		}
 
+		// Status.
 		if ( null !== $this->get_status() ) {
 			$properties['status'] = $this->get_status();
 		}
 
+		// Failure reason.
 		$failure_reason = $this->get_failure_reason();
 
 		if ( null !== $failure_reason ) {
 			$properties['failure_reason'] = $failure_reason->get_json();
 		}
 
+		// Google Analytics tracked.
 		if ( null !== $this->get_ga_tracked() ) {
 			$properties['ga_tracked'] = $this->get_ga_tracked();
 		}
 
+		// Origin ID.
 		$origin_id = $this->get_origin_id();
 
 		if ( null !== $origin_id ) {

@@ -75,6 +75,26 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 			?>
 		</td>
 	</tr>
+
+	<?php
+
+	$amount_refunded = $payment->get_refunded_amount();
+
+	if ( $amount_refunded->get_value() > 0 ) :
+
+		?>
+
+		<tr>
+			<th scope="row">
+				<?php esc_html_e( 'Refunded Amount', 'pronamic_ideal' ); ?>
+			</th>
+			<td>
+				<?php echo esc_html( $amount_refunded->format_i18n() ); ?>
+			</td>
+		</tr>
+
+	<?php endif; ?>
+
 	<tr>
 		<th scope="row">
 			<?php esc_html_e( 'Transaction ID', 'pronamic_ideal' ); ?>
