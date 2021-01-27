@@ -80,7 +80,7 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 
 	$amount_refunded = $payment->get_refunded_amount();
 
-	if ( $amount_refunded->get_value() > 0 ) :
+	if ( null !== $amount_refunded && $amount_refunded->get_value() > 0 ) :
 
 		?>
 
