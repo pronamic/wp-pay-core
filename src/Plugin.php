@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Admin\AdminModule;
 use Pronamic\WordPress\Pay\Banks\BankAccountDetails;
 use Pronamic\WordPress\Pay\Core\Gateway;
@@ -1055,6 +1056,68 @@ class Plugin {
 		}
 
 		return $payment;
+	}
+
+	/**
+	 * Create refund.
+	 *
+	 * @param string      $transaction_id Gateway transaction ID.
+	 * @param Gateway     $gateway        Gateway.
+	 * @param Money       $amount         Refund amount.
+	 * @param string|null $description    Refund description.
+	 * @throws \Exception Throws exception on error.
+	 */
+	public static function create_refund( $transaction_id, $gateway, Money $amount, $description = null ) {
+		// Check if gateway supports refunds.
+		if ( ! $gateway->supports( 'refunds' ) || ! \method_exists( $gateway, 'create_refund' ) ) {
+			throw new \Exception( __( 'Unable to process refund as gateway does not support refunds.', 'pronamic_ideal' ) );
+		}
+
+		// Check amount.
+		if ( $amount->get_value() <= 0 ) {
+			throw new \Exception(
+				sprintf(
+					/* translators: %s: formatted amount */
+					__( 'Unable to process refund because of invalid amount (%s).', 'pronamic_ideal' ),
+					$amount->format_i18n()
+				)
+			);
+		}
+
+		// Create refund.
+		$refund_reference = $gateway->create_refund( $transaction_id, $amount, $description );
+
+		// Add note to original payment.
+		$payment = \get_pronamic_payment_by_transaction_id( $transaction_id );
+
+		if ( null !== $payment ) {
+			/* translators: 1: refunded amount */
+			$format = __( 'Refunded %1$s.', 'pronamic_ideal' );
+
+			if ( ! empty( $refund_reference ) ) {
+				/* translators: 1: refunded amount, 3: refund reference */
+				$format = __( 'Refunded %1$s with gateway reference `%3$s`.', 'pronamic_ideal' );
+			}
+
+			if ( ! empty( $description ) ) {
+				/* translators: 1: refunded amount, 2: refund description */
+				$format = __( 'Refunded %1$s ("%2$s").', 'pronamic_ideal' );
+
+				if ( ! empty( $refund_reference ) ) {
+					/* translators: 1: refunded amount, 2: refund description, 3: refund reference */
+					$format = __( 'Refunded %1$s ("%2$s") with gateway reference `%3$s`.', 'pronamic_ideal' );
+				}
+			}
+
+			$note = sprintf(
+				$format,
+				$amount->format_i18n(),
+				$description,
+				$refund_reference
+			);
+
+			$payment->add_note( $note );
+		}
 	}
 
 	/**
