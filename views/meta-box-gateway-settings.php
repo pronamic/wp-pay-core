@@ -323,6 +323,20 @@ $sections = array_filter(
 									$attributes['type']  = $field['type'];
 									$attributes['value'] = '1';
 
+									/**
+									 * Unchecked HTML checkboxes are not part of an HTML form POST request.
+									 * Should the settings API delete settings that are not posted, or should
+									 * it set the value to false? We simplify this by adding an hidden HTML
+									 * input with `0` value. If the checkbox is checked it will post two 
+									 * values under the same name. PHP will work with the last occurrence.
+									 *
+									 * @link https://stackoverflow.com/questions/1746507/authoritative-position-of-duplicate-http-get-query-keys#8971514
+									 */
+									printf(
+										'<input type="hidden" name="%s" value="0" />',
+										\esc_attr( $field_id )
+									);
+
 									printf(
 										'<input %s %s />',
 										// @codingStandardsIgnoreStart
