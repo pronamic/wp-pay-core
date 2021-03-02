@@ -1065,6 +1065,7 @@ class Plugin {
 	 * @param Gateway     $gateway        Gateway.
 	 * @param Money       $amount         Refund amount.
 	 * @param string|null $description    Refund description.
+	 * @return void
 	 * @throws \Exception Throws exception on error.
 	 */
 	public static function create_refund( $transaction_id, $gateway, Money $amount, $description = null ) {

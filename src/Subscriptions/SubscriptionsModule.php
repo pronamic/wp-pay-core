@@ -813,6 +813,11 @@ class SubscriptionsModule {
 		// Make sure to use fresh subscription data.
 		$subscription = \get_pronamic_subscription( $subscription->get_id() );
 
+		// Make sure the subscription exists.
+		if ( null === $subscription ) {
+			return;
+		}
+
 		// Status.
 		$status_before = $subscription->get_status();
 		$status_update = $status_before;
