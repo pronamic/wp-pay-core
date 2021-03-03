@@ -15,7 +15,7 @@
   width: 225px;
 }
 
-.pronamci-pay-chart-legend {
+.pronamic-pay-chart-legend {
   background: #fff;
   border: 1px solid #e5e5e5;
   border-right-width: 0;
@@ -24,7 +24,7 @@
   margin: 0 0 1em;
   padding: 0;
 }
-.pronamci-pay-chart-legend li {
+.pronamic-pay-chart-legend li {
   border-right: 5px solid #aaa;
   -webkit-box-shadow: inset 0 -1px 0 0 #e5e5e5;
           box-shadow: inset 0 -1px 0 0 #e5e5e5;
@@ -39,31 +39,31 @@
   transition-property: border, box-shadow, padding;
   transition-property: border, box-shadow, padding, -webkit-box-shadow;
 }
-.pronamci-pay-chart-legend li.completed-count {
+.pronamic-pay-chart-legend li.completed-count {
   border-right-color: #dbe1e3;
 }
-.pronamci-pay-chart-legend li.pending-sum {
+.pronamic-pay-chart-legend li.pending-sum {
   border-right-color: #b1d4ea;
 }
-.pronamci-pay-chart-legend li.completed-sum {
+.pronamic-pay-chart-legend li.completed-sum {
   border-right-color: #3498db;
 }
-.pronamci-pay-chart-legend li.cancelled-sum {
+.pronamic-pay-chart-legend li.cancelled-sum {
   border-right-color: #f1c40f;
 }
-.pronamci-pay-chart-legend li.expired-sum {
+.pronamic-pay-chart-legend li.expired-sum {
   border-right-color: #dbe1e3;
 }
-.pronamci-pay-chart-legend li.failed-sum {
+.pronamic-pay-chart-legend li.failed-sum {
   border-right-color: #e74c3c;
 }
-.pronamci-pay-chart-legend li:hover {
+.pronamic-pay-chart-legend li:hover {
   border-right-color: #23282f;
   -webkit-box-shadow: inset 0 -1px 0 0 #e5e5e5, inset 300px 0 0 #f9f9f9;
           box-shadow: inset 0 -1px 0 0 #e5e5e5, inset 300px 0 0 #f9f9f9;
   padding-left: 1.5em;
 }
-.pronamci-pay-chart-legend strong {
+.pronamic-pay-chart-legend strong {
   color: #444;
   display: block;
   font-size: 1.618em;

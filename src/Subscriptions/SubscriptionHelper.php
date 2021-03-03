@@ -177,7 +177,7 @@ class SubscriptionHelper {
 	}
 
 	/**
-	 * Calculate expirty date.
+	 * Calculate expiry date.
 	 *
 	 * @param Subscription $subscription Subscription.
 	 * @return DateTime|null

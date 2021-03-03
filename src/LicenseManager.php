@@ -30,7 +30,7 @@ class LicenseManager {
 	private $plugin;
 
 	/**
-	 * Constructs and initalize an license manager object.
+	 * Construct and initialize an license manager object.
 	 *
 	 * @param Plugin $plugin Plugin.
 	 */

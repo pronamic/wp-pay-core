@@ -193,7 +193,7 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	}
 
 	/**
-	 * Check if this intengration supports a given feature.
+	 * Check if this integration supports a given feature.
 	 *
 	 * @param string $feature The feature to check.
 	 * @return bool True if supported, false otherwise.

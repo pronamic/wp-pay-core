@@ -110,7 +110,7 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 	public $payment_method;
 
 	/**
-	 * The end date of the last succesfull payment.
+	 * The end date of the last successful payment.
 	 *
 	 * @var DateTime|null
 	 */
@@ -140,7 +140,7 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 	/**
 	 * Activated at.
 	 *
-	 * The datetime this subscription was activated or reactived.
+	 * The datetime this subscription was activated or reactivated.
 	 *
 	 * @var DateTime
 	 */

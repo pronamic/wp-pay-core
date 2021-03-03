@@ -29,14 +29,14 @@ use WP_Error;
  */
 abstract class Gateway {
 	/**
-	 * Method indicator for an gateway wich works through an HTML form
+	 * Method indicator for an gateway which works through an HTML form
 	 *
 	 * @var int
 	 */
 	const METHOD_HTML_FORM = 1;
 
 	/**
-	 * Method indicator for an gateway wich works through an HTTP redirect
+	 * Method indicator for an gateway which works through an HTTP redirect
 	 *
 	 * @var int
 	 */
@@ -176,7 +176,7 @@ abstract class Gateway {
 	}
 
 	/**
-	 * Check if this gateway works trhough an HTTP redirect
+	 * Check if this gateway works trough an HTTP redirect
 	 *
 	 * @return boolean true if an HTTP redirect is required, false otherwise
 	 */
@@ -425,7 +425,7 @@ abstract class Gateway {
 	/**
 	 * Handle subscription cancellation.
 	 *
-	 * @param Subscription $subscription The subscipriont to handle cancellation for.
+	 * @param Subscription $subscription The subscription to handle cancellation for.
 	 * @return void
 	 */
 	public function cancel_subscription( Subscription $subscription ) {

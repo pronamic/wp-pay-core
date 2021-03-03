@@ -121,7 +121,7 @@ class AddressHelper {
 	}
 
 	/**
-	 * Create an adress from an array.
+	 * Create an address from an array.
 	 *
 	 * @param array $data Data.
 	 * @return Address|null

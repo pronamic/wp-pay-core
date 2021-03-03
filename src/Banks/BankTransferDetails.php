@@ -1,6 +1,6 @@
 <?php
 /**
- * Bank trasnfer details
+ * Bank transfer details
  *
  * @author    Pronamic <info@pronamic.eu>
  * @copyright 2005-2021 Pronamic

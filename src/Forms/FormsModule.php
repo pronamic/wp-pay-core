@@ -57,7 +57,7 @@ class FormsModule {
 	private $shortcode;
 
 	/**
-	 * Constructs and initalize a forms module object.
+	 * Construct and initialize a forms module object.
 	 *
 	 * @param Plugin $plugin Plugin.
 	 */

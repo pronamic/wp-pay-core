@@ -99,7 +99,7 @@ class AdminAboutPage {
 		$min = SCRIPT_DEBUG ? '' : '.min';
 
 		wp_enqueue_style(
-			'proanmic-pay-admin-about',
+			'pronamic-pay-admin-about',
 			plugins_url( '../../css/admin-about' . $min . '.css', __FILE__ ),
 			array(),
 			$this->plugin->get_version()

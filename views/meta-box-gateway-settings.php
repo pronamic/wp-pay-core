@@ -63,7 +63,7 @@ if ( $integration->supports( 'webhook' ) ) {
 
 // Check if webhook configuration is needed.
 if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_no_config' ) ) {
-	$webbhook_config_needed = true;
+	$webhook_config_needed = true;
 
 	$log = get_post_meta( $config_id, '_pronamic_gateway_webhook_log', true );
 
@@ -74,11 +74,11 @@ if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_n
 
 		// Validate log request URL against current home URL.
 		if ( WebhookManager::validate_request_url( $request_info ) ) {
-			$webbhook_config_needed = false;
+			$webhook_config_needed = false;
 		}
 	}
 
-	if ( $webbhook_config_needed ) {
+	if ( $webhook_config_needed ) {
 		$sections['feedback']->title = sprintf(
 			'⚠️ %s',
 			$sections['feedback']->title
@@ -273,7 +273,7 @@ $sections = array_filter(
 								/**
 								 * An empty value can also be an empty string, this
 								 * should not always be overwritten with the default
-								 * value. Therefor we check if there is anykind of
+								 * value. Therefore we check if there is any kind of
 								 * meta.
 								 *
 								 * @link https://developer.wordpress.org/reference/functions/get_post_meta/

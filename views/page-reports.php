@@ -25,7 +25,7 @@ use Pronamic\WordPress\Pay\Util;
 
 			<div class="inside pronamic-pay-chart-with-sidebar">
 				<div class="pronamic-pay-chart-sidebar">
-					<ul class="pronamci-pay-chart-legend">
+					<ul class="pronamic-pay-chart-legend">
 
 						<?php foreach ( $this->reports->get_reports() as $i => $serie ) : ?>
 

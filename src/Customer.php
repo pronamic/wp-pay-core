@@ -174,7 +174,7 @@ class Customer {
 	/**
 	 * Set email address.
 	 *
-	 * @param string|null $email Email adress.
+	 * @param string|null $email Email address.
 	 * @return void
 	 */
 	public function set_email( $email ) {

@@ -178,7 +178,7 @@ class VatNumber {
 	}
 
 	/**
-	 * Create string representation of VAT nunber.
+	 * Create string representation of VAT number.
 	 *
 	 * @return string
 	 */

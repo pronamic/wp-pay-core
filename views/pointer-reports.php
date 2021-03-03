@@ -13,7 +13,7 @@
 
 <p>
 	<?php esc_html_e( 'The Pronamic Pay reports page shows you an graph of all the payments of this year.', 'pronamic_ideal' ); ?>
-	<?php esc_html_e( 'You can see the number of succesfull payments and the total amount of pending, succesfull, cancelled and failed payments.', 'pronamic_ideal' ); ?>
+	<?php esc_html_e( 'You can see the number of successful payments and the total amount of pending, successful, cancelled and failed payments.', 'pronamic_ideal' ); ?>
 </p>
 
 <div class="wp-pointer-buttons pp-pointer-buttons">

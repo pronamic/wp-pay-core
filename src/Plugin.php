@@ -175,7 +175,7 @@ class Plugin {
 	public $payments_module;
 
 	/**
-	 * Subsciptions module.
+	 * Subscriptions module.
 	 *
 	 * @var Subscriptions\SubscriptionsModule
 	 */
@@ -378,7 +378,7 @@ class Plugin {
 		}
 
 		/*
-		 * If WordPress CLI is runnig we can't redirect.
+		 * If WordPress CLI is running we can't redirect.
 		 *
 		 * @link https://basecamp.com/1810084/projects/10966871/todos/346407847
 		 * @link https://github.com/woocommerce/woocommerce/blob/3.5.3/includes/class-woocommerce.php#L381-L383
@@ -619,7 +619,7 @@ class Plugin {
 	 * Filter plugin locale.
 	 *
 	 * @param string $locale A WordPress locale identifier.
-	 * @param string $domain A WordPress text domain indentifier.
+	 * @param string $domain A WordPress text domain identifier.
 	 *
 	 * @return string
 	 */
