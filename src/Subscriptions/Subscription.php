@@ -149,20 +149,14 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 	/**
 	 * Construct and initialize subscription object.
 	 *
-	 * @param int|null $post_id A subscription post ID or null.
-	 *
 	 * @throws \Exception Throws exception on invalid post date.
 	 */
-	public function __construct( $post_id = null ) {
-		parent::__construct( $post_id );
+	public function __construct() {
+		parent::__construct();
 
 		$this->meta = array();
 
 		$this->activated_at = new DateTime();
-
-		if ( ! empty( $post_id ) ) {
-			pronamic_pay_plugin()->subscriptions_data_store->read( $this );
-		}
 	}
 
 	/**
