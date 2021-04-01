@@ -684,7 +684,7 @@ class Payment extends LegacyPayment {
 			return null;
 		}
 
-		$this->subscription = new Subscription( $this->subscription_id );
+		$this->subscription = \get_pronamic_subscription( $this->subscription_id );
 
 		return $this->subscription;
 	}

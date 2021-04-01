@@ -324,10 +324,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		$result = empty( $id ) ? $this->create( $subscription ) : $this->update( $subscription );
 
-		if ( $result && \array_key_exists( $id, $this->subscriptions ) ) {
-			unset( $this->subscriptions[ $id ] );
-		}
-
 		return $result;
 	}
 
