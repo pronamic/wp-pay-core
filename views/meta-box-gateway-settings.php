@@ -8,6 +8,7 @@
  * @package   Pronamic\WordPress\Pay
  */
 
+use Pronamic\WordPress\Html\Element;
 use Pronamic\WordPress\Pay\Admin\AdminGatewayPostType;
 use Pronamic\WordPress\Pay\Util;
 use Pronamic\WordPress\Pay\Webhooks\WebhookManager;
@@ -291,12 +292,9 @@ $sections = array_filter(
 									$attributes['type']  = $field['type'];
 									$attributes['value'] = $value;
 
-									printf(
-										'<input %s />',
-										// @codingStandardsIgnoreStart
-										Util::array_to_html_attributes( $attributes )
-										// @codingStandardsIgnoreEnd
-									);
+									$element = new Element( 'input', $attributes );
+
+									$element->print();
 
 									break;
 								case 'number':
@@ -311,12 +309,9 @@ $sections = array_filter(
 										$attributes['max'] = $field['max'];
 									}
 
-									printf(
-										'<input %s />',
-										// @codingStandardsIgnoreStart
-										Util::array_to_html_attributes( $attributes )
-										// @codingStandardsIgnoreEnd
-									);
+									$element = new Element( 'input', $attributes );
+
+									$element->print();
 
 									break;
 								case 'checkbox':
@@ -370,12 +365,9 @@ $sections = array_filter(
 								case 'file':
 									$attributes['type'] = 'file';
 
-									printf(
-										'<input %s />',
-										// @codingStandardsIgnoreStart
-										Util::array_to_html_attributes( $attributes )
-										// @codingStandardsIgnoreEnd
-									);
+									$element = new Element( 'input', $attributes );
+
+									$element->print();
 
 									break;
 								case 'select':

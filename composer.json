@@ -48,6 +48,8 @@
 		"ext-simplexml": "*",
 		"composer/installers": "^1.7",
 		"pronamic/wp-datetime": "^1.2",
+		"pronamic/wp-html": "dev-main",
+		"pronamic/wp-http": "dev-main",
 		"pronamic/wp-money": "^1.2",
 		"viison/address-splitter": "^0.3.4"
 	},
