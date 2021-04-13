@@ -21,7 +21,7 @@ Argument | Type | Description
 
 Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 281](../src/Payments/PaymentsDataStoreCPT.php#L281-L281)
 
-### pronamic\_payment_status_update_{$payment}->source_{$old}\_to\_{$new}
+### `pronamic\_payment_status_update_{$payment}->source_{$old}_to_{$new}`
 
 Argument | Type | Description
 -------- | ---- | -----------
