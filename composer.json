@@ -84,6 +84,9 @@
 		"xmllint-phpcs": "xmllint --noout --schema vendor/squizlabs/php_codesniffer/phpcs.xsd phpcs.xml.dist",
 		"xmllint": [
 			"@xmllint-phpcs"
+		],
+		"build-docs": [
+			"vendor/bin/wp-documentor parse src --format=markdown --relative=docs > docs/hooks.md"
 		]
 	}
 }
