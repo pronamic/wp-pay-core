@@ -978,7 +978,9 @@ class SubscriptionsModule {
 			$subscription->add_note( $note );
 
 			// Send renewal notice.
-			do_action( 'pronamic_subscription_renewal_notice_' . $subscription->get_source(), $subscription );
+			$source = $subscription->get_source();
+
+			do_action( 'pronamic_subscription_renewal_notice_' . $source, $subscription );
 
 			// Update renewal notice sent date meta.
 			$renewal_sent_date = clone $start_date;

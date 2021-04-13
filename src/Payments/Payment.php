@@ -327,7 +327,9 @@ class Payment extends LegacyPayment {
 
 		$text = implode( '<br />', $pieces );
 
-		$text = apply_filters( 'pronamic_payment_source_text_' . $this->get_source(), $text, $this );
+		$source = $this->get_source();
+
+		$text = apply_filters( 'pronamic_payment_source_text_' . $source, $text, $this );
 		$text = apply_filters( 'pronamic_payment_source_text', $text, $this );
 
 		return $text;

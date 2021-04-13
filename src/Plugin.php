@@ -1154,7 +1154,9 @@ class Plugin {
 	 * @return string
 	 */
 	public function payment_redirect_url( $url, Payment $payment ) {
-		$url = \apply_filters( 'pronamic_payment_redirect_url_' . $payment->get_source(), $url, $payment );
+		$source = $payment->get_source();
+
+		$url = \apply_filters( 'pronamic_payment_redirect_url_' . $source, $url, $payment );
 
 		return $url;
 	}

@@ -368,7 +368,9 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 
 		$default_text = implode( '<br />', $pieces );
 
-		$text = apply_filters( 'pronamic_subscription_source_text_' . $this->get_source(), $default_text, $this );
+		$source = $this->get_source();
+
+		$text = apply_filters( 'pronamic_subscription_source_text_' . $source, $default_text, $this );
 		$text = apply_filters( 'pronamic_subscription_source_text', $text, $this );
 
 		return $text;
@@ -380,9 +382,11 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 	 * @return string
 	 */
 	public function get_source_description() {
+		$source = $this->get_source();
+
 		$default_text = $this->get_source();
 
-		$text = apply_filters( 'pronamic_subscription_source_description_' . $this->get_source(), $default_text, $this );
+		$text = apply_filters( 'pronamic_subscription_source_description_' . $source, $default_text, $this );
 		$text = apply_filters( 'pronamic_subscription_source_description', $text, $this );
 
 		return $text;
