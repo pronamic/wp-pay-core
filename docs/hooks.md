@@ -21,7 +21,7 @@ Argument | Type | Description
 
 Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 281](../src/Payments/PaymentsDataStoreCPT.php#L281-L281)
 
-### `pronamic_payment_status_update_{$payment}->source_{$old}_to_{$new}`
+### `pronamic_payment_status_update_{$payment->source}_{$old}_to_{$new}`
 
 Argument | Type | Description
 -------- | ---- | -----------
@@ -32,7 +32,7 @@ Argument | Type | Description
 
 Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 882](../src/Payments/PaymentsDataStoreCPT.php#L882-L882)
 
-### `pronamic_payment_status_update_{$payment}->source`
+### `pronamic_payment_status_update_{$payment->source}`
 
 Argument | Type | Description
 -------- | ---- | -----------
@@ -91,7 +91,7 @@ Argument | Type | Description
 
 Source: [src/Subscriptions/SubscriptionsDataStoreCPT.php](../src/Subscriptions/SubscriptionsDataStoreCPT.php), [line 279](../src/Subscriptions/SubscriptionsDataStoreCPT.php#L279-L279)
 
-### `pronamic_subscription_status_update_{$subscription}->source_{$old}_to_{$new}`
+### `pronamic_subscription_status_update_{$subscription->source}_{$old}_to_{$new}`
 
 Argument | Type | Description
 -------- | ---- | -----------
@@ -102,7 +102,7 @@ Argument | Type | Description
 
 Source: [src/Subscriptions/SubscriptionsDataStoreCPT.php](../src/Subscriptions/SubscriptionsDataStoreCPT.php), [line 741](../src/Subscriptions/SubscriptionsDataStoreCPT.php#L741-L741)
 
-### `pronamic_subscription_status_update_{$subscription}->source`
+### `pronamic_subscription_status_update_{$subscription->source}`
 
 Argument | Type | Description
 -------- | ---- | -----------
@@ -162,7 +162,7 @@ Argument | Type | Description
 
 Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 624](../src/Payments/Payment.php#L624-L624)
 
-### `pronamic_payment_source_description_{$this}->source`
+### `pronamic_payment_source_description_{$this->source}`
 
 Argument | Type | Description
 -------- | ---- | -----------
@@ -180,7 +180,7 @@ Argument | Type | Description
 
 Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 638](../src/Payments/Payment.php#L638-L638)
 
-### `pronamic_payment_source_url_{$this}->source`
+### `pronamic_payment_source_url_{$this->source}`
 
 Argument | Type | Description
 -------- | ---- | -----------
@@ -350,7 +350,7 @@ Argument | Type | Description
 
 Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 397](../src/Subscriptions/Subscription.php#L397-L397)
 
-### `pronamic_subscription_source_url_{$this}->source`
+### `pronamic_subscription_source_url_{$this->source}`
 
 Argument | Type | Description
 -------- | ---- | -----------
