@@ -936,7 +936,7 @@ class SubscriptionsModule {
 		$expiring_subscription_posts = $this->get_expiring_subscription_posts( $start_date, $end_date );
 
 		foreach ( $expiring_subscription_posts as $post ) {
-			$subscription = new Subscription( $post->ID );
+			$subscription = \get_pronamic_subscription( $post->ID );
 
 			// If expiry date is null we continue, subscription is not expiring.
 			$expiry_date = $subscription->get_expiry_date();
@@ -1051,7 +1051,7 @@ class SubscriptionsModule {
 				WP_CLI::log( sprintf( 'Processing post `%d` - "%s"…', $post->ID, get_the_title( $post ) ) );
 			}
 
-			$subscription = new Subscription( $post->ID );
+			$subscription = \get_pronamic_subscription( $post->ID );
 
 			$gateway = Plugin::get_gateway( $subscription->config_id );
 
@@ -1152,7 +1152,7 @@ class SubscriptionsModule {
 
 			// Complete subscription.
 			try {
-				$subscription = new Subscription( $post->ID );
+				$subscription = \get_pronamic_subscription( $post->ID );
 
 				$subscription->status      = SubscriptionStatus::COMPLETED;
 				$subscription->expiry_date = $subscription->end_date;
