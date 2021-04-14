@@ -7,6 +7,8 @@
 
 ### `pronamic_pay_update_payment`
 
+**Arguments**
+
 Argument | Type | Description
 -------- | ---- | -----------
 `$payment` |  | 
@@ -15,6 +17,8 @@ Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStor
 
 ### `pronamic_pay_new_payment`
 
+**Arguments**
+
 Argument | Type | Description
 -------- | ---- | -----------
 `$payment` |  | 
@@ -22,6 +26,8 @@ Argument | Type | Description
 Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 281](../src/Payments/PaymentsDataStoreCPT.php#L281-L281)
 
 ### `pronamic_payment_status_update_{$payment->source}_{$old}_to_{$new}`
+
+**Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
@@ -34,6 +40,8 @@ Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStor
 
 ### `pronamic_payment_status_update_{$payment->source}`
 
+**Arguments**
+
 Argument | Type | Description
 -------- | ---- | -----------
 `$payment` |  | 
@@ -44,6 +52,8 @@ Argument | Type | Description
 Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 883](../src/Payments/PaymentsDataStoreCPT.php#L883-L883)
 
 ### `pronamic_payment_status_update`
+
+**Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
@@ -56,6 +66,8 @@ Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStor
 
 ### `pronamic_pay_privacy_register_exporters`
 
+**Arguments**
+
 Argument | Type | Description
 -------- | ---- | -----------
 `$this` |  | 
@@ -63,6 +75,8 @@ Argument | Type | Description
 Source: [src/PrivacyManager.php](../src/PrivacyManager.php), [line 52](../src/PrivacyManager.php#L52-L52)
 
 ### `pronamic_pay_privacy_register_erasers`
+
+**Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
@@ -77,6 +91,8 @@ Source: [src/Admin/AdminSettings.php](../src/Admin/AdminSettings.php), [line 288
 
 ### `pronamic_subscription_renewal_notice_{$source}`
 
+**Arguments**
+
 Argument | Type | Description
 -------- | ---- | -----------
 `$subscription` |  | 
@@ -85,6 +101,8 @@ Source: [src/Subscriptions/SubscriptionsModule.php](../src/Subscriptions/Subscri
 
 ### `pronamic_pay_new_subscription`
 
+**Arguments**
+
 Argument | Type | Description
 -------- | ---- | -----------
 `$subscription` |  | 
@@ -92,6 +110,8 @@ Argument | Type | Description
 Source: [src/Subscriptions/SubscriptionsDataStoreCPT.php](../src/Subscriptions/SubscriptionsDataStoreCPT.php), [line 279](../src/Subscriptions/SubscriptionsDataStoreCPT.php#L279-L279)
 
 ### `pronamic_subscription_status_update_{$subscription->source}_{$old}_to_{$new}`
+
+**Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
@@ -104,6 +124,8 @@ Source: [src/Subscriptions/SubscriptionsDataStoreCPT.php](../src/Subscriptions/S
 
 ### `pronamic_subscription_status_update_{$subscription->source}`
 
+**Arguments**
+
 Argument | Type | Description
 -------- | ---- | -----------
 `$subscription` |  | 
@@ -114,6 +136,8 @@ Argument | Type | Description
 Source: [src/Subscriptions/SubscriptionsDataStoreCPT.php](../src/Subscriptions/SubscriptionsDataStoreCPT.php), [line 742](../src/Subscriptions/SubscriptionsDataStoreCPT.php#L742-L742)
 
 ### `pronamic_subscription_status_update`
+
+**Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
@@ -128,6 +152,8 @@ Source: [src/Subscriptions/SubscriptionsDataStoreCPT.php](../src/Subscriptions/S
 
 ### `pronamic_payment_source_text_{$source}`
 
+**Arguments**
+
 Argument | Type | Description
 -------- | ---- | -----------
 `$text` |  | 
@@ -136,6 +162,8 @@ Argument | Type | Description
 Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 332](../src/Payments/Payment.php#L332-L332)
 
 ### `pronamic_payment_source_text`
+
+**Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
@@ -146,6 +174,8 @@ Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 333](../s
 
 ### `pronamic_payment_redirect_url`
 
+**Arguments**
+
 Argument | Type | Description
 -------- | ---- | -----------
 `$url` |  | 
@@ -154,6 +184,8 @@ Argument | Type | Description
 Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 579](../src/Payments/Payment.php#L579-L579)
 
 ### `pronamic_payment_source_description`
+
+**Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
@@ -164,6 +196,8 @@ Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 624](../s
 
 ### `pronamic_payment_source_description_{$this->source}`
 
+**Arguments**
+
 Argument | Type | Description
 -------- | ---- | -----------
 `$description` |  | 
@@ -172,6 +206,8 @@ Argument | Type | Description
 Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 625](../src/Payments/Payment.php#L625-L625)
 
 ### `pronamic_payment_source_url`
+
+**Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
@@ -182,6 +218,8 @@ Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 638](../s
 
 ### `pronamic_payment_source_url_{$this->source}`
 
+**Arguments**
+
 Argument | Type | Description
 -------- | ---- | -----------
 `$url` |  | 
@@ -190,6 +228,8 @@ Argument | Type | Description
 Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 639](../src/Payments/Payment.php#L639-L639)
 
 ### `pronamic_payment_provider_url`
+
+**Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
@@ -200,6 +240,8 @@ Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 652](../s
 
 ### `pronamic_payment_provider_url_{$gateway_id}`
 
+**Arguments**
+
 Argument | Type | Description
 -------- | ---- | -----------
 `$url` |  | 
@@ -209,6 +251,8 @@ Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 670](../s
 
 ### `wp_doing_cron`
 
+**Arguments**
+
 Argument | Type | Description
 -------- | ---- | -----------
 `defined('DOING_CRON') && DOING_CRON` |  | 
@@ -216,6 +260,8 @@ Argument | Type | Description
 Source: [src/Core/Util.php](../src/Core/Util.php), [line 141](../src/Core/Util.php#L141-L141)
 
 ### `pronamic_pay_google_analytics_ecommerce_item_name`
+
+**Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
@@ -226,6 +272,8 @@ Source: [src/GoogleAnalyticsEcommerce.php](../src/GoogleAnalyticsEcommerce.php),
 
 ### `pronamic_pay_google_analytics_ecommerce_item_product_category`
 
+**Arguments**
+
 Argument | Type | Description
 -------- | ---- | -----------
 `$line->get_product_category()` |  | 
@@ -234,6 +282,8 @@ Argument | Type | Description
 Source: [src/GoogleAnalyticsEcommerce.php](../src/GoogleAnalyticsEcommerce.php), [line 247](../src/GoogleAnalyticsEcommerce.php#L247-L247)
 
 ### `pronamic_pay_return_should_redirect`
+
+**Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
@@ -244,6 +294,8 @@ Source: [src/Plugin.php](../src/Plugin.php), [line 434](../src/Plugin.php#L434-L
 
 ### `pronamic_pay_gateways`
 
+**Arguments**
+
 Argument | Type | Description
 -------- | ---- | -----------
 `array()` |  | 
@@ -251,6 +303,8 @@ Argument | Type | Description
 Source: [src/Plugin.php](../src/Plugin.php), [line 591](../src/Plugin.php#L591-L591)
 
 ### `pronamic_pay_plugin_integrations`
+
+**Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
@@ -262,6 +316,8 @@ Source: [src/Plugin.php](../src/Plugin.php), [line 600](../src/Plugin.php#L600-L
 
 *Filters the payment gateway configuration ID.*
 
+**Arguments**
+
 Argument | Type | Description
 -------- | ---- | -----------
 `$payment->get_config_id()` |  | 
@@ -270,6 +326,8 @@ Argument | Type | Description
 Source: [src/Plugin.php](../src/Plugin.php), [line 963](../src/Plugin.php#L963-L969)
 
 ### `pronamic_payment_redirect_url_{$source}`
+
+**Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
@@ -281,6 +339,8 @@ Source: [src/Plugin.php](../src/Plugin.php), [line 1159](../src/Plugin.php#L1159
 ### `pronamic_gateway_configuration_display_value`
 
 *Filters the gateway configuration display value.*
+
+**Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
@@ -298,6 +358,8 @@ For example, the gateway ID for Payvision is `payvision`, se the filter
 for that gateway would be:
 `pronamic_gateway_configuration_display_value_payvision`
 
+**Arguments**
+
 Argument | Type | Description
 -------- | ---- | -----------
 `$display_value` | `string` | Display value.
@@ -306,6 +368,8 @@ Argument | Type | Description
 Source: [src/Admin/AdminGatewayPostType.php](../src/Admin/AdminGatewayPostType.php), [line 147](../src/Admin/AdminGatewayPostType.php#L147-L158)
 
 ### `pronamic_subscription_source_text_{$source}`
+
+**Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
@@ -316,6 +380,8 @@ Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.p
 
 ### `pronamic_subscription_source_text`
 
+**Arguments**
+
 Argument | Type | Description
 -------- | ---- | -----------
 `$text` |  | 
@@ -324,6 +390,8 @@ Argument | Type | Description
 Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 368](../src/Subscriptions/Subscription.php#L368-L368)
 
 ### `pronamic_subscription_source_description_{$source}`
+
+**Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
@@ -334,6 +402,8 @@ Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.p
 
 ### `pronamic_subscription_source_description`
 
+**Arguments**
+
 Argument | Type | Description
 -------- | ---- | -----------
 `$text` |  | 
@@ -343,6 +413,8 @@ Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.p
 
 ### `pronamic_subscription_source_url`
 
+**Arguments**
+
 Argument | Type | Description
 -------- | ---- | -----------
 `$url` |  | 
@@ -351,6 +423,8 @@ Argument | Type | Description
 Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 397](../src/Subscriptions/Subscription.php#L397-L397)
 
 ### `pronamic_subscription_source_url_{$this->source}`
+
+**Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
@@ -363,6 +437,8 @@ Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.p
 
 *Filters the subscription next payment delivery date.*
 
+**Arguments**
+
 Argument | Type | Description
 -------- | ---- | -----------
 `$next_payment_delivery_date` | `\Pronamic\WordPress\DateTime\DateTime` | Next payment delivery date.
@@ -370,4 +446,6 @@ Argument | Type | Description
 
 Source: [src/Subscriptions/SubscriptionHelper.php](../src/Subscriptions/SubscriptionHelper.php), [line 246](../src/Subscriptions/SubscriptionHelper.php#L246-L254)
 
+
+<p align="center"><a href="https://github.com/pronamic/wp-documentor"><img src="https://cdn.jsdelivr.net/gh/pronamic/wp-documentor@main/logos/pronamic-wp-documentor.svgo-min.svg" alt="Pronamic WordPress Documentor" width="32" height="32"></a><br><em>Generated by <a href="https://github.com/pronamic/wp-documentor">Pronamic WordPress Documentor</a> <code>1.0.0</code></em><p>
 

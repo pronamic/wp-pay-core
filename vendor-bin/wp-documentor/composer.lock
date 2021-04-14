@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e9107a65e5ab0a83924584fbd9f77475",
+    "content-hash": "6b06e7661c8507a0915ee41ab685c8b9",
     "packages": [
         {
             "name": "nikic/php-parser",
@@ -278,16 +278,16 @@
         },
         {
             "name": "pronamic/wp-documentor",
-            "version": "dev-main",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pronamic/wp-documentor.git",
-                "reference": "358ab2073b1a8c989b10e34a128e8582ce290f2f"
+                "reference": "9224a357cc4c08b3c8ca062ee76fcd24d2514c66"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pronamic/wp-documentor/zipball/358ab2073b1a8c989b10e34a128e8582ce290f2f",
-                "reference": "358ab2073b1a8c989b10e34a128e8582ce290f2f",
+                "url": "https://api.github.com/repos/pronamic/wp-documentor/zipball/9224a357cc4c08b3c8ca062ee76fcd24d2514c66",
+                "reference": "9224a357cc4c08b3c8ca062ee76fcd24d2514c66",
                 "shasum": ""
             },
             "require": {
@@ -301,7 +301,6 @@
                 "bamarni/composer-bin-plugin": "^1.4",
                 "roots/wordpress": "^5.7"
             },
-            "default-branch": true,
             "bin": [
                 "bin/wp-documentor"
             ],
@@ -312,6 +311,23 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Pronamic",
+                    "email": "info@pronamic.eu",
+                    "homepage": "https://www.pronamic.eu/",
+                    "role": "Company"
+                },
+                {
+                    "name": "Remco Tolsma",
+                    "email": "info@remcotolsma.nl",
+                    "homepage": "https://www.remcotolsma.nl/",
+                    "role": "Developer"
+                }
+            ],
             "description": "Documentation Generator for WordPress.",
             "keywords": [
                 "api",
@@ -323,9 +339,9 @@
             ],
             "support": {
                 "issues": "https://github.com/pronamic/wp-documentor/issues",
-                "source": "https://github.com/pronamic/wp-documentor/tree/main"
+                "source": "https://github.com/pronamic/wp-documentor/tree/1.0.0"
             },
-            "time": "2021-04-13T09:56:54+00:00"
+            "time": "2021-04-14T09:49:38+00:00"
         },
         {
             "name": "psr/container",
@@ -1355,9 +1371,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "pronamic/wp-documentor": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
