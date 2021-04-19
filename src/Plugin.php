@@ -973,6 +973,17 @@ class Plugin {
 		// Create payment.
 		$pronamic_ideal->payments_data_store->create( $payment );
 
+		// Gateway.
+		$gateway = self::get_gateway( $payment->get_config_id() );
+
+		if ( null === $gateway ) {
+			$payment->set_status( PaymentStatus::FAILURE );
+
+			$payment->save();
+
+			return $payment;
+		}
+
 		// Prevent payment start at gateway if amount is empty.
 		$amount = $payment->get_total_amount()->get_value();
 
@@ -988,18 +999,11 @@ class Plugin {
 			 * @todo Throw exception?
 			 */
 
-			return $payment;
-		}
+			$maybe_tokenize = ( $gateway->supports( 'recurring' ) && PaymentMethods::DIRECT_DEBIT === $payment->get_method() && null !== $payment->get_consumer_bank_details() );
 
-		// Gateway.
-		$gateway = self::get_gateway( $payment->get_config_id() );
-
-		if ( null === $gateway ) {
-			$payment->set_status( PaymentStatus::FAILURE );
-
-			$payment->save();
-
-			return $payment;
+			if ( ! $maybe_tokenize ) {
+				return $payment;
+			}
 		}
 
 		// Recurring.
