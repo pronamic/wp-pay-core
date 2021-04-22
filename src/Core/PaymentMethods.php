@@ -275,6 +275,22 @@ class PaymentMethods {
 	const SOFORT = 'sofort';
 
 	/**
+	 * Swish
+	 *
+	 * @var string
+	 * @since 2.6.3
+	 */
+	const SWISH = 'swish';
+
+	/**
+	 * Vipps
+	 *
+	 * @var string
+	 * @since 2.6.3
+	 */
+	const VIPPS = 'vipps';
+
+	/**
 	 * Get payment methods
 	 *
 	 * @since 1.3.0
@@ -325,6 +341,8 @@ class PaymentMethods {
 			self::PRZELEWY24              => __( 'Przelewy24', 'pronamic_ideal' ),
 			self::SANTANDER               => __( 'Santander', 'pronamic_ideal' ),
 			self::SOFORT                  => __( 'SOFORT Banking', 'pronamic_ideal' ),
+			self::SWISH                   => __( 'Swish', 'pronamic_ideal' ),
+			self::VIPPS                   => __( 'Vipps', 'pronamic_ideal' ),
 		);
 
 		return $payment_methods;
