@@ -22,10 +22,16 @@
 
 	<body>
 		<div class="pronamic-pay-redirect-page">
-			<div class="pronamic-pay-redirect-container alignleft">
-				<p>
-					<?php esc_html_e( 'The subscription can not be renewed.', 'pronamic_ideal' ); ?>
-				</p>
+			<div class="pronamic-pay-redirect-container">
+				<h1><?php esc_html_e( 'Subscription Renewal', 'pronamic_ideal' ); ?></h1>
+
+				<div class="pp-page-section-container">
+					<div class="pp-page-section-wrapper">
+						<p>
+							<?php esc_html_e( 'The subscription can not be renewed.', 'pronamic_ideal' ); ?>
+						</p>
+					</div>
+				</div>
 			</div>
 		</div>
 	</body>

@@ -9,7 +9,14 @@
  */
 
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
-use Pronamic\WordPress\Pay\Util;
+
+if ( ! defined( 'WPINC' ) ) {
+	die;
+}
+
+if ( ! isset( $subscription ) ) {
+	return;
+}
 
 $phase = $subscription->get_current_phase();
 
@@ -29,66 +36,46 @@ $expiry_date = $subscription->get_expiry_date();
 
 	<body>
 		<div class="pronamic-pay-redirect-page">
-			<div class="pronamic-pay-redirect-container alignleft">
-				<form id="pronamic_ideal_form" name="pronamic_ideal_form" method="post">
-					<h1><?php esc_html_e( 'Subscription Cancellation', 'pronamic_ideal' ); ?></h1>
+			<div class="pronamic-pay-redirect-container">
+				<h1><?php esc_html_e( 'Subscription Cancellation', 'pronamic_ideal' ); ?></h1>
 
-					<?php if ( null !== $expiry_date && SubscriptionStatus::CANCELLED !== $subscription->get_status() ) : ?>
+				<div class="pp-page-section-container">
+					<div class="pp-page-section-wrapper alignleft">
 
-						<p>
-							<?php
+						<?php
 
-							echo esc_html(
-								sprintf(
-									/* translators: %s: expiry date */
-									__( 'The subscription expires at %s.', 'pronamic_ideal' ),
-									$expiry_date->format_i18n()
-								)
-							);
+						// Subscription details.
+						require __DIR__ . '/subscription-details.php';
 
-							?>
-						</p>
+						$is_active = in_array( $subscription->get_status(), array( SubscriptionStatus::ACTIVE, SubscriptionStatus::FAILURE, SubscriptionStatus::EXPIRED, SubscriptionStatus::ON_HOLD, SubscriptionStatus::OPEN ), true );
 
-					<?php endif; ?>
+						?>
 
-					<hr />
+						<?php if ( ! $is_active ) : ?>
 
-					<?php if ( null !== $phase ) : ?>
+							<p>
+								<?php esc_html_e( 'The subscription can not be canceled as it is not active anymore.', 'pronamic_ideal' ); ?>
+							</p>
 
-						<dl>
-							<dt>
-								<?php esc_html_e( 'Subscription Length:', 'pronamic_ideal' ); ?>
-							</dt>
-							<dd>
-								<?php echo esc_html( strval( Util::format_date_interval( $phase->get_interval() ) ) ); ?>
-							</dd>
+						<?php endif; ?>
+					</div>
 
-							<dt>
-								<?php esc_html_e( 'Amount:', 'pronamic_ideal' ); ?>
-							</dt>
-							<dd>
-								<?php echo esc_html( $phase->get_amount()->format_i18n() ); ?>
-							</dd>
-						</dl>
+					<?php if ( $is_active ) : ?>
+
+						<div class="pp-page-section-wrapper">
+
+							<p>
+								<?php esc_html_e( 'Are you sure you want to cancel the subscription?', 'pronamic_ideal' ); ?>
+							</p>
+
+							<form id="pronamic_ideal_form" name="pronamic_ideal_form" method="post">
+								<input type="submit" value="<?php esc_html_e( 'Cancel subscription', 'pronamic_ideal' ); ?>"/>
+							</form>
+
+						</div>
 
 					<?php endif; ?>
-
-					<?php if ( SubscriptionStatus::CANCELLED === $subscription->get_status() ) : ?>
-
-						<p>
-							<?php \esc_html_e( 'The subscription has already been canceled.', 'pronamic_ideal' ); ?>
-						</p>
-
-					<?php else : ?>
-
-						<p>
-							<?php \esc_html_e( 'Are you sure you want to cancel the subscription?', 'pronamic_ideal' ); ?>
-						</p>
-
-						<input type="submit" value="<?php esc_html_e( 'Cancel', 'pronamic_ideal' ); ?>"/>
-
-					<?php endif; ?>
-				</form>
+				</div>
 			</div>
 		</div>
 	</body>

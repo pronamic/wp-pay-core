@@ -8,7 +8,13 @@
  * @package   Pronamic\WordPress\Pay
  */
 
-use Pronamic\WordPress\Pay\Util;
+use Pronamic\WordPress\DateTime\DateTimeImmutable;
+use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
+use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
+
+if ( ! isset( $subscription, $gateway ) ) {
+	return;
+}
 
 $phase = $subscription->get_current_phase();
 
@@ -28,59 +34,63 @@ $expiry_date = $subscription->get_expiry_date();
 
 	<body>
 		<div class="pronamic-pay-redirect-page">
-			<div class="pronamic-pay-redirect-container alignleft">
-				<form id="pronamic_ideal_form" name="pronamic_ideal_form" method="post">
-					<h1><?php esc_html_e( 'Subscription Renewal', 'pronamic_ideal' ); ?></h1>
+			<div class="pronamic-pay-redirect-container">
+				<h1><?php esc_html_e( 'Subscription Renewal', 'pronamic_ideal' ); ?></h1>
 
-					<?php if ( null !== $expiry_date ) : ?>
+				<div class="pp-page-section-container">
+					<div class="pp-page-section-wrapper alignleft">
+						<?php
 
-						<p>
-							<?php
+						// Subscription details.
+						require __DIR__ . '/subscription-details.php';
 
-							echo esc_html(
-								sprintf(
-									/* translators: %s: expiry date */
-									__( 'The subscription expires at %s.', 'pronamic_ideal' ),
-									$expiry_date->format_i18n()
-								)
-							);
+						// Determine next period.
+						$phase = $subscription->get_current_phase();
 
-							?>
-						</p>
+						$now = new DateTimeImmutable();
 
-					<?php endif; ?>
+						if (
+								null !== $phase && $phase->get_next_date() < $now
+									&&
+								SubscriptionStatus::CANCELLED === $subscription->get_status() && 'gravityformsideal' === $subscription->get_source()
+						) {
+							$phase = new SubscriptionPhase( $subscription, $now, $phase->get_interval(), $phase->get_amount() );
+						}
 
-					<hr />
+						$next_period = $phase->get_next_period();
 
-					<?php if ( null !== $phase ) : ?>
+						?>
 
-						<dl>
-							<dt>
-								<?php esc_html_e( 'Subscription Length:', 'pronamic_ideal' ); ?>
-							</dt>
-							<dd>
-								<?php echo esc_html( strval( Util::format_date_interval( $phase->get_interval() ) ) ); ?>
-							</dd>
+						<?php if ( null === $next_period ) : ?>
 
-							<dt>
-								<?php esc_html_e( 'Amount:', 'pronamic_ideal' ); ?>
-							</dt>
-							<dd>
-								<?php echo esc_html( $phase->get_amount()->format_i18n() ); ?>
-							</dd>
-						</dl>
+							<p>
+								<?php echo esc_html__( 'This subscription can not be renewed.', 'pronamic_ideal' ); ?>
+							</p>
 
-					<?php endif; ?>
+						<?php else : ?>
 
-					<?php
+							<p>
+								<?php
 
-					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Complex input HTML.
-					echo $gateway->get_input_html();
+								printf(
+									/* translators: %s: next period range */
+									esc_html( __( 'Renew the subscription by paying for the next period, %s.', 'pronamic_ideal' ) ),
+									esc_html( $next_period->human_readable_range( __( 'l j F Y', 'pronamic_ideal' ), _x( 'until', 'period seperator', 'pronamic_ideal' ) ) )
+								);
 
-					?>
+								// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Complex input HTML.
+								echo $gateway->get_input_html();
 
-					<input type="submit" value="<?php esc_html_e( 'Pay', 'pronamic_ideal' ); ?>"/>
-				</form>
+								?>
+							</p>
+
+							<form id="pronamic_ideal_form" name="pronamic_ideal_form" method="post">
+								<input type="submit" value="<?php esc_html_e( 'Pay', 'pronamic_ideal' ); ?>"/>
+							</form>
+
+						<?php endif; ?>
+					</div>
+				</div>
 			</div>
 		</div>
 	</body>

@@ -238,28 +238,35 @@ class SubscriptionPeriod {
 	/**
 	 * Human readable range.
 	 *
+	 * @param null|string $format    Date format.
+	 * @param string      $separator Period separator.
 	 * @return string
 	 */
-	public function human_readable_range() {
+	public function human_readable_range( $format = null, $separator = '–' ) {
 		$start = $this->get_start_date();
 		$end   = $this->get_end_date();
 
-		$format_start = __( 'D j M Y', 'pronamic_ideal' );
+		$format_start = $format;
+
+		if ( null === $format_start ) {
+			$format_start = __( 'D j M Y', 'pronamic_ideal' );
+		}
 
 		// Check if year is equal.
 		if ( $start->format( 'Y' ) === $end->format( 'Y' ) ) {
-			$format_start = __( 'D j M', 'pronamic_ideal' );
+			$format_start = \str_replace( ' Y', '', $format_start );
 
 			// Check if month is equal.
 			if ( $start->format( 'm' ) === $end->format( 'm' ) ) {
-				$format_start = __( 'D j', 'pronamic_ideal' );
+				$format_start = \str_replace( ' m', '', $format_start );
 			}
 		}
 
-		return sprintf(
-			'%1$s – %2$s',
+		return \sprintf(
+			'%1$s %2$s %3$s',
 			$start->format_i18n( $format_start ),
-			$end->format_i18n()
+			\esc_html( $separator ),
+			$end->format_i18n( $format )
 		);
 	}
 }
