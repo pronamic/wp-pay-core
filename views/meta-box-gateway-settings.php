@@ -8,6 +8,7 @@
  * @package   Pronamic\WordPress\Pay
  */
 
+use Pronamic\WordPress\Html\Element;
 use Pronamic\WordPress\Pay\Admin\AdminGatewayPostType;
 use Pronamic\WordPress\Pay\Util;
 use Pronamic\WordPress\Pay\Webhooks\WebhookManager;
@@ -63,7 +64,7 @@ if ( $integration->supports( 'webhook' ) ) {
 
 // Check if webhook configuration is needed.
 if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_no_config' ) ) {
-	$webbhook_config_needed = true;
+	$webhook_config_needed = true;
 
 	$log = get_post_meta( $config_id, '_pronamic_gateway_webhook_log', true );
 
@@ -74,11 +75,11 @@ if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_n
 
 		// Validate log request URL against current home URL.
 		if ( WebhookManager::validate_request_url( $request_info ) ) {
-			$webbhook_config_needed = false;
+			$webhook_config_needed = false;
 		}
 	}
 
-	if ( $webbhook_config_needed ) {
+	if ( $webhook_config_needed ) {
 		$sections['feedback']->title = sprintf(
 			'⚠️ %s',
 			$sections['feedback']->title
@@ -273,7 +274,7 @@ $sections = array_filter(
 								/**
 								 * An empty value can also be an empty string, this
 								 * should not always be overwritten with the default
-								 * value. Therefor we check if there is anykind of
+								 * value. Therefore we check if there is any kind of
 								 * meta.
 								 *
 								 * @link https://developer.wordpress.org/reference/functions/get_post_meta/
@@ -291,12 +292,9 @@ $sections = array_filter(
 									$attributes['type']  = $field['type'];
 									$attributes['value'] = $value;
 
-									printf(
-										'<input %s />',
-										// @codingStandardsIgnoreStart
-										Util::array_to_html_attributes( $attributes )
-										// @codingStandardsIgnoreEnd
-									);
+									$element = new Element( 'input', $attributes );
+
+									$element->print();
 
 									break;
 								case 'number':
@@ -311,17 +309,28 @@ $sections = array_filter(
 										$attributes['max'] = $field['max'];
 									}
 
-									printf(
-										'<input %s />',
-										// @codingStandardsIgnoreStart
-										Util::array_to_html_attributes( $attributes )
-										// @codingStandardsIgnoreEnd
-									);
+									$element = new Element( 'input', $attributes );
+
+									$element->print();
 
 									break;
 								case 'checkbox':
 									$attributes['type']  = $field['type'];
 									$attributes['value'] = '1';
+
+									/**
+									 * Unchecked HTML checkboxes are not part of an HTML form POST request.
+									 * Should the settings API delete settings that are not posted, or should
+									 * it set the value to false? We simplify this by adding an hidden HTML
+									 * input with `0` value. If the checkbox is checked it will post two
+									 * values under the same name. PHP will work with the last occurrence.
+									 *
+									 * @link https://stackoverflow.com/questions/1746507/authoritative-position-of-duplicate-http-get-query-keys#8971514
+									 */
+									printf(
+										'<input type="hidden" name="%s" value="0" />',
+										\esc_attr( $field_id )
+									);
 
 									printf(
 										'<input %s %s />',
@@ -356,12 +365,9 @@ $sections = array_filter(
 								case 'file':
 									$attributes['type'] = 'file';
 
-									printf(
-										'<input %s />',
-										// @codingStandardsIgnoreStart
-										Util::array_to_html_attributes( $attributes )
-										// @codingStandardsIgnoreEnd
-									);
+									$element = new Element( 'input', $attributes );
+
+									$element->print();
 
 									break;
 								case 'select':

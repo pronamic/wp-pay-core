@@ -110,7 +110,7 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 	public $payment_method;
 
 	/**
-	 * The end date of the last succesfull payment.
+	 * The end date of the last successful payment.
 	 *
 	 * @var DateTime|null
 	 */
@@ -140,7 +140,7 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 	/**
 	 * Activated at.
 	 *
-	 * The datetime this subscription was activated or reactived.
+	 * The datetime this subscription was activated or reactivated.
 	 *
 	 * @var DateTime
 	 */
@@ -149,20 +149,14 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 	/**
 	 * Construct and initialize subscription object.
 	 *
-	 * @param int|null $post_id A subscription post ID or null.
-	 *
 	 * @throws \Exception Throws exception on invalid post date.
 	 */
-	public function __construct( $post_id = null ) {
-		parent::__construct( $post_id );
+	public function __construct() {
+		parent::__construct();
 
 		$this->meta = array();
 
 		$this->activated_at = new DateTime();
-
-		if ( ! empty( $post_id ) ) {
-			pronamic_pay_plugin()->subscriptions_data_store->read( $this );
-		}
 	}
 
 	/**
@@ -368,7 +362,9 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 
 		$default_text = implode( '<br />', $pieces );
 
-		$text = apply_filters( 'pronamic_subscription_source_text_' . $this->get_source(), $default_text, $this );
+		$source = $this->get_source();
+
+		$text = apply_filters( 'pronamic_subscription_source_text_' . $source, $default_text, $this );
 		$text = apply_filters( 'pronamic_subscription_source_text', $text, $this );
 
 		return $text;
@@ -380,9 +376,11 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 	 * @return string
 	 */
 	public function get_source_description() {
+		$source = $this->get_source();
+
 		$default_text = $this->get_source();
 
-		$text = apply_filters( 'pronamic_subscription_source_description_' . $this->get_source(), $default_text, $this );
+		$text = apply_filters( 'pronamic_subscription_source_description_' . $source, $default_text, $this );
 		$text = apply_filters( 'pronamic_subscription_source_description', $text, $this );
 
 		return $text;

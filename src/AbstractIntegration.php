@@ -76,7 +76,7 @@ abstract class AbstractIntegration {
 	private $version_option_name;
 
 	/**
-	 * Data version option nane.
+	 * Data version option name.
 	 *
 	 * @var string|null
 	 */
@@ -194,7 +194,7 @@ abstract class AbstractIntegration {
 	/**
 	 * Is active.
 	 *
-	 * @return bool True if dependencies are met, false othwerise.
+	 * @return bool True if dependencies are met, false otherwise.
 	 */
 	public function is_active() {
 		return $this->dependencies->are_met();

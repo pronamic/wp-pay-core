@@ -310,7 +310,7 @@ class Install {
 	/**
 	 * Requires upgrade.
 	 *
-	 * @return bool True if database update is required, false othwerise.
+	 * @return bool True if database update is required, false otherwise.
 	 */
 	public function requires_upgrade() {
 		$current_db_version = get_option( 'pronamic_pay_db_version' );

@@ -25,7 +25,7 @@ class Settings {
 	private $plugin;
 
 	/**
-	 * Constructs and initalize settings object.
+	 * Construct and initialize settings object.
 	 *
 	 * @param Plugin $plugin The plugin.
 	 */

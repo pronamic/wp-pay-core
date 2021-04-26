@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Admin\AdminModule;
 use Pronamic\WordPress\Pay\Banks\BankAccountDetails;
 use Pronamic\WordPress\Pay\Core\Gateway;
@@ -174,7 +175,7 @@ class Plugin {
 	public $payments_module;
 
 	/**
-	 * Subsciptions module.
+	 * Subscriptions module.
 	 *
 	 * @var Subscriptions\SubscriptionsModule
 	 */
@@ -377,7 +378,7 @@ class Plugin {
 		}
 
 		/*
-		 * If WordPress CLI is runnig we can't redirect.
+		 * If WordPress CLI is running we can't redirect.
 		 *
 		 * @link https://basecamp.com/1810084/projects/10966871/todos/346407847
 		 * @link https://github.com/woocommerce/woocommerce/blob/3.5.3/includes/class-woocommerce.php#L381-L383
@@ -618,7 +619,7 @@ class Plugin {
 	 * Filter plugin locale.
 	 *
 	 * @param string $locale A WordPress locale identifier.
-	 * @param string $domain A WordPress text domain indentifier.
+	 * @param string $domain A WordPress text domain identifier.
 	 *
 	 * @return string
 	 */
@@ -972,6 +973,17 @@ class Plugin {
 		// Create payment.
 		$pronamic_ideal->payments_data_store->create( $payment );
 
+		// Gateway.
+		$gateway = self::get_gateway( $payment->get_config_id() );
+
+		if ( null === $gateway ) {
+			$payment->set_status( PaymentStatus::FAILURE );
+
+			$payment->save();
+
+			return $payment;
+		}
+
 		// Prevent payment start at gateway if amount is empty.
 		$amount = $payment->get_total_amount()->get_value();
 
@@ -987,18 +999,11 @@ class Plugin {
 			 * @todo Throw exception?
 			 */
 
-			return $payment;
-		}
+			$maybe_tokenize = ( $gateway->supports( 'recurring' ) && PaymentMethods::DIRECT_DEBIT === $payment->get_method() && null !== $payment->get_consumer_bank_details() );
 
-		// Gateway.
-		$gateway = self::get_gateway( $payment->get_config_id() );
-
-		if ( null === $gateway ) {
-			$payment->set_status( PaymentStatus::FAILURE );
-
-			$payment->save();
-
-			return $payment;
+			if ( ! $maybe_tokenize ) {
+				return $payment;
+			}
 		}
 
 		// Recurring.
@@ -1058,6 +1063,69 @@ class Plugin {
 	}
 
 	/**
+	 * Create refund.
+	 *
+	 * @param string      $transaction_id Gateway transaction ID.
+	 * @param Gateway     $gateway        Gateway.
+	 * @param Money       $amount         Refund amount.
+	 * @param string|null $description    Refund description.
+	 * @return void
+	 * @throws \Exception Throws exception on error.
+	 */
+	public static function create_refund( $transaction_id, $gateway, Money $amount, $description = null ) {
+		// Check if gateway supports refunds.
+		if ( ! $gateway->supports( 'refunds' ) || ! \method_exists( $gateway, 'create_refund' ) ) {
+			throw new \Exception( __( 'Unable to process refund as gateway does not support refunds.', 'pronamic_ideal' ) );
+		}
+
+		// Check amount.
+		if ( $amount->get_value() <= 0 ) {
+			throw new \Exception(
+				sprintf(
+					/* translators: %s: formatted amount */
+					__( 'Unable to process refund because of invalid amount (%s).', 'pronamic_ideal' ),
+					$amount->format_i18n()
+				)
+			);
+		}
+
+		// Create refund.
+		$refund_reference = $gateway->create_refund( $transaction_id, $amount, $description );
+
+		// Add note to original payment.
+		$payment = \get_pronamic_payment_by_transaction_id( $transaction_id );
+
+		if ( null !== $payment ) {
+			/* translators: 1: refunded amount */
+			$format = __( 'Refunded %1$s.', 'pronamic_ideal' );
+
+			if ( ! empty( $refund_reference ) ) {
+				/* translators: 1: refunded amount, 3: refund reference */
+				$format = __( 'Refunded %1$s with gateway reference `%3$s`.', 'pronamic_ideal' );
+			}
+
+			if ( ! empty( $description ) ) {
+				/* translators: 1: refunded amount, 2: refund description */
+				$format = __( 'Refunded %1$s ("%2$s").', 'pronamic_ideal' );
+
+				if ( ! empty( $refund_reference ) ) {
+					/* translators: 1: refunded amount, 2: refund description, 3: refund reference */
+					$format = __( 'Refunded %1$s ("%2$s") with gateway reference `%3$s`.', 'pronamic_ideal' );
+				}
+			}
+
+			$note = sprintf(
+				$format,
+				$amount->format_i18n(),
+				$description,
+				$refund_reference
+			);
+
+			$payment->add_note( $note );
+		}
+	}
+
+	/**
 	 * Get pages.
 	 *
 	 * @return array
@@ -1090,7 +1158,9 @@ class Plugin {
 	 * @return string
 	 */
 	public function payment_redirect_url( $url, Payment $payment ) {
-		$url = \apply_filters( 'pronamic_payment_redirect_url_' . $payment->get_source(), $url, $payment );
+		$source = $payment->get_source();
+
+		$url = \apply_filters( 'pronamic_payment_redirect_url_' . $source, $url, $payment );
 
 		return $url;
 	}

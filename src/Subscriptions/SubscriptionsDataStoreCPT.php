@@ -368,9 +368,11 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		}
 
 		if ( null === $customer->get_user_id() ) {
-			$post_author = get_post_field( 'post_author', $id, 'raw' );
+			$post_author = intval( get_post_field( 'post_author', $id, 'raw' ) );
 
-			$customer->set_user_id( intval( $post_author ) );
+			if ( ! empty( $post_author ) ) {
+				$customer->set_user_id( $post_author );
+			}
 		}
 
 		$this->read_post_meta( $subscription );
@@ -604,8 +606,10 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			if ( null !== $customer && null !== $first_customer ) {
 				$user_id = $customer->get_user_id();
 
-				if ( empty( $user_id ) ) {
-					$customer->set_user_id( $first_customer->get_user_id() );
+				$first_customer_user_id = $first_customer->get_user_id();
+
+				if ( empty( $user_id ) && ! empty( $first_customer_user_id ) ) {
+					$customer->set_user_id( $first_customer_user_id );
 				}
 			}
 		}

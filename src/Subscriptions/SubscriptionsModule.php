@@ -12,6 +12,7 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DateInterval;
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\DateTime\DateTimeImmutable;
 use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Core\Gateway;
@@ -205,9 +206,28 @@ class SubscriptionsModule {
 					throw new \Exception( 'Unable to create renewal payment for subscription.' );
 				}
 
+				// Maybe cancel current expired phase and add new phase.
+				if ( SubscriptionStatus::CANCELLED === $subscription->get_status() && 'gravityformsideal' === $subscription->get_source() ) {
+					$phase = $subscription->get_current_phase();
+
+					$now = new DateTimeImmutable();
+
+					if ( null !== $phase && $phase->get_next_date() < $now ) {
+						// Cancel current phase.
+						$phase->set_canceled_at( $now );
+
+						// Add new phase, starting now.
+						$new_phase = new SubscriptionPhase( $subscription, $now, $phase->get_interval(), $phase->get_amount() );
+
+						$subscription->add_phase( $new_phase );
+					}
+				}
+
 				$payment->recurring = false;
 
 				$payment = $this->start_payment( $payment );
+
+				$payment->set_meta( 'manual_subscription_renewal', true );
 			} catch ( \Exception $e ) {
 				require __DIR__ . '/../../views/subscription-renew-failed.php';
 
@@ -810,6 +830,14 @@ class SubscriptionsModule {
 			return;
 		}
 
+		// Make sure to use fresh subscription data.
+		$subscription = \get_pronamic_subscription( $subscription->get_id() );
+
+		// Make sure the subscription exists.
+		if ( null === $subscription ) {
+			return;
+		}
+
 		// Status.
 		$status_before = $subscription->get_status();
 		$status_update = $status_before;
@@ -850,8 +878,17 @@ class SubscriptionsModule {
 				break;
 		}
 
-		// The status of canceled or completed subscriptions will not be changed automatically.
-		if ( ! in_array( $status_before, array( SubscriptionStatus::CANCELLED, SubscriptionStatus::COMPLETED, SubscriptionStatus::ON_HOLD ), true ) ) {
+		/*
+		 * The status of canceled or completed subscriptions will not be changed automatically,
+		 * unless the cancelled subscription is manually being renewed.
+		 */
+		$is_renewal = false;
+
+		if ( SubscriptionStatus::CANCELLED === $status_before && SubscriptionStatus::ACTIVE === $status_update && '1' === $payment->get_meta( 'manual_subscription_renewal' ) ) {
+			$is_renewal = true;
+		}
+
+		if ( $is_renewal || ! in_array( $status_before, array( SubscriptionStatus::CANCELLED, SubscriptionStatus::COMPLETED, SubscriptionStatus::ON_HOLD ), true ) ) {
 			$subscription->set_status( $status_update );
 		}
 
@@ -928,7 +965,7 @@ class SubscriptionsModule {
 		$expiring_subscription_posts = $this->get_expiring_subscription_posts( $start_date, $end_date );
 
 		foreach ( $expiring_subscription_posts as $post ) {
-			$subscription = new Subscription( $post->ID );
+			$subscription = \get_pronamic_subscription( $post->ID );
 
 			// If expiry date is null we continue, subscription is not expiring.
 			$expiry_date = $subscription->get_expiry_date();
@@ -970,7 +1007,9 @@ class SubscriptionsModule {
 			$subscription->add_note( $note );
 
 			// Send renewal notice.
-			do_action( 'pronamic_subscription_renewal_notice_' . $subscription->get_source(), $subscription );
+			$source = $subscription->get_source();
+
+			do_action( 'pronamic_subscription_renewal_notice_' . $source, $subscription );
 
 			// Update renewal notice sent date meta.
 			$renewal_sent_date = clone $start_date;
@@ -1041,7 +1080,7 @@ class SubscriptionsModule {
 				WP_CLI::log( sprintf( 'Processing post `%d` - "%s"…', $post->ID, get_the_title( $post ) ) );
 			}
 
-			$subscription = new Subscription( $post->ID );
+			$subscription = \get_pronamic_subscription( $post->ID );
 
 			$gateway = Plugin::get_gateway( $subscription->config_id );
 
@@ -1142,7 +1181,7 @@ class SubscriptionsModule {
 
 			// Complete subscription.
 			try {
-				$subscription = new Subscription( $post->ID );
+				$subscription = \get_pronamic_subscription( $post->ID );
 
 				$subscription->status      = SubscriptionStatus::COMPLETED;
 				$subscription->expiry_date = $subscription->end_date;

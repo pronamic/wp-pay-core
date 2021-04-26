@@ -118,6 +118,8 @@ if ( is_array( $current_mandate ) ) {
 
 									$classes = array( 'pp-card' );
 
+									$bg_color = 'purple';
+
 									$card = $cards->get_card( $bic_or_brand );
 
 									// Set card brand specific details.
@@ -125,12 +127,14 @@ if ( is_array( $current_mandate ) ) {
 										$classes[] = 'brand-' . $card['brand'];
 
 										$logo_url = $cards->get_card_logo_url( $card['brand'] );
+
+										$bg_color = 'transparent';
 									endif;
 
 									?>
 
 									<div class="pp-card-container">
-										<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>" style="background: purple;">
+										<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>" style="background: <?php echo \esc_attr( $bg_color ); ?>;">
 											<div class="pp-card__background"></div>
 
 											<div class="pp-card__content">

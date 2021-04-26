@@ -6,9 +6,10 @@ $gray-very-light-mostly-white: #f6f6f6;
 $gray-light: #c3c3c3;
 // Light gray (http://www.colorhexa.com/777)
 $gray-dark: #777;
-// Strong blue (http://www.colorhexa.com/008ec2)
-// @see https://github.com/WordPress/WordPress/blob/4.6/wp-includes/css/buttons.css#L240
-$wp-button-primary-background-focus-color: #008ec2;
+// Strong blue (http://www.colorhexa.com/2271b1)
+// @link https://github.com/WordPress/WordPress/blob/5.7/wp-includes/css/buttons.css#L240-L255
+$wp-button-primary-background-color: #2271b1;
+$wp-button-primary-background-hover-color: #135e96;
 
 body {
 	background: $gray-very-light-mostly-white;
@@ -23,11 +24,7 @@ body {
 }
 
 .pronamic-pay-redirect-container {
-	background: $white;
-
-	border: 1px solid $gray-light;
-
-	border-radius: 4px;
+	background: $gray-very-light-mostly-white;
 
 	margin: 30px auto;
 	padding: 20px;
@@ -46,6 +43,66 @@ body {
 
 	> p {
 		color: $gray-dark;
+	}
+
+	.pp-page-section-container {
+		* {
+			box-sizing: border-box;
+		}
+
+		.pp-page-section-wrapper {
+			background: #fff;
+			border-radius: 20px;
+			box-shadow: 0 0 20px rgba(0, 0, 0, .1);
+			color: #333;
+			max-width: 600px;
+			margin: 3em auto 0 auto;
+			padding: 40px;
+
+			h2 {
+				margin-top: 0;
+			}
+
+			dl {
+				display: flex;
+				flex-flow: row wrap;
+
+				dt, dd {
+					float: left;
+					padding-bottom: 5px;
+				}
+
+				dt {
+					flex-basis: 30%;
+					font-weight: bold;
+				}
+
+				dd {
+					flex-basis: 70%;
+					margin-inline-start: 0;
+				}
+			}
+		}
+	}
+
+	input[type="submit"],
+	select {
+		padding: 10px 20px;
+	}
+
+	input[type="submit"] {
+		background: $wp-button-primary-background-color;
+		border: none;
+		border-radius: 3px;
+		color: $white;
+		cursor: pointer;
+		font-size: 1.25em;
+		font-weight: 300;
+		letter-spacing: .05rem;
+
+		&:hover {
+			background-color: $wp-button-primary-background-hover-color;
+		}
 	}
 }
 
@@ -74,20 +131,6 @@ hr {
 			margin-top: .5em;
 		}
 	}
-}
-
-.pronamic-pay-btn {
-	background: $wp-button-primary-background-focus-color;
-
-	border: 0;
-	border-radius: 4px;
-
-	color: $white;
-
-	font-size: 24px;
-	font-weight: 200;
-
-	padding: 10px 20px;
 }
 
 .alignleft {

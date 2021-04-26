@@ -127,7 +127,7 @@ $gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 		<tr class="">
 			<th scope="row">
 				<label for="pronamic_ideal_mode">
-					Modus
+					<?php echo esc_html__( 'Mode', 'pronamic_ideal' ); ?>
 				</label>
 			</th>
 			<td>

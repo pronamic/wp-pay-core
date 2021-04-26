@@ -111,7 +111,7 @@ class AdminReports {
 
 		// Reports.
 		wp_register_script(
-			'proanmic-pay-admin-reports',
+			'pronamic-pay-admin-reports',
 			plugins_url( '../../js/dist/admin-reports' . $min . '.js', __FILE__ ),
 			array(
 				'jquery',
@@ -127,7 +127,7 @@ class AdminReports {
 		global $wp_locale;
 
 		wp_localize_script(
-			'proanmic-pay-admin-reports',
+			'pronamic-pay-admin-reports',
 			'pronamicPayAdminReports',
 			array(
 				'data'       => $this->get_reports(),
@@ -136,7 +136,7 @@ class AdminReports {
 		);
 
 		// Enqueue.
-		wp_enqueue_script( 'proanmic-pay-admin-reports' );
+		wp_enqueue_script( 'pronamic-pay-admin-reports' );
 	}
 
 	/**

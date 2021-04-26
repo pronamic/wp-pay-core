@@ -30,7 +30,7 @@ class GatewayPostType {
 	 */
 	public function __construct() {
 		/**
-		 * Priotiry of the initial post types function should be set to < 10.
+		 * Priority of the initial post types function should be set to < 10.
 		 *
 		 * @link https://core.trac.wordpress.org/ticket/28488
 		 * @link https://core.trac.wordpress.org/changeset/29318

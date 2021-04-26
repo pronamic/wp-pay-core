@@ -78,7 +78,7 @@ class Util {
 	/**
 	 * Cents to amount.
 	 *
-	 * @param int $cents The numberof cents to convert to an amount.
+	 * @param int $cents The number of cents to convert to an amount.
 	 *
 	 * @deprecated 2.0.9 Use \Pronamic\WordPress\Pay\Core\Util::cents_to_amount() instead.
 	 *
@@ -91,7 +91,7 @@ class Util {
 	}
 
 	/**
-	 * Convert boolean to an numceric boolean.
+	 * Convert boolean to an numeric boolean.
 	 *
 	 * @link https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
 	 *
@@ -317,7 +317,7 @@ class Util {
 	/**
 	 * Get hidden inputs HTML for data.
 	 *
-	 * @param array $data Array with name and value pairs to convert to hidden HTML input eleemnts.
+	 * @param array $data Array with name and value pairs to convert to hidden HTML input elements.
 	 *
 	 * @return string
 	 */

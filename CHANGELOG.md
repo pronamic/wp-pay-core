@@ -7,6 +7,19 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.7.0] - 2021-04-26
+- Added initial support for refunds.
+- Added support for creating mandate with free trial periods.
+- Added support for Swish and Vipps payment methods.
+- Fixed setting post author `0` as customer user ID.
+- Fixed subscription memory inconsistencies.
+- Fixed subscription status updated to previous status when using manual payment status check.
+- Improved manually renewing canceled subscriptions.
+- Updated active tab item highlight to use WordPress color scheme.
+- Updated redirect and subscription cancel/renew pages.
+- Removed parameter `$post_id` from `Subscription` constructor (use `get_pronamic_subscription()` instead).
+- Started using `pronamic/wp-html` and `pronamic/wp-http`.
+
 ## [2.6.2] - 2021-01-21
 - Happy 2021.
 - Added debug mode setting.
@@ -349,7 +362,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.6.2...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.7.0...HEAD
+[2.7.0]: https://github.com/wp-pay/core/compare/2.6.2...2.7.0
 [2.6.2]: https://github.com/wp-pay/core/compare/2.6.1...2.6.2
 [2.6.1]: https://github.com/wp-pay/core/compare/2.6.0...2.6.1
 [2.6.0]: https://github.com/wp-pay/core/compare/2.5.1...2.6.0

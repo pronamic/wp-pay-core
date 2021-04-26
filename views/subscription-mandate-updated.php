@@ -29,7 +29,7 @@
 
 				<p>
 					<a href="<?php echo esc_url( home_url() ); ?>">
-						<?php esc_html_e( 'Return to home page', 'pronamic_ieal' ); ?>
+						<?php esc_html_e( 'Return to home page', 'pronamic_ideal' ); ?>
 					</a>
 				</p>
 			</div>

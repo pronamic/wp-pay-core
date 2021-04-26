@@ -42,7 +42,7 @@ class Util {
 		}
 
 		/*
-		 * The response code is cast to a integer since WordPress 4.1, therefor we can't use
+		 * The response code is cast to a integer since WordPress 4.1, therefore we can't use
 		 * strict comparison on the required response code.
 		 *
 		 * @link https://github.com/WordPress/WordPress/blob/4.1/wp-includes/class-http.php#L528-L529
@@ -178,7 +178,7 @@ class Util {
 	/**
 	 * Amount to cents.
 	 *
-	 * @param float $amount The amount to conver to cents.
+	 * @param float $amount The amount to convert to cents.
 	 *
 	 * @deprecated 2.0.9 Use \Pronamic\WordPress\Money\Money::get_cents() instead.
 	 *
@@ -452,10 +452,10 @@ class Util {
 	 * Method exists
 	 *
 	 * This helper function was created to fix an issue with `method_exists` calls
-	 * and non existings classes.
+	 * and non existing classes.
 	 *
-	 * @param string $class  Class name to check for the specifiekd method.
-	 * @param string $method Method name to check for existance.
+	 * @param string $class  Class name to check for the specified method.
+	 * @param string $method Method name to check for existence.
 	 *
 	 * @return boolean
 	 */

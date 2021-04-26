@@ -275,6 +275,22 @@ class PaymentMethods {
 	const SOFORT = 'sofort';
 
 	/**
+	 * Swish
+	 *
+	 * @var string
+	 * @since 2.6.3
+	 */
+	const SWISH = 'swish';
+
+	/**
+	 * Vipps
+	 *
+	 * @var string
+	 * @since 2.6.3
+	 */
+	const VIPPS = 'vipps';
+
+	/**
 	 * Get payment methods
 	 *
 	 * @since 1.3.0
@@ -325,6 +341,8 @@ class PaymentMethods {
 			self::PRZELEWY24              => __( 'Przelewy24', 'pronamic_ideal' ),
 			self::SANTANDER               => __( 'Santander', 'pronamic_ideal' ),
 			self::SOFORT                  => __( 'SOFORT Banking', 'pronamic_ideal' ),
+			self::SWISH                   => __( 'Swish', 'pronamic_ideal' ),
+			self::VIPPS                   => __( 'Vipps', 'pronamic_ideal' ),
 		);
 
 		return $payment_methods;
@@ -352,6 +370,35 @@ class PaymentMethods {
 		}
 
 		return $default;
+	}
+
+	/**
+	 * Get icon URL.
+	 *
+	 * @param string|null $method Payment method.
+	 * @param string|null $size   Icon size.
+	 * @return string|null
+	 */
+	public static function get_icon_url( $method = null, $size = null ) {
+		// Check method.
+		if ( empty( $method ) ) {
+			return null;
+		}
+
+		// Size.
+		if ( empty( $size ) ) {
+			$size = '640x360';
+		}
+
+		if ( self::KLARNA_PAY_LATER === $method ) {
+			$method = 'klarna';
+		}
+
+		return \sprintf(
+			'https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.6.5/dist/methods/%1$s/method-%1$s-%2$s.svg',
+			\str_replace( '_', '-', $method ),
+			$size
+		);
 	}
 
 	/**

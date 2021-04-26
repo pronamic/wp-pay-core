@@ -108,7 +108,7 @@ class AdminModule {
 	private $webhook_manager;
 
 	/**
-	 * Constructs and initalize an admin object.
+	 * Construct and initialize an admin object.
 	 *
 	 * @param Plugin $plugin Plugin.
 	 */
