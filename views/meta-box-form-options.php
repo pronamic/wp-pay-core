@@ -116,4 +116,16 @@ wp_nonce_field( 'pronamic_pay_save_form_options', 'pronamic_pay_nonce' );
 			?>
 		</td>
 	</tr>
+	<tr>
+		<th scope="row">
+			<label for="_pronamic_payment_form_description">
+				<?php esc_html_e( 'Transaction description', 'pronamic_ideal' ); ?>
+			</label>
+		</th>
+		<td>
+			<?php $description = get_post_meta( $post->ID, '_pronamic_payment_form_description', true ); ?>
+
+			<input class="regular-text" type="text" name="_pronamic_payment_form_description" value="<?php echo esc_attr( $description ); ?>" />
+		</td>
+	</tr>
 </table>

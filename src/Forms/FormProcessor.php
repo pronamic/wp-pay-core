@@ -107,11 +107,23 @@ class FormProcessor {
 		$email      = filter_input( INPUT_POST, 'pronamic_pay_email', FILTER_VALIDATE_EMAIL );
 		$order_id   = time();
 
-		$description = sprintf(
-			/* translators: %s: order id */
-			__( 'Payment Form %s', 'pronamic_ideal' ),
-			$order_id
-		);
+		$description = null;
+
+		if ( FormsSource::PAYMENT_FORM === $source ) {
+			$description = get_post_meta( $source_id, '_pronamic_payment_form_description', true );
+
+			if ( ! empty( $description ) ) {
+				$description = sprintf( '%s %s', $description, $order_id );
+			}
+		}
+
+		if ( empty( $description ) ) {
+			$description = sprintf(
+				/* translators: %s: order id */
+				__( 'Payment Form %s', 'pronamic_ideal' ),
+				$order_id
+			);
+		}
 
 		$payment = new Payment();
 
