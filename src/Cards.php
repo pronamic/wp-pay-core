@@ -202,7 +202,7 @@ class Cards {
 	 */
 	public function get_card_logo_url( $brand ) {
 		return sprintf(
-			'https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.6.5/dist/cards/%1$s/card-%1$s-logo-_x80.svg',
+			'https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.6.6/dist/cards/%1$s/card-%1$s-logo-_x80.svg',
 			$brand
 		);
 	}
