@@ -19,7 +19,7 @@ use WP_Post;
  * Form Post Type
  *
  * @author  Remco Tolsma
- * @version 2.2.6
+ * @version 2.7.1
  * @since   1.0.0
  */
 class FormPostType {

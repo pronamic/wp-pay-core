@@ -7,6 +7,11 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.7.1] - 2021-05-27
+- Added transaction description setting to payment forms.
+- Updated payment methods logos to version 1.6.6.
+- Fixed missing `On Hold` status in payment status map.
+
 ## [2.7.0] - 2021-04-26
 - Added initial support for refunds.
 - Added support for creating mandate with free trial periods.
@@ -362,7 +367,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.7.0...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.7.1...HEAD
+[2.7.1]: https://github.com/wp-pay/core/compare/2.7.0...2.7.1
 [2.7.0]: https://github.com/wp-pay/core/compare/2.6.2...2.7.0
 [2.6.2]: https://github.com/wp-pay/core/compare/2.6.1...2.6.2
 [2.6.1]: https://github.com/wp-pay/core/compare/2.6.0...2.6.1
