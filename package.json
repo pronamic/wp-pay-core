@@ -1,6 +1,6 @@
 {
   "name": "@wp-pay/core",
-  "version": "2.7.0",
+  "version": "2.7.1",
   "description": "Core components for the WordPress payment processing library.",
   "repository": {
     "type": "git",
@@ -32,8 +32,8 @@
   },
   "homepage": "http://www.wp-pay.org/",
   "dependencies": {
-    "Flot": "github:flot/flot#958e5fd43c6dff4bab3e1fd5cb6109df5c1e8003",
     "accounting": "^0.4.1",
+    "Flot": "github:flot/flot#958e5fd43c6dff4bab3e1fd5cb6109df5c1e8003",
     "icon-gen": "^2.0.0",
     "jquery": "^3.5.1",
     "tippy.js": "^3.4"

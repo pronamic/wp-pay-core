@@ -20,7 +20,7 @@ use WP_Query;
  * Company: Pronamic
  *
  * @author  Remco Tolsma
- * @version 2.5.0
+ * @version 2.7.1
  * @since   1.0.1
  */
 class PaymentMethods {

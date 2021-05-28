@@ -14,7 +14,7 @@ namespace Pronamic\WordPress\Pay;
  * Cards
  *
  * @author  Reüel van der Steege
- * @version 2.5.0
+ * @version 2.7.1
  * @since   2.4.0
  */
 class Cards {
