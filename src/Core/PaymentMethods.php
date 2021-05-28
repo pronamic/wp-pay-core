@@ -20,7 +20,7 @@ use WP_Query;
  * Company: Pronamic
  *
  * @author  Remco Tolsma
- * @version 2.5.0
+ * @version 2.7.1
  * @since   1.0.1
  */
 class PaymentMethods {
@@ -395,7 +395,7 @@ class PaymentMethods {
 		}
 
 		return \sprintf(
-			'https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.6.5/dist/methods/%1$s/method-%1$s-%2$s.svg',
+			'https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.6.6/dist/methods/%1$s/method-%1$s-%2$s.svg',
 			\str_replace( '_', '-', $method ),
 			$size
 		);

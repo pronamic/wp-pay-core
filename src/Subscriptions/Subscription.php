@@ -21,7 +21,7 @@ use Pronamic\WordPress\Pay\Payments\PaymentInfoHelper;
  * Subscription
  *
  * @author  Remco Tolsma
- * @version 2.5.0
+ * @version 2.7.1
  * @since   1.0.0
  */
 class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
@@ -442,7 +442,7 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 	 * @return string
 	 */
 	public function get_mandate_selection_url() {
-		$renewal_url = add_query_arg(
+		$url = add_query_arg(
 			array(
 				'subscription' => $this->get_id(),
 				'key'          => $this->get_key(),
@@ -451,7 +451,7 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 			home_url()
 		);
 
-		return $renewal_url;
+		return $url;
 	}
 
 	/**

@@ -25,7 +25,7 @@ use WP_User;
  * Form Processor
  *
  * @author Remco Tolsma
- * @version 2.3.2
+ * @version 2.7.1
  * @since 3.7.0
  */
 class FormProcessor {
@@ -107,11 +107,23 @@ class FormProcessor {
 		$email      = filter_input( INPUT_POST, 'pronamic_pay_email', FILTER_VALIDATE_EMAIL );
 		$order_id   = time();
 
-		$description = sprintf(
-			/* translators: %s: order id */
-			__( 'Payment Form %s', 'pronamic_ideal' ),
-			$order_id
-		);
+		$description = null;
+
+		if ( FormsSource::PAYMENT_FORM === $source ) {
+			$description = get_post_meta( $source_id, '_pronamic_payment_form_description', true );
+
+			if ( ! empty( $description ) ) {
+				$description = sprintf( '%s %s', $description, $order_id );
+			}
+		}
+
+		if ( empty( $description ) ) {
+			$description = sprintf(
+				/* translators: %s: order id */
+				__( 'Payment Form %s', 'pronamic_ideal' ),
+				$order_id
+			);
+		}
 
 		$payment = new Payment();
 
