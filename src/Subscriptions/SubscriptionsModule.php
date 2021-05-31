@@ -298,16 +298,17 @@ class SubscriptionsModule {
 			try {
 				$payment = $this->new_subscription_payment( $subscription );
 
-				$payment_method = \filter_input( \INPUT_POST, 'pronamic_pay_subscription_payment_method', \FILTER_SANITIZE_STRING );
-
-				if ( null !== $payment && ! empty( $payment_method ) ) {
-					$payment->method = $payment_method;
-				}
-
 				if ( null === $payment ) {
 					require __DIR__ . '/../../views/subscription-mandate-failed.php';
 
 					exit;
+				}
+
+				// Set payment method.
+				$payment_method = \filter_input( \INPUT_POST, 'pronamic_pay_subscription_payment_method', \FILTER_SANITIZE_STRING );
+
+				if ( ! empty( $payment_method ) ) {
+					$payment->method = $payment_method;
 				}
 
 				$payment->recurring = false;
