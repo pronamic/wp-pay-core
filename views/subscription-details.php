@@ -8,6 +8,7 @@
  * @package   Pronamic\WordPress\Pay
  */
 
+use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Util;
 
 if ( ! defined( 'WPINC' ) ) {
@@ -54,6 +55,16 @@ if ( null !== $phase ) {
 		);
 
 	endif;
+}
+
+// Payment method.
+$method = $subscription->payment_method;
+
+if ( ! empty( $method ) ) {
+	$details[] = array(
+		'term'        => __( 'Payment method', 'pronamic_ideal' ),
+		'description' => PaymentMethods::get_name( $method ),
+	);
 }
 
 // Recurrence.
