@@ -331,10 +331,20 @@ class SubscriptionsModule {
 						$amount = 0.01;
 				}
 
-				$payment->set_total_amount(
-					new TaxedMoney(
-						$amount,
-						$payment->get_total_amount()->get_currency()
+				$total_amount = new TaxedMoney(
+					$amount,
+					$payment->get_total_amount()->get_currency()
+				);
+
+				$payment->set_total_amount( $total_amount );
+
+				// Add period.
+				$payment->add_period(
+					new SubscriptionPeriod(
+						$subscription->get_current_phase(),
+						$payment->get_date(),
+						$payment->get_date(),
+						$total_amount
 					)
 				);
 
