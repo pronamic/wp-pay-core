@@ -1069,7 +1069,7 @@ class Plugin {
 	 * @param Gateway     $gateway        Gateway.
 	 * @param Money       $amount         Refund amount.
 	 * @param string|null $description    Refund description.
-	 * @return void
+	 * @return string
 	 * @throws \Exception Throws exception on error.
 	 */
 	public static function create_refund( $transaction_id, $gateway, Money $amount, $description = null ) {
@@ -1090,7 +1090,7 @@ class Plugin {
 		}
 
 		// Create refund.
-		$refund_reference = $gateway->create_refund( $transaction_id, $amount, $description );
+		$reference = $gateway->create_refund( $transaction_id, $amount, $description );
 
 		// Add note to original payment.
 		$payment = \get_pronamic_payment_by_transaction_id( $transaction_id );
@@ -1099,7 +1099,7 @@ class Plugin {
 			/* translators: 1: refunded amount */
 			$format = __( 'Refunded %1$s.', 'pronamic_ideal' );
 
-			if ( ! empty( $refund_reference ) ) {
+			if ( ! empty( $reference ) ) {
 				/* translators: 1: refunded amount, 3: refund reference */
 				$format = __( 'Refunded %1$s with gateway reference `%3$s`.', 'pronamic_ideal' );
 			}
@@ -1108,7 +1108,7 @@ class Plugin {
 				/* translators: 1: refunded amount, 2: refund description */
 				$format = __( 'Refunded %1$s ("%2$s").', 'pronamic_ideal' );
 
-				if ( ! empty( $refund_reference ) ) {
+				if ( ! empty( $reference ) ) {
 					/* translators: 1: refunded amount, 2: refund description, 3: refund reference */
 					$format = __( 'Refunded %1$s ("%2$s") with gateway reference `%3$s`.', 'pronamic_ideal' );
 				}
@@ -1118,11 +1118,13 @@ class Plugin {
 				$format,
 				$amount->format_i18n(),
 				$description,
-				$refund_reference
+				$reference
 			);
 
 			$payment->add_note( $note );
 		}
+
+		return $reference;
 	}
 
 	/**
