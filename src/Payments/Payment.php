@@ -839,6 +839,10 @@ class Payment extends LegacyPayment {
 			$payment->set_total_amount( TaxedMoneyJsonTransformer::from_json( $json->total_amount ) );
 		}
 
+		if ( isset( $json->refunded_amount ) ) {
+			$payment->set_refunded_amount( MoneyJsonTransformer::from_json( $json->refunded_amount ) );
+		}
+
 		if ( isset( $json->expiry_date ) ) {
 			$payment->set_expiry_date( new DateTime( $json->expiry_date ) );
 		}
