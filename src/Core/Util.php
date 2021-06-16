@@ -12,6 +12,7 @@ namespace Pronamic\WordPress\Pay\Core;
 
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
+use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Util as Pay_Util;
 
 /**
@@ -479,5 +480,20 @@ class Util {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Switch to user locale.
+	 *
+	 * @return void
+	 */
+	public static function switch_to_user_locale() {
+		\switch_to_locale( \get_user_locale() );
+
+		\add_filter( 'determine_locale', 'get_user_locale' );
+
+		Plugin::load_plugin_textdomain();
+
+		\remove_filter( 'determine_locale', 'get_user_locale' );
 	}
 }
