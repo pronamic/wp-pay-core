@@ -471,6 +471,9 @@ class Plugin {
 		// Don't cache.
 		Core_Util::no_cache();
 
+		// Switch to user locale.
+		Core_Util::switch_to_user_locale();
+
 		// Handle redirect message from payment meta.
 		$redirect_message = $payment->get_meta( 'payment_redirect_message' );
 
@@ -535,12 +538,8 @@ class Plugin {
 	 * @return void
 	 */
 	public function plugins_loaded() {
-		// Load plugin text domain.
-		$rel_path = dirname( plugin_basename( self::$file ) );
-
-		load_plugin_textdomain( 'pronamic_ideal', false, $rel_path . '/languages' );
-
-		load_plugin_textdomain( 'pronamic-money', false, $rel_path . '/vendor/pronamic/wp-money/languages' );
+		// Load plugin textdomain.
+		self::load_plugin_textdomain();
 
 		// Settings.
 		$this->settings = new Settings( $this );
@@ -613,6 +612,19 @@ class Plugin {
 
 		// Filters.
 		\add_filter( 'pronamic_payment_redirect_url', array( $this, 'payment_redirect_url' ), 10, 2 );
+	}
+
+	/**
+	 * Load plugin text domain.
+	 *
+	 * @return void
+	 */
+	public static function load_plugin_textdomain() {
+		$rel_path = \dirname( \plugin_basename( self::$file ) );
+
+		\load_plugin_textdomain( 'pronamic_ideal', false, $rel_path . '/languages' );
+
+		\load_plugin_textdomain( 'pronamic-money', false, $rel_path . '/vendor/pronamic/wp-money/languages' );
 	}
 
 	/**
@@ -1069,7 +1081,7 @@ class Plugin {
 	 * @param Gateway     $gateway        Gateway.
 	 * @param Money       $amount         Refund amount.
 	 * @param string|null $description    Refund description.
-	 * @return void
+	 * @return string
 	 * @throws \Exception Throws exception on error.
 	 */
 	public static function create_refund( $transaction_id, $gateway, Money $amount, $description = null ) {
@@ -1090,7 +1102,7 @@ class Plugin {
 		}
 
 		// Create refund.
-		$refund_reference = $gateway->create_refund( $transaction_id, $amount, $description );
+		$reference = $gateway->create_refund( $transaction_id, $amount, $description );
 
 		// Add note to original payment.
 		$payment = \get_pronamic_payment_by_transaction_id( $transaction_id );
@@ -1099,7 +1111,7 @@ class Plugin {
 			/* translators: 1: refunded amount */
 			$format = __( 'Refunded %1$s.', 'pronamic_ideal' );
 
-			if ( ! empty( $refund_reference ) ) {
+			if ( ! empty( $reference ) ) {
 				/* translators: 1: refunded amount, 3: refund reference */
 				$format = __( 'Refunded %1$s with gateway reference `%3$s`.', 'pronamic_ideal' );
 			}
@@ -1108,7 +1120,7 @@ class Plugin {
 				/* translators: 1: refunded amount, 2: refund description */
 				$format = __( 'Refunded %1$s ("%2$s").', 'pronamic_ideal' );
 
-				if ( ! empty( $refund_reference ) ) {
+				if ( ! empty( $reference ) ) {
 					/* translators: 1: refunded amount, 2: refund description, 3: refund reference */
 					$format = __( 'Refunded %1$s ("%2$s") with gateway reference `%3$s`.', 'pronamic_ideal' );
 				}
@@ -1118,11 +1130,13 @@ class Plugin {
 				$format,
 				$amount->format_i18n(),
 				$description,
-				$refund_reference
+				$reference
 			);
 
 			$payment->add_note( $note );
 		}
+
+		return $reference;
 	}
 
 	/**

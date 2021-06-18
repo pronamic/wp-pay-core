@@ -440,6 +440,9 @@ abstract class Gateway {
 	 * @throws \Exception Throws exception when action URL for HTTP redirect is empty.
 	 */
 	public function redirect( Payment $payment ) {
+		// Switch to user locale.
+		Util::switch_to_user_locale();
+
 		switch ( $this->method ) {
 			case self::METHOD_HTTP_REDIRECT:
 				$this->redirect_via_http( $payment );

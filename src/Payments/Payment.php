@@ -46,7 +46,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Refunded amount.
 	 *
-	 * @var Money
+	 * @var Money|null
 	 */
 	private $refunded_amount;
 
@@ -385,7 +385,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Get refunded amount.
 	 *
-	 * @return Money
+	 * @return Money|null
 	 */
 	public function get_refunded_amount() {
 		return $this->refunded_amount;
@@ -394,7 +394,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Set refunded amount.
 	 *
-	 * @param Money $refunded_amount Refunded amount.
+	 * @param Money|null $refunded_amount Refunded amount.
 	 * @return void
 	 */
 	public function set_refunded_amount( $refunded_amount ) {
@@ -837,6 +837,10 @@ class Payment extends LegacyPayment {
 
 		if ( isset( $json->total_amount ) ) {
 			$payment->set_total_amount( TaxedMoneyJsonTransformer::from_json( $json->total_amount ) );
+		}
+
+		if ( isset( $json->refunded_amount ) ) {
+			$payment->set_refunded_amount( MoneyJsonTransformer::from_json( $json->refunded_amount ) );
 		}
 
 		if ( isset( $json->expiry_date ) ) {

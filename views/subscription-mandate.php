@@ -65,118 +65,122 @@ if ( is_array( $current_mandate ) ) {
 					<?php \esc_html_e( 'Change subscription payment method', 'pronamic_ideal' ); ?>
 				</h1>
 
-				<p>
-					<?php \esc_html_e( 'Select an existing payment method or add a new one.', 'pronamic_ideal' ); ?>
-				</p>
+				<?php if ( count( $mollie_customer_mandates ) > 0 ) : ?>
 
-				<div class="pp-card-slider-container">
-					<div class="pp-card-slider-wrapper">
-						<form method="post">
-							<h2>
-								<?php \esc_html_e( 'Select existing payment method', 'pronamic_ideal' ); ?>
-							</h2>
+					<p>
+						<?php \esc_html_e( 'Select an existing payment method or add a new one.', 'pronamic_ideal' ); ?>
+					</p>
 
-							<div class="pp-card-slider alignleft">
-								<?php
+					<div class="pp-card-slider-container">
+						<div class="pp-card-slider-wrapper">
+							<form method="post">
+								<h2>
+									<?php \esc_html_e( 'Select existing payment method', 'pronamic_ideal' ); ?>
+								</h2>
 
-								$cards = new Cards();
+								<div class="pp-card-slider alignleft">
+									<?php
 
-								foreach ( $mollie_customer_mandates as $mandate ) :
-									if ( 'valid' !== $mandate->status ) :
-										continue;
-									endif;
+									$cards = new Cards();
 
-									$card_name      = null;
-									$account_number = null;
-									$account_label  = null;
-									$bic_or_brand   = null;
-									$logo_url       = null;
+									foreach ( $mollie_customer_mandates as $mandate ) :
+										if ( 'valid' !== $mandate->status ) :
+											continue;
+										endif;
 
-									switch ( $mandate->method ) :
-										case 'creditcard':
-											$card_name      = $mandate->details->cardHolder;
-											$account_number = str_pad( $mandate->details->cardNumber, 16, '*', \STR_PAD_LEFT );
-											$account_label  = _x( 'Card Number', 'Card selector', 'pronamic_ideal' );
+										$card_name      = null;
+										$account_number = null;
+										$account_label  = null;
+										$bic_or_brand   = null;
+										$logo_url       = null;
 
-											$bic_or_brand = $mandate->details->cardLabel;
+										switch ( $mandate->method ) :
+											case 'creditcard':
+												$card_name      = $mandate->details->cardHolder;
+												$account_number = str_pad( $mandate->details->cardNumber, 16, '*', \STR_PAD_LEFT );
+												$account_label  = _x( 'Card Number', 'Card selector', 'pronamic_ideal' );
 
-											break;
-										case 'directdebit':
-											$card_name      = $mandate->details->consumerName;
-											$account_number = $mandate->details->consumerAccount;
-											$account_label  = _x( 'Account Number', 'Card selector', 'pronamic_ideal' );
+												$bic_or_brand = $mandate->details->cardLabel;
 
-											$bic_or_brand = substr( $mandate->details->consumerAccount, 4, 4 );
+												break;
+											case 'directdebit':
+												$card_name      = $mandate->details->consumerName;
+												$account_number = $mandate->details->consumerAccount;
+												$account_label  = _x( 'Account Number', 'Card selector', 'pronamic_ideal' );
 
-											break;
-									endswitch;
+												$bic_or_brand = substr( $mandate->details->consumerAccount, 4, 4 );
 
-									// Split account number in chunks.
-									if ( null !== $account_number ) :
-										$account_number = \chunk_split( $account_number, 4, ' ' );
-									endif;
+												break;
+										endswitch;
 
-									$classes = array( 'pp-card' );
+										// Split account number in chunks.
+										if ( null !== $account_number ) :
+											$account_number = \chunk_split( $account_number, 4, ' ' );
+										endif;
 
-									$bg_color = 'purple';
+										$classes = array( 'pp-card' );
 
-									$card = $cards->get_card( $bic_or_brand );
+										$bg_color = 'purple';
 
-									// Set card brand specific details.
-									if ( null !== $card ) :
-										$classes[] = 'brand-' . $card['brand'];
+										$card = $cards->get_card( $bic_or_brand );
 
-										$logo_url = $cards->get_card_logo_url( $card['brand'] );
+										// Set card brand specific details.
+										if ( null !== $card ) :
+											$classes[] = 'brand-' . $card['brand'];
 
-										$bg_color = 'transparent';
-									endif;
+											$logo_url = $cards->get_card_logo_url( $card['brand'] );
 
-									?>
+											$bg_color = 'transparent';
+										endif;
 
-									<div class="pp-card-container">
-										<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>" style="background: <?php echo \esc_attr( $bg_color ); ?>;">
-											<div class="pp-card__background"></div>
+										?>
 
-											<div class="pp-card__content">
-												<input class="pp-card__input" name="pronamic_pay_subscription_mandate" value="<?php echo esc_html( $mandate->id ); ?>" type="radio">
+										<div class="pp-card-container">
+											<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>" style="background: <?php echo \esc_attr( $bg_color ); ?>;">
+												<div class="pp-card__background"></div>
 
-												<div class="pt-card__indicator"></div>
+												<div class="pp-card__content">
+													<input class="pp-card__input" name="pronamic_pay_subscription_mandate" value="<?php echo esc_html( $mandate->id ); ?>" type="radio">
 
-												<h3 class="pp-card__title"><?php echo esc_html( $title ); ?></h3>
+													<div class="pt-card__indicator"></div>
 
-												<figure class="pp-card__logo">
-													<?php if ( null !== $logo_url && array_key_exists( 'title', $card ) ) : ?>
+													<h3 class="pp-card__title"><?php echo esc_html( $title ); ?></h3>
 
-														<img class="pp-card__logo__img" src="<?php echo esc_url( $logo_url ); ?>" alt="<?php echo esc_attr( $card['title'] ); ?>"/>
+													<figure class="pp-card__logo">
+														<?php if ( null !== $logo_url && array_key_exists( 'title', $card ) ) : ?>
 
-													<?php endif; ?>
-												</figure>
+															<img class="pp-card__logo__img" src="<?php echo esc_url( $logo_url ); ?>" alt="<?php echo esc_attr( $card['title'] ); ?>"/>
 
-												<dl class="pp-card__name">
-													<dt class="pp-card__label"><?php echo esc_html_x( 'Name', 'Card selector', 'pronamic_ideal' ); ?></dt>
-													<dd class="pp-card__value"><?php echo esc_html( $card_name ); ?></dd>
-												</dl>
+														<?php endif; ?>
+													</figure>
 
-												<dl class="pp-card__number">
-													<dt class="pp-card__label"><?php echo esc_html( $account_label ); ?></dt>
-													<dd class="pp-card__value"><?php echo esc_html( $account_number ); ?></dd>
-												</dl>
+													<dl class="pp-card__name">
+														<dt class="pp-card__label"><?php echo esc_html_x( 'Name', 'Card selector', 'pronamic_ideal' ); ?></dt>
+														<dd class="pp-card__value"><?php echo esc_html( $card_name ); ?></dd>
+													</dl>
+
+													<dl class="pp-card__number">
+														<dt class="pp-card__label"><?php echo esc_html( $account_label ); ?></dt>
+														<dd class="pp-card__value"><?php echo esc_html( $account_number ); ?></dd>
+													</dl>
+												</div>
 											</div>
 										</div>
-									</div>
 
-								<?php endforeach; ?>
+									<?php endforeach; ?>
 
-							</div>
+								</div>
 
-							<p>
-								<?php wp_nonce_field( 'pronamic_pay_update_subscription_mandate', 'pronamic_pay_nonce' ); ?>
+								<p>
+									<?php wp_nonce_field( 'pronamic_pay_update_subscription_mandate', 'pronamic_pay_nonce' ); ?>
 
-								<input type="submit" value="<?php esc_html_e( 'Use selected payment method', 'pronamic_ideal' ); ?>"/>
-							</p>
-						</form>
+									<input type="submit" value="<?php esc_html_e( 'Use selected payment method', 'pronamic_ideal' ); ?>"/>
+								</p>
+							</form>
+						</div>
 					</div>
-				</div>
+
+				<?php endif; ?>
 
 				<div class="pp-new-payment-method-container">
 					<div class="pp-new-payment-method-wrapper">

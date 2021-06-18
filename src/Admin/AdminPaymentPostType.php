@@ -553,7 +553,29 @@ class AdminPaymentPostType {
 
 				break;
 			case 'pronamic_payment_amount':
-				echo esc_html( $payment->get_total_amount()->format_i18n() );
+				$total_amount = $payment->get_total_amount();
+
+				$refunded_value = null;
+
+				$refunded_amount = $payment->get_refunded_amount();
+
+				if ( null !== $refunded_amount ) {
+					$refunded_value = $refunded_amount->get_value();
+				}
+
+				// Check refunded amount.
+				if ( empty( $refunded_value ) ) {
+					echo esc_html( $total_amount->format_i18n() );
+
+					break;
+				}
+
+				// Show original amount and refunded amount.
+				echo \sprintf(
+					'<del>%1$s</del> %2$s',
+					esc_html( $total_amount->format_i18n() ),
+					\esc_html( $total_amount->subtract( $refunded_amount )->format_i18n() )
+				);
 
 				break;
 			case 'pronamic_payment_date':

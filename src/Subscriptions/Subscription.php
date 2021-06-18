@@ -486,7 +486,7 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 			$payment_periods = $payment->get_periods();
 
 			if ( null === $payment_periods ) {
-				break;
+				continue;
 			}
 
 			foreach ( $payment_periods as $period ) {
