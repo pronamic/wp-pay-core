@@ -7,6 +7,12 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [2.7.2] - 2021-06-18
+- Added payment method to subscription details when cancelling/renewing a subscription.
+- Added refunded amount in payments overview amount column.
+- Fixed using user locale on payment redirect and subscription action pages [#136](https://github.com/pronamic/wp-pronamic-pay/issues/136).
+- Improved changing subscription mandate.
+
 ## [2.7.1] - 2021-05-27
 - Added transaction description setting to payment forms.
 - Updated payment methods logos to version 1.6.6.
@@ -367,7 +373,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.7.1...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/2.7.2...HEAD
+[2.7.2]: https://github.com/wp-pay/core/compare/2.7.1...2.7.2
 [2.7.1]: https://github.com/wp-pay/core/compare/2.7.0...2.7.1
 [2.7.0]: https://github.com/wp-pay/core/compare/2.6.2...2.7.0
 [2.6.2]: https://github.com/wp-pay/core/compare/2.6.1...2.6.2
