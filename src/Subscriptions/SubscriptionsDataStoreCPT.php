@@ -704,7 +704,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		if ( null !== $display_phase ) {
 			$this->update_meta( $id, 'currency', $display_phase->get_amount()->get_currency()->get_alphabetic_code() );
-			$this->update_meta( $id, 'amount', $display_phase->get_amount()->format() );
+			$this->update_meta( $id, 'amount', $display_phase->get_amount()->get_number()->get_value() );
 		}
 
 		$this->update_meta_status( $subscription );
