@@ -143,6 +143,40 @@ function get_pronamic_payments_by_user_id( $user_id = null ) {
 }
 
 /**
+ * Get payments by the specified source and source ID.
+ *
+ * @param string      $source    The source to query for.
+ * @param string|null $source_id The source ID to query for.
+ * @return Payment[]|null
+ */
+function get_pronamic_payments_by_source( $source, $source_id = null ) {
+	// Meta query.
+	$meta_query = array(
+		array(
+			'key'   => '_pronamic_payment_source',
+			'value' => $source,
+		),
+	);
+
+	// Add source ID meta query condition.
+	if ( ! empty( $source_id ) ) {
+		$meta_query[] = array(
+			'key'   => '_pronamic_payment_source_id',
+			'value' => $source_id,
+		);
+	}
+
+	// Return.
+	$args = array(
+		'meta_query' => $meta_query,
+		'order'      => 'DESC',
+		'orderby'    => 'ID',
+	);
+
+	return get_pronamic_payments_by_meta( null, null, $args );
+}
+
+/**
  * Get subscription by the specified post ID.
  *
  * @param int $post_id A subscription post ID.
@@ -236,7 +270,7 @@ function get_pronamic_subscriptions_by_user_id( $user_id = null ) {
 }
 
 /**
- * Get subscription by the specified source and value.
+ * Get subscriptions by the specified source and source ID.
  *
  * @param string      $source    The source to query for.
  * @param string|null $source_id The source ID to query for.
