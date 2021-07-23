@@ -268,6 +268,10 @@ class FormPostType {
 					)
 				);
 
+				if ( empty( $value ) ) {
+					$value = 0;
+				}
+
 				$money = new Money( $value, 'EUR' );
 
 				echo esc_html( $money->format_i18n() );
