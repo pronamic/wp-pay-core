@@ -36,15 +36,15 @@
 }
 
 $wp_admin_colors: (
-	fresh: #2271b1,
-	light: #888,
-	modern: #3858e9,
-	blue: #096484,
-	coffee: #c7a589,
-	ectoplasm: #a3b745,
-	midnight: #e14d43,
-	ocean: #9ebaa0,
-	sunrise: #dd823b
+	"fresh": #2271b1,
+	"light": #888,
+	"modern": #3858e9,
+	"blue": #096484,
+	"coffee": #c7a589,
+	"ectoplasm": #a3b745,
+	"midnight": #e14d43,
+	"ocean": #9ebaa0,
+	"sunrise": #dd823b
 );
 
 @each $name, $color in $wp_admin_colors {
