@@ -374,7 +374,7 @@ class FormPostType {
 					continue;
 				}
 
-				$data['_pronamic_payment_form_amount_choices'][ $i ] = $amount->get_cents();
+				$data['_pronamic_payment_form_amount_choices'][ $i ] = $amount->get_minor_units()->to_int();
 			}
 
 			// Remove empty choices.
