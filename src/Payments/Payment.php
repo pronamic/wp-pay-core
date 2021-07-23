@@ -874,6 +874,10 @@ class Payment extends LegacyPayment {
 			$payment->set_origin_id( $json->origin_id );
 		}
 
+		if ( isset( $json->transaction_id ) ) {
+			$payment->set_transaction_id( $json->transaction_id );
+		}
+
 		return $payment;
 	}
 
@@ -939,6 +943,13 @@ class Payment extends LegacyPayment {
 
 		if ( null !== $origin_id ) {
 			$properties['origin_id'] = $origin_id;
+		}
+
+		// Transaction ID.
+		$transaction_id = $this->get_transaction_id();
+
+		if ( null !== $transaction_id ) {
+			$properties['transaction_id'] = $transaction_id;
 		}
 
 		$object = (object) $properties;
