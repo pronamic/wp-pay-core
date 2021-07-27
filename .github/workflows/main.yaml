@@ -6,18 +6,13 @@ env:
   COMPOSER_NO_INTERACTION: 1
   WP_TESTS_DB_PASS: password
   wp-version: '*'
+  phpunit-version: '^6.0'
 
 jobs:
-  coding-standards:
-    name: Coding Standards (PHP ${{ matrix.php-version }})
+  phpcs:
+    name: PHP Coding Standards
 
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        php-version:
-          - 7.4
 
     steps:
       - uses: actions/checkout@v2
@@ -54,25 +49,57 @@ jobs:
       - name: List Composer packages
         run: composer show
 
-      - name: PHPLint
-        run: composer run-script phplint
-
       - name: PHP Code Sniffer
         run: composer run-script phpcs
 
+  phpmd:
+    name: PHP Mess Detector
+  
+    runs-on: ubuntu-latest
+  
+    steps:
+      - uses: actions/checkout@v2
+  
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: bcmath, intl, mbstring, mysql
+          ini-values: memory_limit=2048M
+          tools: composer
+          coverage: none
+  
+      - name: Composer validation
+        run: composer validate --strict
+  
+      # https://github.com/actions/cache/blob/master/examples.md#php---composer
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+            echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+  
+      - name: Require WordPress
+        run: composer require --dev --no-update --no-progress --no-suggest roots/wordpress:${{ env.wp-version }} wp-phpunit/wp-phpunit:${{ env.wp-version }}
+  
+      - name: Install Composer dependencies
+        run: composer update --no-progress --no-suggest
+  
+      - name: List Composer packages
+        run: composer show
+  
       - name: PHP Mess Detector
         continue-on-error: true
         run: composer run-script phpmd
 
-  static-code-analysis:
-    name: Static Code Analysis (PHP ${{ matrix.php-version }})
+  phpstan:
+    name: PHPStan
 
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        php-version:
-          - 7.4
 
     steps:
       - uses: actions/checkout@v2
@@ -100,8 +127,11 @@ jobs:
       - name: Install Composer dependencies
         run: composer update --no-progress --no-suggest
 
-      - name: PHPStan static code analysis
-        run: composer bin phpstan install && composer run-script phpstan
+      - name: Install PHPStan
+        run: composer bin phpstan install
+
+      - name: PHPStan
+        run: composer run-script phpstan
 
   tests:
     name: Tests — PHP ${{ matrix.php-version }} ${{ matrix.name }}
@@ -215,15 +245,9 @@ jobs:
         run: composer run-script phpunit
 
   code-coverage:
-    name: Code Coverage (PHP ${{ matrix.php-version }})
+    name: Code Coverage
 
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        php-version:
-          - 7.4
 
     services:
       mysql:
@@ -277,17 +301,19 @@ jobs:
       - name: PHPUnit test suite
         env:
           WP_TESTS_DB_HOST: 127.0.0.1:${{ job.services.mysql.ports['3306'] }}
-        run: composer run-script phpunit
+        run: composer run-script coverage
 
-      - name: Coveralls code coverage
+      - name: Publish coverage
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
         run: |
           composer run-script coveralls
           bash <(curl -s https://codecov.io/bash)
 
-  es-sass-linting:
-    name: Scripts and Styles
+  es-lint:
+    name: Scripts
 
     runs-on: ubuntu-latest
 
@@ -312,5 +338,28 @@ jobs:
       - name: ESLint
         run: npm run-script eslint
 
-      - name: Sass Lint
-        run: npm run-script sass-lint
+  sass-lint:
+    name: Styles
+  
+    runs-on: ubuntu-latest
+  
+    steps:
+        - uses: actions/checkout@v2
+  
+        # https://github.com/actions/cache/blob/master/examples.md#macos-and-ubuntu
+        - uses: actions/cache@v2
+          with:
+              path: ~/.npm
+              key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+              restore-keys: |
+                  ${{ runner.os }}-node-
+  
+        - uses: actions/setup-node@v1
+          with:
+              node-version: '12'
+  
+        - name: Install Node packages
+          run: npm install
+  
+        - name: Sass Lint
+          run: npm run-script sass-lint
