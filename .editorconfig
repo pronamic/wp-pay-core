@@ -12,7 +12,7 @@ trim_trailing_whitespace = true
 [*.txt]
 trim_trailing_whitespace = false
 
-[*.{md,json,yml}]
+[*.{md,json,yaml,yml}]
 trim_trailing_whitespace = false
 indent_style = space
 indent_size = 2
