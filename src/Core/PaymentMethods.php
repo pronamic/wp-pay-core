@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Core;
 
 use Pronamic\WordPress\Pay\Plugin;
+use WP_Post;
 use WP_Query;
 
 /**
@@ -513,7 +514,11 @@ class PaymentMethods {
 		);
 
 		foreach ( $query->posts as $config_id ) {
-			$gateway = Plugin::get_gateway( (int) $config_id );
+			if ( $config_id instanceof WP_Post ) {
+				$config_id = $config_id->ID;
+			}
+
+			$gateway = Plugin::get_gateway( $config_id );
 
 			if ( ! $gateway ) {
 				continue;
