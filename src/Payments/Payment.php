@@ -313,29 +313,6 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
-	 * Get the source text of this payment.
-	 *
-	 * @return string
-	 */
-	public function get_source_text() {
-		$pieces = array(
-			$this->get_source(),
-			$this->get_source_id(),
-		);
-
-		$pieces = array_filter( $pieces );
-
-		$text = implode( '<br />', $pieces );
-
-		$source = $this->get_source();
-
-		$text = apply_filters( 'pronamic_payment_source_text_' . $source, $text, $this );
-		$text = apply_filters( 'pronamic_payment_source_text', $text, $this );
-
-		return $text;
-	}
-
-	/**
 	 * Get the payment description.
 	 *
 	 * @return string|null
@@ -576,7 +553,15 @@ class Payment extends LegacyPayment {
 	public function get_return_redirect_url() {
 		$url = home_url( '/' );
 
-		$url = apply_filters( 'pronamic_payment_redirect_url', $url, $this );
+		$payment = $this;
+
+		/**
+		 * Filters the payment return redirect URL.
+		 *
+		 * @param string  $text    Redirect URL.
+		 * @param Payment $payment Payment.
+		 */
+		$url = apply_filters( 'pronamic_payment_redirect_url', $url, $payment );
 
 		return $url;
 	}
@@ -614,15 +599,74 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
+	 * Get the source text of this payment.
+	 *
+	 * @return string
+	 */
+	public function get_source_text() {
+		$pieces = array(
+			$this->get_source(),
+			$this->get_source_id(),
+		);
+
+		$pieces = array_filter( $pieces );
+
+		$text = implode( '<br />', $pieces );
+
+		$source = $this->get_source();
+
+		$payment = $this;
+
+		if ( null !== $source ) {
+			/**
+			 * Filters the payment source text by plugin integration source.
+			 *
+			 * @param string  $text    Source text.
+			 * @param Payment $payment Payment.
+			 */
+			$text = apply_filters( 'pronamic_payment_source_text_' . $source, $text, $payment );
+		}
+
+		/**
+		 * Filters the payment source text.
+		 *
+		 * @param string  $text    Source text.
+		 * @param Payment $payment Payment.
+		 */
+		$text = apply_filters( 'pronamic_payment_source_text', $text, $payment );
+
+		return $text;
+	}
+
+	/**
 	 * Get source description.
 	 *
 	 * @return string|null
 	 */
 	public function get_source_description() {
-		$description = $this->source;
+		$payment = $this;
 
-		$description = apply_filters( 'pronamic_payment_source_description', $description, $this );
-		$description = apply_filters( 'pronamic_payment_source_description_' . $this->source, $description, $this );
+		$source = $payment->get_source();
+
+		$description = $source;
+
+		/**
+		 * Filters the payment source description.
+		 *
+		 * @param string  $description Source description.
+		 * @param Payment $payment     Payment.
+		 */
+		$description = apply_filters( 'pronamic_payment_source_description', $description, $payment );
+
+		if ( null !== $source ) {
+			/**
+			 * Filters the payment source description by plugin integration source.
+			 *
+			 * @param string  $description Source description.
+			 * @param Payment $payment     Payment.
+			 */
+			$description = apply_filters( 'pronamic_payment_source_description_' . $source, $description, $payment );
+		}
 
 		return $description;
 	}
@@ -635,8 +679,27 @@ class Payment extends LegacyPayment {
 	public function get_source_link() {
 		$url = null;
 
-		$url = apply_filters( 'pronamic_payment_source_url', $url, $this );
-		$url = apply_filters( 'pronamic_payment_source_url_' . $this->source, $url, $this );
+		$payment = $this;
+
+		$source = $payment->get_source();
+
+		/**
+		 * Filters the payment source URL.
+		 *
+		 * @param null|string $url     Source URL.
+		 * @param Payment     $payment Payment.
+		 */
+		$url = apply_filters( 'pronamic_payment_source_url', $url, $payment );
+
+		if ( null !== $source ) {
+			/**
+			 * Filters the payment source URL by plugin integration source.
+			 *
+			 * @param null|string $url     Source URL.
+			 * @param Payment     $payment Payment.
+			 */
+			$url = apply_filters( 'pronamic_payment_source_url_' . $source, $url, $payment );
+		}
 
 		return $url;
 	}
@@ -649,7 +712,15 @@ class Payment extends LegacyPayment {
 	public function get_provider_link() {
 		$url = null;
 
-		$url = apply_filters( 'pronamic_payment_provider_url', $url, $this );
+		$payment = $this;
+
+		/**
+		 * Filters the payment provider URL.
+		 *
+		 * @param null|string $url     Provider URL.
+		 * @param Payment     $payment Payment.
+		 */
+		$url = apply_filters( 'pronamic_payment_provider_url', $url, $payment );
 
 		if ( null === $this->id ) {
 			return $url;
@@ -663,11 +734,15 @@ class Payment extends LegacyPayment {
 
 		$gateway_id = get_post_meta( intval( $config_id ), '_pronamic_gateway_id', true );
 
-		if ( empty( $gateway_id ) ) {
-			return $url;
+		if ( ! empty( $gateway_id ) ) {
+			/**
+			 * Filters the payment provider URL by gateway identifier.
+			 *
+			 * @param null|string $url     Provider URL.
+			 * @param Payment     $payment Payment.
+			 */
+			$url = apply_filters( 'pronamic_payment_provider_url_' . $gateway_id, $url, $payment );
 		}
-
-		$url = apply_filters( 'pronamic_payment_provider_url_' . $gateway_id, $url, $this );
 
 		return $url;
 	}

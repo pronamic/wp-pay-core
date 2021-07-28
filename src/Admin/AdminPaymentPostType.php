@@ -531,7 +531,7 @@ class AdminPaymentPostType {
 				if ( null !== $integration ) {
 					printf(
 						'<a href="%1$s" title="%2$s">%2$s</a>',
-						\esc_url( \get_edit_post_link( $config_id ) ),
+						\esc_url( (string) \get_edit_post_link( $config_id ) ),
 						\esc_html( \get_the_title( $config_id ) )
 					);
 				} elseif ( ! empty( $config_id ) ) {

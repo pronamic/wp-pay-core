@@ -132,14 +132,15 @@ class Util {
 			return \wp_doing_cron();
 		}
 
+		$wp_doing_cron = defined( 'DOING_CRON' ) && DOING_CRON;
+
 		/**
 		 * Filters whether the current request is a WordPress cron request.
 		 *
-		 * @since 4.8.0
-		 *
 		 * @param bool $wp_doing_cron Whether the current request is a WordPress cron request.
+		 * @since 4.8.0
 		 */
-		return apply_filters( 'wp_doing_cron', defined( 'DOING_CRON' ) && DOING_CRON );
+		return apply_filters( 'wp_doing_cron', $wp_doing_cron );
 	}
 
 	/**

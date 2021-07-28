@@ -7,247 +7,495 @@
 
 ### `pronamic_pay_update_payment`
 
+*Payment updated.*
+
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$payment` |  | 
+`$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 239](../src/Payments/PaymentsDataStoreCPT.php#L239-L239)
+Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 240](../src/Payments/PaymentsDataStoreCPT.php#L240-L245)
 
 ### `pronamic_pay_new_payment`
 
-**Arguments**
-
-Argument | Type | Description
--------- | ---- | -----------
-`$payment` |  | 
-
-Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 281](../src/Payments/PaymentsDataStoreCPT.php#L281-L281)
-
-### `pronamic_payment_status_update_{$payment->source}_{$old}_to_{$new}`
+*New payment created.*
 
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$payment` |  | 
-`$can_redirect` |  | 
-`$previous_status` |  | 
-`$payment->status` |  | 
+`$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 882](../src/Payments/PaymentsDataStoreCPT.php#L882-L882)
+Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 287](../src/Payments/PaymentsDataStoreCPT.php#L287-L292)
 
-### `pronamic_payment_status_update_{$payment->source}`
+### `pronamic_payment_status_update_{$source}_{$old_status}_to_{$new_status}`
+
+*Payment status updated for plugin integration source from old to new status.*
+
+**Source**
+
+Plugin | Source
+------ | ------
+Charitable | `charitable`
+Contact Form 7 | `contact-form-7`
+Event Espresso | `eventespresso`
+Event Espresso (legacy) | `event-espresso`
+Formidable Forms | `formidable-forms`
+Give | `give`
+Gravity Forms | `gravityformsideal`
+MemberPress | `memberpress`
+Ninja Forms | `ninja-forms`
+s2Member | `s2member`
+WooCommerce | `woocommerce`
+WP eCommerce | `wp-e-commerce`
+
+**Action status**
+
+Status | Value
+------ | -----
+(empty) | `unknown`
+Cancelled | `cancelled`
+Expired | `expired`
+Failure | `failure`
+Open | `open`
+Reserved | `reserved`
+Success | `success`
+
+**Payment status**
+
+Status | Value
+------ | -----
+Cancelled | `Cancelled`
+Expired | `Expired`
+Failure | `Failure`
+Open | `Open`
+Reserved | `Reserved`
+Success | `Success`
 
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$payment` |  | 
-`$can_redirect` |  | 
-`$previous_status` |  | 
-`$payment->status` |  | 
+`$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
+`$can_redirect` | `bool` | Flag to indicate if redirect is allowed after the payment update.
+`$previous_status` | `null\|string` | Previous payment status.
+`$updated_status` | `string` | Updated payment status.
 
-Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 883](../src/Payments/PaymentsDataStoreCPT.php#L883-L883)
+Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 901](../src/Payments/PaymentsDataStoreCPT.php#L901-L949)
+
+### `pronamic_payment_status_update_{$source}`
+
+*Payment status updated for plugin integration source.*
+
+**Source**
+
+Plugin | Source
+------ | ------
+Charitable | `charitable`
+Contact Form 7 | `contact-form-7`
+Event Espresso | `eventespresso`
+Event Espresso (legacy) | `event-espresso`
+Formidable Forms | `formidable-forms`
+Give | `give`
+Gravity Forms | `gravityformsideal`
+MemberPress | `memberpress`
+Ninja Forms | `ninja-forms`
+s2Member | `s2member`
+WooCommerce | `woocommerce`
+WP eCommerce | `wp-e-commerce`
+
+**Action status**
+
+Status | Value
+------ | -----
+(empty) | `unknown`
+Cancelled | `cancelled`
+Expired | `expired`
+Failure | `failure`
+Open | `open`
+Reserved | `reserved`
+Success | `success`
+
+**Payment status**
+
+Status | Value
+------ | -----
+Cancelled | `Cancelled`
+Expired | `Expired`
+Failure | `Failure`
+Open | `Open`
+Reserved | `Reserved`
+Success | `Success`
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
+`$can_redirect` | `bool` | Flag to indicate if redirect is allowed after the payment update.
+`$previous_status` | `null\|string` | Previous payment status.
+`$updated_status` | `string` | Updated payment status.
+
+Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 951](../src/Payments/PaymentsDataStoreCPT.php#L951-L999)
 
 ### `pronamic_payment_status_update`
 
+*Payment status updated.*
+
+**Payment status**
+
+Status | Value
+------ | -----
+Cancelled | `Cancelled`
+Expired | `Expired`
+Failure | `Failure`
+Open | `Open`
+Reserved | `Reserved`
+Success | `Success`
+
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$payment` |  | 
-`$can_redirect` |  | 
-`$previous_status` |  | 
-`$payment->status` |  | 
+`$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
+`$can_redirect` | `bool` | Flag to indicate if redirect is allowed after the payment update.
+`$previous_status` | `null\|string` | Previous payment status.
+`$updated_status` | `string` | Updated payment status.
 
-Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 884](../src/Payments/PaymentsDataStoreCPT.php#L884-L884)
+Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 1001](../src/Payments/PaymentsDataStoreCPT.php#L1001-L1020)
 
 ### `pronamic_pay_privacy_register_exporters`
 
+*Register privacy exporters.*
+
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$this` |  | 
+`$privacy_manager` | `\Pronamic\WordPress\Pay\PrivacyManager` | Privacy manager.
 
-Source: [src/PrivacyManager.php](../src/PrivacyManager.php), [line 52](../src/PrivacyManager.php#L52-L52)
+Source: [src/PrivacyManager.php](../src/PrivacyManager.php), [line 54](../src/PrivacyManager.php#L54-L59)
 
 ### `pronamic_pay_privacy_register_erasers`
 
+*Register privacy erasers.*
+
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$this` |  | 
+`$privacy_manager` | `\Pronamic\WordPress\Pay\PrivacyManager` | Privacy manager.
 
-Source: [src/PrivacyManager.php](../src/PrivacyManager.php), [line 68](../src/PrivacyManager.php#L68-L68)
+Source: [src/PrivacyManager.php](../src/PrivacyManager.php), [line 77](../src/PrivacyManager.php#L77-L82)
 
 ### `pronamic_pay_license_check`
 
+*Perform license check.*
 
-Source: [src/Admin/AdminSettings.php](../src/Admin/AdminSettings.php), [line 288](../src/Admin/AdminSettings.php#L288-L288)
+
+Source: [src/Admin/AdminSettings.php](../src/Admin/AdminSettings.php), [line 288](../src/Admin/AdminSettings.php#L288-L291)
 
 ### `pronamic_subscription_renewal_notice_{$source}`
 
+*Send renewal notice for source.*
+
+**Source**
+
+Plugin | Source
+------ | ------
+Charitable | `charitable`
+Contact Form 7 | `contact-form-7`
+Event Espresso | `eventespresso`
+Event Espresso (legacy) | `event-espresso`
+Formidable Forms | `formidable-forms`
+Give | `give`
+Gravity Forms | `gravityformsideal`
+MemberPress | `memberpress`
+Ninja Forms | `ninja-forms`
+s2Member | `s2member`
+WooCommerce | `woocommerce`
+WP eCommerce | `wp-e-commerce`
+
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$subscription` |  | 
+`$subscription` | `\Pronamic\WordPress\Pay\Subscriptions\Subscription` | Subscription.
 
-Source: [src/Subscriptions/SubscriptionsModule.php](../src/Subscriptions/SubscriptionsModule.php), [line 1012](../src/Subscriptions/SubscriptionsModule.php#L1012-L1012)
+Source: [src/Subscriptions/SubscriptionsModule.php](../src/Subscriptions/SubscriptionsModule.php), [line 1026](../src/Subscriptions/SubscriptionsModule.php#L1026-L1048)
 
 ### `pronamic_pay_new_subscription`
 
-**Arguments**
-
-Argument | Type | Description
--------- | ---- | -----------
-`$subscription` |  | 
-
-Source: [src/Subscriptions/SubscriptionsDataStoreCPT.php](../src/Subscriptions/SubscriptionsDataStoreCPT.php), [line 279](../src/Subscriptions/SubscriptionsDataStoreCPT.php#L279-L279)
-
-### `pronamic_subscription_status_update_{$subscription->source}_{$old}_to_{$new}`
+*New subscription created.*
 
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$subscription` |  | 
-`$can_redirect` |  | 
-`$previous_status` |  | 
-`$subscription->status` |  | 
+`$subscription` | `\Pronamic\WordPress\Pay\Subscriptions\Subscription` | Subscription.
 
-Source: [src/Subscriptions/SubscriptionsDataStoreCPT.php](../src/Subscriptions/SubscriptionsDataStoreCPT.php), [line 741](../src/Subscriptions/SubscriptionsDataStoreCPT.php#L741-L741)
+Source: [src/Subscriptions/SubscriptionsDataStoreCPT.php](../src/Subscriptions/SubscriptionsDataStoreCPT.php), [line 279](../src/Subscriptions/SubscriptionsDataStoreCPT.php#L279-L284)
 
-### `pronamic_subscription_status_update_{$subscription->source}`
+### `pronamic_subscription_status_update_{$source}_{$old_status}_to_{$new_status}`
+
+*Subscription status updated for plugin integration source from old to new status.*
+
+**Source**
+
+Plugin | Source
+------ | ------
+Charitable | `charitable`
+Contact Form 7 | `contact-form-7`
+Event Espresso | `eventespresso`
+Event Espresso (legacy) | `event-espresso`
+Formidable Forms | `formidable-forms`
+Give | `give`
+Gravity Forms | `gravityformsideal`
+MemberPress | `memberpress`
+Ninja Forms | `ninja-forms`
+s2Member | `s2member`
+WooCommerce | `woocommerce`
+WP eCommerce | `wp-e-commerce`
+
+**Action status**
+
+Status | Value
+------ | -----
+(empty) | `unknown`
+Active | `active`
+Cancelled | `cancelled`
+Completed | `completed`
+Expired | `expired`
+Failure | `failure`
+On Hold | `on_hold`
+Open | `open`
+
+**Subscription status**
+
+Status | Value
+------ | -----
+Active | `Active`
+Cancelled | `Cancelled`
+Completed | `Completed`
+Expired | `Expired`
+Failure | `Failure`
+On Hold | `On Hold`
+Open | `Open`
 
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$subscription` |  | 
-`$can_redirect` |  | 
-`$previous_status` |  | 
-`$subscription->status` |  | 
+`$subscription` | `\Pronamic\WordPress\Pay\Subscriptions\Subscription` | Subscription.
+`$can_redirect` | `bool` | Flag to indicate if redirect is allowed after the subscription update.
+`$previous_status` | `null\|string` | Previous subscription status.
+`$updated_status` | `string` | Updated subscription status.
 
-Source: [src/Subscriptions/SubscriptionsDataStoreCPT.php](../src/Subscriptions/SubscriptionsDataStoreCPT.php), [line 742](../src/Subscriptions/SubscriptionsDataStoreCPT.php#L742-L742)
+Source: [src/Subscriptions/SubscriptionsDataStoreCPT.php](../src/Subscriptions/SubscriptionsDataStoreCPT.php), [line 752](../src/Subscriptions/SubscriptionsDataStoreCPT.php#L752-L802)
+
+### `pronamic_subscription_status_update_{$source}`
+
+*Subscription status updated for plugin integration source.*
+
+**Source**
+
+Plugin | Source
+------ | ------
+Charitable | `charitable`
+Contact Form 7 | `contact-form-7`
+Event Espresso | `eventespresso`
+Event Espresso (legacy) | `event-espresso`
+Formidable Forms | `formidable-forms`
+Give | `give`
+Gravity Forms | `gravityformsideal`
+MemberPress | `memberpress`
+Ninja Forms | `ninja-forms`
+s2Member | `s2member`
+WooCommerce | `woocommerce`
+WP eCommerce | `wp-e-commerce`
+
+**Action status**
+
+Status | Value
+------ | -----
+(empty) | `unknown`
+Active | `active`
+Cancelled | `cancelled`
+Completed | `completed`
+Expired | `expired`
+Failure | `failure`
+On Hold | `on_hold`
+Open | `open`
+
+**Subscription status**
+
+Status | Value
+------ | -----
+Active | `Active`
+Cancelled | `Cancelled`
+Completed | `Completed`
+Expired | `Expired`
+Failure | `Failure`
+On Hold | `On Hold`
+Open | `Open`
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$subscription` | `\Pronamic\WordPress\Pay\Subscriptions\Subscription` | Subscription.
+`$can_redirect` | `bool` | Flag to indicate if redirect is allowed after the subscription update.
+`$previous_status` | `null\|string` | Previous subscription status.
+`$updated_status` | `string` | Updated subscription status.
+
+Source: [src/Subscriptions/SubscriptionsDataStoreCPT.php](../src/Subscriptions/SubscriptionsDataStoreCPT.php), [line 804](../src/Subscriptions/SubscriptionsDataStoreCPT.php#L804-L854)
 
 ### `pronamic_subscription_status_update`
 
+*Subscription status updated.*
+
+**Subscription status**
+
+Status | Value
+------ | -----
+Active | `Active`
+Cancelled | `Cancelled`
+Completed | `Completed`
+Expired | `Expired`
+Failure | `Failure`
+On Hold | `On Hold`
+Open | `Open`
+
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$subscription` |  | 
-`$can_redirect` |  | 
-`$previous_status` |  | 
-`$subscription->status` |  | 
+`$subscription` | `\Pronamic\WordPress\Pay\Subscriptions\Subscription` | Subscription.
+`$can_redirect` | `bool` | Flag to indicate if redirect is allowed after the subscription update.
+`$previous_status` | `null\|string` | Previous subscription status.
+`$updated_status` | `string` | Updated subscription status.
 
-Source: [src/Subscriptions/SubscriptionsDataStoreCPT.php](../src/Subscriptions/SubscriptionsDataStoreCPT.php), [line 743](../src/Subscriptions/SubscriptionsDataStoreCPT.php#L743-L743)
+Source: [src/Subscriptions/SubscriptionsDataStoreCPT.php](../src/Subscriptions/SubscriptionsDataStoreCPT.php), [line 856](../src/Subscriptions/SubscriptionsDataStoreCPT.php#L856-L876)
 
 ## Filters
 
-### `pronamic_payment_source_text_{$source}`
+### `pronamic_payment_redirect_url`
+
+*Filters the payment return redirect URL.*
 
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$text` |  | 
-`$this` |  | 
+`$url` |  | 
+`$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 332](../src/Payments/Payment.php#L332-L332)
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 558](../src/Payments/Payment.php#L558-L564)
+
+### `pronamic_payment_source_text_{$source}`
+
+*Filters the payment source text by plugin integration source.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$text` | `string` | Source text.
+`$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
+
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 621](../src/Payments/Payment.php#L621-L627)
 
 ### `pronamic_payment_source_text`
 
-**Arguments**
-
-Argument | Type | Description
--------- | ---- | -----------
-`$text` |  | 
-`$this` |  | 
-
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 333](../src/Payments/Payment.php#L333-L333)
-
-### `pronamic_payment_redirect_url`
+*Filters the payment source text.*
 
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$url` |  | 
-`$this` |  | 
+`$text` | `string` | Source text.
+`$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 579](../src/Payments/Payment.php#L579-L579)
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 630](../src/Payments/Payment.php#L630-L636)
 
 ### `pronamic_payment_source_description`
 
-**Arguments**
-
-Argument | Type | Description
--------- | ---- | -----------
-`$description` |  | 
-`$this` |  | 
-
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 624](../src/Payments/Payment.php#L624-L624)
-
-### `pronamic_payment_source_description_{$this->source}`
+*Filters the payment source description.*
 
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$description` |  | 
-`$this` |  | 
+`$description` | `string` | Source description.
+`$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 625](../src/Payments/Payment.php#L625-L625)
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 653](../src/Payments/Payment.php#L653-L659)
+
+### `pronamic_payment_source_description_{$source}`
+
+*Filters the payment source description by plugin integration source.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$description` | `string` | Source description.
+`$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
+
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 662](../src/Payments/Payment.php#L662-L668)
 
 ### `pronamic_payment_source_url`
 
-**Arguments**
-
-Argument | Type | Description
--------- | ---- | -----------
-`$url` |  | 
-`$this` |  | 
-
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 638](../src/Payments/Payment.php#L638-L638)
-
-### `pronamic_payment_source_url_{$this->source}`
+*Filters the payment source URL.*
 
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$url` |  | 
-`$this` |  | 
+`$url` | `null\|string` | Source URL.
+`$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 639](../src/Payments/Payment.php#L639-L639)
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 686](../src/Payments/Payment.php#L686-L692)
+
+### `pronamic_payment_source_url_{$source}`
+
+*Filters the payment source URL by plugin integration source.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$url` | `null\|string` | Source URL.
+`$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
+
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 695](../src/Payments/Payment.php#L695-L701)
 
 ### `pronamic_payment_provider_url`
 
+*Filters the payment provider URL.*
+
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$url` |  | 
-`$this` |  | 
+`$url` | `null\|string` | Provider URL.
+`$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 652](../src/Payments/Payment.php#L652-L652)
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 717](../src/Payments/Payment.php#L717-L723)
 
 ### `pronamic_payment_provider_url_{$gateway_id}`
 
+*Filters the payment provider URL by gateway identifier.*
+
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$url` |  | 
-`$this` |  | 
+`$url` | `null\|string` | Provider URL.
+`$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 670](../src/Payments/Payment.php#L670-L670)
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 738](../src/Payments/Payment.php#L738-L744)
 
 ### `wp_doing_cron`
 
@@ -255,62 +503,72 @@ Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 670](../s
 
 Argument | Type | Description
 -------- | ---- | -----------
-`defined('DOING_CRON') && DOING_CRON` |  | 
+`$wp_doing_cron` |  | 
 
-Source: [src/Core/Util.php](../src/Core/Util.php), [line 141](../src/Core/Util.php#L141-L141)
+Source: [src/Core/Util.php](../src/Core/Util.php), [line 143](../src/Core/Util.php#L143-L143)
 
 ### `pronamic_pay_google_analytics_ecommerce_item_name`
 
+*Filters the item name for Google Analytics e-commerce tracking.*
+
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$line->get_name()` |  | 
-`$line` |  | 
+`$name` | `string` | Item name.
+`$line` | `\Pronamic\WordPress\Pay\Payments\PaymentLine` | Payment line.
 
-Source: [src/GoogleAnalyticsEcommerce.php](../src/GoogleAnalyticsEcommerce.php), [line 211](../src/GoogleAnalyticsEcommerce.php#L211-L211)
+Source: [src/GoogleAnalyticsEcommerce.php](../src/GoogleAnalyticsEcommerce.php), [line 215](../src/GoogleAnalyticsEcommerce.php#L215-L222)
 
 ### `pronamic_pay_google_analytics_ecommerce_item_product_category`
 
+*Filters the product category for Google Analytics e-commerce tracking.*
+
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$line->get_product_category()` |  | 
-`$line` |  | 
+`$product_category` | `string` | Product category.
+`$line` | `\Pronamic\WordPress\Pay\Payments\PaymentLine` | Payment line.
 
-Source: [src/GoogleAnalyticsEcommerce.php](../src/GoogleAnalyticsEcommerce.php), [line 247](../src/GoogleAnalyticsEcommerce.php#L247-L247)
+Source: [src/GoogleAnalyticsEcommerce.php](../src/GoogleAnalyticsEcommerce.php), [line 262](../src/GoogleAnalyticsEcommerce.php#L262-L269)
 
 ### `pronamic_pay_return_should_redirect`
 
+*Filter whether or not to allow redirects on payment return.*
+
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`true` |  | 
-`$payment` |  | 
+`$should_redirect` | `bool` | Flag to indicate if redirect is allowed on handling payment return.
+`$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 434](../src/Plugin.php#L434-L434)
+Source: [src/Plugin.php](../src/Plugin.php), [line 436](../src/Plugin.php#L436-L442)
 
 ### `pronamic_pay_gateways`
 
+*Filters the gateway integrations.*
+
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`array()` |  | 
+`$gateways` | `\Pronamic\WordPress\Pay\AbstractGatewayIntegration[]` | Gateway integrations.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 591](../src/Plugin.php#L591-L591)
+Source: [src/Plugin.php](../src/Plugin.php), [line 599](../src/Plugin.php#L599-L604)
 
 ### `pronamic_pay_plugin_integrations`
 
+*Filters the plugin integrations.*
+
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`array()` |  | 
+`$plugin_integrations` | `\Pronamic\WordPress\Pay\AbstractPluginIntegration[]` | Plugin integrations.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 600](../src/Plugin.php#L600-L600)
+Source: [src/Plugin.php](../src/Plugin.php), [line 614](../src/Plugin.php#L614-L619)
 
 ### `pronamic_payment_gateway_configuration_id`
 
@@ -320,21 +578,23 @@ Source: [src/Plugin.php](../src/Plugin.php), [line 600](../src/Plugin.php#L600-L
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$payment->get_config_id()` |  | 
-`$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | The payment resource data.
+`$config_id` | `null\|int` | Gateway configuration ID.
+`$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 963](../src/Plugin.php#L963-L969)
+Source: [src/Plugin.php](../src/Plugin.php), [line 1001](../src/Plugin.php#L1001-L1007)
 
 ### `pronamic_payment_redirect_url_{$source}`
+
+*Filters the payment redirect URL by plugin integration source.*
 
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$url` |  | 
-`$payment` |  | 
+`$url` | `null\|string` | Redirect URL.
+`$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 1163](../src/Plugin.php#L1163-L1163)
+Source: [src/Plugin.php](../src/Plugin.php), [line 1203](../src/Plugin.php#L1203-L1209)
 
 ### `pronamic_gateway_configuration_display_value`
 
@@ -354,7 +614,7 @@ Source: [src/Admin/AdminGatewayPostType.php](../src/Admin/AdminGatewayPostType.p
 *Filters the gateway configuration display value.*
 
 The dynamic portion of the hook name, `$id`, refers to the gateway ID.
-For example, the gateway ID for Payvision is `payvision`, se the filter
+For example, the gateway ID for Payvision is `payvision`, so the filter
 for that gateway would be:
 `pronamic_gateway_configuration_display_value_payvision`
 
@@ -369,69 +629,81 @@ Source: [src/Admin/AdminGatewayPostType.php](../src/Admin/AdminGatewayPostType.p
 
 ### `pronamic_subscription_source_text_{$source}`
 
+*Filters the subscription source text by plugin integration source.*
+
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$default_text` |  | 
-`$this` |  | 
+`$text` | `string` | Source text.
+`$subscription` | `\Pronamic\WordPress\Pay\Subscriptions\Subscription` | Subscription.
 
-Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 367](../src/Subscriptions/Subscription.php#L367-L367)
+Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 370](../src/Subscriptions/Subscription.php#L370-L376)
 
 ### `pronamic_subscription_source_text`
 
+*Filters the subscription source text.*
+
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$text` |  | 
-`$this` |  | 
+`$text` | `string` | Source text.
+`$subscription` | `\Pronamic\WordPress\Pay\Subscriptions\Subscription` | Subscription.
 
-Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 368](../src/Subscriptions/Subscription.php#L368-L368)
+Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 379](../src/Subscriptions/Subscription.php#L379-L385)
 
 ### `pronamic_subscription_source_description_{$source}`
 
+*Filters the subscription source description by plugin integration source.*
+
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$default_text` |  | 
-`$this` |  | 
+`$description` | `string` | Source description.
+`$subscription` | `\Pronamic\WordPress\Pay\Subscriptions\Subscription` | Subscription.
 
-Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 383](../src/Subscriptions/Subscription.php#L383-L383)
+Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 403](../src/Subscriptions/Subscription.php#L403-L409)
 
 ### `pronamic_subscription_source_description`
 
+*Filters the subscription source description.*
+
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$text` |  | 
-`$this` |  | 
+`$description` | `string` | Source description.
+`$subscription` | `\Pronamic\WordPress\Pay\Subscriptions\Subscription` | Subscription.
 
-Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 384](../src/Subscriptions/Subscription.php#L384-L384)
+Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 412](../src/Subscriptions/Subscription.php#L412-L418)
 
 ### `pronamic_subscription_source_url`
 
-**Arguments**
-
-Argument | Type | Description
--------- | ---- | -----------
-`$url` |  | 
-`$this` |  | 
-
-Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 397](../src/Subscriptions/Subscription.php#L397-L397)
-
-### `pronamic_subscription_source_url_{$this->source}`
+*Filters the subscription source URL.*
 
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$url` |  | 
-`$this` |  | 
+`$url` | `null\|string` | Source URL.
+`$subscription` | `\Pronamic\WordPress\Pay\Subscriptions\Subscription` | Subscription.
 
-Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 398](../src/Subscriptions/Subscription.php#L398-L398)
+Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 435](../src/Subscriptions/Subscription.php#L435-L441)
+
+### `pronamic_subscription_source_url_{$source}`
+
+*Filters the subscription source URL by plugin integration source.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$url` | `null\|string` | Source URL.
+`$subscription` | `\Pronamic\WordPress\Pay\Subscriptions\Subscription` | Subscription.
+
+Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 444](../src/Subscriptions/Subscription.php#L444-L450)
 
 ### `pronamic_pay_subscription_next_payment_delivery_date`
 

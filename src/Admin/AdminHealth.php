@@ -402,8 +402,6 @@ class AdminHealth {
 				continue;
 			}
 
-			$plugin_file = null;
-
 			foreach ( $extensions as $extension ) {
 				// Requires at least.
 				$requires_at_least = '0.0.0';

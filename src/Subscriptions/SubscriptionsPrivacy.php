@@ -198,7 +198,7 @@ class SubscriptionsPrivacy {
 			$message = __( 'Subscription ID %s anonymized.', 'pronamic_ideal' );
 
 			// Anonymize completed and cancelled subscriptions.
-			if ( isset( $subscription_status ) && in_array( $subscription_status, array( PaymentStatus::COMPLETED, PaymentStatus::CANCELLED ), true ) ) {
+			if ( isset( $subscription_status ) && in_array( $subscription_status, array( SubscriptionStatus::COMPLETED, SubscriptionStatus::CANCELLED ), true ) ) {
 				// Erase subscription meta.
 				foreach ( $meta_keys as $meta_key => $meta_options ) {
 					$meta_key = $data_store->meta_key_prefix . $meta_key;

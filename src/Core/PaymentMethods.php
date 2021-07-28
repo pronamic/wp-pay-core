@@ -513,7 +513,7 @@ class PaymentMethods {
 		);
 
 		foreach ( $query->posts as $config_id ) {
-			$gateway = Plugin::get_gateway( $config_id );
+			$gateway = Plugin::get_gateway( (int) $config_id );
 
 			if ( ! $gateway ) {
 				continue;

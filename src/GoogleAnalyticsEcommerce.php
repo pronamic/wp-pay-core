@@ -12,6 +12,7 @@ namespace Pronamic\WordPress\Pay;
 
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\Server;
+use Pronamic\WordPress\Pay\Payments\PaymentLine;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Payments\Payment;
 
@@ -206,9 +207,21 @@ class GoogleAnalyticsEcommerce {
 
 				/*
 				 * Item Name - Required for item hit type. - Specifies the item name.
+				 *
 				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#in
 				 */
-				$item['in'] = \apply_filters( 'pronamic_pay_google_analytics_ecommerce_item_name', $line->get_name(), $line );
+				$name = $line->get_name();
+
+				/**
+				 * Filters the item name for Google Analytics e-commerce tracking.
+				 *
+				 * @param string      $name Item name.
+				 * @param PaymentLine $line Payment line.
+				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#in
+				 */
+				$name = \apply_filters( 'pronamic_pay_google_analytics_ecommerce_item_name', $name, $line );
+
+				$item['in'] = $name;
 
 				/*
 				 * Item Price - Optional. - Specifies the price for a single item / unit.
@@ -244,7 +257,16 @@ class GoogleAnalyticsEcommerce {
 				 * Item Category - Optional. - Specifies the category that the item belongs to.
 				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#iv
 				 */
-				$product_category = \apply_filters( 'pronamic_pay_google_analytics_ecommerce_item_product_category', $line->get_product_category(), $line );
+				$product_category = $line->get_product_category();
+
+				/**
+				 * Filters the product category for Google Analytics e-commerce tracking.
+				 *
+				 * @param string      $product_category Product category.
+				 * @param PaymentLine $line             Payment line.
+				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#iv
+				 */
+				$product_category = \apply_filters( 'pronamic_pay_google_analytics_ecommerce_item_product_category', $product_category, $line );
 
 				if ( null !== $product_category ) {
 					$item['iv'] = $product_category;

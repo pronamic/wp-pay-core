@@ -90,7 +90,7 @@
 			"@xmllint-phpcs"
 		],
 		"build-docs": [
-			"vendor/bin/wp-documentor parse src --format=markdown --relative=docs > docs/hooks.md"
+			"XDEBUG_MODE=off vendor/bin/wp-documentor parse src --format=markdown --relative=docs > docs/hooks.md"
 		]
 	}
 }
