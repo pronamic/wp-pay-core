@@ -46,7 +46,7 @@ class SubscriptionPeriod {
 	/**
 	 * The amount to pay for this period.
 	 *
-	 * @var TaxedMoney
+	 * @var Money
 	 */
 	private $amount;
 
@@ -56,9 +56,9 @@ class SubscriptionPeriod {
 	 * @param SubscriptionPhase $phase        Subscription phase.
 	 * @param DateTime          $start_date   Start date.
 	 * @param DateTime          $end_date     End date.
-	 * @param TaxedMoney        $amount       Taxed amount.
+	 * @param Money             $amount       Taxed amount.
 	 */
-	public function __construct( SubscriptionPhase $phase, DateTime $start_date, DateTime $end_date, TaxedMoney $amount ) {
+	public function __construct( SubscriptionPhase $phase, DateTime $start_date, DateTime $end_date, Money $amount ) {
 		$this->phase      = $phase;
 		$this->start_date = $start_date;
 		$this->end_date   = $end_date;
@@ -105,7 +105,7 @@ class SubscriptionPeriod {
 	/**
 	 * Get amount.
 	 *
-	 * @return TaxedMoney
+	 * @return Money
 	 */
 	public function get_amount() {
 		return $this->amount;

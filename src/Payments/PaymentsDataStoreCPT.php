@@ -761,7 +761,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		if ( empty( $amount_value ) && ! empty( $amount ) ) {
 			$payment->set_total_amount(
-				new TaxedMoney(
+				new Money(
 					$amount,
 					$payment->get_meta( 'currency' )
 				)

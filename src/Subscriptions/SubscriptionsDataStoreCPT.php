@@ -13,6 +13,7 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 use DatePeriod;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
+use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Payments\LegacyPaymentsDataStoreCPT;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
@@ -380,7 +381,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		// Phases.
 		if ( is_object( $json ) && ! property_exists( $json, 'phases' ) ) {
 			// Amount.
-			$amount = new TaxedMoney(
+			$amount = new Money(
 				(string) $this->get_meta( $id, 'amount' ),
 				(string) $this->get_meta_string( $id, 'currency' )
 			);

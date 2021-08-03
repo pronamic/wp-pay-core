@@ -48,7 +48,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Amount.
 	 *
-	 * @var TaxedMoney
+	 * @var Money
 	 */
 	private $amount;
 
@@ -129,10 +129,10 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @param Subscription         $subscription Subscription.
 	 * @param DateTimeImmutable    $start_date   Start date.
 	 * @param SubscriptionInterval $interval     Interval.
-	 * @param TaxedMoney           $amount       Amount.
+	 * @param Money                $amount       Amount.
 	 * @return void
 	 */
-	public function __construct( Subscription $subscription, DateTimeImmutable $start_date, SubscriptionInterval $interval, TaxedMoney $amount ) {
+	public function __construct( Subscription $subscription, DateTimeImmutable $start_date, SubscriptionInterval $interval, Money $amount ) {
 		$this->subscription = $subscription;
 		$this->start_date   = $start_date;
 		$this->interval     = $interval;
@@ -250,7 +250,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Get amount.
 	 *
-	 * @return TaxedMoney
+	 * @return Money
 	 */
 	public function get_amount() {
 		return $this->amount;
@@ -259,7 +259,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Set amount.
 	 *
-	 * @param TaxedMoney $amount Amount.
+	 * @param Money $amount Amount.
 	 * @return void
 	 */
 	public function set_amount( $amount ) {

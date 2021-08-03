@@ -71,7 +71,7 @@ class PaymentLine {
 	/**
 	 * The unit price of this payment line.
 	 *
-	 * @var TaxedMoney|null
+	 * @var Money|null
 	 */
 	private $unit_price;
 
@@ -85,7 +85,7 @@ class PaymentLine {
 	/**
 	 * Total amount of this payment line.
 	 *
-	 * @var TaxedMoney
+	 * @var Money
 	 */
 	private $total_amount;
 
@@ -121,7 +121,7 @@ class PaymentLine {
 	 * Payment line constructor.
 	 */
 	public function __construct() {
-		$this->set_total_amount( new TaxedMoney() );
+		$this->set_total_amount( new Money() );
 	}
 
 	/**
@@ -241,7 +241,7 @@ class PaymentLine {
 	/**
 	 * Get unit price.
 	 *
-	 * @return TaxedMoney|null
+	 * @return Money|null
 	 */
 	public function get_unit_price() {
 		return $this->unit_price;
@@ -250,10 +250,10 @@ class PaymentLine {
 	/**
 	 * Set unit price.
 	 *
-	 * @param TaxedMoney|null $price Unit price.
+	 * @param Money|null $price Unit price.
 	 * @return void
 	 */
-	public function set_unit_price( TaxedMoney $price = null ) {
+	public function set_unit_price( Money $price = null ) {
 		$this->unit_price = ( null === $price ? null : $price );
 	}
 
@@ -297,7 +297,7 @@ class PaymentLine {
 	/**
 	 * Get total amount.
 	 *
-	 * @return TaxedMoney
+	 * @return Money
 	 */
 	public function get_total_amount() {
 		return $this->total_amount;
@@ -306,10 +306,10 @@ class PaymentLine {
 	/**
 	 * Set total amount.
 	 *
-	 * @param TaxedMoney $total_amount Total amount.
+	 * @param Money $total_amount Total amount.
 	 * @return void
 	 */
-	public function set_total_amount( TaxedMoney $total_amount ) {
+	public function set_total_amount( Money $total_amount ) {
 		$this->total_amount = $total_amount;
 	}
 

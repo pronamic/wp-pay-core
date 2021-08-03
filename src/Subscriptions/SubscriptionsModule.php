@@ -14,6 +14,7 @@ use DateInterval;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeImmutable;
 use Pronamic\WordPress\DateTime\DateTimeZone;
+use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
@@ -334,7 +335,7 @@ class SubscriptionsModule {
 						$amount = 0.01;
 				}
 
-				$total_amount = new TaxedMoney(
+				$total_amount = new Money(
 					$amount,
 					$payment->get_total_amount()->get_currency()
 				);

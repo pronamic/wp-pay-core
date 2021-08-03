@@ -39,7 +39,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * The total amount of this payment.
 	 *
-	 * @var TaxedMoney
+	 * @var Money
 	 */
 	private $total_amount;
 
@@ -264,7 +264,7 @@ class Payment extends LegacyPayment {
 
 		$this->set_status( PaymentStatus::OPEN );
 
-		$this->set_total_amount( new TaxedMoney() );
+		$this->set_total_amount( new Money() );
 
 		if ( null !== $post_id ) {
 			pronamic_pay_plugin()->payments_data_store->read( $this );
@@ -366,7 +366,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Get total amount.
 	 *
-	 * @return TaxedMoney
+	 * @return Money
 	 */
 	public function get_total_amount() {
 		return $this->total_amount;
@@ -375,10 +375,10 @@ class Payment extends LegacyPayment {
 	/**
 	 * Set total amount.
 	 *
-	 * @param TaxedMoney $total_amount Total amount.
+	 * @param Money $total_amount Total amount.
 	 * @return void
 	 */
-	public function set_total_amount( TaxedMoney $total_amount ) {
+	public function set_total_amount( Money $total_amount ) {
 		$this->total_amount = $total_amount;
 	}
 
