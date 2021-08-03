@@ -230,7 +230,7 @@ class SubscriptionPeriod {
 			),
 			'start_date' => $this->start_date->format( \DATE_ATOM ),
 			'end_date'   => $this->end_date->format( \DATE_ATOM ),
-			'amount'     => TaxedMoneyJsonTransformer::to_json( $this->amount ),
+			'amount'     => $this->amount->jsonSerialize(),
 		);
 
 		return $json;

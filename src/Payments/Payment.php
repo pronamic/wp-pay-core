@@ -977,14 +977,14 @@ class Payment extends LegacyPayment {
 		$total_amount = $this->get_total_amount();
 
 		if ( null !== $total_amount ) {
-			$properties['total_amount'] = TaxedMoneyJsonTransformer::to_json( $total_amount );
+			$properties['total_amount'] = $total_amount->jsonSerialize();
 		}
 
 		// Refunded amount.
 		$refunded_amount = $this->get_refunded_amount();
 
 		if ( null !== $refunded_amount ) {
-			$properties['refunded_amount'] = MoneyJsonTransformer::to_json( $refunded_amount );
+			$properties['refunded_amount'] = $refunded_amount->jsonSerialize();
 		}
 
 		// Periods.
