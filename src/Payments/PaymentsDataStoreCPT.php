@@ -237,6 +237,11 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 			$this->update_post_meta( $payment );
 
+			/**
+			 * Payment updated.
+			 *
+			 * @param Payment $payment Payment.
+			 */
 			do_action( 'pronamic_pay_update_payment', $payment );
 		}
 
@@ -279,6 +284,11 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			return false;
 		}
 
+		/**
+		 * New payment created.
+		 *
+		 * @param Payment $payment Payment.
+		 */
 		do_action( 'pronamic_pay_new_payment', $payment );
 
 		return true;
@@ -734,7 +744,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$payment->method              = $this->get_meta_string( $id, 'method' );
 		$payment->issuer              = $this->get_meta_string( $id, 'issuer' );
 		$payment->order_id            = $this->get_meta_string( $id, 'order_id' );
-		$payment->transaction_id      = $this->get_meta_string( $id, 'transaction_id' );
 		$payment->entrance_code       = $this->get_meta_string( $id, 'entrance_code' );
 		$payment->action_url          = $this->get_meta_string( $id, 'action_url' );
 		$payment->source              = $this->get_meta_string( $id, 'source' );
@@ -753,6 +762,11 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		// Legacy.
 		parent::read_post_meta( $payment );
+
+		// Transaction ID.
+		if ( empty( $payment->transaction_id ) ) {
+			$payment->transaction_id = $this->get_meta_string( $id, 'transaction_id' );
+		}
 
 		// Amount.
 		$amount = $payment->get_meta( 'amount' );
@@ -870,19 +884,140 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$this->update_meta( $id, 'status', $payment->status );
 
 		if ( $previous_status !== $payment->status ) {
-			$old = $previous_status;
-			$old = empty( $old ) ? 'unknown' : $old;
-			$old = strtolower( $old );
-
-			$new = $payment->status;
-			$new = empty( $new ) ? 'unknown' : $new;
-			$new = strtolower( $new );
+			if ( empty( $previous_status ) ) {
+				$previous_status = null;
+			}
 
 			$can_redirect = false;
 
-			do_action( 'pronamic_payment_status_update_' . $payment->source . '_' . $old . '_to_' . $new, $payment, $can_redirect, $previous_status, $payment->status );
-			do_action( 'pronamic_payment_status_update_' . $payment->source, $payment, $can_redirect, $previous_status, $payment->status );
-			do_action( 'pronamic_payment_status_update', $payment, $can_redirect, $previous_status, $payment->status );
+			$source = $payment->source;
+
+			$updated_status = $payment->status;
+
+			$old_status = empty( $previous_status ) ? 'unknown' : strtolower( $previous_status );
+
+			$new_status = empty( $updated_status ) ? 'unknown' : strtolower( $updated_status );
+
+			/**
+			 * Payment status updated for plugin integration source from old to new status.
+			 *
+			 * **Source**
+			 *
+			 * Plugin | Source
+			 * ------ | ------
+			 * Charitable | `charitable`
+			 * Contact Form 7 | `contact-form-7`
+			 * Event Espresso | `eventespresso`
+			 * Event Espresso (legacy) | `event-espresso`
+			 * Formidable Forms | `formidable-forms`
+			 * Give | `give`
+			 * Gravity Forms | `gravityformsideal`
+			 * MemberPress | `memberpress`
+			 * Ninja Forms | `ninja-forms`
+			 * s2Member | `s2member`
+			 * WooCommerce | `woocommerce`
+			 * WP eCommerce | `wp-e-commerce`
+			 *
+			 * **Action status**
+			 *
+			 * Status | Value
+			 * ------ | -----
+			 * (empty) | `unknown`
+			 * Cancelled | `cancelled`
+			 * Expired | `expired`
+			 * Failure | `failure`
+			 * Open | `open`
+			 * Reserved | `reserved`
+			 * Success | `success`
+			 *
+			 * **Payment status**
+			 *
+			 * Status | Value
+			 * ------ | -----
+			 * Cancelled | `Cancelled`
+			 * Expired | `Expired`
+			 * Failure | `Failure`
+			 * Open | `Open`
+			 * Reserved | `Reserved`
+			 * Success | `Success`
+			 *
+			 * @param Payment     $payment         Payment.
+			 * @param bool        $can_redirect    Flag to indicate if redirect is allowed after the payment update.
+			 * @param null|string $previous_status Previous payment status.
+			 * @param string      $updated_status  Updated payment status.
+			 */
+			do_action( 'pronamic_payment_status_update_' . $source . '_' . $old_status . '_to_' . $new_status, $payment, $can_redirect, $previous_status, $updated_status );
+
+			/**
+			 * Payment status updated for plugin integration source.
+			 *
+			 * **Source**
+			 *
+			 * Plugin | Source
+			 * ------ | ------
+			 * Charitable | `charitable`
+			 * Contact Form 7 | `contact-form-7`
+			 * Event Espresso | `eventespresso`
+			 * Event Espresso (legacy) | `event-espresso`
+			 * Formidable Forms | `formidable-forms`
+			 * Give | `give`
+			 * Gravity Forms | `gravityformsideal`
+			 * MemberPress | `memberpress`
+			 * Ninja Forms | `ninja-forms`
+			 * s2Member | `s2member`
+			 * WooCommerce | `woocommerce`
+			 * WP eCommerce | `wp-e-commerce`
+			 *
+			 * **Action status**
+			 *
+			 * Status | Value
+			 * ------ | -----
+			 * (empty) | `unknown`
+			 * Cancelled | `cancelled`
+			 * Expired | `expired`
+			 * Failure | `failure`
+			 * Open | `open`
+			 * Reserved | `reserved`
+			 * Success | `success`
+			 *
+			 * **Payment status**
+			 *
+			 * Status | Value
+			 * ------ | -----
+			 * Cancelled | `Cancelled`
+			 * Expired | `Expired`
+			 * Failure | `Failure`
+			 * Open | `Open`
+			 * Reserved | `Reserved`
+			 * Success | `Success`
+			 *
+			 * @param Payment     $payment         Payment.
+			 * @param bool        $can_redirect    Flag to indicate if redirect is allowed after the payment update.
+			 * @param null|string $previous_status Previous payment status.
+			 * @param string      $updated_status  Updated payment status.
+			 */
+			do_action( 'pronamic_payment_status_update_' . $source, $payment, $can_redirect, $previous_status, $updated_status );
+
+			/**
+			 * Payment status updated.
+			 *
+			 * **Payment status**
+			 *
+			 * Status | Value
+			 * ------ | -----
+			 * Cancelled | `Cancelled`
+			 * Expired | `Expired`
+			 * Failure | `Failure`
+			 * Open | `Open`
+			 * Reserved | `Reserved`
+			 * Success | `Success`
+			 *
+			 * @param Payment     $payment         Payment.
+			 * @param bool        $can_redirect    Flag to indicate if redirect is allowed after the payment update.
+			 * @param null|string $previous_status Previous payment status.
+			 * @param string      $updated_status  Updated payment status.
+			 */
+			do_action( 'pronamic_payment_status_update', $payment, $can_redirect, $previous_status, $updated_status );
 		}
 	}
 }

@@ -360,12 +360,29 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 
 		$pieces = array_filter( $pieces );
 
-		$default_text = implode( '<br />', $pieces );
+		$text = implode( '<br />', $pieces );
 
 		$source = $this->get_source();
 
-		$text = apply_filters( 'pronamic_subscription_source_text_' . $source, $default_text, $this );
-		$text = apply_filters( 'pronamic_subscription_source_text', $text, $this );
+		$subscription = $this;
+
+		if ( null !== $source ) {
+			/**
+			 * Filters the subscription source text by plugin integration source.
+			 *
+			 * @param string       $text         Source text.
+			 * @param Subscription $subscription Subscription.
+			 */
+			$text = apply_filters( 'pronamic_subscription_source_text_' . $source, $text, $subscription );
+		}
+
+		/**
+		 * Filters the subscription source text.
+		 *
+		 * @param string       $text         Source text.
+		 * @param Subscription $subscription Subscription.
+		 */
+		$text = apply_filters( 'pronamic_subscription_source_text', $text, $subscription );
 
 		return $text;
 	}
@@ -376,14 +393,31 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 	 * @return string
 	 */
 	public function get_source_description() {
-		$source = $this->get_source();
+		$subscription = $this;
 
-		$default_text = $this->get_source();
+		$source = $subscription->get_source();
 
-		$text = apply_filters( 'pronamic_subscription_source_description_' . $source, $default_text, $this );
-		$text = apply_filters( 'pronamic_subscription_source_description', $text, $this );
+		$description = $source;
 
-		return $text;
+		if ( null !== $source ) {
+			/**
+			 * Filters the subscription source description by plugin integration source.
+			 *
+			 * @param string       $description  Source description.
+			 * @param Subscription $subscription Subscription.
+			 */
+			$description = apply_filters( 'pronamic_subscription_source_description_' . $source, $description, $subscription );
+		}
+
+		/**
+		 * Filters the subscription source description.
+		 *
+		 * @param string       $description  Source description.
+		 * @param Subscription $subscription Subscription.
+		 */
+		$description = apply_filters( 'pronamic_subscription_source_description', $description, $subscription );
+
+		return $description;
 	}
 
 	/**
@@ -394,8 +428,27 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 	public function get_source_link() {
 		$url = null;
 
-		$url = apply_filters( 'pronamic_subscription_source_url', $url, $this );
-		$url = apply_filters( 'pronamic_subscription_source_url_' . $this->source, $url, $this );
+		$subscription = $this;
+
+		$source = $subscription->get_source();
+
+		/**
+		 * Filters the subscription source URL.
+		 *
+		 * @param null|string  $url          Source URL.
+		 * @param Subscription $subscription Subscription.
+		 */
+		$url = apply_filters( 'pronamic_subscription_source_url', $url, $subscription );
+
+		if ( null !== $source ) {
+			/**
+			 * Filters the subscription source URL by plugin integration source.
+			 *
+			 * @param null|string  $url          Source URL.
+			 * @param Subscription $subscription Subscription.
+			 */
+			$url = apply_filters( 'pronamic_subscription_source_url_' . $source, $url, $subscription );
+		}
 
 		return $url;
 	}
@@ -412,7 +465,7 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 				'key'          => $this->get_key(),
 				'action'       => 'cancel',
 			),
-			home_url()
+			home_url( '/' )
 		);
 
 		return $cancel_url;
@@ -430,7 +483,7 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 				'key'          => $this->get_key(),
 				'action'       => 'renew',
 			),
-			home_url()
+			home_url( '/' )
 		);
 
 		return $renewal_url;
@@ -448,7 +501,7 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 				'key'          => $this->get_key(),
 				'action'       => 'mandate',
 			),
-			home_url()
+			home_url( '/' )
 		);
 
 		return $url;

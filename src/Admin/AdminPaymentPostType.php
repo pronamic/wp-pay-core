@@ -524,7 +524,17 @@ class AdminPaymentPostType {
 				$config_id = get_post_meta( $post_id, '_pronamic_payment_config_id', true );
 				$config_id = intval( $config_id );
 
-				if ( ! empty( $config_id ) ) {
+				$gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
+
+				$integration = $this->plugin->gateway_integrations->get_integration( $gateway_id );
+
+				if ( null !== $integration ) {
+					printf(
+						'<a href="%1$s" title="%2$s">%2$s</a>',
+						\esc_url( (string) \get_edit_post_link( $config_id ) ),
+						\esc_html( \get_the_title( $config_id ) )
+					);
+				} elseif ( ! empty( $config_id ) ) {
 					echo esc_html( get_the_title( $config_id ) );
 				} else {
 					echo '—';

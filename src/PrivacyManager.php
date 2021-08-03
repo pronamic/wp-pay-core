@@ -49,7 +49,14 @@ class PrivacyManager {
 	 * @return array
 	 */
 	public function register_exporters( $exporters ) {
-		do_action( 'pronamic_pay_privacy_register_exporters', $this );
+		$privacy_manager = $this;
+
+		/**
+		 * Register privacy exporters.
+		 *
+		 * @param PrivacyManager $privacy_manager Privacy manager.
+		 */
+		do_action( 'pronamic_pay_privacy_register_exporters', $privacy_manager );
 
 		foreach ( $this->exporters as $id => $exporter ) {
 			$exporters[ $id ] = $exporter;
@@ -65,7 +72,14 @@ class PrivacyManager {
 	 * @return array
 	 */
 	public function register_erasers( $erasers ) {
-		do_action( 'pronamic_pay_privacy_register_erasers', $this );
+		$privacy_manager = $this;
+
+		/**
+		 * Register privacy erasers.
+		 *
+		 * @param PrivacyManager $privacy_manager Privacy manager.
+		 */
+		do_action( 'pronamic_pay_privacy_register_erasers', $privacy_manager );
 
 		foreach ( $this->erasers as $id => $eraser ) {
 			$erasers[ $id ] = $eraser;

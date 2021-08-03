@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Core;
 
 use Pronamic\WordPress\Pay\Plugin;
+use WP_Post;
 use WP_Query;
 
 /**
@@ -275,6 +276,14 @@ class PaymentMethods {
 	const SOFORT = 'sofort';
 
 	/**
+	 * SprayPay
+	 *
+	 * @var string
+	 * @since 2.8.0
+	 */
+	const SPRAYPAY = 'spraypay';
+
+	/**
 	 * Swish
 	 *
 	 * @var string
@@ -341,6 +350,7 @@ class PaymentMethods {
 			self::PRZELEWY24              => __( 'Przelewy24', 'pronamic_ideal' ),
 			self::SANTANDER               => __( 'Santander', 'pronamic_ideal' ),
 			self::SOFORT                  => __( 'SOFORT Banking', 'pronamic_ideal' ),
+			self::SPRAYPAY                => __( 'SprayPay', 'pronamic_ideal' ),
 			self::SWISH                   => __( 'Swish', 'pronamic_ideal' ),
 			self::VIPPS                   => __( 'Vipps', 'pronamic_ideal' ),
 		);
@@ -513,6 +523,10 @@ class PaymentMethods {
 		);
 
 		foreach ( $query->posts as $config_id ) {
+			if ( $config_id instanceof WP_Post ) {
+				$config_id = $config_id->ID;
+			}
+
 			$gateway = Plugin::get_gateway( $config_id );
 
 			if ( ! $gateway ) {

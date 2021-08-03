@@ -132,14 +132,15 @@ class Util {
 			return \wp_doing_cron();
 		}
 
+		$wp_doing_cron = defined( 'DOING_CRON' ) && DOING_CRON;
+
 		/**
 		 * Filters whether the current request is a WordPress cron request.
 		 *
-		 * @since 4.8.0
-		 *
 		 * @param bool $wp_doing_cron Whether the current request is a WordPress cron request.
+		 * @since 4.8.0
 		 */
-		return apply_filters( 'wp_doing_cron', defined( 'DOING_CRON' ) && DOING_CRON );
+		return apply_filters( 'wp_doing_cron', $wp_doing_cron );
 	}
 
 	/**
@@ -181,16 +182,16 @@ class Util {
 	 *
 	 * @param float $amount The amount to convert to cents.
 	 *
-	 * @deprecated 2.0.9 Use \Pronamic\WordPress\Money\Money::get_cents() instead.
+	 * @deprecated 2.0.9 Use \Pronamic\WordPress\Money\Money::get_minor_units()->to_int() instead.
 	 *
-	 * @return float
+	 * @return int
 	 */
 	public static function amount_to_cents( $amount ) {
-		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Money\Money::get_cents()' );
+		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Money\Money::get_minor_units()->to_int()' );
 
 		$money = new Money( $amount );
 
-		return $money->get_cents();
+		return $money->get_minor_units()->to_int();
 	}
 
 	/**

@@ -1024,6 +1024,28 @@ class SubscriptionsModule {
 			// Send renewal notice.
 			$source = $subscription->get_source();
 
+			/**
+			 * Send renewal notice for source.
+			 *
+			 * **Source**
+			 *
+			 * Plugin | Source
+			 * ------ | ------
+			 * Charitable | `charitable`
+			 * Contact Form 7 | `contact-form-7`
+			 * Event Espresso | `eventespresso`
+			 * Event Espresso (legacy) | `event-espresso`
+			 * Formidable Forms | `formidable-forms`
+			 * Give | `give`
+			 * Gravity Forms | `gravityformsideal`
+			 * MemberPress | `memberpress`
+			 * Ninja Forms | `ninja-forms`
+			 * s2Member | `s2member`
+			 * WooCommerce | `woocommerce`
+			 * WP eCommerce | `wp-e-commerce`
+			 *
+			 * @param Subscription $subscription Subscription.
+			 */
 			do_action( 'pronamic_subscription_renewal_notice_' . $source, $subscription );
 
 			// Update renewal notice sent date meta.
@@ -1132,8 +1154,8 @@ class SubscriptionsModule {
 			if ( ! $gateway->supports( 'recurring' ) ) {
 				$now = new DateTime();
 
-				if ( PaymentStatus::COMPLETED !== $subscription->status && isset( $subscription->expiry_date ) && $subscription->expiry_date <= $now ) {
-					$subscription->status = PaymentStatus::EXPIRED;
+				if ( SubscriptionStatus::COMPLETED !== $subscription->status && isset( $subscription->expiry_date ) && $subscription->expiry_date <= $now ) {
+					$subscription->status = SubscriptionStatus::EXPIRED;
 
 					$subscription->save();
 

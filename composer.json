@@ -71,6 +71,10 @@
 		"wpackagist-plugin/shortcode-ui": "^0.7"
 	},
 	"scripts": {
+		"coverage": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-clover build/logs/clover.xml --coverage-text",
+		"coverage-clover": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-clover build/logs/clover.xml",
+		"coverage-html": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html build/coverage-html",
+		"coverage-text": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-text",
 		"coveralls": "vendor/bin/php-coveralls -v",
 		"phpcbf": "vendor/bin/phpcbf",
 		"phpcs": "XDEBUG_MODE=off vendor/bin/phpcs -s -v",
@@ -86,7 +90,7 @@
 			"@xmllint-phpcs"
 		],
 		"build-docs": [
-			"vendor/bin/wp-documentor parse src --format=markdown --relative=docs > docs/hooks.md"
+			"XDEBUG_MODE=off vendor/bin/wp-documentor parse src --format=markdown --relative=docs > docs/hooks.md"
 		]
 	}
 }
