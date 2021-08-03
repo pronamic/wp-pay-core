@@ -134,25 +134,24 @@ class GoogleAnalyticsEcommerce {
 			'ni'  => 1,
 		);
 
+		$total_amount = $payment->get_total_amount();
+
 		// Transaction Hit.
 		$transaction = wp_parse_args(
 			array(
 				't'  => 'transaction',
-				'tr' => sprintf( '%F', $payment->get_total_amount()->get_value() ),
+				'tr' => $total_amount->number_format( null, '.', '' ),
 			),
 			$defaults
 		);
 
-		// Currency.
-		if ( null !== $payment->get_total_amount()->get_currency()->get_alphabetic_code() ) {
-			/*
-			 * Currency Code
-			 * Optional.
-			 * When present indicates the local currency for all transaction currency values. Value should be a valid ISO 4217 currency code.
-			 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cu
-			 */
-			$transaction['cu'] = $payment->get_total_amount()->get_currency()->get_alphabetic_code();
-		}
+		/*
+		 * Currency Code
+		 * Optional.
+		 * When present indicates the local currency for all transaction currency values. Value should be a valid ISO 4217 currency code.
+		 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cu
+		 */
+		$transaction['cu'] = $total_amount->get_currency()->get_alphabetic_code();
 
 		// Shipping.
 		$shipping_amount = $payment->get_shipping_amount();
@@ -164,18 +163,18 @@ class GoogleAnalyticsEcommerce {
 			 * Specifies the total shipping cost of the transaction.
 			 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ts
 			 */
-			$transaction['ts'] = sprintf( '%F', $shipping_amount->get_value() );
+			$transaction['ts'] = $shipping_amount->number_format( null, '.', '' );
 		}
 
 		// Tax.
-		if ( $payment->get_total_amount()->has_tax() ) {
+		if ( $total_amount instanceof TaxedMoney ) {
 			/*
 			 * Transaction Tax
 			 * Optional.
 			 * Specifies the total tax of the transaction.
 			 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#tt
 			 */
-			$transaction['tt'] = sprintf( '%F', $payment->get_total_amount()->get_tax_value() );
+			$transaction['tt'] = sprintf( '%F', $total_amount->get_tax_value() );
 		}
 
 		wp_remote_post(
@@ -230,7 +229,7 @@ class GoogleAnalyticsEcommerce {
 				$unit_price = $line->get_unit_price();
 
 				if ( null !== $unit_price ) {
-					$item['ip'] = sprintf( '%F', $unit_price->get_value() );
+					$item['ip'] = $unit_price->number_format( null, '.', '' );
 				}
 
 				/*
