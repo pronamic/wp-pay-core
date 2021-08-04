@@ -16,11 +16,16 @@ use Pronamic\WordPress\Pay\Plugin;
 
 $extensions_json_path = Plugin::$dirname . '/other/extensions.json';
 
-if ( ! file_exists( $extensions_json_path ) ) :
+if ( ! file_exists( $extensions_json_path ) ) {
 	return;
-endif;
+}
 
-$data       = file_get_contents( $extensions_json_path );
+$data = file_get_contents( $extensions_json_path, true );
+
+if ( false === $data ) {
+	return;
+}
+
 $extensions = json_decode( $data );
 
 ?>
