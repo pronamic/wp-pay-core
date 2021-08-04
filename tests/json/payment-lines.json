@@ -4,7 +4,7 @@
         "description":"Lorem ipsum dolor sit amet.",
         "quantity":50,
         "total_amount":{
-            "value":39.99,
+            "value":"39.99",
             "currency":"EUR"
         }
     },
@@ -13,19 +13,19 @@
         "description":"Lorem ipsum dolor sit amet.",
         "quantity":10,
         "total_amount":{
-            "value":25,
+            "value":"25",
             "currency":"EUR"
         }
     },
     {
         "total_amount":{
-            "value":0,
+            "value":"0",
             "currency":"EUR"
         }
     },
     {
         "total_amount":{
-            "value":0,
+            "value":"0",
             "currency":"EUR"
         }
     }

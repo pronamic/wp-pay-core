@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Admin;
 
 use Pronamic\WordPress\Money\Parser as MoneyParser;
+use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\AddressHelper;
@@ -741,7 +742,7 @@ class AdminModule {
 
 		$line = $payment->lines->new_line();
 
-		$price = new TaxedMoney( $amount, 'EUR' );
+		$price = new Money( $amount, 'EUR' );
 
 		$line->set_name( __( 'Test', 'pronamic_ideal' ) );
 		$line->set_unit_price( $price );

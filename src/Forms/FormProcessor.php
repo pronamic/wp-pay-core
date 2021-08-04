@@ -12,6 +12,7 @@ namespace Pronamic\WordPress\Pay\Forms;
 
 use Exception;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
+use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Customer;
@@ -177,7 +178,7 @@ class FormProcessor {
 		}
 
 		$payment->set_total_amount(
-			new TaxedMoney(
+			new Money(
 				$amount,
 				'EUR'
 			)
