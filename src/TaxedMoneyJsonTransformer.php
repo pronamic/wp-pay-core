@@ -22,39 +22,6 @@ use Pronamic\WordPress\Money\TaxedMoney;
  */
 class TaxedMoneyJsonTransformer {
 	/**
-	 * Convert taxed money object to JSON.
-	 *
-	 * @param TaxedMoney|null $money Money.
-	 *
-	 * @return null|object
-	 */
-	public static function to_json( TaxedMoney $money = null ) {
-		if ( null === $money ) {
-			return null;
-		}
-
-		$object = MoneyJsonTransformer::to_json( $money );
-
-		if ( null === $object ) {
-			return null;
-		}
-
-		$properties = (array) $object;
-
-		if ( null !== $money->get_tax_value() ) {
-			$properties['tax_value'] = $money->get_tax_value();
-		}
-
-		if ( null !== $money->get_tax_percentage() ) {
-			$properties['tax_percentage'] = $money->get_tax_percentage();
-		}
-
-		$object = (object) $properties;
-
-		return $object;
-	}
-
-	/**
 	 * Convert JSON to taxed money object.
 	 *
 	 * @param mixed $json JSON.

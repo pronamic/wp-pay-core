@@ -22,31 +22,6 @@ use Pronamic\WordPress\Money\Money;
  */
 class MoneyJsonTransformer {
 	/**
-	 * Convert money object to JSON.
-	 *
-	 * @param Money|null $money Money.
-	 *
-	 * @return null|object
-	 */
-	public static function to_json( Money $money = null ) {
-		if ( null === $money ) {
-			return null;
-		}
-
-		$properties = array(
-			'value' => $money->get_value(),
-		);
-
-		if ( null !== $money->get_currency()->get_alphabetic_code() ) {
-			$properties['currency'] = $money->get_currency()->get_alphabetic_code();
-		}
-
-		$object = (object) $properties;
-
-		return $object;
-	}
-
-	/**
 	 * Convert JSON to money object.
 	 *
 	 * @param mixed $json JSON.

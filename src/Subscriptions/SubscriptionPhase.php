@@ -511,7 +511,7 @@ class SubscriptionPhase implements \JsonSerializable {
 			'sequence_number'   => $this->get_sequence_number(),
 			'start_date'        => $this->start_date->format( \DATE_ATOM ),
 			'interval'          => $this->interval->get_specification(),
-			'amount'            => MoneyJsonTransformer::to_json( $this->amount ),
+			'amount'            => $this->amount->jsonSerialize(),
 			// Numbers.
 			'total_periods'     => $this->total_periods,
 			'periods_created'   => $this->periods_created,

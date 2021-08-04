@@ -48,7 +48,7 @@ class PaymentInfoHelper {
 		$shipping_amount = $payment_info->get_shipping_amount();
 
 		if ( null !== $shipping_amount ) {
-			$object->shipping_amount = MoneyJsonTransformer::to_json( $shipping_amount );
+			$object->shipping_amount = $shipping_amount->jsonSerialize();
 		}
 
 		$customer = $payment_info->get_customer();
