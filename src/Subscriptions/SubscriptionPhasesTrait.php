@@ -61,9 +61,9 @@ trait SubscriptionPhasesTrait {
 	/**
 	 * Create new phase for this subscription.
 	 *
-	 * @param DateTime   $start_date    Start date.
-	 * @param string     $interval_spec Interval specification.
-	 * @param Money      $amount        Amount.
+	 * @param DateTime $start_date    Start date.
+	 * @param string   $interval_spec Interval specification.
+	 * @param Money    $amount        Amount.
 	 * @return SubscriptionPhase
 	 */
 	public function new_phase( $start_date, $interval_spec, $amount ) {

@@ -204,7 +204,7 @@ if ( empty( $lines ) ) : ?>
 
 						if ( null !== $unit_price ) {
 							$tips = array(
-								\__( 'No tax information.', 'pronamic_ideal' )
+								\__( 'No tax information.', 'pronamic_ideal' ),
 							);
 
 							if ( $unit_price instanceof TaxedMoney ) {
@@ -250,7 +250,7 @@ if ( empty( $lines ) ) : ?>
 						$line_total = $line->get_total_amount();
 
 						$tips = array(
-							\__( 'No tax information.', 'pronamic_ideal' )
+							\__( 'No tax information.', 'pronamic_ideal' ),
 						);
 
 						if ( $line_total instanceof TaxedMoney ) {

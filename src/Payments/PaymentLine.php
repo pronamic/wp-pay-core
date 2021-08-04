@@ -285,7 +285,7 @@ class PaymentLine {
 			return null;
 		}
 
-		$tax_value =  $this->total_amount->get_tax_value();
+		$tax_value = $this->total_amount->get_tax_value();
 
 		if ( null === $tax_value ) {
 			return null;
