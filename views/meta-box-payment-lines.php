@@ -105,54 +105,12 @@ if ( empty( $lines ) ) : ?>
 
 					$discount_amount = new Money( \array_sum( $values ), $lines->get_amount()->get_currency() );
 
-					echo \esc_html( $discount_amount );
+					echo \esc_html( $discount_amount->format_i18n() );
 
 					?>
 				</td>
 				<td>
-					<?php
-
-					$values = \array_map(
-						function ( PaymentLine $line ) {
-							return $line->get_total_amount()->get_excluding_tax()->get_value();
-						},
-						$lines->get_array()
-					);
-
-					$total_exclusive = new Money( \array_sum( $values ), $lines->get_amount()->get_currency() );
-
-					$tip = array(
-						\sprintf(
-							/* translators: %s: price excluding tax */
-							\__( 'Exclusive tax: %s', 'pronamic_ideal' ),
-							$total_exclusive
-						),
-					);
-
-					if ( $lines->get_amount()->has_tax() ) {
-						$values = \array_map(
-							function ( PaymentLine $line ) {
-								return $line->get_total_amount()->get_including_tax()->get_value();
-							},
-							$lines->get_array()
-						);
-
-						$total_inclusive = new Money( \array_sum( $values ), $lines->get_amount()->get_currency() );
-
-						$tip[] = \sprintf(
-							/* translators: %s: price including tax */
-							\__( 'Inclusive tax: %s', 'pronamic_ideal' ),
-							$total_inclusive
-						);
-					}
-
-					\printf(
-						'<span class="pronamic-pay-tip" title="%s">%s</span>',
-						\esc_attr( \implode( '<br />', $tip ) ),
-						\esc_html( $total_exclusive )
-					);
-
-					?>
+					<?php echo \esc_html( $lines->get_amount()->format_i18n() ); ?>
 				</td>
 				<td>
 					<?php
@@ -172,7 +130,7 @@ if ( empty( $lines ) ) : ?>
 
 					$tax_amount = new Money( \array_sum( $values ), $lines->get_amount()->get_currency() );
 
-					echo \esc_html( $tax_amount );
+					echo \esc_html( $tax_amount->format_i18n() );
 
 					?>
 				</td>
@@ -245,27 +203,29 @@ if ( empty( $lines ) ) : ?>
 						$unit_price = $line->get_unit_price();
 
 						if ( null !== $unit_price ) {
-
-							$tip = array(
-								\sprintf(
-									/* translators: %s: price excluding tax */
-									\__( 'Exclusive tax: %s', 'pronamic_ideal' ),
-									$unit_price->get_excluding_tax()
-								),
+							$tips = array(
+								\__( 'No tax information.', 'pronamic_ideal' )
 							);
 
-							if ( $unit_price->has_tax() ) {
-								$tip[] = \sprintf(
-									/* translators: %s: price including tax */
-									\__( 'Inclusive tax: %s', 'pronamic_ideal' ),
-									$unit_price->get_including_tax()
+							if ( $unit_price instanceof TaxedMoney ) {
+								$tips = array(
+									\sprintf(
+										/* translators: %s: price excluding tax */
+										\__( 'Exclusive tax: %s', 'pronamic_ideal' ),
+										$unit_price->get_excluding_tax()
+									),
+									\sprintf(
+										/* translators: %s: price including tax */
+										\__( 'Inclusive tax: %s', 'pronamic_ideal' ),
+										$unit_price->get_including_tax()
+									),
 								);
 							}
 
 							\printf(
 								'<span class="pronamic-pay-tip" title="%s">%s</span>',
-								\esc_attr( \implode( '<br />', $tip ) ),
-								\esc_html( $unit_price->get_excluding_tax() )
+								\esc_attr( \implode( '<br />', $tips ) ),
+								\esc_html( $unit_price->format_i18n() )
 							);
 
 						}
@@ -276,8 +236,10 @@ if ( empty( $lines ) ) : ?>
 					<td>
 						<?php
 
-						if ( null !== $line->get_discount_amount() ) {
-							echo \esc_html( $line->get_discount_amount() );
+						$discount_amount = $line->get_discount_amount();
+
+						if ( null !== $discount_amount ) {
+							echo \esc_html( $discount_amount );
 						}
 
 						?>
@@ -285,26 +247,31 @@ if ( empty( $lines ) ) : ?>
 					<td>
 						<?php
 
-						$tip = array(
-							\sprintf(
-								/* translators: %s: price excluding tax */
-								\__( 'Exclusive tax: %s', 'pronamic_ideal' ),
-								$line->get_total_amount()->get_excluding_tax()
-							),
+						$line_total = $line->get_total_amount();
+
+						$tips = array(
+							\__( 'No tax information.', 'pronamic_ideal' )
 						);
 
-						if ( $line->get_total_amount()->has_tax() ) {
-							$tip[] = \sprintf(
-								/* translators: %s: price including tax */
-								\__( 'Inclusive tax: %s', 'pronamic_ideal' ),
-								$line->get_total_amount()->get_including_tax()
+						if ( $line_total instanceof TaxedMoney ) {
+							$tips = array(
+								\sprintf(
+									/* translators: %s: price excluding tax */
+									\__( 'Exclusive tax: %s', 'pronamic_ideal' ),
+									$line->get_total_amount()->get_excluding_tax()
+								),
+								\sprintf(
+									/* translators: %s: price including tax */
+									\__( 'Inclusive tax: %s', 'pronamic_ideal' ),
+									$line->get_total_amount()->get_including_tax()
+								),
 							);
 						}
 
 						\printf(
 							'<span class="pronamic-pay-tip" title="%s">%s</span>',
-							\esc_attr( \implode( '<br />', $tip ) ),
-							\esc_html( $line->get_total_amount()->get_excluding_tax() )
+							\esc_attr( \implode( '<br />', $tips ) ),
+							\esc_html( $line_total->format_i18n() )
 						);
 
 						?>
@@ -312,20 +279,15 @@ if ( empty( $lines ) ) : ?>
 					<td>
 						<?php
 
-						$tax_amount = $line->get_total_amount()->get_tax_amount();
-
-						if ( null === $line->get_total_amount()->get_tax_percentage() ) {
-
-							echo \esc_html( $tax_amount );
-
-						} else {
+						if ( $line_total instanceof TaxedMoney ) {
+							$tax_amount     = $line_total->get_tax_amount();
+							$tax_percentage = $line_total->get_tax_percentage();
 
 							\printf(
 								'<span class="pronamic-pay-tip" title="%s">%s</span>',
-								\esc_attr( \number_format_i18n( $line->get_total_amount()->get_tax_percentage() ) . '%' ),
-								\esc_html( $tax_amount )
+								\esc_attr( \number_format_i18n( $tax_percentage ) . '%' ),
+								\esc_html( $tax_amount->format_i18n() )
 							);
-
 						}
 
 						?>

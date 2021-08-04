@@ -103,10 +103,12 @@ class PaymentLines implements \Countable, \IteratorAggregate {
 			$total = $total->add( $line_total );
 
 			// Tax.
-			$line_tax = $line_total->get_tax_amount();
+			if ( $line_total instanceof TaxedMoney ) {
+				$line_tax = $line_total->get_tax_amount();
 
-			if ( null !== $line_tax ) {
-				$tax = $tax->add( $line_tax );
+				if ( null !== $line_tax ) {
+					$tax = $tax->add( $line_tax );
+				}
 			}
 
 			// Currency.
