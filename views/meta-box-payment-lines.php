@@ -242,28 +242,30 @@ if ( empty( $lines ) ) : ?>
 					<td>
 						<?php
 
-						if ( null !== $line->get_unit_price() ) {
+						$unit_price = $line->get_unit_price();
+
+						if ( null !== $unit_price ) {
 
 							$tip = array(
 								\sprintf(
 									/* translators: %s: price excluding tax */
 									\__( 'Exclusive tax: %s', 'pronamic_ideal' ),
-									$line->get_unit_price()->get_excluding_tax()
+									$unit_price->get_excluding_tax()
 								),
 							);
 
-							if ( $line->get_unit_price()->has_tax() ) {
+							if ( $unit_price->has_tax() ) {
 								$tip[] = \sprintf(
 									/* translators: %s: price including tax */
 									\__( 'Inclusive tax: %s', 'pronamic_ideal' ),
-									$line->get_unit_price()->get_including_tax()
+									$unit_price->get_including_tax()
 								);
 							}
 
 							\printf(
 								'<span class="pronamic-pay-tip" title="%s">%s</span>',
 								\esc_attr( \implode( '<br />', $tip ) ),
-								\esc_html( $line->get_unit_price()->get_excluding_tax() )
+								\esc_html( $unit_price->get_excluding_tax() )
 							);
 
 						}
