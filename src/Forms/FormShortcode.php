@@ -59,7 +59,7 @@ class FormShortcode {
 			'pronamic_payment_form'
 		);
 
-		if ( null === $atts['id'] ) {
+		if ( empty( $atts['id'] ) ) {
 			return '';
 		}
 
