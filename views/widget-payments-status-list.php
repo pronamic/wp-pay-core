@@ -8,25 +8,47 @@
  * @package   Pronamic\WordPress\Pay
  */
 
+$counts = \wp_count_posts( 'pronamic_payment' );
+
+$states = array(
+	/* translators: %s: posts count value */
+	'payment_completed' => __( '%s completed', 'pronamic_ideal' ),
+	/* translators: %s: posts count value */
+	'payment_pending'   => __( '%s pending', 'pronamic_ideal' ),
+	/* translators: %s: posts count value */
+	'payment_cancelled' => __( '%s cancelled', 'pronamic_ideal' ),
+	/* translators: %s: posts count value */
+	'payment_failed'    => __( '%s failed', 'pronamic_ideal' ),
+	/* translators: %s: posts count value */
+	'payment_expired'   => __( '%s expired', 'pronamic_ideal' ),
+);
+
+$url = \add_query_arg(
+	array(
+		'post_type' => 'pronamic_payment',
+	),
+	\admin_url( 'edit.php' )
+);
+
 ?>
 <div class="pronamic-pay-status-widget">
 	<ul class="pronamic-pay-status-list">
 
 		<?php foreach ( $states as $payment_status => $label ) : ?>
 
-			<li class="<?php echo esc_attr( 'payment_status-' . $payment_status ); ?>">
-				<a href="<?php echo esc_attr( add_query_arg( 'post_status', $payment_status, $url ) ); ?>">
+			<li class="<?php echo \esc_attr( 'payment_status-' . $payment_status ); ?>">
+				<a href="<?php echo \esc_attr( \add_query_arg( 'post_status', $payment_status, $url ) ); ?>">
 					<?php
 
 					$count = isset( $counts->$payment_status ) ? $counts->$payment_status : 0;
 
-					printf(
+					\printf(
                         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 						$label,
-						'<strong>' . sprintf(
+						'<strong>' . \sprintf(
 							/* translators: %s: Number payments */
-							esc_html( _n( '%s payment', '%s payments', $count, 'pronamic_ideal' ) ),
-							esc_html( number_format_i18n( $count ) )
+							\esc_html( \_n( '%s payment', '%s payments', $count, 'pronamic_ideal' ) ),
+							\esc_html( \number_format_i18n( $count ) )
 						) . '</strong>'
 					);
 
