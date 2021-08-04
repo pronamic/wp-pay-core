@@ -96,9 +96,9 @@ if ( empty( $lines ) ) : ?>
 
 					$values = \array_map(
 						function( PaymentLine $line ) {
-							if ( null !== $line->get_discount_amount() ) {
-								return $line->get_discount_amount()->get_value();
-							}
+							$discount_amount = $line->get_discount_amount();
+
+							return ( null === $discount_amount ) ? null : $discount_amount->get_value();
 						},
 						$lines->get_array()
 					);
