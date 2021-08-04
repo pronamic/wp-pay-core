@@ -12,6 +12,7 @@ namespace Pronamic\WordPress\Pay;
 
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
+use Pronamic\WordPress\Number\Number;
 use Pronamic\WordPress\Pay\Payments\PaymentLine;
 
 if ( empty( $lines ) ) : ?>
@@ -78,14 +79,17 @@ if ( empty( $lines ) ) : ?>
 					<td>
 						<?php
 
-						$quantities = \array_map(
-							function( PaymentLine $line ) {
-									return $line->get_quantity();
-							},
-							$lines->get_array()
-						);
+						$quantity_total = new Number( 0 );
 
-						echo \esc_html( \array_sum( $quantities ) );
+						foreach ( $lines as $line ) {
+							$quantity = $line->get_quantity();
+
+							if ( null !== $quantity ) {
+								$quantity_total = $quantity_total->add( Number::from_int( $quantity ) );
+							}
+						}
+
+						echo \esc_html( $quantity_total->format_i18n() );
 
 						?>
 					</td>
@@ -281,11 +285,13 @@ if ( empty( $lines ) ) : ?>
 								$tax_amount     = $line_total->get_tax_amount();
 								$tax_percentage = $line_total->get_tax_percentage();
 
-								\printf(
-									'<span class="pronamic-pay-tip" title="%s">%s</span>',
-									\esc_attr( \number_format_i18n( $tax_percentage ) . '%' ),
-									\esc_html( $tax_amount->format_i18n() )
-								);
+								if ( null !== $tax_amount ) {
+									\printf(
+										'<span class="pronamic-pay-tip" title="%s">%s</span>',
+										\esc_attr( \number_format_i18n( $tax_percentage ) . '%' ),
+										\esc_html( $tax_amount->format_i18n() )
+									);
+								}
 							}
 
 							?>
