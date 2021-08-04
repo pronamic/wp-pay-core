@@ -117,6 +117,8 @@ class AdminTour {
 		if ( is_readable( $path ) ) {
 			ob_start();
 
+			$admin_tour = $this;
+
 			include $path;
 
 			$content = ob_get_clean();

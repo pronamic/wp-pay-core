@@ -8,6 +8,10 @@
  * @package   Pronamic\WordPress\Pay
  */
 
+if ( ! isset( $admin_tour ) ) {
+	return;
+}
+
 ?>
 <h3><?php esc_html_e( 'Settings', 'pronamic_ideal' ); ?></h3>
 
@@ -22,6 +26,6 @@
 	<span class="pp-pointer-buttons-right">
 		<a href="<?php echo esc_attr( add_query_arg( 'page', 'pronamic_pay_tools', admin_url( 'admin.php' ) ) ); ?>" class="button-primary pp-pointer-button-next"><?php esc_html_e( 'Next', 'pronamic_ideal' ); ?></a>
 
-		<a href="<?php echo esc_attr( $this->get_close_url() ); ?>" class="button-secondary pp-pointer-button-close"><?php esc_html_e( 'Close', 'pronamic_ideal' ); ?></a>
+		<a href="<?php echo esc_attr( $admin_tour->get_close_url() ); ?>" class="button-secondary pp-pointer-button-close"><?php esc_html_e( 'Close', 'pronamic_ideal' ); ?></a>
 	</span>
 </div>
