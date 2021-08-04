@@ -13,9 +13,7 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 use DateTimeImmutable;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Money\Money;
-use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
-use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
 
 /**
  * Subscription Phase
@@ -561,7 +559,7 @@ class SubscriptionPhase implements \JsonSerializable {
 			$json->subscription,
 			new \DateTimeImmutable( $json->start_date ),
 			new SubscriptionInterval( $json->interval ),
-			TaxedMoneyJsonTransformer::from_json( $json->amount )
+			MoneyJsonTransformer::from_json( $json->amount )
 		);
 
 		if ( property_exists( $json, 'total_periods' ) ) {

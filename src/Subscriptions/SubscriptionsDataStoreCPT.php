@@ -14,11 +14,9 @@ use DatePeriod;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Money\Money;
-use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Payments\LegacyPaymentsDataStoreCPT;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Customer;
-use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
 
 /**
  * Title: Subscriptions data store CPT
@@ -392,7 +390,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			);
 
 			if ( \property_exists( $json, 'total_amount' ) ) {
-				$amount = TaxedMoneyJsonTransformer::from_json( $json->total_amount );
+				$amount = MoneyJsonTransformer::from_json( $json->total_amount );
 			}
 
 			// Phase.

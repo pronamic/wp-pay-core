@@ -10,7 +10,6 @@
 
 namespace Pronamic\WordPress\Pay;
 
-use InvalidArgumentException;
 use Pronamic\WordPress\Money\Money;
 
 /**
@@ -26,23 +25,41 @@ class MoneyJsonTransformer {
 	 *
 	 * @param mixed $json JSON.
 	 * @return Money
-	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
+	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
 	public static function from_json( $json ) {
 		if ( ! is_object( $json ) ) {
-			throw new InvalidArgumentException( 'JSON value must be an object.' );
+			throw new \InvalidArgumentException( 'JSON value must be an object.' );
 		}
+
+		// Default arguments.
+		$value          = 0;
+		$currency       = null;
+		$tax_value      = null;
+		$tax_percentage = null;
 
 		$money = new Money();
 
-		if ( property_exists( $json, 'value' ) ) {
-			$money->set_value( $json->value );
+		if ( \property_exists( $json, 'value' ) ) {
+			$value = $json->value;
 		}
 
-		if ( property_exists( $json, 'currency' ) ) {
-			$money->set_currency( $json->currency );
+		if ( \property_exists( $json, 'currency' ) ) {
+			$currency = $json->currency;
 		}
 
-		return $money;
+		if ( \property_exists( $json, 'tax_value' ) ) {
+			$tax_value = $json->tax_value;
+		}
+
+		if ( \property_exists( $json, 'tax_percentage' ) ) {
+			$tax_percentage = $json->tax_percentage;
+		}
+
+		if ( ! empty( $tax_value ) || ! empty( $tax_percentage ) ) {
+			return new TaxedMoney( $value, $currency, $tax_value, $tax_percentage );
+		}
+
+		return new Money( $value, $currency );
 	}
 }

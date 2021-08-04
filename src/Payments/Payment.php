@@ -13,13 +13,11 @@ namespace Pronamic\WordPress\Pay\Payments;
 use InvalidArgumentException;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Money\Money;
-use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPeriod;
-use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
 
 /**
  * Payment
@@ -911,7 +909,7 @@ class Payment extends LegacyPayment {
 		PaymentInfoHelper::from_json( $json, $payment );
 
 		if ( isset( $json->total_amount ) ) {
-			$payment->set_total_amount( TaxedMoneyJsonTransformer::from_json( $json->total_amount ) );
+			$payment->set_total_amount( MoneyJsonTransformer::from_json( $json->total_amount ) );
 		}
 
 		if ( isset( $json->refunded_amount ) ) {

@@ -14,7 +14,6 @@ use InvalidArgumentException;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
-use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
 
 /**
  * Payment line.
@@ -432,7 +431,7 @@ class PaymentLine {
 		}
 
 		if ( isset( $json->unit_price ) ) {
-			$line->set_unit_price( TaxedMoneyJsonTransformer::from_json( $json->unit_price ) );
+			$line->set_unit_price( MoneyJsonTransformer::from_json( $json->unit_price ) );
 		}
 
 		if ( isset( $json->discount_amount ) ) {
@@ -440,7 +439,7 @@ class PaymentLine {
 		}
 
 		if ( isset( $json->total_amount ) ) {
-			$line->set_total_amount( TaxedMoneyJsonTransformer::from_json( $json->total_amount ) );
+			$line->set_total_amount( MoneyJsonTransformer::from_json( $json->total_amount ) );
 		}
 
 		if ( property_exists( $json, 'product_url' ) ) {

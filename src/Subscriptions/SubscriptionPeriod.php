@@ -12,8 +12,6 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Money\Money;
-use Pronamic\WordPress\Money\TaxedMoney;
-use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
 
 /**
  * Subscription Period
@@ -193,7 +191,7 @@ class SubscriptionPeriod {
 		$start_date = new DateTime( $json->start_date );
 		$end_date   = new DateTime( $json->end_date );
 
-		$amount = TaxedMoneyJsonTransformer::from_json( $json->amount );
+		$amount = MoneyJsonTransformer::from_json( $json->amount );
 
 		return new self( $phase, $start_date, $end_date, $amount );
 	}
