@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay;
 
 use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Payments\PaymentLine;
 
 if ( empty( $lines ) ) : ?>
@@ -156,14 +157,20 @@ if ( empty( $lines ) ) : ?>
 
 						$values = array_map(
 							function( PaymentLine $line ) {
-								return $line->get_total_amount()->get_tax_value();
+								$total_amount = $line->get_total_amount();
+
+								if ( $total_amount instanceof TaxedMoney ) {
+									return $total_amount->get_tax_value();
+								}
+
+								return null;
 							},
 							$lines->get_array()
 						);
 
-						$tax_amount = new Money( array_sum( $values ), $lines->get_amount()->get_currency()->get_alphabetic_code() );
+						$tax_amount = new Money( array_sum( $values ), $lines->get_amount()->get_currency() );
 
-						echo esc_html( $tax_amount );
+						echo \esc_html( $tax_amount );
 
 						?>
 					</td>
