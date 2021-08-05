@@ -23,6 +23,9 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 - Fixed payment form amount input styling with WordPress default theme.
 - Fixed deprecated `block_categories` filter warning with WordPress 5.8.
 
+### Removed
+- Removed [Shortcake (Shortcode UI)](https://wordpress.org/plugins/shortcode-ui/) support.
+
 ## [2.7.2] - 2021-06-18
 - Added payment method to subscription details when cancelling/renewing a subscription.
 - Added refunded amount in payments overview amount column.

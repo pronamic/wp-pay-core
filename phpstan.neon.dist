@@ -16,8 +16,5 @@ parameters:
 		# Uses func_get_args()
 		- '#^Function apply_filters(_ref_array)? invoked with [34567] parameters, 2 required\.$#'
 		-
-			message: '#Function shortcode_ui_register_for_shortcode not found\.#'
-			path: src/Forms/FormShortcode.php
-		-
 			message: '#Function pll_home_url not found\.#'
 			path: src/Payments/Payment.php
