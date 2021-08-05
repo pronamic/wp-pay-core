@@ -54,7 +54,7 @@ $extensions = json_decode( $data );
 
 			<tr>
 				<td>
-					<a href="<?php echo esc_attr( $extension->url ); ?>" target="_blank">
+					<a href="<?php echo \esc_url( $extension->url ); ?>" target="_blank">
 						<?php echo esc_html( $extension->name ); ?>
 					</a>
 				</td>

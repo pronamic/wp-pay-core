@@ -326,7 +326,7 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 
 				?>
 				<a href="https://travis-ci.org/pronamic/wp-pronamic-ideal">
-					<img src="<?php echo esc_attr( $url ); ?>" alt="" />
+					<img src="<?php echo \esc_url( $url ); ?>" alt="" />
 				</a>
 			</td>
 			<td>

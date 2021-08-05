@@ -37,7 +37,7 @@ $url = \add_query_arg(
 		<?php foreach ( $states as $payment_status => $label ) : ?>
 
 			<li class="<?php echo \esc_attr( 'payment_status-' . $payment_status ); ?>">
-				<a href="<?php echo \esc_attr( \add_query_arg( 'post_status', $payment_status, $url ) ); ?>">
+				<a href="<?php echo \esc_url( \add_query_arg( 'post_status', $payment_status, $url ) ); ?>">
 					<?php
 
 					$count = isset( $counts->$payment_status ) ? $counts->$payment_status : 0;

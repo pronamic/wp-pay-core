@@ -30,7 +30,7 @@ $upgrade_link = wp_nonce_url(
 	</p>
 
 	<p class="submit">
-		<a href="<?php echo esc_attr( $upgrade_link ); ?>" class="pp-upgrade-now button-primary"><?php esc_html_e( 'Run the upgrader', 'pronamic_ideal' ); ?></a>
+		<a href="<?php echo \esc_url( $upgrade_link ); ?>" class="pp-upgrade-now button-primary"><?php esc_html_e( 'Run the upgrader', 'pronamic_ideal' ); ?></a>
 	</p>
 </div>
 

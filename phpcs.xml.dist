@@ -1,35 +1,30 @@
 <?xml version="1.0"?>
 
 <ruleset name="WordPress Pay: Core rules">
-	<config name="minimum_supported_wp_version" value="4.7" />
-
-	<config name="testVersion" value="5.6-" />
-
 	<file>.</file>
 
-	<arg name="colors"/>
-	<arg name="extensions" value="php" />
-	<arg name="parallel" value="8" />
-	<arg value="sp" />
-
 	<exclude-pattern>includes/xmlseclibs/*</exclude-pattern>
-	<exclude-pattern>node_modules/*</exclude-pattern>
 	<exclude-pattern>tests/bootstrap.php</exclude-pattern>
 	<exclude-pattern>tests/wp-config.php</exclude-pattern>
-	<exclude-pattern>vendor/*</exclude-pattern>
-	<exclude-pattern>wordpress/*</exclude-pattern>
-	<exclude-pattern type="relative">^wp-content/*</exclude-pattern>
 
-	<rule ref="WordPress">
-		<exclude name="Generic.Files.LowercasedFilename.NotFound" />
-
-		<exclude name="WordPress.DB.SlowDBQuery.slow_db_query_meta_key" />
+	<rule ref="PronamicWP">
 		<exclude name="WordPress.DB.SlowDBQuery.slow_db_query_meta_query" />
 
-		<exclude name="WordPress.Files.FileName.InvalidClassFileName" />
-		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
-
 		<exclude name="WordPress.Security.SafeRedirect.wp_redirect_wp_redirect" />
+
+		<exclude name="WordPressVIPMinimum.Functions.RestrictedFunctions.custom_role_add_role" />
+		<exclude name="WordPressVIPMinimum.Functions.RestrictedFunctions.flush_rewrite_rules_flush_rewrite_rules" />
+		<exclude name="WordPressVIPMinimum.Functions.RestrictedFunctions.url_to_postid_url_to_postid" />
+		<exclude name="WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get" />
+
+		<exclude name="WordPressVIPMinimum.Hooks.PreGetPosts.PreGetPosts" />
+
+		<exclude name="WordPressVIPMinimum.Performance.FetchingRemoteData.FileGetContentsUnknown" />
+		<exclude name="WordPressVIPMinimum.Performance.FetchingRemoteData.FileGetContentsRemoteFile" />
+		<exclude name="WordPressVIPMinimum.Performance.NoPaging.nopaging_nopaging" />
+		<exclude name="WordPressVIPMinimum.Performance.RemoteRequestTimeout.timeout_timeout" />
+
+		<exclude name="WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___SERVER__HTTP_USER_AGENT__" />
 	</rule>
 
 	<rule ref="WordPress.WP.I18n">
@@ -42,10 +37,6 @@
 		<exclude-pattern>/tests/UtilTest.php</exclude-pattern>
 	</rule>
 
-	<rule ref="WordPress.PHP.DevelopmentFunctions.error_log_trigger_error">
-		<exclude-pattern>/src/Payments/Item.php</exclude-pattern>
-	</rule>
-
 	<rule ref="WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_putenv">
 		<exclude-pattern>/tests/phpstan-bootstrap.php</exclude-pattern>
 	</rule>
@@ -53,9 +44,5 @@
 	<rule ref="WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize">
 		<exclude-pattern>/src/Admin/AdminGatewayPostType.php</exclude-pattern>
 		<exclude-pattern>/src/Core/Gateway.php</exclude-pattern>
-	</rule>
-
-	<rule ref="WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents">
-		<exclude-pattern>/views/tab-extensions.php</exclude-pattern>
 	</rule>
 </ruleset>

@@ -138,7 +138,7 @@ class CustomerHelper {
 		 * @link https://github.com/WordPress/WordPress/blob/4.9.4/wp-includes/comment.php#L1962-L1965
 		 */
 		if ( null === $customer->get_user_agent() && isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
-			$user_agent = filter_var( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) );
+			$user_agent = \sanitize_text_field( \wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) );
 
 			if ( false !== $user_agent ) {
 				$customer->set_user_agent( $user_agent );
