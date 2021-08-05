@@ -57,6 +57,14 @@ class MoneyJsonTransformer {
 			$tax_percentage = $json->tax_percentage;
 		}
 
+		/**
+		 * In older versions of this library the currency could be empty,
+		 * for backward compatibility we fall back to the euro.
+		 */
+		if ( null === $currency ) {
+			$currency = 'EUR';
+		}
+
 		if ( ! empty( $tax_value ) || ! empty( $tax_percentage ) ) {
 			return new TaxedMoney( $value, $currency, $tax_value, $tax_percentage );
 		}
