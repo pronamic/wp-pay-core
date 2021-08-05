@@ -13,6 +13,10 @@ use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
 use Pronamic\WordPress\Pay\Util;
 
+if ( ! isset( $subscription ) ) {
+	return;
+}
+
 $subscription_id = $subscription->get_id();
 
 $customer = $subscription->get_customer();

@@ -12,6 +12,10 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+if ( ! isset( $data ) ) {
+	return;
+}
+
 $class = ( 'valid' === $data->license ) ? 'updated' : 'error';
 
 ?>

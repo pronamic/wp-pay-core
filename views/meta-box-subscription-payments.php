@@ -11,6 +11,14 @@
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
 
+if ( ! isset( $periods ) ) {
+	return;
+}
+
+if ( ! isset( $subscription ) ) {
+	return;
+}
+
 ?>
 
 <?php if ( empty( $periods ) ) : ?>

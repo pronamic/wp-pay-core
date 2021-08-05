@@ -11,6 +11,10 @@
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Util;
 
+if ( ! isset( $admin_reports ) ) {
+	return;
+}
+
 ?>
 <div class="wrap">
 	<h1 class="wp-heading-inline"><?php echo esc_html( get_admin_page_title() ); ?></h1>
@@ -27,7 +31,7 @@ use Pronamic\WordPress\Pay\Util;
 				<div class="pronamic-pay-chart-sidebar">
 					<ul class="pronamic-pay-chart-legend">
 
-						<?php foreach ( $this->reports->get_reports() as $i => $serie ) : ?>
+						<?php foreach ( $admin_reports->get_reports() as $i => $serie ) : ?>
 
                             <?php // phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- Flot data object. ?>
 

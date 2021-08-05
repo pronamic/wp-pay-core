@@ -10,6 +10,10 @@
 
 use Pronamic\WordPress\Money\Money;
 
+if ( ! isset( $post ) ) {
+	return;
+}
+
 wp_nonce_field( 'pronamic_pay_save_form_options', 'pronamic_pay_nonce' );
 
 ?>

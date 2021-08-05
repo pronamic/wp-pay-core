@@ -17,6 +17,7 @@ use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Payments\LegacyPaymentsDataStoreCPT;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Customer;
+use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 
 /**
  * Title: Subscriptions data store CPT

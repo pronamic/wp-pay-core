@@ -11,6 +11,10 @@
 use Pronamic\WordPress\Pay\Cards;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 
+if ( ! isset( $subscription ) ) {
+	return;
+}
+
 $subscription_id = $subscription->get_id();
 
 $mollie_customer_id = \get_post_meta( $subscription_id, '_pronamic_subscription_mollie_customer_id', true );
