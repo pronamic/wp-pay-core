@@ -50,7 +50,7 @@
 		"pronamic/wp-datetime": "^1.2",
 		"pronamic/wp-html": "^1.0",
 		"pronamic/wp-http": "^1.0",
-		"pronamic/wp-money": "dev-develop",
+		"pronamic/wp-money": "^2.0",
 		"viison/address-splitter": "^0.3.4"
 	},
 	"require-dev": {
