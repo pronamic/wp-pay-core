@@ -157,6 +157,8 @@ class AdminSubscriptionPostType {
 				);
 
 				\wp_safe_redirect( $url );
+
+				exit;
 			}
 		}
 
@@ -184,6 +186,8 @@ class AdminSubscriptionPostType {
 					);
 
 					\wp_safe_redirect( $url );
+
+					exit;
 				}
 			}
 		}
