@@ -1,32 +1,36 @@
 build:
+  nodes:
+    analysis:
+      tests:
+        override:
+          - php-scrutinizer-run
+
+    coverage:
+      tests:
+        override:
+          - command: ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+            coverage:
+              file: build/logs/clover.xml
+              format: clover
+
   environment:
     php: 7.3.0
     variables:
       WP_TESTS_DB_NAME: 'wp_phpunit_tests'
       WP_TESTS_DB_USER: 'root'
       WP_TESTS_DB_PASS: ''
-      WP_TESTS_DB_HOST: 'localhost'
+      WP_TESTS_DB_HOST: '127.0.0.1'
+
+  services:
+    mysql: 5.7
+
+  dependencies:
+    override:
+      - composer install --ignore-platform-reqs --no-interaction
+
   project_setup:
     before:
       - mysql -e "CREATE DATABASE wp_phpunit_tests"
-  dependencies:
-    override:
-      - composer install --no-interaction
-  nodes:
-    analysis:
-      tests:
-        override:
-          -
-            command: phpcs-run
-            use_website_config: false
-
-    coverage:
-      tests:
-        override:
-          - command: vendor/bin/phpunit
-            coverage:
-              file: build/logs/clover.xml
-              format: clover
 
 filter:
   excluded_paths:

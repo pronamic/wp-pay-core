@@ -13,11 +13,11 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 use DatePeriod;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
-use Pronamic\WordPress\Money\TaxedMoney;
+use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Payments\LegacyPaymentsDataStoreCPT;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Customer;
-use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
+use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 
 /**
  * Title: Subscriptions data store CPT
@@ -276,6 +276,11 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		$this->update_post_meta( $subscription );
 
+		/**
+		 * New subscription created.
+		 *
+		 * @param Subscription $subscription Subscription.
+		 */
 		do_action( 'pronamic_pay_new_subscription', $subscription );
 
 		return true;
@@ -380,13 +385,13 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		// Phases.
 		if ( is_object( $json ) && ! property_exists( $json, 'phases' ) ) {
 			// Amount.
-			$amount = new TaxedMoney(
+			$amount = new Money(
 				(string) $this->get_meta( $id, 'amount' ),
 				(string) $this->get_meta_string( $id, 'currency' )
 			);
 
 			if ( \property_exists( $json, 'total_amount' ) ) {
-				$amount = TaxedMoneyJsonTransformer::from_json( $json->total_amount );
+				$amount = MoneyJsonTransformer::from_json( $json->total_amount );
 			}
 
 			// Phase.
@@ -704,7 +709,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		if ( null !== $display_phase ) {
 			$this->update_meta( $id, 'currency', $display_phase->get_amount()->get_currency()->get_alphabetic_code() );
-			$this->update_meta( $id, 'amount', $display_phase->get_amount()->format() );
+			$this->update_meta( $id, 'amount', $display_phase->get_amount()->get_number()->get_value() );
 		}
 
 		$this->update_meta_status( $subscription );
@@ -728,19 +733,147 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$this->update_meta( $id, 'status', $subscription->status );
 
 		if ( $previous_status !== $subscription->status ) {
-			$old = $previous_status;
-			$old = empty( $old ) ? 'unknown' : $old;
-			$old = strtolower( $old );
-
-			$new = $subscription->status;
-			$new = empty( $new ) ? 'unknown' : $new;
-			$new = strtolower( $new );
+			if ( empty( $previous_status ) ) {
+				$previous_status = null;
+			}
 
 			$can_redirect = false;
 
-			do_action( 'pronamic_subscription_status_update_' . $subscription->source . '_' . $old . '_to_' . $new, $subscription, $can_redirect, $previous_status, $subscription->status );
-			do_action( 'pronamic_subscription_status_update_' . $subscription->source, $subscription, $can_redirect, $previous_status, $subscription->status );
-			do_action( 'pronamic_subscription_status_update', $subscription, $can_redirect, $previous_status, $subscription->status );
+			$source = $subscription->source;
+
+			$updated_status = $subscription->status;
+
+			$old_status = empty( $previous_status ) ? 'unknown' : strtolower( $previous_status );
+			$old_status = \str_replace( ' ', '_', $old_status );
+
+			$new_status = empty( $updated_status ) ? 'unknown' : strtolower( $updated_status );
+			$new_status = \str_replace( ' ', '_', $new_status );
+
+			/**
+			 * Subscription status updated for plugin integration source from old to new status.
+			 *
+			 * **Source**
+			 *
+			 * Plugin | Source
+			 * ------ | ------
+			 * Charitable | `charitable`
+			 * Contact Form 7 | `contact-form-7`
+			 * Event Espresso | `eventespresso`
+			 * Event Espresso (legacy) | `event-espresso`
+			 * Formidable Forms | `formidable-forms`
+			 * Give | `give`
+			 * Gravity Forms | `gravityformsideal`
+			 * MemberPress | `memberpress`
+			 * Ninja Forms | `ninja-forms`
+			 * s2Member | `s2member`
+			 * WooCommerce | `woocommerce`
+			 * WP eCommerce | `wp-e-commerce`
+			 *
+			 * **Action status**
+			 *
+			 * Status | Value
+			 * ------ | -----
+			 * (empty) | `unknown`
+			 * Active | `active`
+			 * Cancelled | `cancelled`
+			 * Completed | `completed`
+			 * Expired | `expired`
+			 * Failure | `failure`
+			 * On Hold | `on_hold`
+			 * Open | `open`
+			 *
+			 * **Subscription status**
+			 *
+			 * Status | Value
+			 * ------ | -----
+			 * Active | `Active`
+			 * Cancelled | `Cancelled`
+			 * Completed | `Completed`
+			 * Expired | `Expired`
+			 * Failure | `Failure`
+			 * On Hold | `On Hold`
+			 * Open | `Open`
+			 *
+			 * @param Subscription $subscription    Subscription.
+			 * @param bool         $can_redirect    Flag to indicate if redirect is allowed after the subscription update.
+			 * @param null|string  $previous_status Previous subscription status.
+			 * @param string       $updated_status  Updated subscription status.
+			 */
+			do_action( 'pronamic_subscription_status_update_' . $source . '_' . $old_status . '_to_' . $new_status, $subscription, $can_redirect, $previous_status, $updated_status );
+
+			/**
+			 * Subscription status updated for plugin integration source.
+			 *
+			 * **Source**
+			 *
+			 * Plugin | Source
+			 * ------ | ------
+			 * Charitable | `charitable`
+			 * Contact Form 7 | `contact-form-7`
+			 * Event Espresso | `eventespresso`
+			 * Event Espresso (legacy) | `event-espresso`
+			 * Formidable Forms | `formidable-forms`
+			 * Give | `give`
+			 * Gravity Forms | `gravityformsideal`
+			 * MemberPress | `memberpress`
+			 * Ninja Forms | `ninja-forms`
+			 * s2Member | `s2member`
+			 * WooCommerce | `woocommerce`
+			 * WP eCommerce | `wp-e-commerce`
+			 *
+			 * **Action status**
+			 *
+			 * Status | Value
+			 * ------ | -----
+			 * (empty) | `unknown`
+			 * Active | `active`
+			 * Cancelled | `cancelled`
+			 * Completed | `completed`
+			 * Expired | `expired`
+			 * Failure | `failure`
+			 * On Hold | `on_hold`
+			 * Open | `open`
+			 *
+			 * **Subscription status**
+			 *
+			 * Status | Value
+			 * ------ | -----
+			 * Active | `Active`
+			 * Cancelled | `Cancelled`
+			 * Completed | `Completed`
+			 * Expired | `Expired`
+			 * Failure | `Failure`
+			 * On Hold | `On Hold`
+			 * Open | `Open`
+			 *
+			 * @param Subscription $subscription    Subscription.
+			 * @param bool         $can_redirect    Flag to indicate if redirect is allowed after the subscription update.
+			 * @param null|string  $previous_status Previous subscription status.
+			 * @param string       $updated_status  Updated subscription status.
+			 */
+			do_action( 'pronamic_subscription_status_update_' . $source, $subscription, $can_redirect, $previous_status, $updated_status );
+
+			/**
+			 * Subscription status updated.
+			 *
+			 * **Subscription status**
+			 *
+			 * Status | Value
+			 * ------ | -----
+			 * Active | `Active`
+			 * Cancelled | `Cancelled`
+			 * Completed | `Completed`
+			 * Expired | `Expired`
+			 * Failure | `Failure`
+			 * On Hold | `On Hold`
+			 * Open | `Open`
+			 *
+			 * @param Subscription $subscription    Subscription.
+			 * @param bool         $can_redirect    Flag to indicate if redirect is allowed after the subscription update.
+			 * @param null|string  $previous_status Previous subscription status.
+			 * @param string       $updated_status  Updated subscription status.
+			 */
+			do_action( 'pronamic_subscription_status_update', $subscription, $can_redirect, $previous_status, $updated_status );
 		}
 	}
 }

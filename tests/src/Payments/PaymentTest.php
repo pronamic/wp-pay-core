@@ -271,7 +271,7 @@ class PaymentTest extends WP_UnitTestCase {
 		$line->set_id( '1234' );
 		$line->set_description( 'Lorem ipsum dolor sit amet.' );
 		$line->set_quantity( 50 );
-		$line->set_total_amount( new TaxedMoney( 39.99, 'EUR' ) );
+		$line->set_total_amount( new Money( 39.99, 'EUR' ) );
 
 		$line = $lines->new_line();
 		$line->set_id( 5678 );

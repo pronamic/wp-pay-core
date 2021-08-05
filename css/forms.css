@@ -8,7 +8,7 @@
   padding: 0 0 10px;
   width: 100%;
 }
-.pronamic-pay-form .pronamic-pay-amount-input {
+.pronamic-pay-form .pronamic-pay-amount-input[type="text"] {
   width: auto;
 }
 

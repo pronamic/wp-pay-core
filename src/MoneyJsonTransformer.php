@@ -10,8 +10,8 @@
 
 namespace Pronamic\WordPress\Pay;
 
-use InvalidArgumentException;
 use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Money\TaxedMoney;
 
 /**
  * Money JSON transformer
@@ -22,52 +22,53 @@ use Pronamic\WordPress\Money\Money;
  */
 class MoneyJsonTransformer {
 	/**
-	 * Convert money object to JSON.
-	 *
-	 * @param Money|null $money Money.
-	 *
-	 * @return null|object
-	 */
-	public static function to_json( Money $money = null ) {
-		if ( null === $money ) {
-			return null;
-		}
-
-		$properties = array(
-			'value' => $money->get_value(),
-		);
-
-		if ( null !== $money->get_currency()->get_alphabetic_code() ) {
-			$properties['currency'] = $money->get_currency()->get_alphabetic_code();
-		}
-
-		$object = (object) $properties;
-
-		return $object;
-	}
-
-	/**
 	 * Convert JSON to money object.
 	 *
 	 * @param mixed $json JSON.
 	 * @return Money
-	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
+	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
 	public static function from_json( $json ) {
 		if ( ! is_object( $json ) ) {
-			throw new InvalidArgumentException( 'JSON value must be an object.' );
+			throw new \InvalidArgumentException( 'JSON value must be an object.' );
 		}
+
+		// Default arguments.
+		$value          = 0;
+		$currency       = null;
+		$tax_value      = null;
+		$tax_percentage = null;
 
 		$money = new Money();
 
-		if ( property_exists( $json, 'value' ) ) {
-			$money->set_value( $json->value );
+		if ( \property_exists( $json, 'value' ) ) {
+			$value = $json->value;
 		}
 
-		if ( property_exists( $json, 'currency' ) ) {
-			$money->set_currency( $json->currency );
+		if ( \property_exists( $json, 'currency' ) ) {
+			$currency = $json->currency;
 		}
 
-		return $money;
+		if ( \property_exists( $json, 'tax_value' ) ) {
+			$tax_value = $json->tax_value;
+		}
+
+		if ( \property_exists( $json, 'tax_percentage' ) ) {
+			$tax_percentage = $json->tax_percentage;
+		}
+
+		/**
+		 * In older versions of this library the currency could be empty,
+		 * for backward compatibility we fall back to the euro.
+		 */
+		if ( null === $currency ) {
+			$currency = 'EUR';
+		}
+
+		if ( ! empty( $tax_value ) || ! empty( $tax_percentage ) ) {
+			return new TaxedMoney( $value, $currency, $tax_value, $tax_percentage );
+		}
+
+		return new Money( $value, $currency );
 	}
 }

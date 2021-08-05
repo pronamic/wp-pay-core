@@ -13,13 +13,11 @@ namespace Pronamic\WordPress\Pay\Payments;
 use InvalidArgumentException;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Money\Money;
-use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPeriod;
-use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
 
 /**
  * Payment
@@ -39,7 +37,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * The total amount of this payment.
 	 *
-	 * @var TaxedMoney
+	 * @var Money
 	 */
 	private $total_amount;
 
@@ -264,7 +262,7 @@ class Payment extends LegacyPayment {
 
 		$this->set_status( PaymentStatus::OPEN );
 
-		$this->set_total_amount( new TaxedMoney() );
+		$this->set_total_amount( new Money() );
 
 		if ( null !== $post_id ) {
 			pronamic_pay_plugin()->payments_data_store->read( $this );
@@ -313,29 +311,6 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
-	 * Get the source text of this payment.
-	 *
-	 * @return string
-	 */
-	public function get_source_text() {
-		$pieces = array(
-			$this->get_source(),
-			$this->get_source_id(),
-		);
-
-		$pieces = array_filter( $pieces );
-
-		$text = implode( '<br />', $pieces );
-
-		$source = $this->get_source();
-
-		$text = apply_filters( 'pronamic_payment_source_text_' . $source, $text, $this );
-		$text = apply_filters( 'pronamic_payment_source_text', $text, $this );
-
-		return $text;
-	}
-
-	/**
 	 * Get the payment description.
 	 *
 	 * @return string|null
@@ -366,7 +341,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Get total amount.
 	 *
-	 * @return TaxedMoney
+	 * @return Money
 	 */
 	public function get_total_amount() {
 		return $this->total_amount;
@@ -375,10 +350,10 @@ class Payment extends LegacyPayment {
 	/**
 	 * Set total amount.
 	 *
-	 * @param TaxedMoney $total_amount Total amount.
+	 * @param Money $total_amount Total amount.
 	 * @return void
 	 */
-	public function set_total_amount( TaxedMoney $total_amount ) {
+	public function set_total_amount( Money $total_amount ) {
 		$this->total_amount = $total_amount;
 	}
 
@@ -576,7 +551,15 @@ class Payment extends LegacyPayment {
 	public function get_return_redirect_url() {
 		$url = home_url( '/' );
 
-		$url = apply_filters( 'pronamic_payment_redirect_url', $url, $this );
+		$payment = $this;
+
+		/**
+		 * Filters the payment return redirect URL.
+		 *
+		 * @param string  $text    Redirect URL.
+		 * @param Payment $payment Payment.
+		 */
+		$url = apply_filters( 'pronamic_payment_redirect_url', $url, $payment );
 
 		return $url;
 	}
@@ -614,15 +597,74 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
+	 * Get the source text of this payment.
+	 *
+	 * @return string
+	 */
+	public function get_source_text() {
+		$pieces = array(
+			$this->get_source(),
+			$this->get_source_id(),
+		);
+
+		$pieces = array_filter( $pieces );
+
+		$text = implode( '<br />', $pieces );
+
+		$source = $this->get_source();
+
+		$payment = $this;
+
+		if ( null !== $source ) {
+			/**
+			 * Filters the payment source text by plugin integration source.
+			 *
+			 * @param string  $text    Source text.
+			 * @param Payment $payment Payment.
+			 */
+			$text = apply_filters( 'pronamic_payment_source_text_' . $source, $text, $payment );
+		}
+
+		/**
+		 * Filters the payment source text.
+		 *
+		 * @param string  $text    Source text.
+		 * @param Payment $payment Payment.
+		 */
+		$text = apply_filters( 'pronamic_payment_source_text', $text, $payment );
+
+		return $text;
+	}
+
+	/**
 	 * Get source description.
 	 *
 	 * @return string|null
 	 */
 	public function get_source_description() {
-		$description = $this->source;
+		$payment = $this;
 
-		$description = apply_filters( 'pronamic_payment_source_description', $description, $this );
-		$description = apply_filters( 'pronamic_payment_source_description_' . $this->source, $description, $this );
+		$source = $payment->get_source();
+
+		$description = $source;
+
+		/**
+		 * Filters the payment source description.
+		 *
+		 * @param string  $description Source description.
+		 * @param Payment $payment     Payment.
+		 */
+		$description = apply_filters( 'pronamic_payment_source_description', $description, $payment );
+
+		if ( null !== $source ) {
+			/**
+			 * Filters the payment source description by plugin integration source.
+			 *
+			 * @param string  $description Source description.
+			 * @param Payment $payment     Payment.
+			 */
+			$description = apply_filters( 'pronamic_payment_source_description_' . $source, $description, $payment );
+		}
 
 		return $description;
 	}
@@ -635,8 +677,27 @@ class Payment extends LegacyPayment {
 	public function get_source_link() {
 		$url = null;
 
-		$url = apply_filters( 'pronamic_payment_source_url', $url, $this );
-		$url = apply_filters( 'pronamic_payment_source_url_' . $this->source, $url, $this );
+		$payment = $this;
+
+		$source = $payment->get_source();
+
+		/**
+		 * Filters the payment source URL.
+		 *
+		 * @param null|string $url     Source URL.
+		 * @param Payment     $payment Payment.
+		 */
+		$url = apply_filters( 'pronamic_payment_source_url', $url, $payment );
+
+		if ( null !== $source ) {
+			/**
+			 * Filters the payment source URL by plugin integration source.
+			 *
+			 * @param null|string $url     Source URL.
+			 * @param Payment     $payment Payment.
+			 */
+			$url = apply_filters( 'pronamic_payment_source_url_' . $source, $url, $payment );
+		}
 
 		return $url;
 	}
@@ -649,7 +710,15 @@ class Payment extends LegacyPayment {
 	public function get_provider_link() {
 		$url = null;
 
-		$url = apply_filters( 'pronamic_payment_provider_url', $url, $this );
+		$payment = $this;
+
+		/**
+		 * Filters the payment provider URL.
+		 *
+		 * @param null|string $url     Provider URL.
+		 * @param Payment     $payment Payment.
+		 */
+		$url = apply_filters( 'pronamic_payment_provider_url', $url, $payment );
 
 		if ( null === $this->id ) {
 			return $url;
@@ -663,11 +732,15 @@ class Payment extends LegacyPayment {
 
 		$gateway_id = get_post_meta( intval( $config_id ), '_pronamic_gateway_id', true );
 
-		if ( empty( $gateway_id ) ) {
-			return $url;
+		if ( ! empty( $gateway_id ) ) {
+			/**
+			 * Filters the payment provider URL by gateway identifier.
+			 *
+			 * @param null|string $url     Provider URL.
+			 * @param Payment     $payment Payment.
+			 */
+			$url = apply_filters( 'pronamic_payment_provider_url_' . $gateway_id, $url, $payment );
 		}
-
-		$url = apply_filters( 'pronamic_payment_provider_url_' . $gateway_id, $url, $this );
 
 		return $url;
 	}
@@ -836,7 +909,7 @@ class Payment extends LegacyPayment {
 		PaymentInfoHelper::from_json( $json, $payment );
 
 		if ( isset( $json->total_amount ) ) {
-			$payment->set_total_amount( TaxedMoneyJsonTransformer::from_json( $json->total_amount ) );
+			$payment->set_total_amount( MoneyJsonTransformer::from_json( $json->total_amount ) );
 		}
 
 		if ( isset( $json->refunded_amount ) ) {
@@ -874,6 +947,10 @@ class Payment extends LegacyPayment {
 			$payment->set_origin_id( $json->origin_id );
 		}
 
+		if ( isset( $json->transaction_id ) ) {
+			$payment->set_transaction_id( $json->transaction_id );
+		}
+
 		return $payment;
 	}
 
@@ -898,14 +975,14 @@ class Payment extends LegacyPayment {
 		$total_amount = $this->get_total_amount();
 
 		if ( null !== $total_amount ) {
-			$properties['total_amount'] = TaxedMoneyJsonTransformer::to_json( $total_amount );
+			$properties['total_amount'] = $total_amount->jsonSerialize();
 		}
 
 		// Refunded amount.
 		$refunded_amount = $this->get_refunded_amount();
 
 		if ( null !== $refunded_amount ) {
-			$properties['refunded_amount'] = MoneyJsonTransformer::to_json( $refunded_amount );
+			$properties['refunded_amount'] = $refunded_amount->jsonSerialize();
 		}
 
 		// Periods.
@@ -939,6 +1016,13 @@ class Payment extends LegacyPayment {
 
 		if ( null !== $origin_id ) {
 			$properties['origin_id'] = $origin_id;
+		}
+
+		// Transaction ID.
+		$transaction_id = $this->get_transaction_id();
+
+		if ( null !== $transaction_id ) {
+			$properties['transaction_id'] = $transaction_id;
 		}
 
 		$object = (object) $properties;

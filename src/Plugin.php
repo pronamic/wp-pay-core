@@ -431,7 +431,15 @@ class Plugin {
 		}
 
 		// Check if we should redirect.
-		$should_redirect = apply_filters( 'pronamic_pay_return_should_redirect', true, $payment );
+		$should_redirect = true;
+
+		/**
+		 * Filter whether or not to allow redirects on payment return.
+		 *
+		 * @param bool    $should_redirect Flag to indicate if redirect is allowed on handling payment return.
+		 * @param Payment $payment         Payment.
+		 */
+		$should_redirect = apply_filters( 'pronamic_pay_return_should_redirect', $should_redirect, $payment );
 
 		try {
 			self::update_payment( $payment, $should_redirect );
@@ -586,8 +594,14 @@ class Plugin {
 			$this->admin = new Admin\AdminModule( $this );
 		}
 
-		// Gateway Integrations.
-		$gateways = apply_filters( 'pronamic_pay_gateways', array() );
+		$gateways = array();
+
+		/**
+		 * Filters the gateway integrations.
+		 *
+		 * @param AbstractGatewayIntegration[] $gateways Gateway integrations.
+		 */
+		$gateways = apply_filters( 'pronamic_pay_gateways', $gateways );
 
 		$this->gateway_integrations = new GatewayIntegrations( $gateways );
 
@@ -595,8 +609,14 @@ class Plugin {
 			$integration->setup();
 		}
 
-		// Plugin Integrations.
-		$this->plugin_integrations = apply_filters( 'pronamic_pay_plugin_integrations', array() );
+		$plugin_integrations = array();
+
+		/**
+		 * Filters the plugin integrations.
+		 *
+		 * @param AbstractPluginIntegration[] $plugin_integrations Plugin integrations.
+		 */
+		$this->plugin_integrations = apply_filters( 'pronamic_pay_plugin_integrations', $plugin_integrations );
 
 		foreach ( $this->plugin_integrations as $integration ) {
 			$integration->setup();
@@ -716,6 +736,10 @@ class Plugin {
 		$options = array( __( '— Select Configuration —', 'pronamic_ideal' ) );
 
 		foreach ( $query->posts as $post ) {
+			if ( ! \is_object( $post ) ) {
+				continue;
+			}
+
 			$id = $post->ID;
 
 			$options[ $id ] = sprintf(
@@ -972,13 +996,15 @@ class Plugin {
 		// Complement payment.
 		self::complement_payment( $payment );
 
+		$config_id = $payment->get_config_id();
+
 		/**
 		 * Filters the payment gateway configuration ID.
 		 *
-		 * @param int     $configuration_id Gateway configuration ID.
-		 * @param Payment $payment          The payment resource data.
+		 * @param null|int $config_id Gateway configuration ID.
+		 * @param Payment  $payment   Payment.
 		 */
-		$config_id = \apply_filters( 'pronamic_payment_gateway_configuration_id', $payment->get_config_id(), $payment );
+		$config_id = \apply_filters( 'pronamic_payment_gateway_configuration_id', $config_id, $payment );
 
 		$payment->set_config_id( $config_id );
 
@@ -1174,6 +1200,12 @@ class Plugin {
 	public function payment_redirect_url( $url, Payment $payment ) {
 		$source = $payment->get_source();
 
+		/**
+		 * Filters the payment redirect URL by plugin integration source.
+		 *
+		 * @param null|string $url     Redirect URL.
+		 * @param Payment     $payment Payment.
+		 */
 		$url = \apply_filters( 'pronamic_payment_redirect_url_' . $source, $url, $payment );
 
 		return $url;

@@ -55,7 +55,9 @@ class AdminReports {
 	 * @return void
 	 */
 	public function page_reports() {
-		$this->admin->render_page( 'reports' );
+		$admin_reports = $this;
+
+		include __DIR__ . '/../../views/page-reports.php';
 	}
 
 	/**

@@ -148,7 +148,7 @@ class AdminGatewayPostType {
 				 * Filters the gateway configuration display value.
 				 *
 				 * The dynamic portion of the hook name, `$id`, refers to the gateway ID.
-				 * For example, the gateway ID for Payvision is `payvision`, se the filter
+				 * For example, the gateway ID for Payvision is `payvision`, so the filter
 				 * for that gateway would be:
 				 * `pronamic_gateway_configuration_display_value_payvision`
 				 *

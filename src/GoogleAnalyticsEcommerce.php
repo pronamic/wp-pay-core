@@ -10,8 +10,10 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\Server;
+use Pronamic\WordPress\Pay\Payments\PaymentLine;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Payments\Payment;
 
@@ -133,25 +135,24 @@ class GoogleAnalyticsEcommerce {
 			'ni'  => 1,
 		);
 
+		$total_amount = $payment->get_total_amount();
+
 		// Transaction Hit.
 		$transaction = wp_parse_args(
 			array(
 				't'  => 'transaction',
-				'tr' => sprintf( '%F', $payment->get_total_amount()->get_value() ),
+				'tr' => $total_amount->number_format( null, '.', '' ),
 			),
 			$defaults
 		);
 
-		// Currency.
-		if ( null !== $payment->get_total_amount()->get_currency()->get_alphabetic_code() ) {
-			/*
-			 * Currency Code
-			 * Optional.
-			 * When present indicates the local currency for all transaction currency values. Value should be a valid ISO 4217 currency code.
-			 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cu
-			 */
-			$transaction['cu'] = $payment->get_total_amount()->get_currency()->get_alphabetic_code();
-		}
+		/*
+		 * Currency Code
+		 * Optional.
+		 * When present indicates the local currency for all transaction currency values. Value should be a valid ISO 4217 currency code.
+		 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cu
+		 */
+		$transaction['cu'] = $total_amount->get_currency()->get_alphabetic_code();
 
 		// Shipping.
 		$shipping_amount = $payment->get_shipping_amount();
@@ -163,18 +164,18 @@ class GoogleAnalyticsEcommerce {
 			 * Specifies the total shipping cost of the transaction.
 			 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ts
 			 */
-			$transaction['ts'] = sprintf( '%F', $shipping_amount->get_value() );
+			$transaction['ts'] = $shipping_amount->number_format( null, '.', '' );
 		}
 
 		// Tax.
-		if ( $payment->get_total_amount()->has_tax() ) {
+		if ( $total_amount instanceof TaxedMoney ) {
 			/*
 			 * Transaction Tax
 			 * Optional.
 			 * Specifies the total tax of the transaction.
 			 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#tt
 			 */
-			$transaction['tt'] = sprintf( '%F', $payment->get_total_amount()->get_tax_value() );
+			$transaction['tt'] = sprintf( '%F', $total_amount->get_tax_value() );
 		}
 
 		wp_remote_post(
@@ -206,9 +207,21 @@ class GoogleAnalyticsEcommerce {
 
 				/*
 				 * Item Name - Required for item hit type. - Specifies the item name.
+				 *
 				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#in
 				 */
-				$item['in'] = \apply_filters( 'pronamic_pay_google_analytics_ecommerce_item_name', $line->get_name(), $line );
+				$name = $line->get_name();
+
+				/**
+				 * Filters the item name for Google Analytics e-commerce tracking.
+				 *
+				 * @param string      $name Item name.
+				 * @param PaymentLine $line Payment line.
+				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#in
+				 */
+				$name = \apply_filters( 'pronamic_pay_google_analytics_ecommerce_item_name', $name, $line );
+
+				$item['in'] = $name;
 
 				/*
 				 * Item Price - Optional. - Specifies the price for a single item / unit.
@@ -217,7 +230,7 @@ class GoogleAnalyticsEcommerce {
 				$unit_price = $line->get_unit_price();
 
 				if ( null !== $unit_price ) {
-					$item['ip'] = sprintf( '%F', $unit_price->get_value() );
+					$item['ip'] = $unit_price->number_format( null, '.', '' );
 				}
 
 				/*
@@ -244,7 +257,16 @@ class GoogleAnalyticsEcommerce {
 				 * Item Category - Optional. - Specifies the category that the item belongs to.
 				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#iv
 				 */
-				$product_category = \apply_filters( 'pronamic_pay_google_analytics_ecommerce_item_product_category', $line->get_product_category(), $line );
+				$product_category = $line->get_product_category();
+
+				/**
+				 * Filters the product category for Google Analytics e-commerce tracking.
+				 *
+				 * @param string      $product_category Product category.
+				 * @param PaymentLine $line             Payment line.
+				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#iv
+				 */
+				$product_category = \apply_filters( 'pronamic_pay_google_analytics_ecommerce_item_product_category', $product_category, $line );
 
 				if ( null !== $product_category ) {
 					$item['iv'] = $product_category;

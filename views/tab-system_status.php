@@ -108,10 +108,10 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 		</tr>
 		<tr>
 			<th scope="row">
-				<?php esc_html_e( 'PHP Version', 'pronamic_ideal' ); ?>
+				<?php \esc_html_e( 'PHP Version', 'pronamic_ideal' ); ?>
 			</th>
 			<td>
-				<?php echo esc_html( phpversion() ); ?>
+				<?php echo \esc_html( (string) \phpversion() ); ?>
 			</td>
 			<td>
 				<?php
@@ -326,7 +326,7 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 
 				?>
 				<a href="https://travis-ci.org/pronamic/wp-pronamic-ideal">
-					<img src="<?php echo esc_attr( $url ); ?>" alt="" />
+					<img src="<?php echo \esc_url( $url ); ?>" alt="" />
 				</a>
 			</td>
 			<td>

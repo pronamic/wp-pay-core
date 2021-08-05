@@ -11,7 +11,7 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use Pronamic\WordPress\DateTime\DateTime;
-use Pronamic\WordPress\Money\TaxedMoney;
+use Pronamic\WordPress\Money\Money;
 
 /**
  * Subscription Phases Trait
@@ -61,9 +61,9 @@ trait SubscriptionPhasesTrait {
 	/**
 	 * Create new phase for this subscription.
 	 *
-	 * @param DateTime   $start_date    Start date.
-	 * @param string     $interval_spec Interval specification.
-	 * @param TaxedMoney $amount        Amount.
+	 * @param DateTime $start_date    Start date.
+	 * @param string   $interval_spec Interval specification.
+	 * @param Money    $amount        Amount.
 	 * @return SubscriptionPhase
 	 */
 	public function new_phase( $start_date, $interval_spec, $amount ) {

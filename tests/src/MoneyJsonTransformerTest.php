@@ -39,18 +39,11 @@ class MoneyJsonTransformerTest extends TestCase {
 
 		$json_data = json_decode( file_get_contents( $json_file, true ) );
 
-		$json_string = wp_json_encode( MoneyJsonTransformer::to_json( $money ), JSON_PRETTY_PRINT );
+		$json_string = wp_json_encode( $money, JSON_PRETTY_PRINT );
 
 		$this->assertEquals( wp_json_encode( $json_data, JSON_PRETTY_PRINT ), $json_string );
 
 		$this->assertJsonStringEqualsJsonFile( $json_file, strval( $json_string ) );
-	}
-
-	/**
-	 * Test to JSON empty.
-	 */
-	public function test_to_json_empty() {
-		self::assertNull( MoneyJsonTransformer::to_json() );
 	}
 
 	/**

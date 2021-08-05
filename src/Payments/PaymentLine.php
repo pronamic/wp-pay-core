@@ -14,7 +14,6 @@ use InvalidArgumentException;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
-use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
 
 /**
  * Payment line.
@@ -71,7 +70,7 @@ class PaymentLine {
 	/**
 	 * The unit price of this payment line.
 	 *
-	 * @var TaxedMoney|null
+	 * @var Money|null
 	 */
 	private $unit_price;
 
@@ -85,7 +84,7 @@ class PaymentLine {
 	/**
 	 * Total amount of this payment line.
 	 *
-	 * @var TaxedMoney
+	 * @var Money
 	 */
 	private $total_amount;
 
@@ -121,7 +120,7 @@ class PaymentLine {
 	 * Payment line constructor.
 	 */
 	public function __construct() {
-		$this->set_total_amount( new TaxedMoney() );
+		$this->set_total_amount( new Money() );
 	}
 
 	/**
@@ -241,7 +240,7 @@ class PaymentLine {
 	/**
 	 * Get unit price.
 	 *
-	 * @return TaxedMoney|null
+	 * @return Money|null
 	 */
 	public function get_unit_price() {
 		return $this->unit_price;
@@ -250,10 +249,10 @@ class PaymentLine {
 	/**
 	 * Set unit price.
 	 *
-	 * @param TaxedMoney|null $price Unit price.
+	 * @param Money|null $price Unit price.
 	 * @return void
 	 */
-	public function set_unit_price( TaxedMoney $price = null ) {
+	public function set_unit_price( Money $price = null ) {
 		$this->unit_price = ( null === $price ? null : $price );
 	}
 
@@ -282,7 +281,11 @@ class PaymentLine {
 	 * @return Money|null
 	 */
 	public function get_tax_amount() {
-		$tax_value = $this->get_total_amount()->get_tax_value();
+		if ( ! $this->total_amount instanceof TaxedMoney ) {
+			return null;
+		}
+
+		$tax_value = $this->total_amount->get_tax_value();
 
 		if ( null === $tax_value ) {
 			return null;
@@ -297,7 +300,7 @@ class PaymentLine {
 	/**
 	 * Get total amount.
 	 *
-	 * @return TaxedMoney
+	 * @return Money
 	 */
 	public function get_total_amount() {
 		return $this->total_amount;
@@ -306,10 +309,10 @@ class PaymentLine {
 	/**
 	 * Set total amount.
 	 *
-	 * @param TaxedMoney $total_amount Total amount.
+	 * @param Money $total_amount Total amount.
 	 * @return void
 	 */
-	public function set_total_amount( TaxedMoney $total_amount ) {
+	public function set_total_amount( Money $total_amount ) {
 		$this->total_amount = $total_amount;
 	}
 
@@ -428,7 +431,7 @@ class PaymentLine {
 		}
 
 		if ( isset( $json->unit_price ) ) {
-			$line->set_unit_price( TaxedMoneyJsonTransformer::from_json( $json->unit_price ) );
+			$line->set_unit_price( MoneyJsonTransformer::from_json( $json->unit_price ) );
 		}
 
 		if ( isset( $json->discount_amount ) ) {
@@ -436,7 +439,7 @@ class PaymentLine {
 		}
 
 		if ( isset( $json->total_amount ) ) {
-			$line->set_total_amount( TaxedMoneyJsonTransformer::from_json( $json->total_amount ) );
+			$line->set_total_amount( MoneyJsonTransformer::from_json( $json->total_amount ) );
 		}
 
 		if ( property_exists( $json, 'product_url' ) ) {
@@ -467,9 +470,9 @@ class PaymentLine {
 			'name'             => $this->get_name(),
 			'description'      => $this->get_description(),
 			'quantity'         => $this->get_quantity(),
-			'unit_price'       => TaxedMoneyJsonTransformer::to_json( $this->get_unit_price() ),
-			'discount_amount'  => MoneyJsonTransformer::to_json( $this->get_discount_amount() ),
-			'total_amount'     => TaxedMoneyJsonTransformer::to_json( $this->get_total_amount() ),
+			'unit_price'       => ( null === $this->unit_price ) ? null : $this->unit_price->jsonSerialize(),
+			'discount_amount'  => ( null === $this->discount_amount ) ? null : $this->discount_amount->jsonSerialize(),
+			'total_amount'     => $this->total_amount->jsonSerialize(),
 			'product_url'      => $this->get_product_url(),
 			'image_url'        => $this->get_image_url(),
 			'product_category' => $this->get_product_category(),

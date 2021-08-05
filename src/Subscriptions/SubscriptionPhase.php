@@ -12,9 +12,8 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DateTimeImmutable;
 use Pronamic\WordPress\DateTime\DateTime;
-use Pronamic\WordPress\Money\TaxedMoney;
+use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
-use Pronamic\WordPress\Pay\TaxedMoneyJsonTransformer;
 
 /**
  * Subscription Phase
@@ -48,7 +47,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Amount.
 	 *
-	 * @var TaxedMoney
+	 * @var Money
 	 */
 	private $amount;
 
@@ -129,10 +128,10 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @param Subscription         $subscription Subscription.
 	 * @param DateTimeImmutable    $start_date   Start date.
 	 * @param SubscriptionInterval $interval     Interval.
-	 * @param TaxedMoney           $amount       Amount.
+	 * @param Money                $amount       Amount.
 	 * @return void
 	 */
-	public function __construct( Subscription $subscription, DateTimeImmutable $start_date, SubscriptionInterval $interval, TaxedMoney $amount ) {
+	public function __construct( Subscription $subscription, DateTimeImmutable $start_date, SubscriptionInterval $interval, Money $amount ) {
 		$this->subscription = $subscription;
 		$this->start_date   = $start_date;
 		$this->interval     = $interval;
@@ -250,7 +249,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Get amount.
 	 *
-	 * @return TaxedMoney
+	 * @return Money
 	 */
 	public function get_amount() {
 		return $this->amount;
@@ -259,7 +258,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Set amount.
 	 *
-	 * @param TaxedMoney $amount Amount.
+	 * @param Money $amount Amount.
 	 * @return void
 	 */
 	public function set_amount( $amount ) {
@@ -510,7 +509,7 @@ class SubscriptionPhase implements \JsonSerializable {
 			'sequence_number'   => $this->get_sequence_number(),
 			'start_date'        => $this->start_date->format( \DATE_ATOM ),
 			'interval'          => $this->interval->get_specification(),
-			'amount'            => MoneyJsonTransformer::to_json( $this->amount ),
+			'amount'            => $this->amount->jsonSerialize(),
 			// Numbers.
 			'total_periods'     => $this->total_periods,
 			'periods_created'   => $this->periods_created,
@@ -560,7 +559,7 @@ class SubscriptionPhase implements \JsonSerializable {
 			$json->subscription,
 			new \DateTimeImmutable( $json->start_date ),
 			new SubscriptionInterval( $json->interval ),
-			TaxedMoneyJsonTransformer::from_json( $json->amount )
+			MoneyJsonTransformer::from_json( $json->amount )
 		);
 
 		if ( property_exists( $json, 'total_periods' ) ) {

@@ -78,9 +78,7 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::set_total_amount()' );
 
 		if ( \method_exists( $this, 'set_total_amount' ) ) {
-			$money = new TaxedMoney( $amount->get_value(), $amount->get_currency() );
-
-			$this->set_total_amount( $money );
+			$this->set_total_amount( $amount );
 		}
 	}
 

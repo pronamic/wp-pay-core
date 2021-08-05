@@ -19,7 +19,7 @@ $container_index = 1;
 
 			<?php if ( current_user_can( 'edit_payments' ) ) : ?>
 
-				<div id="postbox-container-<?php echo esc_attr( $container_index ); ?>" class="postbox-container">
+				<div id="postbox-container-<?php echo \esc_attr( (string) $container_index ); ?>" class="postbox-container">
 					<div id="normal-sortables" class="meta-box-sortables ui-sortable">
 
 						<div class="postbox">
@@ -314,7 +314,7 @@ $container_index = 1;
 
 			<?php endif; ?>
 
-			<div id="postbox-container-<?php echo esc_attr( $container_index ); ?>" class="postbox-container">
+			<div id="postbox-container-<?php echo \esc_attr( (string) $container_index ); ?>" class="postbox-container">
 				<div id="side-sortables" class="meta-box-sortables ui-sortable">
 					<?php if ( current_user_can( 'manage_options' ) ) : ?>
 

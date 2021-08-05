@@ -12,6 +12,10 @@ use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Plugin;
 
+if ( ! isset( $post ) ) {
+	return;
+}
+
 $states = PaymentPostType::get_payment_states();
 
 $payment = get_pronamic_payment( get_the_ID() );

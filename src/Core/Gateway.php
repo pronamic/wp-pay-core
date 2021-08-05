@@ -567,6 +567,7 @@ abstract class Gateway {
 			PaymentMethods::FOCUM,
 			PaymentMethods::IN3,
 			PaymentMethods::KLARNA_PAY_LATER,
+			PaymentMethods::SPRAYPAY,
 		);
 
 		$payment_method = $this->get_payment_method();
@@ -605,6 +606,7 @@ abstract class Gateway {
 			PaymentMethods::FOCUM,
 			PaymentMethods::IN3,
 			PaymentMethods::KLARNA_PAY_LATER,
+			PaymentMethods::SPRAYPAY,
 		);
 
 		$payment_method = $this->get_payment_method();

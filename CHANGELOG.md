@@ -7,6 +7,25 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [3.0.0] - 2021-08-05
+### Changed
+- Updated to `pronamic/wp-money` version ` 2.0.0`.
+- No longer require taxed money in payments and subscriptions.
+- Gateway in WordPress admin dashboard is now clickable.
+- Updated subscription action URLs to include trailing slash.
+- Made transaction ID searchable by inclusion in payment JSON post content.
+- Updated hooks documentation.
+
+### Added
+- Added support for SprayPay payment method.
+
+### Fixed
+- Fixed payment form amount input styling with WordPress default theme.
+- Fixed deprecated `block_categories` filter warning with WordPress 5.8.
+
+### Removed
+- Removed [Shortcake (Shortcode UI)](https://wordpress.org/plugins/shortcode-ui/) support.
+
 ## [2.7.2] - 2021-06-18
 - Added payment method to subscription details when cancelling/renewing a subscription.
 - Added refunded amount in payments overview amount column.
@@ -373,7 +392,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/2.7.2...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/3.0.0...HEAD
+[3.0.0]: https://github.com/wp-pay/core/compare/2.7.2...3.0.0
 [2.7.2]: https://github.com/wp-pay/core/compare/2.7.1...2.7.2
 [2.7.1]: https://github.com/wp-pay/core/compare/2.7.0...2.7.1
 [2.7.0]: https://github.com/wp-pay/core/compare/2.6.2...2.7.0

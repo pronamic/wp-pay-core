@@ -30,13 +30,19 @@ class BlocksModule {
 	 * @return void
 	 */
 	public function setup() {
+		global $wp_version;
+
 		// Initialize.
 		add_action( 'init', array( $this, 'register_scripts' ) );
 		add_action( 'init', array( $this, 'register_block_types' ) );
 
 		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_styles' ) );
 
-		add_filter( 'block_categories', array( $this, 'block_categories' ), 10, 2 );
+		add_filter( 'block_categories_all', array( $this, 'block_categories' ), 10, 2 );
+
+		if ( \version_compare( $wp_version, '5.8', '<' ) ) {
+			add_filter( 'block_categories', array( $this, 'block_categories' ), 10, 2 );
+		}
 
 		// Source text and description.
 		add_filter( 'pronamic_payment_source_url_' . FormsSource::BLOCK_PAYMENT_FORM, array( $this, 'source_url' ), 10, 2 );

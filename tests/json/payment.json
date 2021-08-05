@@ -62,7 +62,7 @@
       "description":"Lorem ipsum dolor sit amet.",
       "quantity":50,
       "total_amount":{
-        "value":39.99,
+        "value":"39.99",
         "currency":"EUR"
       }
     },
@@ -71,10 +71,10 @@
       "description":"Lorem ipsum dolor sit amet.",
       "quantity":10,
       "total_amount":{
-        "value":25,
+        "value":"25",
         "currency":"EUR",
-        "tax_value":5.25,
-        "tax_percentage":21
+        "tax_value":"5.25",
+        "tax_percentage":"21"
       }
     }
   ],
@@ -104,10 +104,10 @@
   "end_date": "2100-05-05T00:00:00+00:00",
   "expiry_date": "2005-05-05T00:30:00+00:00",
   "total_amount": {
-    "value": 242,
+    "value": "242",
     "currency": "EUR",
-    "tax_value": 42,
-    "tax_percentage": 21
+    "tax_value": "42",
+    "tax_percentage": "21"
   },
   "status":"Open",
   "failure_reason": {

@@ -10,6 +10,10 @@
 
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
 
+if ( ! isset( $post ) ) {
+	return;
+}
+
 $states = SubscriptionPostType::get_states();
 
 // WordPress by default doesn't allow `post_author` values of `0`, that's why we use a dash (`-`).
