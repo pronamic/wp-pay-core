@@ -5,7 +5,10 @@ All notable changes to this project will be documented in this file.
 This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
--
+- Added support for 'American Express' payment method.
+- Added support for 'Mastercard' payment method.
+- Added support for 'Visa' payment method.
+- Added support for 'V PAY' payment method.
 
 ## [3.0.0] - 2021-08-05
 ### Changed
