@@ -7,6 +7,14 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [3.0.1] - 2021-08-16
+### Added
+- Added debug page for subscriptions follow-up payments.
+- Added support for 'American Express' payment method.
+- Added support for 'Mastercard' payment method.
+- Added support for 'Visa' payment method.
+- Added support for 'V PAY' payment method.
+
 ## [3.0.0] - 2021-08-05
 ### Changed
 - Updated to `pronamic/wp-money` version ` 2.0.0`.
@@ -392,7 +400,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/3.0.0...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/3.0.1...HEAD
+[3.0.1]: https://github.com/wp-pay/core/compare/3.0.0...3.0.1
 [3.0.0]: https://github.com/wp-pay/core/compare/2.7.2...3.0.0
 [2.7.2]: https://github.com/wp-pay/core/compare/2.7.1...2.7.2
 [2.7.1]: https://github.com/wp-pay/core/compare/2.7.0...2.7.1

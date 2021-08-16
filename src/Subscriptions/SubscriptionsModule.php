@@ -71,6 +71,8 @@ class SubscriptionsModule {
 
 		add_action( 'plugins_loaded', array( $this, 'maybe_schedule_subscription_events' ), 6 );
 
+		add_action( 'admin_init', array( $this, 'maybe_process_debug' ) );
+
 		// Exclude subscription notes.
 		add_filter( 'comments_clauses', array( $this, 'exclude_subscription_comment_notes' ), 10, 2 );
 
@@ -1062,25 +1064,35 @@ class SubscriptionsModule {
 	}
 
 	/**
-	 * Update subscription payments.
-	 *
-	 * @param bool $cli_test Whether or not this a CLI test.
-	 * @return void
+	 * Get WordPress query for subscriptions that require a follow-up payment.
+	 * 
+	 * @param array $args Arguments.
+	 * @return WP_Query
 	 */
-	public function update_subscription_payments( $cli_test = false ) {
-		$this->send_subscription_renewal_notices();
+	public function get_subscriptions_wp_query_that_require_follow_up_payment( $args = array() ) {
+		$args = \wp_parse_args(
+			$args,
+			array(
+				'date'   => new \DateTimeImmutable(),
+				'number' => -1,
+			) 
+		);
 
-		$args = array(
-			'post_type'   => 'pronamic_pay_subscr',
-			'nopaging'    => true,
-			'orderby'     => 'post_date',
-			'order'       => 'ASC',
-			'post_status' => array(
+		$date = $args['date'];
+
+		$date_utc = $date->setTimezone( new \DateTimeZone( 'UTC' ) );
+
+		$query_args = array(
+			'post_type'      => 'pronamic_pay_subscr',
+			'posts_per_page' => $args['number'],
+			'orderby'        => 'post_date',
+			'order'          => 'ASC',
+			'post_status'    => array(
 				'subscr_pending',
 				'subscr_failed',
 				'subscr_active',
 			),
-			'meta_query'  => array(
+			'meta_query'     => array(
 				array(
 					'key'     => '_pronamic_subscription_source',
 					'compare' => 'NOT IN',
@@ -1089,35 +1101,69 @@ class SubscriptionsModule {
 						'woocommerce',
 					),
 				),
+				array(
+					'relation' => 'OR',
+					array(
+						'key'     => '_pronamic_subscription_next_payment',
+						'compare' => '<=',
+						'value'   => $date_utc->format( 'Y-m-d H:i:s' ),
+						'type'    => 'DATETIME',
+					),
+					array(
+						'key'     => '_pronamic_subscription_next_payment_delivery_date',
+						'compare' => '<=',
+						'value'   => $date_utc->format( 'Y-m-d H:i:s' ),
+						'type'    => 'DATETIME',
+					),
+				),
 			),
 		);
 
-		if ( ! $cli_test ) {
-			$args['meta_query'][] = array(
-				'relation' => 'OR',
-				array(
-					'key'     => '_pronamic_subscription_next_payment',
-					'compare' => '<=',
-					'value'   => current_time( 'mysql', true ),
-					'type'    => 'DATETIME',
-				),
-				array(
-					'key'     => '_pronamic_subscription_next_payment_delivery_date',
-					'compare' => '<=',
-					'value'   => current_time( 'mysql', true ),
-					'type'    => 'DATETIME',
-				),
-			);
-		}
+		$query = new WP_Query( $query_args );
 
-		$query = new WP_Query( $args );
+		return $query;
+	}
+
+	/**
+	 * Process subscriptions follow-up payment.
+	 * 
+	 * @param array $args Arguments.
+	 * @return void
+	 * @throws \Exception Throws exception when unable to load subscription from post ID.
+	 */
+	private function process_subscriptions_follow_up_payment( $args = array() ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'date'         => null,
+				'number'       => null,
+				'on_progress'  => null,
+				'on_exception' => null,
+			) 
+		);
+
+		$query = $this->get_subscriptions_wp_query_that_require_follow_up_payment(
+			array(
+				'date'   => $args['date'],
+				'number' => $args['number'],
+			) 
+		);
 
 		foreach ( $query->posts as $post ) {
-			if ( $cli_test ) {
-				WP_CLI::log( sprintf( 'Processing post `%d` - "%s"…', $post->ID, get_the_title( $post ) ) );
+			if ( null !== $args['on_progress'] ) {
+				\call_user_func( $args['on_progress'], $post ); 
 			}
 
 			$subscription = \get_pronamic_subscription( $post->ID );
+
+			if ( null === $subscription ) {
+				throw new \Exception(
+					\sprintf(
+						'Unable to load subscription from post ID: %d.',
+						$post->ID
+					)
+				);
+			}
 
 			$gateway = Plugin::get_gateway( $subscription->config_id );
 
@@ -1138,8 +1184,8 @@ class SubscriptionsModule {
 
 				$payment = $this->start_payment( $payment );
 			} catch ( \Exception $e ) {
-				if ( $cli_test ) {
-					WP_CLI::error( $e->getMessage(), false );
+				if ( null !== $args['on_exception'] ) {
+					\call_user_func( $args['on_exception'], $e );   
 				}
 
 				continue;
@@ -1166,6 +1212,69 @@ class SubscriptionsModule {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Update subscription payments.
+	 *
+	 * @return void
+	 */
+	public function update_subscription_payments() {
+		$this->send_subscription_renewal_notices();
+
+		$this->process_subscriptions_follow_up_payment(
+			array(
+				'date'   => new \DateTimeImmutable(),
+				'number' => -1,
+			) 
+		);
+	}
+
+	/**
+	 * Maybe process debug.
+	 */
+	public function maybe_process_debug() {
+		if ( ! \filter_has_var( \INPUT_POST, 'pronamic_pay_process_subscriptions_follow_up_payment' ) ) {
+			return;
+		}
+
+		if ( ! \check_admin_referer( 'pronamic_pay_process_subscriptions_follow_up_payment', 'pronamic_pay_nonce' ) ) {
+			return;
+		}
+
+		$date = new \DateTimeImmutable();
+
+		if ( \array_key_exists( 'date', $_POST ) ) {
+			$date = new \DateTimeImmutable( \sanitize_text_field( \wp_unslash( $_POST['date'] ) ) );
+		}
+
+		$number = 10;
+
+		if ( \array_key_exists( 'number', $_POST ) ) {
+			$number = (int) $_POST['number'];
+		}
+
+		$this->process_subscriptions_follow_up_payment(
+			array(
+				'date'         => $date,
+				'number'       => $number,
+				'on_exception' => function( $e ) {
+					\wp_die( \esc_html( $e->getMessage() ) );
+				},
+			) 
+		);
+
+		$location = \add_query_arg(
+			array(
+				'page'               => 'pronamic_pay_debug',
+				'pronamic_pay_debug' => 'true',
+			),
+			\admin_url( 'admin.php' )
+		);
+
+		\wp_safe_redirect( $location );
+
+		exit;
 	}
 
 	/**
@@ -1233,16 +1342,41 @@ class SubscriptionsModule {
 	/**
 	 * CLI subscriptions test.
 	 *
+	 * @param array $args       Arguments.
+	 * @param array $assoc_args Associative arguments.
 	 * @return void
 	 */
-	public function cli_subscriptions_test() {
-		$cli_test = true;
+	public function cli_subscriptions_test( $args, $assoc_args ) {
+		$date = new \DateTimeImmutable();
+
+		if ( \array_key_exists( 'date', $assoc_args ) ) {
+			$date = new \DateTimeImmutable( $assoc_args['date'] );
+		}
+
+		$number = -1;
+
+		if ( \array_key_exists( 'number', $assoc_args ) ) {
+			$number = (int) $assoc_args['number'];
+		}
 
 		WP_CLI::log( 'Updating subscription payments…' );
 
-		$this->update_subscription_payments( $cli_test );
+		$this->process_subscriptions_follow_up_payment(
+			array(
+				'date'         => $date,
+				'number'       => $number,
+				'on_progress'  => function( $post ) {
+					WP_CLI::log( \sprintf( 'Processing post `%d` - "%s"…', $post->ID, \get_the_title( $post ) ) );
+				},
+				'on_exception' => function( $e ) {
+					WP_CLI::error( $e->getMessage(), false );
+				},
+			) 
+		);
 
 		WP_CLI::log( 'Completing subscriptions…' );
+
+		$cli_test = true; 
 
 		$this->complete_subscriptions( $cli_test );
 
