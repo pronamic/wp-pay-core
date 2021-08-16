@@ -101,9 +101,5 @@
 		?>
 	</form>
 
-	<h2><?php \esc_html_e( 'WP-Cron', 'pronamic_ideal' ); ?></h2>
-
-	<?php echo '<pre>'; \print_r( \_get_cron_array() ); echo '</pre>'; ?>
-
 	<?php require __DIR__ . '/pronamic.php'; ?>
 </div>
