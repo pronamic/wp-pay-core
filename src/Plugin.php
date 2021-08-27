@@ -1022,28 +1022,6 @@ class Plugin {
 			return $payment;
 		}
 
-		// Prevent payment start at gateway if amount is empty.
-		$amount = $payment->get_total_amount()->get_value();
-
-		if ( empty( $amount ) ) {
-			$payment->set_status( PaymentStatus::SUCCESS );
-
-			$payment->save();
-
-			/**
-			 * Return or throw exception?
-			 *
-			 * @link https://github.com/wp-pay/core/commit/aa6422f0963d9718edd11ac41edbadfd6cd07d49
-			 * @todo Throw exception?
-			 */
-
-			$maybe_tokenize = ( $gateway->supports( 'recurring' ) && PaymentMethods::DIRECT_DEBIT === $payment->get_method() && null !== $payment->get_consumer_bank_details() );
-
-			if ( ! $maybe_tokenize ) {
-				return $payment;
-			}
-		}
-
 		// Recurring.
 		if ( true === $payment->get_recurring() && ! $gateway->supports( 'recurring' ) ) {
 			throw new \Exception( 'Gateway does not support recurring payments.' );
