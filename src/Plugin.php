@@ -831,7 +831,7 @@ class Plugin {
 	 * @param Payment $payment Payment.
 	 * @return void
 	 */
-	private static function complement_payment( Payment $payment ) {
+	public static function complement_payment( Payment $payment ) {
 		// Entrance Code.
 		if ( null === $payment->entrance_code ) {
 			$payment->entrance_code = uniqid();
