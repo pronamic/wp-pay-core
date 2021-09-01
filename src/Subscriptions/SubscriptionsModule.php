@@ -231,6 +231,13 @@ class SubscriptionsModule {
 
 				$payment->recurring = false;
 
+				// Set payment period.
+				$renewal_period = $subscription->get_renewal_period();
+
+				if ( null !== $renewal_period ) {
+					$payment->add_period( $renewal_period );
+				}
+
 				$payment = $this->start_payment( $payment );
 
 				$payment->set_meta( 'manual_subscription_renewal', true );
