@@ -223,7 +223,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$subscription` | `\Pronamic\WordPress\Pay\Subscriptions\Subscription` | Subscription.
 
-Source: [src/Subscriptions/SubscriptionsModule.php](../src/Subscriptions/SubscriptionsModule.php), [line 1028](../src/Subscriptions/SubscriptionsModule.php#L1028-L1050)
+Source: [src/Subscriptions/SubscriptionsModule.php](../src/Subscriptions/SubscriptionsModule.php), [line 1035](../src/Subscriptions/SubscriptionsModule.php#L1035-L1057)
 
 ### `pronamic_pay_new_subscription`
 
@@ -638,7 +638,7 @@ Argument | Type | Description
 `$text` | `string` | Source text.
 `$subscription` | `\Pronamic\WordPress\Pay\Subscriptions\Subscription` | Subscription.
 
-Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 370](../src/Subscriptions/Subscription.php#L370-L376)
+Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 371](../src/Subscriptions/Subscription.php#L371-L377)
 
 ### `pronamic_subscription_source_text`
 
@@ -651,7 +651,7 @@ Argument | Type | Description
 `$text` | `string` | Source text.
 `$subscription` | `\Pronamic\WordPress\Pay\Subscriptions\Subscription` | Subscription.
 
-Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 379](../src/Subscriptions/Subscription.php#L379-L385)
+Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 380](../src/Subscriptions/Subscription.php#L380-L386)
 
 ### `pronamic_subscription_source_description_{$source}`
 
@@ -664,7 +664,7 @@ Argument | Type | Description
 `$description` | `string` | Source description.
 `$subscription` | `\Pronamic\WordPress\Pay\Subscriptions\Subscription` | Subscription.
 
-Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 403](../src/Subscriptions/Subscription.php#L403-L409)
+Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 404](../src/Subscriptions/Subscription.php#L404-L410)
 
 ### `pronamic_subscription_source_description`
 
@@ -677,7 +677,7 @@ Argument | Type | Description
 `$description` | `string` | Source description.
 `$subscription` | `\Pronamic\WordPress\Pay\Subscriptions\Subscription` | Subscription.
 
-Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 412](../src/Subscriptions/Subscription.php#L412-L418)
+Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 413](../src/Subscriptions/Subscription.php#L413-L419)
 
 ### `pronamic_subscription_source_url`
 
@@ -690,7 +690,7 @@ Argument | Type | Description
 `$url` | `null\|string` | Source URL.
 `$subscription` | `\Pronamic\WordPress\Pay\Subscriptions\Subscription` | Subscription.
 
-Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 435](../src/Subscriptions/Subscription.php#L435-L441)
+Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 436](../src/Subscriptions/Subscription.php#L436-L442)
 
 ### `pronamic_subscription_source_url_{$source}`
 
@@ -703,7 +703,7 @@ Argument | Type | Description
 `$url` | `null\|string` | Source URL.
 `$subscription` | `\Pronamic\WordPress\Pay\Subscriptions\Subscription` | Subscription.
 
-Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 444](../src/Subscriptions/Subscription.php#L444-L450)
+Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 445](../src/Subscriptions/Subscription.php#L445-L451)
 
 ### `pronamic_pay_subscription_next_payment_delivery_date`
 
