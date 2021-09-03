@@ -106,6 +106,7 @@ class BlocksModule {
 		register_block_type(
 			'pronamic-pay/payment-form',
 			array(
+				'title'           => __( 'Payment Form', 'pronamic_ideal' ),
 				'render_callback' => array( $this, 'render_payment_form_block' ),
 				'editor_script'   => 'pronamic-payment-form-editor',
 				'attributes'      => array(

@@ -1,12 +1,12 @@
 /* globals pronamic_payment_form */
-( function ( blocks, components, editor, element ) {
+( function ( wp, blocks, components, editor, element ) {
 	var el = element.createElement;
 	var Fragment = element.Fragment;
 	var InspectorControls = editor.InspectorControls;
 	var Button = components.Button;
 	var Placeholder = components.Placeholder;
 	var TextControl = components.TextControl;
-	var ServerSideRender = components.ServerSideRender;
+	var ServerSideRender = wp.serverSideRender;
 
 	/**
 	 * Register payment form block type.
@@ -97,8 +97,9 @@
 		}
 	} );
 } )(
+	window.wp,
 	window.wp.blocks,
 	window.wp.components,
-	window.wp.editor,
+	window.wp.blockEditor,
 	window.wp.element
 );

@@ -12,6 +12,7 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DateInterval;
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\DateTime\DateTimeImmutable;
 use Pronamic\WordPress\Pay\Payments\LegacyPaymentInfo;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Payments\Payment;
@@ -679,6 +680,50 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 		}
 
 		return $this->next_period();
+	}
+
+	/**
+	 * Get renewal period.
+	 *
+	 * @return SubscriptionPeriod|null
+	 */
+	public function get_renewal_period() {
+		$renewal_period = null;
+
+		// Get next period for current phase.
+		$current_phase = $this->get_current_phase();
+
+		if ( null !== $current_phase ) {
+			$renewal_period = $current_phase->get_next_period();
+		}
+
+		// Check if last period failed.
+		$now = new DateTimeImmutable();
+
+		$periods = $this->get_payments_by_period();
+
+		$last_period = array_shift( $periods );
+
+		if ( null !== $last_period ) {
+			// Can period be re-tried?
+			if ( false === $last_period['can_retry'] ) {
+				return $renewal_period;
+			}
+
+			// Can payment be re-tried?
+			$payment = array_shift( $last_period['payments'] );
+
+			if ( ! \pronamic_pay_plugin()->subscriptions_module->can_retry_payment( $payment ) ) {
+				return $renewal_period;
+			}
+
+			// Is last period end date in the future?
+			if ( $last_period['period']->get_end_date() > $now ) {
+				$renewal_period = $last_period['period'];
+			}
+		}
+
+		return $renewal_period;
 	}
 
 	/**

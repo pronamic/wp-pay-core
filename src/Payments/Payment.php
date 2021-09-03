@@ -495,21 +495,7 @@ class Payment extends LegacyPayment {
 	 * @return string|null
 	 */
 	public function get_action_url() {
-		$action_url = $this->action_url;
-
-		$amount = $this->get_total_amount()->get_value();
-
-		if ( empty( $amount ) ) {
-			$status = $this->get_status();
-
-			$this->set_status( PaymentStatus::SUCCESS );
-
-			$action_url = $this->get_return_redirect_url();
-
-			$this->set_status( $status );
-		}
-
-		return $action_url;
+		return $this->action_url;
 	}
 
 	/**

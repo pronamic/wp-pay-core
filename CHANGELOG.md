@@ -7,6 +7,14 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [3.1.0] - 2021-09-03
+- No longer create recurring payments for subscriptions with the status `Failed` (see https://github.com/pronamic/wp-pronamic-pay/issues/188#issuecomment-907155800).
+- No longer set payments with an empty amount to success (gateways and extensions should handle this).
+- Subscription renewal page uses last failed period for manual renewal, if failed period has not yet passed.
+- Fixed block titles ([pronamic/wp-pronamic-pay#185](https://github.com/pronamic/wp-pronamic-pay/issues/185)).
+- Fixed layout issue with input HTML on subscription renewal page.
+- Fixed script error in payment form block.
+
 ## [3.0.1] - 2021-08-16
 ### Added
 - Added debug page for subscriptions follow-up payments.
@@ -400,7 +408,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/3.0.1...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/3.1.0...HEAD
+[3.1.0]: https://github.com/pronamic/wp-pay-core/compare/3.0.1...3.1.0
 [3.0.1]: https://github.com/wp-pay/core/compare/3.0.0...3.0.1
 [3.0.0]: https://github.com/wp-pay/core/compare/2.7.2...3.0.0
 [2.7.2]: https://github.com/wp-pay/core/compare/2.7.1...2.7.2

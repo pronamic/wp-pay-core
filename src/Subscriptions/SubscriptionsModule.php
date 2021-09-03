@@ -231,6 +231,13 @@ class SubscriptionsModule {
 
 				$payment->recurring = false;
 
+				// Set payment period.
+				$renewal_period = $subscription->get_renewal_period();
+
+				if ( null !== $renewal_period ) {
+					$payment->add_period( $renewal_period );
+				}
+
 				$payment = $this->start_payment( $payment );
 
 				$payment->set_meta( 'manual_subscription_renewal', true );
@@ -811,7 +818,6 @@ class SubscriptionsModule {
 			'order'       => 'ASC',
 			'post_status' => array(
 				'subscr_pending',
-				'subscr_failed',
 				'subscr_active',
 			),
 			'meta_query'  => array(
@@ -1065,7 +1071,7 @@ class SubscriptionsModule {
 
 	/**
 	 * Get WordPress query for subscriptions that require a follow-up payment.
-	 * 
+	 *
 	 * @param array $args Arguments.
 	 * @return WP_Query
 	 */
@@ -1075,7 +1081,7 @@ class SubscriptionsModule {
 			array(
 				'date'   => new \DateTimeImmutable(),
 				'number' => -1,
-			) 
+			)
 		);
 
 		$date = $args['date'];
@@ -1126,7 +1132,7 @@ class SubscriptionsModule {
 
 	/**
 	 * Process subscriptions follow-up payment.
-	 * 
+	 *
 	 * @param array $args Arguments.
 	 * @return void
 	 * @throws \Exception Throws exception when unable to load subscription from post ID.
@@ -1139,19 +1145,19 @@ class SubscriptionsModule {
 				'number'       => null,
 				'on_progress'  => null,
 				'on_exception' => null,
-			) 
+			)
 		);
 
 		$query = $this->get_subscriptions_wp_query_that_require_follow_up_payment(
 			array(
 				'date'   => $args['date'],
 				'number' => $args['number'],
-			) 
+			)
 		);
 
 		foreach ( $query->posts as $post ) {
 			if ( null !== $args['on_progress'] ) {
-				\call_user_func( $args['on_progress'], $post ); 
+				\call_user_func( $args['on_progress'], $post );
 			}
 
 			$subscription = \get_pronamic_subscription( $post->ID );
@@ -1185,7 +1191,7 @@ class SubscriptionsModule {
 				$payment = $this->start_payment( $payment );
 			} catch ( \Exception $e ) {
 				if ( null !== $args['on_exception'] ) {
-					\call_user_func( $args['on_exception'], $e );   
+					\call_user_func( $args['on_exception'], $e );
 				}
 
 				continue;
@@ -1226,7 +1232,7 @@ class SubscriptionsModule {
 			array(
 				'date'   => new \DateTimeImmutable(),
 				'number' => -1,
-			) 
+			)
 		);
 	}
 
@@ -1261,7 +1267,7 @@ class SubscriptionsModule {
 				'on_exception' => function( $e ) {
 					\wp_die( \esc_html( $e->getMessage() ) );
 				},
-			) 
+			)
 		);
 
 		$location = \add_query_arg(
@@ -1371,12 +1377,12 @@ class SubscriptionsModule {
 				'on_exception' => function( $e ) {
 					WP_CLI::error( $e->getMessage(), false );
 				},
-			) 
+			)
 		);
 
 		WP_CLI::log( 'Completing subscriptions…' );
 
-		$cli_test = true; 
+		$cli_test = true;
 
 		$this->complete_subscriptions( $cli_test );
 
