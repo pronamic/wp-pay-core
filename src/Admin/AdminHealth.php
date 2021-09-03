@@ -431,13 +431,28 @@ class AdminHealth {
 
 					if ( $tested_up_to_ok && $requires_at_least_ok ) {
 						// Plugin version is between minimum and tested versions.
-						$supported_extensions[] = $description_text;
+						$supported_extensions[] = sprintf(
+							'– %1$s %2$s',
+							\esc_html( $extension->name ),
+							\esc_html( $plugin['Version'] )
+						);
 					} elseif ( ! $requires_at_least_ok ) {
 						// Plugin version is lower than minimum required version.
-						$outdated_plugin_versions[] = $description_text;
+						$outdated_plugin_versions[] = sprintf(
+							'– %1$s %2$s (requires at least version %3$s, tested up to %4$s)',
+							\esc_html( $extension->name ),
+							\esc_html( $plugin['Version'] ),
+							\esc_html( $requires_at_least ),
+							\esc_html( $tested_up_to )
+						);
 					} elseif ( ! $tested_up_to_ok ) {
 						// Plugin version is higher than tested version.
-						$untested_plugin_versions[] = $description_text;
+						$untested_plugin_versions[] = sprintf(
+							'– %1$s %2$s (tested up to %3$s)',
+							\esc_html( $extension->name ),
+							\esc_html( $plugin['Version'] ),
+							\esc_html( $tested_up_to )
+						);
 					}
 				}
 			}
@@ -452,7 +467,7 @@ class AdminHealth {
 
 			$extensions_list_text .= sprintf(
 				'<p>%1$s</p><p>%2$s</p>',
-				__( 'Untested plugin versions (issues with payments might occur):', 'pronamic_ideal' ),
+				__( 'Untested plugin versions:', 'pronamic_ideal' ),
 				\join( '</p><p>', $untested_plugin_versions )
 			);
 		}
@@ -477,14 +492,30 @@ class AdminHealth {
 		}
 
 		// Result.
-		$label = __( 'Pronamic Pay extensions are compatible', 'pronamic_ideal' );
+		$label = sprintf(
+			/* translators: %s: plugin name */
+			__( '%s extensions are compatible', 'pronamic_ideal' ),
+			__( 'Pronamic Pay', 'pronamic_ideal' )
+		);
 
-		$description_text = __( 'Pronamic Pay uses extensions to integrate with form, booking and other e-commerce plugins. All extensions support the currently activated plugin version.', 'pronamic_ideal' );
+		$description_text = __( 'Pronamic Pay uses extensions to integrate with form, booking and other e-commerce plugins. All extensions support the currently activated plugin versions.', 'pronamic_ideal' );
 
 		if ( 'good' !== $status ) {
-			$label = __( 'Pronamic Pay extensions are incompatible', 'pronamic_ideal' );
+			$label = sprintf(
+				/* translators: %s: plugin name */
+				__( '%s extensions are incompatible', 'pronamic_ideal' ),
+				__( 'Pronamic Pay', 'pronamic_ideal' )
+			);
 
-			$description_text = __( 'Pronamic Pay uses extensions to integrate with form, booking and other e-commerce plugins. Not all extensions support the version of the currently activated plugin.', 'pronamic_ideal' );
+			if ( 0 === count( $outdated_plugin_versions ) ) {
+				$label = sprintf(
+					/* translators: %s: plugin name */
+					__( '%s extensions might be incompatible', 'pronamic_ideal' ),
+					__( 'Pronamic Pay', 'pronamic_ideal' )
+				);
+			}
+
+			$description_text = __( 'Pronamic Pay uses extensions to integrate with form, booking and other e-commerce plugins. We have found that not all extensions are tested with or support the version of the currently activated plugins. Usually you can still accept payments, however if you experience payment issues it is advised to check the \'Plugins\' page for available updates.', 'pronamic_ideal' );
 		}
 
 		$result = array(
