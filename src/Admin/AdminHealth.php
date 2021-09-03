@@ -434,7 +434,7 @@ class AdminHealth {
 						$supported_extensions[] = sprintf(
 							'– %1$s %2$s',
 							\esc_html( $extension->name ),
-							\esc_html( $plugin['Version'] ),
+							\esc_html( $plugin['Version'] )
 						);
 					} elseif ( ! $requires_at_least_ok ) {
 						// Plugin version is lower than minimum required version.
@@ -493,6 +493,7 @@ class AdminHealth {
 
 		// Result.
 		$label = sprintf(
+			/* translators: %s: plugin name */
 			__( '%s extensions are compatible', 'pronamic_ideal' ),
 			__( 'Pronamic Pay', 'pronamic_ideal' )
 		);
@@ -501,12 +502,14 @@ class AdminHealth {
 
 		if ( 'good' !== $status ) {
 			$label = sprintf(
+				/* translators: %s: plugin name */
 				__( '%s extensions are incompatible', 'pronamic_ideal' ),
 				__( 'Pronamic Pay', 'pronamic_ideal' )
 			);
 
 			if ( 0 === count( $outdated_plugin_versions ) ) {
 				$label = sprintf(
+					/* translators: %s: plugin name */
 					__( '%s extensions might be incompatible', 'pronamic_ideal' ),
 					__( 'Pronamic Pay', 'pronamic_ideal' )
 				);
