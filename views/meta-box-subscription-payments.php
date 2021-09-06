@@ -66,23 +66,27 @@ if ( ! isset( $subscription ) ) {
 							'pronamic_next_period_' . $subscription->get_id()
 						);
 
-						if ( in_array( $subscription->get_source(), array( 'woocommerce' ), true ) ) :
+						$next_payment_date = $subscription->get_next_payment_date();
+
+						$next_payment_delivery_date = $subscription->get_next_payment_delivery_date();
+
+						if ( in_array( $subscription->get_source(), array( 'woocommerce' ), true ) && null !== $next_payment_date ) :
 
 							echo wp_kses_post(
 								sprintf(
 									/* translators: %s: next payment date */
 									__( 'Will be created on %s', 'pronamic_ideal' ),
-									\esc_html( $subscription->get_next_payment_date()->format_i18n() )
+									\esc_html( $next_payment_date->format_i18n() )
 								)
 							);
 
-						else :
+						elseif ( null !== $next_payment_delivery_date ) :
 
 							echo wp_kses_post(
 								sprintf(
 									/* translators: 1: next payment delivery date, 2: create next period payment anchor */
 									__( 'Will be created on %1$s or %2$s', 'pronamic_ideal' ),
-									\esc_html( $subscription->get_next_payment_delivery_date()->format_i18n() ),
+									\esc_html( $next_payment_delivery_date->format_i18n() ),
 									\sprintf(
 										'<a href="%1$s">%2$s</a>',
 										\esc_url( $create_next_payment_url ),
