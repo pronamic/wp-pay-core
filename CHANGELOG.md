@@ -7,6 +7,9 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [3.1.1] - 2021-09-16
+- Fixed possible fatal error in subscription payments meta box (fixes [pronamic/wp-pronamic-pay#206](https://github.com/pronamic/wp-pronamic-pay/issues/206)).
+
 ## [3.1.0] - 2021-09-03
 - No longer create recurring payments for subscriptions with the status `Failed` (see https://github.com/pronamic/wp-pronamic-pay/issues/188#issuecomment-907155800).
 - No longer set payments with an empty amount to success (gateways and extensions should handle this).
@@ -408,7 +411,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/3.1.0...HEAD
+[unreleased]: https://github.com/wp-pay/core/compare/3.1.1...HEAD
+[3.1.1]: https://github.com/pronamic/wp-pay-core/compare/3.1.0...3.1.1
 [3.1.0]: https://github.com/pronamic/wp-pay-core/compare/3.0.1...3.1.0
 [3.0.1]: https://github.com/wp-pay/core/compare/3.0.0...3.0.1
 [3.0.0]: https://github.com/wp-pay/core/compare/2.7.2...3.0.0
