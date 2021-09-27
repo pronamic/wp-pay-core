@@ -11,9 +11,8 @@
 namespace Pronamic\WordPress\Pay\Forms;
 
 use Exception;
-use Pronamic\WordPress\Money\Parser as MoneyParser;
+use Pronamic\WordPress\Number\Number;
 use Pronamic\WordPress\Money\Money;
-use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\Payments\Payment;
@@ -47,6 +46,26 @@ class FormProcessor {
 
 		// Actions.
 		add_action( 'init', array( $this, 'init' ) );
+	}
+
+	/**
+	 * Get amount.
+	 * 
+	 * @param string $amount_method Amount method.
+	 * @return Money
+	 */
+	private function get_amount() {
+		$amount_string = \filter_input( INPUT_POST, 'pronamic_pay_amount', FILTER_SANITIZE_STRING );
+
+		if ( 'other' === $amount_string ) {
+			$amount_string = \filter_input( INPUT_POST, 'pronamic_pay_amount_other', FILTER_SANITIZE_STRING );
+		}
+
+		$number = Number::from_string( $amount_string );
+
+		$money = new Money( $number, 'EUR' );
+
+		return $money;
 	}
 
 	/**
@@ -164,25 +183,7 @@ class FormProcessor {
 		}
 
 		// Amount.
-		$amount_method = get_post_meta( $source_id, '_pronamic_payment_form_amount_method', true );
-		$amount        = filter_input( INPUT_POST, 'pronamic_pay_amount', FILTER_SANITIZE_STRING );
-
-		if ( 'other' === $amount ) {
-			$amount = filter_input( INPUT_POST, 'pronamic_pay_amount_other', FILTER_SANITIZE_STRING );
-
-			$money_parser = new MoneyParser();
-
-			$amount = $money_parser->parse( $amount )->get_value();
-		} elseif ( empty( $amount_method ) || in_array( $amount_method, array( FormPostType::AMOUNT_METHOD_CHOICES_ONLY, FormPostType::AMOUNT_METHOD_CHOICES_AND_INPUT ), true ) ) {
-			$amount /= 100;
-		}
-
-		$payment->set_total_amount(
-			new Money(
-				$amount,
-				'EUR'
-			)
-		);
+		$payment->set_total_amount( $this->get_amount() );
 
 		// Payment lines.
 		$payment->lines = new PaymentLines();
@@ -254,6 +255,13 @@ class FormProcessor {
 	 */
 	private function validate() {
 		global $pronamic_pay_errors;
+
+		// Amount.
+		try {
+			$amount = $this->get_amount();
+		} catch ( \Exception $e ) {
+			$pronamic_pay_errors['amount'] = __( 'Please enter a valid amount', 'pronamic_ideal' );
+		}
 
 		// First Name.
 		$first_name = filter_input( INPUT_POST, 'pronamic_pay_first_name', FILTER_SANITIZE_STRING );
