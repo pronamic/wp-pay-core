@@ -10,9 +10,9 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
-use Pronamic\WordPress\Money\Parser as MoneyParser;
+use Pronamic\WordPress\Number\Number;
+use Pronamic\WordPress\Money\Currency;
 use Pronamic\WordPress\Money\Money;
-use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\AddressHelper;
 use Pronamic\WordPress\Pay\ContactName;
@@ -649,13 +649,14 @@ class AdminModule {
 			return;
 		}
 
+		// Currency.
+		$currency = Currency::get_instance( 'EUR' );
+
 		// Amount.
 		$string = \filter_input( INPUT_POST, 'test_amount', \FILTER_SANITIZE_STRING );
 
 		try {
-			$money_parser = new MoneyParser();
-
-			$amount = $money_parser->parse( $string )->get_value();
+			$amount = Number::from_string( $string );
 		} catch ( \Exception $e ) {
 			\wp_die( \esc_html( $e->getMessage() ) );
 		}
