@@ -152,7 +152,7 @@ class FormsModule {
 		$amounts = array( 0 );
 
 		if ( isset( $args['amounts'] ) && is_array( $args['amounts'] ) ) {
-			foreach ( $$args['amounts'] as $value ) {
+			foreach ( $args['amounts'] as $value ) {
 				$amounts[] = Number::from_mixed( $value )->divide( Number::from_int( 100 ) );
 			}
 		} elseif ( isset( $args['amount'] ) ) {
