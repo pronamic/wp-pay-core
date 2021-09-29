@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Blocks;
 
 use Pronamic\WordPress\Number\Number;
+use Pronamic\WordPress\Number\Parser as NumberParser;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Forms\FormsSource;
 use Pronamic\WordPress\Pay\Payments\Payment;
@@ -146,7 +147,16 @@ class BlocksModule {
 			try {
 				$amounts[] = Number::from_mixed( $attributes['amount'] );
 			} catch ( \Exception $e ) {
-				return '';
+				/**
+				 * It is possible that in the past localized numbers were stored in the amount attribute.
+				 */
+				try {
+					$parser = new NumberParser();
+
+					$amounts[] = $parser->parse( $attributes['amount'] );
+				} catch ( \Exception $e ) {
+					return '';
+				}
 			}
 		}
 
