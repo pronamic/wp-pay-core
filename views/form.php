@@ -70,14 +70,12 @@ $step = \pow( 10, - $currency->get_number_decimals() );
 
 							$input_id = 'pronamic-pay-amount-' . esc_attr( $amount );
 
-							$number = Number::from_mixed( $amount )->divide( Number::from_int( 100 ) );
-
-							$money = new Money( $number, $currency );
+							$money = new Money( $amount, $currency );
 
 							?>
 
 							<div>
-								<input class="pronamic-pay-amount-input pronamic-pay-input" id="<?php echo esc_attr( $input_id ); ?>" name="pronamic_pay_amount" type="radio" required="required" value="<?php echo esc_attr( (string) $number ); ?>" />
+								<input class="pronamic-pay-amount-input pronamic-pay-input" id="<?php echo esc_attr( $input_id ); ?>" name="pronamic_pay_amount" type="radio" required="required" value="<?php echo esc_attr( (string) $amount ); ?>" />
 
 								<label for="<?php echo esc_attr( $input_id ); ?>">
 									<span class="pronamic-pay-amount-value"><?php echo esc_html( $money->format_i18n() ); ?></span>

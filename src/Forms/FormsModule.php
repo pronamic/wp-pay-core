@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Forms;
 
+use Pronamic\WordPress\Number\Number;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
 
@@ -151,9 +152,13 @@ class FormsModule {
 		$amounts = array( 0 );
 
 		if ( isset( $args['amounts'] ) && is_array( $args['amounts'] ) ) {
-			$amounts = $args['amounts'];
+			foreach ( $$args['amounts'] as $value ) {
+				$amounts[] = Number::from_mixed( $value )->divide( Number::from_int( 100 ) );
+			}
 		} elseif ( isset( $args['amount'] ) ) {
-			$amounts = array( $args['amount'] );
+			$amounts = array(
+				Number::from_mixed( $args['amount'] ),
+			);
 		}
 
 		// Form settings.
