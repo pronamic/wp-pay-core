@@ -163,7 +163,7 @@ class BlocksModule {
 
 		$gateway = Plugin::get_gateway( $config_id );
 
-		if ( null === $gateway ) :
+		if ( null === $gateway ) {
 			ob_start();
 
 			Plugin::render_errors(
@@ -180,7 +180,7 @@ class BlocksModule {
 			}
 
 			return $output;
-		endif;
+		}
 
 		$this->enqueue_styles();
 
