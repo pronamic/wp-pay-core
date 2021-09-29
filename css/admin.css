@@ -1,4 +1,3 @@
-@charset "UTF-8";
 /* Icons */
 .pronamic-pay-btn-link {
   line-height: 26px;
@@ -26,18 +25,13 @@
 }
 .pronamic-pay-chart-legend li {
   border-right: 5px solid #aaa;
-  -webkit-box-shadow: inset 0 -1px 0 0 #e5e5e5;
-          box-shadow: inset 0 -1px 0 0 #e5e5e5;
+  box-shadow: inset 0 -1px 0 0 #e5e5e5;
   color: #aaa;
   display: block;
   margin: 0;
   padding: 1em;
-  -webkit-transition-duration: .5s;
-          transition-duration: .5s;
-  -webkit-transition-property: border, padding, -webkit-box-shadow;
-  transition-property: border, padding, -webkit-box-shadow;
+  transition-duration: 0.5s;
   transition-property: border, box-shadow, padding;
-  transition-property: border, box-shadow, padding, -webkit-box-shadow;
 }
 .pronamic-pay-chart-legend li.completed-count {
   border-right-color: #dbe1e3;
@@ -59,8 +53,7 @@
 }
 .pronamic-pay-chart-legend li:hover {
   border-right-color: #23282f;
-  -webkit-box-shadow: inset 0 -1px 0 0 #e5e5e5, inset 300px 0 0 #f9f9f9;
-          box-shadow: inset 0 -1px 0 0 #e5e5e5, inset 300px 0 0 #f9f9f9;
+  box-shadow: inset 0 -1px 0 0 #e5e5e5, inset 300px 0 0 #f9f9f9;
   padding-left: 1.5em;
 }
 .pronamic-pay-chart-legend strong {
@@ -81,8 +74,7 @@
 }
 .pronamic-pay-status-list li {
   border-top: 1px solid #eee;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   color: #aaa;
   float: left;
   margin: 0;
@@ -95,8 +87,7 @@
   font-size: 12px;
   padding: 9px 12px;
   position: relative;
-  -webkit-transition: color ease .5s;
-  transition: color ease .5s;
+  transition: color ease 0.5s;
 }
 .pronamic-pay-status-list li a strong {
   color: #0073aa;
@@ -132,7 +123,7 @@ body.post-type-pronamic_payment #post-body-content, body.post-type-pronamic_pay_
   width: 100%;
 }
 
-.pronamic-pay-form-control-file-button [type='file'] {
+.pronamic-pay-form-control-file-button [type=file] {
   border: 0;
   clip: rect(0, 0, 0, 0);
   margin: -1px;
@@ -150,9 +141,9 @@ body.post-type-pronamic_payment #post-body-content, body.post-type-pronamic_pay_
   height: 1em;
 }
 .pronamic-pay-icon::after {
-  content: "";
+  content: "\f10b";
   display: block;
-  font-family: 'Pronamic Pay Icons';
+  font-family: "Pronamic Pay Icons";
   position: absolute;
   top: 0;
   left: 0;
@@ -164,52 +155,52 @@ body.post-type-pronamic_payment #post-body-content, body.post-type-pronamic_pay_
 
 .pronamic-pay-icon-pending::after {
   color: #ffba00;
-  content: "";
+  content: "\f10a";
 }
 
 .pronamic-pay-icon-cancelled::after {
   color: #a00;
-  content: "";
+  content: "\f106";
 }
 
 .pronamic-pay-icon-processing::after {
   color: #73a724;
-  content: "";
+  content: "\f10b";
 }
 
 .pronamic-pay-icon-completed::after {
   color: #2ea2cc;
-  content: "";
+  content: "\f107";
 }
 
 .pronamic-pay-icon-refunded::after {
   color: #999;
-  content: "";
+  content: "\f10c";
 }
 
 .pronamic-pay-icon-failed::after {
   color: #d0c21f;
-  content: "";
+  content: "\f108";
 }
 
 .pronamic-pay-icon-on-hold::after {
   color: #999;
-  content: "";
+  content: "\f109";
 }
 
 .pronamic-pay-icon-recurring::after {
   color: #999;
-  content: "";
+  content: "\f105";
 }
 
 .pronamic-pay-icon-recurring-first::after {
   color: #2ea2cc;
-  content: "";
+  content: "\f105";
 }
 
 .pronamic-pay-icon-question-mark::after {
   color: #999;
-  content: "";
+  content: "\f104";
 }
 
 .pronamic-pay-payment-methods.form-table.widefat {
@@ -265,7 +256,7 @@ body.post-type-pronamic_payment #post-body-content, body.post-type-pronamic_pay_
   border: 0 none;
 }
 
-#pronamic_subscription.postbox input[name="pronamic_subscription_amount"] {
+#pronamic_subscription.postbox input[name=pronamic_subscription_amount] {
   vertical-align: initial;
 }
 
@@ -446,7 +437,7 @@ body.post-type-pronamic_payment #post-body-content, body.post-type-pronamic_pay_
 }
 @media only screen and (max-width: 782px) {
   .pronamic-pay-tab .form-table th,
-  .pronamic-pay-tab .form-table td {
+.pronamic-pay-tab .form-table td {
     padding: 11px;
   }
 }
@@ -474,3 +465,5 @@ body.post-type-pronamic_payment #post-body-content, body.post-type-pronamic_pay_
 .pronamic-pay-cloack {
   display: none;
 }
+
+/*# sourceMappingURL=admin.css.map */
