@@ -64,8 +64,6 @@ require Plugin::$dirname . '/views/errors.php';
 
 $currency = Currency::get_instance( 'EUR' );
 
-$step = \pow( 10, - $currency->get_number_decimals() );
-
 ?>
 <table class="form-table">
 	<tr>
@@ -117,7 +115,7 @@ $step = \pow( 10, - $currency->get_number_decimals() );
 		<td>
 			<label for="test_amount"><?php echo \esc_attr( $currency->get_symbol() ); ?></label>
 
-			<input name="test_amount" id="test_amount" class="regular-text code pronamic-pay-form-control" value="" type="number" step="<?php echo \esc_attr( $step ); ?>" size="6" autocomplete="off" />
+			<input name="test_amount" id="test_amount" class="regular-text code pronamic-pay-form-control" value="" type="number" step="any" size="6" autocomplete="off" />
 		</td>
 	</tr>
 

@@ -42,8 +42,6 @@ if ( null === $gateway ) {
 
 $currency = Currency::get_instance( 'EUR' );
 
-$step = \pow( 10, - $currency->get_number_decimals() );
-
 ?>
 <div class="pronamic-pay-form-wrap">
 
@@ -91,7 +89,7 @@ $step = \pow( 10, - $currency->get_number_decimals() );
 
 								<label for="pronamic-pay-amount-other">
 									<span class="pronamic-pay-currency-symbol pronamic-pay-currency-position-before">€</span>
-									<input class="pronamic-pay-amount-input pronamic-pay-input" id="pronamic-pay-amount" name="pronamic_pay_amount_other" type="number" step="<?php echo \esc_attr( $step ); ?>" autocomplete="off" value="<?php echo esc_attr( $amount_value ); ?>" />
+									<input class="pronamic-pay-amount-input pronamic-pay-input" id="pronamic-pay-amount" name="pronamic_pay_amount_other" type="number" step="any" autocomplete="off" value="<?php echo esc_attr( $amount_value ); ?>" />
 								</label>
 							</div>
 
@@ -102,7 +100,7 @@ $step = \pow( 10, - $currency->get_number_decimals() );
 				<?php if ( \Pronamic\WordPress\Pay\Forms\FormPostType::AMOUNT_METHOD_INPUT_ONLY === $settings['amount_method'] ) : ?>
 
 					<span class="pronamic-pay-currency-symbol pronamic-pay-currency-position-before">€</span>
-					<input class="pronamic-pay-amount-input pronamic-pay-input" id="pronamic-pay-amount" name="pronamic_pay_amount" type="number" step="<?php echo \esc_attr( $step ); ?>" autocomplete="off" value="<?php echo esc_attr( $amount_value ); ?>" />
+					<input class="pronamic-pay-amount-input pronamic-pay-input" id="pronamic-pay-amount" name="pronamic_pay_amount" type="number" step="any" autocomplete="off" value="<?php echo esc_attr( $amount_value ); ?>" />
 
 				<?php endif; ?>
 			</div>
