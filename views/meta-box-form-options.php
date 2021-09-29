@@ -8,6 +8,7 @@
  * @package   Pronamic\WordPress\Pay
  */
 
+use Pronamic\WordPress\Number\Number;
 use Pronamic\WordPress\Money\Money;
 
 if ( ! isset( $post ) ) {
@@ -82,34 +83,28 @@ wp_nonce_field( 'pronamic_pay_save_form_options', 'pronamic_pay_nonce' );
 		</td>
 	</tr>
 	<tr>
-		<th scope="row">
-		</th>
+		<th scope="row"></th>
 		<td>
 			<?php
 
 			$choices = get_post_meta( $post->ID, '_pronamic_payment_form_amount_choices', true );
 
-			// Start with an empty field.
-			if ( empty( $choices ) ) {
-				$choices = array( '' );
+			$items = array();
+
+			if ( \is_array( $choices ) ) {
+				foreach ( $choices as $value ) {
+					$items[] = Number::from_mixed( $value )->divide( Number::from_int( 100 ) );
+				}
 			}
 
 			// Add empty input field.
-			$choices[] = '';
+			$items[] = '';
 
-			foreach ( $choices as $i => $amount ) {
-				$value = '';
-
-				if ( $amount ) {
-					$money = new Money();
-
-					$value = number_format_i18n( $amount / 100, 2 );
-				}
-
+			foreach ( $items as $i => $value ) {
 				printf(
 					'<div>
 						<label for="_pronamic_payment_form_amount_choice_%d">
-							€ <input id="_pronamic_payment_form_amount_choice_%d" type="text" name="_pronamic_payment_form_amount_choices[]" value="%s" />
+							€ <input id="_pronamic_payment_form_amount_choice_%d" type="number" step="any" name="_pronamic_payment_form_amount_choices[]" value="%s" />
 						</label>
 					</div>',
 					esc_attr( $i ),

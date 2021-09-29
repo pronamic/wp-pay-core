@@ -140,11 +140,11 @@ class BlocksModule {
 	 */
 	public function render_payment_form_block( $attributes = array() ) {
 		// Amount.
-		$amount = null;
+		$amounts = array();
 
 		if ( ! empty( $attributes['amount'] ) ) {
 			try {
-				$amount = Number::from_mixed( $attributes['amount'] );
+				$amounts[] = Number::from_mixed( $attributes['amount'] );
 			} catch ( \Exception $e ) {
 				return '';
 			}
@@ -152,7 +152,7 @@ class BlocksModule {
 
 		// Form settings.
 		$args = array(
-			'amount'    => $amount,
+			'amounts'   => $amounts,
 			'html_id'   => sprintf( 'pronamic-pay-payment-form-%s', get_the_ID() ),
 			'source'    => FormsSource::BLOCK_PAYMENT_FORM,
 			'source_id' => get_the_ID(),
