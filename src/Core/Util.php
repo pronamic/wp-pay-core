@@ -11,7 +11,6 @@
 namespace Pronamic\WordPress\Pay\Core;
 
 use Pronamic\WordPress\Money\Money;
-use Pronamic\WordPress\Money\Parser as MoneyParser;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Util as Pay_Util;
 
@@ -203,33 +202,6 @@ class Util {
 	 */
 	public static function cents_to_amount( $cents ) {
 		return $cents / 100;
-	}
-
-	/**
-	 * String to amount (user input string).
-	 *
-	 * @link https://github.com/WordPress/WordPress/blob/4.9.6/wp-includes/functions.php#L206-L237
-	 *
-	 * @version 1.3.1
-	 * @since 1.3.0
-	 * @deprecated 2.0.3 Use Pronamic\WordPress\Money\Parser::parse( $amount )->get_amount() instead.
-	 *
-	 * @param string $value The string value to convert to a float value.
-	 *
-	 * @return float
-	 */
-	public static function string_to_amount( $value ) {
-		_deprecated_function( __FUNCTION__, '2.0.3', 'Pronamic\WordPress\Money\Parser::parse()->get_value()' );
-
-		$money_parser = new MoneyParser();
-
-		try {
-			$amount = $money_parser->parse( $value )->get_value();
-		} catch ( \Exception $e ) {
-			$amount = (float) 0;
-		}
-
-		return $amount;
 	}
 
 	/**
