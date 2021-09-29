@@ -10,7 +10,8 @@
 
 namespace Pronamic\WordPress\Pay\Blocks;
 
-use Pronamic\WordPress\Money\Parser;
+use Pronamic\WordPress\Number\Number;
+use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Forms\FormsSource;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
@@ -139,13 +140,11 @@ class BlocksModule {
 	 */
 	public function render_payment_form_block( $attributes = array() ) {
 		// Amount.
-		$money_parser = new Parser();
-
-		$amount = '';
+		$amount = null;
 
 		if ( ! empty( $attributes['amount'] ) ) {
 			try {
-				$amount = $money_parser->parse( $attributes['amount'] )->get_minor_units();
+				$amount = Number::from_mixed( $attributes['amount'] );
 			} catch ( \Exception $e ) {
 				return '';
 			}

@@ -49,6 +49,8 @@
 				el( InspectorControls, null,
 					el( Fragment, null,
 						el( TextControl, {
+							type: 'number',
+							step: 'any',
 							label: pronamic_payment_form.label_amount,
 							value: amount,
 							onChange: onChangeAmount
