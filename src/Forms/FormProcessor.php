@@ -50,8 +50,7 @@ class FormProcessor {
 
 	/**
 	 * Get amount.
-	 * 
-	 * @param string $amount_method Amount method.
+	 *
 	 * @return Money
 	 */
 	private function get_amount() {
