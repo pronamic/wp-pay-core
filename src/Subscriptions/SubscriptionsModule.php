@@ -1244,7 +1244,7 @@ class SubscriptionsModule {
 		$this->process_subscriptions_follow_up_payment(
 			array(
 				'date'   => new \DateTimeImmutable(),
-				'number' => -1,
+				'number' => 20,
 			)
 		);
 	}
