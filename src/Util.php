@@ -59,21 +59,6 @@ class Util {
 	}
 
 	/**
-	 * Cents to amount.
-	 *
-	 * @param int $cents The number of cents to convert to an amount.
-	 *
-	 * @deprecated 2.0.9 Use \Pronamic\WordPress\Pay\Core\Util::cents_to_amount() instead.
-	 *
-	 * @return float
-	 */
-	public static function cents_to_amount( $cents ) {
-		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Pay\Core\Util::cents_to_amount()' );
-
-		return Core_Util::cents_to_amount( $cents );
-	}
-
-	/**
 	 * Convert boolean to an numeric boolean.
 	 *
 	 * @link https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
