@@ -232,18 +232,6 @@ class Util {
 	}
 
 	/**
-	 * Convert boolean to an string boolean
-	 *
-	 * @link https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
-	 *
-	 * @param bool $boolean The boolean value to convert to a string value.
-	 * @return string
-	 */
-	public static function boolean_to_string( $boolean ) {
-		return $boolean ? 'true' : 'false';
-	}
-
-	/**
 	 * Convert the specified period to a single char notation.
 	 *
 	 * @since 1.3.9
