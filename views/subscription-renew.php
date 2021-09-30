@@ -102,7 +102,7 @@ $expiry_date = $subscription->get_expiry_date();
 							?>
 
 							<form id="pronamic_ideal_form" name="pronamic_ideal_form" method="post">
-								<input type="submit" value="<?php esc_html_e( 'Pay', 'pronamic_ideal' ); ?>"/>
+								<input type="submit" value="<?php esc_attr_e( 'Pay', 'pronamic_ideal' ); ?>"/>
 							</form>
 
 						<?php endif; ?>
