@@ -177,17 +177,6 @@ class Util {
 	}
 
 	/**
-	 * Cents to amount.
-	 *
-	 * @param int $cents The cents to convert to float value.
-	 *
-	 * @return float
-	 */
-	public static function cents_to_amount( $cents ) {
-		return $cents / 100;
-	}
-
-	/**
 	 * String to interval period (user input string).
 	 *
 	 * @since 2.0.3
