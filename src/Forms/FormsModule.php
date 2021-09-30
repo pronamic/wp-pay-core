@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Forms;
 
+use Pronamic\WordPress\Number\Number;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
 
@@ -113,9 +114,18 @@ class FormsModule {
 	 * @throws \Exception Throws exception if output buffering is not active.
 	 */
 	public function get_form_output_by_id( $id ) {
+		$choices = \get_post_meta( $id, '_pronamic_payment_form_amount_choices', true );
+		$amounts = array();
+
+		if ( \is_array( $choices ) ) {
+			foreach ( $choices as $value ) {
+				$amounts[] = Number::from_mixed( $value )->divide( Number::from_int( 100 ) );
+			}
+		}
+
 		$args = array(
 			'amount_method' => get_post_meta( $id, '_pronamic_payment_form_amount_method', true ),
-			'amounts'       => get_post_meta( $id, '_pronamic_payment_form_amount_choices', true ),
+			'amounts'       => $amounts,
 			'config_id'     => get_post_meta( $id, '_pronamic_payment_form_config_id', true ),
 			'html_id'       => sprintf( 'pronamic-pay-form-%s', $id ),
 			'source'        => FormsSource::PAYMENT_FORM,
@@ -147,19 +157,10 @@ class FormsModule {
 			return '';
 		}
 
-		// Amount(s).
-		$amounts = array( 0 );
-
-		if ( isset( $args['amounts'] ) && is_array( $args['amounts'] ) ) {
-			$amounts = $args['amounts'];
-		} elseif ( isset( $args['amount'] ) ) {
-			$amounts = array( $args['amount'] );
-		}
-
 		// Form settings.
 		$defaults = array(
 			'amount_method' => FormPostType::AMOUNT_METHOD_INPUT_FIXED,
-			'amounts'       => $amounts,
+			'amounts'       => array( 0 ),
 			'button_text'   => __( 'Pay Now', 'pronamic_ideal' ),
 			'config_id'     => get_option( 'pronamic_pay_config_id' ),
 			'form_id'       => null,

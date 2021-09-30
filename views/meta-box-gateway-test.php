@@ -10,6 +10,7 @@
 
 global $pronamic_ideal_errors;
 
+use Pronamic\WordPress\Money\Currency;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Gateways\IDealAdvancedV3\Gateway as IDealAdvancedV3_Gateway;
 use Pronamic\WordPress\Pay\Gateways\IDealBasic\Gateway as IDealBasic_Gateway;
@@ -61,6 +62,8 @@ if ( $gateway->has_error() ) {
 
 require Plugin::$dirname . '/views/errors.php';
 
+$currency = Currency::get_instance( 'EUR' );
+
 ?>
 <table class="form-table">
 	<tr>
@@ -110,9 +113,9 @@ require Plugin::$dirname . '/views/errors.php';
 			<?php esc_html_e( 'Amount', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
-			<label for="test_amount">€</label>
+			<label for="test_amount"><?php echo \esc_html( $currency->get_symbol() ); ?></label>
 
-			<input name="test_amount" id="test_amount" class="regular-text code pronamic-pay-form-control" value="" type="text" size="6" autocomplete="off" />
+			<input name="test_amount" id="test_amount" class="regular-text code pronamic-pay-form-control" value="" type="number" step="any" size="6" autocomplete="off" />
 		</td>
 	</tr>
 

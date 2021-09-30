@@ -144,7 +144,7 @@ if ( is_array( $current_mandate ) ) {
 												<div class="pp-card__background"></div>
 
 												<div class="pp-card__content">
-													<input class="pp-card__input" name="pronamic_pay_subscription_mandate" value="<?php echo esc_html( $mandate->id ); ?>" type="radio">
+													<input class="pp-card__input" name="pronamic_pay_subscription_mandate" value="<?php echo esc_attr( $mandate->id ); ?>" type="radio" />
 
 													<div class="pt-card__indicator"></div>
 
@@ -153,7 +153,7 @@ if ( is_array( $current_mandate ) ) {
 													<figure class="pp-card__logo">
 														<?php if ( null !== $logo_url && array_key_exists( 'title', $card ) ) : ?>
 
-															<img class="pp-card__logo__img" src="<?php echo esc_url( $logo_url ); ?>" alt="<?php echo esc_attr( $card['title'] ); ?>"/>
+															<img class="pp-card__logo__img" src="<?php echo esc_url( $logo_url ); ?>" alt="<?php echo esc_attr( $card['title'] ); ?>" />
 
 														<?php endif; ?>
 													</figure>
@@ -178,7 +178,7 @@ if ( is_array( $current_mandate ) ) {
 								<p>
 									<?php wp_nonce_field( 'pronamic_pay_update_subscription_mandate', 'pronamic_pay_nonce' ); ?>
 
-									<input type="submit" value="<?php esc_html_e( 'Use selected payment method', 'pronamic_ideal' ); ?>"/>
+									<input type="submit" value="<?php esc_attr_e( 'Use selected payment method', 'pronamic_ideal' ); ?>" />
 								</p>
 							</form>
 						</div>
@@ -233,7 +233,7 @@ if ( is_array( $current_mandate ) ) {
 							<p>
 								<?php wp_nonce_field( 'pronamic_pay_update_subscription_mandate', 'pronamic_pay_nonce' ); ?>
 
-								<input type="submit" value="<?php esc_html_e( 'Pay', 'pronamic_ideal' ); ?>"/>
+								<input type="submit" value="<?php esc_attr_e( 'Pay', 'pronamic_ideal' ); ?>" />
 							</p>
 						</form>
 					</div>

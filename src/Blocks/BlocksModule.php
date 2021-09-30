@@ -10,7 +10,9 @@
 
 namespace Pronamic\WordPress\Pay\Blocks;
 
-use Pronamic\WordPress\Money\Parser;
+use Pronamic\WordPress\Number\Number;
+use Pronamic\WordPress\Number\Parser as NumberParser;
+use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Forms\FormsSource;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
@@ -139,21 +141,28 @@ class BlocksModule {
 	 */
 	public function render_payment_form_block( $attributes = array() ) {
 		// Amount.
-		$money_parser = new Parser();
-
-		$amount = '';
+		$amounts = array();
 
 		if ( ! empty( $attributes['amount'] ) ) {
 			try {
-				$amount = $money_parser->parse( $attributes['amount'] )->get_minor_units();
+				$amounts[] = Number::from_mixed( $attributes['amount'] );
 			} catch ( \Exception $e ) {
-				return '';
+				/**
+				 * It is possible that in the past localized numbers were stored in the amount attribute.
+				 */
+				try {
+					$parser = new NumberParser();
+
+					$amounts[] = $parser->parse( $attributes['amount'] );
+				} catch ( \Exception $e ) {
+					return '';
+				}
 			}
 		}
 
 		// Form settings.
 		$args = array(
-			'amount'    => $amount,
+			'amounts'   => $amounts,
 			'html_id'   => sprintf( 'pronamic-pay-payment-form-%s', get_the_ID() ),
 			'source'    => FormsSource::BLOCK_PAYMENT_FORM,
 			'source_id' => get_the_ID(),
@@ -164,7 +173,7 @@ class BlocksModule {
 
 		$gateway = Plugin::get_gateway( $config_id );
 
-		if ( null === $gateway ) :
+		if ( null === $gateway ) {
 			ob_start();
 
 			Plugin::render_errors(
@@ -181,7 +190,7 @@ class BlocksModule {
 			}
 
 			return $output;
-		endif;
+		}
 
 		$this->enqueue_styles();
 

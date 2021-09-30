@@ -69,7 +69,7 @@ $expiry_date = $subscription->get_expiry_date();
 							</p>
 
 							<form id="pronamic_ideal_form" name="pronamic_ideal_form" method="post">
-								<input type="submit" value="<?php esc_html_e( 'Cancel subscription', 'pronamic_ideal' ); ?>"/>
+								<input type="submit" value="<?php esc_attr_e( 'Cancel subscription', 'pronamic_ideal' ); ?>"/>
 							</form>
 
 						</div>

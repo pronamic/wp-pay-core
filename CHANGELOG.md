@@ -7,6 +7,12 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [3.2.0] - 2021-09-30
+- Start using `<input type="number">` in payment forms en test meta box.
+- Removed `Util::string_to_amount( $value )` function.
+- Updated logo library to version `1.6.8` for new Bancontact logo.
+- Improved security by using correct escaping functions.
+
 ## [3.1.1] - 2021-09-16
 - Fixed possible fatal error in subscription payments meta box (fixes [pronamic/wp-pronamic-pay#206](https://github.com/pronamic/wp-pronamic-pay/issues/206)).
 
@@ -411,67 +417,68 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/wp-pay/core/compare/3.1.1...HEAD
+[unreleased]: https://github.com/pronamic/wp-pay-core/compare/3.2.0...HEAD
+[3.2.0]: https://github.com/pronamic/wp-pay-core/compare/3.1.1...3.2.0
 [3.1.1]: https://github.com/pronamic/wp-pay-core/compare/3.1.0...3.1.1
 [3.1.0]: https://github.com/pronamic/wp-pay-core/compare/3.0.1...3.1.0
-[3.0.1]: https://github.com/wp-pay/core/compare/3.0.0...3.0.1
-[3.0.0]: https://github.com/wp-pay/core/compare/2.7.2...3.0.0
-[2.7.2]: https://github.com/wp-pay/core/compare/2.7.1...2.7.2
-[2.7.1]: https://github.com/wp-pay/core/compare/2.7.0...2.7.1
-[2.7.0]: https://github.com/wp-pay/core/compare/2.6.2...2.7.0
-[2.6.2]: https://github.com/wp-pay/core/compare/2.6.1...2.6.2
-[2.6.1]: https://github.com/wp-pay/core/compare/2.6.0...2.6.1
-[2.6.0]: https://github.com/wp-pay/core/compare/2.5.1...2.6.0
-[2.5.1]: https://github.com/wp-pay/core/compare/2.5.0...2.5.1
-[2.5.0]: https://github.com/wp-pay/core/compare/2.4.1...2.5.0
-[2.4.1]: https://github.com/wp-pay/core/compare/2.4.0...2.4.1
-[2.4.0]: https://github.com/wp-pay/core/compare/2.3.2...2.4.0
-[2.3.2]: https://github.com/wp-pay/core/compare/2.3.1...2.3.2
-[2.3.1]: https://github.com/wp-pay/core/compare/2.3.0...2.3.1
-[2.3.0]: https://github.com/wp-pay/core/compare/2.2.8...2.3.0
-[2.2.8]: https://github.com/wp-pay/core/compare/2.2.7...2.2.8
-[2.2.7]: https://github.com/wp-pay/core/compare/2.2.6...2.2.7
-[2.2.6]: https://github.com/wp-pay/core/compare/2.2.5...2.2.6
-[2.2.5]: https://github.com/wp-pay/core/compare/2.2.4...2.2.5
-[2.2.4]: https://github.com/wp-pay/core/compare/2.2.3...2.2.4
-[2.2.3]: https://github.com/wp-pay/core/compare/2.2.2...2.2.3
-[2.2.2]: https://github.com/wp-pay/core/compare/2.2.1...2.2.2
-[2.2.1]: https://github.com/wp-pay/core/compare/2.2.0...2.2.1
-[2.2.0]: https://github.com/wp-pay/core/compare/2.1.6...2.2.0
-[2.1.6]: https://github.com/wp-pay/core/compare/2.1.5...2.1.6
-[2.1.5]: https://github.com/wp-pay/core/compare/2.1.4...2.1.5
-[2.1.4]: https://github.com/wp-pay/core/compare/2.1.3...2.1.4
-[2.1.3]: https://github.com/wp-pay/core/compare/2.1.2...2.1.3
-[2.1.2]: https://github.com/wp-pay/core/compare/2.1.1...2.1.2
-[2.1.1]: https://github.com/wp-pay/core/compare/2.1.0...2.1.1
-[2.1.0]: https://github.com/wp-pay/core/compare/2.0.8...2.1.0
-[2.0.8]: https://github.com/wp-pay/core/compare/2.0.7...2.0.8
-[2.0.7]: https://github.com/wp-pay/core/compare/2.0.6...2.0.7
-[2.0.6]: https://github.com/wp-pay/core/compare/2.0.5...2.0.6
-[2.0.5]: https://github.com/wp-pay/core/compare/2.0.4...2.0.5
-[2.0.4]: https://github.com/wp-pay/core/compare/2.0.3...2.0.4
-[2.0.3]: https://github.com/wp-pay/core/compare/2.0.2...2.0.3
-[2.0.2]: https://github.com/wp-pay/core/compare/2.0.1...2.0.2
-[2.0.1]: https://github.com/wp-pay/core/compare/2.0.0...2.0.1
-[2.0.0]: https://github.com/wp-pay/core/compare/1.3.14...2.0.0
-[1.3.14]: https://github.com/wp-pay/core/compare/1.3.13...1.3.14
-[1.3.13]: https://github.com/wp-pay/core/compare/1.3.12...1.3.13
-[1.3.12]: https://github.com/wp-pay/core/compare/1.3.11...1.3.12
-[1.3.11]: https://github.com/wp-pay/core/compare/1.3.10...1.3.11
-[1.3.10]: https://github.com/wp-pay/core/compare/1.3.9...1.3.10
-[1.3.9]: https://github.com/wp-pay/core/compare/1.3.8...1.3.9
-[1.3.8]: https://github.com/wp-pay/core/compare/1.3.7...1.3.8
-[1.3.7]: https://github.com/wp-pay/core/compare/1.3.6...1.3.7
-[1.3.6]: https://github.com/wp-pay/core/compare/1.3.5...1.3.6
-[1.3.5]: https://github.com/wp-pay/core/compare/1.3.4...1.3.5
-[1.3.4]: https://github.com/wp-pay/core/compare/1.3.3...1.3.4
-[1.3.3]: https://github.com/wp-pay/core/compare/1.3.2...1.3.3
-[1.3.2]: https://github.com/wp-pay/core/compare/1.3.1...1.3.2
-[1.3.1]: https://github.com/wp-pay/core/compare/1.3.0...1.3.1
-[1.3.0]: https://github.com/wp-pay/core/compare/1.2.3...1.3.0
-[1.2.3]: https://github.com/wp-pay/core/compare/1.2.2...1.2.3
-[1.2.2]: https://github.com/wp-pay/core/compare/1.2.1...1.2.2
-[1.2.1]: https://github.com/wp-pay/core/compare/1.2.0...1.2.1
-[1.2.0]: https://github.com/wp-pay/core/compare/1.1.0...1.2.0
-[1.1.0]: https://github.com/wp-pay/core/compare/1.0.1...1.1.0
-[1.0.1]: https://github.com/wp-pay/core/compare/1.0.0...1.0.1
+[3.0.1]: https://github.com/pronamic/wp-pay-core/compare/3.0.0...3.0.1
+[3.0.0]: https://github.com/pronamic/wp-pay-core/compare/2.7.2...3.0.0
+[2.7.2]: https://github.com/pronamic/wp-pay-core/compare/2.7.1...2.7.2
+[2.7.1]: https://github.com/pronamic/wp-pay-core/compare/2.7.0...2.7.1
+[2.7.0]: https://github.com/pronamic/wp-pay-core/compare/2.6.2...2.7.0
+[2.6.2]: https://github.com/pronamic/wp-pay-core/compare/2.6.1...2.6.2
+[2.6.1]: https://github.com/pronamic/wp-pay-core/compare/2.6.0...2.6.1
+[2.6.0]: https://github.com/pronamic/wp-pay-core/compare/2.5.1...2.6.0
+[2.5.1]: https://github.com/pronamic/wp-pay-core/compare/2.5.0...2.5.1
+[2.5.0]: https://github.com/pronamic/wp-pay-core/compare/2.4.1...2.5.0
+[2.4.1]: https://github.com/pronamic/wp-pay-core/compare/2.4.0...2.4.1
+[2.4.0]: https://github.com/pronamic/wp-pay-core/compare/2.3.2...2.4.0
+[2.3.2]: https://github.com/pronamic/wp-pay-core/compare/2.3.1...2.3.2
+[2.3.1]: https://github.com/pronamic/wp-pay-core/compare/2.3.0...2.3.1
+[2.3.0]: https://github.com/pronamic/wp-pay-core/compare/2.2.8...2.3.0
+[2.2.8]: https://github.com/pronamic/wp-pay-core/compare/2.2.7...2.2.8
+[2.2.7]: https://github.com/pronamic/wp-pay-core/compare/2.2.6...2.2.7
+[2.2.6]: https://github.com/pronamic/wp-pay-core/compare/2.2.5...2.2.6
+[2.2.5]: https://github.com/pronamic/wp-pay-core/compare/2.2.4...2.2.5
+[2.2.4]: https://github.com/pronamic/wp-pay-core/compare/2.2.3...2.2.4
+[2.2.3]: https://github.com/pronamic/wp-pay-core/compare/2.2.2...2.2.3
+[2.2.2]: https://github.com/pronamic/wp-pay-core/compare/2.2.1...2.2.2
+[2.2.1]: https://github.com/pronamic/wp-pay-core/compare/2.2.0...2.2.1
+[2.2.0]: https://github.com/pronamic/wp-pay-core/compare/2.1.6...2.2.0
+[2.1.6]: https://github.com/pronamic/wp-pay-core/compare/2.1.5...2.1.6
+[2.1.5]: https://github.com/pronamic/wp-pay-core/compare/2.1.4...2.1.5
+[2.1.4]: https://github.com/pronamic/wp-pay-core/compare/2.1.3...2.1.4
+[2.1.3]: https://github.com/pronamic/wp-pay-core/compare/2.1.2...2.1.3
+[2.1.2]: https://github.com/pronamic/wp-pay-core/compare/2.1.1...2.1.2
+[2.1.1]: https://github.com/pronamic/wp-pay-core/compare/2.1.0...2.1.1
+[2.1.0]: https://github.com/pronamic/wp-pay-core/compare/2.0.8...2.1.0
+[2.0.8]: https://github.com/pronamic/wp-pay-core/compare/2.0.7...2.0.8
+[2.0.7]: https://github.com/pronamic/wp-pay-core/compare/2.0.6...2.0.7
+[2.0.6]: https://github.com/pronamic/wp-pay-core/compare/2.0.5...2.0.6
+[2.0.5]: https://github.com/pronamic/wp-pay-core/compare/2.0.4...2.0.5
+[2.0.4]: https://github.com/pronamic/wp-pay-core/compare/2.0.3...2.0.4
+[2.0.3]: https://github.com/pronamic/wp-pay-core/compare/2.0.2...2.0.3
+[2.0.2]: https://github.com/pronamic/wp-pay-core/compare/2.0.1...2.0.2
+[2.0.1]: https://github.com/pronamic/wp-pay-core/compare/2.0.0...2.0.1
+[2.0.0]: https://github.com/pronamic/wp-pay-core/compare/1.3.14...2.0.0
+[1.3.14]: https://github.com/pronamic/wp-pay-core/compare/1.3.13...1.3.14
+[1.3.13]: https://github.com/pronamic/wp-pay-core/compare/1.3.12...1.3.13
+[1.3.12]: https://github.com/pronamic/wp-pay-core/compare/1.3.11...1.3.12
+[1.3.11]: https://github.com/pronamic/wp-pay-core/compare/1.3.10...1.3.11
+[1.3.10]: https://github.com/pronamic/wp-pay-core/compare/1.3.9...1.3.10
+[1.3.9]: https://github.com/pronamic/wp-pay-core/compare/1.3.8...1.3.9
+[1.3.8]: https://github.com/pronamic/wp-pay-core/compare/1.3.7...1.3.8
+[1.3.7]: https://github.com/pronamic/wp-pay-core/compare/1.3.6...1.3.7
+[1.3.6]: https://github.com/pronamic/wp-pay-core/compare/1.3.5...1.3.6
+[1.3.5]: https://github.com/pronamic/wp-pay-core/compare/1.3.4...1.3.5
+[1.3.4]: https://github.com/pronamic/wp-pay-core/compare/1.3.3...1.3.4
+[1.3.3]: https://github.com/pronamic/wp-pay-core/compare/1.3.2...1.3.3
+[1.3.2]: https://github.com/pronamic/wp-pay-core/compare/1.3.1...1.3.2
+[1.3.1]: https://github.com/pronamic/wp-pay-core/compare/1.3.0...1.3.1
+[1.3.0]: https://github.com/pronamic/wp-pay-core/compare/1.2.3...1.3.0
+[1.2.3]: https://github.com/pronamic/wp-pay-core/compare/1.2.2...1.2.3
+[1.2.2]: https://github.com/pronamic/wp-pay-core/compare/1.2.1...1.2.2
+[1.2.1]: https://github.com/pronamic/wp-pay-core/compare/1.2.0...1.2.1
+[1.2.0]: https://github.com/pronamic/wp-pay-core/compare/1.1.0...1.2.0
+[1.1.0]: https://github.com/pronamic/wp-pay-core/compare/1.0.1...1.1.0
+[1.0.1]: https://github.com/pronamic/wp-pay-core/compare/1.0.0...1.0.1

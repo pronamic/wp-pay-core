@@ -51,6 +51,7 @@
 		"pronamic/wp-html": "^1.0",
 		"pronamic/wp-http": "^1.0",
 		"pronamic/wp-money": "^2.0",
+		"pronamic/wp-number": "^1.0",
 		"viison/address-splitter": "^0.3.4"
 	},
 	"require-dev": {
@@ -61,11 +62,16 @@
 		"phpmd/phpmd": "^2.9",
 		"phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0",
 		"pronamic/wp-coding-standards": "^1.0",
-		"roots/wordpress": "^5.6",
+		"roots/wordpress": "^5.8",
 		"wp-cli/wp-cli": "^2.3",
-		"wp-phpunit/wp-phpunit": "^5.6"
+		"wp-phpunit/wp-phpunit": "^5.8"
 	},
 	"scripts": {
+		"ci": [
+			"@phplint",
+			"@phpcs",
+			"@coverage"
+		],
 		"coverage": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-clover build/logs/clover.xml --coverage-text",
 		"coverage-clover": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-clover build/logs/clover.xml",
 		"coverage-html": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html build/coverage-html",

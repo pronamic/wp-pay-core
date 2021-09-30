@@ -1,12 +1,11 @@
 @charset "UTF-8";
 .pp-card-slider-container *,
 .pp-new-payment-method-container * {
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
-.pp-card-slider-container input[type="submit"],
+.pp-card-slider-container input[type=submit],
 .pp-card-slider-container select,
-.pp-new-payment-method-container input[type="submit"],
+.pp-new-payment-method-container input[type=submit],
 .pp-new-payment-method-container select {
   padding: 10px;
 }
@@ -15,8 +14,7 @@
 .pp-new-payment-method-wrapper {
   background: #fff;
   border-radius: 20px;
-  -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-          box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   color: #333;
   max-width: 600px;
   margin: 3em auto 0 auto;
@@ -31,15 +29,13 @@
   max-width: 600px;
 }
 .pp-card-container * {
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .pp-card {
   background: #000;
   border-radius: 10px;
-  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   font-family: sans-serif;
   margin: 0;
   padding-top: 56.25%;
@@ -49,16 +45,9 @@
 .pp-card .pp-card__content {
   color: #fff;
   cursor: pointer;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  flex-direction: column;
+  justify-content: space-between;
   margin: 0;
   padding: 8%;
   position: absolute;
@@ -70,23 +59,21 @@
 .pp-card .pp-card__content .pt-card__indicator {
   background: #fff;
   border-radius: 100%;
-  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   color: #81cf1f;
-  content: '';
+  content: "";
   line-height: 40px;
   opacity: 0;
   position: absolute;
   top: 20px;
   right: 20px;
   text-align: center;
-  -webkit-transition: opacity .2s;
-  transition: opacity .2s;
+  transition: opacity 0.2s;
   width: 40px;
   height: 40px;
 }
 .pp-card .pp-card__content .pt-card__indicator::after {
-  content: '✓';
+  content: "✓";
 }
 .pp-card .pp-card__input {
   position: absolute;
@@ -105,11 +92,11 @@
 .pp-card .pp-card__label {
   font-size: 14px;
   font-weight: normal;
-  opacity: .6;
+  opacity: 0.6;
   margin: 0;
 }
 .pp-card .pp-card__value {
-  font-family: 'Roboto Mono';
+  font-family: "Roboto Mono";
   font-size: 20px;
   margin: 0;
 }
@@ -187,7 +174,7 @@
 }
 .pp-card.brand-asn-bank .pp-card__content {
   color: #000;
-  opacity: .6;
+  opacity: 0.6;
 }
 .pp-card.brand-bunq .pp-card__background {
   background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/bunq/card-bunq-background-480x270.svg");
@@ -215,7 +202,7 @@
 }
 .pp-card.brand-moneyou .pp-card__label {
   color: #000;
-  opacity: .4;
+  opacity: 0.4;
 }
 .pp-card.brand-moneyou .pp-card__value {
   color: #000;
@@ -254,12 +241,8 @@
 }
 
 .slick-dots {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  justify-content: center;
   list-style: none;
   margin: 30px 0 0;
   padding: 0;
@@ -287,10 +270,10 @@
 }
 .slick-dots li button:before {
   color: #f9461c;
-  content: '•';
+  content: "•";
   font-size: 20px;
   line-height: 20px;
-  opacity: .25;
+  opacity: 0.25;
   position: absolute;
   top: 0;
   left: 0;
@@ -308,3 +291,5 @@
   color: #f9461c;
   opacity: 1;
 }
+
+/*# sourceMappingURL=card-slider.css.map */
