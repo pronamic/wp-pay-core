@@ -1091,8 +1091,6 @@ class SubscriptionsModule {
 		$query_args = array(
 			'post_type'      => 'pronamic_pay_subscr',
 			'posts_per_page' => $args['number'],
-			'orderby'        => 'post_date',
-			'order'          => 'ASC',
 			'post_status'    => array(
 				'subscr_pending',
 				'subscr_failed',
