@@ -177,23 +177,6 @@ class Util {
 	}
 
 	/**
-	 * Amount to cents.
-	 *
-	 * @param float $amount The amount to convert to cents.
-	 *
-	 * @deprecated 2.0.9 Use \Pronamic\WordPress\Money\Money::get_minor_units()->to_int() instead.
-	 *
-	 * @return int
-	 */
-	public static function amount_to_cents( $amount ) {
-		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Money\Money::get_minor_units()->to_int()' );
-
-		$money = new Money( $amount );
-
-		return $money->get_minor_units()->to_int();
-	}
-
-	/**
 	 * Cents to amount.
 	 *
 	 * @param int $cents The cents to convert to float value.
