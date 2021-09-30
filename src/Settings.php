@@ -93,6 +93,16 @@ class Settings {
 			)
 		);
 
+		\register_setting(
+			'pronamic_pay',
+			'pronamic_pay_subscriptions_processing_enabled',
+			array(
+				'type'        => 'boolean',
+				'description' => 'Setting that can be used to enable or disable processing of recurring payments.',
+				'default'     => true,
+			)
+		);
+
 		// Pages.
 		$pages = $this->plugin->get_pages();
 

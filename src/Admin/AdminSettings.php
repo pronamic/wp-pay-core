@@ -132,6 +132,22 @@ class AdminSettings {
 			$debug_mode_args
 		);
 
+		if ( $this->plugin->is_debug_mode() || ! $this->plugin->subscriptions_module->is_processing_enabled() ) {
+			\add_settings_field(
+				'pronamic_pay_subscriptions_processing_enabled',
+				\__( 'Process Subscriptions', 'pronamic_ideal' ),
+				array( $this, 'input_checkbox' ),
+				'pronamic_pay',
+				'pronamic_pay_general',
+				array(
+					'legend'      => \__( 'Enable processing of recurring payments', 'pronamic_ideal' ),
+					'description' => \__( 'Enable processing of recurring payments', 'pronamic_ideal' ),
+					'label_for'   => 'pronamic_pay_subscriptions_processing_enabled',
+					'type'        => 'checkbox',
+				)
+			);
+		}
+
 		// Settings - Pages.
 		add_settings_section(
 			'pronamic_pay_pages',

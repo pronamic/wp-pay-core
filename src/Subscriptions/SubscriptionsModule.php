@@ -1221,11 +1221,24 @@ class SubscriptionsModule {
 	}
 
 	/**
+	 * Is subscriptions processing enabled.
+	 *
+	 * @return bool True if processing recurring payment is enabled, false otherwise.
+	 */
+	public function is_processing_enabled() {
+		return (bool) \get_option( 'pronamic_pay_subscriptions_processing_enabled', true );
+	}
+
+	/**
 	 * Update subscription payments.
 	 *
 	 * @return void
 	 */
 	public function update_subscription_payments() {
+		if ( ! $this->is_processing_enabled() ) {
+			return;
+		}
+
 		$this->send_subscription_renewal_notices();
 
 		$this->process_subscriptions_follow_up_payment(
