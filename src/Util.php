@@ -25,40 +25,6 @@ use WP_Error;
  */
 class Util {
 	/**
-	 * Remote get body.
-	 *
-	 * @link       https://developer.wordpress.org/reference/functions/wp_remote_request/
-	 *
-	 * @param string $url                    The URL to use for the remote request.
-	 * @param int    $required_response_code The required response code.
-	 * @param array  $args                   The WordPress HTTP API request arguments.
-	 *
-	 * @deprecated 2.0.9 Use Pronamic\WordPress\Pay\Core\Util::remote_get_body() instead.
-	 *
-	 * @return array|bool|string|WP_Error
-	 */
-	public static function remote_get_body( $url, $required_response_code = 200, array $args = array() ) {
-		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Pay\Core\Util::remote_get_body()' );
-
-		return Core_Util::remote_get_body( $url, $required_response_code, $args );
-	}
-
-	/**
-	 * SimpleXML load string.
-	 *
-	 * @param string $string The XML string to convert to a SimpleXMLElement object.
-	 *
-	 * @deprecated 2.0.9 Use Pronamic\WordPress\Pay\Core\Util::simplexml_load_string() instead.
-	 *
-	 * @return SimpleXMLElement|WP_Error
-	 */
-	public static function simplexml_load_string( $string ) {
-		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Pay\Core\Util::simplexml_load_string()' );
-
-		return Core_Util::simplexml_load_string( $string );
-	}
-
-	/**
 	 * Format date interval.
 	 *
 	 * @param DateInterval $date_interval Date interval.

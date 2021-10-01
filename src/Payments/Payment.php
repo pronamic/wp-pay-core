@@ -73,14 +73,6 @@ class Payment extends PaymentInfo {
 	public $expiration_period;
 
 	/**
-	 * The entrance code of this payment.
-	 *
-	 * @todo Is this required/used?
-	 * @var string|null
-	 */
-	public $entrance_code;
-
-	/**
 	 * The description of this payment.
 	 *
 	 * @var string|null
@@ -128,7 +120,7 @@ class Payment extends PaymentInfo {
 	 *
 	 * @var string|null
 	 */
-	public $action_url;
+	private $action_url;
 
 	/**
 	 * The date this payment expires.
@@ -811,15 +803,6 @@ class Payment extends PaymentInfo {
 	}
 
 	/**
-	 * Get entrance code.
-	 *
-	 * @return string|null
-	 */
-	public function get_entrance_code() {
-		return $this->entrance_code;
-	}
-
-	/**
 	 * Get subscription periods.
 	 *
 	 * @since 2.5.0
@@ -881,6 +864,10 @@ class Payment extends PaymentInfo {
 
 		PaymentInfoHelper::from_json( $json, $payment );
 
+		if ( isset( $json->action_url ) ) {
+			$payment->set_action_url( $json->action_url );
+		}
+
 		if ( isset( $json->total_amount ) ) {
 			$payment->set_total_amount( MoneyJsonTransformer::from_json( $json->total_amount ) );
 		}
@@ -936,6 +923,11 @@ class Payment extends PaymentInfo {
 		$object = PaymentInfoHelper::to_json( $this );
 
 		$properties = (array) $object;
+
+		// Action URL.
+		if ( null !== $this->action_url ) {
+			$properties['action_url'] = $this->action_url;
+		}
 
 		// Expiry date.
 		$expiry_date = $this->get_expiry_date();

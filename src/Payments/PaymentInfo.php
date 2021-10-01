@@ -122,7 +122,7 @@ abstract class PaymentInfo {
 	 *
 	 * @var string|null
 	 */
-	public $description;
+	private $description;
 
 	/**
 	 * Bank transfer recipient details.
@@ -513,6 +513,10 @@ abstract class PaymentInfo {
 	 * @return mixed
 	 */
 	public function get_meta( $key ) {
+		if ( \array_key_exists( $key, $this->meta ) ) {
+			return $this->meta[ $key ];
+		}
+
 		if ( null === $this->id ) {
 			return null;
 		}
@@ -531,6 +535,8 @@ abstract class PaymentInfo {
 	 * @return bool True on successful update, false on failure.
 	 */
 	public function set_meta( $key, $value ) {
+		$this->meta[ $key ] = $value;
+
 		if ( null === $this->id ) {
 			return false;
 		}

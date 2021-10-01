@@ -745,11 +745,8 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$payment->method              = $this->get_meta_string( $id, 'method' );
 		$payment->issuer              = $this->get_meta_string( $id, 'issuer' );
 		$payment->order_id            = $this->get_meta_string( $id, 'order_id' );
-		$payment->entrance_code       = $this->get_meta_string( $id, 'entrance_code' );
-		$payment->action_url          = $this->get_meta_string( $id, 'action_url' );
 		$payment->source              = $this->get_meta_string( $id, 'source' );
 		$payment->source_id           = $this->get_meta_string( $id, 'source_id' );
-		$payment->description         = $this->get_meta_string( $id, 'description' );
 		$payment->email               = $this->get_meta_string( $id, 'email' );
 		$payment->status              = $this->get_meta_string( $id, 'status' );
 		$payment->analytics_client_id = $this->get_meta_string( $id, 'analytics_client_id' );
@@ -760,6 +757,24 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$payment->end_date            = $this->get_meta_date( $id, 'end_date' );
 
 		$payment->set_version( $this->get_meta_string( $id, 'version' ) );
+
+		// Action URL.
+		$action_url = $payment->get_action_url();
+
+		if ( empty( $action_url ) ) {
+			$action_url = $this->get_meta_string( $id, 'action_url' );
+
+			$payment->set_action_url( $action_url );
+		}
+
+		// Description.
+		$description = $payment->get_description();
+
+		if ( empty( $description ) ) {
+			$description = $this->get_meta_string( $id, '$description' );
+
+			$payment->set_description( $description );
+		}
 
 		// Legacy.
 		parent::read_post_meta( $payment );
@@ -810,13 +825,9 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			'config_id'               => $payment->config_id,
 			'key'                     => $payment->key,
 			'order_id'                => $payment->order_id,
-			'currency'                => $payment->get_total_amount()->get_currency()->get_alphabetic_code(),
-			'amount'                  => $payment->get_total_amount()->get_number()->get_value(),
 			'method'                  => $payment->method,
 			'issuer'                  => $payment->issuer,
 			'expiration_period'       => null,
-			'entrance_code'           => $payment->entrance_code,
-			'description'             => $payment->description,
 			'consumer_name'           => ( null === $consumer_bank_details ? null : $consumer_bank_details->get_name() ),
 			'consumer_account_number' => ( null === $consumer_bank_details ? null : $consumer_bank_details->get_account_number() ),
 			'consumer_iban'           => ( null === $consumer_bank_details ? null : $consumer_bank_details->get_iban() ),
@@ -830,7 +841,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			'recurring_type'          => $payment->recurring_type,
 			'recurring'               => $payment->recurring,
 			'transaction_id'          => $payment->get_transaction_id(),
-			'action_url'              => $payment->get_action_url(),
 			'start_date'              => $payment->start_date,
 			'end_date'                => $payment->end_date,
 			'version'                 => $payment->get_version(),
