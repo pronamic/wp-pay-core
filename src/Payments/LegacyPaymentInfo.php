@@ -51,23 +51,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	protected $amount;
 
 	/**
-	 * Get the payment amount.
-	 *
-	 * @deprecated 2.0.9 Use Payment::get_total_amount() instead.
-	 *
-	 * @return Money
-	 */
-	public function get_amount() {
-		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_total_amount()' );
-
-		if ( \method_exists( $this, 'get_total_amount' ) ) {
-			return $this->get_total_amount();
-		}
-
-		return new Money( 0 );
-	}
-
-	/**
 	 * Set the payment amount.
 	 *
 	 * @param Money $amount Money object.
