@@ -832,7 +832,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			'issuer'                  => $payment->issuer,
 			'expiration_period'       => null,
 			'entrance_code'           => $payment->entrance_code,
-			'description'             => $payment->description,
 			'consumer_name'           => ( null === $consumer_bank_details ? null : $consumer_bank_details->get_name() ),
 			'consumer_account_number' => ( null === $consumer_bank_details ? null : $consumer_bank_details->get_account_number() ),
 			'consumer_iban'           => ( null === $consumer_bank_details ? null : $consumer_bank_details->get_iban() ),
