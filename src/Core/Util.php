@@ -219,19 +219,6 @@ class Util {
 	}
 
 	/**
-	 * Convert boolean to an numeric boolean.
-	 *
-	 * @link https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
-	 *
-	 * @param boolean $boolean The boolean value to convert to an integer value.
-	 *
-	 * @return int
-	 */
-	public static function boolean_to_numeric( $boolean ) {
-		return $boolean ? 1 : 0;
-	}
-
-	/**
 	 * Convert the specified period to a single char notation.
 	 *
 	 * @since 1.3.9
