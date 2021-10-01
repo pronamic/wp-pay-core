@@ -29,7 +29,6 @@ use Pronamic\WordPress\Pay\Customer;
  *
  * @property string|null $email
  * @property string|null $customer_name
- * @property string|null $city
  * @property string|null $address
  * @property int|string|null $user_id
  */
@@ -130,7 +129,7 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 			}
 		}
 
-		if ( in_array( $name, array( 'city', 'address' ), true ) ) {
+		if ( in_array( $name, array( 'address' ), true ) ) {
 			if ( null === $value && null === $address ) {
 				return null;
 			}
