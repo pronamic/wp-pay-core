@@ -695,7 +695,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$this->update_meta( $id, 'frequency', $subscription->frequency );
 		$this->update_meta( $id, 'interval', $subscription->interval );
 		$this->update_meta( $id, 'interval_period', $subscription->interval_period );
-		$this->update_meta( $id, 'description', $subscription->description );
 		$this->update_meta( $id, 'email', ( null === $customer ? null : $customer->get_email() ) );
 		$this->update_meta( $id, 'customer_name', ( null === $customer ? null : strval( $customer->get_name() ) ) );
 		$this->update_meta( $id, 'payment_method', $subscription->payment_method );
@@ -704,13 +703,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$this->update_meta( $id, 'expiry_date', $subscription->expiry_date );
 		$this->update_meta( $id, 'next_payment', $subscription->next_payment_date );
 		$this->update_meta( $id, 'next_payment_delivery_date', $subscription->next_payment_delivery_date );
-
-		$display_phase = $subscription->get_display_phase();
-
-		if ( null !== $display_phase ) {
-			$this->update_meta( $id, 'currency', $display_phase->get_amount()->get_currency()->get_alphabetic_code() );
-			$this->update_meta( $id, 'amount', $display_phase->get_amount()->get_number()->get_value() );
-		}
 
 		$this->update_meta_status( $subscription );
 	}
