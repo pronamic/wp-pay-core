@@ -97,7 +97,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 		}
 
 		$customer              = $this->get_customer();
-		$address               = $this->get_billing_address();
 		$consumer_bank_details = $this->get_consumer_bank_details();
 		$contact_name          = null;
 
