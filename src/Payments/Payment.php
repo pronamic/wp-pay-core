@@ -73,14 +73,6 @@ class Payment extends PaymentInfo {
 	public $expiration_period;
 
 	/**
-	 * The entrance code of this payment.
-	 *
-	 * @todo Is this required/used?
-	 * @var string|null
-	 */
-	public $entrance_code;
-
-	/**
 	 * The description of this payment.
 	 *
 	 * @var string|null
