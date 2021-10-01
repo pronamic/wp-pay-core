@@ -119,25 +119,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	}
 
 	/**
-	 * Get the payment locale.
-	 *
-	 * @deprecated 2.0.9 Use Payment::get_customer()->get_locale() instead.
-	 *
-	 * @return string|null
-	 */
-	public function get_locale() {
-		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_customer()->get_locale()' );
-
-		$customer = $this->get_customer();
-
-		if ( null === $customer ) {
-			return null;
-		}
-
-		return $customer->get_locale();
-	}
-
-	/**
 	 * Get first name.
 	 *
 	 * @deprecated 2.0.9 Use Payment::get_customer()->get_name()->get_first_name() instead.
@@ -371,8 +352,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 		switch ( $name ) {
 			case 'language':
 				return $this->get_language();
-			case 'locale':
-				return $this->get_locale();
 			case 'email':
 				return ( null === $customer ) ? null : $customer->get_email();
 			case 'user_agent':
