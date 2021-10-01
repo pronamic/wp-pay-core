@@ -34,8 +34,10 @@ class PaymentInfoHelper {
 	public static function to_json( PaymentInfo $payment_info ) {
 		$object = (object) array();
 
-		if ( null !== $payment_info->get_id() ) {
-			$object->id = $payment_info->get_id();
+		$id = $payment_info->get_id();
+
+		if ( null !== $id ) {
+			$object->id = $id;
 		}
 
 		$origin_id = $payment_info->get_origin_id();
