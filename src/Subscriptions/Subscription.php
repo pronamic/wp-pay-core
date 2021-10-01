@@ -13,7 +13,7 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 use DateInterval;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeImmutable;
-use Pronamic\WordPress\Pay\Payments\LegacyPaymentInfo;
+use Pronamic\WordPress\Pay\Payments\PaymentInfo;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentInfoHelper;
@@ -25,7 +25,7 @@ use Pronamic\WordPress\Pay\Payments\PaymentInfoHelper;
  * @version 2.7.1
  * @since   1.0.0
  */
-class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
+class Subscription extends PaymentInfo implements \JsonSerializable {
 	use SubscriptionPhasesTrait;
 
 	/**
