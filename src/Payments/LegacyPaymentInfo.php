@@ -30,8 +30,6 @@ use Pronamic\WordPress\Pay\Customer;
  * @property string|null $language
  * @property string|null $locale
  * @property string|null $email
- * @property string|null $first_name
- * @property string|null $last_name
  * @property string|null $customer_name
  * @property string|null $telephone_number
  * @property string|null $country
