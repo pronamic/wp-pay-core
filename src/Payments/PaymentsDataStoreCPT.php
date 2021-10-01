@@ -845,7 +845,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			'recurring_type'          => $payment->recurring_type,
 			'recurring'               => $payment->recurring,
 			'transaction_id'          => $payment->get_transaction_id(),
-			'action_url'              => $payment->get_action_url(),
 			'start_date'              => $payment->start_date,
 			'end_date'                => $payment->end_date,
 			'version'                 => $payment->get_version(),
