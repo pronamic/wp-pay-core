@@ -289,25 +289,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	}
 
 	/**
-	 * Get telephone number.
-	 *
-	 * @deprecated 2.0.9 Use Payment::get_billing_address()->get_phone() instead.
-	 *
-	 * @return string|null
-	 */
-	public function get_telephone_number() {
-		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_billing_address()->get_phone()' );
-
-		$address = $this->get_billing_address();
-
-		if ( null === $address ) {
-			return null;
-		}
-
-		return $address->get_phone();
-	}
-
-	/**
 	 * Set consumer name.
 	 *
 	 * @deprecated 2.2.6 Use Payment::set_consumer_bank_details()->set_name() instead.

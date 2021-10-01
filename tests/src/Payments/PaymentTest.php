@@ -185,7 +185,6 @@ class PaymentTest extends WP_UnitTestCase {
 			array( 'city', 'get_city', 'Drachten', true ),
 			array( 'zip', 'get_zip', '9203 KA', true ),
 			array( 'country', 'get_country', 'NL', true ),
-			array( 'telephone_number', 'get_telephone_number', '1234567890', true ),
 		);
 	}
 
