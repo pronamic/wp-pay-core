@@ -39,25 +39,6 @@ use Pronamic\WordPress\Pay\Customer;
  */
 abstract class LegacyPaymentInfo extends PaymentInfo {
 	/**
-	 * Get city.
-	 *
-	 * @deprecated 2.0.9 Use Payment::get_billing_address()->get_city() instead.
-	 *
-	 * @return string|null
-	 */
-	public function get_city() {
-		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_billing_address()->get_city()' );
-
-		$address = $this->get_billing_address();
-
-		if ( null === $address ) {
-			return null;
-		}
-
-		return $address->get_city();
-	}
-
-	/**
 	 * Get country.
 	 *
 	 * @deprecated 2.0.9 Use Payment::get_billing_address()->get_country_code() instead.
@@ -96,8 +77,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 				return ( null === $customer ) ? null : $customer->get_user_id();
 			case 'user_ip':
 				return ( null === $customer ) ? null : $customer->get_ip_address();
-			case 'city':
-				return $this->get_city();
 			case 'country':
 				return $this->get_country();
 			case 'telephone_number':
@@ -131,15 +110,10 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	 */
 	public function __set( $name, $value ) {
 		$legacy_keys = array(
-			'language',
-			'locale',
 			'email',
-			'first_name',
-			'last_name',
 			'telephone_number',
 			'country',
 			'zip',
-			'city',
 			'address',
 			'user_id',
 			'consumer_name',
@@ -218,18 +192,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 				}
 
 				return;
-			case 'first_name':
-				if ( null !== $contact_name ) {
-					$contact_name->set_first_name( $value );
-				}
-
-				return;
-			case 'last_name':
-				if ( null !== $contact_name ) {
-					$contact_name->set_last_name( $value );
-				}
-
-				return;
 			case 'country':
 				if ( null !== $address ) {
 					$address->set_country_code( $value );
@@ -239,18 +201,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 			case 'zip':
 				if ( null !== $address ) {
 					$address->set_postal_code( $value );
-				}
-
-				return;
-			case 'city':
-				if ( null !== $address ) {
-					$address->set_city( $value );
-				}
-
-				return;
-			case 'address':
-				if ( null !== $address ) {
-					$address->set_line_1( $value );
 				}
 
 				return;
