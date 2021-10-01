@@ -27,7 +27,6 @@ use Pronamic\WordPress\Pay\Customer;
  * @version 2.5.0
  * @since   2.1.0
  *
- * @property string|null $language
  * @property string|null $locale
  * @property string|null $email
  * @property string|null $customer_name
