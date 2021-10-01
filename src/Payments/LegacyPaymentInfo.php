@@ -446,12 +446,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 		}
 
 		switch ( $name ) {
-			case 'language':
-				if ( null !== $customer ) {
-					$customer->set_language( $value );
-				}
-
-				return;
 			case 'email':
 				if ( null !== $customer ) {
 					$customer->set_email( $value );
@@ -467,18 +461,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 			case 'last_name':
 				if ( null !== $contact_name ) {
 					$contact_name->set_last_name( $value );
-				}
-
-				return;
-			case 'locale':
-				if ( null !== $customer ) {
-					$customer->set_locale( $value );
-				}
-
-				return;
-			case 'telephone_number':
-				if ( null !== $address ) {
-					$address->set_phone( $value );
 				}
 
 				return;
