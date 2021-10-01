@@ -248,18 +248,6 @@ class Util {
 	}
 
 	/**
-	 * Build URL with the specified parameters
-	 *
-	 * @param string $url        URL to extend with the specified parameters.
-	 * @param array  $parameters URL parameters.
-	 *
-	 * @return string
-	 */
-	public static function build_url( $url, array $parameters ) {
-		return $url . '?' . _http_build_query( $parameters, null, '&' );
-	}
-
-	/**
 	 * Get remote address.
 	 *
 	 * @link https://github.com/WordPress/WordPress/blob/4.9.8/wp-admin/includes/class-wp-community-events.php#L210-L274
