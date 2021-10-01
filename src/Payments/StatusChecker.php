@@ -27,9 +27,6 @@ class StatusChecker {
 		// Payment status check events are scheduled when payments are started.
 		add_action( 'pronamic_pay_payment_status_check', array( $this, 'check_status' ), 10, 2 );
 
-		// Deprecated `pronamic_ideal_check_transaction_status` hooks got scheduled to request the payment status.
-		add_action( 'pronamic_ideal_check_transaction_status', array( $this, 'check_transaction_status' ), 10, 3 );
-
 		// Clear scheduled status check once payment reaches a final status.
 		add_action( 'pronamic_payment_status_update', array( $this, 'maybe_clear_scheduled_status_check' ), 10, 1 );
 	}
@@ -123,21 +120,6 @@ class StatusChecker {
 			default:
 				return DAY_IN_SECONDS;
 		}
-	}
-
-	/**
-	 * Backwards compatible transaction status check.
-	 *
-	 * @param integer $payment_id   The ID of a payment to check.
-	 * @param integer $seconds      The number of seconds this status check was delayed.
-	 * @param integer $number_tries The number of status check tries.
-	 *
-	 * @return void
-	 *
-	 * @deprecated 2.1.6 In favor of event `pronamic_pay_payment_status_check`.
-	 */
-	public function check_transaction_status( $payment_id = null, $seconds = null, $number_tries = 1 ) {
-		$this->check_status( $payment_id, $number_tries );
 	}
 
 	/**
