@@ -90,9 +90,6 @@ class PaymentTest extends WP_UnitTestCase {
 			array( 'set_consumer_bank_details', 'get_consumer_bank_details', new BankAccountDetails() ),
 			array( 'set_bank_transfer_recipient_details', 'get_bank_transfer_recipient_details', new BankTransferDetails() ),
 			array( 'set_failure_reason', 'get_failure_reason', new FailureReason() ),
-
-			// Deprecated.
-			array( 'set_amount', 'get_amount', new TaxedMoney( 89.95, 'EUR' ), true ),
 		);
 	}
 
@@ -141,14 +138,6 @@ class PaymentTest extends WP_UnitTestCase {
 			array( 'email', 'get_email', 'john.doe@example.com' ),
 			array( 'analytics_client_id', 'get_analytics_client_id', 'GA1.2.1234567890.1234567890' ),
 			array( 'entrance_code', 'get_entrance_code', uniqid() ),
-
-			// Deprecated.
-			array( 'first_name', 'get_first_name', 'John', true ),
-			array( 'last_name', 'get_last_name', 'Doe', true ),
-			array( 'customer_name', 'get_customer_name', 'John Doe', true ),
-			array( 'address', 'get_address', 'Burgemeester Wuiteweg 39b', true ),
-			array( 'city', 'get_city', 'Drachten', true ),
-			array( 'country', 'get_country', 'NL', true ),
 		);
 	}
 
@@ -306,29 +295,5 @@ class PaymentTest extends WP_UnitTestCase {
 		$this->assertEquals( wp_json_encode( $json_data, JSON_PRETTY_PRINT ), $json_string );
 
 		$this->assertJsonStringEqualsJsonFile( $json_file, $json_string );
-	}
-
-	/**
-	 * Test legacy consumer bank details.
-	 *
-	 * @return void
-	 */
-	public function test_legacy_consumer_bank_details() {
-		$payment = new Payment();
-
-		$payment->consumer_iban           = 'NL56 RABO 0108 6347 79';
-		$payment->consumer_bic            = 'RABONL2U';
-		$payment->consumer_city           = 'Drachten';
-
-		$consumer_bank_details = $payment->get_consumer_bank_details();
-
-		$this->assertNotNull( $consumer_bank_details );
-		$this->assertInstanceOf( BankAccountDetails::class, $consumer_bank_details );
-
-		$this->assertEquals( 'Pronamic', $consumer_bank_details->get_name() );
-		$this->assertEquals( '1086.34.779', $consumer_bank_details->get_account_number() );
-		$this->assertEquals( 'NL56 RABO 0108 6347 79', $consumer_bank_details->get_iban() );
-		$this->assertEquals( 'RABONL2U', $consumer_bank_details->get_bic() );
-		$this->assertEquals( 'Drachten', $consumer_bank_details->get_city() );
 	}
 }
