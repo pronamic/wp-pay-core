@@ -42,31 +42,6 @@ use Pronamic\WordPress\Pay\Customer;
  */
 abstract class LegacyPaymentInfo extends PaymentInfo {
 	/**
-	 * Get first name.
-	 *
-	 * @deprecated 2.0.9 Use Payment::get_customer()->get_name()->get_first_name() instead.
-	 *
-	 * @return string|null
-	 */
-	public function get_first_name() {
-		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_customer()->get_name()->get_first_name()' );
-
-		$customer = $this->get_customer();
-
-		if ( null === $customer ) {
-			return null;
-		}
-
-		$name = $customer->get_name();
-
-		if ( null === $name ) {
-			return null;
-		}
-
-		return $name->get_first_name();
-	}
-
-	/**
 	 * Get last name.
 	 *
 	 * @deprecated 2.0.9 Use Payment::get_customer()->get_name()->get_last_name() instead.
@@ -195,8 +170,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 				return ( null === $customer ) ? null : $customer->get_ip_address();
 			case 'customer_name':
 				return $this->get_customer_name();
-			case 'first_name':
-				return $this->get_first_name();
 			case 'last_name':
 				return $this->get_last_name();
 			case 'address':
