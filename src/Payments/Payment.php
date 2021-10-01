@@ -551,19 +551,6 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
-	 * Get the redirect URL for this payment.
-	 *
-	 * @deprecated 4.1.2 Use get_return_redirect_url()
-	 *
-	 * @return string
-	 */
-	public function get_redirect_url() {
-		_deprecated_function( __FUNCTION__, '4.1.2', 'get_return_redirect_url()' );
-
-		return $this->get_return_redirect_url();
-	}
-
-	/**
 	 * Get edit payment URL.
 	 *
 	 * @link https://docs.woocommerce.com/wc-apidocs/source-class-WC_Order.html#1538-1546
