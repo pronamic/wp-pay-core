@@ -803,15 +803,6 @@ class Payment extends PaymentInfo {
 	}
 
 	/**
-	 * Get entrance code.
-	 *
-	 * @return string|null
-	 */
-	public function get_entrance_code() {
-		return $this->entrance_code;
-	}
-
-	/**
 	 * Get subscription periods.
 	 *
 	 * @since 2.5.0
