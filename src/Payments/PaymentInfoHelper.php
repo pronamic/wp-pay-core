@@ -40,6 +40,12 @@ class PaymentInfoHelper {
 			$object->id = $id;
 		}
 
+		$description = $payment_info->get_description();
+
+		if ( null !== $description ) {
+			$object->description = $description;
+		}
+
 		$origin_id = $payment_info->get_origin_id();
 
 		if ( null !== $origin_id ) {

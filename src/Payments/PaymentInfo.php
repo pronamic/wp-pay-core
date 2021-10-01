@@ -122,7 +122,7 @@ abstract class PaymentInfo {
 	 *
 	 * @var string|null
 	 */
-	public $description;
+	private $description;
 
 	/**
 	 * Bank transfer recipient details.

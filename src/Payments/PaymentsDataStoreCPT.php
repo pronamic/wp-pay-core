@@ -748,7 +748,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$payment->entrance_code       = $this->get_meta_string( $id, 'entrance_code' );
 		$payment->source              = $this->get_meta_string( $id, 'source' );
 		$payment->source_id           = $this->get_meta_string( $id, 'source_id' );
-		$payment->description         = $this->get_meta_string( $id, 'description' );
 		$payment->email               = $this->get_meta_string( $id, 'email' );
 		$payment->status              = $this->get_meta_string( $id, 'status' );
 		$payment->analytics_client_id = $this->get_meta_string( $id, 'analytics_client_id' );
@@ -767,6 +766,15 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			$action_url = $this->get_meta_string( $id, 'action_url' );
 
 			$payment->set_action_url( $action_url );
+		}
+
+		// Description.
+		$description = $payment->get_description();
+
+		if ( empty( $description ) ) {
+			$description = $this->get_meta_string( $id, '$description' );
+
+			$payment->set_$description( $$description );
 		}
 
 		// Legacy.
