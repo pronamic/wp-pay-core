@@ -25,21 +25,6 @@ use WP_Error;
  */
 class Util {
 	/**
-	 * SimpleXML load string.
-	 *
-	 * @param string $string The XML string to convert to a SimpleXMLElement object.
-	 *
-	 * @deprecated 2.0.9 Use Pronamic\WordPress\Pay\Core\Util::simplexml_load_string() instead.
-	 *
-	 * @return SimpleXMLElement|WP_Error
-	 */
-	public static function simplexml_load_string( $string ) {
-		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Pay\Core\Util::simplexml_load_string()' );
-
-		return Core_Util::simplexml_load_string( $string );
-	}
-
-	/**
 	 * Format date interval.
 	 *
 	 * @param DateInterval $date_interval Date interval.
