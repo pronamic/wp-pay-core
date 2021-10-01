@@ -97,34 +97,6 @@ class PaymentTest extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test set.
-	 *
-	 * @dataProvider set_provider
-	 *
-	 * @param string $set_function Setter function name.
-	 * @param string $property     Property name.
-	 * @param string $value        Expected value.
-	 */
-	public function test_set( $set_function, $property, $value ) {
-		$this->setExpectedDeprecated( $set_function );
-
-		$payment = new Payment();
-
-		$payment->$set_function( $value );
-
-		$this->assertEquals( $value, $payment->$property );
-	}
-
-	/**
-	 * Set provider.
-	 *
-	 * @return array
-	 */
-	public function set_provider() {
-		return array();
-	}
-
-	/**
 	 * Test get.
 	 *
 	 * @dataProvider get_provider
