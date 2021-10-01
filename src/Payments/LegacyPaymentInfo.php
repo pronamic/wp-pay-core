@@ -29,7 +29,6 @@ use Pronamic\WordPress\Pay\Customer;
  *
  * @property string|null $email
  * @property string|null $customer_name
- * @property string|null $address
  * @property int|string|null $user_id
  */
 abstract class LegacyPaymentInfo extends PaymentInfo {
@@ -83,7 +82,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	public function __set( $name, $value ) {
 		$legacy_keys = array(
 			'email',
-			'address',
 			'user_id',
 			'consumer_name',
 			'consumer_account_number',
@@ -126,18 +124,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 
 					$customer->set_name( $contact_name );
 				}
-			}
-		}
-
-		if ( in_array( $name, array( 'address' ), true ) ) {
-			if ( null === $value && null === $address ) {
-				return null;
-			}
-
-			if ( null === $address ) {
-				$address = new Address();
-
-				$this->set_billing_address( $address );
 			}
 		}
 
