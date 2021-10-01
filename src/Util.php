@@ -59,23 +59,6 @@ class Util {
 	}
 
 	/**
-	 * Convert boolean to an numeric boolean.
-	 *
-	 * @link https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
-	 *
-	 * @param boolean $boolean The boolean to convert to 1 or 0.
-	 *
-	 * @deprecated 2.0.9 Use \Pronamic\WordPress\Pay\Core\Util::boolean_to_numeric() instead.
-	 *
-	 * @return int
-	 */
-	public static function boolean_to_numeric( $boolean ) {
-		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Pay\Core\Util::boolean_to_numeric()' );
-
-		return Core_Util::boolean_to_numeric( $boolean );
-	}
-
-	/**
 	 * Format date interval.
 	 *
 	 * @param DateInterval $date_interval Date interval.
