@@ -15,8 +15,6 @@ use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeImmutable;
 use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Money\Money;
-use Pronamic\WordPress\Money\TaxedMoney;
-use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Core\Recurring;
 use Pronamic\WordPress\Pay\Core\Server;
@@ -80,6 +78,7 @@ class SubscriptionsModule {
 
 		// The 'pronamic_pay_update_subscription_payments' hook adds subscription payments and sends renewal notices.
 		add_action( 'pronamic_pay_update_subscription_payments', array( $this, 'update_subscription_payments' ) );
+		\add_action( 'pronamic_pay_process_subscription_payment', array( $this, 'process_subscription_payment_event' ), 10, 2 );
 
 		// The 'pronamic_pay_complete_subscriptions' hook completes active subscriptions.
 		add_action( 'pronamic_pay_complete_subscriptions', array( $this, 'complete_subscriptions' ) );
@@ -756,7 +755,7 @@ class SubscriptionsModule {
 	 * @return Payment
 	 * @throws \Exception Throws exception if gateway integration can not be found.
 	 */
-	public function new_period_payment( SubscriptionPeriod $period ) {
+	private function new_period_payment( SubscriptionPeriod $period ) {
 		$subscription = $period->get_phase()->get_subscription();
 
 		$config_id = (int) $subscription->get_config_id();
@@ -977,7 +976,7 @@ class SubscriptionsModule {
 	 *
 	 * @throws \Exception Throws exception on start date error.
 	 */
-	public function send_subscription_renewal_notices() {
+	private function send_subscription_renewal_notices() {
 		$interval = new DateInterval( 'P1W' ); // 1 week
 
 		$start_date = new DateTime( 'midnight', new DateTimeZone( 'UTC' ) );
@@ -1139,10 +1138,11 @@ class SubscriptionsModule {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'date'         => null,
-				'number'       => null,
-				'on_progress'  => null,
-				'on_exception' => null,
+				'date'           => null,
+				'number'         => null,
+				'schedule_event' => null,
+				'on_progress'    => null,
+				'on_exception'   => null,
 			)
 		);
 
@@ -1154,68 +1154,246 @@ class SubscriptionsModule {
 		);
 
 		foreach ( $query->posts as $post ) {
+			// Progress callback.
 			if ( null !== $args['on_progress'] ) {
 				\call_user_func( $args['on_progress'], $post );
 			}
 
-			$subscription = \get_pronamic_subscription( $post->ID );
+			// Schedule event for single subscription to postpone processing.
+			if ( true === $args['schedule_event'] ) {
+				$try = 1;
 
-			if ( null === $subscription ) {
-				throw new \Exception(
-					\sprintf(
-						'Unable to load subscription from post ID: %d.',
-						$post->ID
-					)
-				);
-			}
+				$this->schedule_subscription_payment_event( $post->ID, $try );
 
-			$gateway = Plugin::get_gateway( $subscription->config_id );
-
-			// If gateway is null we continue to next subscription.
-			if ( null === $gateway ) {
 				continue;
 			}
 
-			// Start payment.
 			try {
-				$payment = $this->new_subscription_payment( $subscription );
-
-				if ( null === $payment ) {
-					continue;
-				}
-
-				$payment->recurring = true;
-
-				$payment = $this->start_payment( $payment );
+				$this->process_subscription_payment( $post->ID );
 			} catch ( \Exception $e ) {
+				// Exception callback.
 				if ( null !== $args['on_exception'] ) {
 					\call_user_func( $args['on_exception'], $e );
 				}
 
 				continue;
 			}
-
-			if ( is_object( $payment ) ) {
-				// Update payment.
-				Plugin::update_payment( $payment, false );
-			}
-
-			// Expire manual renewal subscriptions.
-			if ( ! $gateway->supports( 'recurring' ) ) {
-				$now = new DateTime();
-
-				if ( SubscriptionStatus::COMPLETED !== $subscription->status && isset( $subscription->expiry_date ) && $subscription->expiry_date <= $now ) {
-					$subscription->status = SubscriptionStatus::EXPIRED;
-
-					$subscription->save();
-
-					// Delete next payment date so it won't get used as start date
-					// of the new payment period when manually renewing and to keep
-					// the subscription out of updating subscription payments (this method).
-					$subscription->set_meta( 'next_payment', null );
-				}
-			}
 		}
+	}
+
+	/**
+	 * Process subscription payment.
+	 *
+	 * @param string|int $subscription_id Subscription ID.
+	 * @throws \Exception Throws exception on error.
+	 */
+	private function process_subscription_payment( $subscription_id ) {
+		// Check subscription.
+		$subscription = \get_pronamic_subscription( (int) $subscription_id );
+
+		if ( null === $subscription ) {
+			throw new \Exception(
+				\sprintf(
+					'Unable to load subscription from post ID: %d.',
+					$subscription_id
+				)
+			);
+		}
+
+		// Check gateway.
+		$config_id = $subscription->config_id;
+
+		$gateway   = Plugin::get_gateway( $config_id );
+
+		// If gateway is null we continue to next subscription.
+		if ( null === $gateway ) {
+			throw new \Exception(
+				sprintf(
+					/* translators: %s: Gateway configuration ID */
+					__( 'Could not find gateway with ID `%s`.', 'pronamic_ideal' ),
+					$config_id
+				)
+			);
+		}
+
+		// Handle gateway without recurring payments support.
+		if ( ! $gateway->supports( 'recurring' ) ) {
+			$this->maybe_expire_subscription( $subscription );
+
+			return;
+		}
+
+		// Start payment.
+		$payment = $this->new_subscription_payment( $subscription );
+
+		if ( null === $payment ) {
+			return;
+		}
+
+		$payment->recurring = true;
+
+		$payment = $this->start_payment( $payment );
+
+		// Update payment.
+		Plugin::update_payment( $payment, false );
+	}
+
+	/**
+	 * Schedule subscription payment event.
+	 *
+	 * @param int $subscription_id Subscription ID.
+	 * @param int $try             Try number for this event.
+	 */
+	private function schedule_subscription_payment_event( $subscription_id, $try ) {
+		// Limit number of tries.
+		if ( $try > 4 ) {
+			return;
+		}
+
+		$event_args = array(
+			'subscription_id' => $subscription_id,
+			'try'             => $try,
+		);
+
+		// Check if event has already been scheduled.
+		if ( \wp_next_scheduled( 'pronamic_pay_process_subscription_payment', $event_args ) ) {
+			return;
+		}
+
+		// Schedule event.
+		\wp_schedule_single_event(
+			\time() + $this->get_subscription_payment_retry_seconds( $try ),
+			'pronamic_pay_process_subscription_payment',
+			$event_args,
+			false
+		);
+	}
+
+	/**
+	 * Get subscription payment retry seconds.
+	 *
+	 * @param $try
+	 * @return float|int
+	 */
+	public function get_subscription_payment_retry_seconds( $try ) {
+		switch ( $try ) {
+			case 1:
+				return 5 * MINUTE_IN_SECONDS;
+			case 2:
+				return HOUR_IN_SECONDS;
+			case 3:
+				return 12 * HOUR_IN_SECONDS;
+			case 4:
+			default:
+				return DAY_IN_SECONDS;
+		}
+	}
+
+	/**
+	 * Process subscription payment event.
+	 *
+	 * @param int                   $subscription_id Subscription ID.
+	 * @param string|int|array|null $tries           Try/tries to clear.
+	 * @return void
+	 */
+	private function clear_scheduled_subscription_payment( $subscription_id ) {
+		$tries = range( 1, 4 );
+
+		foreach ( $tries as $try ) {
+			\wp_clear_scheduled_hook(
+				'pronamic_pay_process_subscription_payment',
+				array(
+					'subscription_id' => $subscription_id,
+					'try'             => $try,
+				)
+			);
+		}
+	}
+
+	/**
+	 * Process subscription payment event.
+	 *
+	 * @param int $subscription_id Subscription ID.
+	 * @param int $try             Try number for this event.
+	 * @throws \Exception Throws exception if note could not be added.
+	 */
+	public function process_subscription_payment_event( $subscription_id, $try ) {
+		// Check if processing is enabled.
+		if ( ! $this->is_processing_enabled() ) {
+			return;
+		}
+
+		// Process subscription payment.
+		try {
+			$this->clear_scheduled_subscription_payment( $subscription_id );
+
+			$this->process_subscription_payment( $subscription_id );
+		} catch ( \Exception $e ) {
+			// Check subscription.
+			$subscription = \get_pronamic_subscription( (int) $subscription_id );
+
+			if ( null === $subscription ) {
+				return;
+			}
+
+			$next_try = ( $try + 1 );
+
+			// Add note.
+			$note = \sprintf(
+				\__( 'Unable to start recurring payment. Will not try again. Error: %2$s', 'pronamic_ideal' ),
+				$e->getMessage()
+			);
+
+			if ( $try < 4 ) {
+				$retry_time = time() + $this->get_subscription_payment_retry_seconds( $try );
+
+				$note = \sprintf(
+					\__( 'Unable to start recurring payment. Retry on %1$s. Error: %2$s', 'pronamic_ideal' ),
+					( new DateTime( '@' . $retry_time ) )->format_i18n(),
+					$e->getMessage()
+				);
+			}
+
+			$subscription->add_note( $note );
+
+			// Limit number of tries.
+			if ( $try >= 4 ) {
+				return;
+			}
+
+			// Schedule retry.
+			$this->schedule_subscription_payment_event( $subscription_id, $next_try );
+		}
+	}
+
+	/**
+	 * Maybe expire subscription.
+	 *
+	 * @param Subscription $subscription
+	 */
+	private function maybe_expire_subscription( Subscription $subscription ) {
+		// Do not expire completed subscription.
+		if ( SubscriptionStatus::COMPLETED === $subscription->status ) {
+			return;
+		}
+
+		// Check expiry date.
+		$now = new DateTime();
+
+		if ( ! isset( $subscription->expiry_date ) || $subscription->expiry_date > $now ) {
+			return;
+		}
+
+		// Expire subscription.
+		$subscription->status = SubscriptionStatus::EXPIRED;
+
+		$subscription->save();
+
+		// Delete next payment date, so it won't get used as start date of the
+		// new payment period when manually renewing and to keep the subscription
+		// out of updating subscription payments.
+		$subscription->set_meta( 'next_payment', null );
+		$subscription->set_meta( 'next_payment_delivery_date', null );
 	}
 
 	/**
@@ -1241,8 +1419,9 @@ class SubscriptionsModule {
 
 		$this->process_subscriptions_follow_up_payment(
 			array(
-				'date'   => new \DateTimeImmutable(),
-				'number' => 20,
+				'date'           => new \DateTimeImmutable(),
+				'number'         => 20,
+				'schedule_event' => true,
 			)
 		);
 	}
@@ -1273,9 +1452,10 @@ class SubscriptionsModule {
 
 		$this->process_subscriptions_follow_up_payment(
 			array(
-				'date'         => $date,
-				'number'       => $number,
-				'on_exception' => function( $e ) {
+				'date'           => $date,
+				'number'         => $number,
+				'schedule_event' => false,
+				'on_exception'   => function ( $e ) {
 					\wp_die( \esc_html( $e->getMessage() ) );
 				},
 			)
@@ -1318,12 +1498,13 @@ class SubscriptionsModule {
 
 		$this->process_subscriptions_follow_up_payment(
 			array(
-				'date'         => $date,
-				'number'       => $number,
-				'on_progress'  => function( $post ) {
+				'date'           => $date,
+				'number'         => $number,
+				'schedule_event' => false,
+				'on_progress'    => function ( $post ) {
 					WP_CLI::log( \sprintf( 'Processing post `%d` - "%s"…', $post->ID, \get_the_title( $post ) ) );
 				},
-				'on_exception' => function( $e ) {
+				'on_exception'   => function ( $e ) {
 					WP_CLI::error( $e->getMessage(), false );
 				},
 			)
