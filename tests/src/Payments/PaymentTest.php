@@ -317,13 +317,11 @@ class PaymentTest extends WP_UnitTestCase {
 		$payment = new Payment();
 
 		$payment->consumer_name           = 'Pronamic';
-		$payment->consumer_account_number = '1086.34.779';
 		$payment->consumer_iban           = 'NL56 RABO 0108 6347 79';
 		$payment->consumer_bic            = 'RABONL2U';
 		$payment->consumer_city           = 'Drachten';
 
 		$this->assertEquals( 'Pronamic', $payment->consumer_name );
-		$this->assertEquals( '1086.34.779', $payment->consumer_account_number );
 
 		$consumer_bank_details = $payment->get_consumer_bank_details();
 

@@ -33,7 +33,6 @@ use Pronamic\WordPress\Pay\Customer;
  * @property mixed $user_agent
  * @property mixed $user_ip
  * @property mixed $consumer_name
- * @property mixed $consumer_account_number
  */
 abstract class LegacyPaymentInfo extends PaymentInfo {
 
