@@ -124,6 +124,12 @@ class PaymentInfoHelper {
 			$object->version = $version;
 		}
 
+		$meta = $payment_info->meta;
+
+		if ( ! empty( $meta ) ) {
+			$object->meta = (object) $meta;
+		}
+
 		return $object;
 	}
 
@@ -197,6 +203,12 @@ class PaymentInfoHelper {
 
 		if ( isset( $json->version ) ) {
 			$payment_info->set_version( $json->version );
+		}
+
+		if ( isset( $json->meta ) ) {
+			foreach ( $json->meta as $key => $value ) {
+				$payment_info->meta[ $key ] = $value;
+			}
 		}
 
 		return $payment_info;
