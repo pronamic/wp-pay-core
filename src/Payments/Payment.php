@@ -26,7 +26,7 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPeriod;
  * @version 2.5.0
  * @since   1.0.0
  */
-class Payment extends LegacyPayment {
+class Payment extends PaymentInfo {
 	/**
 	 * The subscription.
 	 *
