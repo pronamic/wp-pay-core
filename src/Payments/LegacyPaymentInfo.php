@@ -32,7 +32,6 @@ use Pronamic\WordPress\Pay\Customer;
  * @property string|null $customer_name
  * @property string|null $telephone_number
  * @property string|null $country
- * @property string|null $zip
  * @property string|null $city
  * @property string|null $address
  * @property int|string|null $user_id
@@ -91,7 +90,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 		$legacy_keys = array(
 			'email',
 			'telephone_number',
-			'zip',
 			'address',
 			'user_id',
 			'consumer_name',
@@ -138,7 +136,7 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 			}
 		}
 
-		if ( in_array( $name, array( 'telephone_number', 'country', 'zip', 'city', 'address' ), true ) ) {
+		if ( in_array( $name, array( 'telephone_number', 'country', 'city', 'address' ), true ) ) {
 			if ( null === $value && null === $address ) {
 				return null;
 			}
@@ -173,12 +171,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 			case 'country':
 				if ( null !== $address ) {
 					$address->set_country_code( $value );
-				}
-
-				return;
-			case 'zip':
-				if ( null !== $address ) {
-					$address->set_postal_code( $value );
 				}
 
 				return;
