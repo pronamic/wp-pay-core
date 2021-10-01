@@ -251,25 +251,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	}
 
 	/**
-	 * Get ZIP.
-	 *
-	 * @deprecated 2.0.9 Use Payment::get_billing_address()->get_postal_code() instead.
-	 *
-	 * @return string|null
-	 */
-	public function get_zip() {
-		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_billing_address()->get_postal_code()' );
-
-		$address = $this->get_billing_address();
-
-		if ( null === $address ) {
-			return null;
-		}
-
-		return $address->get_postal_code();
-	}
-
-	/**
 	 * Get country.
 	 *
 	 * @deprecated 2.0.9 Use Payment::get_billing_address()->get_country_code() instead.
@@ -408,8 +389,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 				return $this->get_last_name();
 			case 'address':
 				return $this->get_address();
-			case 'zip':
-				return $this->get_zip();
 			case 'city':
 				return $this->get_city();
 			case 'country':

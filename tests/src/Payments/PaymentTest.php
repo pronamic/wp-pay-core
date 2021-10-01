@@ -183,7 +183,6 @@ class PaymentTest extends WP_UnitTestCase {
 			array( 'customer_name', 'get_customer_name', 'John Doe', true ),
 			array( 'address', 'get_address', 'Burgemeester Wuiteweg 39b', true ),
 			array( 'city', 'get_city', 'Drachten', true ),
-			array( 'zip', 'get_zip', '9203 KA', true ),
 			array( 'country', 'get_country', 'NL', true ),
 		);
 	}
