@@ -39,25 +39,6 @@ use Pronamic\WordPress\Pay\Customer;
  */
 abstract class LegacyPaymentInfo extends PaymentInfo {
 	/**
-	 * Get address.
-	 *
-	 * @deprecated 2.0.9 Use Payment::get_billing_address()->get_line_1() instead.
-	 *
-	 * @return string|null
-	 */
-	public function get_address() {
-		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_billing_address()->get_line_1()' );
-
-		$address = $this->get_billing_address();
-
-		if ( null === $address ) {
-			return null;
-		}
-
-		return $address->get_line_1();
-	}
-
-	/**
 	 * Get city.
 	 *
 	 * @deprecated 2.0.9 Use Payment::get_billing_address()->get_city() instead.
@@ -115,8 +96,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 				return ( null === $customer ) ? null : $customer->get_user_id();
 			case 'user_ip':
 				return ( null === $customer ) ? null : $customer->get_ip_address();
-			case 'address':
-				return $this->get_address();
 			case 'city':
 				return $this->get_city();
 			case 'country':
