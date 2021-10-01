@@ -237,28 +237,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	}
 
 	/**
-	 * Set consumer BIC.
-	 *
-	 * @deprecated 2.2.6 Use Payment::set_consumer_bank_details()->set_bic() instead.
-	 *
-	 * @param string|null $bic BIC.
-	 * @return void
-	 */
-	public function set_consumer_bic( $bic ) {
-		_deprecated_function( __FUNCTION__, '2.2.6', 'Payment::set_consumer_bank_details()->set_bic()' );
-
-		$consumer_bank_details = $this->get_consumer_bank_details();
-
-		if ( null === $consumer_bank_details ) {
-			$consumer_bank_details = new BankAccountDetails();
-
-			$this->set_consumer_bank_details( $consumer_bank_details );
-		}
-
-		$consumer_bank_details->set_bic( $bic );
-	}
-
-	/**
 	 * Get.
 	 *
 	 * @link http://php.net/manual/en/language.oop5.overloading.php#object.get
