@@ -396,28 +396,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	}
 
 	/**
-	 * Set consumer city.
-	 *
-	 * @deprecated 2.2.6 Use Payment::set_consumer_bank_details()->set_city() instead.
-	 *
-	 * @param string|null $city City.
-	 * @return void
-	 */
-	public function set_consumer_city( $city ) {
-		_deprecated_function( __FUNCTION__, '2.2.6', 'Payment::set_consumer_bank_details()->set_city()' );
-
-		$consumer_bank_details = $this->get_consumer_bank_details();
-
-		if ( null === $consumer_bank_details ) {
-			$consumer_bank_details = new BankAccountDetails();
-
-			$this->set_consumer_bank_details( $consumer_bank_details );
-		}
-
-		$consumer_bank_details->set_city( $city );
-	}
-
-	/**
 	 * Get.
 	 *
 	 * @link http://php.net/manual/en/language.oop5.overloading.php#object.get
