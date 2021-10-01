@@ -176,8 +176,6 @@ class PaymentTest extends WP_UnitTestCase {
 			array( 'entrance_code', 'get_entrance_code', uniqid() ),
 
 			// Deprecated.
-			array( 'language', 'get_language', 'nl', true ),
-			array( 'locale', 'get_locale', 'nl_NL', true ),
 			array( 'first_name', 'get_first_name', 'John', true ),
 			array( 'last_name', 'get_last_name', 'Doe', true ),
 			array( 'customer_name', 'get_customer_name', 'John Doe', true ),
