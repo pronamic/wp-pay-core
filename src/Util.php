@@ -233,22 +233,6 @@ class Util {
 	}
 
 	/**
-	 * Build URL with the specified parameters
-	 *
-	 * @param string $url        The URL to extend with specified parameters.
-	 * @param array  $parameters The parameters to add to the specified URL.
-	 *
-	 * @deprecated 2.0.9 Use \Pronamic\WordPress\Pay\Core\Util::build_url() instead.
-	 *
-	 * @return string
-	 */
-	public static function build_url( $url, array $parameters ) {
-		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Pay\Core\Util::build_url()' );
-
-		return Core_Util::build_url( $url, $parameters );
-	}
-
-	/**
 	 * Get hidden inputs HTML for data.
 	 *
 	 * @param array $data Array with name and value pairs to convert to hidden HTML input elements.
