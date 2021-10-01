@@ -215,28 +215,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	}
 
 	/**
-	 * Set consumer name.
-	 *
-	 * @deprecated 2.2.6 Use Payment::set_consumer_bank_details()->set_name() instead.
-	 *
-	 * @param string|null $name Name.
-	 * @return void
-	 */
-	public function set_consumer_name( $name ) {
-		_deprecated_function( __FUNCTION__, '2.2.6', 'Payment::set_consumer_bank_details()->set_name()' );
-
-		$consumer_bank_details = $this->get_consumer_bank_details();
-
-		if ( null === $consumer_bank_details ) {
-			$consumer_bank_details = new BankAccountDetails();
-
-			$this->set_consumer_bank_details( $consumer_bank_details );
-		}
-
-		$consumer_bank_details->set_name( $name );
-	}
-
-	/**
 	 * Set consumer account number.
 	 *
 	 * @deprecated 2.2.6 Use Payment::set_consumer_bank_details()->set_account_number() instead.

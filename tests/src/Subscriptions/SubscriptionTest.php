@@ -86,7 +86,6 @@ class SubscriptionTest extends WP_UnitTestCase {
 	 */
 	public function set_provider() {
 		return array(
-			array( 'set_consumer_name', 'consumer_name', 'John Doe' ),
 			array( 'set_consumer_bic', 'consumer_bic', 'RABONL2U' ),
 		);
 	}
