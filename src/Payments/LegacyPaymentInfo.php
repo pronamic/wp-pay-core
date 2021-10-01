@@ -98,9 +98,8 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 
 		$customer              = $this->get_customer();
 		$consumer_bank_details = $this->get_consumer_bank_details();
-		$contact_name          = null;
 
-		if ( in_array( $name, array( 'language', 'email', 'first_name', 'last_name', 'user_id' ), true ) ) {
+		if ( in_array( $name, array( 'email', 'user_id' ), true ) ) {
 			if ( null === $value && null === $customer ) {
 				return null;
 			}
@@ -109,20 +108,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 				$customer = new Customer();
 
 				$this->set_customer( $customer );
-			}
-
-			if ( in_array( $name, array( 'first_name', 'last_name' ), true ) ) {
-				$contact_name = $customer->get_name();
-
-				if ( null === $value && null === $contact_name ) {
-					return null;
-				}
-
-				if ( null === $contact_name ) {
-					$contact_name = new ContactName();
-
-					$customer->set_name( $contact_name );
-				}
 			}
 		}
 
