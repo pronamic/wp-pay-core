@@ -326,7 +326,6 @@ class PaymentTest extends WP_UnitTestCase {
 		$this->assertEquals( '1086.34.779', $payment->consumer_account_number );
 		$this->assertEquals( 'NL56 RABO 0108 6347 79', $payment->consumer_iban );
 		$this->assertEquals( 'RABONL2U', $payment->consumer_bic );
-		$this->assertEquals( 'Drachten', $payment->consumer_city );
 
 		$consumer_bank_details = $payment->get_consumer_bank_details();
 

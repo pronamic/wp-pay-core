@@ -36,7 +36,6 @@ use Pronamic\WordPress\Pay\Customer;
  * @property mixed $consumer_account_number
  * @property mixed $consumer_iban
  * @property mixed $consumer_bic
- * @property mixed $consumer_city
  */
 abstract class LegacyPaymentInfo extends PaymentInfo {
 
