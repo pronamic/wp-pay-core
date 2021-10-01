@@ -67,7 +67,7 @@ class SubscriptionsModule {
 		$this->privacy = new SubscriptionsPrivacy();
 
 		// Actions.
-		add_action( 'wp_loaded', array( $this, 'handle_subscription' ) );
+		add_action( 'wp_loaded', array( $this, 'maybe_handle_subscription_action' ) );
 
 		add_action( 'plugins_loaded', array( $this, 'maybe_schedule_subscription_events' ), 6 );
 
@@ -305,7 +305,7 @@ class SubscriptionsModule {
 	 *
 	 * @return void
 	 */
-	public function handle_subscription() {
+	public function maybe_handle_subscription_action() {
 		if ( ! Util::input_has_vars( INPUT_GET, array( 'subscription', 'action', 'key' ) ) ) {
 			return;
 		}
