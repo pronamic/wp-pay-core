@@ -774,7 +774,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		if ( empty( $description ) ) {
 			$description = $this->get_meta_string( $id, '$description' );
 
-			$payment->set_$description( $$description );
+			$payment->set_description( $description );
 		}
 
 		// Legacy.

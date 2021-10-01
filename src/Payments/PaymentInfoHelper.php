@@ -118,6 +118,12 @@ class PaymentInfoHelper {
 			$object->end_date = $end_date->format( \DATE_ATOM );
 		}
 
+		$version = $payment_info->get_version();
+
+		if ( null !== $version ) {
+			$object->version = $version;
+		}
+
 		return $object;
 	}
 
@@ -131,6 +137,10 @@ class PaymentInfoHelper {
 	public static function from_json( $json, PaymentInfo $payment_info ) {
 		if ( isset( $json->id ) ) {
 			$payment_info->set_id( $json->id );
+		}
+
+		if ( isset( $json->description ) ) {
+			$payment_info->set_description( $json->description );
 		}
 
 		if ( isset( $json->origin_id ) ) {
@@ -183,6 +193,10 @@ class PaymentInfoHelper {
 
 		if ( isset( $json->end_date ) ) {
 			$payment_info->set_end_date( new DateTime( $json->end_date ) );
+		}
+
+		if ( isset( $json->version ) ) {
+			$payment_info->set_version( $json->version );
 		}
 
 		return $payment_info;

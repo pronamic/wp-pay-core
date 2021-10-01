@@ -881,6 +881,10 @@ class Payment extends PaymentInfo {
 
 		PaymentInfoHelper::from_json( $json, $payment );
 
+		if ( isset( $json->action_url ) ) {
+			$payment->set_action_url( $json->action_url );
+		}
+
 		if ( isset( $json->total_amount ) ) {
 			$payment->set_total_amount( MoneyJsonTransformer::from_json( $json->total_amount ) );
 		}
