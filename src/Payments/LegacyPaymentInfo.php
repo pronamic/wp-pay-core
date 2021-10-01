@@ -83,23 +83,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	}
 
 	/**
-	 * Get the payment currency alphabetic code.
-	 *
-	 * @deprecated 2.0.9 Use Payment::get_total_amount()->get_currency()->get_alphabetic_code() instead.
-	 *
-	 * @return string|null
-	 */
-	public function get_currency() {
-		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_total_amount()->get_currency()->get_alphabetic_code()' );
-
-		if ( \method_exists( $this, 'get_total_amount' ) ) {
-			return $this->get_total_amount()->get_currency()->get_alphabetic_code();
-		}
-
-		return null;
-	}
-
-	/**
 	 * Get the payment language.
 	 *
 	 * @deprecated 2.0.9 Use Payment::get_customer()->get_language() instead.
