@@ -51,21 +51,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	protected $amount;
 
 	/**
-	 * Set the payment amount.
-	 *
-	 * @param Money $amount Money object.
-	 * @return void
-	 * @deprecated 2.0.9 Use Payment::set_total_amount() instead.
-	 */
-	public function set_amount( Money $amount ) {
-		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::set_total_amount()' );
-
-		if ( \method_exists( $this, 'set_total_amount' ) ) {
-			$this->set_total_amount( $amount );
-		}
-	}
-
-	/**
 	 * Get first name.
 	 *
 	 * @deprecated 2.0.9 Use Payment::get_customer()->get_name()->get_first_name() instead.
