@@ -124,7 +124,6 @@ class PaymentTest extends WP_UnitTestCase {
 		return array(
 			array( 'set_consumer_name', 'consumer_name', 'John Doe' ),
 			array( 'set_consumer_account_number', 'consumer_account_number', '1086.34.779' ),
-			array( 'set_consumer_iban', 'consumer_iban', 'NL56 RABO 0108 6347 79' ),
 			array( 'set_consumer_bic', 'consumer_bic', 'RABONL2U' ),
 		);
 	}

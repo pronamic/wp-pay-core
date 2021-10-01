@@ -259,28 +259,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 	}
 
 	/**
-	 * Set consumer IBAN.
-	 *
-	 * @deprecated 2.2.6 Use Payment::set_consumer_bank_details()->set_iban() instead.
-	 *
-	 * @param string|null $iban IBAN.
-	 * @return void
-	 */
-	public function set_consumer_iban( $iban ) {
-		_deprecated_function( __FUNCTION__, '2.2.6', 'Payment::set_consumer_bank_details()->set_iban()' );
-
-		$consumer_bank_details = $this->get_consumer_bank_details();
-
-		if ( null === $consumer_bank_details ) {
-			$consumer_bank_details = new BankAccountDetails();
-
-			$this->set_consumer_bank_details( $consumer_bank_details );
-		}
-
-		$consumer_bank_details->set_iban( $iban );
-	}
-
-	/**
 	 * Set consumer BIC.
 	 *
 	 * @deprecated 2.2.6 Use Payment::set_consumer_bank_details()->set_bic() instead.
