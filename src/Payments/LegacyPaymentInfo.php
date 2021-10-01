@@ -39,25 +39,6 @@ use Pronamic\WordPress\Pay\Customer;
  */
 abstract class LegacyPaymentInfo extends PaymentInfo {
 	/**
-	 * Get country.
-	 *
-	 * @deprecated 2.0.9 Use Payment::get_billing_address()->get_country_code() instead.
-	 *
-	 * @return string|null
-	 */
-	public function get_country() {
-		_deprecated_function( __FUNCTION__, '2.0.9', 'Payment::get_billing_address()->get_country()' );
-
-		$address = $this->get_billing_address();
-
-		if ( null === $address ) {
-			return null;
-		}
-
-		return $address->get_country_code();
-	}
-
-	/**
 	 * Get.
 	 *
 	 * @link http://php.net/manual/en/language.oop5.overloading.php#object.get
@@ -77,8 +58,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 				return ( null === $customer ) ? null : $customer->get_user_id();
 			case 'user_ip':
 				return ( null === $customer ) ? null : $customer->get_ip_address();
-			case 'country':
-				return $this->get_country();
 			case 'telephone_number':
 				return $this->get_telephone_number();
 
@@ -112,7 +91,6 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 		$legacy_keys = array(
 			'email',
 			'telephone_number',
-			'country',
 			'zip',
 			'address',
 			'user_id',
