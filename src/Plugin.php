@@ -512,8 +512,10 @@ class Plugin {
 		}
 
 		// Redirect to payment action URL.
-		if ( ! empty( $payment->action_url ) ) {
-			wp_redirect( $payment->action_url );
+		$action_url = $payment->get_action_url();
+
+		if ( ! empty( $action_url ) ) {
+			wp_redirect( $action_url );
 
 			exit;
 		}

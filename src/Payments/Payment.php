@@ -128,7 +128,7 @@ class Payment extends PaymentInfo {
 	 *
 	 * @var string|null
 	 */
-	public $action_url;
+	private $action_url;
 
 	/**
 	 * The date this payment expires.
@@ -936,6 +936,11 @@ class Payment extends PaymentInfo {
 		$object = PaymentInfoHelper::to_json( $this );
 
 		$properties = (array) $object;
+
+		// Action URL.
+		if ( null !== $this->action_url ) {
+			$properties['action_url'] = $this->action_url;
+		}
 
 		// Expiry date.
 		$expiry_date = $this->get_expiry_date();
