@@ -103,6 +103,201 @@ class SubscriptionsModule {
 	}
 
 	/**
+	 * Comments clauses.
+	 *
+	 * @param array             $clauses The database query clauses.
+	 * @param \WP_Comment_Query $query   The WordPress comment query object.
+	 * @return array
+	 */
+	public function exclude_subscription_comment_notes( $clauses, $query ) {
+		$type = $query->query_vars['type'];
+
+		// Ignore subscription notes comments if it's not specifically requested.
+		if ( 'subscription_note' !== $type ) {
+			$clauses['where'] .= " AND comment_type != 'subscription_note'";
+		}
+
+		return $clauses;
+	}
+
+	/**
+	 * Maybe create subscription for the specified payment.
+	 *
+	 * @param Payment $payment The new payment.
+	 *
+	 * @return void
+	 *
+	 * @throws \UnexpectedValueException Throw unexpected value exception if the subscription does not have a valid date interval.
+	 */
+	public function maybe_create_subscription( $payment ) {
+		// Check if there is already subscription attached to the payment.
+		$subscription_id = $payment->get_subscription_id();
+
+		if ( ! empty( $subscription_id ) ) {
+			// Subscription already created.
+			return;
+		}
+
+		// Check if there is a subscription object attached to the payment.
+		$subscription = $payment->subscription;
+
+		if ( empty( $subscription ) ) {
+			return;
+		}
+
+		// Complement subscription.
+		SubscriptionHelper::complement_subscription( $subscription );
+		SubscriptionHelper::complement_subscription_by_payment( $subscription, $payment );
+		SubscriptionHelper::complement_subscription_dates( $subscription );
+
+		// Create.
+		$result = $this->plugin->subscriptions_data_store->create( $subscription );
+
+		if ( $result ) {
+			$payment->subscription    = $subscription;
+			$payment->subscription_id = $subscription->get_id();
+
+			$payment->recurring_type = Recurring::FIRST;
+
+			$start_date = $subscription->get_start_date();
+			$end_date   = $subscription->get_next_payment_date();
+
+			$payment->start_date = ( null === $start_date ) ? null : clone $start_date;
+			$payment->end_date   = ( null === $end_date ) ? null : clone $end_date;
+
+			$payment->save();
+		}
+	}
+
+	/**
+	 * Payment status update.
+	 *
+	 * @param Payment $payment The status updated payment.
+	 * @return void
+	 */
+	public function payment_status_update( $payment ) {
+		// Check if the payment is connected to a subscription.
+		$subscription = $payment->get_subscription();
+
+		if ( empty( $subscription ) || null === $subscription->get_id() ) {
+			// Payment not connected to a subscription, nothing to do.
+			return;
+		}
+
+		// Make sure to use fresh subscription data.
+		$subscription = \get_pronamic_subscription( $subscription->get_id() );
+
+		// Make sure the subscription exists.
+		if ( null === $subscription ) {
+			return;
+		}
+
+		// Status.
+		$status_before = $subscription->get_status();
+		$status_update = $status_before;
+
+		switch ( $payment->get_status() ) {
+			case PaymentStatus::OPEN:
+				// @todo
+				break;
+			case PaymentStatus::SUCCESS:
+				$status_update = SubscriptionStatus::ACTIVE;
+
+				if ( isset( $subscription->expiry_date, $payment->end_date ) && $subscription->expiry_date < $payment->end_date ) {
+					$subscription->expiry_date = clone $payment->end_date;
+				}
+
+				break;
+			case PaymentStatus::FAILURE:
+				/**
+				 * Subscription status for failed payment.
+				 *
+				 * @todo Determine update status based on reason of failed payment. Use `failure` for now as that is usually the desired status.
+				 *
+				 * @link https://www.europeanpaymentscouncil.eu/document-library/guidance-documents/guidance-reason-codes-sepa-direct-debit-r-transactions
+				 * @link https://github.com/pronamic/wp-pronamic-ideal/commit/48449417eac49eb6a93480e3b523a396c7db9b3d#diff-6712c698c6b38adfa7190a4be983a093
+				 */
+				$status_update = SubscriptionStatus::FAILURE;
+
+				break;
+			case PaymentStatus::CANCELLED:
+			case PaymentStatus::EXPIRED:
+				$first_payment = $subscription->get_first_payment();
+
+				// Set subscription status to 'On Hold' only if the subscription is not already active when processing the first payment.
+				if ( ! ( null !== $first_payment && $first_payment->get_id() === $payment->get_id() && SubscriptionStatus::ACTIVE === $subscription->get_status() ) ) {
+					$status_update = SubscriptionStatus::ON_HOLD;
+				}
+
+				break;
+		}
+
+		/*
+		 * The status of canceled or completed subscriptions will not be changed automatically,
+		 * unless the cancelled subscription is manually being renewed.
+		 */
+		$is_renewal = false;
+
+		if ( SubscriptionStatus::CANCELLED === $status_before && SubscriptionStatus::ACTIVE === $status_update && '1' === $payment->get_meta( 'manual_subscription_renewal' ) ) {
+			$is_renewal = true;
+		}
+
+		if ( $is_renewal || ! in_array( $status_before, array( SubscriptionStatus::CANCELLED, SubscriptionStatus::COMPLETED, SubscriptionStatus::ON_HOLD ), true ) ) {
+			$subscription->set_status( $status_update );
+		}
+
+		// Update.
+		$subscription->save();
+	}
+
+	/**
+	 * Get subscription status update note.
+	 *
+	 * @param string|null $old_status   Old meta status.
+	 * @param string      $new_status   New meta status.
+	 * @return string
+	 */
+	private function get_subscription_status_update_note( $old_status, $new_status ) {
+		$old_label = $this->plugin->subscriptions_data_store->get_meta_status_label( $old_status );
+		$new_label = $this->plugin->subscriptions_data_store->get_meta_status_label( $new_status );
+
+		if ( null === $old_status ) {
+			return sprintf(
+			/* translators: 1: new status */
+				__( 'Subscription created with status "%1$s".', 'pronamic_ideal' ),
+				esc_html( empty( $new_label ) ? $new_status : $new_label )
+			);
+		}
+
+		return sprintf(
+		/* translators: 1: old status, 2: new status */
+			__( 'Subscription status changed from "%1$s" to "%2$s".', 'pronamic_ideal' ),
+			esc_html( empty( $old_label ) ? $old_status : $old_label ),
+			esc_html( empty( $new_label ) ? $new_status : $new_label )
+		);
+	}
+
+	/**
+	 * Subscription status update.
+	 *
+	 * @param Subscription $subscription The status updated subscription.
+	 * @param bool         $can_redirect Whether or not redirects should be performed.
+	 * @param string|null  $old_status   Old meta status.
+	 * @param string       $new_status   New meta status.
+	 *
+	 * @return void
+	 */
+	public function log_subscription_status_update( $subscription, $can_redirect, $old_status, $new_status ) {
+		$note = $this->get_subscription_status_update_note( $old_status, $new_status );
+
+		try {
+			$subscription->add_note( $note );
+		} catch ( \Exception $e ) {
+			return;
+		}
+	}
+
+	/**
 	 * Handle subscription actions.
 	 *
 	 * Extensions like Gravity Forms can send action links in for example
@@ -555,42 +750,6 @@ class SubscriptionsModule {
 	}
 
 	/**
-	 * Can payment be retried.
-	 *
-	 * @param Payment $payment Payment to retry.
-	 * @return bool
-	 */
-	public function can_retry_payment( Payment $payment ) {
-		// Check status.
-		if ( PaymentStatus::FAILURE !== $payment->get_status() ) {
-			return false;
-		}
-
-		// Check recurring.
-		if ( ! $payment->get_recurring() ) {
-			return false;
-		}
-
-		// Check periods.
-		$periods = $payment->get_periods();
-
-		if ( null === $periods ) {
-			return false;
-		}
-
-		// Check for pending and successful child payments.
-		$payments = \get_pronamic_payments_by_meta( '', '', array( 'post_parent' => $payment->get_id() ) );
-
-		foreach ( $payments as $child_payment ) {
-			if ( \in_array( $child_payment->get_status(), array( PaymentStatus::OPEN, PaymentStatus::SUCCESS ), true ) ) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
 	 * New payment based on period.
 	 *
 	 * @param SubscriptionPeriod $period Subscription period.
@@ -677,6 +836,42 @@ class SubscriptionsModule {
 	}
 
 	/**
+	 * Can payment be retried.
+	 *
+	 * @param Payment $payment Payment to retry.
+	 * @return bool
+	 */
+	public function can_retry_payment( Payment $payment ) {
+		// Check status.
+		if ( PaymentStatus::FAILURE !== $payment->get_status() ) {
+			return false;
+		}
+
+		// Check recurring.
+		if ( ! $payment->get_recurring() ) {
+			return false;
+		}
+
+		// Check periods.
+		$periods = $payment->get_periods();
+
+		if ( null === $periods ) {
+			return false;
+		}
+
+		// Check for pending and successful child payments.
+		$payments = \get_pronamic_payments_by_meta( '', '', array( 'post_parent' => $payment->get_id() ) );
+
+		foreach ( $payments as $child_payment ) {
+			if ( \in_array( $child_payment->get_status(), array( PaymentStatus::OPEN, PaymentStatus::SUCCESS ), true ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * Retry a payment by starting a payment for each period of given payment.
 	 *
 	 * @param Payment $payment Payment.
@@ -719,24 +914,6 @@ class SubscriptionsModule {
 	}
 
 	/**
-	 * Comments clauses.
-	 *
-	 * @param array             $clauses The database query clauses.
-	 * @param \WP_Comment_Query $query   The WordPress comment query object.
-	 * @return array
-	 */
-	public function exclude_subscription_comment_notes( $clauses, $query ) {
-		$type = $query->query_vars['type'];
-
-		// Ignore subscription notes comments if it's not specifically requested.
-		if ( 'subscription_note' !== $type ) {
-			$clauses['where'] .= " AND comment_type != 'subscription_note'";
-		}
-
-		return $clauses;
-	}
-
-	/**
 	 * Maybe schedule subscription payments.
 	 *
 	 * @return void
@@ -748,55 +925,6 @@ class SubscriptionsModule {
 
 		if ( ! wp_next_scheduled( 'pronamic_pay_complete_subscriptions' ) ) {
 			wp_schedule_event( time(), 'hourly', 'pronamic_pay_complete_subscriptions' );
-		}
-	}
-
-	/**
-	 * Maybe create subscription for the specified payment.
-	 *
-	 * @param Payment $payment The new payment.
-	 *
-	 * @return void
-	 *
-	 * @throws \UnexpectedValueException Throw unexpected value exception if the subscription does not have a valid date interval.
-	 */
-	public function maybe_create_subscription( $payment ) {
-		// Check if there is already subscription attached to the payment.
-		$subscription_id = $payment->get_subscription_id();
-
-		if ( ! empty( $subscription_id ) ) {
-			// Subscription already created.
-			return;
-		}
-
-		// Check if there is a subscription object attached to the payment.
-		$subscription = $payment->subscription;
-
-		if ( empty( $subscription ) ) {
-			return;
-		}
-
-		// Complement subscription.
-		SubscriptionHelper::complement_subscription( $subscription );
-		SubscriptionHelper::complement_subscription_by_payment( $subscription, $payment );
-		SubscriptionHelper::complement_subscription_dates( $subscription );
-
-		// Create.
-		$result = $this->plugin->subscriptions_data_store->create( $subscription );
-
-		if ( $result ) {
-			$payment->subscription    = $subscription;
-			$payment->subscription_id = $subscription->get_id();
-
-			$payment->recurring_type = Recurring::FIRST;
-
-			$start_date = $subscription->get_start_date();
-			$end_date   = $subscription->get_next_payment_date();
-
-			$payment->start_date = ( null === $start_date ) ? null : clone $start_date;
-			$payment->end_date   = ( null === $end_date ) ? null : clone $end_date;
-
-			$payment->save();
 		}
 	}
 
@@ -836,134 +964,6 @@ class SubscriptionsModule {
 		$query = new WP_Query( $args );
 
 		return $query->posts;
-	}
-
-	/**
-	 * Payment status update.
-	 *
-	 * @param Payment $payment The status updated payment.
-	 * @return void
-	 */
-	public function payment_status_update( $payment ) {
-		// Check if the payment is connected to a subscription.
-		$subscription = $payment->get_subscription();
-
-		if ( empty( $subscription ) || null === $subscription->get_id() ) {
-			// Payment not connected to a subscription, nothing to do.
-			return;
-		}
-
-		// Make sure to use fresh subscription data.
-		$subscription = \get_pronamic_subscription( $subscription->get_id() );
-
-		// Make sure the subscription exists.
-		if ( null === $subscription ) {
-			return;
-		}
-
-		// Status.
-		$status_before = $subscription->get_status();
-		$status_update = $status_before;
-
-		switch ( $payment->get_status() ) {
-			case PaymentStatus::OPEN:
-				// @todo
-				break;
-			case PaymentStatus::SUCCESS:
-				$status_update = SubscriptionStatus::ACTIVE;
-
-				if ( isset( $subscription->expiry_date, $payment->end_date ) && $subscription->expiry_date < $payment->end_date ) {
-					$subscription->expiry_date = clone $payment->end_date;
-				}
-
-				break;
-			case PaymentStatus::FAILURE:
-				/**
-				 * Subscription status for failed payment.
-				 *
-				 * @todo Determine update status based on reason of failed payment. Use `failure` for now as that is usually the desired status.
-				 *
-				 * @link https://www.europeanpaymentscouncil.eu/document-library/guidance-documents/guidance-reason-codes-sepa-direct-debit-r-transactions
-				 * @link https://github.com/pronamic/wp-pronamic-ideal/commit/48449417eac49eb6a93480e3b523a396c7db9b3d#diff-6712c698c6b38adfa7190a4be983a093
-				 */
-				$status_update = SubscriptionStatus::FAILURE;
-
-				break;
-			case PaymentStatus::CANCELLED:
-			case PaymentStatus::EXPIRED:
-				$first_payment = $subscription->get_first_payment();
-
-				// Set subscription status to 'On Hold' only if the subscription is not already active when processing the first payment.
-				if ( ! ( null !== $first_payment && $first_payment->get_id() === $payment->get_id() && SubscriptionStatus::ACTIVE === $subscription->get_status() ) ) {
-					$status_update = SubscriptionStatus::ON_HOLD;
-				}
-
-				break;
-		}
-
-		/*
-		 * The status of canceled or completed subscriptions will not be changed automatically,
-		 * unless the cancelled subscription is manually being renewed.
-		 */
-		$is_renewal = false;
-
-		if ( SubscriptionStatus::CANCELLED === $status_before && SubscriptionStatus::ACTIVE === $status_update && '1' === $payment->get_meta( 'manual_subscription_renewal' ) ) {
-			$is_renewal = true;
-		}
-
-		if ( $is_renewal || ! in_array( $status_before, array( SubscriptionStatus::CANCELLED, SubscriptionStatus::COMPLETED, SubscriptionStatus::ON_HOLD ), true ) ) {
-			$subscription->set_status( $status_update );
-		}
-
-		// Update.
-		$subscription->save();
-	}
-
-	/**
-	 * Get subscription status update note.
-	 *
-	 * @param string|null $old_status   Old meta status.
-	 * @param string      $new_status   New meta status.
-	 * @return string
-	 */
-	private function get_subscription_status_update_note( $old_status, $new_status ) {
-		$old_label = $this->plugin->subscriptions_data_store->get_meta_status_label( $old_status );
-		$new_label = $this->plugin->subscriptions_data_store->get_meta_status_label( $new_status );
-
-		if ( null === $old_status ) {
-			return sprintf(
-				/* translators: 1: new status */
-				__( 'Subscription created with status "%1$s".', 'pronamic_ideal' ),
-				esc_html( empty( $new_label ) ? $new_status : $new_label )
-			);
-		}
-
-		return sprintf(
-			/* translators: 1: old status, 2: new status */
-			__( 'Subscription status changed from "%1$s" to "%2$s".', 'pronamic_ideal' ),
-			esc_html( empty( $old_label ) ? $old_status : $old_label ),
-			esc_html( empty( $new_label ) ? $new_status : $new_label )
-		);
-	}
-
-	/**
-	 * Subscription status update.
-	 *
-	 * @param Subscription $subscription The status updated subscription.
-	 * @param bool         $can_redirect Whether or not redirects should be performed.
-	 * @param string|null  $old_status   Old meta status.
-	 * @param string       $new_status   New meta status.
-	 *
-	 * @return void
-	 */
-	public function log_subscription_status_update( $subscription, $can_redirect, $old_status, $new_status ) {
-		$note = $this->get_subscription_status_update_note( $old_status, $new_status );
-
-		try {
-			$subscription->add_note( $note );
-		} catch ( \Exception $e ) {
-			return;
-		}
 	}
 
 	/**
@@ -1295,6 +1295,50 @@ class SubscriptionsModule {
 	}
 
 	/**
+	 * CLI subscriptions test.
+	 *
+	 * @param array $args       Arguments.
+	 * @param array $assoc_args Associative arguments.
+	 * @return void
+	 */
+	public function cli_subscriptions_test( $args, $assoc_args ) {
+		$date = new \DateTimeImmutable();
+
+		if ( \array_key_exists( 'date', $assoc_args ) ) {
+			$date = new \DateTimeImmutable( $assoc_args['date'] );
+		}
+
+		$number = -1;
+
+		if ( \array_key_exists( 'number', $assoc_args ) ) {
+			$number = (int) $assoc_args['number'];
+		}
+
+		WP_CLI::log( 'Updating subscription payments…' );
+
+		$this->process_subscriptions_follow_up_payment(
+			array(
+				'date'         => $date,
+				'number'       => $number,
+				'on_progress'  => function( $post ) {
+					WP_CLI::log( \sprintf( 'Processing post `%d` - "%s"…', $post->ID, \get_the_title( $post ) ) );
+				},
+				'on_exception' => function( $e ) {
+					WP_CLI::error( $e->getMessage(), false );
+				},
+			)
+		);
+
+		WP_CLI::log( 'Completing subscriptions…' );
+
+		$cli_test = true;
+
+		$this->complete_subscriptions( $cli_test );
+
+		WP_CLI::success( 'Pronamic Pay subscriptions test.' );
+	}
+
+	/**
 	 * Complete subscriptions.
 	 *
 	 * @param bool $cli_test Whether or not this a CLI test.
@@ -1354,50 +1398,6 @@ class SubscriptionsModule {
 				continue;
 			}
 		}
-	}
-
-	/**
-	 * CLI subscriptions test.
-	 *
-	 * @param array $args       Arguments.
-	 * @param array $assoc_args Associative arguments.
-	 * @return void
-	 */
-	public function cli_subscriptions_test( $args, $assoc_args ) {
-		$date = new \DateTimeImmutable();
-
-		if ( \array_key_exists( 'date', $assoc_args ) ) {
-			$date = new \DateTimeImmutable( $assoc_args['date'] );
-		}
-
-		$number = -1;
-
-		if ( \array_key_exists( 'number', $assoc_args ) ) {
-			$number = (int) $assoc_args['number'];
-		}
-
-		WP_CLI::log( 'Updating subscription payments…' );
-
-		$this->process_subscriptions_follow_up_payment(
-			array(
-				'date'         => $date,
-				'number'       => $number,
-				'on_progress'  => function( $post ) {
-					WP_CLI::log( \sprintf( 'Processing post `%d` - "%s"…', $post->ID, \get_the_title( $post ) ) );
-				},
-				'on_exception' => function( $e ) {
-					WP_CLI::error( $e->getMessage(), false );
-				},
-			)
-		);
-
-		WP_CLI::log( 'Completing subscriptions…' );
-
-		$cli_test = true;
-
-		$this->complete_subscriptions( $cli_test );
-
-		WP_CLI::success( 'Pronamic Pay subscriptions test.' );
 	}
 
 	/**
