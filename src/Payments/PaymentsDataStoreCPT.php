@@ -825,7 +825,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			'config_id'               => $payment->config_id,
 			'key'                     => $payment->key,
 			'order_id'                => $payment->order_id,
-			'currency'                => $payment->get_total_amount()->get_currency()->get_alphabetic_code(),
 			'method'                  => $payment->method,
 			'issuer'                  => $payment->issuer,
 			'expiration_period'       => null,
