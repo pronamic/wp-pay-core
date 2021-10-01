@@ -27,7 +27,6 @@ use Pronamic\WordPress\Pay\Customer;
  * @version 2.5.0
  * @since   2.1.0
  *
- * @property string|null $locale
  * @property string|null $email
  * @property string|null $customer_name
  * @property string|null $telephone_number
@@ -110,7 +109,7 @@ abstract class LegacyPaymentInfo extends PaymentInfo {
 		$consumer_bank_details = $this->get_consumer_bank_details();
 		$contact_name          = null;
 
-		if ( in_array( $name, array( 'language', 'locale', 'email', 'first_name', 'last_name', 'user_id' ), true ) ) {
+		if ( in_array( $name, array( 'language', 'email', 'first_name', 'last_name', 'user_id' ), true ) ) {
 			if ( null === $value && null === $customer ) {
 				return null;
 			}
