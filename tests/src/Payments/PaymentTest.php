@@ -121,9 +121,7 @@ class PaymentTest extends WP_UnitTestCase {
 	 * @return array
 	 */
 	public function set_provider() {
-		return array(
-			array( 'set_consumer_account_number', 'consumer_account_number', '1086.34.779' ),
-		);
+		return array();
 	}
 
 	/**
