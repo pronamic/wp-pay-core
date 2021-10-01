@@ -42,15 +42,6 @@ use Pronamic\WordPress\Pay\Customer;
  */
 abstract class LegacyPaymentInfo extends PaymentInfo {
 	/**
-	 * The amount of this payment, for example 18.95.
-	 *
-	 * @deprecated 2.0.9 Use Payment::$total_amount instead.
-	 *
-	 * @var Money
-	 */
-	protected $amount;
-
-	/**
 	 * Get first name.
 	 *
 	 * @deprecated 2.0.9 Use Payment::get_customer()->get_name()->get_first_name() instead.
