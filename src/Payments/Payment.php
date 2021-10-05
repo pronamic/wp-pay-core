@@ -211,13 +211,6 @@ class Payment extends PaymentInfo {
 	public $lines;
 
 	/**
-	 * Mode.
-	 *
-	 * @var string|null
-	 */
-	private $mode;
-
-	/**
 	 * Construct and initialize payment object.
 	 *
 	 * @param integer $post_id A payment post ID or null.
