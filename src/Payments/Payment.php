@@ -82,6 +82,8 @@ class Payment extends PaymentInfo {
 	/**
 	 * Google Analytics e-commerce tracked.
 	 *
+	 * @todo Move to payment meta.
+	 * @deprecated
 	 * @var bool|null
 	 */
 	public $ga_tracked;
