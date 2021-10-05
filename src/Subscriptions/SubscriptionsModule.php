@@ -1346,7 +1346,7 @@ class SubscriptionsModule {
 				$e->getMessage()
 			);
 
-			if ( $try < 4 ) {
+			if ( $next_try <= 4 ) {
 				$retry_time = time() + $this->get_subscription_payment_retry_seconds( $try );
 
 				$note = \sprintf(
@@ -1359,7 +1359,7 @@ class SubscriptionsModule {
 			$subscription->add_note( $note );
 
 			// Limit number of tries.
-			if ( $try >= 4 ) {
+			if ( $next_try > 4 ) {
 				return;
 			}
 
