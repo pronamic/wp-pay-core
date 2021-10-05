@@ -76,6 +76,7 @@ abstract class PaymentInfo {
 	/**
 	 * The configuration ID.
 	 *
+	 * @deprecated
 	 * @var int|null
 	 */
 	public $config_id;
@@ -90,6 +91,7 @@ abstract class PaymentInfo {
 	/**
 	 * Origin post ID.
 	 *
+	 * @deprecated
 	 * @var int|null
 	 */
 	private $origin_id;
@@ -162,6 +164,7 @@ abstract class PaymentInfo {
 	/**
 	 * The payment method chosen by the user who started this payment.
 	 *
+	 * @deprecated
 	 * @var string|null
 	 */
 	public $method;
@@ -169,6 +172,7 @@ abstract class PaymentInfo {
 	/**
 	 * The issuer chosen by the user who started this payment.
 	 *
+	 * @deprecated
 	 * @var string|null
 	 */
 	public $issuer;
@@ -211,6 +215,7 @@ abstract class PaymentInfo {
 	/**
 	 * Credit card
 	 *
+	 * @deprecated
 	 * @var CreditCard|null
 	 */
 	private $credit_card;
@@ -218,6 +223,7 @@ abstract class PaymentInfo {
 	/**
 	 * Start date if the payment is related to a specific period.
 	 *
+	 * @deprecated
 	 * @var DateTime|null
 	 */
 	public $start_date;
@@ -225,6 +231,7 @@ abstract class PaymentInfo {
 	/**
 	 * End date if the payment is related to a specific period.
 	 *
+	 * @deprecated
 	 * @var DateTime|null
 	 */
 	public $end_date;
@@ -290,6 +297,7 @@ abstract class PaymentInfo {
 	/**
 	 * Get start date.
 	 *
+	 * @deprecated
 	 * @return DateTime|null
 	 */
 	public function get_start_date() {
@@ -299,6 +307,7 @@ abstract class PaymentInfo {
 	/**
 	 * Set start date.
 	 *
+	 * @deprecated
 	 * @param DateTime|null $start_date Start date.
 	 * @return void
 	 */
@@ -309,6 +318,7 @@ abstract class PaymentInfo {
 	/**
 	 * Get end date.
 	 *
+	 * @deprecated
 	 * @return DateTime|null
 	 */
 	public function get_end_date() {
@@ -318,6 +328,7 @@ abstract class PaymentInfo {
 	/**
 	 * Set end date.
 	 *
+	 * @deprecated
 	 * @param DateTime|null $end_date End date.
 	 * @return void
 	 */
@@ -328,6 +339,7 @@ abstract class PaymentInfo {
 	/**
 	 * Get origin post ID.
 	 *
+	 * @deprecated
 	 * @return int|null
 	 */
 	public function get_origin_id() {
@@ -337,6 +349,7 @@ abstract class PaymentInfo {
 	/**
 	 * Set origin post ID.
 	 *
+	 * @deprecated
 	 * @param int|null $origin_id Origin post ID.
 	 * @return void
 	 */
@@ -347,6 +360,7 @@ abstract class PaymentInfo {
 	/**
 	 * Get the config ID of this payment.
 	 *
+	 * @deprecated
 	 * @return int|null
 	 */
 	public function get_config_id() {
@@ -356,6 +370,7 @@ abstract class PaymentInfo {
 	/**
 	 * Set the config ID of this payment.
 	 *
+	 * @deprecated
 	 * @param int|null $config_id Config ID.
 	 * @return void
 	 */
@@ -471,7 +486,7 @@ abstract class PaymentInfo {
 	 * Get the payment method.
 	 *
 	 * @todo Constant?
-	 *
+	 * @deprecated
 	 * @return string|null
 	 */
 	public function get_method() {
@@ -481,6 +496,7 @@ abstract class PaymentInfo {
 	/**
 	 * Get the payment issuer.
 	 *
+	 * @deprecated
 	 * @return string|null
 	 */
 	public function get_issuer() {
@@ -606,6 +622,7 @@ abstract class PaymentInfo {
 	/**
 	 * Get Google Analytics client ID.
 	 *
+	 * @deprecated
 	 * @return string|null
 	 */
 	public function get_analytics_client_id() {
