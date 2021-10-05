@@ -162,6 +162,13 @@ abstract class PaymentInfo {
 	public $email;
 
 	/**
+	 * Payment method.
+	 *
+	 * @var string|null
+	 */
+	private $payment_method;
+
+	/**
 	 * The payment method chosen by the user who started this payment.
 	 *
 	 * @deprecated
@@ -520,6 +527,25 @@ abstract class PaymentInfo {
 	 */
 	public function set_description( $description ) {
 		$this->description = $description;
+	}
+
+	/**
+	 * Get the payment method.
+	 *
+	 * @return string|null
+	 */
+	public function get_payment_method() {
+		return $this->payment_method;
+	}
+
+	/**
+	 * Set the payment method.
+	 *
+	 * @param string|null $payment_method Payment method.
+	 * @return void
+	 */
+	public function set_payment_method( $payment_method ) {
+		$this->payment_method = $payment_method;
 	}
 
 	/**

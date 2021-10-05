@@ -590,7 +590,13 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$subscription->description     = $this->get_meta_string( $id, 'description' );
 		$subscription->email           = $this->get_meta_string( $id, 'email' );
 		$subscription->customer_name   = $this->get_meta_string( $id, 'customer_name' );
-		$subscription->payment_method  = $this->get_meta_string( $id, 'payment_method' );
+
+		// Payment method.
+		$payment_method = $subscription->get_payment_method();
+
+		if ( empty( $payment_method ) ) {
+			$subscription->set_payment_method( $this->get_meta_string( $id, 'payment_method' ) );
+		}
 
 		// First Payment.
 		$first_payment = $subscription->get_first_payment();
@@ -600,8 +606,10 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 				$subscription->config_id = $first_payment->config_id;
 			}
 
-			if ( empty( $subscription->payment_method ) ) {
-				$subscription->payment_method = $first_payment->method;
+			$payment_method = $subscription->get_payment_method();
+
+			if ( empty( $payment_method ) ) {
+				$subscription->set_payment_method( $first_payment->get_payment_method() );
 			}
 
 			$customer = $subscription->get_customer();
@@ -697,7 +705,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$this->update_meta( $id, 'interval_period', $subscription->interval_period );
 		$this->update_meta( $id, 'email', ( null === $customer ? null : $customer->get_email() ) );
 		$this->update_meta( $id, 'customer_name', ( null === $customer ? null : strval( $customer->get_name() ) ) );
-		$this->update_meta( $id, 'payment_method', $subscription->payment_method );
 		$this->update_meta( $id, 'start_date', $subscription->start_date );
 		$this->update_meta( $id, 'end_date', $subscription->end_date );
 		$this->update_meta( $id, 'expiry_date', $subscription->expiry_date );

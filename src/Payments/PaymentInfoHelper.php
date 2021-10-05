@@ -46,6 +46,12 @@ class PaymentInfoHelper {
 			$object->description = $description;
 		}
 
+		$payment_method = $payment_info->get_payment_method();
+
+		if ( null !== $payment_method ) {
+			$object->payment_method = $payment_method;
+		}
+
 		$origin_id = $payment_info->get_origin_id();
 
 		if ( null !== $origin_id ) {
@@ -147,6 +153,10 @@ class PaymentInfoHelper {
 
 		if ( isset( $json->description ) ) {
 			$payment_info->set_description( $json->description );
+		}
+
+		if ( isset( $json->payment_method ) ) {
+			$payment_info->set_payment_method( $json->payment_method );
 		}
 
 		if ( isset( $json->origin_id ) ) {

@@ -58,12 +58,12 @@ if ( null !== $phase ) {
 }
 
 // Payment method.
-$method = $subscription->payment_method;
+$payment_method = $subscription->get_payment_method();
 
-if ( ! empty( $method ) ) {
+if ( ! empty( $payment_method ) ) {
 	$details[] = array(
 		'term'        => __( 'Payment method', 'pronamic_ideal' ),
-		'description' => PaymentMethods::get_name( $method ),
+		'description' => PaymentMethods::get_name( $payment_method ),
 	);
 }
 

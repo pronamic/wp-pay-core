@@ -104,13 +104,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	public $status;
 
 	/**
-	 * The payment method which was used to create this subscription.
-	 *
-	 * @var string|null
-	 */
-	public $payment_method;
-
-	/**
 	 * The end date of the last successful payment.
 	 *
 	 * @var DateTime|null
