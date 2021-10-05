@@ -455,7 +455,7 @@ class SubscriptionsModule {
 		}
 
 		// Payment method input HTML.
-		$gateway->set_payment_method( $subscription->payment_method );
+		$gateway->set_payment_method( $subscription->get_payment_method() );
 
 		require __DIR__ . '/../../views/subscription-renew.php';
 
@@ -647,11 +647,12 @@ class SubscriptionsModule {
 		$payment->source          = $subscription->get_source();
 		$payment->source_id       = $subscription->get_source_id();
 		$payment->email           = $subscription->get_email();
-		$payment->method          = $subscription->payment_method;
 		$payment->issuer          = $subscription->issuer;
 		$payment->recurring       = true;
 		$payment->subscription    = $subscription;
 		$payment->subscription_id = $subscription->get_id();
+
+		$payment->set_payment_method( $subscription->get_payment_method() );
 
 		$payment->set_origin_id( $subscription->get_origin_id() );
 		$payment->set_customer( $subscription->get_customer() );
@@ -777,11 +778,12 @@ class SubscriptionsModule {
 		$payment = new Payment();
 
 		$payment->email           = $subscription->get_email();
-		$payment->method          = $subscription->payment_method;
 		$payment->issuer          = $subscription->get_issuer();
 		$payment->recurring       = true;
 		$payment->subscription    = $subscription;
 		$payment->subscription_id = $subscription->get_id();
+
+		$payment->set_payment_method( $subscription->get_payment_method() );
 
 		$payment->set_description( $subscription->get_description() );
 		$payment->set_config_id( $config_id );

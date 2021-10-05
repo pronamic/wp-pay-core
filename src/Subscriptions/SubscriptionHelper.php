@@ -116,8 +116,10 @@ class SubscriptionHelper {
 		}
 
 		// Payment method.
-		if ( null === $subscription->payment_method ) {
-			$subscription->payment_method = $payment->method;
+		$payment_method = $subscription->get_payment_method();
+
+		if ( null === $payment_method ) {
+			$subscription->set_payment_method( $payment->get_payment_method() );
 		}
 
 		// Start date.
