@@ -1,0 +1,14 @@
+{
+	"name": "pronamic-pay/payment-form",
+	"title": "Payment Form",
+	"category": "pronamic-pay",
+	"attributes": {
+		"amount": {
+			"type": "string"
+		}
+	},
+	"editorScript": "pronamic-payment-form-editor",
+	"editorStyle": "pronamic-pay-forms",
+	"style": "pronamic-pay-forms",
+	"textdomain": "pronamic_ideal"
+}
