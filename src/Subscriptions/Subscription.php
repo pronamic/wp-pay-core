@@ -125,13 +125,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	public $next_payment_delivery_date;
 
 	/**
-	 * Array for extra meta data to store with this subscription.
-	 *
-	 * @var array
-	 */
-	public $meta;
-
-	/**
 	 * Activated at.
 	 *
 	 * The datetime this subscription was activated or reactivated.
