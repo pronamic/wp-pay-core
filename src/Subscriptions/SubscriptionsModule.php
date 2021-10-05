@@ -1080,6 +1080,7 @@ class SubscriptionsModule {
 			array(
 				'date'   => new \DateTimeImmutable(),
 				'number' => -1,
+				'not_in' => array(),
 			)
 		);
 
@@ -1090,6 +1091,7 @@ class SubscriptionsModule {
 		$query_args = array(
 			'post_type'      => 'pronamic_pay_subscr',
 			'posts_per_page' => $args['number'],
+			'post__not_in'   => $args['not_in'],
 			'post_status'    => array(
 				'subscr_pending',
 				'subscr_failed',
@@ -1132,7 +1134,6 @@ class SubscriptionsModule {
 	 *
 	 * @param array $args Arguments.
 	 * @return void
-	 * @throws \Exception Throws exception when unable to load subscription from post ID.
 	 */
 	private function process_subscriptions_follow_up_payment( $args = array() ) {
 		$args = wp_parse_args(
@@ -1140,16 +1141,22 @@ class SubscriptionsModule {
 			array(
 				'date'           => null,
 				'number'         => null,
+				'not_in'         => null,
 				'schedule_event' => null,
 				'on_progress'    => null,
 				'on_exception'   => null,
 			)
 		);
 
+		if ( true === $args['schedule_event'] ) {
+			$args['not_in'] = $this->get_scheduled_subscription_ids();
+		}
+
 		$query = $this->get_subscriptions_wp_query_that_require_follow_up_payment(
 			array(
 				'date'   => $args['date'],
 				'number' => $args['number'],
+				'not_in' => $args['not_in'],
 			)
 		);
 
@@ -1188,6 +1195,9 @@ class SubscriptionsModule {
 	 * @throws \Exception Throws exception on error.
 	 */
 	private function process_subscription_payment( $subscription_id ) {
+		// Clear scheduled payments for subscription.
+		$this->clear_scheduled_subscription_payment( $subscription_id );
+
 		// Check subscription.
 		$subscription = \get_pronamic_subscription( (int) $subscription_id );
 
@@ -1290,6 +1300,53 @@ class SubscriptionsModule {
 	}
 
 	/**
+	 * Get scheduled subscription IDs.
+	 *
+	 * @return array
+	 */
+	public function get_scheduled_subscription_ids() {
+		$subscription_ids = array();
+
+		$cron = \get_option( 'cron' );
+
+		if ( is_array( $cron ) ) {
+			// Loop cron array.
+			foreach ( $cron as $hooks ) {
+				if ( ! \is_array( $hooks ) ) {
+					continue;
+				}
+
+				// Look hooks for timestamp.
+				foreach ( $hooks as $hook => $events ) {
+					if ( 'pronamic_pay_process_subscription_payment' !== $hook ) {
+						continue;
+					}
+
+					// Loop events.
+					foreach ( $events as $event ) {
+						// Check arguments.
+						if ( ! \array_key_exists( 'args', $event ) ) {
+							continue;
+						}
+
+						// Check subscription ID.
+						$args = $event['args'];
+
+						if ( ! \array_key_exists( 'subscription_id', $args ) ) {
+							continue;
+						}
+
+						// Add subscription ID to result.
+						$subscription_ids[] = $args['subscription_id'];
+					}
+				}
+			}
+		}
+
+		return $subscription_ids;
+	}
+
+	/**
 	 * Process subscription payment event.
 	 *
 	 * @param int                   $subscription_id Subscription ID.
@@ -1318,15 +1375,13 @@ class SubscriptionsModule {
 	 * @throws \Exception Throws exception if note could not be added.
 	 */
 	public function process_subscription_payment_event( $subscription_id, $try ) {
-		// Check if processing is enabled.
-		if ( ! $this->is_processing_enabled() ) {
+		// Check if processing is disabled.
+		if ( $this->is_processing_disabled() ) {
 			return;
 		}
 
 		// Process subscription payment.
 		try {
-			$this->clear_scheduled_subscription_payment( $subscription_id );
-
 			$this->process_subscription_payment( $subscription_id );
 		} catch ( \Exception $e ) {
 			// Check subscription.
@@ -1344,7 +1399,7 @@ class SubscriptionsModule {
 				$e->getMessage()
 			);
 
-			if ( $try < 4 ) {
+			if ( $next_try <= 4 ) {
 				$retry_time = time() + $this->get_subscription_payment_retry_seconds( $try );
 
 				$note = \sprintf(
@@ -1357,7 +1412,7 @@ class SubscriptionsModule {
 			$subscription->add_note( $note );
 
 			// Limit number of tries.
-			if ( $try >= 4 ) {
+			if ( $next_try > 4 ) {
 				return;
 			}
 
@@ -1397,12 +1452,12 @@ class SubscriptionsModule {
 	}
 
 	/**
-	 * Is subscriptions processing enabled.
+	 * Is subscriptions processing disabled.
 	 *
-	 * @return bool True if processing recurring payment is enabled, false otherwise.
+	 * @return bool True if processing recurring payment is disabled, false otherwise.
 	 */
-	public function is_processing_enabled() {
-		return (bool) \get_option( 'pronamic_pay_subscriptions_processing_enabled', true );
+	public function is_processing_disabled() {
+		return (bool) \get_option( 'pronamic_pay_subscriptions_processing_disabled', false );
 	}
 
 	/**
@@ -1411,7 +1466,7 @@ class SubscriptionsModule {
 	 * @return void
 	 */
 	public function update_subscription_payments() {
-		if ( ! $this->is_processing_enabled() ) {
+		if ( $this->is_processing_disabled() ) {
 			return;
 		}
 
