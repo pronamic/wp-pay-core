@@ -527,16 +527,6 @@ abstract class PaymentInfo {
 	}
 
 	/**
-	 * Get the payment issuer.
-	 *
-	 * @deprecated
-	 * @return string|null
-	 */
-	public function get_issuer() {
-		return $this->issuer;
-	}
-
-	/**
 	 * Get the payment description.
 	 *
 	 * @return string|null
