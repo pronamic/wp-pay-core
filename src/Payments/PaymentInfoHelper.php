@@ -136,6 +136,11 @@ class PaymentInfoHelper {
 			$object->meta = (object) $meta;
 		}
 
+		$object->source = (object) array(
+			'key'   => $payment_info->get_source(),
+			'value' => $payment_info->get_source_id(),
+		);
+
 		return $object;
 	}
 
@@ -218,6 +223,16 @@ class PaymentInfoHelper {
 		if ( isset( $json->meta ) ) {
 			foreach ( $json->meta as $key => $value ) {
 				$payment_info->meta[ $key ] = $value;
+			}
+		}
+
+		if ( isset( $json->source ) && \is_object( $json->source ) ) {
+			if ( isset( $json->source->key ) ) {
+				$payment_info->set_source( $json->source->key );
+			}
+
+			if ( isset( $json->source->value ) ) {
+				$payment_info->set_source_id( $json->source->value );
 			}
 		}
 
