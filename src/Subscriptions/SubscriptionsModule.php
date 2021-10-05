@@ -525,7 +525,7 @@ class SubscriptionsModule {
 				 *
 				 * @link https://help.mollie.com/hc/en-us/articles/115000667365-What-are-the-minimum-and-maximum-amounts-per-payment-method-
 				 */
-				switch ( $payment->method ) {
+				switch ( $payment->get_payment_method() ) {
 					case PaymentMethods::DIRECT_DEBIT_BANCONTACT:
 						$amount = 0.02;
 
