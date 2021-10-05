@@ -1318,8 +1318,8 @@ class SubscriptionsModule {
 	 * @throws \Exception Throws exception if note could not be added.
 	 */
 	public function process_subscription_payment_event( $subscription_id, $try ) {
-		// Check if processing is enabled.
-		if ( ! $this->is_processing_enabled() ) {
+		// Check if processing is disabled.
+		if ( $this->is_processing_disabled() ) {
 			return;
 		}
 
@@ -1397,12 +1397,12 @@ class SubscriptionsModule {
 	}
 
 	/**
-	 * Is subscriptions processing enabled.
+	 * Is subscriptions processing disabled.
 	 *
-	 * @return bool True if processing recurring payment is enabled, false otherwise.
+	 * @return bool True if processing recurring payment is disabled, false otherwise.
 	 */
-	public function is_processing_enabled() {
-		return (bool) \get_option( 'pronamic_pay_subscriptions_processing_enabled', true );
+	public function is_processing_disabled() {
+		return (bool) \get_option( 'pronamic_pay_subscriptions_processing_disabled', false );
 	}
 
 	/**
@@ -1411,7 +1411,7 @@ class SubscriptionsModule {
 	 * @return void
 	 */
 	public function update_subscription_payments() {
-		if ( ! $this->is_processing_enabled() ) {
+		if ( $this->is_processing_disabled() ) {
 			return;
 		}
 

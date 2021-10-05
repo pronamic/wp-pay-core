@@ -95,11 +95,11 @@ class Settings {
 
 		\register_setting(
 			'pronamic_pay',
-			'pronamic_pay_subscriptions_processing_enabled',
+			'pronamic_pay_subscriptions_processing_disabled',
 			array(
 				'type'        => 'boolean',
-				'description' => 'Setting that can be used to enable or disable processing of recurring payments.',
-				'default'     => true,
+				'description' => 'Setting that can be used to disable processing of recurring payments.',
+				'default'     => false,
 			)
 		);
 
