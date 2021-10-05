@@ -16,6 +16,7 @@ use Pronamic\WordPress\Pay\Banks\BankTransferDetails;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
+use Pronamic\WordPress\Pay\Plugin;
 
 /**
  * Payment info helper
@@ -247,6 +248,14 @@ class PaymentInfoHelper {
 
 			if ( isset( $json->source->value ) ) {
 				$payment_info->set_source_id( $json->source->value );
+			}
+		}
+
+		if ( isset( $json->gateway ) && \is_object( $json->gateway ) ) {
+			if ( isset( $json->gateway->post_id ) ) {
+				$gateway = Plugin::get_gateway( $json->gateway->post_id );
+
+				$payment_info->set_gateway( $gateway );
 			}
 		}
 
