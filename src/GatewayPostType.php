@@ -40,6 +40,9 @@ class GatewayPostType {
 		add_action( 'init', array( $this, 'register_gateway_post_type' ), 0 ); // Highest priority.
 
 		add_action( 'save_post_' . self::POST_TYPE, array( $this, 'maybe_set_default_gateway' ) );
+
+		// REST API.
+		add_action( 'rest_api_init', array( $this, 'rest_api_init' ) );
 	}
 
 	/**
@@ -146,5 +149,59 @@ class GatewayPostType {
 			'edit_published_posts'   => 'manage_options',
 			'create_posts'           => 'manage_options',
 		);
+	}
+
+	/**
+	 * REST API init.
+	 *
+	 * @link https://developer.wordpress.org/rest-api/extending-the-rest-api/adding-custom-endpoints/
+	 * @link https://developer.wordpress.org/reference/hooks/rest_api_init/
+	 *
+	 * @return void
+	 */
+	public function rest_api_init() {
+		\register_rest_route(
+			'pronamic-pay/v1',
+			'/gateways/(?P<gateway_id>\d+)',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $this, 'rest_api_gateway' ),
+				'permission_callback' => function() {
+					return \current_user_can( 'manage_options' );
+				},
+				'args'                => array(
+					'gateway_id' => array(
+						'description' => __( 'Gateway ID.', 'pronamic_ideal' ),
+						'type'        => 'integer',
+					),
+				),
+			)
+		);
+	}
+
+	/**
+	 * REST API gateway.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return object
+	 */
+	public function rest_api_gateway( \WP_REST_Request $request ) {
+		$gateway_id = $request->get_param( 'gateway_id' );
+
+		$gateway = Plugin::get_gateway( $gateway_id );
+
+		if ( null === $gateway ) {
+			return new \WP_Error(
+				'pronamic-pay-gateway-not-found',
+				\sprintf(
+				/* translators: %s: Subscription ID */
+					\__( 'Could not find gateway with ID `%s`.', 'pronamic_ideal' ),
+					$gateway_id
+				),
+				$gateway_id
+			);
+		}
+
+		return $gateway;
 	}
 }

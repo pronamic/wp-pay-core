@@ -141,6 +141,20 @@ class PaymentInfoHelper {
 			'value' => $payment_info->get_source_id(),
 		);
 
+		if ( null !== $payment_info->config_id ) {
+			$object->gateway = (object) array(
+				'$ref'    => \rest_url(
+					\sprintf(
+						'/%s/%s/%d',
+						'pronamic-pay/v1',
+						'gateways',
+						$payment_info->config_id
+					)
+				),
+				'post_id' => $payment_info->config_id,
+			);
+		}
+
 		return $object;
 	}
 
