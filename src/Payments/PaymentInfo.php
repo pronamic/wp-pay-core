@@ -166,7 +166,7 @@ abstract class PaymentInfo {
 	 *
 	 * @var string|null
 	 */
-	public $payment_method;
+	private $payment_method;
 
 	/**
 	 * The payment method chosen by the user who started this payment.
