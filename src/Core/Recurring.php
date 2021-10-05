@@ -34,11 +34,4 @@ class Recurring {
 	 * @var string
 	 */
 	const RECURRING = 'recurring';
-
-	/**
-	 * Constant for subscription payments.
-	 *
-	 * @var string
-	 */
-	const SUBSCRIPTION = 'subscription';
 }
