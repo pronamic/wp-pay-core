@@ -742,7 +742,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		$payment->config_id           = $this->get_meta_int( $id, 'config_id' );
 		$payment->key                 = $this->get_meta_string( $id, 'key' );
-		$payment->issuer              = $this->get_meta_string( $id, 'issuer' );
 		$payment->order_id            = $this->get_meta_string( $id, 'order_id' );
 		$payment->source              = $this->get_meta_string( $id, 'source' );
 		$payment->source_id           = $this->get_meta_string( $id, 'source_id' );
@@ -833,7 +832,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			'config_id'               => $payment->config_id,
 			'key'                     => $payment->key,
 			'order_id'                => $payment->order_id,
-			'issuer'                  => $payment->issuer,
 			'expiration_period'       => null,
 			'consumer_name'           => ( null === $consumer_bank_details ? null : $consumer_bank_details->get_name() ),
 			'consumer_account_number' => ( null === $consumer_bank_details ? null : $consumer_bank_details->get_account_number() ),

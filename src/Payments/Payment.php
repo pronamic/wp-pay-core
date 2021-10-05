@@ -140,6 +140,7 @@ class Payment extends PaymentInfo {
 	/**
 	 * The issuer chosen by the user who started this payment.
 	 *
+	 * @deprecated
 	 * @var string|null
 	 */
 	public $issuer;

@@ -920,18 +920,22 @@ class Plugin {
 		}
 
 		// Issuer.
-		if ( null === $payment->issuer ) {
+		$issuer = $payment->get_meta( 'issuer' );
+
+		if ( null === $issuer ) {
 			// Credit card.
-			if ( PaymentMethods::CREDIT_CARD === $payment->method && filter_has_var( INPUT_POST, 'pronamic_credit_card_issuer_id' ) ) {
-				$payment->issuer = filter_input( INPUT_POST, 'pronamic_credit_card_issuer_id', FILTER_SANITIZE_STRING );
+			if ( PaymentMethods::CREDIT_CARD === $payment->get_payment_method() && \filter_has_var( INPUT_POST, 'pronamic_credit_card_issuer_id' ) ) {
+				$issuer = \filter_input( INPUT_POST, 'pronamic_credit_card_issuer_id', FILTER_SANITIZE_STRING );
 			}
 
 			// iDEAL.
 			$ideal_methods = array( PaymentMethods::IDEAL, PaymentMethods::DIRECT_DEBIT_IDEAL );
 
-			if ( \in_array( $payment->method, $ideal_methods, true ) && filter_has_var( INPUT_POST, 'pronamic_ideal_issuer_id' ) ) {
-				$payment->issuer = filter_input( INPUT_POST, 'pronamic_ideal_issuer_id', FILTER_SANITIZE_STRING );
+			if ( \in_array( $payment->get_payment_method(), $ideal_methods, true ) && \filter_has_var( INPUT_POST, 'pronamic_ideal_issuer_id' ) ) {
+				$issuer = \filter_input( INPUT_POST, 'pronamic_ideal_issuer_id', FILTER_SANITIZE_STRING );
 			}
+
+			$payment->set_meta( 'issuer', $issuer );
 		}
 
 		/**
@@ -946,8 +950,12 @@ class Plugin {
 		 * @link https://github.com/wp-pay-extensions/ninjaforms/blob/1.2.0/src/PaymentGateway.php#L80-L83
 		 * @link https://github.com/wp-pay/core/blob/2.4.0/src/Forms/FormProcessor.php#L131-L134
 		 */
-		if ( null !== $payment->issuer && null === $payment->method ) {
-			$payment->method = PaymentMethods::IDEAL;
+		$issuer = $payment->get_meta( 'issuer' );
+
+		$payment_method = $payment->get_payment_method();
+
+		if ( null !== $issuer && null === $payment_method ) {
+			$payment->set_payment_method( PaymentMethods::IDEAL );
 		}
 
 		// Consumer bank details.

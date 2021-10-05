@@ -647,7 +647,6 @@ class SubscriptionsModule {
 		$payment->source          = $subscription->get_source();
 		$payment->source_id       = $subscription->get_source_id();
 		$payment->email           = $subscription->get_email();
-		$payment->issuer          = $subscription->issuer;
 		$payment->recurring       = true;
 		$payment->subscription    = $subscription;
 		$payment->subscription_id = $subscription->get_id();
@@ -778,7 +777,6 @@ class SubscriptionsModule {
 		$payment = new Payment();
 
 		$payment->email           = $subscription->get_email();
-		$payment->issuer          = $subscription->get_issuer();
 		$payment->recurring       = true;
 		$payment->subscription    = $subscription;
 		$payment->subscription_id = $subscription->get_id();
