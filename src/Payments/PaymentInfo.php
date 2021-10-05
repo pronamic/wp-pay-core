@@ -184,14 +184,6 @@ abstract class PaymentInfo {
 	public $method;
 
 	/**
-	 * The issuer chosen by the user who started this payment.
-	 *
-	 * @deprecated
-	 * @var string|null
-	 */
-	public $issuer;
-
-	/**
 	 * Customer.
 	 *
 	 * @var Customer|null
