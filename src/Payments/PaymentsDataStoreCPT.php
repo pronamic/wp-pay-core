@@ -742,7 +742,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		$payment->config_id           = $this->get_meta_int( $id, 'config_id' );
 		$payment->key                 = $this->get_meta_string( $id, 'key' );
-		$payment->method              = $this->get_meta_string( $id, 'method' );
 		$payment->issuer              = $this->get_meta_string( $id, 'issuer' );
 		$payment->order_id            = $this->get_meta_string( $id, 'order_id' );
 		$payment->source              = $this->get_meta_string( $id, 'source' );
@@ -771,9 +770,18 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$description = $payment->get_description();
 
 		if ( empty( $description ) ) {
-			$description = $this->get_meta_string( $id, '$description' );
+			$description = $this->get_meta_string( $id, 'description' );
 
 			$payment->set_description( $description );
+		}
+
+		// Payment method.
+		$payment_method = $payment->get_payment_method();
+
+		if ( empty( $payment_method ) ) {
+			$payment_method = $this->get_meta_string( $id, 'method' );
+
+			$payment->set_payment_method( $payment_method );
 		}
 
 		// Legacy.

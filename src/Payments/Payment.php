@@ -132,6 +132,7 @@ class Payment extends PaymentInfo {
 	/**
 	 * The payment method chosen by the user who started this payment.
 	 *
+	 * @deprecated
 	 * @var string|null
 	 */
 	public $method;
