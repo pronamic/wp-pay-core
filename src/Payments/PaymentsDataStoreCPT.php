@@ -813,6 +813,20 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 				$payment->add_subscription( $subscription );
 			}
 		}
+
+		// Meta.
+		$keys = array(
+			'_pronamic_payment_issuer'              => 'issuer',
+			'_pronamic_payment_analytics_client_id' => 'google_analytics_client_id',
+		);
+
+		foreach ( $keys as $old_key => $new_key ) {
+			$value = \get_post_meta( $id, $old_key, true );
+
+			if ( ! empty( $value ) ) {
+				$payment->set_meta( $new_key, $value );
+			}
+		}
 	}
 
 	/**
