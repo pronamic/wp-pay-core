@@ -133,14 +133,6 @@ class Payment extends PaymentInfo {
 	public $method;
 
 	/**
-	 * The issuer chosen by the user who started this payment.
-	 *
-	 * @deprecated
-	 * @var string|null
-	 */
-	public $issuer;
-
-	/**
 	 * Subscriptions.
 	 *
 	 * @var Subscription[]
@@ -219,25 +211,11 @@ class Payment extends PaymentInfo {
 	public $lines;
 
 	/**
-	 * Version.
-	 *
-	 * @var string|null
-	 */
-	private $version;
-
-	/**
 	 * Mode.
 	 *
 	 * @var string|null
 	 */
 	private $mode;
-
-	/**
-	 * Is anonymized.
-	 *
-	 * @var bool|null
-	 */
-	private $anonymized;
 
 	/**
 	 * Construct and initialize payment object.
