@@ -740,19 +740,18 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			return;
 		}
 
-		$payment->config_id           = $this->get_meta_int( $id, 'config_id' );
-		$payment->key                 = $this->get_meta_string( $id, 'key' );
-		$payment->order_id            = $this->get_meta_string( $id, 'order_id' );
-		$payment->source              = $this->get_meta_string( $id, 'source' );
-		$payment->source_id           = $this->get_meta_string( $id, 'source_id' );
-		$payment->email               = $this->get_meta_string( $id, 'email' );
-		$payment->status              = $this->get_meta_string( $id, 'status' );
-		$payment->analytics_client_id = $this->get_meta_string( $id, 'analytics_client_id' );
-		$payment->subscription_id     = $this->get_meta_int( $id, 'subscription_id' );
-		$payment->recurring_type      = $this->get_meta_string( $id, 'recurring_type' );
-		$payment->recurring           = $this->get_meta_bool( $id, 'recurring' );
-		$payment->start_date          = $this->get_meta_date( $id, 'start_date' );
-		$payment->end_date            = $this->get_meta_date( $id, 'end_date' );
+		$payment->config_id       = $this->get_meta_int( $id, 'config_id' );
+		$payment->key             = $this->get_meta_string( $id, 'key' );
+		$payment->order_id        = $this->get_meta_string( $id, 'order_id' );
+		$payment->source          = $this->get_meta_string( $id, 'source' );
+		$payment->source_id       = $this->get_meta_string( $id, 'source_id' );
+		$payment->email           = $this->get_meta_string( $id, 'email' );
+		$payment->status          = $this->get_meta_string( $id, 'status' );
+		$payment->subscription_id = $this->get_meta_int( $id, 'subscription_id' );
+		$payment->recurring_type  = $this->get_meta_string( $id, 'recurring_type' );
+		$payment->recurring       = $this->get_meta_bool( $id, 'recurring' );
+		$payment->start_date      = $this->get_meta_date( $id, 'start_date' );
+		$payment->end_date        = $this->get_meta_date( $id, 'end_date' );
 
 		$payment->set_version( $this->get_meta_string( $id, 'version' ) );
 
@@ -855,7 +854,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			'source'                  => $payment->source,
 			'source_id'               => $payment->source_id,
 			'email'                   => ( null === $customer ? null : $customer->get_email() ),
-			'analytics_client_id'     => $payment->analytics_client_id,
 			'subscription_id'         => $payment->subscription_id,
 			'recurring_type'          => $payment->recurring_type,
 			'recurring'               => $payment->recurring,

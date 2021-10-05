@@ -291,7 +291,7 @@ class GoogleAnalyticsEcommerce {
 	 * @return string
 	 */
 	private function get_client_id( Payment $payment ) {
-		$client_id = $payment->get_analytics_client_id();
+		$client_id = $payment->get_meta( 'google_analytics_client_id' );
 
 		if ( ! empty( $client_id ) ) {
 			return $client_id;

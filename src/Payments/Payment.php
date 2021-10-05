@@ -80,13 +80,6 @@ class Payment extends PaymentInfo {
 	public $description;
 
 	/**
-	 * The Google Analytics client ID of the user who started this payment.
-	 *
-	 * @var string|null
-	 */
-	public $analytics_client_id;
-
-	/**
 	 * Google Analytics e-commerce tracked.
 	 *
 	 * @var bool|null
@@ -793,15 +786,6 @@ class Payment extends PaymentInfo {
 	 */
 	public function get_email() {
 		return $this->email;
-	}
-
-	/**
-	 * Get Google Analytics client ID.
-	 *
-	 * @return string|null
-	 */
-	public function get_analytics_client_id() {
-		return $this->analytics_client_id;
 	}
 
 	/**
