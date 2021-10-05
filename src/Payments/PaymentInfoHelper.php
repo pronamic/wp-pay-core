@@ -16,6 +16,7 @@ use Pronamic\WordPress\Pay\Banks\BankTransferDetails;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
+use Pronamic\WordPress\Pay\Plugin;
 
 /**
  * Payment info helper
@@ -136,6 +137,25 @@ class PaymentInfoHelper {
 			$object->meta = (object) $meta;
 		}
 
+		$object->source = (object) array(
+			'key'   => $payment_info->get_source(),
+			'value' => $payment_info->get_source_id(),
+		);
+
+		if ( null !== $payment_info->config_id ) {
+			$object->gateway = (object) array(
+				'$ref'    => \rest_url(
+					\sprintf(
+						'/%s/%s/%d',
+						'pronamic-pay/v1',
+						'gateways',
+						$payment_info->config_id
+					)
+				),
+				'post_id' => $payment_info->config_id,
+			);
+		}
+
 		return $object;
 	}
 
@@ -218,6 +238,24 @@ class PaymentInfoHelper {
 		if ( isset( $json->meta ) ) {
 			foreach ( $json->meta as $key => $value ) {
 				$payment_info->meta[ $key ] = $value;
+			}
+		}
+
+		if ( isset( $json->source ) && \is_object( $json->source ) ) {
+			if ( isset( $json->source->key ) ) {
+				$payment_info->set_source( $json->source->key );
+			}
+
+			if ( isset( $json->source->value ) ) {
+				$payment_info->set_source_id( $json->source->value );
+			}
+		}
+
+		if ( isset( $json->gateway ) && \is_object( $json->gateway ) ) {
+			if ( isset( $json->gateway->post_id ) ) {
+				$gateway = Plugin::get_gateway( $json->gateway->post_id );
+
+				$payment_info->set_gateway( $gateway );
 			}
 		}
 
