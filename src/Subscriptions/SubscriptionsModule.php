@@ -643,7 +643,6 @@ class SubscriptionsModule {
 
 		$payment->config_id       = $subscription->get_config_id();
 		$payment->order_id        = $subscription->get_order_id();
-		$payment->description     = $subscription->description;
 		$payment->source          = $subscription->get_source();
 		$payment->source_id       = $subscription->get_source_id();
 		$payment->email           = $subscription->get_email();
@@ -652,6 +651,7 @@ class SubscriptionsModule {
 		$payment->subscription_id = $subscription->get_id();
 
 		$payment->set_payment_method( $subscription->get_payment_method() );
+		$payment->set_description( $subscription->get_description() );
 
 		$payment->set_origin_id( $subscription->get_origin_id() );
 		$payment->set_customer( $subscription->get_customer() );

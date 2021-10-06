@@ -102,8 +102,10 @@ class SubscriptionHelper {
 		}
 
 		// Description.
-		if ( null === $subscription->description ) {
-			$subscription->description = $payment->description;
+		$description = $subscription->get_description();
+
+		if ( null === $description ) {
+			$subscription->set_description( $payment->get_description() );
 		}
 
 		// Email.

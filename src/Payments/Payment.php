@@ -271,15 +271,6 @@ class Payment extends PaymentInfo {
 	}
 
 	/**
-	 * Get the payment description.
-	 *
-	 * @return string|null
-	 */
-	public function get_description() {
-		return $this->description;
-	}
-
-	/**
 	 * Set the transaction ID.
 	 *
 	 * @param string|null $transaction_id Transaction ID.

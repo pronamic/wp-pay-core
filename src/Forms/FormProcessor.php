@@ -152,7 +152,8 @@ class FormProcessor {
 			$description
 		);
 
-		$payment->description = $description;
+		$payment->set_description( $description );
+
 		$payment->config_id   = $config_id;
 		$payment->order_id    = $order_id;
 		$payment->source      = $source;
