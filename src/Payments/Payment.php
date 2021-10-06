@@ -387,6 +387,7 @@ class Payment extends PaymentInfo {
 	/**
 	 * Is tracked in Google Analytics?
 	 *
+	 * @deprecated
 	 * @return bool|null
 	 */
 	public function get_ga_tracked() {
@@ -396,6 +397,7 @@ class Payment extends PaymentInfo {
 	/**
 	 * Set if payment is tracked in Google Analytics.
 	 *
+	 * @deprecated
 	 * @param bool|null $tracked Tracked in Google Analytics.
 	 * @return void
 	 */
