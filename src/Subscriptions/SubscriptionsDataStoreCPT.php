@@ -579,7 +579,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		}
 
 		$subscription->config_id       = $this->get_meta_int( $id, 'config_id' );
-		$subscription->key             = $this->get_meta_string( $id, 'key' );
 		$subscription->source          = $this->get_meta_string( $id, 'source' );
 		$subscription->source_id       = $this->get_meta_string( $id, 'source_id' );
 		$subscription->frequency       = $this->get_meta_int( $id, 'frequency' );
@@ -587,7 +586,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$subscription->interval_period = $this->get_meta_string( $id, 'interval_period' );
 		$subscription->transaction_id  = $this->get_meta_string( $id, 'transaction_id' );
 		$subscription->status          = $this->get_meta_string( $id, 'status' );
-		$subscription->description     = $this->get_meta_string( $id, 'description' );
 		$subscription->email           = $this->get_meta_string( $id, 'email' );
 		$subscription->customer_name   = $this->get_meta_string( $id, 'customer_name' );
 
@@ -697,7 +695,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$customer = $subscription->get_customer();
 
 		$this->update_meta( $id, 'config_id', $subscription->config_id );
-		$this->update_meta( $id, 'key', $subscription->key );
 		$this->update_meta( $id, 'source', $subscription->source );
 		$this->update_meta( $id, 'source_id', $subscription->source_id );
 		$this->update_meta( $id, 'frequency', $subscription->frequency );

@@ -41,6 +41,12 @@ class PaymentInfoHelper {
 			$object->id = $id;
 		}
 
+		$key = $payment_info->key;
+
+		if ( null !== $key ) {
+			$object->key = $key;
+		}
+
 		$description = $payment_info->get_description();
 
 		if ( null !== $description ) {
@@ -257,6 +263,10 @@ class PaymentInfoHelper {
 
 				$payment_info->set_gateway( $gateway );
 			}
+		}
+
+		if ( isset( $json->key ) ) {
+			$payment_info->key = $json->key;
 		}
 
 		return $payment_info;
