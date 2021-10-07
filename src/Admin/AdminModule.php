@@ -677,7 +677,7 @@ class AdminModule {
 		$payment->set_config_id( $config_id );
 		$payment->set_description( $description );
 
-		$payment->method   = \filter_input( \INPUT_POST, 'pronamic_pay_test_payment_method', \FILTER_SANITIZE_STRING );
+		$payment->set_payment_method( \filter_input( \INPUT_POST, 'pronamic_pay_test_payment_method', \FILTER_SANITIZE_STRING ) );
 		$payment->order_id = $order_id;
 
 		// Source.

@@ -116,14 +116,6 @@ class Payment extends PaymentInfo {
 	private $expiry_date;
 
 	/**
-	 * The payment method chosen by the user who started this payment.
-	 *
-	 * @deprecated
-	 * @var string|null
-	 */
-	public $method;
-
-	/**
 	 * Subscriptions.
 	 *
 	 * @var Subscription[]

@@ -162,14 +162,6 @@ abstract class PaymentInfo {
 	private $payment_method;
 
 	/**
-	 * The payment method chosen by the user who started this payment.
-	 *
-	 * @deprecated
-	 * @var string|null
-	 */
-	public $method;
-
-	/**
 	 * Customer.
 	 *
 	 * @var Customer|null
@@ -498,17 +490,6 @@ abstract class PaymentInfo {
 	 */
 	public function set_shipping_amount( Money $shipping_amount = null ) {
 		$this->shipping_amount = $shipping_amount;
-	}
-
-	/**
-	 * Get the payment method.
-	 *
-	 * @todo Constant?
-	 * @deprecated
-	 * @return string|null
-	 */
-	public function get_method() {
-		return $this->method;
 	}
 
 	/**
