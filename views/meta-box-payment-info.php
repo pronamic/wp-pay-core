@@ -731,13 +731,13 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 
 	<?php
 
-	$ga_tracked = $payment->get_ga_tracked();
+	$analytics_tracked = $payment->get_meta( 'google_analytics_tracked' );
 
 	$ga_property_id = get_option( 'pronamic_pay_google_analytics_property' );
 
 	?>
 
-	<?php if ( $ga_tracked || ! empty( $ga_property_id ) ) : ?>
+	<?php if ( true === $analytics_tracked || ! empty( $ga_property_id ) ) : ?>
 
 		<tr>
 			<th scope="row">
@@ -746,7 +746,7 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 			<td>
 				<?php
 
-				if ( $ga_tracked ) :
+				if ( true === $analytics_tracked ) :
 
 					esc_html_e( 'Ecommerce conversion tracked', 'pronamic_ideal' );
 

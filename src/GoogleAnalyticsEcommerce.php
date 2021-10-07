@@ -82,7 +82,7 @@ class GoogleAnalyticsEcommerce {
 	 */
 	public function valid_payment( $payment ) {
 		// Is payment already tracked?
-		if ( $payment->get_ga_tracked() ) {
+		if ( true === $payment->get_meta( 'google_analytics_tracked' ) ) {
 			return false;
 		}
 
@@ -188,7 +188,7 @@ class GoogleAnalyticsEcommerce {
 		);
 
 		// Mark payment as tracked.
-		$payment->set_ga_tracked( true );
+		$payment->set_meta( 'google_analytics_tracked', true );
 		$payment->save();
 
 		// Item Hit.

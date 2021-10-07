@@ -86,7 +86,6 @@ class PaymentTest extends WP_UnitTestCase {
 			array( 'set_total_amount', 'get_total_amount', new TaxedMoney( 89.95, 'EUR' ) ),
 			array( 'set_shipping_address', 'get_shipping_address', new Address() ),
 			array( 'set_shipping_amount', 'get_shipping_amount', new Money( 10, 'EUR' ) ),
-			array( 'set_ga_tracked', 'get_ga_tracked', true ),
 			array( 'set_consumer_bank_details', 'get_consumer_bank_details', new BankAccountDetails() ),
 			array( 'set_bank_transfer_recipient_details', 'get_bank_transfer_recipient_details', new BankTransferDetails() ),
 			array( 'set_failure_reason', 'get_failure_reason', new FailureReason() ),
@@ -136,7 +135,6 @@ class PaymentTest extends WP_UnitTestCase {
 			array( 'issuer', 'get_issuer', 'ideal_KNABNL2H' ),
 			array( 'description', 'get_description', 'Lorem ipsum dolor sit amet, consectetur.' ),
 			array( 'email', 'get_email', 'john.doe@example.com' ),
-			array( 'analytics_client_id', 'get_analytics_client_id', 'GA1.2.1234567890.1234567890' ),
 		);
 	}
 
@@ -179,8 +177,8 @@ class PaymentTest extends WP_UnitTestCase {
 		$payment = new Payment();
 		$payment->set_id( 1 );
 		$payment->set_mode( Gateway::MODE_LIVE );
-		$payment->set_ga_tracked( true );
 		$payment->set_total_amount( new TaxedMoney( 242, 'EUR', 42, 21 ) );
+		$payment->set_meta( 'google_analytics_tracked', true );
 
 		// Name.
 		$name = new ContactName();
