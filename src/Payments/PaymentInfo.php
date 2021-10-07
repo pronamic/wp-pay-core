@@ -236,6 +236,13 @@ abstract class PaymentInfo {
 	public $meta;
 
 	/**
+	 * Meta key prefix.
+	 *
+	 * @var string
+	 */
+	public $meta_key_prefix = '_pronamic_pay_';
+
+	/**
 	 * Construct and initialize payment object.
 	 *
 	 * @param integer $post_id A payment post ID or null.
@@ -557,7 +564,7 @@ abstract class PaymentInfo {
 			return null;
 		}
 
-		$key = '_pronamic_payment_' . $key;
+		$key = $this->meta_key_prefix . $key;
 
 		return get_post_meta( $this->id, $key, true );
 	}
@@ -577,7 +584,7 @@ abstract class PaymentInfo {
 			return false;
 		}
 
-		$key = '_pronamic_payment_' . $key;
+		$key = $this->meta_key_prefix . $key;
 
 		if ( $value instanceof \DateTime ) {
 			$value = $value->format( 'Y-m-d H:i:s' );
