@@ -80,15 +80,6 @@ class Payment extends PaymentInfo {
 	public $description;
 
 	/**
-	 * Google Analytics e-commerce tracked.
-	 *
-	 * @todo Move to payment meta.
-	 * @deprecated
-	 * @var bool|null
-	 */
-	public $ga_tracked;
-
-	/**
 	 * The status of this payment.
 	 *
 	 * @todo   Check constant?
@@ -123,14 +114,6 @@ class Payment extends PaymentInfo {
 	 * @var DateTime|null
 	 */
 	private $expiry_date;
-
-	/**
-	 * The payment method chosen by the user who started this payment.
-	 *
-	 * @deprecated
-	 * @var string|null
-	 */
-	public $method;
 
 	/**
 	 * Subscriptions.
@@ -216,6 +199,8 @@ class Payment extends PaymentInfo {
 	 * @param integer $post_id A payment post ID or null.
 	 */
 	public function __construct( $post_id = null ) {
+		$this->meta_key_prefix = '_pronamic_payment_';
+
 		parent::__construct( $post_id );
 
 		$this->subscriptions = array();
@@ -373,27 +358,6 @@ class Payment extends PaymentInfo {
 	 */
 	public function set_failure_reason( FailureReason $failure_reason = null ) {
 		$this->failure_reason = $failure_reason;
-	}
-
-	/**
-	 * Is tracked in Google Analytics?
-	 *
-	 * @deprecated
-	 * @return bool|null
-	 */
-	public function get_ga_tracked() {
-		return $this->ga_tracked;
-	}
-
-	/**
-	 * Set if payment is tracked in Google Analytics.
-	 *
-	 * @deprecated
-	 * @param bool|null $tracked Tracked in Google Analytics.
-	 * @return void
-	 */
-	public function set_ga_tracked( $tracked ) {
-		$this->ga_tracked = $tracked;
 	}
 
 	/**
@@ -851,10 +815,6 @@ class Payment extends PaymentInfo {
 			$payment->set_failure_reason( FailureReason::from_json( $json->failure_reason ) );
 		}
 
-		if ( isset( $json->ga_tracked ) ) {
-			$payment->set_ga_tracked( $json->ga_tracked );
-		}
-
 		if ( isset( $json->origin_id ) ) {
 			$payment->set_origin_id( $json->origin_id );
 		}
@@ -921,11 +881,6 @@ class Payment extends PaymentInfo {
 
 		if ( null !== $failure_reason ) {
 			$properties['failure_reason'] = $failure_reason->get_json();
-		}
-
-		// Google Analytics tracked.
-		if ( null !== $this->get_ga_tracked() ) {
-			$properties['ga_tracked'] = $this->get_ga_tracked();
 		}
 
 		// Origin ID.

@@ -487,6 +487,24 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 
 		<?php
 
+		$ip_address = $customer->get_ip_address();
+
+		if ( null !== $ip_address ) :
+			?>
+
+			<tr>
+				<th scope="row">
+					<?php esc_html_e( 'IP Address', 'pronamic_ideal' ); ?>
+				</th>
+				<td>
+					<?php echo esc_html( $ip_address ); ?>
+				</td>
+			</tr>
+
+		<?php endif; ?>
+
+		<?php
+
 		$user_id = $customer->get_user_id();
 
 		if ( null !== $user_id ) :
@@ -713,13 +731,13 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 
 	<?php
 
-	$ga_tracked = $payment->get_ga_tracked();
+	$analytics_tracked = $payment->get_meta( 'google_analytics_tracked' );
 
 	$ga_property_id = get_option( 'pronamic_pay_google_analytics_property' );
 
 	?>
 
-	<?php if ( $ga_tracked || ! empty( $ga_property_id ) ) : ?>
+	<?php if ( true === $analytics_tracked || ! empty( $ga_property_id ) ) : ?>
 
 		<tr>
 			<th scope="row">
@@ -728,7 +746,7 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 			<td>
 				<?php
 
-				if ( $ga_tracked ) :
+				if ( true === $analytics_tracked ) :
 
 					esc_html_e( 'Ecommerce conversion tracked', 'pronamic_ideal' );
 
@@ -840,15 +858,6 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 			</tr>
 
 		<?php endif; ?>
-
-		<tr>
-			<th scope="row">
-				<?php esc_html_e( 'IP Address', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php echo esc_html( $payment->user_ip ); ?>
-			</td>
-		</tr>
 
 		<?php if ( null !== $payment->get_version() ) : ?>
 

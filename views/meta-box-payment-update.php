@@ -101,7 +101,7 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 		$link_text = sprintf(
 			/* translators: %s: payment method name */
 			__( 'Create %1$s invoice', 'pronamic_ideal' ),
-			PaymentMethods::get_name( $payment->get_method() )
+			PaymentMethods::get_name( $payment->get_payment_method() )
 		);
 
 		printf(
@@ -131,7 +131,7 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 		$link_text = sprintf(
 			/* translators: %s: payment method name */
 			__( 'Cancel %1$s reservation', 'pronamic_ideal' ),
-			PaymentMethods::get_name( $payment->get_method() )
+			PaymentMethods::get_name( $payment->get_payment_method() )
 		);
 
 		printf(

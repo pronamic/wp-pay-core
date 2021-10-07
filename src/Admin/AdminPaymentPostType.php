@@ -206,7 +206,7 @@ class AdminPaymentPostType {
 			} else {
 				pronamic_pay_plugin()->google_analytics_ecommerce->send_transaction( $payment );
 
-				if ( $payment->get_ga_tracked() ) {
+				if ( true === $payment->get_meta( 'google_analytics_tracked' ) ) {
 					$notice = array(
 						'type'    => 'info',
 						'message' => __( 'Payment sent to Google Analytics.', 'pronamic_ideal' ),

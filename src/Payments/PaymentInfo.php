@@ -148,20 +148,6 @@ abstract class PaymentInfo {
 	private $consumer_bank_details;
 
 	/**
-	 * The Google Analytics client ID of the user who started this payment.
-	 *
-	 * @var string|null
-	 */
-	public $analytics_client_id;
-
-	/**
-	 * Google Analytics e-commerce tracked.
-	 *
-	 * @var bool|null
-	 */
-	public $ga_tracked;
-
-	/**
 	 * The email of the user who started this payment.
 	 *
 	 * @var string|null
@@ -174,14 +160,6 @@ abstract class PaymentInfo {
 	 * @var string|null
 	 */
 	private $payment_method;
-
-	/**
-	 * The payment method chosen by the user who started this payment.
-	 *
-	 * @deprecated
-	 * @var string|null
-	 */
-	public $method;
 
 	/**
 	 * Customer.
@@ -248,6 +226,13 @@ abstract class PaymentInfo {
 	 * @var array
 	 */
 	public $meta;
+
+	/**
+	 * Meta key prefix.
+	 *
+	 * @var string
+	 */
+	public $meta_key_prefix = '_pronamic_pay_';
 
 	/**
 	 * Construct and initialize payment object.
@@ -508,17 +493,6 @@ abstract class PaymentInfo {
 	}
 
 	/**
-	 * Get the payment method.
-	 *
-	 * @todo Constant?
-	 * @deprecated
-	 * @return string|null
-	 */
-	public function get_method() {
-		return $this->method;
-	}
-
-	/**
 	 * Get the payment description.
 	 *
 	 * @return string|null
@@ -571,7 +545,7 @@ abstract class PaymentInfo {
 			return null;
 		}
 
-		$key = '_pronamic_payment_' . $key;
+		$key = $this->meta_key_prefix . $key;
 
 		return get_post_meta( $this->id, $key, true );
 	}
@@ -581,29 +555,10 @@ abstract class PaymentInfo {
 	 *
 	 * @param  string $key   A meta key.
 	 * @param  mixed  $value A meta value.
-	 *
-	 * @return bool True on successful update, false on failure.
+	 * @return void
 	 */
 	public function set_meta( $key, $value ) {
 		$this->meta[ $key ] = $value;
-
-		if ( null === $this->id ) {
-			return false;
-		}
-
-		$key = '_pronamic_payment_' . $key;
-
-		if ( $value instanceof \DateTime ) {
-			$value = $value->format( 'Y-m-d H:i:s' );
-		}
-
-		if ( empty( $value ) ) {
-			return delete_post_meta( $this->id, $key );
-		}
-
-		$result = update_post_meta( $this->id, $key, $value );
-
-		return ( false !== $result );
 	}
 
 	/**
@@ -651,16 +606,6 @@ abstract class PaymentInfo {
 	 */
 	public function get_email() {
 		return $this->email;
-	}
-
-	/**
-	 * Get Google Analytics client ID.
-	 *
-	 * @deprecated
-	 * @return string|null
-	 */
-	public function get_analytics_client_id() {
-		return $this->analytics_client_id;
 	}
 
 	/**

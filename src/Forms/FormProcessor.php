@@ -162,7 +162,7 @@ class FormProcessor {
 
 		// Set default payment method if required.
 		if ( $gateway->payment_method_is_required() ) {
-			$payment->method = PaymentMethods::IDEAL;
+			$payment->set_payment_method( PaymentMethods::IDEAL );
 		}
 
 		// Customer.

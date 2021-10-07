@@ -139,9 +139,9 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * @throws \Exception Throws exception on invalid post date.
 	 */
 	public function __construct() {
-		parent::__construct();
+		$this->meta_key_prefix = '_pronamic_subscription_';
 
-		$this->meta = array();
+		parent::__construct();
 
 		$this->activated_at = new DateTime();
 	}
@@ -288,50 +288,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Get meta by the specified meta key.
-	 *
-	 * @param string $key A meta key.
-	 * @return string|false
-	 */
-	public function get_meta( $key ) {
-		if ( null === $this->id ) {
-			return false;
-		}
-
-		$key = '_pronamic_subscription_' . $key;
-
-		return get_post_meta( $this->id, $key, true );
-	}
-
-	/**
-	 * Set meta data.
-	 *
-	 * @param  string $key   A meta key.
-	 * @param  mixed  $value A meta value.
-	 *
-	 * @return bool True on successful update, false on failure.
-	 */
-	public function set_meta( $key, $value = false ) {
-		if ( null === $this->id ) {
-			return false;
-		}
-
-		$key = '_pronamic_subscription_' . $key;
-
-		if ( $value instanceof \DateTime ) {
-			$value = $value->format( 'Y-m-d H:i:s' );
-		}
-
-		if ( empty( $value ) ) {
-			return delete_post_meta( $this->id, $key );
-		}
-
-		$result = update_post_meta( $this->id, $key, $value );
-
-		return ( false !== $result );
 	}
 
 	/**
