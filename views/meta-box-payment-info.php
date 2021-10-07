@@ -132,7 +132,7 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 		<td>
 			<?php
 
-			$method = $payment->get_meta( 'method' );
+			$method = $payment->get_payment_method();
 
 			$name = PaymentMethods::get_name( $method );
 
