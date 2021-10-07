@@ -555,29 +555,10 @@ abstract class PaymentInfo {
 	 *
 	 * @param  string $key   A meta key.
 	 * @param  mixed  $value A meta value.
-	 *
-	 * @return bool True on successful update, false on failure.
+	 * @return void
 	 */
 	public function set_meta( $key, $value ) {
 		$this->meta[ $key ] = $value;
-
-		if ( null === $this->id ) {
-			return false;
-		}
-
-		$key = $this->meta_key_prefix . $key;
-
-		if ( $value instanceof \DateTime ) {
-			$value = $value->format( 'Y-m-d H:i:s' );
-		}
-
-		if ( empty( $value ) ) {
-			return delete_post_meta( $this->id, $key );
-		}
-
-		$result = update_post_meta( $this->id, $key, $value );
-
-		return ( false !== $result );
 	}
 
 	/**
