@@ -141,8 +141,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	public function __construct() {
 		parent::__construct();
 
-		$this->meta = array();
-
 		$this->activated_at = new DateTime();
 	}
 
