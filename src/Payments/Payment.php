@@ -42,25 +42,8 @@ class Payment extends PaymentInfo {
 	private $refunded_amount;
 
 	/**
-	 * The purchase ID.
-	 *
-	 * @todo Is this required/used?
-	 * @var string|null
-	 */
-	public $purchase_id;
-
-	/**
-	 * The expiration period of this payment.
-	 *
-	 * @todo Is this required/used?
-	 * @var string
-	 */
-	public $expiration_period;
-
-	/**
 	 * The status of this payment.
 	 *
-	 * @todo   Check constant?
 	 * @var string|null
 	 */
 	public $status;
