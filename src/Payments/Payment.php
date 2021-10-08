@@ -155,17 +155,6 @@ class Payment extends PaymentInfo {
 	public $recurring;
 
 	/**
-	 * The recurring type:
-	 * - 'first'
-	 * - 'recurring'
-	 *
-	 * @todo Improve documentation, is this used?
-	 *
-	 * @var string|null
-	 */
-	public $recurring_type;
-
-	/**
 	 * Customer.
 	 *
 	 * @var Customer|null

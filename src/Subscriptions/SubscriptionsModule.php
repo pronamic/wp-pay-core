@@ -156,8 +156,6 @@ class SubscriptionsModule {
 			$payment->subscription    = $subscription;
 			$payment->subscription_id = $subscription->get_id();
 
-			$payment->recurring_type = Recurring::FIRST;
-
 			$start_date = $subscription->get_start_date();
 			$end_date   = $subscription->get_next_payment_date();
 
@@ -681,11 +679,6 @@ class SubscriptionsModule {
 	 * @return Payment
 	 */
 	public function start_payment( Payment $payment ) {
-		// Set recurring type.
-		if ( $payment->get_recurring() ) {
-			$payment->recurring_type = Recurring::RECURRING;
-		}
-
 		$subscription = $payment->get_subscription();
 
 		if ( empty( $subscription ) ) {
