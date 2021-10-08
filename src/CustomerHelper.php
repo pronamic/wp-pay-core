@@ -49,6 +49,11 @@ class CustomerHelper {
 			}
 		}
 
+		// User ID.
+		if ( null === $customer->get_user_id() && is_user_logged_in() ) {
+			$customer->set_user_id( \get_current_user_id() );
+		}
+
 		// Name.
 		$name = $customer->get_name();
 

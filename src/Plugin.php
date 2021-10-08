@@ -839,11 +839,6 @@ class Plugin {
 			$payment->key = uniqid( 'pay_' );
 		}
 
-		// User ID.
-		if ( null === $payment->user_id && is_user_logged_in() ) {
-			$payment->user_id = get_current_user_id();
-		}
-
 		$origin_id = $payment->get_origin_id();
 
 		if ( null === $origin_id ) {
