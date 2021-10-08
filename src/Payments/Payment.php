@@ -57,14 +57,6 @@ class Payment extends PaymentInfo {
 	public $purchase_id;
 
 	/**
-	 * The order ID of this payment.
-	 *
-	 * @todo Is this required/used?
-	 * @var string|int|null
-	 */
-	public $order_id;
-
-	/**
 	 * The expiration period of this payment.
 	 *
 	 * @todo Is this required/used?

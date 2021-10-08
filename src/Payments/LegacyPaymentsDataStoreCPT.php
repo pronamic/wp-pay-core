@@ -293,6 +293,11 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			return;
 		}
 
+		// Order ID.
+		if ( empty( $payment->order_id ) ) {
+			$payment->order_id = $this->get_meta_string( $id, 'order_id' );
+		}
+
 		// Key.
 		if ( empty( $payment->key ) ) {
 			$payment->key = $this->get_meta_string( $id, 'key' );
@@ -305,6 +310,22 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			$description = $this->get_meta_string( $id, 'description' );
 
 			$payment->set_description( $description );
+		}
+
+		// Payment method.
+		$payment_method = $payment->get_payment_method();
+
+		if ( empty( $payment_method ) ) {
+			$payment_method = $this->get_meta_string( $id, 'method' );
+
+			$payment->set_payment_method( $payment_method );
+		}
+
+		// Version.
+		$meta_version = $this->get_meta_string( $id, 'version' );
+
+		if ( ! empty( $meta_version ) ) {
+			$payment->set_version( $meta_version );
 		}
 
 		// Other.

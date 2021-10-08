@@ -41,6 +41,10 @@ class PaymentInfoHelper {
 			$object->id = $id;
 		}
 
+		if ( null !== $payment_info->order_id ) {
+			$object->order_id = $payment_info->order_id;
+		}
+
 		$key = $payment_info->key;
 
 		if ( null !== $key ) {
@@ -175,6 +179,10 @@ class PaymentInfoHelper {
 	public static function from_json( $json, PaymentInfo $payment_info ) {
 		if ( isset( $json->id ) ) {
 			$payment_info->set_id( $json->id );
+		}
+
+		if ( isset( $json->order_id ) ) {
+			$payment_info->order_id = $json->order_id;
 		}
 
 		if ( isset( $json->description ) ) {

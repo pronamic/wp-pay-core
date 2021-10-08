@@ -107,7 +107,6 @@ abstract class PaymentInfo {
 	 * The order ID of this payment.
 	 *
 	 * @todo Is this required/used?
-	 *
 	 * @var string|null
 	 */
 	public $order_id;

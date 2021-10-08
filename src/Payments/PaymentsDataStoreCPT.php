@@ -741,7 +741,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		}
 
 		$payment->config_id       = $this->get_meta_int( $id, 'config_id' );
-		$payment->order_id        = $this->get_meta_string( $id, 'order_id' );
 		$payment->source          = $this->get_meta_string( $id, 'source' );
 		$payment->source_id       = $this->get_meta_string( $id, 'source_id' );
 		$payment->email           = $this->get_meta_string( $id, 'email' );
@@ -750,8 +749,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$payment->start_date      = $this->get_meta_date( $id, 'start_date' );
 		$payment->end_date        = $this->get_meta_date( $id, 'end_date' );
 
-		$payment->set_version( $this->get_meta_string( $id, 'version' ) );
-
 		// Action URL.
 		$action_url = $payment->get_action_url();
 
@@ -759,15 +756,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			$action_url = $this->get_meta_string( $id, 'action_url' );
 
 			$payment->set_action_url( $action_url );
-		}
-
-		// Payment method.
-		$payment_method = $payment->get_payment_method();
-
-		if ( empty( $payment_method ) ) {
-			$payment_method = $this->get_meta_string( $id, 'method' );
-
-			$payment->set_payment_method( $payment_method );
 		}
 
 		// Legacy.
@@ -831,7 +819,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		$meta = array(
 			'config_id'               => $payment->config_id,
-			'order_id'                => $payment->order_id,
 			'expiration_period'       => null,
 			'consumer_name'           => ( null === $consumer_bank_details ? null : $consumer_bank_details->get_name() ),
 			'consumer_account_number' => ( null === $consumer_bank_details ? null : $consumer_bank_details->get_account_number() ),
