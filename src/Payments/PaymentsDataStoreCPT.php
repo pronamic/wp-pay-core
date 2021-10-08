@@ -800,14 +800,19 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	}
 
 	/**
-	 * Get update meta.
+	 * Update payment post meta.
 	 *
+	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
 	 * @param Payment $payment The payment to update.
-	 * @param array   $meta    Meta array.
-	 *
-	 * @return array
+	 * @return void
 	 */
-	protected function get_update_meta( $payment, $meta = array() ) {
+	private function update_post_meta( $payment ) {
+		$id = $payment->get_id();
+
+		if ( empty( $id ) ) {
+			return;
+		}
+
 		$customer = $payment->get_customer();
 
 		$consumer_bank_details = $payment->get_consumer_bank_details();
@@ -829,27 +834,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			'end_date'                => $payment->end_date,
 			'version'                 => $payment->get_version(),
 		);
-
-		$meta = parent::get_update_meta( $payment, $meta );
-
-		return $meta;
-	}
-
-	/**
-	 * Update payment post meta.
-	 *
-	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
-	 * @param Payment $payment The payment to update.
-	 * @return void
-	 */
-	private function update_post_meta( $payment ) {
-		$id = $payment->get_id();
-
-		if ( empty( $id ) ) {
-			return;
-		}
-
-		$meta = $this->get_update_meta( $payment );
 
 		foreach ( $meta as $meta_key => $meta_value ) {
 			$this->update_meta( $id, $meta_key, $meta_value );
