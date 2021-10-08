@@ -146,15 +146,6 @@ class Payment extends PaymentInfo {
 	public $subscription_source_id;
 
 	/**
-	 * Flag to indicate a recurring payment
-	 *
-	 * @todo Is this required?
-	 *
-	 * @var boolean|null
-	 */
-	public $recurring;
-
-	/**
 	 * Customer.
 	 *
 	 * @var Customer|null
@@ -739,16 +730,6 @@ class Payment extends PaymentInfo {
 	 */
 	public function get_subscription_id() {
 		return $this->subscription_id;
-	}
-
-	/**
-	 * Get recurring.
-	 *
-	 * @deprecated
-	 * @return bool|null
-	 */
-	public function get_recurring() {
-		return $this->recurring;
 	}
 
 	/**
