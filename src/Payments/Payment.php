@@ -73,13 +73,6 @@ class Payment extends PaymentInfo {
 	public $expiration_period;
 
 	/**
-	 * The description of this payment.
-	 *
-	 * @var string|null
-	 */
-	public $description;
-
-	/**
 	 * The status of this payment.
 	 *
 	 * @todo   Check constant?
