@@ -595,20 +595,17 @@ class Payment extends PaymentInfo {
 	/**
 	 * Get subscription.
 	 *
+	 * @deprecated Use `get_subscriptions()`.
 	 * @return Subscription|null
 	 */
 	public function get_subscription() {
-		if ( is_object( $this->subscription ) ) {
-			return $this->subscription;
-		}
+		$first = \reset( $this->subscriptions );
 
-		if ( empty( $this->subscription_id ) ) {
+		if ( false === $first ) {
 			return null;
 		}
 
-		$this->subscription = \get_pronamic_subscription( $this->subscription_id );
-
-		return $this->subscription;
+		return $first;
 	}
 
 	/**

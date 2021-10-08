@@ -740,9 +740,8 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			return;
 		}
 
-		$payment->subscription_id = $this->get_meta_int( $id, 'subscription_id' );
-		$payment->start_date      = $this->get_meta_date( $id, 'start_date' );
-		$payment->end_date        = $this->get_meta_date( $id, 'end_date' );
+		$payment->start_date = $this->get_meta_date( $id, 'start_date' );
+		$payment->end_date   = $this->get_meta_date( $id, 'end_date' );
 
 		// Action URL.
 		$action_url = $payment->get_action_url();
@@ -776,8 +775,10 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		}
 
 		// Subscription.
-		if ( ! empty( $payment->subscription_id ) ) {
-			$subscription = get_pronamic_subscription( $payment->subscription_id );
+		$subscription_id = $this->get_meta_int( $id, 'subscription_id' );
+
+		if ( ! empty( $subscription_id ) ) {
+			$subscription = \get_pronamic_subscription( $subscription_id );
 
 			if ( null !== $subscription ) {
 				$payment->add_subscription( $subscription );
@@ -819,11 +820,23 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$this->update_meta( $id, 'source', $payment->source );
 		$this->update_meta( $id, 'source_id', $payment->source_id );
 		$this->update_meta( $id, 'email', ( null === $customer ? null : $customer->get_email() ) );
-		$this->update_meta( $id, 'subscription_id', $payment->subscription_id );
 		$this->update_meta( $id, 'transaction_id', $payment->get_transaction_id() );
 		$this->update_meta( $id, 'start_date', $payment->start_date );
 		$this->update_meta( $id, 'end_date', $payment->end_date );
 		$this->update_meta( $id, 'version', $payment->get_version() );
+
+		// Subscriptions.
+		$meta_key = $this->get_meta_key( 'subscription_id' );
+
+		$subscriptions_ids = \get_post_meta( $id, 'subscription_id' );
+
+		foreach ( $payment->get_subscriptions() as $subscription ) {
+			$subscription_id = $subscription->get_id();
+
+			if ( ! in_array( $subscription_id, $subscriptions_ids ) ) {
+				\add_post_meta( $id, $meta_key, $subscription_id, false );
+			}
+		}
 
 		$this->update_meta_status( $payment );
 	}
