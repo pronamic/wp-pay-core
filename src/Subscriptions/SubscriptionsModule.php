@@ -128,16 +128,8 @@ class SubscriptionsModule {
 	 * @throws \UnexpectedValueException Throw unexpected value exception if the subscription does not have a valid date interval.
 	 */
 	public function maybe_create_subscription( $payment ) {
-		// Check if there is already subscription attached to the payment.
-		$subscription_id = $payment->get_subscription_id();
-
-		if ( ! empty( $subscription_id ) ) {
-			// Subscription already created.
-			return;
-		}
-
 		// Check if there is a subscription object attached to the payment.
-		$subscription = $payment->subscription;
+		$subscription = $payment->get_subscription();
 
 		if ( empty( $subscription ) ) {
 			return;
@@ -152,8 +144,6 @@ class SubscriptionsModule {
 		$result = $this->plugin->subscriptions_data_store->create( $subscription );
 
 		if ( $result ) {
-			$payment->subscription = $subscription;
-
 			$start_date = $subscription->get_start_date();
 			$end_date   = $subscription->get_next_payment_date();
 
@@ -638,7 +628,8 @@ class SubscriptionsModule {
 		$payment->source       = $subscription->get_source();
 		$payment->source_id    = $subscription->get_source_id();
 		$payment->email        = $subscription->get_email();
-		$payment->subscription = $subscription;
+
+		$payment->add_subscription( $subscription );
 
 		$payment->set_payment_method( $subscription->get_payment_method() );
 		$payment->set_description( $subscription->get_description() );
@@ -761,8 +752,9 @@ class SubscriptionsModule {
 
 		$payment = new Payment();
 
-		$payment->email        = $subscription->get_email();
-		$payment->subscription = $subscription;
+		$payment->email = $subscription->get_email();
+
+		$payment->add_subscription( $subscription );
 
 		$payment->set_payment_method( $subscription->get_payment_method() );
 
