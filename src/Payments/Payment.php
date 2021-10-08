@@ -179,11 +179,10 @@ class Payment extends PaymentInfo {
 	 * @param integer $post_id A payment post ID or null.
 	 */
 	public function __construct( $post_id = null ) {
-		$this->meta_key_prefix = '_pronamic_payment_';
-
 		parent::__construct( $post_id );
 
-		$this->subscriptions = array();
+		$this->meta_key_prefix = '_pronamic_payment_';
+		$this->subscriptions   = array();
 
 		$this->set_status( PaymentStatus::OPEN );
 

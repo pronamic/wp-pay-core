@@ -139,11 +139,10 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * @throws \Exception Throws exception on invalid post date.
 	 */
 	public function __construct() {
-		$this->meta_key_prefix = '_pronamic_subscription_';
-
 		parent::__construct();
 
-		$this->activated_at = new DateTime();
+		$this->activated_at    = new DateTime();
+		$this->meta_key_prefix = '_pronamic_subscription_';
 	}
 
 	/**
