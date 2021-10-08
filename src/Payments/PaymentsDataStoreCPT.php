@@ -815,24 +815,17 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		$customer = $payment->get_customer();
 
-		$consumer_bank_details = $payment->get_consumer_bank_details();
-
 		$meta = array(
-			'config_id'               => $payment->config_id,
-			'expiration_period'       => null,
-			'consumer_name'           => ( null === $consumer_bank_details ? null : $consumer_bank_details->get_name() ),
-			'consumer_account_number' => ( null === $consumer_bank_details ? null : $consumer_bank_details->get_account_number() ),
-			'consumer_iban'           => ( null === $consumer_bank_details ? null : $consumer_bank_details->get_iban() ),
-			'consumer_bic'            => ( null === $consumer_bank_details ? null : $consumer_bank_details->get_bic() ),
-			'consumer_city'           => ( null === $consumer_bank_details ? null : $consumer_bank_details->get_city() ),
-			'source'                  => $payment->source,
-			'source_id'               => $payment->source_id,
-			'email'                   => ( null === $customer ? null : $customer->get_email() ),
-			'subscription_id'         => $payment->subscription_id,
-			'transaction_id'          => $payment->get_transaction_id(),
-			'start_date'              => $payment->start_date,
-			'end_date'                => $payment->end_date,
-			'version'                 => $payment->get_version(),
+			'config_id'         => $payment->config_id,
+			'expiration_period' => null,
+			'source'            => $payment->source,
+			'source_id'         => $payment->source_id,
+			'email'             => ( null === $customer ? null : $customer->get_email() ),
+			'subscription_id'   => $payment->subscription_id,
+			'transaction_id'    => $payment->get_transaction_id(),
+			'start_date'        => $payment->start_date,
+			'end_date'          => $payment->end_date,
+			'version'           => $payment->get_version(),
 		);
 
 		foreach ( $meta as $meta_key => $meta_value ) {

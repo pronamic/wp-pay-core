@@ -692,11 +692,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$this->update_meta( $id, 'config_id', $subscription->config_id );
 		$this->update_meta( $id, 'source', $subscription->source );
 		$this->update_meta( $id, 'source_id', $subscription->source_id );
-		$this->update_meta( $id, 'frequency', $subscription->frequency );
-		$this->update_meta( $id, 'interval', $subscription->interval );
-		$this->update_meta( $id, 'interval_period', $subscription->interval_period );
 		$this->update_meta( $id, 'email', ( null === $customer ? null : $customer->get_email() ) );
-		$this->update_meta( $id, 'customer_name', ( null === $customer ? null : strval( $customer->get_name() ) ) );
 		$this->update_meta( $id, 'start_date', $subscription->start_date );
 		$this->update_meta( $id, 'end_date', $subscription->end_date );
 		$this->update_meta( $id, 'expiry_date', $subscription->expiry_date );
