@@ -154,10 +154,10 @@ class FormProcessor {
 
 		$payment->set_description( $description );
 
-		$payment->config_id   = $config_id;
-		$payment->order_id    = $order_id;
-		$payment->source      = $source;
-		$payment->source_id   = $source_id;
+		$payment->config_id = $config_id;
+		$payment->order_id  = $order_id;
+		$payment->source    = $source;
+		$payment->source_id = $source_id;
 		$payment->set_origin_id( $source_id );
 
 		// Set default payment method if required.

@@ -1206,7 +1206,7 @@ class SubscriptionsModule {
 		// Check gateway.
 		$config_id = $subscription->config_id;
 
-		$gateway   = Plugin::get_gateway( $config_id );
+		$gateway = Plugin::get_gateway( $config_id );
 
 		// If gateway is null we continue to next subscription.
 		if ( null === $gateway ) {
