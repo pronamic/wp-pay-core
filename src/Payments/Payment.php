@@ -124,13 +124,6 @@ class Payment extends PaymentInfo {
 	public $subscription_id;
 
 	/**
-	 * Subscription source ID.
-	 *
-	 * @var string|int|null
-	 */
-	public $subscription_source_id;
-
-	/**
 	 * Customer.
 	 *
 	 * @var Customer|null

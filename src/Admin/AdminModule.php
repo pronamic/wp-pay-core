@@ -815,8 +815,7 @@ class AdminModule {
 				$payment->add_period( $period );
 			}
 
-			$payment->subscription           = $subscription;
-			$payment->subscription_source_id = $payment->get_source_id();
+			$payment->subscription = $subscription;
 		}
 
 		// Start.

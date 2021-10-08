@@ -97,8 +97,7 @@ class SubscriptionHelper {
 
 		// Source.
 		if ( empty( $subscription->source ) && empty( $subscription->source_id ) ) {
-			$subscription->source    = $payment->source;
-			$subscription->source_id = $payment->subscription_source_id;
+			$subscription->source = $payment->source;
 		}
 
 		// Description.
