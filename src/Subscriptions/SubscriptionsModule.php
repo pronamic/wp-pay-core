@@ -421,8 +421,6 @@ class SubscriptionsModule {
 					}
 				}
 
-				$payment->recurring = false;
-
 				// Set payment period.
 				$renewal_period = $subscription->get_renewal_period();
 
@@ -515,8 +513,6 @@ class SubscriptionsModule {
 				if ( ! empty( $payment_method ) ) {
 					$payment->set_payment_method( $payment_method );
 				}
-
-				$payment->recurring = false;
 
 				/*
 				 * Use payment method minimum amount for verification payment.
@@ -644,7 +640,6 @@ class SubscriptionsModule {
 		$payment->source          = $subscription->get_source();
 		$payment->source_id       = $subscription->get_source_id();
 		$payment->email           = $subscription->get_email();
-		$payment->recurring       = true;
 		$payment->subscription    = $subscription;
 		$payment->subscription_id = $subscription->get_id();
 
@@ -770,7 +765,6 @@ class SubscriptionsModule {
 		$payment = new Payment();
 
 		$payment->email           = $subscription->get_email();
-		$payment->recurring       = true;
 		$payment->subscription    = $subscription;
 		$payment->subscription_id = $subscription->get_id();
 
@@ -1232,8 +1226,6 @@ class SubscriptionsModule {
 		if ( null === $payment ) {
 			return;
 		}
-
-		$payment->recurring = true;
 
 		$payment = $this->start_payment( $payment );
 
