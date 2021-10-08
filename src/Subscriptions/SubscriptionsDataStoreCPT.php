@@ -698,6 +698,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$this->update_meta( $id, 'expiry_date', $subscription->expiry_date );
 		$this->update_meta( $id, 'next_payment', $subscription->next_payment_date );
 		$this->update_meta( $id, 'next_payment_delivery_date', $subscription->next_payment_delivery_date );
+		$this->update_meta( $id, 'version', $subscription->get_version() );
 
 		$this->update_meta_status( $subscription );
 	}
