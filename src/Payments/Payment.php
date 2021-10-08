@@ -744,6 +744,7 @@ class Payment extends PaymentInfo {
 	/**
 	 * Get recurring.
 	 *
+	 * @deprecated
 	 * @return bool|null
 	 */
 	public function get_recurring() {
