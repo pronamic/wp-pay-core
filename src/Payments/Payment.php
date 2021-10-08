@@ -28,13 +28,6 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPeriod;
  */
 class Payment extends PaymentInfo {
 	/**
-	 * The subscription.
-	 *
-	 * @var Subscription|null
-	 */
-	public $subscription;
-
-	/**
 	 * The total amount of this payment.
 	 *
 	 * @var Money
