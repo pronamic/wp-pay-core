@@ -816,7 +816,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$customer = $payment->get_customer();
 
 		$this->update_meta( $id, 'config_id', $payment->config_id );
-		$this->update_meta( $id, 'expiration_period', null );
 		$this->update_meta( $id, 'source', $payment->source );
 		$this->update_meta( $id, 'source_id', $payment->source_id );
 		$this->update_meta( $id, 'email', ( null === $customer ? null : $customer->get_email() ) );
