@@ -177,7 +177,7 @@ class StatusChecker {
 			$next_try = ( $try + 1 );
 
 			// Get delay seconds for next status check.
-			$delay = self::get_delay_seconds( $next_try, $payment->get_recurring() );
+			$delay = self::get_delay_seconds( $next_try, $payment );
 
 			wp_schedule_single_event(
 				time() + $delay,
