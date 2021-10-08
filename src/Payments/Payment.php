@@ -116,14 +116,6 @@ class Payment extends PaymentInfo {
 	private $periods;
 
 	/**
-	 * Subscription ID.
-	 *
-	 * @todo Is this required?
-	 * @var int|null
-	 */
-	public $subscription_id;
-
-	/**
 	 * Customer.
 	 *
 	 * @var Customer|null
@@ -695,15 +687,6 @@ class Payment extends PaymentInfo {
 		}
 
 		$this->periods[] = $period;
-	}
-
-	/**
-	 * Get payment subscription ID.
-	 *
-	 * @return int|null
-	 */
-	public function get_subscription_id() {
-		return $this->subscription_id;
 	}
 
 	/**
