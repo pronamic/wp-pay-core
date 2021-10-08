@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
+use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Plugin;
 
 /**
@@ -66,7 +67,7 @@ class StatusChecker {
 		}
 
 		// Get delay seconds for first status check.
-		$delay = self::get_delay_seconds( 1, $payment->get_recurring() );
+		$delay = self::get_delay_seconds( 1, $payment );
 
 		wp_schedule_single_event(
 			time() + $delay,
@@ -81,14 +82,22 @@ class StatusChecker {
 	/**
 	 * Get the delay seconds for the specified try.
 	 *
-	 * @param int       $try       Which try/round to get the delay seconds for.
-	 * @param bool|null $recurring Whether or not to use the delay scheme for recurring payments.
+	 * @param int     $try     Which try/round to get the delay seconds for.
+	 * @param Payment $payment Payment.
 	 *
 	 * @return int
 	 */
-	private static function get_delay_seconds( $try, $recurring = false ) {
-		// Delays for recurring payments.
-		if ( $recurring ) {
+	private static function get_delay_seconds( $try, $payment ) {
+		if ( \in_array(
+			$payment->get_payment_method(),
+			array(
+				PaymentMethods::AFTERPAY,
+				PaymentMethods::BANK_TRANSFER,
+				PaymentMethods::DIRECT_DEBIT,
+				PaymentMethods::KLARNA_PAY_LATER,
+			),
+			true
+		) ) {
 			switch ( $try ) {
 				case 1:
 					return 15 * MINUTE_IN_SECONDS;
