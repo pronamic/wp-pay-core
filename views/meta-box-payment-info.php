@@ -27,8 +27,6 @@ if ( null === $payment ) {
 	return;
 }
 
-$purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true );
-
 ?>
 <table class="form-table">
 	<tr>
@@ -104,7 +102,12 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 		</td>
 	</tr>
 
-	<?php if ( $purchase_id ) : ?>
+	<?php
+
+	$purchase_id = $payment->get_meta( 'purchase_id' );
+
+	if ( $purchase_id ) :
+		?>
 
 		<tr>
 			<th scope="row">
