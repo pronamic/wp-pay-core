@@ -833,11 +833,6 @@ class SubscriptionsModule {
 			return false;
 		}
 
-		// Check recurring.
-		if ( ! $payment->get_recurring() ) {
-			return false;
-		}
-
 		// Check periods.
 		$periods = $payment->get_periods();
 
