@@ -815,22 +815,16 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		$customer = $payment->get_customer();
 
-		$meta = array(
-			'config_id'         => $payment->config_id,
-			'expiration_period' => null,
-			'source'            => $payment->source,
-			'source_id'         => $payment->source_id,
-			'email'             => ( null === $customer ? null : $customer->get_email() ),
-			'subscription_id'   => $payment->subscription_id,
-			'transaction_id'    => $payment->get_transaction_id(),
-			'start_date'        => $payment->start_date,
-			'end_date'          => $payment->end_date,
-			'version'           => $payment->get_version(),
-		);
-
-		foreach ( $meta as $meta_key => $meta_value ) {
-			$this->update_meta( $id, $meta_key, $meta_value );
-		}
+		$this->update_meta( $id, 'config_id', $payment->config_id );
+		$this->update_meta( $id, 'expiration_period', null );
+		$this->update_meta( $id, 'source', $payment->source );
+		$this->update_meta( $id, 'source_id', $payment->source_id );
+		$this->update_meta( $id, 'email', ( null === $customer ? null : $customer->get_email() ) );
+		$this->update_meta( $id, 'subscription_id', $payment->subscription_id );
+		$this->update_meta( $id, 'transaction_id', $payment->get_transaction_id() );
+		$this->update_meta( $id, 'start_date', $payment->start_date );
+		$this->update_meta( $id, 'end_date', $payment->end_date );
+		$this->update_meta( $id, 'version', $payment->get_version() );
 
 		$this->update_meta_status( $payment );
 	}
