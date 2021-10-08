@@ -1031,8 +1031,10 @@ class Plugin {
 			return $payment;
 		}
 
-		// Recurring.
-		if ( true === $payment->get_recurring() && ! $gateway->supports( 'recurring' ) ) {
+		// Subscriptions.
+		$subscriptions = $payment->get_subscriptions();
+
+		if ( \count( $subscriptions ) > 0 && ! $gateway->supports( 'recurring' ) ) {
 			throw new \Exception( 'Gateway does not support recurring payments.' );
 		}
 
