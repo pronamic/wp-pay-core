@@ -52,7 +52,7 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 			<?php esc_html_e( 'Order ID', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
-			<?php echo esc_html( get_post_meta( $payment_id, '_pronamic_payment_order_id', true ) ); ?>
+			<?php echo esc_html( $payment->get_order_id() ); ?>
 		</td>
 	</tr>
 	<tr>
