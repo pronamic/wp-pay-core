@@ -60,7 +60,7 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 			<?php esc_html_e( 'Description', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
-			<?php echo esc_html( get_post_meta( $payment_id, '_pronamic_payment_description', true ) ); ?>
+			<?php echo esc_html( $payment->get_description() ); ?>
 		</td>
 	</tr>
 	<tr>
@@ -184,7 +184,7 @@ $purchase_id = get_post_meta( $payment_id, '_pronamic_payment_purchase_id', true
 		<td>
 			<?php
 
-			$url = get_post_meta( $payment_id, '_pronamic_payment_action_url', true );
+			$url = $payment->get_action_url();
 
 			printf(
 				'<a href="%s" target="_blank">%s</a>',
