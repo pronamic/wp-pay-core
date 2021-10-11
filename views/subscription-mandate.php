@@ -15,6 +15,10 @@ if ( ! isset( $subscription ) ) {
 	return;
 }
 
+if ( ! isset( $gateway ) ) {
+	return;
+}
+
 $subscription_id = $subscription->get_id();
 
 $mollie_customer_id = \get_post_meta( $subscription_id, '_pronamic_subscription_mollie_customer_id', true );
