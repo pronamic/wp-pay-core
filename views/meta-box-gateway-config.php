@@ -116,7 +116,7 @@ $gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 							esc_attr( (string) $integration_id ),
 							selected( $gateway_id, $integration_id, false ),
 							esc_attr( implode( ' ', $classes ) ),
-							esc_attr( $name )
+							esc_attr( (string) $name )
 						);
 					}
 
