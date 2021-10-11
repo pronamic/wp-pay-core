@@ -17,9 +17,9 @@ $columns = array(
 
 $integration = pronamic_pay_plugin()->gateway_integrations->get_integration( $gateway_id );
 
-if ( $integration->supports( 'recurring' ) ) :
+if ( $integration->supports( 'recurring' ) ) {
 	$columns['recurring'] = __( 'Recurring', 'pronamic_ideal' );
-endif;
+}
 
 ?>
 <table class="form-table widefat pronamic-pay-payment-methods">
