@@ -6,25 +6,22 @@
  * @copyright 2005-2021 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
+ * @var \Pronamic\WordPress\Pay\Payments\Payment $payment Payment.
  */
 
 use Pronamic\WordPress\Pay\Util;
 
-$payment_id = get_the_ID();
-
-if ( empty( $payment_id ) ) {
-	return;
-}
-
-$payment = get_pronamic_payment( $payment_id );
-
-if ( null === $payment ) {
-	return;
-}
-
 $subscription = $payment->get_subscription();
 
-if ( $subscription ) :
+if ( null === $subscription ) : ?>
+
+	<p>
+		<?php esc_html_e( 'This payment is not related to a subscription.', 'pronamic_ideal' ); ?>
+	</p>
+
+<?php else : ?>
+
+	<?php
 
 	$phase = $subscription->get_display_phase();
 
@@ -62,7 +59,7 @@ if ( $subscription ) :
 				<?php esc_html_e( 'Description', 'pronamic_ideal' ); ?>
 			</th>
 			<td>
-				<?php echo esc_html( $subscription->get_description() ); ?>
+				<?php echo esc_html( (string) $subscription->get_description() ); ?>
 			</td>
 		</tr>
 		<tr>
@@ -72,11 +69,9 @@ if ( $subscription ) :
 			<td>
 				<?php
 
-				if ( null !== $phase ) :
-
+				if ( null !== $phase ) {
 					echo esc_html( $phase->get_amount()->format_i18n() );
-
-				endif;
+				}
 
 				?>
 			</td>
@@ -123,11 +118,5 @@ if ( $subscription ) :
 			</td>
 		</tr>
 	</table>
-
-<?php else : ?>
-
-	<p>
-		<?php esc_html_e( 'This payment is not related to a subscription.', 'pronamic_ideal' ); ?>
-	</p>
 
 <?php endif; ?>
