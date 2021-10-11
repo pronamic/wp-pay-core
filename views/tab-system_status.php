@@ -189,7 +189,7 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 				$memory_formatted = size_format( $memory );
 
 				if ( false === $memory_formatted ) {
-					echo \esc_html( $memory );
+					echo \esc_html( (string) $memory );
 				}
 
 				if ( false !== $memory_formatted ) {
@@ -260,15 +260,17 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 			<td>
 				<?php
 
-				if ( function_exists( 'curl_version' ) ) {
-					// @codingStandardsIgnoreStart
+				if ( \function_exists( 'curl_version' ) ) {
 					// Using cURL functions is highly discouraged within VIP context
 					// We only use this cURL function for on the system status page
-					$version = curl_version();
-					// @codingStandardsIgnoreEnd
+					$curl_version = curl_version();
 
-					if ( isset( $version['version'] ) ) {
-						echo esc_html( $version['version'] );
+					if ( false === $curl_version ) {
+						\esc_html_e( 'Unable to get the current cURL version.', 'pronamic_ideal' );
+					}
+
+					if ( \is_array( $curl_version ) && \array_key_exists( 'version', $curl_version ) ) {
+						echo \esc_html( $curl_version['version'] );
 					}
 				}
 
@@ -285,19 +287,20 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 			<td>
 				<?php
 
-				if ( defined( 'OPENSSL_VERSION_TEXT' ) ) {
-					echo esc_html( OPENSSL_VERSION_TEXT );
+				if ( \defined( 'OPENSSL_VERSION_TEXT' ) ) {
+					echo \esc_html( OPENSSL_VERSION_TEXT );
 				}
 
 				// @link https://www.openssl.org/docs/crypto/OPENSSL_VERSION_NUMBER.html
-				$version_required = 0x000908000;
+				$version_current  = (string) OPENSSL_VERSION_NUMBER;
+				$version_required = (string) 0x000908000;
 
 				?>
 			</td>
 			<td>
 				<?php
 
-				if ( version_compare( OPENSSL_VERSION_NUMBER, 0x000908000, '>' ) ) {
+				if ( \version_compare( $version_current, $version_required, '>' ) ) {
 					echo '✓';
 				} else {
 					esc_html_e( 'Pronamic Pay requires OpenSSL 0.9.8 or above.', 'pronamic_ideal' );
@@ -338,7 +341,7 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 			<td>
 				<?php
 
-				$url = add_query_arg( 'branch', $this->plugin->get_version(), 'https://travis-ci.org/pronamic/wp-pronamic-ideal.png' );
+				$url = add_query_arg( 'branch', pronamic_pay_plugin()->get_version(), 'https://travis-ci.org/pronamic/wp-pronamic-ideal.png' );
 
 				?>
 				<a href="https://travis-ci.org/pronamic/wp-pronamic-ideal">
