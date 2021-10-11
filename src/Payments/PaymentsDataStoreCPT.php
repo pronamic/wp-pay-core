@@ -796,7 +796,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			$post_meta_value    = \get_post_meta( $id, $post_meta_key, true );
 
 			if ( empty( $payment_meta_value ) && ! empty( $post_meta_value ) ) {
-				$payment->set_meta( $new_key, $value );
+				$payment->set_meta( $payment_meta_key, $post_meta_value );
 			}
 		}
 	}
