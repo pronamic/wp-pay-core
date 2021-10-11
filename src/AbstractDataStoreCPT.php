@@ -65,7 +65,7 @@ abstract class AbstractDataStoreCPT {
 	 * @param string $key A key.
 	 * @return string
 	 */
-	private function get_meta_key( $key ) {
+	protected function get_meta_key( $key ) {
 		return $this->meta_key_prefix . $key;
 	}
 
