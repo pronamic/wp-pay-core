@@ -186,7 +186,15 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 
 				$memory = pronamic_pay_let_to_num( WP_MEMORY_LIMIT );
 
-				echo esc_html( size_format( $memory ) );
+				$memory_formatted = size_format( $memory );
+
+				if ( false === $memory_formatted ) {
+					echo \esc_html( $memory );
+				}
+
+				if ( false !== $memory_formatted ) {
+					echo \esc_html( $memory_formatted );
+				}
 
 				?>
 			</td>
