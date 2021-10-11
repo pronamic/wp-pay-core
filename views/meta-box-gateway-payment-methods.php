@@ -34,10 +34,8 @@ if ( $integration->supports( 'recurring' ) ) {
 	</thead>
 
 	<tbody>
-		<?php
 
-		foreach ( $payment_methods as $method ) {
-			?>
+		<?php  foreach ( $payment_methods as $method ) : ?>
 
 			<tr>
 
@@ -87,11 +85,7 @@ if ( $integration->supports( 'recurring' ) ) {
 
 			</tr>
 
-			<?php
+		<?php endforeach; ?>
 
-		}
-
-		?>
 	</tbody>
-
 </table>
