@@ -113,7 +113,7 @@ $gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 							'<option data-gateway-description="%s" data-pronamic-pay-settings="%s" value="%s" %s class="%s">%s</option>',
 							esc_attr( $description ),
 							esc_attr( (string) wp_json_encode( $integration->get_settings() ) ),
-							esc_attr( $integration_id ),
+							esc_attr( (string) $integration_id ),
 							selected( $gateway_id, $integration_id, false ),
 							esc_attr( implode( ' ', $classes ) ),
 							esc_attr( $name )

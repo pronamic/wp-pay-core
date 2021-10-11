@@ -71,7 +71,6 @@ class WebhookManager {
 					'post_type'  => 'pronamic_gateway',
 					'orderby'    => 'post_title',
 					'order'      => 'ASC',
-					'fields'     => 'ids',
 					'nopaging'   => true,
 					'meta_query' => array(
 						array(
@@ -81,10 +80,17 @@ class WebhookManager {
 				)
 			);
 
+			$posts = \array_filter(
+				$query->posts,
+				function( $post ) {
+					return ( $post instanceof \WP_Post );
+				}
+			);
+
 			// Loop gateways.
-			foreach ( $query->posts as $config_id ) {
+			foreach ( $posts as $post ) {
 				try {
-					$log = get_post_meta( $config_id, '_pronamic_gateway_webhook_log', true );
+					$log = get_post_meta( $post->ID, '_pronamic_gateway_webhook_log', true );
 
 					$log = json_decode( $log );
 
@@ -94,7 +100,7 @@ class WebhookManager {
 				}
 
 				// Check if manual configuration is needed for webhook.
-				$gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
+				$gateway_id = get_post_meta( $post->ID, '_pronamic_gateway_id', true );
 
 				$integration = pronamic_pay_plugin()->gateway_integrations->get_integration( $gateway_id );
 
@@ -112,7 +118,7 @@ class WebhookManager {
 					continue;
 				}
 
-				$outdated_urls[] = $config_id;
+				$outdated_urls[] = $post->ID;
 			}
 
 			/**
