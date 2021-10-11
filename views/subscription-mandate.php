@@ -92,9 +92,9 @@ if ( is_array( $current_mandate ) ) {
 									$cards = new Cards();
 
 									foreach ( $mollie_customer_mandates as $mandate ) :
-										if ( 'valid' !== $mandate->status ) :
+										if ( 'valid' !== $mandate->status ) {
 											continue;
-										endif;
+										}
 
 										$card_name      = null;
 										$account_number = null;
@@ -102,7 +102,7 @@ if ( is_array( $current_mandate ) ) {
 										$bic_or_brand   = null;
 										$logo_url       = null;
 
-										switch ( $mandate->method ) :
+										switch ( $mandate->method ) {
 											case 'creditcard':
 												$card_name      = $mandate->details->cardHolder;
 												$account_number = str_pad( $mandate->details->cardNumber, 16, '*', \STR_PAD_LEFT );
@@ -119,12 +119,12 @@ if ( is_array( $current_mandate ) ) {
 												$bic_or_brand = substr( $mandate->details->consumerAccount, 4, 4 );
 
 												break;
-										endswitch;
+										}
 
 										// Split account number in chunks.
-										if ( null !== $account_number ) :
+										if ( null !== $account_number ) {
 											$account_number = \chunk_split( $account_number, 4, ' ' );
-										endif;
+										}
 
 										$classes = array( 'pp-card' );
 
@@ -133,13 +133,13 @@ if ( is_array( $current_mandate ) ) {
 										$card = $cards->get_card( $bic_or_brand );
 
 										// Set card brand specific details.
-										if ( null !== $card ) :
+										if ( null !== $card ) {
 											$classes[] = 'brand-' . $card['brand'];
 
 											$logo_url = $cards->get_card_logo_url( $card['brand'] );
 
 											$bg_color = 'transparent';
-										endif;
+										}
 
 										?>
 
