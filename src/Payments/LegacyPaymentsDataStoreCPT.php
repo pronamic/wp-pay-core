@@ -297,7 +297,6 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$payment->config_id = $this->get_meta_int( $id, 'config_id' );
 		$payment->source    = $this->get_meta_string( $id, 'source' );
 		$payment->source_id = $this->get_meta_string( $id, 'source_id' );
-		$payment->status    = $this->get_meta_string( $id, 'status' );
 		$payment->email     = $this->get_meta_string( $id, 'email' );
 
 		// Order ID.

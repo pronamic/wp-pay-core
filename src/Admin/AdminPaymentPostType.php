@@ -583,11 +583,13 @@ class AdminPaymentPostType {
 				}
 
 				// Show original amount and refunded amount.
-				echo \sprintf(
-					'<del>%1$s</del> %2$s',
-					esc_html( $total_amount->format_i18n() ),
-					\esc_html( $total_amount->subtract( $refunded_amount )->format_i18n() )
-				);
+				if ( null !== $refunded_amount ) {
+					echo \sprintf(
+						'<del>%1$s</del> %2$s',
+						esc_html( $total_amount->format_i18n() ),
+						\esc_html( $total_amount->subtract( $refunded_amount )->format_i18n() )
+					);
+				}
 
 				break;
 			case 'pronamic_payment_date':
