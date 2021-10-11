@@ -7,6 +7,7 @@
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  * @var \Pronamic\WordPress\Pay\Plugin $plugin Plugin.
+ * @var \WP_Post                       $post   Post.
  */
 
 use Pronamic\WordPress\Pay\Util;
@@ -21,7 +22,7 @@ usort(
 );
 
 // Sections.
-$config_id = get_the_ID();
+$config_id = $post->ID;
 
 $gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 
@@ -149,7 +150,7 @@ $gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 					),
 				);
 
-				$value = get_post_meta( get_the_ID(), '_pronamic_gateway_mode', true );
+				$value = get_post_meta( $config_id, '_pronamic_gateway_mode', true );
 
 				printf(
 					'<select %s>%s</select>',
