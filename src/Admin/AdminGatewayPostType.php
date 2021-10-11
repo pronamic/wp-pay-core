@@ -355,6 +355,17 @@ class AdminGatewayPostType {
 			}
 		);
 
+		$columns = array(
+			'payment_method' => __( 'Payment method', 'pronamic_ideal' ),
+			'active'         => __( 'Active', 'pronamic_ideal' ),
+		);
+
+		$integration = pronamic_pay_plugin()->gateway_integrations->get_integration( $gateway_id );
+
+		if ( $integration->supports( 'recurring' ) ) {
+			$columns['recurring'] = __( 'Recurring', 'pronamic_ideal' );
+		}
+
 		require __DIR__ . '/../../views/meta-box-gateway-payment-methods.php';
 	}
 
