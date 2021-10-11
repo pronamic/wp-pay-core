@@ -721,6 +721,18 @@ class Payment extends PaymentInfo {
 			}
 		}
 
+		if ( isset( $json->subscriptions ) ) {
+			foreach ( $json->subscriptions as $json_subscription ) {
+				if ( \property_exists( $json_subscription, 'id' ) ) {
+					$subscription = \get_pronamic_subscription( $json_subscription->id );
+
+					if ( null !== $subscription ) {
+						$payment->add_subscription( $subscription );
+					}
+				}
+			}
+		}
+
 		if ( isset( $json->failure_reason ) ) {
 			$payment->set_failure_reason( FailureReason::from_json( $json->failure_reason ) );
 		}
@@ -770,6 +782,27 @@ class Payment extends PaymentInfo {
 
 		if ( null !== $refunded_amount ) {
 			$properties['refunded_amount'] = $refunded_amount->jsonSerialize();
+		}
+
+		// Subscriptions.
+		$subscriptions = $this->get_subscriptions();
+
+		if ( \count( $subscriptions ) > 0 ) {
+			$properties['subscriptions'] = array();
+
+			foreach ( $subscriptions as $subscription ) {
+				$properties['subscriptions'][] = (object) array(
+					'$ref' => \rest_url(
+						\sprintf(
+							'/%s/%s/%d',
+							'pronamic-pay/v1',
+							'subscriptions',
+							$subscription->get_id()
+						)
+					),
+					'id'   => $subscription->get_id(),
+				);
+			}
 		}
 
 		// Periods.
