@@ -116,10 +116,18 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 			<td>
 				<?php
 
-				if ( version_compare( phpversion(), '5.2', '>' ) ) {
-					echo '✓';
-				} else {
-					esc_html_e( 'Pronamic Pay requires PHP 5.2 or above.', 'pronamic_ideal' );
+				$php_version = \phpversion();
+
+				if ( false === $php_version ) {
+					\esc_html_e( 'Unable to get the current PHP version.', 'pronamic_ideal' );
+				}
+
+				if ( false !== $php_version ) {
+					if ( \version_compare( $php_version, '5.2', '>' ) ) {
+						echo '✓';
+					} else {
+						esc_html_e( 'Pronamic Pay requires PHP 5.2 or above.', 'pronamic_ideal' );
+					}
 				}
 
 				?>
