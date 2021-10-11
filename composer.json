@@ -58,6 +58,7 @@
 		"bamarni/composer-bin-plugin": "^1.4",
 		"overtrue/phplint": "^2.2",
 		"php-coveralls/php-coveralls": "^2.4",
+		"php-stubs/wordpress-globals": "^0.2.0",
 		"php-stubs/wp-cli-stubs": "^2.4",
 		"phpmd/phpmd": "^2.9",
 		"phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0",

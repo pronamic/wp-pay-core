@@ -5,10 +5,11 @@ parameters:
 	checkMissingIterableValueType: false
 	dynamicConstantNames:
 		- PRONAMIC_PAY_DEBUG
-		- SCRIPT_DEBUG
 	bootstrapFiles:
-		- vendor/php-stubs/wp-cli-stubs/wp-cli-stubs.php
 		- tests/phpstan/bootstrap.php
+	scanFiles:
+		- vendor/php-stubs/wordpress-globals/wordpress-globals.php
+		- vendor/php-stubs/wp-cli-stubs/wp-cli-stubs.php
 	paths:
 		- src/
 		- views/
