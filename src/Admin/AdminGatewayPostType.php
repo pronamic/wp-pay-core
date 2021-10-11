@@ -360,10 +360,12 @@ class AdminGatewayPostType {
 			'active'         => __( 'Active', 'pronamic_ideal' ),
 		);
 
-		$integration = pronamic_pay_plugin()->gateway_integrations->get_integration( $gateway_id );
+		if ( null !== $gateway_id ) {
+			$integration = pronamic_pay_plugin()->gateway_integrations->get_integration( $gateway_id );
 
-		if ( $integration->supports( 'recurring' ) ) {
-			$columns['recurring'] = __( 'Recurring', 'pronamic_ideal' );
+			if ( null !== $integration && $integration->supports( 'recurring' ) ) {
+				$columns['recurring'] = __( 'Recurring', 'pronamic_ideal' );
+			}
 		}
 
 		require __DIR__ . '/../../views/meta-box-gateway-payment-methods.php';
