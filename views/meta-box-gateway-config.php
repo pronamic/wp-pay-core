@@ -6,11 +6,12 @@
  * @copyright 2005-2021 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
+ * @var \Pronamic\WordPress\Pay\Plugin $plugin Plugin.
  */
 
 use Pronamic\WordPress\Pay\Util;
 
-$integrations = iterator_to_array( $this->plugin->gateway_integrations );
+$integrations = iterator_to_array( $plugin->gateway_integrations );
 
 usort(
 	$integrations,

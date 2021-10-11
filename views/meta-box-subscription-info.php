@@ -79,7 +79,7 @@ $phase = $subscription->get_display_phase();
 			<?php esc_html_e( 'Payment Method', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
-			<?php echo esc_html( PaymentMethods::get_name( $subscription->get_payment_method() ) ); ?>
+			<?php echo esc_html( (string) PaymentMethods::get_name( $subscription->get_payment_method() ) ); ?>
 		</td>
 	</tr>
 	<tr>

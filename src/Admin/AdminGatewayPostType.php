@@ -288,16 +288,18 @@ class AdminGatewayPostType {
 	public function meta_box_config( $post ) {
 		wp_nonce_field( 'pronamic_pay_save_gateway', 'pronamic_pay_nonce' );
 
+		$plugin = $this->plugin;
+
 		$gateway = Plugin::get_gateway( $post->ID );
 
 		include __DIR__ . '/../../views/meta-box-gateway-config.php';
 
-		wp_localize_script(
+		\wp_localize_script(
 			'pronamic-pay-admin',
 			'pronamicPayGatewayAdmin',
 			array(
-				'rest_url' => rest_url( 'pronamic-pay/v1/gateways/' . $post->ID ),
-				'nonce'    => wp_create_nonce( 'wp_rest' ),
+				'rest_url' => \rest_url( 'pronamic-pay/v1/gateways/' . $post->ID ),
+				'nonce'    => \wp_create_nonce( 'wp_rest' ),
 			)
 		);
 	}
