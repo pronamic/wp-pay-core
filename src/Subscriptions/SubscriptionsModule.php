@@ -1131,9 +1131,12 @@ class SubscriptionsModule {
 			)
 		);
 
-		$posts = \array_filter( $query->posts, function( $post ) {
-			return ( $post instanceof \WP_Post );
-		} );
+		$posts = \array_filter(
+			$query->posts,
+			function( $post ) {
+				return ( $post instanceof \WP_Post );
+			} 
+		);
 
 		foreach ( $posts as $post ) {
 			// Progress callback.
@@ -1595,9 +1598,12 @@ class SubscriptionsModule {
 
 		$query = new WP_Query( $args );
 
-		$posts = \array_filter( $query->posts, function( $post ) {
-			return ( $post instanceof \WP_Post );
-		} );
+		$posts = \array_filter(
+			$query->posts,
+			function( $post ) {
+				return ( $post instanceof \WP_Post );
+			} 
+		);
 
 		foreach ( $posts as $post ) {
 			if ( $cli_test ) {

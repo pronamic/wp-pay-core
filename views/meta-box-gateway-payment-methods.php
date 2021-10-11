@@ -27,7 +27,7 @@ use Pronamic\WordPress\Pay\Core\PaymentMethods;
 
 	<tbody>
 
-		<?php  foreach ( $payment_methods as $method ) : ?>
+		<?php foreach ( $payment_methods as $method ) : ?>
 
 			<tr>
 
