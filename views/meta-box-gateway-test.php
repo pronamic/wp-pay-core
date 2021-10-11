@@ -29,10 +29,6 @@ if ( empty( $gateway ) ) {
 
 wp_nonce_field( 'test_pay_gateway', 'pronamic_pay_test_nonce' );
 
-$is_ideal  = false;
-$is_ideal |= $gateway instanceof IDealBasic_Gateway;
-$is_ideal |= $gateway instanceof IDealAdvancedV3_Gateway;
-
 // Payment method selector.
 $payment_methods = $gateway->get_payment_method_field_options( true );
 
@@ -319,9 +315,3 @@ $currency = Currency::get_instance( 'EUR' );
 		} );
 	} );
 </script>
-
-<?php
-
-if ( $is_ideal || $gateway instanceof \Pronamic\WordPress\Pay\Gateways\OmniKassa2\Gateway ) {
-	include Plugin::$dirname . '/views/ideal-test-cases.php';
-}
