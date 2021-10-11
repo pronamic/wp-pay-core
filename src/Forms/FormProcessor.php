@@ -124,7 +124,7 @@ class FormProcessor {
 		$first_name = filter_input( INPUT_POST, 'pronamic_pay_first_name', FILTER_SANITIZE_STRING );
 		$last_name  = filter_input( INPUT_POST, 'pronamic_pay_last_name', FILTER_SANITIZE_STRING );
 		$email      = filter_input( INPUT_POST, 'pronamic_pay_email', FILTER_VALIDATE_EMAIL );
-		$order_id   = time();
+		$order_id   = (string) time();
 
 		$description = null;
 

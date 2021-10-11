@@ -343,7 +343,7 @@ class Payment extends PaymentInfo {
 	/**
 	 * Set the action URL.
 	 *
-	 * @param string $action_url Action URL.
+	 * @param string|null $action_url Action URL.
 	 * @return void
 	 */
 	public function set_action_url( $action_url ) {

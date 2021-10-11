@@ -61,6 +61,6 @@ class FormShortcode {
 			return '';
 		}
 
-		return $this->forms_module->get_form_output_by_id( $atts['id'] );
+		return $this->forms_module->get_form_output_by_id( (int) $atts['id'] );
 	}
 }

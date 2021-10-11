@@ -5,6 +5,7 @@ parameters:
 	checkMissingIterableValueType: false
 	dynamicConstantNames:
 		- DOING_AUTOSAVE
+		- DOING_CRON
 		- PRONAMIC_PAY_DEBUG
 		- SCRIPT_DEBUG
 	bootstrapFiles:

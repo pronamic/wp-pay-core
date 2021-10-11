@@ -156,10 +156,10 @@ class AdminReports {
 
 		$data = array(
 			(object) array(
-				'label'      => __( 'Number successful payments', 'pronamic_ideal' ),
-				'data'       => $this->get_report( 'payment_completed', 'COUNT', $start, $end ),
-				'color'      => '#dbe1e3',
-				'bars'       => (object) array(
+				'label'       => __( 'Number successful payments', 'pronamic_ideal' ),
+				'data'        => $this->get_report( 'payment_completed', 'COUNT', $start, $end ),
+				'color'       => '#dbe1e3',
+				'bars'        => (object) array(
 					'fillColor' => '#dbe1e3',
 					'fill'      => true,
 					'show'      => true,
@@ -167,9 +167,10 @@ class AdminReports {
 					'barWidth'  => 2419200000 * 0.5,
 					'align'     => 'center',
 				),
-				'shadowSize' => 0,
-				'hoverable'  => false,
-				'class'      => 'completed-count',
+				'shadowSize'  => 0,
+				'hoverable'   => false,
+				'class'       => 'completed-count',
+				'legendValue' => 0,
 			),
 			(object) array(
 				'label'            => __( 'Open payments', 'pronamic_ideal' ),
@@ -191,6 +192,7 @@ class AdminReports {
 				'shadowSize'       => 0,
 				'tooltipFormatter' => 'money',
 				'class'            => 'pending-sum',
+				'legendValue'      => 0,
 			),
 			(object) array(
 				'label'            => __( 'Successful payments', 'pronamic_ideal' ),
@@ -213,6 +215,7 @@ class AdminReports {
 				'prepend_tooltip'  => '&euro;&nbsp;',
 				'tooltipFormatter' => 'money',
 				'class'            => 'completed-sum',
+				'legendValue'      => 0,
 			),
 			(object) array(
 				'label'            => __( 'Cancelled payments', 'pronamic_ideal' ),
@@ -235,6 +238,7 @@ class AdminReports {
 				'prepend_tooltip'  => '&euro;&nbsp;',
 				'tooltipFormatter' => 'money',
 				'class'            => 'cancelled-sum',
+				'legendValue'      => 0,
 			),
 			(object) array(
 				'label'            => __( 'Expired payments', 'pronamic_ideal' ),
@@ -257,6 +261,7 @@ class AdminReports {
 				'prepend_tooltip'  => '&euro;&nbsp;',
 				'tooltipFormatter' => 'money',
 				'class'            => 'expired-sum',
+				'legendValue'      => 0,
 			),
 			(object) array(
 				'label'            => __( 'Failed payments', 'pronamic_ideal' ),
@@ -279,6 +284,7 @@ class AdminReports {
 				'prepend_tooltip'  => '&euro;&nbsp;',
 				'tooltipFormatter' => 'money',
 				'class'            => 'failed-sum',
+				'legendValue'      => 0,
 			),
 		);
 

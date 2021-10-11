@@ -623,11 +623,11 @@ class SubscriptionsModule {
 		// Create payment.
 		$payment = new Payment();
 
-		$payment->config_id    = $subscription->get_config_id();
-		$payment->order_id     = $subscription->get_order_id();
-		$payment->source       = $subscription->get_source();
-		$payment->source_id    = $subscription->get_source_id();
-		$payment->email        = $subscription->get_email();
+		$payment->config_id = $subscription->get_config_id();
+		$payment->order_id  = $subscription->get_order_id();
+		$payment->source    = $subscription->get_source();
+		$payment->source_id = $subscription->get_source_id();
+		$payment->email     = $subscription->get_email();
 
 		$payment->add_subscription( $subscription );
 

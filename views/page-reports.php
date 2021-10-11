@@ -2,10 +2,11 @@
 /**
  * Page Reports
  *
- * @author    Pronamic <info@pronamic.eu>
+ * @author Pronamic <info@pronamic.eu>
  * @copyright 2005-2021 Pronamic
- * @license   GPL-3.0-or-later
- * @package   Pronamic\WordPress\Pay
+ * @license GPL-3.0-or-later
+ * @package Pronamic\WordPress\Pay
+ * @var \Pronamic\WordPress\Pay\Admin\AdminReports $admin_reports Admin reports.
  */
 
 use Pronamic\WordPress\Money\Money;

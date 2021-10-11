@@ -30,9 +30,12 @@
 		)
 	);
 
-	$subscription_posts = \array_filter( $query->posts, function( $post ) {
-		return $post instanceof \WP_Post;
-	} );
+	$subscription_posts = \array_filter(
+		$query->posts,
+		function( $post ) {
+			return $post instanceof \WP_Post;
+		} 
+	);
 
 	echo '<ul>';
 
