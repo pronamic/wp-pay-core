@@ -211,10 +211,13 @@ if ( is_array( $current_mandate ) ) {
 												continue;
 											endif;
 
+											$name = PaymentMethods::get_name( $method );
+											$name = ( null === $name ) ? $method : $name;
+
 											printf(
 												'<option value="%s">%s</option>',
 												esc_attr( $method ),
-												esc_html( PaymentMethods::get_name( $method ) )
+												esc_html( $name )
 											);
 										}
 									}
