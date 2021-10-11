@@ -763,8 +763,6 @@ class AdminModule {
 			$subscription->set_description( $description );
 			$subscription->set_lines( $payment->get_lines() );
 
-			$payment->add_subscription( $subscription );
-
 			// Ends on.
 			$ends_on = \filter_input( \INPUT_POST, 'pronamic_pay_ends_on', \FILTER_SANITIZE_STRING );
 
@@ -814,8 +812,6 @@ class AdminModule {
 			if ( null !== $period ) {
 				$payment->add_period( $period );
 			}
-
-			$payment->add_subscription( $subscription );
 		}
 
 		// Start.

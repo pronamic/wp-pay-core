@@ -592,6 +592,10 @@ class Payment extends PaymentInfo {
 	 * @return void
 	 */
 	public function add_subscription( Subscription $subscription ) {
+		if ( \in_array( $subscription, $this->subscriptions, true ) ) {
+			return;
+		}
+
 		$this->subscriptions[] = $subscription;
 	}
 
@@ -661,6 +665,8 @@ class Payment extends PaymentInfo {
 		if ( null === $this->periods ) {
 			$this->periods = array();
 		}
+
+		$this->add_subscription( $period->get_phase()->get_subscription() );
 
 		$this->periods[] = $period;
 	}
