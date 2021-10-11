@@ -950,7 +950,15 @@ class SubscriptionsModule {
 		$expiring_subscription_posts = $this->get_expiring_subscription_posts( $start_date, $end_date );
 
 		foreach ( $expiring_subscription_posts as $post ) {
+			if ( ! $post instanceof \WP_Post ) {
+				continue;
+			}
+
 			$subscription = \get_pronamic_subscription( $post->ID );
+
+			if ( null === $subscription ) {
+				continue;
+			}
 
 			// If expiry date is null we continue, subscription is not expiring.
 			$expiry_date = $subscription->get_expiry_date();
@@ -1123,7 +1131,11 @@ class SubscriptionsModule {
 			)
 		);
 
-		foreach ( $query->posts as $post ) {
+		$posts = \array_filter( $query->posts, function( $post ) {
+			return ( $post instanceof \WP_Post );
+		} );
+
+		foreach ( $posts as $post ) {
 			// Progress callback.
 			if ( null !== $args['on_progress'] ) {
 				\call_user_func( $args['on_progress'], $post );
@@ -1154,8 +1166,9 @@ class SubscriptionsModule {
 	/**
 	 * Process subscription payment.
 	 *
-	 * @param string|int $subscription_id Subscription ID.
+	 * @param int $subscription_id Subscription ID.
 	 * @throws \Exception Throws exception on error.
+	 * @return void
 	 */
 	private function process_subscription_payment( $subscription_id ) {
 		// Clear scheduled payments for subscription.
@@ -1214,6 +1227,7 @@ class SubscriptionsModule {
 	 *
 	 * @param int $subscription_id Subscription ID.
 	 * @param int $try             Try number for this event.
+	 * @return void
 	 */
 	private function schedule_subscription_payment_event( $subscription_id, $try ) {
 		// Limit number of tries.
@@ -1243,8 +1257,8 @@ class SubscriptionsModule {
 	/**
 	 * Get subscription payment retry seconds.
 	 *
-	 * @param $try
-	 * @return float|int
+	 * @param int $try Number of attempts
+	 * @return int
 	 */
 	public function get_subscription_payment_retry_seconds( $try ) {
 		switch ( $try ) {
@@ -1310,8 +1324,7 @@ class SubscriptionsModule {
 	/**
 	 * Process subscription payment event.
 	 *
-	 * @param int                   $subscription_id Subscription ID.
-	 * @param string|int|array|null $tries           Try/tries to clear.
+	 * @param int $subscription_id Subscription ID.
 	 * @return void
 	 */
 	private function clear_scheduled_subscription_payment( $subscription_id ) {
@@ -1334,6 +1347,7 @@ class SubscriptionsModule {
 	 * @param int $subscription_id Subscription ID.
 	 * @param int $try             Try number for this event.
 	 * @throws \Exception Throws exception if note could not be added.
+	 * @return void
 	 */
 	public function process_subscription_payment_event( $subscription_id, $try ) {
 		// Check if processing is disabled.
@@ -1386,6 +1400,7 @@ class SubscriptionsModule {
 	 * Maybe expire subscription.
 	 *
 	 * @param Subscription $subscription
+	 * @return void
 	 */
 	private function maybe_expire_subscription( Subscription $subscription ) {
 		// Do not expire completed subscription.
@@ -1444,6 +1459,8 @@ class SubscriptionsModule {
 
 	/**
 	 * Maybe process debug.
+	 *
+	 * @return void
 	 */
 	public function maybe_process_debug() {
 		if ( ! \filter_has_var( \INPUT_POST, 'pronamic_pay_process_subscriptions_follow_up_payment' ) ) {
@@ -1578,7 +1595,11 @@ class SubscriptionsModule {
 
 		$query = new WP_Query( $args );
 
-		foreach ( $query->posts as $post ) {
+		$posts = \array_filter( $query->posts, function( $post ) {
+			return ( $post instanceof \WP_Post );
+		} );
+
+		foreach ( $posts as $post ) {
 			if ( $cli_test ) {
 				WP_CLI::log( sprintf( 'Processing post `%d` - "%s"…', $post->ID, get_the_title( $post ) ) );
 			}
@@ -1587,10 +1608,12 @@ class SubscriptionsModule {
 			try {
 				$subscription = \get_pronamic_subscription( $post->ID );
 
-				$subscription->status      = SubscriptionStatus::COMPLETED;
-				$subscription->expiry_date = $subscription->end_date;
+				if ( null !== $subscription ) {
+					$subscription->status      = SubscriptionStatus::COMPLETED;
+					$subscription->expiry_date = $subscription->end_date;
 
-				$subscription->save();
+					$subscription->save();
+				}
 			} catch ( \Exception $e ) {
 				continue;
 			}
