@@ -4,7 +4,9 @@ parameters:
 	level: max
 	checkMissingIterableValueType: false
 	dynamicConstantNames:
+		- DOING_AUTOSAVE
 		- PRONAMIC_PAY_DEBUG
+		- SCRIPT_DEBUG
 	bootstrapFiles:
 		- tests/phpstan/bootstrap.php
 	scanFiles:

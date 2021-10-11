@@ -109,7 +109,7 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 						<td>
 							<?php
 
-							echo esc_html( $phase->get_periods_created() );
+							echo esc_html( (string) $phase->get_periods_created() );
 
 							?>
 						</td>

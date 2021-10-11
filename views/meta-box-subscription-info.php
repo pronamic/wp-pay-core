@@ -6,16 +6,14 @@
  * @copyright 2005-2021 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
+ * @var \Pronamic\WordPress\Pay\Plugin $plugin Plugin.
+ * @var \Pronamic\WordPress\Pay\Subscriptions\Subscription $subscription Subscription.
  */
 
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
 use Pronamic\WordPress\Pay\Util;
-
-if ( ! isset( $subscription ) ) {
-	return;
-}
 
 $subscription_id = $subscription->get_id();
 
@@ -39,7 +37,7 @@ $phase = $subscription->get_display_phase();
 			<?php esc_html_e( 'ID', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
-			<?php echo esc_html( $subscription_id ); ?>
+			<?php echo esc_html( (string) $subscription->get_id() ); ?>
 		</td>
 	</tr>
 	<tr>
@@ -49,7 +47,7 @@ $phase = $subscription->get_display_phase();
 		<td>
 			<?php
 
-			$status_object = get_post_status_object( get_post_status( $subscription_id ) );
+			$status_object = get_post_status_object( get_post_status( $subscription->get_id() ) );
 
 			if ( isset( $status_object, $status_object->label ) ) {
 				echo esc_html( $status_object->label );
@@ -65,7 +63,7 @@ $phase = $subscription->get_display_phase();
 			<?php esc_html_e( 'Description', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
-			<?php echo esc_html( $subscription->get_description() ); ?>
+			<?php echo esc_html( (string) $subscription->get_description() ); ?>
 		</td>
 	</tr>
 	<tr>
@@ -305,7 +303,7 @@ $phase = $subscription->get_display_phase();
 				<?php esc_html_e( 'Period', 'pronamic_ideal' ); ?>
 			</th>
 			<td>
-				<?php echo esc_html( get_post_meta( $subscription->get_id(), '_pronamic_subscription_s2member_period', true ) ); ?>
+				<?php echo esc_html( (string) $subscription->get_meta( 's2member_period' ) ); ?>
 			</td>
 		</tr>
 		<tr>
@@ -313,7 +311,7 @@ $phase = $subscription->get_display_phase();
 				<?php esc_html_e( 'Level', 'pronamic_ideal' ); ?>
 			</th>
 			<td>
-				<?php echo esc_html( get_post_meta( $subscription->get_id(), '_pronamic_subscription_s2member_level', true ) ); ?>
+				<?php echo esc_html( (string) $subscription->get_meta( 's2member_level' ) ); ?>
 			</td>
 		</tr>
 
@@ -374,7 +372,7 @@ $phase = $subscription->get_display_phase();
 		</td>
 	</tr>
 
-	<?php if ( $this->plugin->is_debug_mode() ) : ?>
+	<?php if ( $plugin->is_debug_mode() ) : ?>
 
 		<tr>
 			<th scope="row">

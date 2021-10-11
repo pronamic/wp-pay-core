@@ -678,6 +678,13 @@ class AdminPaymentPostType {
 	 * @return void
 	 */
 	public function meta_box_info( $post ) {
+		$plugin  = $this->plugin;
+		$payment = get_pronamic_payment( $post->ID );
+
+		if ( null === $payment ) {
+			return;
+		}
+
 		include __DIR__ . '/../../views/meta-box-payment-info.php';
 	}
 

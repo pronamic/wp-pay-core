@@ -6,26 +6,14 @@
  * @copyright 2005-2021 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
+ * @var \Pronamic\WordPress\Pay\Plugin $plugin Plugin.
+ * @var \Pronamic\WordPress\Pay\Payments\Payment $payment Payment.
  */
 
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Gender;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
-
-$payment_id = get_the_ID();
-
-if ( empty( $payment_id ) ) {
-	return;
-}
-
-$payments_post_type = \Pronamic\WordPress\Pay\Admin\AdminPaymentPostType::POST_TYPE;
-
-$payment = get_pronamic_payment( $payment_id );
-
-if ( null === $payment ) {
-	return;
-}
 
 ?>
 <table class="form-table">
@@ -42,7 +30,7 @@ if ( null === $payment ) {
 			<?php esc_html_e( 'ID', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
-			<?php echo esc_html( $payment_id ); ?>
+			<?php echo esc_html( (string) $payment->get_id() ); ?>
 		</td>
 	</tr>
 	<tr>
@@ -50,7 +38,7 @@ if ( null === $payment ) {
 			<?php esc_html_e( 'Order ID', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
-			<?php echo esc_html( $payment->get_order_id() ); ?>
+			<?php echo esc_html( (string) $payment->get_order_id() ); ?>
 		</td>
 	</tr>
 	<tr>
@@ -58,7 +46,7 @@ if ( null === $payment ) {
 			<?php esc_html_e( 'Description', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
-			<?php echo esc_html( $payment->get_description() ); ?>
+			<?php echo esc_html( (string) $payment->get_description() ); ?>
 		</td>
 	</tr>
 	<tr>
@@ -98,7 +86,13 @@ if ( null === $payment ) {
 			<?php esc_html_e( 'Transaction ID', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
-			<?php do_action( 'manage_' . $payments_post_type . '_posts_custom_column', 'pronamic_payment_transaction', $payment_id ); ?>
+			<?php
+
+			$payments_post_type = \Pronamic\WordPress\Pay\Admin\AdminPaymentPostType::POST_TYPE;
+
+			do_action( 'manage_' . $payments_post_type . '_posts_custom_column', 'pronamic_payment_transaction', $payment->get_id() );
+
+			?>
 		</td>
 	</tr>
 
@@ -138,8 +132,9 @@ if ( null === $payment ) {
 			$method = $payment->get_payment_method();
 
 			$name = PaymentMethods::get_name( $method );
+			$name = ( null === $name ) ? $method : $name;
 
-			echo esc_html( $name );
+			echo esc_html( (string) $name );
 
 			$issuer = $payment->get_meta( 'issuer' );
 
@@ -189,11 +184,13 @@ if ( null === $payment ) {
 
 			$url = $payment->get_action_url();
 
-			printf(
-				'<a href="%s" target="_blank">%s</a>',
-				esc_attr( $url ),
-				esc_html( $url )
-			);
+			if ( null !== $url ) {
+				printf(
+					'<a href="%s" target="_blank">%s</a>',
+					esc_attr( $url ),
+					esc_html( $url )
+				);
+			}
 
 			?>
 		</td>
@@ -241,7 +238,7 @@ if ( null === $payment ) {
 		<td>
 			<?php
 
-			$status_object = get_post_status_object( get_post_status( $payment_id ) );
+			$status_object = get_post_status_object( get_post_status( $payment->get_id() ) );
 
 			if ( isset( $status_object, $status_object->label ) ) {
 				echo esc_html( $status_object->label );
@@ -372,7 +369,7 @@ if ( null === $payment ) {
 									<?php esc_html_e( 'Name', 'pronamic_ideal' ); ?>
 								</th>
 								<td>
-									<?php echo esc_html( $vat_number_validity->get_name() ); ?>
+									<?php echo esc_html( (string) $vat_number_validity->get_name() ); ?>
 								</td>
 							</tr>
 							<tr>
@@ -383,7 +380,7 @@ if ( null === $payment ) {
 									<?php
 
 									echo \wp_kses(
-										\nl2br( $vat_number_validity->get_address() ),
+										\nl2br( (string) $vat_number_validity->get_address() ),
 										array(
 											'br' => array(),
 										)
@@ -772,7 +769,7 @@ if ( null === $payment ) {
 				<?php esc_html_e( 'Period', 'pronamic_ideal' ); ?>
 			</th>
 			<td>
-				<?php echo esc_html( get_post_meta( $payment->get_id(), '_pronamic_payment_s2member_period', true ) ); ?>
+				<?php echo esc_html( (string) $payment->get_meta( 's2member_period' ) ); ?>
 			</td>
 		</tr>
 		<tr>
@@ -780,7 +777,7 @@ if ( null === $payment ) {
 				<?php esc_html_e( 'Level', 'pronamic_ideal' ); ?>
 			</th>
 			<td>
-				<?php echo esc_html( get_post_meta( $payment->get_id(), '_pronamic_payment_s2member_level', true ) ); ?>
+				<?php echo esc_html( (string) $payment->get_meta( 's2member_level' ) ); ?>
 			</td>
 		</tr>
 
@@ -793,7 +790,7 @@ if ( null === $payment ) {
 				<?php esc_html_e( 'Purchase ID', 'pronamic_ideal' ); ?>
 			</th>
 			<td>
-				<?php echo esc_html( get_post_meta( $payment->get_id(), '_pronamic_payment_wpsc_purchase_id', true ) ); ?>
+				<?php echo esc_html( (string) $payment->get_meta( 'wpsc_purchase_id' ) ); ?>
 			</td>
 		</tr>
 		<tr>
@@ -801,7 +798,7 @@ if ( null === $payment ) {
 				<?php esc_html_e( 'Session ID', 'pronamic_ideal' ); ?>
 			</th>
 			<td>
-				<?php echo esc_html( get_post_meta( $payment->get_id(), '_pronamic_payment_wpsc_session_id', true ) ); ?>
+				<?php echo esc_html( (string) $payment->get_meta( 'wpsc_session_id' ) ); ?>
 			</td>
 		</tr>
 
@@ -814,7 +811,7 @@ if ( null === $payment ) {
 				<?php esc_html_e( 'User ID', 'pronamic_ideal' ); ?>
 			</th>
 			<td>
-				<?php echo esc_html( get_post_meta( $payment->get_id(), '_pronamic_payment_membership_user_id', true ) ); ?>
+				<?php echo esc_html( (string) $payment->get_meta( 'membership_user_id' ) ); ?>
 			</td>
 		</tr>
 		<tr>
@@ -822,7 +819,7 @@ if ( null === $payment ) {
 				<?php esc_html_e( 'Subscription ID', 'pronamic_ideal' ); ?>
 			</th>
 			<td>
-				<?php echo esc_html( get_post_meta( $payment->get_id(), '_pronamic_payment_membership_subscription_id', true ) ); ?>
+				<?php echo esc_html( (string) $payment->get_meta( 'membership_subscription_id' ) ); ?>
 			</td>
 		</tr>
 
@@ -847,7 +844,7 @@ if ( null === $payment ) {
 
 	<?php endif; ?>
 
-	<?php if ( $this->plugin->is_debug_mode() ) : ?>
+	<?php if ( $plugin->is_debug_mode() ) : ?>
 
 		<?php if ( ! empty( $payment->user_agent ) ) : ?>
 
@@ -917,7 +914,7 @@ if ( null === $payment ) {
 				 *
 				 * @link https://developer.wordpress.org/rest-api/using-the-rest-api/authentication/#cookie-authentication
 				 */
-				$rest_api_url = rest_url( 'pronamic-pay/v1/payments/' . $payment_id );
+				$rest_api_url = rest_url( 'pronamic-pay/v1/payments/' . $payment->get_id() );
 
 				$rest_api_nonce_url = wp_nonce_url( $rest_api_url, 'wp_rest' );
 

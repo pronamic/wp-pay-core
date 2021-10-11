@@ -73,7 +73,7 @@ class AdminReports {
 			return;
 		}
 
-		$min = SCRIPT_DEBUG ? '' : '.min';
+		$min = \SCRIPT_DEBUG ? '' : '.min';
 
 		// Flot - http://www.flotcharts.org/.
 		$flot_version = '0.8.0-alpha';

@@ -107,8 +107,8 @@ wp_nonce_field( 'pronamic_pay_save_form_options', 'pronamic_pay_nonce' );
 							€ <input id="_pronamic_payment_form_amount_choice_%d" type="number" step="any" name="_pronamic_payment_form_amount_choices[]" value="%s" />
 						</label>
 					</div>',
-					esc_attr( $i ),
-					esc_attr( $i ),
+					esc_attr( (string) $i ),
+					esc_attr( (string) $i ),
 					esc_attr( $value )
 				);
 			}

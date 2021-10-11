@@ -572,6 +572,7 @@ class AdminSubscriptionPostType {
 	 * @return void
 	 */
 	public function meta_box_info( $post ) {
+		$plugin       = $this->plugin;
 		$subscription = get_pronamic_subscription( $post->ID );
 
 		if ( null === $subscription ) {
@@ -647,6 +648,8 @@ class AdminSubscriptionPostType {
 		if ( null === $subscription ) {
 			return;
 		}
+
+		$plugin = $this->plugin;
 
 		$periods = $subscription->get_payments_by_period();
 

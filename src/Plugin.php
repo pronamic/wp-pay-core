@@ -702,11 +702,11 @@ class Plugin {
 	 * @return void
 	 */
 	public function register_styles() {
-		$min = SCRIPT_DEBUG ? '' : '.min';
+		$min = \SCRIPT_DEBUG ? '' : '.min';
 
-		wp_register_style(
+		\wp_register_style(
 			'pronamic-pay-redirect',
-			plugins_url( 'css/redirect' . $min . '.css', dirname( __FILE__ ) ),
+			\plugins_url( 'css/redirect' . $min . '.css', \dirname( __FILE__ ) ),
 			array(),
 			$this->get_version()
 		);

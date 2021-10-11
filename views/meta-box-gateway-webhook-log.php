@@ -51,7 +51,7 @@ if ( $payment ) {
 			'pronamic_ideal'
 		),
 		esc_html( $webhook_log_request_info->get_request_date()->format_i18n( _x( 'l j F Y \a\t H:i', 'full datetime format', 'pronamic_ideal' ) ) ),
-		esc_url( get_edit_post_link( $payment->get_id() ) ),
+		esc_url( (string) get_edit_post_link( $payment->get_id() ) ),
 		esc_html( $payment->get_id() )
 	);
 } else {

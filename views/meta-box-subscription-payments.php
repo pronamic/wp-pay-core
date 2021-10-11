@@ -6,6 +6,7 @@
  * @copyright 2005-2021 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
+ * @var \Pronamic\WordPress\Pay\Plugin $plugin Plugin.
  */
 
 use Pronamic\WordPress\Pay\Plugin;
@@ -159,7 +160,7 @@ if ( ! isset( $subscription ) ) {
 						</td>
 					</tr>
 
-					<?php if ( $is_first && $can_retry && $this->plugin->subscriptions_module->can_retry_payment( $payment ) ) : ?>
+					<?php if ( $is_first && $can_retry && $plugin->subscriptions_module->can_retry_payment( $payment ) ) : ?>
 
 						<tr>
 							<td>&nbsp;</td>
@@ -171,7 +172,7 @@ if ( ! isset( $subscription ) ) {
 										array(
 											'pronamic_retry_payment' => $payment_id,
 										),
-										\get_edit_post_link( $post->ID )
+										\get_edit_post_link( $payment_id )
 									),
 									'pronamic_retry_payment_' . $payment_id
 								);

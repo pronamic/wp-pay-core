@@ -2,10 +2,11 @@
 /**
  * Page Debug
  *
- * @author    Pronamic <info@pronamic.eu>
+ * @author Pronamic <info@pronamic.eu>
  * @copyright 2005-2021 Pronamic
- * @license   GPL-3.0-or-later
- * @package   Pronamic\WordPress\Pay
+ * @license GPL-3.0-or-later
+ * @package Pronamic\WordPress\Pay
+ * @var \Pronamic\WordPress\Pay\Plugin $plugin Plugin.
  */
 
 ?>
@@ -22,22 +23,26 @@
 	$date   = new \DateTimeImmutable();
 	$number = 10;
 
-	$query = $this->plugin->subscriptions_module->get_subscriptions_wp_query_that_require_follow_up_payment(
+	$query = $plugin->subscriptions_module->get_subscriptions_wp_query_that_require_follow_up_payment(
 		array(
 			'date'   => $date,
 			'number' => $number,
-		) 
+		)
 	);
+
+	$subscription_posts = \array_filter( $query->posts, function( $post ) {
+		return $post instanceof \WP_Post;
+	} );
 
 	echo '<ul>';
 
-	foreach ( $query->posts as $subscription_post ) {
+	foreach ( $subscription_posts as $subscription_post ) {
 		echo '<li>';
 
 		printf(
 			'<a href="%s">Processing post `%d` - "%s"…</a>',
-			\esc_url( \get_edit_post_link( $subscription_post ) ),
-			\esc_html( $subscription_post->ID ),
+			\esc_url( (string) \get_edit_post_link( $subscription_post ) ),
+			\esc_html( (string) $subscription_post->ID ),
 			\esc_html( \get_the_title( $subscription_post ) )
 		);
 
@@ -82,7 +87,7 @@
 						<label for="number"><?php \esc_html_e( 'Number', 'pronamic_ideal' ); ?></label>
 					</th>
 					<td>
-						<input name="number" id="number" type="number" class="regular-text code" value="<?php echo \esc_attr( $number ); ?>" required="required" />
+						<input name="number" id="number" type="number" class="regular-text code" value="<?php echo \esc_attr( (string) $number ); ?>" required="required" />
 					</td>
 				</tr>
 			</tbody>

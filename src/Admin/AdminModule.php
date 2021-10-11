@@ -989,7 +989,9 @@ class AdminModule {
 				'capability' => 'manage_options',
 				'menu_slug'  => 'pronamic_pay_debug',
 				'function'   => function() {
-					$this->render_page( 'debug' );
+					$plugin = $this->plugin;
+
+					include __DIR__ . '/../../views/page-debug.php';
 				},
 			);
 		}
