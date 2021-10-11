@@ -113,7 +113,7 @@ $currency = Currency::get_instance( 'EUR' );
 			<?php esc_html_e( 'Amount', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
-			<label for="test_amount"><?php echo \esc_html( $currency->get_symbol() ); ?></label>
+			<label for="test_amount"><?php echo \esc_html( (string) $currency->get_symbol() ); ?></label>
 
 			<input name="test_amount" id="test_amount" class="regular-text code pronamic-pay-form-control" value="" type="number" step="any" size="6" autocomplete="off" />
 		</td>
@@ -211,8 +211,8 @@ $currency = Currency::get_instance( 'EUR' );
 					foreach ( range( 1, 30 ) as $value ) {
 						printf(
 							'<option value="%s">%s</option>',
-							esc_attr( $value ),
-							esc_html( $value )
+							esc_attr( (string) $value ),
+							esc_html( (string) $value )
 						);
 					}
 
