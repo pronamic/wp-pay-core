@@ -528,14 +528,7 @@ class SubscriptionsModule {
 				$payment->set_total_amount( $total_amount );
 
 				// Add period.
-				$payment->add_period(
-					new SubscriptionPeriod(
-						$subscription->get_current_phase(),
-						$payment->get_date(),
-						$payment->get_date(),
-						$total_amount
-					)
-				);
+				$payment->add_subscription( $subscription );
 
 				// Make sure to only start payments for supported gateways.
 				$gateway = Plugin::get_gateway( $payment->get_config_id() );
