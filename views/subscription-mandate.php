@@ -251,29 +251,29 @@ if ( is_array( $current_mandate ) ) {
 		<?php wp_print_scripts( 'pronamic-pay-subscription-mandate' ); ?>
 
 		<script type="text/javascript">
-		jQuery( document ).ready( function () {
-			var $slider = jQuery( '.pp-card-slider' ).slick( {
-				dots: true,
-				arrows: false,
-				infinite: false,
-				slidesToShow: 1,
-				centerMode: true,
+			jQuery( document ).ready( function () {
+				var $slider = jQuery( '.pp-card-slider' ).slick( {
+					dots: true,
+					arrows: false,
+					infinite: false,
+					slidesToShow: 1,
+					centerMode: true,
+				} );
+
+				$slider.find( '.slick-current input[type="radio"]' ).attr( 'checked', 'checked' );
+
+				$slider.find( '.slick-slide' ).on( 'click', function () {
+					var index = jQuery( this ).data( 'slick-index' );
+
+					$slider.slick( 'slickGoTo', index );
+				} );
+
+				$slider.on( 'afterChange', function ( event, slick, currentSlide, nextSlide ) {
+					$slider.find( 'input[type="radio"]' ).removeAttr( 'checked' );
+
+					$slider.find( '.slick-slide' ).eq( currentSlide ).find( 'input[type="radio"]' ).attr( 'checked', 'checked' );
+				} );
 			} );
-
-			$slider.find( '.slick-current input[type="radio"]' ).attr( 'checked', 'checked' );
-
-			$slider.find( '.slick-slide' ).on( 'click', function () {
-				var index = jQuery( this ).data( 'slick-index' );
-
-				$slider.slick( 'slickGoTo', index );
-			} );
-
-			$slider.on( 'afterChange', function ( event, slick, currentSlide, nextSlide ) {
-				$slider.find( 'input[type="radio"]' ).removeAttr( 'checked' );
-
-				$slider.find( '.slick-slide' ).eq( currentSlide ).find( 'input[type="radio"]' ).attr( 'checked', 'checked' );
-			} );
-		} );
 		</script>
 	</body>
 </html>
