@@ -12,10 +12,6 @@
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Util;
 
-if ( ! isset( $admin_reports ) ) {
-	return;
-}
-
 ?>
 <div class="wrap">
 	<h1 class="wp-heading-inline"><?php echo esc_html( get_admin_page_title() ); ?></h1>
@@ -41,12 +37,14 @@ if ( ! isset( $admin_reports ) ) {
 
 								echo '<strong>';
 
+								$legend_value = \property_exists( $serie, 'legendValue' ) ? $serie->legendValue : '';
+
 								if ( isset( $serie->tooltipFormatter ) && 'money' === $serie->tooltipFormatter ) {
-									$money = new Money( $serie->legendValue, 'EUR' );
+									$money = new Money( $legend_value, 'EUR' );
 
 									echo esc_html( $money->format_i18n() );
 								} else {
-									echo esc_html( $serie->legendValue );
+									echo esc_html( $legend_value );
 								}
 
 								echo '</strong>';

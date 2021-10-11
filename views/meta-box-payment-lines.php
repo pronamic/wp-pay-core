@@ -286,9 +286,17 @@ if ( empty( $lines ) ) : ?>
 								$tax_percentage = $line_total->get_tax_percentage();
 
 								if ( null !== $tax_amount ) {
+									$tip = '';
+
+									if ( null !== $tax_percentage ) {
+										$number = Number::from_mixed( $tax_percentage );
+
+										$tip = $number->format_i18n() . '%';
+									}
+
 									\printf(
 										'<span class="pronamic-pay-tip" title="%s">%s</span>',
-										\esc_attr( \number_format_i18n( $tax_percentage ) . '%' ),
+										\esc_attr( $tip ),
 										\esc_html( $tax_amount->format_i18n() )
 									);
 								}
