@@ -67,7 +67,7 @@ $phase = $subscription->get_display_phase();
 		</td>
 	</tr>
 
-	<?php if ( null !==  $subscription->config_id ) : ?>
+	<?php if ( null !== $subscription->config_id ) : ?>
 
 		<tr>
 			<th scope="row">
