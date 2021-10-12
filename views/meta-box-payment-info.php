@@ -114,14 +114,19 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 
 	<?php endif; ?>
 
-	<tr>
-		<th scope="row">
-			<?php esc_html_e( 'Gateway', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<?php edit_post_link( get_the_title( $payment->config_id ), '', '', $payment->config_id ); ?>
-		</td>
-	</tr>
+	<?php if ( null !== $payment->config_id ) : ?>
+
+		<tr>
+			<th scope="row">
+				<?php esc_html_e( 'Gateway', 'pronamic_ideal' ); ?>
+			</th>
+			<td>
+				<?php edit_post_link( get_the_title( $payment->config_id ), '', '', $payment->config_id ); ?>
+			</td>
+		</tr>
+
+	<?php endif; ?>
+
 	<tr>
 		<th scope="row">
 			<?php esc_html_e( 'Payment Method', 'pronamic_ideal' ); ?>
@@ -238,13 +243,9 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 		<td>
 			<?php
 
-			$status_object = get_post_status_object( get_post_status( $payment->get_id() ) );
+			$status_label = $payment->get_status_label();
 
-			if ( isset( $status_object, $status_object->label ) ) {
-				echo esc_html( $status_object->label );
-			} else {
-				echo '—';
-			}
+			echo \esc_html( ( null === $status_label ) ? '—' : $status_label );
 
 			// Failure reason.
 			$failure_reason = $payment->get_failure_reason();

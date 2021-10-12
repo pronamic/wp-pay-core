@@ -23,37 +23,45 @@ if ( null === $subscription ) : ?>
 
 	<?php
 
+	$subscription_id = $subscription->get_id();
+
 	$phase = $subscription->get_display_phase();
 
 	?>
 
 	<table class="form-table">
-		<tr>
-			<th scope="row">
-				<?php esc_html_e( 'Subscription', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php edit_post_link( get_the_title( $subscription->post->ID ), '', '', $subscription->post->ID ); ?>
-			</td>
-		</tr>
-		<tr>
-			<th scope="row">
-				<?php esc_html_e( 'Status', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php
 
-				$status_object = get_post_status_object( get_post_status( $subscription->post->ID ) );
+		<?php if ( null !== $subscription_id ) : ?>
 
-				if ( isset( $status_object, $status_object->label ) ) {
-					echo esc_html( $status_object->label );
-				} else {
-					echo '—';
-				}
+			<tr>
+				<th scope="row">
+					<?php esc_html_e( 'Subscription', 'pronamic_ideal' ); ?>
+				</th>
+				<td>
+					<?php edit_post_link( get_the_title( $subscription_id ), '', '', $subscription_id ); ?>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<?php esc_html_e( 'Status', 'pronamic_ideal' ); ?>
+				</th>
+				<td>
+					<?php
 
-				?>
-			</td>
-		</tr>
+					$status_object = get_post_status_object( (string) get_post_status( $subscription_id ) );
+
+					if ( isset( $status_object, $status_object->label ) ) {
+						echo esc_html( $status_object->label );
+					} else {
+						echo '—';
+					}
+
+					?>
+				</td>
+			</tr>
+
+		<?php endif; ?>
+
 		<tr>
 			<th scope="row">
 				<?php esc_html_e( 'Description', 'pronamic_ideal' ); ?>

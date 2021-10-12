@@ -47,7 +47,7 @@ $phase = $subscription->get_display_phase();
 		<td>
 			<?php
 
-			$status_object = get_post_status_object( get_post_status( $subscription->get_id() ) );
+			$status_object = get_post_status_object( (string) get_post_status( $subscription->get_id() ) );
 
 			if ( isset( $status_object, $status_object->label ) ) {
 				echo esc_html( $status_object->label );
@@ -66,14 +66,20 @@ $phase = $subscription->get_display_phase();
 			<?php echo esc_html( (string) $subscription->get_description() ); ?>
 		</td>
 	</tr>
-	<tr>
-		<th scope="row">
-			<?php esc_html_e( 'Gateway', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<?php edit_post_link( get_the_title( $subscription->config_id ), '', '', $subscription->config_id ); ?>
-		</td>
-	</tr>
+
+	<?php if ( null !==  $subscription->config_id ) : ?>
+
+		<tr>
+			<th scope="row">
+				<?php esc_html_e( 'Gateway', 'pronamic_ideal' ); ?>
+			</th>
+			<td>
+				<?php edit_post_link( get_the_title( $subscription->config_id ), '', '', $subscription->config_id ); ?>
+			</td>
+		</tr>
+
+	<?php endif; ?>
+
 	<tr>
 		<th scope="row">
 			<?php esc_html_e( 'Payment Method', 'pronamic_ideal' ); ?>
