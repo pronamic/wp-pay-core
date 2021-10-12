@@ -147,10 +147,15 @@ class PaymentInfoHelper {
 			$object->meta = (object) $meta;
 		}
 
-		$object->source = (object) array(
-			'key'   => $payment_info->get_source(),
-			'value' => $payment_info->get_source_id(),
-		);
+		$source_key   = $payment_info->get_source();
+		$source_value = $payment_info->get_source_id();
+
+		if ( null !== $source_key || null !== $source_value ) {
+			$object->source = (object) array(
+				'key'   => $source_key,
+				'value' => $source_value,
+			);
+		}
 
 		if ( null !== $payment_info->config_id ) {
 			$object->gateway = (object) array(
