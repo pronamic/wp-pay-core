@@ -272,21 +272,6 @@
 		}
 	}
 
-	&.brand-moneyou {
-		.pp-card__background {
-			background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/moneyou/card-moneyou-background-480x270.svg");
-		}
-
-		.pp-card__label {
-			color: #000;
-			opacity: .4;
-		}
-
-		.pp-card__value {
-			color: #000;
-		}
-	}
-
 	&.brand-rabobank {
 		.pp-card__background {
 			background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/rabobank/card-rabobank-background-480x270.svg");
