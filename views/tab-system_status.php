@@ -261,8 +261,10 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 				<?php
 
 				if ( \function_exists( 'curl_version' ) ) {
-					// Using cURL functions is highly discouraged within VIP context
-					// We only use this cURL function for on the system status page
+					/**
+					 * Using cURL functions is highly discouraged within VIP context.
+					 * We only use this cURL function for on the system status page.
+					 */
 					$curl_version = curl_version();
 
 					if ( false === $curl_version ) {

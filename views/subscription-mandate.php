@@ -130,7 +130,7 @@ if ( is_array( $current_mandate ) ) {
 											$account_number = \chunk_split( $account_number, 4, ' ' );
 										}
 
-										$title = '';
+										$card_title = '';
 
 										$classes = array( 'pp-card' );
 
@@ -140,7 +140,7 @@ if ( is_array( $current_mandate ) ) {
 
 										// Set card brand specific details.
 										if ( null !== $card ) {
-											$title = $card['title'];
+											$card_title = $card['title'];
 
 											$classes[] = 'brand-' . $card['brand'];
 
@@ -160,12 +160,12 @@ if ( is_array( $current_mandate ) ) {
 
 													<div class="pt-card__indicator"></div>
 
-													<h3 class="pp-card__title"><?php echo esc_html( $title ); ?></h3>
+													<h3 class="pp-card__title"><?php echo esc_html( $card_title ); ?></h3>
 
 													<figure class="pp-card__logo">
 														<?php if ( null !== $logo_url ) : ?>
 
-															<img class="pp-card__logo__img" src="<?php echo esc_url( $logo_url ); ?>" alt="<?php echo esc_attr( $title ); ?>" />
+															<img class="pp-card__logo__img" src="<?php echo esc_url( $logo_url ); ?>" alt="<?php echo esc_attr( $card_title ); ?>" />
 
 														<?php endif; ?>
 													</figure>

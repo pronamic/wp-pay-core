@@ -1135,7 +1135,7 @@ class SubscriptionsModule {
 			$query->posts,
 			function( $post ) {
 				return ( $post instanceof \WP_Post );
-			} 
+			}
 		);
 
 		foreach ( $posts as $post ) {
@@ -1260,7 +1260,7 @@ class SubscriptionsModule {
 	/**
 	 * Get subscription payment retry seconds.
 	 *
-	 * @param int $try Number of attempts
+	 * @param int $try Number of attempts.
 	 * @return int
 	 */
 	public function get_subscription_payment_retry_seconds( $try ) {
@@ -1373,7 +1373,8 @@ class SubscriptionsModule {
 
 			// Add note.
 			$note = \sprintf(
-				\__( 'Unable to start recurring payment. Will not try again. Error: %2$s', 'pronamic_ideal' ),
+				/* translators: %s: Exception message. */
+				\__( 'Unable to start recurring payment. Will not try again. Error: %s', 'pronamic_ideal' ),
 				$e->getMessage()
 			);
 
@@ -1381,6 +1382,7 @@ class SubscriptionsModule {
 				$retry_time = time() + $this->get_subscription_payment_retry_seconds( $try );
 
 				$note = \sprintf(
+					/* translators: 1: Retry time, 2: Exception message. */
 					\__( 'Unable to start recurring payment. Retry on %1$s. Error: %2$s', 'pronamic_ideal' ),
 					( new DateTime( '@' . $retry_time ) )->format_i18n(),
 					$e->getMessage()
@@ -1402,7 +1404,7 @@ class SubscriptionsModule {
 	/**
 	 * Maybe expire subscription.
 	 *
-	 * @param Subscription $subscription
+	 * @param Subscription $subscription Subscription.
 	 * @return void
 	 */
 	private function maybe_expire_subscription( Subscription $subscription ) {
@@ -1602,7 +1604,7 @@ class SubscriptionsModule {
 			$query->posts,
 			function( $post ) {
 				return ( $post instanceof \WP_Post );
-			} 
+			}
 		);
 
 		foreach ( $posts as $post ) {
