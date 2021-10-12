@@ -102,6 +102,9 @@
   "mode":"live",
   "start_date": "2005-05-05T00:00:00+00:00",
   "end_date": "2100-05-05T00:00:00+00:00",
+  "meta": {
+    "google_analytics_tracked": true
+  },
   "expiry_date": "2005-05-05T00:30:00+00:00",
   "total_amount": {
     "value": "242",
@@ -113,6 +116,5 @@
   "failure_reason": {
     "code": "invalid_cvv",
     "message": "De veiligheidscode (CVV) is ongeldig."
-  },
-  "ga_tracked":true
+  }
 }

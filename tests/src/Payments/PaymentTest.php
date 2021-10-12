@@ -131,8 +131,6 @@ class PaymentTest extends WP_UnitTestCase {
 	public function get_provider() {
 		return array(
 			array( 'order_id', 'get_order_id', 1234 ),
-			array( 'method', 'get_method', 'ideal' ),
-			array( 'issuer', 'get_issuer', 'ideal_KNABNL2H' ),
 			array( 'email', 'get_email', 'john.doe@example.com' ),
 		);
 	}
