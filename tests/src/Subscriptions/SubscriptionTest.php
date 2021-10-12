@@ -90,7 +90,6 @@ class SubscriptionTest extends WP_UnitTestCase {
 			array( 'frequency', 'get_frequency', 'daily' ),
 			array( 'interval', 'get_interval', '1' ),
 			array( 'interval_period', 'get_interval_period', 'Y' ),
-			array( 'description', 'get_description', 'Lorem ipsum dolor sit amet, consectetur.' ),
 		);
 	}
 

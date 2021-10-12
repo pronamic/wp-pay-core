@@ -133,7 +133,6 @@ class PaymentTest extends WP_UnitTestCase {
 			array( 'order_id', 'get_order_id', 1234 ),
 			array( 'method', 'get_method', 'ideal' ),
 			array( 'issuer', 'get_issuer', 'ideal_KNABNL2H' ),
-			array( 'description', 'get_description', 'Lorem ipsum dolor sit amet, consectetur.' ),
 			array( 'email', 'get_email', 'john.doe@example.com' ),
 		);
 	}
