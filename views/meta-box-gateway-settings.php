@@ -2,10 +2,14 @@
 /**
  * Meta Box Gateway Settings
  *
- * @author    Pronamic <info@pronamic.eu>
+ * @author Pronamic <info@pronamic.eu>
  * @copyright 2005-2021 Pronamic
- * @license   GPL-3.0-or-later
- * @package   Pronamic\WordPress\Pay
+ * @license GPL-3.0-or-later
+ * @package Pronamic\WordPress\Pay
+ * @var \Pronamic\WordPress\Pay\Plugin       $plugin     Plugin.
+ * @var string                               $gateway_id Gateway ID.
+ * @var int                                  $config_id  Configuration ID.
+ * @var \Pronamic\WordPress\Pay\Core\Gateway $gateway    Gateway.
  */
 
 use Pronamic\WordPress\Html\Element;
@@ -14,7 +18,7 @@ use Pronamic\WordPress\Pay\Util;
 use Pronamic\WordPress\Pay\Webhooks\WebhookManager;
 use Pronamic\WordPress\Pay\Webhooks\WebhookRequestInfo;
 
-$integration = $this->plugin->gateway_integrations->get_integration( $gateway_id );
+$integration = $plugin->gateway_integrations->get_integration( $gateway_id );
 
 if ( null === $integration ) {
 	return;

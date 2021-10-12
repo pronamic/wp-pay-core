@@ -35,7 +35,7 @@ $payment_methods = $gateway->get_payment_method_field_options( true );
 $inputs = array();
 
 foreach ( $payment_methods as $payment_method => $method_name ) {
-	if ( 0 === $payment_method ) {
+	if ( ! \is_string( $payment_method ) ) {
 		$payment_method = null;
 	}
 
@@ -76,7 +76,7 @@ $currency = Currency::get_instance( 'EUR' );
 					printf(
 						'<option value="%s" data-is-recurring="%d">%s</option>',
 						esc_attr( $payment_method ),
-						esc_attr( PaymentMethods::is_recurring_method( $payment_method ) ),
+						esc_attr( PaymentMethods::is_recurring_method( $payment_method ) ? '1' : ' 0' ),
 						esc_html( $method_name )
 					);
 				}

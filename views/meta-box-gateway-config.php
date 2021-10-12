@@ -168,6 +168,6 @@ $gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 
 <div id="pronamic-pay-gateway-settings" style="padding-top: 5px;">
 
-	<?php require 'meta-box-gateway-settings.php'; ?>
+	<?php require __DIR__ . '/meta-box-gateway-settings.php'; ?>
 
 </div>

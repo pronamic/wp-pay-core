@@ -295,6 +295,8 @@ class PaymentsModule {
 		// Settings.
 		ob_start();
 
+		$plugin = $this->plugin;
+
 		require __DIR__ . '/../../views/meta-box-gateway-settings.php';
 
 		$meta_box_settings = ob_get_clean();

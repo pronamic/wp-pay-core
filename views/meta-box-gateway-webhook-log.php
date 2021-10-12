@@ -2,10 +2,13 @@
 /**
  * Meta Box Gateway Webhook Log
  *
- * @author    Pronamic <info@pronamic.eu>
+ * @author Pronamic <info@pronamic.eu>
  * @copyright 2005-2021 Pronamic
- * @license   GPL-3.0-or-later
- * @package   Pronamic\WordPress\Pay
+ * @license GPL-3.0-or-later
+ * @package Pronamic\WordPress\Pay
+ * @var string                               $gateway_id Gateway ID.
+ * @var int                                  $config_id  Configuration ID.
+ * @var \Pronamic\WordPress\Pay\Core\Gateway $gateway    Gateway.
  */
 
 use Pronamic\WordPress\Pay\Plugin;
@@ -43,7 +46,9 @@ try {
 
 $payment = $webhook_log_request_info->get_payment();
 
-if ( $payment ) {
+$payment_id = ( null === $payment ) ? null : $payment->get_id();
+
+if ( null !== $payment_id ) {
 	printf(
 		/* translators: 1: formatted date, 2: payment edit url, 3: payment id */
 		__( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -51,8 +56,8 @@ if ( $payment ) {
 			'pronamic_ideal'
 		),
 		esc_html( $webhook_log_request_info->get_request_date()->format_i18n( _x( 'l j F Y \a\t H:i', 'full datetime format', 'pronamic_ideal' ) ) ),
-		esc_url( (string) get_edit_post_link( $payment->get_id() ) ),
-		esc_html( (string) $payment->get_id() )
+		esc_url( (string) get_edit_post_link( $payment_id ) ),
+		esc_html( (string) $payment_id )
 	);
 } else {
 	printf(

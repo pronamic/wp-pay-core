@@ -19,6 +19,10 @@ if ( ! isset( $gateway ) ) {
 	return;
 }
 
+if ( ! class_exists( '\Pronamic\WordPress\Pay\Gateways\Mollie\Client' ) ) {
+	return;
+}
+
 $subscription_id = $subscription->get_id();
 
 $mollie_customer_id = \get_post_meta( $subscription_id, '_pronamic_subscription_mollie_customer_id', true );
