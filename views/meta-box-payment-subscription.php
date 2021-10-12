@@ -83,23 +83,22 @@ if ( null === $subscription ) : ?>
 			<td>
 				<?php
 
-				if ( null === $phase || 1 === $phase->get_total_periods() ) :
+				$total_periods = ( null === $phase ) ? null : $phase->get_total_periods();
+
+				if ( null === $phase || 1 === $total_periods ) {
 					// No recurrence.
 					echo '—';
-
-				elseif ( $phase->is_infinite() ) :
+				} elseif ( null === $total_periods ) {
 					// Infinite.
 					echo esc_html( strval( Util::format_recurrences( $phase->get_interval() ) ) );
-
-				else :
+				} else {
 					// Fixed number of recurrences.
 					printf(
 						'%s (%s)',
 						esc_html( strval( Util::format_recurrences( $phase->get_interval() ) ) ),
-						esc_html( strval( Util::format_frequency( $phase->get_total_periods() ) ) )
+						esc_html( strval( Util::format_frequency( $total_periods ) ) )
 					);
-
-				endif;
+				}
 
 				?>
 			</td>
