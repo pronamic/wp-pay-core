@@ -164,14 +164,6 @@ class SubscriptionsModule {
 		// Check if the payment is connected to a subscription.
 		$subscription = $payment->get_subscription();
 
-		if ( empty( $subscription ) || null === $subscription->get_id() ) {
-			// Payment not connected to a subscription, nothing to do.
-			return;
-		}
-
-		// Make sure to use fresh subscription data.
-		$subscription = \get_pronamic_subscription( $subscription->get_id() );
-
 		// Make sure the subscription exists.
 		if ( null === $subscription ) {
 			return;
@@ -207,10 +199,8 @@ class SubscriptionsModule {
 				break;
 			case PaymentStatus::CANCELLED:
 			case PaymentStatus::EXPIRED:
-				$first_payment = $subscription->get_first_payment();
-
 				// Set subscription status to 'On Hold' only if the subscription is not already active when processing the first payment.
-				if ( ! ( null !== $first_payment && $first_payment->get_id() === $payment->get_id() && SubscriptionStatus::ACTIVE === $subscription->get_status() ) ) {
+				if ( $subscription->is_first_payment( $payment ) && SubscriptionStatus::ACTIVE === $subscription->get_status() ) {
 					$status_update = SubscriptionStatus::ON_HOLD;
 				}
 

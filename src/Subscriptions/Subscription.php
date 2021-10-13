@@ -526,6 +526,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	/**
 	 * Get the first payment of this subscription.
 	 *
+	 * @deprecated
 	 * @return Payment|null
 	 */
 	public function get_first_payment() {
