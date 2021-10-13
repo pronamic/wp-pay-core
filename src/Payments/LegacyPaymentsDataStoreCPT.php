@@ -16,6 +16,7 @@ use Pronamic\WordPress\Pay\AbstractDataStoreCPT;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\ContactName;
 use Pronamic\WordPress\Pay\Customer;
+use Pronamic\WordPress\Pay\Plugin;
 
 /**
  * Title: Payments data store CPT
@@ -294,10 +295,19 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		}
 
 		// General.
-		$payment->config_id = $this->get_meta_int( $id, 'config_id' );
+		$config_id = $this->get_meta_int( $id, 'config_id' );
+
+		$payment->config_id = $config_id;
 		$payment->source    = $this->get_meta_string( $id, 'source' );
 		$payment->source_id = $this->get_meta_string( $id, 'source_id' );
 		$payment->email     = $this->get_meta_string( $id, 'email' );
+
+		// Gateway.
+		$gateway = $payment->get_gateway();
+
+		if ( null === $gateway && ! empty( $config_id ) ) {
+			$payment->set_gateway( Plugin::get_gateway( $config_id ) );
+		}
 
 		// Order ID.
 		if ( empty( $payment->order_id ) ) {
