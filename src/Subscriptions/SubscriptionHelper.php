@@ -96,8 +96,13 @@ class SubscriptionHelper {
 		}
 
 		// Source.
-		if ( empty( $subscription->source ) && empty( $subscription->source_id ) ) {
+		if ( empty( $subscription->source ) ) {
 			$subscription->source = $payment->source;
+		}
+
+		// Source ID.
+		if ( empty( $subscription->source_id ) ) {
+			$subscription->source_id = $payment->source_id;
 		}
 
 		// Description.
