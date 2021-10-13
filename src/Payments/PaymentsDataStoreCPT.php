@@ -15,6 +15,7 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Customer;
+use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPeriod;
 
 /**
  * Title: Payments data store CPT
@@ -798,6 +799,37 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 			if ( empty( $payment_meta_value ) && ! empty( $post_meta_value ) ) {
 				$payment->set_meta( $payment_meta_key, $post_meta_value );
+			}
+		}
+
+		// Legacy periods.
+		$periods = $payment->get_periods();
+
+		if ( null === $periods ) {
+			$start_date = \get_post_meta( $id, '_pronamic_payment_start_date', true );
+			$end_date   = \get_post_meta( $id, '_pronamic_payment_end_date', true );
+
+			if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+				$subscriptions = $payment->get_subscriptions();
+
+				$subscription = reset( $subscriptions );
+
+				if ( false !== $subscription ) {
+					$phases = $subscription->get_phases();
+
+					$phase = reset( $phases );
+
+					if ( false !== $phase ) {
+						$period = new SubscriptionPeriod(
+							$phase,
+							new DateTime( $start_date ),
+							new DateTime( $end_date ),
+							$payment->get_total_amount()
+						);
+
+						$payment->add_period( $period );
+					}
+				}
 			}
 		}
 	}
