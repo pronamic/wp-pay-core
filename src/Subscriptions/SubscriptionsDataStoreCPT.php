@@ -592,9 +592,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			$subscription->set_payment_method( $this->get_meta_string( $id, 'payment_method' ) );
 		}
 
-		// Read subscription data from first payment.
-		$this->read_from_first_payment( $subscription );
-
 		// Date interval.
 		$date_interval = $subscription->get_date_interval();
 
@@ -646,55 +643,25 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		// Legacy.
 		parent::read_post_meta( $subscription );
-	}
 
-	/**
-	 * Read subscription data from first payment.
-	 *
-	 * @param Subscription $subscription Subscription.
-	 * @return void
-	 */
-	private function read_from_first_payment( Subscription $subscription ) {
-		// Check if complementing the subscription is needed.
-		$gateway        = $subscription->get_gateway();
+		// Read subscription data from first payment.
+		$gateway = $subscription->get_gateway();
+
 		$payment_method = $subscription->get_payment_method();
-		$customer       = $subscription->get_customer();
 
-		$values = array(
-			$gateway,
-			$payment_method,
-			( null === $customer ? null : $customer->get_user_id() ),
-		);
+		if ( null === $gateway || null === $payment_method ) {
+			$first_payment = $subscription->get_first_payment();
 
-		if ( ! \in_array( null, $values, true ) ) {
-			return;
-		}
+			if ( is_object( $first_payment ) ) {
+				// Gateway.
+				if ( empty( $gateway ) ) {
+					$subscription->set_gateway( $first_payment->get_gateway() );
+				}
 
-		// Get first payment.
-		$first_payment = $subscription->get_first_payment();
-
-		if ( ! is_object( $first_payment ) ) {
-			return;
-		}
-
-		// Set gateway.
-		if ( empty( $gateway ) ) {
-			$subscription->set_gateway( $first_payment->get_gateway() );
-		}
-
-		// Set payment method.
-		if ( empty( $payment_method ) ) {
-			$subscription->set_payment_method( $first_payment->get_payment_method() );
-		}
-
-		// Set customer user ID.
-		$first_customer = $first_payment->get_customer();
-
-		if ( null !== $customer && null !== $first_customer ) {
-			$first_customer_user_id = $first_customer->get_user_id();
-
-			if ( empty( $user_id ) && ! empty( $first_customer_user_id ) ) {
-				$customer->set_user_id( $first_customer_user_id );
+				// Payment method.
+				if ( empty( $payment_method ) ) {
+					$subscription->set_payment_method( $first_payment->get_payment_method() );
+				}
 			}
 		}
 	}
