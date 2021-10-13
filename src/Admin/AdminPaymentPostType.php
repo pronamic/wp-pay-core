@@ -436,18 +436,13 @@ class AdminPaymentPostType {
 
 				break;
 			case 'pronamic_payment_subscription':
-				$subscriptions = $payment->get_subscriptions();
+				$subscription = $payment->get_subscription();
 
-				$subscription_id = get_post_meta( $post_id, '_pronamic_payment_subscription_id', true );
-				$subscription_id = intval( $subscription_id );
-
-				if ( \count( $subscriptions ) > 0 ) {
+				if ( null !== $subscription ) {
 					$label = __( 'Recurring payment', 'pronamic_ideal' );
 					$class = 'pronamic-pay-icon-recurring';
 
-					$recurring = get_post_meta( $post_id, '_pronamic_payment_recurring', true );
-
-					if ( ! $recurring ) {
+					if ( $subscription->is_first_payment( $payment ) ) {
 						$label = __( 'First of recurring payment', 'pronamic_ideal' );
 						$class = ' pronamic-pay-icon-recurring-first';
 					}
@@ -461,7 +456,7 @@ class AdminPaymentPostType {
 						),
 						'',
 						'',
-						$subscription_id
+						(int) $subscription->get_id()
 					);
 				}
 
