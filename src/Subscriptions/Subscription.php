@@ -550,6 +550,40 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	}
 
 	/**
+	 * Check if the payyment is the first for this subcription.
+	 *
+	 * @param Payment $payment Payment.
+	 * @return bool True if payment is the first, false otherwise.
+	 */
+	public function is_first_payment( Payment $payment ) {
+		$phases = $this->get_phases();
+
+		$phase = \reset( $phases );
+
+		if ( false === $phase ) {
+			return false;
+		}
+
+		$periods = $payment->get_periods();
+
+		if ( null === $periods ) {
+			return false;
+		}
+
+		foreach ( $periods as $period ) {
+			if ( $period->get_phase()->get_subscription() !== $this ) {
+				continue;
+			}
+
+			if ( $period->get_start_date() == $phase->get_start_date() ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Get the expiry date of this subscription.
 	 *
 	 * @return DateTime|null
