@@ -164,14 +164,6 @@ class SubscriptionsModule {
 		// Check if the payment is connected to a subscription.
 		$subscription = $payment->get_subscription();
 
-		if ( empty( $subscription ) || null === $subscription->get_id() ) {
-			// Payment not connected to a subscription, nothing to do.
-			return;
-		}
-
-		// Make sure to use fresh subscription data.
-		$subscription = \get_pronamic_subscription( $subscription->get_id() );
-
 		// Make sure the subscription exists.
 		if ( null === $subscription ) {
 			return;
