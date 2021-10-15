@@ -288,7 +288,7 @@ class Plugin {
 
 		/**
 		 * Action scheduler.
-		 * 
+		 *
 		 * @link https://actionscheduler.org/
 		 */
 		if ( ! \array_key_exists( 'action_scheduler', $args ) ) {
