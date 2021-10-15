@@ -285,6 +285,12 @@ class Plugin {
 
 		// Default date time format.
 		add_filter( 'pronamic_datetime_default_format', array( $this, 'datetime_format' ), 10, 1 );
+
+		if ( ! \array_key_exists( 'action_scheduler', $args ) ) {
+			throw new \Exception( 'Action scheduler is required' );
+		}
+
+		include_once $args['action_scheduler'];
 	}
 
 	/**
