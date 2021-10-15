@@ -295,7 +295,7 @@ class Plugin {
 			throw new \Exception( 'Action scheduler is required' );
 		}
 
-		include_once $args['action_scheduler'];
+		require_once $args['action_scheduler'];
 	}
 
 	/**
