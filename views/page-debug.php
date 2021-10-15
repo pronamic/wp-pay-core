@@ -10,11 +10,18 @@
  */
 
 if ( isset( $_REQUEST['pronamic_pay_nonce'] ) && wp_verify_nonce( $_REQUEST['pronamic_pay_nonce'], 'pronamic_pay_delete_follow_up_payments_without_transaction_id' ) ) {
-	foreach ( range( 1, 10000 ) as $i ) {
+	$query = new \WP_Query( array(
+		'post_type'   => 'pronamic_payment',
+		'post_status' => 'payment_failed',
+		'nopaging'    => true,
+		'fields'      => 'ids',
+	) );
+
+	foreach ( $query->posts as $post_id ) {
 		\as_enqueue_async_action(
 			'pronamic_pay_delete_follow_up_payment_without_transaction_id',
 			array(
-				'pronamic_payment_id' => $i,
+				'pronamic_payment_id' => $post_id,
 			),
 			'pronamic_pay_delete_follow_up_payments_without_transaction_id'
 		);
