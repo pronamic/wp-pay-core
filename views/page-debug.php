@@ -41,6 +41,27 @@ if ( isset( $_REQUEST['pronamic_pay_nonce'] ) && wp_verify_nonce( $_REQUEST['pro
 	exit;
 }
 
+$tools = array(
+	(object) array(
+		'title'       => \__( 'Follow-up payments without transaction ID', 'pronamic_ideal' ),
+		'action'      => 'pronamic_pay_delete_follow_up_payments_without_transaction_id',
+		'label'       => \__( 'Delete follow-up payments without transaction ID', 'pronamic_ideal' ),
+		'description' => '',
+	),
+	(object) array(
+		'title'       => \__( 'Pending payments status', 'pronamic_ideal' ),
+		'action'      => 'pronamic_pay_check_pending_payments_status',
+		'label'       => \__( 'Check pending payments status', 'pronamic_ideal' ),
+		'description' => '',
+	),
+	(object) array(
+		'title'       => \__( 'Canceled follow-up payments', 'pronamic_ideal' ),
+		'action'      => 'pronamic_pay_delete_canceled_follow_up_payments',
+		'label'       => \__( 'Delete canceled follow-up payments', 'pronamic_ideal' ),
+		'description' => '',
+	),
+);
+
 ?>
 
 <div class="wrap pronamic-pay-debug">
@@ -50,30 +71,44 @@ if ( isset( $_REQUEST['pronamic_pay_nonce'] ) && wp_verify_nonce( $_REQUEST['pro
 
 	<h2><?php \esc_html_e( 'Tools', 'pronamic_ideal' ); ?></h2>
 
-	<p>
-		<?php
+	<table class="widefat">
 
-		$url = wp_nonce_url(
-			\add_query_arg(
-				array(
-					'page'                => 'pronamic_pay_debug',
-					'pronamic_pay_debug'  => 'true',
-					'pronamic_pay_action' => 'pronamic_pay_delete_follow_up_payments_without_transaction_id',
-				),
-				\admin_url( 'admin.php' )
-			),
-			'pronamic_pay_delete_follow_up_payments_without_transaction_id',
-			'pronamic_pay_nonce'
-		);
+		<?php foreach ( $tools as $tool ) : ?>
 
-		\printf(
-			'<a href="%s" class="button button-large">%s</a>',
-			\esc_url( $url ),
-			\esc_html__( 'Delete follow-up payments without transaction ID', 'pronamic_ideal' )
-		);
+			<tr>
+				<td>
+					<strong><?php echo \esc_html( $tool->title ); ?></strong><br />
+					<?php echo \esc_html( $tool->description ); ?>
+				</td>
+				<td>
+					<?php
 
-		?>
-	</p>
+					$url = wp_nonce_url(
+						\add_query_arg(
+							array(
+								'page'                => 'pronamic_pay_debug',
+								'pronamic_pay_debug'  => 'true',
+								'pronamic_pay_action' => $tool->action,
+							),
+							\admin_url( 'admin.php' )
+						),
+						$tool->action,
+						'pronamic_pay_nonce'
+					);
+
+					\printf(
+						'<a href="%s" class="button button-large">%s</a>',
+						\esc_url( $url ),
+						\esc_html( $tool->label )
+					);
+
+					?>
+				</td>
+			</tr>
+
+		<?php endforeach; ?>
+
+	</table>
 
 	<h2><?php \esc_html_e( 'Subscriptions', 'pronamic_ideal' ); ?></h2>
 
