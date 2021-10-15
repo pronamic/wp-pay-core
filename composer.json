@@ -29,8 +29,7 @@
 		},
 		"files": [
 			"includes/functions.php",
-			"includes/xmlseclibs/xmlseclibs-ing.php",
-			"packages/action-scheduler/action-scheduler.php"
+			"includes/xmlseclibs/xmlseclibs-ing.php"
 		]
 	},
 	"config": {
@@ -68,13 +67,6 @@
 		"roots/wordpress": "^5.8",
 		"wp-cli/wp-cli": "^2.3",
 		"wp-phpunit/wp-phpunit": "^5.8"
-	},
-	"extra": {
-		"installer-paths": {
-			"packages/{$name}": [
-				"woocommerce/action-scheduler"
-			]
-		}
 	},
   "scripts": {
 		"ci": [

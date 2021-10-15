@@ -4,7 +4,6 @@
 # Composer
 /composer.lock
 /vendor/
-/packages/
 
 # Composer bin plugin
 /vendor-bin/**/vendor
