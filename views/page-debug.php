@@ -11,8 +11,7 @@
 
 if ( isset( $_REQUEST['pronamic_pay_nonce'] ) && wp_verify_nonce( $_REQUEST['pronamic_pay_nonce'], 'pronamic_pay_delete_follow_up_payments_without_transaction_id' ) ) {
 	foreach ( range( 1, 10000 ) as $i ) {
-		\as_schedule_single_action(
-			\time(),
+		\as_enqueue_async_action(
 			'pronamic_pay_delete_follow_up_payment_without_transaction_id',
 			array(
 				'pronamic_payment_id' => $i,
