@@ -292,7 +292,7 @@ class Plugin {
 		 * @link https://actionscheduler.org/
 		 */
 		if ( ! \array_key_exists( 'action_scheduler', $args ) ) {
-			throw new \Exception( 'Action scheduler is required' );
+			$args['action_scheduler'] = self::$dirname . '/wp-content/plugins/action-scheduler/action-scheduler.php';
 		}
 
 		require_once $args['action_scheduler'];
