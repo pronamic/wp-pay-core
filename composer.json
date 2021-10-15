@@ -68,7 +68,7 @@
 		"wp-cli/wp-cli": "^2.3",
 		"wp-phpunit/wp-phpunit": "^5.8"
 	},
-  "scripts": {
+	"scripts": {
 		"ci": [
 			"@phplint",
 			"@phpcs",
