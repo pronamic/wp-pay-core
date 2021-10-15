@@ -9,12 +9,52 @@
  * @var \Pronamic\WordPress\Pay\Plugin $plugin Plugin.
  */
 
+if ( isset( $_REQUEST['pronamic_pay_nonce'] ) && wp_verify_nonce( $_REQUEST['pronamic_pay_nonce'], 'pronamic_pay_delete_follow_up_payments_without_transaction_id' ) ) {
+	foreach ( range( 1, 10000 ) as $i ) {
+		\as_schedule_single_action(
+			\time(),
+			'pronamic_pay_delete_follow_up_payment_without_transaction_id',
+			array(
+				'pronamic_payment_id' => $i,
+			),
+			'pronamic_pay_delete_follow_up_payments_without_transaction_id'
+		);
+	}
+}
+
 ?>
 
 <div class="wrap pronamic-pay-debug">
 	<h1 class="wp-heading-inline"><?php echo \esc_html( \get_admin_page_title() ); ?></h1>
 
 	<hr class="wp-header-end">
+
+	<h2><?php \esc_html_e( 'Tools', 'pronamic_ideal' ); ?></h2>
+
+	<p>
+		<?php
+
+		$url = wp_nonce_url(
+			\add_query_arg(
+				array(
+					'page'                => 'pronamic_pay_debug',
+					'pronamic_pay_debug'  => 'true',
+					'pronamic_pay_action' => 'pronamic_pay_delete_follow_up_payments_without_transaction_id',
+				),
+				\admin_url( 'admin.php' )
+			),
+			'pronamic_pay_delete_follow_up_payments_without_transaction_id',
+			'pronamic_pay_nonce'
+		);
+
+		\printf(
+			'<a href="%s" class="button button-large">%s</a>',
+			\esc_url( $url ),
+			\esc_html__( 'Delete follow-up payments without transaction ID', 'pronamic_ideal' )
+		);
+
+		?>
+	</p>
 
 	<h2><?php \esc_html_e( 'Subscriptions', 'pronamic_ideal' ); ?></h2>
 
@@ -34,7 +74,7 @@
 		$query->posts,
 		function( $post ) {
 			return $post instanceof \WP_Post;
-		} 
+		}
 	);
 
 	echo '<ul>';
