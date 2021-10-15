@@ -26,6 +26,19 @@ if ( isset( $_REQUEST['pronamic_pay_nonce'] ) && wp_verify_nonce( $_REQUEST['pro
 			'pronamic_pay_delete_follow_up_payments_without_transaction_id'
 		);
 	}
+
+	$url = \add_query_arg(
+		array(
+			'page'   => 'action-scheduler',
+			'status' => 'pending',
+			's'      => 'pronamic_pay_delete_follow_up_payment_without_transaction_id',
+		),
+		\admin_url( 'tools.php' )
+	);
+
+	\wp_safe_redirect( $url );
+
+	exit;
 }
 
 ?>
