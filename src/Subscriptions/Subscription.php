@@ -576,7 +576,12 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 				continue;
 			}
 
-			if ( $period->get_start_date() == $phase->get_start_date() ) {
+			// Compare formatted dates instead of date objects,
+			// to account for differences in microseconds.
+			$period_start = $period->get_start_date()->format( 'Y-m-d H:i:s' );
+			$phase_start  = $phase->get_start_date()->format( 'Y-m-d H:i:s' );
+
+			if ( $period_start === $phase_start ) {
 				return true;
 			}
 		}

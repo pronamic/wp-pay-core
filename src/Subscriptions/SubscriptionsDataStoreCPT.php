@@ -256,6 +256,13 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @return bool
 	 */
 	public function create( $subscription ) {
+		/**
+		 * Pre-create subscription.
+		 *
+		 * @param Subscription $subscription Subscription.
+		 */
+		\do_action( 'pronamic_pay_pre_create_subscription', $subscription );
+
 		$result = wp_insert_post(
 			array(
 				'post_type'             => 'pronamic_pay_subscr',

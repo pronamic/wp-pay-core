@@ -75,6 +75,10 @@ class SubscriptionsModule {
 
 		add_action( 'pronamic_pay_new_payment', array( $this, 'maybe_create_subscription' ) );
 
+		\add_action( 'pronamic_pay_pre_create_subscription', array( __NAMESPACE__ . '\SubscriptionHelper', 'complement_subscription' ), 10, 1 );
+		\add_action( 'pronamic_pay_pre_create_subscription', array( __NAMESPACE__ . '\SubscriptionHelper', 'complement_subscription_dates' ), 10, 1 );
+		\add_action( 'pronamic_pay_pre_create_payment', array( $this, 'complement_subscription_by_payment' ), 10, 1 );
+
 		// The 'pronamic_pay_update_subscription_payments' hook adds subscription payments and sends renewal notices.
 		add_action( 'pronamic_pay_update_subscription_payments', array( $this, 'update_subscription_payments' ) );
 		\add_action( 'pronamic_pay_process_subscription_payment', array( $this, 'process_subscription_payment_event' ), 10, 2 );
@@ -135,15 +139,10 @@ class SubscriptionsModule {
 			return;
 		}
 
-		// Complement subscription.
-		SubscriptionHelper::complement_subscription( $subscription );
-		SubscriptionHelper::complement_subscription_by_payment( $subscription, $payment );
-		SubscriptionHelper::complement_subscription_dates( $subscription );
+		// Save subscription.
+		$subscription->save();
 
-		// Create.
-		$result = $this->plugin->subscriptions_data_store->create( $subscription );
-
-		if ( $result ) {
+		if ( $subscription->is_first_payment( $payment ) ) {
 			$start_date = $subscription->get_start_date();
 			$end_date   = $subscription->get_next_payment_date();
 
@@ -151,6 +150,22 @@ class SubscriptionsModule {
 			$payment->end_date   = ( null === $end_date ) ? null : clone $end_date;
 
 			$payment->save();
+		}
+	}
+
+	/**
+	 * Complement subscription by payment.
+	 *
+	 * @param Payment $payment Payment.
+	 */
+	public function complement_subscription_by_payment( $payment ) {
+		foreach ( $payment->get_subscriptions() as $subscription ) {
+			if ( ! $subscription->is_first_payment( $payment ) ) {
+				continue;
+			}
+
+			// Complement subscription.
+			SubscriptionHelper::complement_subscription_by_payment( $subscription, $payment );
 		}
 	}
 

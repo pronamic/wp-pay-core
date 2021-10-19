@@ -260,6 +260,13 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @return bool
 	 */
 	public function create( Payment $payment ) {
+		/**
+		 * Pre-create payment.
+		 *
+		 * @param Payment $payment Payment.
+		 */
+		\do_action( 'pronamic_pay_pre_create_payment', $payment );
+
 		$title = $payment->title;
 
 		if ( empty( $title ) ) {

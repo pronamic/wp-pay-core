@@ -645,6 +645,9 @@ class Plugin {
 
 		// Filters.
 		\add_filter( 'pronamic_payment_redirect_url', array( $this, 'payment_redirect_url' ), 10, 2 );
+
+		// Actions.
+		\add_action( 'pronamic_pay_pre_create_payment', array( __CLASS__, 'complement_payment' ), 10, 1 );
 	}
 
 	/**
@@ -1006,11 +1009,6 @@ class Plugin {
 	 * @throws \Exception Throws exception if gateway payment start fails.
 	 */
 	public static function start_payment( Payment $payment, $gateway = null ) {
-		global $pronamic_ideal;
-
-		// Complement payment.
-		self::complement_payment( $payment );
-
 		$config_id = $payment->get_config_id();
 
 		/**
@@ -1023,8 +1021,8 @@ class Plugin {
 
 		$payment->set_config_id( $config_id );
 
-		// Create payment.
-		$pronamic_ideal->payments_data_store->create( $payment );
+		// Save payment.
+		$payment->save();
 
 		// Gateway.
 		$gateway = self::get_gateway( $payment->get_config_id() );
