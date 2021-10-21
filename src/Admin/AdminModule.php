@@ -982,7 +982,7 @@ class AdminModule {
 			);
 		}
 
-		if ( \filter_input( INPUT_GET, 'pronamic_pay_debug', FILTER_VALIDATE_BOOLEAN ) ) {
+		if ( 'pronamic_pay_debug' === \filter_input( INPUT_GET, 'page', \FILTER_SANITIZE_STRING ) ) {
 			$submenu_pages[] = array(
 				'page_title' => __( 'Debug', 'pronamic_ideal' ),
 				'menu_title' => __( 'Debug', 'pronamic_ideal' ),

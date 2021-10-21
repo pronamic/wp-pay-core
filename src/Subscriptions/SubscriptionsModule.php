@@ -1506,8 +1506,7 @@ class SubscriptionsModule {
 
 		$location = \add_query_arg(
 			array(
-				'page'               => 'pronamic_pay_debug',
-				'pronamic_pay_debug' => 'true',
+				'page' => 'pronamic_pay_debug',
 			),
 			\admin_url( 'admin.php' )
 		);

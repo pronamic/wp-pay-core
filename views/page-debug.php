@@ -89,7 +89,6 @@ $tools = array(
 						\add_query_arg(
 							array(
 								'page'                => 'pronamic_pay_debug',
-								'pronamic_pay_debug'  => 'true',
 								'pronamic_pay_action' => $tool->action,
 							),
 							\admin_url( 'admin.php' )
