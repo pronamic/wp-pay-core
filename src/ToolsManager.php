@@ -99,6 +99,21 @@ class ToolsManager {
 	 * @return void
 	 */
 	public function register_tools() {
+		// Trash follow-up payments without transaction ID.
+		$this->register_tool(
+			'pronamic_pay_trash_follow_up_payments_without_transaction_id',
+			\__( 'Follow-up payments without transaction ID', 'pronamic_ideal' ),
+			array(
+				'label'    => \__( 'Trash follow-up payments without transaction ID', 'pronamic_ideal' ),
+				'callback' => array( $this, 'action_trash_follow_up_payment_without_transaction_id' ),
+				'query'    => array(
+					'post_type'      => 'pronamic_payment',
+					'post_status'    => 'any',
+					'fields'         => 'ids',
+					'posts_per_page' => 10,
+				),
+			)
+		);
 	}
 
 	/**
@@ -395,5 +410,47 @@ class ToolsManager {
 		);
 
 		return $response;
+	}
+
+	/**
+	 * Action to trash follow-up payments without a transaction ID.
+	 *
+	 * @param int $payment_id Payment ID.
+	 * @return void
+	 */
+	public function action_trash_follow_up_payment_without_transaction_id( $payment_id ) {
+		// Get payment.
+		$payment = \get_pronamic_payment( $payment_id );
+
+		if ( null === $payment ) {
+			return;
+		}
+
+		// Check transaction ID.
+		$transaction_id = $payment->get_transaction_id();
+
+		if ( ! empty( $transaction_id ) ) {
+			return;
+		}
+
+		// Check subscriptions.
+		$subscriptions = $payment->get_subscriptions();
+
+		if ( empty( $subscriptions ) ) {
+			return;
+		}
+
+		// Check if follow-up payment.
+		foreach ( $subscriptions as $subscription ) {
+			if ( ! $subscription->is_first_payment( $payment ) ) {
+				continue;
+			}
+
+			// Bail out, this is a first payment.
+			return;
+		}
+
+		// Go ahead, trash post.
+		\wp_trash_post( $payment_id );
 	}
 }
