@@ -176,68 +176,69 @@ class SubscriptionsModule {
 	 * @return void
 	 */
 	public function payment_status_update( $payment ) {
-		// Check if the payment is connected to a subscription.
-		$subscription = $payment->get_subscription();
+		foreach ( $payment->get_subscriptions() as $subscription ) {
+			// Status.
+			$status_before = $subscription->get_status();
+			$status_update = $status_before;
 
-		// Make sure the subscription exists.
-		if ( null === $subscription ) {
-			return;
+			switch ( $payment->get_status() ) {
+				case PaymentStatus::OPEN:
+					// @todo
+					break;
+				case PaymentStatus::SUCCESS:
+					$status_update = SubscriptionStatus::ACTIVE;
+
+					foreach ( $payment->get_periods() as $period ) {
+						// Check subscription.
+						if ( $period->get_phase()->get_subscription()->get_id() !== $subscription->get_id() ) {
+							continue;
+						}
+
+						// Update subscription expiry date.
+						if ( isset( $subscription->expiry_date ) && $subscription->expiry_date < $period->get_end_date() ) {
+							$subscription->expiry_date = clone $period->get_end_date();
+						}
+					}
+
+					break;
+				case PaymentStatus::FAILURE:
+					/**
+					 * Subscription status for failed payment.
+					 *
+					 * @todo Determine update status based on reason of failed payment. Use `failure` for now as that is usually the desired status.
+					 * @link https://www.europeanpaymentscouncil.eu/document-library/guidance-documents/guidance-reason-codes-sepa-direct-debit-r-transactions
+					 * @link https://github.com/pronamic/wp-pronamic-ideal/commit/48449417eac49eb6a93480e3b523a396c7db9b3d#diff-6712c698c6b38adfa7190a4be983a093
+					 */
+					$status_update = SubscriptionStatus::FAILURE;
+
+					break;
+				case PaymentStatus::CANCELLED:
+				case PaymentStatus::EXPIRED:
+					// Set subscription status to 'On Hold' only if the subscription is not already active when processing the first payment.
+					if ( $subscription->is_first_payment( $payment ) && SubscriptionStatus::ACTIVE === $subscription->get_status() ) {
+						$status_update = SubscriptionStatus::ON_HOLD;
+					}
+
+					break;
+			}
+
+			/*
+			 * The status of canceled or completed subscriptions will not be changed automatically,
+			 * unless the cancelled subscription is manually being renewed.
+			 */
+			$is_renewal = false;
+
+			if ( SubscriptionStatus::CANCELLED === $status_before && SubscriptionStatus::ACTIVE === $status_update && '1' === $payment->get_meta( 'manual_subscription_renewal' ) ) {
+				$is_renewal = true;
+			}
+
+			if ( $is_renewal || ! in_array( $status_before, array( SubscriptionStatus::CANCELLED, SubscriptionStatus::COMPLETED, SubscriptionStatus::ON_HOLD ), true ) ) {
+				$subscription->set_status( $status_update );
+			}
+
+			// Update.
+			$subscription->save();
 		}
-
-		// Status.
-		$status_before = $subscription->get_status();
-		$status_update = $status_before;
-
-		switch ( $payment->get_status() ) {
-			case PaymentStatus::OPEN:
-				// @todo
-				break;
-			case PaymentStatus::SUCCESS:
-				$status_update = SubscriptionStatus::ACTIVE;
-
-				if ( isset( $subscription->expiry_date, $payment->end_date ) && $subscription->expiry_date < $payment->end_date ) {
-					$subscription->expiry_date = clone $payment->end_date;
-				}
-
-				break;
-			case PaymentStatus::FAILURE:
-				/**
-				 * Subscription status for failed payment.
-				 *
-				 * @todo Determine update status based on reason of failed payment. Use `failure` for now as that is usually the desired status.
-				 *
-				 * @link https://www.europeanpaymentscouncil.eu/document-library/guidance-documents/guidance-reason-codes-sepa-direct-debit-r-transactions
-				 * @link https://github.com/pronamic/wp-pronamic-ideal/commit/48449417eac49eb6a93480e3b523a396c7db9b3d#diff-6712c698c6b38adfa7190a4be983a093
-				 */
-				$status_update = SubscriptionStatus::FAILURE;
-
-				break;
-			case PaymentStatus::CANCELLED:
-			case PaymentStatus::EXPIRED:
-				// Set subscription status to 'On Hold' only if the subscription is not already active when processing the first payment.
-				if ( $subscription->is_first_payment( $payment ) && SubscriptionStatus::ACTIVE === $subscription->get_status() ) {
-					$status_update = SubscriptionStatus::ON_HOLD;
-				}
-
-				break;
-		}
-
-		/*
-		 * The status of canceled or completed subscriptions will not be changed automatically,
-		 * unless the cancelled subscription is manually being renewed.
-		 */
-		$is_renewal = false;
-
-		if ( SubscriptionStatus::CANCELLED === $status_before && SubscriptionStatus::ACTIVE === $status_update && '1' === $payment->get_meta( 'manual_subscription_renewal' ) ) {
-			$is_renewal = true;
-		}
-
-		if ( $is_renewal || ! in_array( $status_before, array( SubscriptionStatus::CANCELLED, SubscriptionStatus::COMPLETED, SubscriptionStatus::ON_HOLD ), true ) ) {
-			$subscription->set_status( $status_update );
-		}
-
-		// Update.
-		$subscription->save();
 	}
 
 	/**
