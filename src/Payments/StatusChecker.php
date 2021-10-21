@@ -28,8 +28,10 @@ class StatusChecker {
 		// Payment status check events are scheduled when payments are started.
 		add_action( 'pronamic_pay_payment_status_check', array( $this, 'check_status' ), 10, 2 );
 
-		// Clear scheduled status check once payment reaches a final status.
+		// Clear scheduled status checks.
 		add_action( 'pronamic_payment_status_update', array( $this, 'maybe_clear_scheduled_status_check' ), 10, 1 );
+		add_action( 'trashed_post', array( $this, 'clear_scheduled_status_check' ), 10, 1 );
+		add_action( 'delete_post', array( $this, 'clear_scheduled_status_check' ), 10, 1 );
 	}
 
 	/**
@@ -199,15 +201,30 @@ class StatusChecker {
 			return;
 		}
 
-		// Clear scheduled hooks for all 4 tries.
+		$this->clear_scheduled_status_check( $payment->get_id() );
+	}
+
+	/**
+	 * Clear scheduled status check.
+	 *
+	 * @param int $post_id Post ID.
+	 * @return void
+	 */
+	public function clear_scheduled_status_check( $post_id ) {
+		// Check post type.
+		if ( 'pronamic_payment' !== \get_post_type( $post_id ) ) {
+			return;
+		}
+
+		// Unschedule action for all 4 tries.
 		$args = array(
-			'payment_id' => $payment->get_id(),
+			'payment_id' => $post_id,
 		);
 
 		foreach ( range( 1, 4 ) as $try ) {
 			$args['try'] = $try;
 
-			wp_clear_scheduled_hook( 'pronamic_pay_payment_status_check', $args );
+			\as_unschedule_action( 'pronamic_pay_payment_status_check', $args );
 		}
 	}
 }
