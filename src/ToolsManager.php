@@ -165,6 +165,22 @@ class ToolsManager {
 				),
 			)
 		);
+
+		// Permanently delete trashed payments and subscriptions.
+		$this->register_tool(
+			'pronamic_pay_delete_trashed_payments_and_subscriptions',
+			\__( 'Delete trashed payments and subscriptions', 'pronamic_ideal' ),
+			array(
+				'label'    => \__( 'Permanently delete trashed payments and subscriptions', 'pronamic_ideal' ),
+				'callback' => array( $this, 'action_delete_trashed_payments_and_subscriptions' ),
+				'query'    => array(
+					'post_type'      => array( 'pronamic_payment', 'pronamic_pay_subscr' ),
+					'post_status'    => 'trash',
+					'fields'         => 'ids',
+					'posts_per_page' => 10,
+				),
+			)
+		);
 	}
 
 	/**
@@ -645,5 +661,26 @@ class ToolsManager {
 		} catch ( \Exception $e ) {
 			return;
 		}
+	}
+
+	/**
+	 * Permanently delete trashed payments and subscriptions.
+	 *
+	 * @param int $post_id Post ID.
+	 * @return void
+	 */
+	public function action_delete_trashed_payments_and_subscriptions( $post_id ) {
+		// Check post status.
+		if ( 'trash' !== \get_post_status( $post_id ) ) {
+			return;
+		}
+
+		// Check post type.
+		if ( ! \in_array( \get_post_type( $post_id ), array( 'pronamic_payment', 'pronamic_pay_subscr' ) ) ) {
+			return;
+		}
+
+		// Go ahead, delete post.
+		\wp_delete_post( $post_id, true );
 	}
 }
