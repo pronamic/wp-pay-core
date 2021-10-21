@@ -13,6 +13,7 @@ namespace Pronamic\WordPress\Pay;
 use ActionScheduler;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Payments\StatusChecker;
+use Pronamic\WordPress\Pay\Subscriptions\SubscriptionHelper;
 
 /**
  * Tools manager.
@@ -143,6 +144,22 @@ class ToolsManager {
 				'query'    => array(
 					'post_type'      => 'pronamic_payment',
 					'post_status'    => 'payment_cancelled',
+					'fields'         => 'ids',
+					'posts_per_page' => 10,
+				),
+			)
+		);
+
+		// Reset subscription next payment dates based on successful payments.
+		$this->register_tool(
+			'pronamic_pay_reset_subscription_next_payment_dates_with_successful_payments',
+			\__( 'Correct subscription next payment dates', 'pronamic_ideal' ),
+			array(
+				'label'    => \__( 'Reset subscription next payment dates based on successful payments', 'pronamic_ideal' ),
+				'callback' => array( $this, 'action_reset_subscription_next_payment_date_with_successful_payments' ),
+				'query'    => array(
+					'post_type'      => 'pronamic_pay_subscr',
+					'post_status'    => array( 'subscr_active', 'subscr_failed' ),
 					'fields'         => 'ids',
 					'posts_per_page' => 10,
 				),
@@ -556,5 +573,77 @@ class ToolsManager {
 
 		// Go ahead, delete post.
 		\wp_delete_post( $payment_id );
+	}
+
+	/**
+	 * Action to reset subscription next payment date
+	 *
+	 * @param int $subscription_id Subscription ID.
+	 * @return void
+	 */
+	public function action_reset_subscription_next_payment_date_with_successful_payments( $subscription_id ) {
+		// Get subscription.
+		$subscription = \get_pronamic_subscription( $subscription_id );
+
+		if ( null === $subscription ) {
+			return;
+		}
+
+		// Check phases.
+		$phases = $subscription->get_phases();
+
+		if ( empty( $phases ) ) {
+			return;
+		}
+
+		// Check current phase.
+		$current_phase = $subscription->get_current_phase();
+
+		if ( null === $current_phase ) {
+			return;
+		}
+
+		// Count successful payments in current phase.
+		$payments = $subscription->get_payments();
+
+		$periods_created = 0;
+
+		foreach ( $payments as $payment ) {
+			// Check payment status.
+			if ( PaymentStatus::SUCCESS !== $payment->get_status() ) {
+				continue;
+			}
+
+			// Check periods.
+			$periods = $payment->get_periods();
+
+			foreach ( $periods as $period ) {
+				// Check subscription.
+				if ( $period->get_phase()->get_subscription()->get_id() !== $subscription_id ) {
+					continue;
+				}
+
+				// Check if payment period is before current phase start date.
+				// @todo Check phase sequence number instead?
+				if ( $period->get_start_date() < $current_phase->get_start_date() ) {
+					continue 2;
+				}
+			}
+
+			$periods_created++;
+		}
+
+		$current_phase->set_periods_created( $periods_created );
+
+		// Go ahead, recalculate next payment date.
+		try {
+			$subscription->set_next_payment_date( SubscriptionHelper::calculate_next_payment_date( $subscription ) );
+			$subscription->set_next_payment_delivery_date( SubscriptionHelper::calculate_next_payment_delivery_date( $subscription ) );
+			$subscription->set_expiry_date( $subscription->get_next_payment_date() );
+
+			$subscription->save();
+		} catch ( \Exception $e ) {
+			return;
+		}
 	}
 }
