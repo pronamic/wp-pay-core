@@ -9,60 +9,17 @@
  * @var \Pronamic\WordPress\Pay\Plugin $plugin Plugin.
  */
 
-if ( isset( $_REQUEST['pronamic_pay_nonce'] ) && wp_verify_nonce( $_REQUEST['pronamic_pay_nonce'], 'pronamic_pay_delete_follow_up_payments_without_transaction_id' ) ) {
-	$query = new \WP_Query(
-		array(
-			'post_type'   => 'pronamic_payment',
-			'post_status' => 'payment_failed',
-			'nopaging'    => true,
-			'fields'      => 'ids',
-		) 
-	);
+$tools_manager = $plugin->tools_manager;
 
-	foreach ( $query->posts as $payment_post_id ) {
-		\as_enqueue_async_action(
-			'pronamic_pay_delete_follow_up_payment_without_transaction_id',
-			array(
-				'pronamic_payment_id' => $payment_post_id,
-			),
-			'pronamic_pay_delete_follow_up_payments_without_transaction_id'
-		);
-	}
+$tools = $tools_manager->get_tools();
 
-	$url = \add_query_arg(
-		array(
-			'page'   => 'action-scheduler',
-			'status' => 'pending',
-			's'      => 'pronamic_pay_delete_follow_up_payment_without_transaction_id',
-		),
-		\admin_url( 'tools.php' )
-	);
+$tool = $tools_manager->get_tool( $tools_manager->get_current_action() );
 
-	\wp_safe_redirect( $url );
+if ( null !== $tool ) {
+	require_once __DIR__ . '/page-debug-scheduler.php';
 
-	exit;
+	return;
 }
-
-$tools = array(
-	(object) array(
-		'title'       => \__( 'Follow-up payments without transaction ID', 'pronamic_ideal' ),
-		'action'      => 'pronamic_pay_delete_follow_up_payments_without_transaction_id',
-		'label'       => \__( 'Delete follow-up payments without transaction ID', 'pronamic_ideal' ),
-		'description' => '',
-	),
-	(object) array(
-		'title'       => \__( 'Pending payments status', 'pronamic_ideal' ),
-		'action'      => 'pronamic_pay_check_pending_payments_status',
-		'label'       => \__( 'Check pending payments status', 'pronamic_ideal' ),
-		'description' => '',
-	),
-	(object) array(
-		'title'       => \__( 'Canceled follow-up payments', 'pronamic_ideal' ),
-		'action'      => 'pronamic_pay_delete_canceled_follow_up_payments',
-		'label'       => \__( 'Delete canceled follow-up payments', 'pronamic_ideal' ),
-		'description' => '',
-	),
-);
 
 ?>
 

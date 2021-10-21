@@ -607,6 +607,12 @@ class Plugin {
 			$this->admin = new Admin\AdminModule( $this );
 		}
 
+		// Debug.
+		if ( $this->is_debug_mode() ) {
+			// Tools.
+			$this->tools_manager = new ToolsManager( $this );
+		}
+
 		$gateways = array();
 
 		/**
