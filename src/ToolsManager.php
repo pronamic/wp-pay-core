@@ -11,6 +11,8 @@
 namespace Pronamic\WordPress\Pay;
 
 use ActionScheduler;
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
+use Pronamic\WordPress\Pay\Payments\StatusChecker;
 
 /**
  * Tools manager.
@@ -109,6 +111,22 @@ class ToolsManager {
 				'query'    => array(
 					'post_type'      => 'pronamic_payment',
 					'post_status'    => 'any',
+					'fields'         => 'ids',
+					'posts_per_page' => 10,
+				),
+			)
+		);
+
+		// Check status of pending payments.
+		$this->register_tool(
+			'pronamic_pay_check_pending_payments_status',
+			\__( 'Pending payments status check', 'pronamic_ideal' ),
+			array(
+				'label'    => \__( 'Check pending payments status', 'pronamic_ideal' ),
+				'callback' => array( $this, 'action_check_payment_status' ),
+				'query'    => array(
+					'post_type'      => 'pronamic_payment',
+					'post_status'    => 'payment_pending',
 					'fields'         => 'ids',
 					'posts_per_page' => 10,
 				),
@@ -452,5 +470,35 @@ class ToolsManager {
 
 		// Go ahead, trash post.
 		\wp_trash_post( $payment_id );
+	}
+
+	/**
+	 * Action to check payment status for pending payments.
+	 *
+	 * @param int $payment_id Payment ID.
+	 * @return void
+	 */
+	public function action_check_payment_status( $payment_id ) {
+		// Get payment.
+		$payment = \get_pronamic_payment( $payment_id );
+
+		if ( null === $payment ) {
+			return;
+		}
+
+		// Check payment status.
+		if ( PaymentStatus::OPEN !== $payment->get_status() ) {
+			return;
+		}
+
+		// Check if gateway supports status requests.
+		$gateway = $payment->get_gateway();
+
+		if ( ! $gateway->supports( 'payment_status_request' ) ) {
+			return;
+		}
+
+		// Go ahead, schedule async status check with retries.
+		StatusChecker::schedule_event( $payment, true );
 	}
 }

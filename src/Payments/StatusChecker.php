@@ -38,10 +38,10 @@ class StatusChecker {
 	 * Schedule event.
 	 *
 	 * @param Payment $payment The payment to schedule the status check event.
-	 *
+	 * @param bool    $async   Whether to schedule asynchronous action.
 	 * @return void
 	 */
-	public static function schedule_event( $payment ) {
+	public static function schedule_event( $payment, $async = false ) {
 		/*
 		 * Schedule status requests
 		 * http://pronamic.nl/wp-content/uploads/2011/12/iDEAL_Advanced_PHP_EN_V2.2.pdf (page 19)
@@ -59,6 +59,19 @@ class StatusChecker {
 		$status = $payment->get_status();
 
 		if ( ! empty( $status ) && PaymentStatus::OPEN !== $status ) {
+			return;
+		}
+
+		// Asynchronous action.
+		if ( $async ) {
+			\as_enqueue_async_action(
+				'pronamic_pay_payment_status_check',
+				array(
+					'payment_id' => $payment->get_id(),
+					'try'        => 0,
+				)
+			);
+
 			return;
 		}
 
