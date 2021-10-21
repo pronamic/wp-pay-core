@@ -132,6 +132,22 @@ class ToolsManager {
 				),
 			)
 		);
+
+		// Delete canceled follow-up payments.
+		$this->register_tool(
+			'pronamic_pay_delete_canceled_follow_up_payments',
+			\__( 'Canceled follow-up payments', 'pronamic_ideal' ),
+			array(
+				'label'    => \__( 'Delete canceled follow-up payments', 'pronamic_ideal' ),
+				'callback' => array( $this, 'action_delete_canceled_follow_up_payment' ),
+				'query'    => array(
+					'post_type'      => 'pronamic_payment',
+					'post_status'    => 'payment_cancelled',
+					'fields'         => 'ids',
+					'posts_per_page' => 10,
+				),
+			)
+		);
 	}
 
 	/**
@@ -500,5 +516,45 @@ class ToolsManager {
 
 		// Go ahead, schedule async status check with retries.
 		StatusChecker::schedule_event( $payment, true );
+	}
+
+	/**
+	 * Action to delete canceled follow-up payments.
+	 *
+	 * @param int $payment_id Payment ID.
+	 * @return void
+	 */
+	public function action_delete_canceled_follow_up_payment( $payment_id ) {
+		// Get payment.
+		$payment = \get_pronamic_payment( $payment_id );
+
+		if ( null === $payment ) {
+			return;
+		}
+
+		// Check canceled payment status.
+		if ( PaymentStatus::CANCELLED !== $payment->get_status() ) {
+			return;
+		}
+
+		// Check subscriptions.
+		$subscriptions = $payment->get_subscriptions();
+
+		if ( empty( $subscriptions ) ) {
+			return;
+		}
+
+		// Check if follow-up payment.
+		foreach ( $subscriptions as $subscription ) {
+			if ( ! $subscription->is_first_payment( $payment ) ) {
+				continue;
+			}
+
+			// Bail out, this is a first payment.
+			return;
+		}
+
+		// Go ahead, delete post.
+		\wp_delete_post( $payment_id );
 	}
 }
