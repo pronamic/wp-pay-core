@@ -53,12 +53,6 @@ class StatusChecker {
 		 * - No status request for transactions older than 7 days.
 		 */
 
-		/*
-		 * The function `wp_schedule_single_event` uses the arguments array as an key for the event,
-		 * that's why we also add the time to this array, besides that it's also much clearer on
-		 * the Cron View (http://wordpress.org/extend/plugins/cron-view/) page.
-		 */
-
 		// Bail if payment already has a final status (e.g. failed payments).
 		$status = $payment->get_status();
 
@@ -69,7 +63,7 @@ class StatusChecker {
 		// Get delay seconds for first status check.
 		$delay = self::get_delay_seconds( 1, $payment );
 
-		wp_schedule_single_event(
+		\as_schedule_single_action(
 			time() + $delay,
 			'pronamic_pay_payment_status_check',
 			array(
@@ -179,7 +173,7 @@ class StatusChecker {
 			// Get delay seconds for next status check.
 			$delay = self::get_delay_seconds( $next_try, $payment );
 
-			wp_schedule_single_event(
+			\as_schedule_single_action(
 				time() + $delay,
 				'pronamic_pay_payment_status_check',
 				array(
