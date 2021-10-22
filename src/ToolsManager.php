@@ -39,7 +39,7 @@ class ToolsManager {
 	/**
 	 * Default posts per page.
 	 */
-	const SCHEDULE_POSTS_PER_PAGE = 2;
+	const SCHEDULE_POSTS_PER_PAGE = 100;
 
 	/**
 	 * Construct tools manager.
