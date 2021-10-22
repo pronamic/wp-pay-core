@@ -204,6 +204,7 @@ class Plugin {
 
 	/**
 	 * Tools manager.
+	 *
 	 * @var ToolsManager
 	 */
 	public $tools_manager;
