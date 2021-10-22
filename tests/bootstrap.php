@@ -40,7 +40,11 @@ require_once getenv( 'WP_PHPUNIT__DIR' ) . '/includes/functions.php';
 function _manually_load_plugin() {
 	global $pronamic_ideal;
 
-	$pronamic_ideal = pronamic_pay_plugin();
+	$pronamic_ideal = \Pronamic\WordPress\Pay\Plugin::instance(
+		array(
+			'action_scheduler' => __DIR__ . '/../wp-content/plugins/action-scheduler/action-scheduler.php',
+		)
+	);
 }
 
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
