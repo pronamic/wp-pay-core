@@ -7,7 +7,6 @@ env:
   WP_TESTS_DB_PASS: password
   php-version: '7.4'
   wp-version: '*'
-  phpunit-version: '^6.0'
 
 jobs:
   phpcs:
