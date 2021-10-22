@@ -139,8 +139,8 @@ class ToolsManager {
 			'pronamic_pay_delete_canceled_follow_up_payments',
 			\__( 'Canceled follow-up payments', 'pronamic_ideal' ),
 			array(
-				'label'    => \__( 'Delete canceled follow-up payments', 'pronamic_ideal' ),
-				'callback' => array( $this, 'action_delete_canceled_follow_up_payment' ),
+				'label'    => \__( 'Trash canceled follow-up payments', 'pronamic_ideal' ),
+				'callback' => array( $this, 'action_trash_canceled_follow_up_payment' ),
 				'query'    => array(
 					'post_type'      => 'pronamic_payment',
 					'post_status'    => 'payment_cancelled',
@@ -552,12 +552,12 @@ class ToolsManager {
 	}
 
 	/**
-	 * Action to delete canceled follow-up payments.
+	 * Action to trash canceled follow-up payments.
 	 *
 	 * @param int $payment_id Payment ID.
 	 * @return void
 	 */
-	public function action_delete_canceled_follow_up_payment( $payment_id ) {
+	public function action_trash_canceled_follow_up_payment( $payment_id ) {
 		// Get payment.
 		$payment = \get_pronamic_payment( $payment_id );
 
@@ -588,7 +588,7 @@ class ToolsManager {
 		}
 
 		// Go ahead, delete post.
-		\wp_delete_post( $payment_id );
+		\wp_trash_post( $payment_id );
 	}
 
 	/**
