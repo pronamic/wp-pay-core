@@ -7,6 +7,7 @@ jQuery( document ).ready( function( $ ) {
 	const $barStatus = $( '.pronamic-pay-debug__bar__status' );
 	let isPaused     = false;
 	let currentProcessUrl;
+	let numTotalPages;
 
 	// Before XHR send.
 	const beforeSend = function ( xhr ) {
@@ -19,13 +20,17 @@ jQuery( document ).ready( function( $ ) {
 		method: 'GET',
 		beforeSend: beforeSend
 	} ).done( function ( response ) {
-		let { count } = response.data;
+		let { count, num_pages } = response.data;
 
 		if ( count !== 'undefined' ) {
 			$total.html( count );
 
 			if ( count > 0 ) {
 				$btnStart.removeAttr( 'disabled' );
+			}
+
+			if ( num_pages ) {
+				numTotalPages = num_pages;
 			}
 		}
 	} );
@@ -49,28 +54,28 @@ jQuery( document ).ready( function( $ ) {
 
 			// Update progress.
 			if ( number_scheduled ) {
-				$scheduled.html( number_scheduled );
+				let total_scheduled = parseInt( $scheduled.html(), 10 ) + number_scheduled;
+
+				$scheduled.html( total_scheduled );
 
 				// Update bar.
 				let total = parseInt( $total.html(), 10 );
-				let progress = Math.ceil( ( number_scheduled / total ) * 100 );
+				let progress = Math.ceil( ( total_scheduled / total ) * 100 );
 
 				$bar.css( 'width', progress + '%' );
 				$barStatus.html( progress + ' %' );
-
-				// Check finished.
-				if ( number_scheduled >= total && _links.scheduler ) {
-					$btnStart.hide();
-
-					$( '#pronamic-pay-debug-scheduler-pending' ).attr( 'href', _links.scheduler[0].href ).show();
-
-					return;
-				}
 			}
 
 			// Start next processing.
 			if ( _links.next ) {
 				processUrl( _links.next[0].href );
+			}
+
+			// Check finished.
+			if ( ! _links.next && _links.scheduler ) {
+				$btnStart.hide();
+
+				$( '#pronamic-pay-debug-scheduler-pending' ).attr( 'href', _links.scheduler[0].href ).show();
 			}
 		} );
 	};
@@ -84,7 +89,7 @@ jQuery( document ).ready( function( $ ) {
 			$btnStart.html( pronamicPayAdminDebugScheduler.labelPause );
 			$btnStart.removeClass( 'button-primary' );
 
-			processUrl( pronamicPayAdminDebugScheduler.schedule_url );
+			processUrl( pronamicPayAdminDebugScheduler.schedule_url + '?page=' + numTotalPages );
 
 			return;
 		}

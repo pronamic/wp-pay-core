@@ -10,7 +10,6 @@
 
 namespace Pronamic\WordPress\Pay;
 
-use ActionScheduler;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Payments\StatusChecker;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionHelper;
@@ -36,6 +35,11 @@ class ToolsManager {
 	 * @var array<string,object>
 	 */
 	private $tools;
+
+	/**
+	 * Default posts per page.
+	 */
+	const SCHEDULE_POSTS_PER_PAGE = 2;
 
 	/**
 	 * Construct tools manager.
@@ -113,7 +117,6 @@ class ToolsManager {
 					'post_type'      => 'pronamic_payment',
 					'post_status'    => 'any',
 					'fields'         => 'ids',
-					'posts_per_page' => 10,
 				),
 			)
 		);
@@ -129,7 +132,6 @@ class ToolsManager {
 					'post_type'      => 'pronamic_payment',
 					'post_status'    => 'payment_pending',
 					'fields'         => 'ids',
-					'posts_per_page' => 10,
 				),
 			)
 		);
@@ -145,7 +147,6 @@ class ToolsManager {
 					'post_type'      => 'pronamic_payment',
 					'post_status'    => 'payment_cancelled',
 					'fields'         => 'ids',
-					'posts_per_page' => 10,
 				),
 			)
 		);
@@ -161,7 +162,6 @@ class ToolsManager {
 					'post_type'      => 'pronamic_pay_subscr',
 					'post_status'    => array( 'subscr_active', 'subscr_failed' ),
 					'fields'         => 'ids',
-					'posts_per_page' => 10,
 				),
 			)
 		);
@@ -177,7 +177,6 @@ class ToolsManager {
 					'post_type'      => array( 'pronamic_payment', 'pronamic_pay_subscr' ),
 					'post_status'    => 'trash',
 					'fields'         => 'ids',
-					'posts_per_page' => 10,
 				),
 			)
 		);
@@ -345,7 +344,7 @@ class ToolsManager {
 		}
 
 		// Query.
-		$query = \wp_parse_args(
+		$args = \wp_parse_args(
 			array(
 				'fields'        => 'ids',
 				'no_found_rows' => true,
@@ -354,13 +353,23 @@ class ToolsManager {
 			$tool->query
 		);
 
-		$query = new \WP_Query( $query );
+		$query = new \WP_Query( $args );
+
+		// Posts per page.
+		$posts_per_page = self::SCHEDULE_POSTS_PER_PAGE;
+
+		if ( \array_key_exists( 'posts_per_page', $args ) ) {
+			$posts_per_page = $args['posts_per_page'];
+		}
 
 		// Response.
-		$data = array(
+		$count = count( $query->posts );
+
+		$data  = array(
 			'success' => true,
 			'data'    => array(
-				'count' => count( $query->posts ),
+				'count' => $count,
+				'num_pages' => ceil( $count / $posts_per_page ),
 			),
 		);
 
@@ -392,10 +401,6 @@ class ToolsManager {
 			return new \WP_REST_Response( $data );
 		}
 
-		// Lock action scheduler async request runner to temporarily prevent
-		// running async events (by default for one minute).
-		ActionScheduler::lock()->set( 'async-request-runner' );
-
 		/*
 		 * Query.
 		 */
@@ -410,13 +415,14 @@ class ToolsManager {
 
 		// Posts per page.
 		if ( ! \array_key_exists( 'posts_per_page', $args ) ) {
-			$args['posts_per_page'] = 10;
+			$args['posts_per_page'] = self::SCHEDULE_POSTS_PER_PAGE;
 		}
 
 		// Args.
 		$args = \wp_parse_args(
 			array(
-				'page' => $page,
+				'paged'   => $page,
+				'orderby' => 'ID',
 			),
 			$args
 		);
@@ -445,24 +451,28 @@ class ToolsManager {
 		}
 
 		// Response.
-		$page = $args['page'];
+		$page = $args['paged'];
 
 		$data = array(
 			'success' => true,
 			'data'    => array(
-				'number_scheduled' => ( ( $page - 1 ) * $args['posts_per_page'] ) + $count,
+				'number_scheduled' => $count,
 			),
 		);
 
 		$response = new \WP_REST_Response( $data );
 
-		$response->add_link(
-			'next',
-			\add_query_arg(
-				array( 'page' => ( $page + 1 ) ),
-				\rest_url( 'pronamic-pay/v1/tools/' . $action . '/schedule' )
-			)
-		);
+		$next_page = ( $page - 1 );
+
+		if ( $next_page > 0 ) {
+			$response->add_link(
+				'next',
+				\add_query_arg(
+					array( 'page' => $next_page ),
+					\rest_url( 'pronamic-pay/v1/tools/' . $action . '/schedule' )
+				)
+			);
+		}
 
 		$response->add_link(
 			'scheduler',
