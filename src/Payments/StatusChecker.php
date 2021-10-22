@@ -172,7 +172,7 @@ class StatusChecker {
 		$payment->add_note( $note );
 
 		// Update payment.
-		Plugin::update_payment( $payment );
+		Plugin::update_payment( $payment, false );
 
 		// Limit number of tries.
 		if ( 4 === $try ) {
