@@ -203,6 +203,12 @@ class Plugin {
 	public $integrations;
 
 	/**
+	 * Tools manager.
+	 * @var ToolsManager
+	 */
+	public $tools_manager;
+
+	/**
 	 * Webhook logger.
 	 *
 	 * @var WebhookLogger
