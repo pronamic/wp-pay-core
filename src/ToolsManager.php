@@ -629,10 +629,10 @@ class ToolsManager {
 			return;
 		}
 
-		// Count successful payments in current phase.
+		// Recalculate phase periods created.
 		$payments = $subscription->get_payments();
 
-		$periods_created = 0;
+		$paid_up_to_date = null;
 
 		foreach ( $payments as $payment ) {
 			// Check payment status.
@@ -653,15 +653,31 @@ class ToolsManager {
 					continue;
 				}
 
-				// Check if payment period is before current phase start date.
-				// @todo Check phase sequence number instead?
-				if ( $period->get_start_date() < $current_phase->get_start_date() ) {
-					continue 2;
+				// Check period sequence number.
+				if ( $period->get_phase()->get_sequence_number() !== $current_phase->get_sequence_number() ) {
+					continue;
+				}
+
+				// Update paid up to date.
+				$end_date = $period->get_end_date();
+
+				if ( null === $paid_up_to_date || $end_date > $paid_up_to_date ) {
+					$paid_up_to_date = $end_date;
 				}
 			}
-
-			$periods_created++;
 		}
+
+		if ( null === $paid_up_to_date ) {
+			return;
+		}
+
+		$paid_period = new \DatePeriod(
+			$current_phase->get_start_date(),
+			new \DateInterval( $current_phase->get_interval()->get_specification() ),
+			$paid_up_to_date
+		);
+
+		$periods_created = \iterator_count( $paid_period );
 
 		$current_phase->set_periods_created( $periods_created );
 
