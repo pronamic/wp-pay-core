@@ -214,7 +214,15 @@ class StatusChecker {
 			return;
 		}
 
-		$this->clear_scheduled_status_check( $payment->get_id() );
+		// Check payment.
+		$payment_id = $payment->get_id();
+
+		if ( null === $payment_id ) {
+			return;
+		}
+
+		// Clear scheduled status check.
+		$this->clear_scheduled_status_check( $payment_id );
 	}
 
 	/**

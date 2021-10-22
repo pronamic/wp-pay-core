@@ -157,6 +157,7 @@ class SubscriptionsModule {
 	 * Complement subscription by payment.
 	 *
 	 * @param Payment $payment Payment.
+	 * @return void
 	 */
 	public function complement_subscription_by_payment( $payment ) {
 		foreach ( $payment->get_subscriptions() as $subscription ) {
@@ -188,15 +189,19 @@ class SubscriptionsModule {
 				case PaymentStatus::SUCCESS:
 					$status_update = SubscriptionStatus::ACTIVE;
 
-					foreach ( $payment->get_periods() as $period ) {
-						// Check subscription.
-						if ( $period->get_phase()->get_subscription()->get_id() !== $subscription->get_id() ) {
-							continue;
-						}
+					$periods = $payment->get_periods();
 
-						// Update subscription expiry date.
-						if ( isset( $subscription->expiry_date ) && $subscription->expiry_date < $period->get_end_date() ) {
-							$subscription->expiry_date = clone $period->get_end_date();
+					if ( null !== $periods ) {
+						foreach ( $periods as $period ) {
+							// Check subscription.
+							if ( $period->get_phase()->get_subscription()->get_id() !== $subscription->get_id() ) {
+								continue;
+							}
+
+							// Update subscription expiry date.
+							if ( isset( $subscription->expiry_date ) && $subscription->expiry_date < $period->get_end_date() ) {
+								$subscription->expiry_date = clone $period->get_end_date();
+							}
 						}
 					}
 

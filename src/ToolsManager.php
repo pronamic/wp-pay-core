@@ -252,7 +252,7 @@ class ToolsManager {
 	/**
 	 * Get current tool.
 	 *
-	 * @return object|null
+	 * @return string|null
 	 */
 	public function get_current_action() {
 		// Check action.
@@ -543,7 +543,7 @@ class ToolsManager {
 		// Check if gateway supports status requests.
 		$gateway = $payment->get_gateway();
 
-		if ( ! $gateway->supports( 'payment_status_request' ) ) {
+		if ( null === $gateway || ! $gateway->supports( 'payment_status_request' ) ) {
 			return;
 		}
 
@@ -632,6 +632,10 @@ class ToolsManager {
 
 			// Check periods.
 			$periods = $payment->get_periods();
+
+			if ( null === $periods ) {
+				continue;
+			}
 
 			foreach ( $periods as $period ) {
 				// Check subscription.
