@@ -114,9 +114,9 @@ class ToolsManager {
 				'label'    => \__( 'Trash follow-up payments without transaction ID', 'pronamic_ideal' ),
 				'callback' => array( $this, 'action_trash_follow_up_payment_without_transaction_id' ),
 				'query'    => array(
-					'post_type'      => 'pronamic_payment',
-					'post_status'    => 'any',
-					'fields'         => 'ids',
+					'post_type'   => 'pronamic_payment',
+					'post_status' => 'any',
+					'fields'      => 'ids',
 				),
 			)
 		);
@@ -129,9 +129,9 @@ class ToolsManager {
 				'label'    => \__( 'Check pending payments status', 'pronamic_ideal' ),
 				'callback' => array( $this, 'action_check_payment_status' ),
 				'query'    => array(
-					'post_type'      => 'pronamic_payment',
-					'post_status'    => 'payment_pending',
-					'fields'         => 'ids',
+					'post_type'   => 'pronamic_payment',
+					'post_status' => 'payment_pending',
+					'fields'      => 'ids',
 				),
 			)
 		);
@@ -144,9 +144,9 @@ class ToolsManager {
 				'label'    => \__( 'Trash canceled follow-up payments', 'pronamic_ideal' ),
 				'callback' => array( $this, 'action_trash_canceled_follow_up_payment' ),
 				'query'    => array(
-					'post_type'      => 'pronamic_payment',
-					'post_status'    => 'payment_cancelled',
-					'fields'         => 'ids',
+					'post_type'   => 'pronamic_payment',
+					'post_status' => 'payment_cancelled',
+					'fields'      => 'ids',
 				),
 			)
 		);
@@ -159,9 +159,9 @@ class ToolsManager {
 				'label'    => \__( 'Reset subscription next payment dates based on successful payments', 'pronamic_ideal' ),
 				'callback' => array( $this, 'action_reset_subscription_next_payment_date_with_successful_payments' ),
 				'query'    => array(
-					'post_type'      => 'pronamic_pay_subscr',
-					'post_status'    => array( 'subscr_active', 'subscr_failed' ),
-					'fields'         => 'ids',
+					'post_type'   => 'pronamic_pay_subscr',
+					'post_status' => array( 'subscr_active', 'subscr_failed' ),
+					'fields'      => 'ids',
 				),
 			)
 		);
@@ -174,9 +174,9 @@ class ToolsManager {
 				'label'    => \__( 'Permanently delete trashed payments and subscriptions', 'pronamic_ideal' ),
 				'callback' => array( $this, 'action_delete_trashed_payments_and_subscriptions' ),
 				'query'    => array(
-					'post_type'      => array( 'pronamic_payment', 'pronamic_pay_subscr' ),
-					'post_status'    => 'trash',
-					'fields'         => 'ids',
+					'post_type'   => array( 'pronamic_payment', 'pronamic_pay_subscr' ),
+					'post_status' => 'trash',
+					'fields'      => 'ids',
 				),
 			)
 		);
@@ -365,10 +365,10 @@ class ToolsManager {
 		// Response.
 		$count = count( $query->posts );
 
-		$data  = array(
+		$data = array(
 			'success' => true,
 			'data'    => array(
-				'count' => $count,
+				'count'     => $count,
 				'num_pages' => ceil( $count / $posts_per_page ),
 			),
 		);
