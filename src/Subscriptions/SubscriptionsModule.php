@@ -64,33 +64,33 @@ class SubscriptionsModule {
 		$this->privacy = new SubscriptionsPrivacy();
 
 		// Actions.
-		add_action( 'wp_loaded', array( $this, 'maybe_handle_subscription_action' ) );
+		\add_action( 'wp_loaded', array( $this, 'maybe_handle_subscription_action' ) );
 
-		add_action( 'plugins_loaded', array( $this, 'maybe_schedule_subscription_events' ), 6 );
+		\add_action( 'plugins_loaded', array( $this, 'maybe_schedule_subscription_events' ), 6 );
 
-		add_action( 'admin_init', array( $this, 'maybe_process_debug' ) );
+		\add_action( 'admin_init', array( $this, 'maybe_process_debug' ) );
 
 		// Exclude subscription notes.
-		add_filter( 'comments_clauses', array( $this, 'exclude_subscription_comment_notes' ), 10, 2 );
+		\add_filter( 'comments_clauses', array( $this, 'exclude_subscription_comment_notes' ), 10, 2 );
 
-		add_action( 'pronamic_pay_new_payment', array( $this, 'maybe_create_subscription' ) );
+		\add_action( 'pronamic_pay_new_payment', array( $this, 'maybe_create_subscription' ) );
 
 		\add_action( 'pronamic_pay_pre_create_subscription', array( SubscriptionHelper::class, 'complement_subscription' ), 10, 1 );
 		\add_action( 'pronamic_pay_pre_create_subscription', array( SubscriptionHelper::class, 'complement_subscription_dates' ), 10, 1 );
 		\add_action( 'pronamic_pay_pre_create_payment', array( $this, 'complement_subscription_by_payment' ), 10, 1 );
 
 		// The 'pronamic_pay_update_subscription_payments' hook adds subscription payments and sends renewal notices.
-		add_action( 'pronamic_pay_update_subscription_payments', array( $this, 'update_subscription_payments' ) );
+		\add_action( 'pronamic_pay_update_subscription_payments', array( $this, 'update_subscription_payments' ) );
 		\add_action( 'pronamic_pay_process_subscription_payment', array( $this, 'process_subscription_payment_event' ), 10, 2 );
 
 		// The 'pronamic_pay_complete_subscriptions' hook completes active subscriptions.
-		add_action( 'pronamic_pay_complete_subscriptions', array( $this, 'complete_subscriptions' ) );
+		\add_action( 'pronamic_pay_complete_subscriptions', array( $this, 'complete_subscriptions' ) );
 
 		// Listen to payment status changes so we can update related subscriptions.
-		add_action( 'pronamic_payment_status_update', array( $this, 'payment_status_update' ) );
+		\add_action( 'pronamic_payment_status_update', array( $this, 'payment_status_update' ) );
 
 		// Listen to subscription status changes so we can log these in a note.
-		add_action( 'pronamic_subscription_status_update', array( $this, 'log_subscription_status_update' ), 10, 4 );
+		\add_action( 'pronamic_subscription_status_update', array( $this, 'log_subscription_status_update' ), 10, 4 );
 
 		// WordPress CLI.
 		// @link https://github.com/woocommerce/woocommerce/blob/3.3.1/includes/class-woocommerce.php#L365-L369.
@@ -101,7 +101,7 @@ class SubscriptionsModule {
 		}
 
 		// REST API.
-		add_action( 'rest_api_init', array( $this, 'rest_api_init' ) );
+		\add_action( 'rest_api_init', array( $this, 'rest_api_init' ) );
 	}
 
 	/**
