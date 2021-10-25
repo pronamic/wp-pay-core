@@ -1281,27 +1281,32 @@ class SubscriptionsModule {
 		} catch ( \Exception $e ) {
 			$attempt = $attempt + 1;
 
-			// Add note.
-			$note = \sprintf(
-				/* translators: %s: Exception message. */
-				\__( 'Unable to start recurring payment. Will not try again. Error: %s', 'pronamic_ideal' ),
-				$e->getMessage()
-			);
-
 			if ( $attempt <= 4 ) {
+				$this->schedule_subscription_follow_up_payment( $subscription );
+
 				$retry_time = time() + $this->get_subscription_payment_retry_seconds( $attempt );
 
-				$note = \sprintf(
-					/* translators: 1: Retry time, 2: Exception message. */
-					\__( 'Unable to start recurring payment. Retry on %1$s. Error: %2$s', 'pronamic_ideal' ),
-					( new DateTime( '@' . $retry_time ) )->format_i18n(),
-					$e->getMessage()
+				$subscription->add_note(
+					\sprintf(
+						/* translators: 1: Retry time, 2: Exception message. */
+						\__( 'Unable to start recurring payment. Retry on %1$s. Error: %2$s', 'pronamic_ideal' ),
+						( new DateTime( '@' . $retry_time ) )->format_i18n(),
+						$e->getMessage()
+					)
 				);
-
-				$this->schedule_subscription_follow_up_payment( $subscription );
 			}
 
-			$subscription->add_note( $note );
+			if ( $attempt > 4 ) {
+				$subscription->add_note( \sprintf(
+						/* translators: %s: Exception message. */
+						\__( 'Unable to start recurring payment. Will not try again. Error: %s', 'pronamic_ideal' ),
+						$e->getMessage()
+					)
+				);
+
+				// Rethrow exception.
+				throw $e;
+			}
 		}
 
 		$subscription->save();
