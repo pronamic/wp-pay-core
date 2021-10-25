@@ -890,12 +890,21 @@ class SubscriptionsModule {
 	 * @return void
 	 */
 	public function maybe_schedule_subscription_events() {
-		if ( ! wp_next_scheduled( 'pronamic_pay_update_subscription_payments' ) ) {
-			wp_schedule_event( time(), 'hourly', 'pronamic_pay_update_subscription_payments' );
+		// Unschedule legacy WordPress Cron hook.
+		\wp_unschedule_hook( 'pronamic_pay_update_subscription_payments' );
+		\wp_unschedule_hook( 'pronamic_pay_complete_subscriptions' );
+
+		// Interval in seconds.
+		$interval = 10 * \MINUTE_IN_SECONDS;
+
+		// Action to create follow-up payments for subscriptions.
+		if ( ! \as_next_scheduled_action( 'pronamic_pay_update_subscription_payments' ) ) {
+			\as_schedule_recurring_action( time(), $interval, 'pronamic_pay_update_subscription_payments' );
 		}
 
-		if ( ! wp_next_scheduled( 'pronamic_pay_complete_subscriptions' ) ) {
-			wp_schedule_event( time(), 'hourly', 'pronamic_pay_complete_subscriptions' );
+		// Action to complete expired subscriptions.
+		if ( ! \as_next_scheduled_action( 'pronamic_pay_complete_subscriptions' ) ) {
+			\as_schedule_recurring_action( time(), $interval, 'pronamic_pay_complete_subscriptions' );
 		}
 	}
 
@@ -1258,7 +1267,7 @@ class SubscriptionsModule {
 		}
 
 		// Schedule event.
-		\wp_schedule_single_event(
+		\as_schedule_single_action(
 			\time() + $this->get_subscription_payment_retry_seconds( $try ),
 			'pronamic_pay_process_subscription_payment',
 			$event_args,
