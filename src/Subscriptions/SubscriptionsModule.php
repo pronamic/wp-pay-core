@@ -1327,9 +1327,9 @@ class SubscriptionsModule {
 				// Rethrow exception.
 				throw $e;
 			}
+		} finally {
+			$subscription->save();
 		}
-
-		$subscription->save();
 	}
 
 	/**
