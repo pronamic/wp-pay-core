@@ -79,7 +79,9 @@ class SubscriptionsModule {
 
 		// The 'pronamic_pay_update_subscription_payments' hook adds subscription payments and sends renewal notices.
 		\add_action( 'pronamic_pay_update_subscription_payments', array( $this, 'update_subscription_payments' ) );
-		\add_action( 'pronamic_pay_process_subscription_payment', array( $this, 'process_subscription_payment_event' ), 10, 2 );
+
+		\add_action( 'pronamic_pay_schedule_subscriptions_follow_up_payment', array( $this, 'schedule_subscriptions_follow_up_payment' ) );
+		\add_action( 'pronamic_pay_create_subscription_follow_up_payment', array( $this, 'action_create_subscription_follow_up_payment' ) );
 
 		// The 'pronamic_pay_complete_subscriptions' hook completes active subscriptions.
 		\add_action( 'pronamic_pay_complete_subscriptions', array( $this, 'complete_subscriptions' ) );
@@ -1047,101 +1049,6 @@ class SubscriptionsModule {
 	}
 
 	/**
-	 * Process subscription payment.
-	 *
-	 * @param int $subscription_id Subscription ID.
-	 * @throws \Exception Throws exception on error.
-	 * @return void
-	 */
-	private function process_subscription_payment( $subscription_id ) {
-		// Clear scheduled payments for subscription.
-		$this->clear_scheduled_subscription_payment( $subscription_id );
-
-		// Check subscription.
-		$subscription = \get_pronamic_subscription( (int) $subscription_id );
-
-		if ( null === $subscription ) {
-			throw new \Exception(
-				\sprintf(
-					'Unable to load subscription from post ID: %d.',
-					$subscription_id
-				)
-			);
-		}
-
-		// Check gateway.
-		$config_id = $subscription->config_id;
-
-		$gateway = Plugin::get_gateway( $config_id );
-
-		// If gateway is null we continue to next subscription.
-		if ( null === $gateway ) {
-			throw new \Exception(
-				sprintf(
-					/* translators: %s: Gateway configuration ID */
-					__( 'Could not find gateway with ID `%s`.', 'pronamic_ideal' ),
-					$config_id
-				)
-			);
-		}
-
-		// Handle gateway without recurring payments support.
-		if ( ! $gateway->supports( 'recurring' ) ) {
-			$this->maybe_expire_subscription( $subscription );
-
-			return;
-		}
-
-		// Start payment.
-		$payment = $this->new_subscription_payment( $subscription );
-
-		if ( null === $payment ) {
-			return;
-		}
-
-		$payment = $this->start_payment( $payment );
-
-		// Update payment.
-		Plugin::update_payment( $payment, false );
-	}
-
-	/**
-	 * Schedule subscription payment event.
-	 *
-	 * @param int $subscription_id Subscription ID.
-	 * @param int $try             Try number for this event.
-	 * @return void
-	 */
-	private function schedule_subscription_payment_event( $subscription_id, $try = 1 ) {
-		// Limit number of tries.
-		if ( $try > 4 ) {
-			return;
-		}
-
-		$event_args = array(
-			'subscription_id' => $subscription_id,
-			'try'             => $try,
-		);
-
-		// Check if event has already been scheduled.
-		if (
-			false !== \as_next_scheduled_action( 'pronamic_pay_process_subscription_payment', $event_args )
-				||
-			\wp_next_scheduled( 'pronamic_pay_process_subscription_payment', $event_args )
-		) {
-			return;
-		}
-
-		// Schedule event.
-		\as_schedule_single_action(
-			\time() + $this->get_subscription_payment_retry_seconds( $try ),
-			'pronamic_pay_process_subscription_payment',
-			$event_args,
-			false
-		);
-	}
-
-	/**
 	 * Get subscription payment retry seconds.
 	 *
 	 * @param int $try Number of attempts.
@@ -1158,93 +1065,6 @@ class SubscriptionsModule {
 			case 4:
 			default:
 				return DAY_IN_SECONDS;
-		}
-	}
-
-	/**
-	 * Process subscription payment event.
-	 *
-	 * @param int $subscription_id Subscription ID.
-	 * @return void
-	 */
-	private function clear_scheduled_subscription_payment( $subscription_id ) {
-		$tries = range( 1, 4 );
-
-		foreach ( $tries as $try ) {
-			// Unschedule action.
-			\as_unschedule_action(
-				'pronamic_pay_process_subscription_payment',
-				array(
-					'subscription_id' => $subscription_id,
-					'try'             => $try,
-				)
-			);
-
-			// Clear scheduled legacy WordPress cron event.
-			\wp_clear_scheduled_hook(
-				'pronamic_pay_process_subscription_payment',
-				array(
-					'subscription_id' => $subscription_id,
-					'try'             => $try,
-				)
-			);
-		}
-	}
-
-	/**
-	 * Process subscription payment event.
-	 *
-	 * @param int $subscription_id Subscription ID.
-	 * @param int $try             Try number for this event.
-	 * @throws \Exception Throws exception if note could not be added.
-	 * @return void
-	 */
-	public function process_subscription_payment_event( $subscription_id, $try ) {
-		// Check if processing is disabled.
-		if ( $this->is_processing_disabled() ) {
-			return;
-		}
-
-		// Process subscription payment.
-		try {
-			$this->process_subscription_payment( $subscription_id );
-		} catch ( \Exception $e ) {
-			// Check subscription.
-			$subscription = \get_pronamic_subscription( (int) $subscription_id );
-
-			if ( null === $subscription ) {
-				return;
-			}
-
-			$next_try = ( $try + 1 );
-
-			// Add note.
-			$note = \sprintf(
-				/* translators: %s: Exception message. */
-				\__( 'Unable to start recurring payment. Will not try again. Error: %s', 'pronamic_ideal' ),
-				$e->getMessage()
-			);
-
-			if ( $next_try <= 4 ) {
-				$retry_time = time() + $this->get_subscription_payment_retry_seconds( $try );
-
-				$note = \sprintf(
-					/* translators: 1: Retry time, 2: Exception message. */
-					\__( 'Unable to start recurring payment. Retry on %1$s. Error: %2$s', 'pronamic_ideal' ),
-					( new DateTime( '@' . $retry_time ) )->format_i18n(),
-					$e->getMessage()
-				);
-			}
-
-			$subscription->add_note( $note );
-
-			// Limit number of tries.
-			if ( $next_try > 4 ) {
-				return;
-			}
-
-			// Schedule retry.
-			$this->schedule_subscription_payment_event( $subscription_id, $next_try );
 		}
 	}
 
@@ -1289,17 +1109,12 @@ class SubscriptionsModule {
 	}
 
 	/**
-	 * Update subscription payments.
+	 * Get WordPress query for subscriptions that require a follow-up payment.
 	 *
-	 * @return void
+	 * @param array $args Arguments.
+	 * @return WP_Query
 	 */
-	public function update_subscription_payments() {
-		if ( $this->is_processing_disabled() ) {
-			return;
-		}
-
-		$this->send_subscription_renewal_notices();
-
+	private function get_subscriptions_wp_query_that_require_follow_up_payment( $args = array() ) {
 		$date = new \DateTimeImmutable();
 
 		$date_utc = $date->setTimezone( new \DateTimeZone( 'UTC' ) );
@@ -1339,7 +1154,54 @@ class SubscriptionsModule {
 			),
 		);
 
+		if ( \array_key_exists( 'page', $args ) ) {
+			$query_args['paged'] = $args['page'];
+		}
+
 		$query = new WP_Query( $query_args );
+
+		return $query;
+	}
+
+	/**
+	 * Update subscription payments.
+	 *
+	 * @return void
+	 */
+	public function update_subscription_payments() {
+		if ( $this->is_processing_disabled() ) {
+			return;
+		}
+
+		$this->send_subscription_renewal_notices();
+
+		$query = $this->get_subscriptions_wp_query_that_require_follow_up_payment();
+
+		\as_enqueue_async_action(
+			'pronamic_pay_schedule_subscriptions_follow_up_payment',
+			array(
+				'page' => $query->max_num_pages,
+			),
+			'pronamic_pay'
+		);
+	}
+
+	public function schedule_subscriptions_follow_up_payment( $page ) {
+		if ( $page > 1 ) {
+			\as_enqueue_async_action(
+				'pronamic_pay_schedule_subscriptions_follow_up_payment',
+				array(
+					'page' => $page - 1,
+				),
+				'pronamic_pay'
+			);
+		}
+
+		$query = $this->get_subscriptions_wp_query_that_require_follow_up_payment(
+			array(
+				'page' => $page,
+			)
+		);
 
 		$posts = \array_filter(
 			$query->posts,
@@ -1348,9 +1210,134 @@ class SubscriptionsModule {
 			}
 		);
 
+		$subscriptions = array();
+
 		foreach ( $posts as $post ) {
-			$this->schedule_subscription_payment_event( $post->ID );
+			$subscription = \get_pronamic_subscription( $post->ID );
+
+			if ( null !== $subscription ) {
+				$subscriptions[] = $subscription;
+			}
 		}
+
+		foreach ( $subscriptions as $subscription ) {
+			$this->schedule_subscription_follow_up_payment( $subscription );
+		}
+	}
+
+	private function schedule_subscription_follow_up_payment( Subscription $subscription ) {
+		$actions_args = array(
+			'subscription_id' => $subscription->get_id(),
+		);
+
+		if ( false !== \as_next_scheduled_action( 'pronamic_pay_create_subscription_follow_up_payment', $actions_args ) ) {
+			return;
+		}
+
+		$action_id = $subscription->get_meta( 'create_follow_up_payment_action_id' );
+
+		if ( ! empty( $action_id ) ) {
+			return;
+		}
+
+		$attempt = (int) $subscription->get_meta( 'create_follow_up_payment_attempt' );
+		$attempt = empty( $attempt ) ? 1 : $attempt + 1;
+
+		$action_id = \as_schedule_single_action(
+			\time() + $this->get_subscription_payment_retry_seconds( $attempt ),
+			'pronamic_pay_create_subscription_follow_up_payment',
+			$actions_args,
+			false
+		);
+
+		$subscription->set_meta( 'create_follow_up_payment_attempt', $attempt );
+		$subscription->set_meta( 'create_follow_up_payment_action_id', $action_id );
+
+		$subscription->save();
+	}
+
+	public function action_create_subscription_follow_up_payment( $subscription_id ) {
+		// Check subscription.
+		$subscription = \get_pronamic_subscription( (int) $subscription_id );
+
+		if ( null === $subscription ) {
+			throw new \Exception(
+				\sprintf(
+					'Unable to load subscription from post ID: %d.',
+					$subscription_id
+				)
+			);
+		}
+
+		$attempt = (int) $subscription->get_meta( 'create_follow_up_payment_attempt' );
+		$attempt = empty( $attempt ) ? 1 : $attempt + 1;
+
+		try {
+			$this->create_subscription_follow_up_payment( $subscription );
+		} catch ( \Exception $e ) {
+			$attempt = $attempt + 1;
+
+			// Add note.
+			$note = \sprintf(
+				/* translators: %s: Exception message. */
+				\__( 'Unable to start recurring payment. Will not try again. Error: %s', 'pronamic_ideal' ),
+				$e->getMessage()
+			);
+
+			if ( $attempt <= 4 ) {
+				$retry_time = time() + $this->get_subscription_payment_retry_seconds( $try );
+
+				$note = \sprintf(
+					/* translators: 1: Retry time, 2: Exception message. */
+					\__( 'Unable to start recurring payment. Retry on %1$s. Error: %2$s', 'pronamic_ideal' ),
+					( new DateTime( '@' . $retry_time ) )->format_i18n(),
+					$e->getMessage()
+				);
+
+				$subscription->set_meta( 'create_follow_up_payment_action_id', null );
+
+				$this->schedule_subscription_follow_up_payment( $subscription );
+			}
+
+			$subscription->add_note( $note );
+		}
+	}
+
+	public function create_subscription_follow_up_payment( Subscription $subscription ) {
+		// Check gateway.
+		$config_id = $subscription->config_id;
+
+		$gateway = Plugin::get_gateway( $config_id );
+
+		// If gateway is null we continue to next subscription.
+		if ( null === $gateway ) {
+			throw new \Exception(
+				sprintf(
+				/* translators: %s: Gateway configuration ID */
+					__( 'Could not find gateway with ID `%s`.', 'pronamic_ideal' ),
+					$config_id
+				)
+			);
+		}
+
+		// Handle gateway without recurring payments support.
+		if ( ! $gateway->supports( 'recurring' ) ) {
+			$this->maybe_expire_subscription( $subscription );
+
+			return;
+		}
+
+		// Start payment.
+		$payment = $this->new_subscription_payment( $subscription );
+
+		if ( null === $payment ) {
+			return;
+		}
+
+		$payment = $this->start_payment( $payment );
+
+		// Update payment.
+		Plugin::update_payment( $payment, false );
 	}
 
 	/**

@@ -278,7 +278,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		);
 
 		if ( is_wp_error( $result ) ) {
-			return false;
+			throw new \Exception( 'Could not craete subscription' );
 		}
 
 		$this->update_post_meta( $subscription );
@@ -317,7 +317,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$result = wp_update_post( $data, true );
 
 		if ( is_wp_error( $result ) ) {
-			return false;
+			throw new \Exception( 'Could not update subscription' );
 		}
 
 		return true;

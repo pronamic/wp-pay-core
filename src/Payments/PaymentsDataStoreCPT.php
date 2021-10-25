@@ -290,7 +290,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		);
 
 		if ( is_wp_error( $result ) ) {
-			return false;
+			throw new \Exception( 'Could not craete payment' );
 		}
 
 		/**
@@ -328,7 +328,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$result = wp_update_post( $data, true );
 
 		if ( is_wp_error( $result ) ) {
-			return false;
+			throw new \Exception( 'Could not update payment' );
 		}
 
 		return true;
