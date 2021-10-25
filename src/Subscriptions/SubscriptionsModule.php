@@ -1247,7 +1247,7 @@ class SubscriptionsModule {
 			\time() + $this->get_subscription_payment_retry_seconds( $attempt ),
 			'pronamic_pay_create_subscription_follow_up_payment',
 			$actions_args,
-			false
+			'pronamic_pay'
 		);
 
 		$subscription->set_meta( 'create_follow_up_payment_attempt', $attempt );
