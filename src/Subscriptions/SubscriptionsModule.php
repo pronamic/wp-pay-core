@@ -1106,46 +1106,6 @@ class SubscriptionsModule {
 	}
 
 	/**
-	 * Process subscriptions follow-up payment.
-	 *
-	 * @param array $args Arguments.
-	 * @return void
-	 */
-	private function process_subscriptions_follow_up_payment( $args = array() ) {
-		$args = wp_parse_args(
-			$args,
-			array(
-				'date'        => null,
-				'number'      => null,
-				'on_progress' => null,
-			)
-		);
-
-		$query = $this->get_subscriptions_wp_query_that_require_follow_up_payment(
-			array(
-				'date'   => $args['date'],
-				'number' => $args['number'],
-			)
-		);
-
-		$posts = \array_filter(
-			$query->posts,
-			function( $post ) {
-				return ( $post instanceof \WP_Post );
-			}
-		);
-
-		foreach ( $posts as $post ) {
-			// Progress callback.
-			if ( null !== $args['on_progress'] ) {
-				\call_user_func( $args['on_progress'], $post );
-			}
-
-			$this->schedule_subscription_payment_event( $post->ID );
-		}
-	}
-
-	/**
 	 * Process subscription payment.
 	 *
 	 * @param int $subscription_id Subscription ID.
@@ -1385,11 +1345,23 @@ class SubscriptionsModule {
 
 		$this->send_subscription_renewal_notices();
 
-		$this->process_subscriptions_follow_up_payment(
+		$query = $this->get_subscriptions_wp_query_that_require_follow_up_payment(
 			array(
 				'date' => new \DateTimeImmutable(),
+				'number' => 20,
 			)
 		);
+
+		$posts = \array_filter(
+			$query->posts,
+			function( $post ) {
+				return ( $post instanceof \WP_Post );
+			}
+		);
+
+		foreach ( $posts as $post ) {
+			$this->schedule_subscription_payment_event( $post->ID );
+		}
 	}
 
 	/**
