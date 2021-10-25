@@ -66,7 +66,7 @@ class SubscriptionsModule {
 		// Actions.
 		\add_action( 'wp_loaded', array( $this, 'maybe_handle_subscription_action' ) );
 
-		\add_action( 'init', array( $this, 'maybe_schedule_subscription_events' ) );
+		\add_action( 'plugins_loaded', array( $this, 'maybe_schedule_subscription_events' ), 6 );
 
 		// Exclude subscription notes.
 		\add_filter( 'comments_clauses', array( $this, 'exclude_subscription_comment_notes' ), 10, 2 );
@@ -890,12 +890,21 @@ class SubscriptionsModule {
 	 * @return void
 	 */
 	public function maybe_schedule_subscription_events() {
-		if ( false === \as_next_scheduled_action( 'pronamic_pay_update_subscription_payments' ) ) {
-			\as_schedule_cron_action( \time(), '0 * * * *', 'pronamic_pay_update_subscription_payments' );
+		// Unschedule legacy WordPress Cron hook.
+		\wp_unschedule_hook( 'pronamic_pay_update_subscription_payments' );
+		\wp_unschedule_hook( 'pronamic_pay_complete_subscriptions' );
+
+		// Interval in seconds.
+		$interval = 10 * \MINUTE_IN_SECONDS;
+
+		// Action to create follow-up payments for subscriptions.
+		if ( ! \as_next_scheduled_action( 'pronamic_pay_update_subscription_payments' ) ) {
+			\as_schedule_recurring_action( time(), $interval, 'pronamic_pay_update_subscription_payments' );
 		}
 
-		if ( false === \as_next_scheduled_action( 'pronamic_pay_complete_subscriptions' ) ) {
-			\as_schedule_cron_action( \time(), '0 * * * *', 'pronamic_pay_complete_subscriptions' );
+		// Action to complete expired subscriptions.
+		if ( ! \as_next_scheduled_action( 'pronamic_pay_complete_subscriptions' ) ) {
+			\as_schedule_recurring_action( time(), $interval, 'pronamic_pay_complete_subscriptions' );
 		}
 	}
 
@@ -1071,6 +1080,7 @@ class SubscriptionsModule {
 		$query_args = array(
 			'post_type'      => 'pronamic_pay_subscr',
 			'posts_per_page' => $args['number'],
+			'post__not_in'   => $args['not_in'],
 			'post_status'    => array(
 				'subscr_pending',
 				'subscr_failed',
@@ -1120,6 +1130,7 @@ class SubscriptionsModule {
 			array(
 				'date'        => null,
 				'number'      => null,
+				'not_in'      => null,
 				'on_progress' => null,
 			)
 		);
@@ -1128,6 +1139,7 @@ class SubscriptionsModule {
 			array(
 				'date'   => $args['date'],
 				'number' => $args['number'],
+				'not_in' => $args['not_in'],
 			)
 		);
 
@@ -1231,7 +1243,7 @@ class SubscriptionsModule {
 		}
 
 		// Schedule event.
-		\wp_schedule_single_event(
+		\as_schedule_single_action(
 			\time() + $this->get_subscription_payment_retry_seconds( $try ),
 			'pronamic_pay_process_subscription_payment',
 			$event_args,
