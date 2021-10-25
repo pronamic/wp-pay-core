@@ -423,6 +423,7 @@ class ToolsManager {
 			array(
 				'paged'   => $page,
 				'orderby' => 'ID',
+				'order'   => 'ASC',
 			),
 			$args
 		);
