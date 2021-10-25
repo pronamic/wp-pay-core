@@ -66,7 +66,7 @@ class SubscriptionsModule {
 		// Actions.
 		\add_action( 'wp_loaded', array( $this, 'maybe_handle_subscription_action' ) );
 
-		\add_action( 'plugins_loaded', array( $this, 'maybe_schedule_subscription_events' ), 6 );
+		\add_action( 'init', array( $this, 'maybe_schedule_subscription_events' ) );
 
 		// Exclude subscription notes.
 		\add_filter( 'comments_clauses', array( $this, 'exclude_subscription_comment_notes' ), 10, 2 );
@@ -890,12 +890,12 @@ class SubscriptionsModule {
 	 * @return void
 	 */
 	public function maybe_schedule_subscription_events() {
-		if ( ! wp_next_scheduled( 'pronamic_pay_update_subscription_payments' ) ) {
-			wp_schedule_event( time(), 'hourly', 'pronamic_pay_update_subscription_payments' );
+		if ( false === \as_next_scheduled_action( 'pronamic_pay_update_subscription_payments' ) ) {
+			\as_schedule_cron_action( \time(), '0 * * * *', 'pronamic_pay_update_subscription_payments' );
 		}
 
-		if ( ! wp_next_scheduled( 'pronamic_pay_complete_subscriptions' ) ) {
-			wp_schedule_event( time(), 'hourly', 'pronamic_pay_complete_subscriptions' );
+		if ( false === \as_next_scheduled_action( 'pronamic_pay_complete_subscriptions' ) ) {
+			\as_schedule_cron_action( \time(), '0 * * * *', 'pronamic_pay_complete_subscriptions' );
 		}
 	}
 
