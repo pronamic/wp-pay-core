@@ -1274,6 +1274,9 @@ class SubscriptionsModule {
 
 		try {
 			$this->create_subscription_follow_up_payment( $subscription );
+
+			$subscription->set_meta( 'create_follow_up_payment_attempt', null );
+			$subscription->set_meta( 'create_follow_up_payment_action_id', null );
 		} catch ( \Exception $e ) {
 			$attempt = $attempt + 1;
 
