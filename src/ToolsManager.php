@@ -440,15 +440,27 @@ class ToolsManager {
 		// Query.
 		$query = new \WP_Query( $args );
 
-		foreach ( $query->posts as $post_id ) {
-			// Schedule action.
-			\as_enqueue_async_action(
-				$action,
-				array( $action_arg_name => $post_id ),
-				$action
-			);
+		$schedule_action = \property_exists( $tool, 'schedule' ) ? $tool->schedule : true;
 
+		foreach ( $query->posts as $post_id ) {
+			// Increase counter.
 			$count++;
+
+			// Schedule action.
+			if ( $schedule_action ) {
+				\as_enqueue_async_action(
+					$action,
+					array( $action_arg_name => $post_id ),
+					$action
+				);
+
+				continue;
+			}
+
+			// Call tool callback.
+			if ( \property_exists( $tool, 'callback' ) ) {
+				call_user_func( $tool->callback, $post_id );
+			}
 		}
 
 		// Response.
