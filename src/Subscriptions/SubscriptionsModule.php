@@ -1278,6 +1278,16 @@ class SubscriptionsModule {
 		$tries = range( 1, 4 );
 
 		foreach ( $tries as $try ) {
+			// Unschedule action.
+			\as_unschedule_action(
+				'pronamic_pay_process_subscription_payment',
+				array(
+					'subscription_id' => $subscription_id,
+					'try'             => $try,
+				)
+			);
+
+			// Clear scheduled legacy WordPress cron event.
 			\wp_clear_scheduled_hook(
 				'pronamic_pay_process_subscription_payment',
 				array(
