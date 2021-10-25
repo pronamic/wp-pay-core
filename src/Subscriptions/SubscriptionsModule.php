@@ -894,17 +894,14 @@ class SubscriptionsModule {
 		\wp_unschedule_hook( 'pronamic_pay_update_subscription_payments' );
 		\wp_unschedule_hook( 'pronamic_pay_complete_subscriptions' );
 
-		// Interval in seconds.
-		$interval = 10 * \MINUTE_IN_SECONDS;
-
 		// Action to create follow-up payments for subscriptions.
-		if ( ! \as_next_scheduled_action( 'pronamic_pay_update_subscription_payments' ) ) {
-			\as_schedule_recurring_action( time(), $interval, 'pronamic_pay_update_subscription_payments' );
+		if ( false === \as_next_scheduled_action( 'pronamic_pay_update_subscription_payments' ) ) {
+			\as_schedule_cron_action( \time(), '0 * * * *', 'pronamic_pay_update_subscription_payments' );
 		}
 
 		// Action to complete expired subscriptions.
-		if ( ! \as_next_scheduled_action( 'pronamic_pay_complete_subscriptions' ) ) {
-			\as_schedule_recurring_action( time(), $interval, 'pronamic_pay_complete_subscriptions' );
+		if ( false === \as_next_scheduled_action( 'pronamic_pay_complete_subscriptions' ) ) {
+			\as_schedule_cron_action( \time(), '0 * * * *', 'pronamic_pay_complete_subscriptions' );
 		}
 	}
 
