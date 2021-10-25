@@ -68,8 +68,6 @@ class SubscriptionsModule {
 
 		\add_action( 'plugins_loaded', array( $this, 'maybe_schedule_subscription_events' ), 6 );
 
-		\add_action( 'admin_init', array( $this, 'maybe_process_debug' ) );
-
 		// Exclude subscription notes.
 		\add_filter( 'comments_clauses', array( $this, 'exclude_subscription_comment_notes' ), 10, 2 );
 
@@ -1471,55 +1469,6 @@ class SubscriptionsModule {
 				'schedule_event' => true,
 			)
 		);
-	}
-
-	/**
-	 * Maybe process debug.
-	 *
-	 * @return void
-	 */
-	public function maybe_process_debug() {
-		if ( ! \filter_has_var( \INPUT_POST, 'pronamic_pay_process_subscriptions_follow_up_payment' ) ) {
-			return;
-		}
-
-		if ( ! \check_admin_referer( 'pronamic_pay_process_subscriptions_follow_up_payment', 'pronamic_pay_nonce' ) ) {
-			return;
-		}
-
-		$date = new \DateTimeImmutable();
-
-		if ( \array_key_exists( 'date', $_POST ) ) {
-			$date = new \DateTimeImmutable( \sanitize_text_field( \wp_unslash( $_POST['date'] ) ) );
-		}
-
-		$number = 10;
-
-		if ( \array_key_exists( 'number', $_POST ) ) {
-			$number = (int) $_POST['number'];
-		}
-
-		$this->process_subscriptions_follow_up_payment(
-			array(
-				'date'           => $date,
-				'number'         => $number,
-				'schedule_event' => false,
-				'on_exception'   => function ( $e ) {
-					\wp_die( \esc_html( $e->getMessage() ) );
-				},
-			)
-		);
-
-		$location = \add_query_arg(
-			array(
-				'page' => 'pronamic_pay_debug',
-			),
-			\admin_url( 'admin.php' )
-		);
-
-		\wp_safe_redirect( $location );
-
-		exit;
 	}
 
 	/**
