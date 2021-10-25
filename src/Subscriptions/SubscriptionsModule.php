@@ -1351,6 +1351,15 @@ class SubscriptionsModule {
 		foreach ( $posts as $post ) {
 			$this->schedule_subscription_payment_event( $post->ID );
 		}
+
+		// Enqueue update subscription payments action.
+		if ( ! empty( $posts ) ) {
+			\as_enqueue_async_action(
+				'pronamic_pay_update_subscription_payments',
+				array(),
+				'pronamic-pay-subscriptions'
+			);
+		}
 	}
 
 	/**
