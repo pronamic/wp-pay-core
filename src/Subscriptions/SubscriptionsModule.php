@@ -75,8 +75,8 @@ class SubscriptionsModule {
 
 		add_action( 'pronamic_pay_new_payment', array( $this, 'maybe_create_subscription' ) );
 
-		\add_action( 'pronamic_pay_pre_create_subscription', array( __NAMESPACE__ . '\SubscriptionHelper', 'complement_subscription' ), 10, 1 );
-		\add_action( 'pronamic_pay_pre_create_subscription', array( __NAMESPACE__ . '\SubscriptionHelper', 'complement_subscription_dates' ), 10, 1 );
+		\add_action( 'pronamic_pay_pre_create_subscription', array( SubscriptionHelper::class, 'complement_subscription' ), 10, 1 );
+		\add_action( 'pronamic_pay_pre_create_subscription', array( SubscriptionHelper::class, 'complement_subscription_dates' ), 10, 1 );
 		\add_action( 'pronamic_pay_pre_create_payment', array( $this, 'complement_subscription_by_payment' ), 10, 1 );
 
 		// The 'pronamic_pay_update_subscription_payments' hook adds subscription payments and sends renewal notices.
