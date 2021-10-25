@@ -90,14 +90,6 @@ class SubscriptionsModule {
 		// Listen to subscription status changes so we can log these in a note.
 		\add_action( 'pronamic_subscription_status_update', array( $this, 'log_subscription_status_update' ), 10, 4 );
 
-		// WordPress CLI.
-		// @link https://github.com/woocommerce/woocommerce/blob/3.3.1/includes/class-woocommerce.php#L365-L369.
-		// @link https://github.com/woocommerce/woocommerce/blob/3.3.1/includes/class-wc-cli.php.
-		// @link https://make.wordpress.org/cli/handbook/commands-cookbook/.
-		if ( Util::doing_cli() ) {
-			WP_CLI::add_command( 'pay subscriptions test', array( $this, 'cli_subscriptions_test' ) );
-		}
-
 		// REST API.
 		\add_action( 'rest_api_init', array( $this, 'rest_api_init' ) );
 	}
@@ -1409,52 +1401,9 @@ class SubscriptionsModule {
 
 		$this->process_subscriptions_follow_up_payment(
 			array(
-				'date'           => new \DateTimeImmutable(),
-				'number'         => 20,
-				'schedule_event' => true,
+				'date' => new \DateTimeImmutable(),
 			)
 		);
-	}
-
-	/**
-	 * CLI subscriptions test.
-	 *
-	 * @param array $args       Arguments.
-	 * @param array $assoc_args Associative arguments.
-	 * @return void
-	 */
-	public function cli_subscriptions_test( $args, $assoc_args ) {
-		$date = new \DateTimeImmutable();
-
-		if ( \array_key_exists( 'date', $assoc_args ) ) {
-			$date = new \DateTimeImmutable( $assoc_args['date'] );
-		}
-
-		$number = -1;
-
-		if ( \array_key_exists( 'number', $assoc_args ) ) {
-			$number = (int) $assoc_args['number'];
-		}
-
-		WP_CLI::log( 'Updating subscription payments…' );
-
-		$this->process_subscriptions_follow_up_payment(
-			array(
-				'date'        => $date,
-				'number'      => $number,
-				'on_progress' => function ( $post ) {
-					WP_CLI::log( \sprintf( 'Processing post `%d` - "%s"…', $post->ID, \get_the_title( $post ) ) );
-				},
-			)
-		);
-
-		WP_CLI::log( 'Completing subscriptions…' );
-
-		$cli_test = true;
-
-		$this->complete_subscriptions( $cli_test );
-
-		WP_CLI::success( 'Pronamic Pay subscriptions test.' );
 	}
 
 	/**
