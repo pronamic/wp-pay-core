@@ -1047,65 +1047,6 @@ class SubscriptionsModule {
 	}
 
 	/**
-	 * Get WordPress query for subscriptions that require a follow-up payment.
-	 *
-	 * @param array $args Arguments.
-	 * @return WP_Query
-	 */
-	public function get_subscriptions_wp_query_that_require_follow_up_payment( $args = array() ) {
-		$args = \wp_parse_args(
-			$args,
-			array(
-				'date'   => new \DateTimeImmutable(),
-				'number' => -1,
-			)
-		);
-
-		$date = $args['date'];
-
-		$date_utc = $date->setTimezone( new \DateTimeZone( 'UTC' ) );
-
-		$query_args = array(
-			'post_type'      => 'pronamic_pay_subscr',
-			'posts_per_page' => $args['number'],
-			'post_status'    => array(
-				'subscr_pending',
-				'subscr_failed',
-				'subscr_active',
-			),
-			'meta_query'     => array(
-				array(
-					'key'     => '_pronamic_subscription_source',
-					'compare' => 'NOT IN',
-					'value'   => array(
-						// Don't create payments for sources which schedule payments.
-						'woocommerce',
-					),
-				),
-				array(
-					'relation' => 'OR',
-					array(
-						'key'     => '_pronamic_subscription_next_payment',
-						'compare' => '<=',
-						'value'   => $date_utc->format( 'Y-m-d H:i:s' ),
-						'type'    => 'DATETIME',
-					),
-					array(
-						'key'     => '_pronamic_subscription_next_payment_delivery_date',
-						'compare' => '<=',
-						'value'   => $date_utc->format( 'Y-m-d H:i:s' ),
-						'type'    => 'DATETIME',
-					),
-				),
-			),
-		);
-
-		$query = new WP_Query( $query_args );
-
-		return $query;
-	}
-
-	/**
 	 * Process subscription payment.
 	 *
 	 * @param int $subscription_id Subscription ID.
@@ -1359,12 +1300,46 @@ class SubscriptionsModule {
 
 		$this->send_subscription_renewal_notices();
 
-		$query = $this->get_subscriptions_wp_query_that_require_follow_up_payment(
-			array(
-				'date' => new \DateTimeImmutable(),
-				'number' => 20,
-			)
+		$date = new \DateTimeImmutable();
+
+		$date_utc = $date->setTimezone( new \DateTimeZone( 'UTC' ) );
+
+		$query_args = array(
+			'post_type'      => 'pronamic_pay_subscr',
+			'posts_per_page' => 20,
+			'post_status'    => array(
+				'subscr_pending',
+				'subscr_failed',
+				'subscr_active',
+			),
+			'meta_query'     => array(
+				array(
+					'key'     => '_pronamic_subscription_source',
+					'compare' => 'NOT IN',
+					'value'   => array(
+						// Don't create payments for sources which schedule payments.
+						'woocommerce',
+					),
+				),
+				array(
+					'relation' => 'OR',
+					array(
+						'key'     => '_pronamic_subscription_next_payment',
+						'compare' => '<=',
+						'value'   => $date_utc->format( 'Y-m-d H:i:s' ),
+						'type'    => 'DATETIME',
+					),
+					array(
+						'key'     => '_pronamic_subscription_next_payment_delivery_date',
+						'compare' => '<=',
+						'value'   => $date_utc->format( 'Y-m-d H:i:s' ),
+						'type'    => 'DATETIME',
+					),
+				),
+			),
 		);
+
+		$query = new WP_Query( $query_args );
 
 		$posts = \array_filter(
 			$query->posts,
