@@ -1069,7 +1069,6 @@ class SubscriptionsModule {
 			array(
 				'date'   => new \DateTimeImmutable(),
 				'number' => -1,
-				'not_in' => array(),
 			)
 		);
 
@@ -1080,7 +1079,6 @@ class SubscriptionsModule {
 		$query_args = array(
 			'post_type'      => 'pronamic_pay_subscr',
 			'posts_per_page' => $args['number'],
-			'post__not_in'   => $args['not_in'],
 			'post_status'    => array(
 				'subscr_pending',
 				'subscr_failed',
@@ -1130,7 +1128,6 @@ class SubscriptionsModule {
 			array(
 				'date'        => null,
 				'number'      => null,
-				'not_in'      => null,
 				'on_progress' => null,
 			)
 		);
@@ -1139,7 +1136,6 @@ class SubscriptionsModule {
 			array(
 				'date'   => $args['date'],
 				'number' => $args['number'],
-				'not_in' => $args['not_in'],
 			)
 		);
 
