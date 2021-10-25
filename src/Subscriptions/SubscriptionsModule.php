@@ -1289,7 +1289,7 @@ class SubscriptionsModule {
 			);
 
 			if ( $attempt <= 4 ) {
-				$retry_time = time() + $this->get_subscription_payment_retry_seconds( $try );
+				$retry_time = time() + $this->get_subscription_payment_retry_seconds( $attempt );
 
 				$note = \sprintf(
 					/* translators: 1: Retry time, 2: Exception message. */
