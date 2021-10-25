@@ -1272,11 +1272,12 @@ class SubscriptionsModule {
 		$attempt = (int) $subscription->get_meta( 'create_follow_up_payment_attempt' );
 		$attempt = empty( $attempt ) ? 1 : $attempt + 1;
 
+		$subscription->set_meta( 'create_follow_up_payment_action_id', null );
+
 		try {
 			$this->create_subscription_follow_up_payment( $subscription );
 
 			$subscription->set_meta( 'create_follow_up_payment_attempt', null );
-			$subscription->set_meta( 'create_follow_up_payment_action_id', null );
 		} catch ( \Exception $e ) {
 			$attempt = $attempt + 1;
 
@@ -1297,13 +1298,13 @@ class SubscriptionsModule {
 					$e->getMessage()
 				);
 
-				$subscription->set_meta( 'create_follow_up_payment_action_id', null );
-
 				$this->schedule_subscription_follow_up_payment( $subscription );
 			}
 
 			$subscription->add_note( $note );
 		}
+
+		$subscription->save();
 	}
 
 	public function create_subscription_follow_up_payment( Subscription $subscription ) {
