@@ -1265,53 +1265,6 @@ class SubscriptionsModule {
 	}
 
 	/**
-	 * Get scheduled subscription IDs.
-	 *
-	 * @return array
-	 */
-	public function get_scheduled_subscription_ids() {
-		$subscription_ids = array();
-
-		$cron = \get_option( 'cron' );
-
-		if ( is_array( $cron ) ) {
-			// Loop cron array.
-			foreach ( $cron as $hooks ) {
-				if ( ! \is_array( $hooks ) ) {
-					continue;
-				}
-
-				// Look hooks for timestamp.
-				foreach ( $hooks as $hook => $events ) {
-					if ( 'pronamic_pay_process_subscription_payment' !== $hook ) {
-						continue;
-					}
-
-					// Loop events.
-					foreach ( $events as $event ) {
-						// Check arguments.
-						if ( ! \array_key_exists( 'args', $event ) ) {
-							continue;
-						}
-
-						// Check subscription ID.
-						$args = $event['args'];
-
-						if ( ! \array_key_exists( 'subscription_id', $args ) ) {
-							continue;
-						}
-
-						// Add subscription ID to result.
-						$subscription_ids[] = $args['subscription_id'];
-					}
-				}
-			}
-		}
-
-		return $subscription_ids;
-	}
-
-	/**
 	 * Process subscription payment event.
 	 *
 	 * @param int $subscription_id Subscription ID.
