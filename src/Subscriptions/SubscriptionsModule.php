@@ -1183,7 +1183,11 @@ class SubscriptionsModule {
 		);
 
 		// Check if event has already been scheduled.
-		if ( \wp_next_scheduled( 'pronamic_pay_process_subscription_payment', $event_args ) ) {
+		if (
+			false !== \as_next_scheduled_action( 'pronamic_pay_process_subscription_payment', $event_args )
+				||
+			\wp_next_scheduled( 'pronamic_pay_process_subscription_payment', $event_args )
+		) {
 			return;
 		}
 
@@ -1226,6 +1230,16 @@ class SubscriptionsModule {
 		$tries = range( 1, 4 );
 
 		foreach ( $tries as $try ) {
+			// Unschedule action.
+			\as_unschedule_action(
+				'pronamic_pay_process_subscription_payment',
+				array(
+					'subscription_id' => $subscription_id,
+					'try'             => $try,
+				)
+			);
+
+			// Clear scheduled legacy WordPress cron event.
 			\wp_clear_scheduled_hook(
 				'pronamic_pay_process_subscription_payment',
 				array(
