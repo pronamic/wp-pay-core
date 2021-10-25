@@ -1128,18 +1128,12 @@ class SubscriptionsModule {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'date'           => null,
-				'number'         => null,
-				'not_in'         => null,
-				'schedule_event' => null,
-				'on_progress'    => null,
-				'on_exception'   => null,
+				'date'        => null,
+				'number'      => null,
+				'not_in'      => null,
+				'on_progress' => null,
 			)
 		);
-
-		if ( true === $args['schedule_event'] ) {
-			$args['not_in'] = $this->get_scheduled_subscription_ids();
-		}
 
 		$query = $this->get_subscriptions_wp_query_that_require_follow_up_payment(
 			array(
@@ -1162,25 +1156,7 @@ class SubscriptionsModule {
 				\call_user_func( $args['on_progress'], $post );
 			}
 
-			// Schedule event for single subscription to postpone processing.
-			if ( true === $args['schedule_event'] ) {
-				$try = 1;
-
-				$this->schedule_subscription_payment_event( $post->ID, $try );
-
-				continue;
-			}
-
-			try {
-				$this->process_subscription_payment( $post->ID );
-			} catch ( \Exception $e ) {
-				// Exception callback.
-				if ( null !== $args['on_exception'] ) {
-					\call_user_func( $args['on_exception'], $e );
-				}
-
-				continue;
-			}
+			$this->schedule_subscription_payment_event( $post->ID );
 		}
 	}
 
@@ -1250,7 +1226,7 @@ class SubscriptionsModule {
 	 * @param int $try             Try number for this event.
 	 * @return void
 	 */
-	private function schedule_subscription_payment_event( $subscription_id, $try ) {
+	private function schedule_subscription_payment_event( $subscription_id, $try = 1 ) {
 		// Limit number of tries.
 		if ( $try > 4 ) {
 			return;
@@ -1504,14 +1480,10 @@ class SubscriptionsModule {
 
 		$this->process_subscriptions_follow_up_payment(
 			array(
-				'date'           => $date,
-				'number'         => $number,
-				'schedule_event' => false,
-				'on_progress'    => function ( $post ) {
+				'date'        => $date,
+				'number'      => $number,
+				'on_progress' => function ( $post ) {
 					WP_CLI::log( \sprintf( 'Processing post `%d` - "%s"…', $post->ID, \get_the_title( $post ) ) );
-				},
-				'on_exception'   => function ( $e ) {
-					WP_CLI::error( $e->getMessage(), false );
 				},
 			)
 		);
