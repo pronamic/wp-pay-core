@@ -256,8 +256,8 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L47-L76
 	 *
 	 * @param Payment $payment The payment to create in this data store.
-	 *
 	 * @return bool
+	 * @throws \Exception Throws exception when create fails.
 	 */
 	public function create( Payment $payment ) {
 		/**
@@ -310,8 +310,8 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
 	 *
 	 * @param Payment $payment The payment to update in this data store.
-	 *
 	 * @return bool
+	 * @throws \Exception Throws exception when update fails.
 	 */
 	public function update( Payment $payment ) {
 		$id = $payment->get_id();

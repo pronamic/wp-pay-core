@@ -254,6 +254,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 *
 	 * @param Subscription $subscription Create the specified subscription in this data store.
 	 * @return bool
+	 * @throws \Exception Throws exception when create fails.
 	 */
 	public function create( $subscription ) {
 		/**
@@ -301,6 +302,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 *
 	 * @param Subscription $subscription The subscription to update in this data store.
 	 * @return bool
+	 * @throws \Exception Throws exception when update fails.
 	 */
 	public function update( $subscription ) {
 		$id = $subscription->get_id();

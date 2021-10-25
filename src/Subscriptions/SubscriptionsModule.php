@@ -1186,6 +1186,12 @@ class SubscriptionsModule {
 		);
 	}
 
+	/**
+	 * Scheduel subscriptions follow-up payment.
+	 *
+	 * @param int $page Page.
+	 * @retun void
+	 */
 	public function schedule_subscriptions_follow_up_payment( $page ) {
 		if ( $page > 1 ) {
 			\as_enqueue_async_action(
@@ -1225,6 +1231,12 @@ class SubscriptionsModule {
 		}
 	}
 
+	/**
+	 * Schedule subscription follow-up payment.
+	 *
+	 * @param Subscription $subscription Subscription.
+	 * @return void
+	 */
 	private function schedule_subscription_follow_up_payment( Subscription $subscription ) {
 		$actions_args = array(
 			'subscription_id' => $subscription->get_id(),
@@ -1256,6 +1268,13 @@ class SubscriptionsModule {
 		$subscription->save();
 	}
 
+	/**
+	 * Action create subscription follow-up payment.
+	 *
+	 * @param int $subscription_id Subscription ID.
+	 * @return void
+	 * @throws \Exception Throws exception when creating subscription follow-up payment failed after 4 attempts.
+	 */
 	public function action_create_subscription_follow_up_payment( $subscription_id ) {
 		// Check subscription.
 		$subscription = \get_pronamic_subscription( (int) $subscription_id );
@@ -1279,7 +1298,7 @@ class SubscriptionsModule {
 
 			$subscription->set_meta( 'create_follow_up_payment_attempt', null );
 		} catch ( \Exception $e ) {
-			$attempt = $attempt + 1;
+			$attempt++;
 
 			if ( $attempt <= 4 ) {
 				$this->schedule_subscription_follow_up_payment( $subscription );
@@ -1297,7 +1316,8 @@ class SubscriptionsModule {
 			}
 
 			if ( $attempt > 4 ) {
-				$subscription->add_note( \sprintf(
+				$subscription->add_note(
+					\sprintf(
 						/* translators: %s: Exception message. */
 						\__( 'Unable to start recurring payment. Will not try again. Error: %s', 'pronamic_ideal' ),
 						$e->getMessage()
@@ -1312,6 +1332,13 @@ class SubscriptionsModule {
 		$subscription->save();
 	}
 
+	/**
+	 * Create subscription follow-up payment.
+	 *
+	 * @param Subscription $subscription Subscription.
+	 * @return void
+	 * @throws \Exception Throws exception when gateway not found.
+	 */
 	public function create_subscription_follow_up_payment( Subscription $subscription ) {
 		// Check gateway.
 		$config_id = $subscription->config_id;
