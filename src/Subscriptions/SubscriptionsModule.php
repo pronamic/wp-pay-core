@@ -1231,7 +1231,11 @@ class SubscriptionsModule {
 		);
 
 		// Check if event has already been scheduled.
-		if ( \wp_next_scheduled( 'pronamic_pay_process_subscription_payment', $event_args ) ) {
+		if (
+			false !== \as_next_scheduled_action( 'pronamic_pay_process_subscription_payment', $event_args )
+				||
+			\wp_next_scheduled( 'pronamic_pay_process_subscription_payment', $event_args )
+		) {
 			return;
 		}
 
