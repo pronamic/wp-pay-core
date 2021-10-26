@@ -561,6 +561,16 @@ abstract class PaymentInfo {
 	}
 
 	/**
+	 * Delete meta data.
+	 *
+	 * @param string $key Meta key.
+	 * @return void
+	 */
+	public function delete_meta( $key ) {
+		unset( $this->meta[ $key ] );
+	}
+
+	/**
 	 * Get consumer bank details.
 	 *
 	 * @return BankAccountDetails|null
