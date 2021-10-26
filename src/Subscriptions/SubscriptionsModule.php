@@ -1288,11 +1288,7 @@ class SubscriptionsModule {
 
 		$date = new \DateTimeImmutable();
 
-		if ( $subscription->next_payment_date > $date ) {
-			return false;
-		}
-
-		if ( $subscription->next_payment_delivery_date > $date ) {
+		if ( $subscription->next_payment_date > $date && $subscription->next_payment_delivery_date > $date ) {
 			return false;
 		}
 
