@@ -1121,7 +1121,12 @@ class SubscriptionsModule {
 
 		$query_args = array(
 			'post_type'      => 'pronamic_pay_subscr',
-			'posts_per_page' => 20,
+			/**
+			 * Posts per page is set to 100, higher could result in performance issues.
+			 *
+			 * @link https://github.com/WordPress/WordPress-Coding-Standards/wiki/Customizable-sniff-properties#wp-postsperpage-post-limit
+			 */
+			'posts_per_page' => 100,
 			'post_status'    => array(
 				'subscr_pending',
 				'subscr_failed',
@@ -1190,7 +1195,7 @@ class SubscriptionsModule {
 	 * Scheduel subscriptions follow-up payment.
 	 *
 	 * @param int $page Page.
-	 * @retun void
+	 * @return void
 	 */
 	public function schedule_subscriptions_follow_up_payment( $page ) {
 		if ( $page > 1 ) {
