@@ -116,6 +116,8 @@ class SubscriptionsModule {
 
 						if ( null === $action_id ) {
 							WP_CLI::error( 'Could not schedule action.' );
+
+							exit;
 						}
 
 						WP_CLI::line( \sprintf( 'Action scheduled: %s', (string) $action_id ) );
@@ -126,6 +128,8 @@ class SubscriptionsModule {
 
 						if ( null === $subscription ) {
 							WP_CLI::error( \sprintf( 'Could not find a subscription with ID: %s', $id ) );
+
+							exit;
 						}
 
 						WP_CLI::line( \sprintf( 'Schedule subscription %s follow-up payment…', $id ) );
@@ -165,9 +169,7 @@ class SubscriptionsModule {
 	 * Maybe create subscription for the specified payment.
 	 *
 	 * @param Payment $payment The new payment.
-	 *
 	 * @return void
-	 *
 	 * @throws \UnexpectedValueException Throw unexpected value exception if the subscription does not have a valid date interval.
 	 */
 	public function maybe_create_subscription( $payment ) {
@@ -1096,26 +1098,6 @@ class SubscriptionsModule {
 	}
 
 	/**
-	 * Get subscription payment retry seconds.
-	 *
-	 * @param int $try Number of attempts.
-	 * @return int
-	 */
-	public function get_subscription_payment_retry_seconds( $try ) {
-		switch ( $try ) {
-			case 1:
-				return 5 * MINUTE_IN_SECONDS;
-			case 2:
-				return HOUR_IN_SECONDS;
-			case 3:
-				return 12 * HOUR_IN_SECONDS;
-			case 4:
-			default:
-				return DAY_IN_SECONDS;
-		}
-	}
-
-	/**
 	 * Maybe expire subscription.
 	 *
 	 * @param Subscription $subscription Subscription.
@@ -1278,31 +1260,45 @@ class SubscriptionsModule {
 	}
 
 	/**
+	 * Test if the subscription meets the follow-up requirements.
+	 *
+	 * @param Subscription $subscription Subscription.
+	 * @return bool True if meets requirements, false otherwise.
+	 */
+	private function meets_follow_up_payment_requirements( Subscription $subscription ) {
+		if ( 'woocommerce' === $subscription->get_source() ) {
+			return false;
+		}
+
+		if ( null === $subscription->next_payment_date ) {
+			return false;
+		}
+
+		if ( null === $subscription->next_payment_delivery_date ) {
+			return false;
+		}
+
+		$date = new \DateTimeImmutable();
+
+		if ( $subscription->next_payment_date > $date ) {
+			return false;
+		}
+
+		if ( $subscription->next_payment_delivery_date > $date ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Schedule subscription follow-up payment.
 	 *
 	 * @param Subscription $subscription Subscription.
 	 * @return int|null
 	 */
 	private function schedule_subscription_follow_up_payment( Subscription $subscription ) {
-		if ( 'woocommerce' === $subscription->get_source() ) {
-			return null;
-		}
-
-		if ( null === $subscription->next_payment_date ) {
-			return null;
-		}
-
-		if ( null === $subscription->next_payment_delivery_date ) {
-			return null;
-		}
-
-		$date = new \DateTimeImmutable();
-
-		if ( $subscription->next_payment_date > $date ) {
-			return null;
-		}
-
-		if ( $subscription->next_payment_delivery_date > $date ) {
+		if ( ! $this->meets_follow_up_payment_requirements( $subscription ) ) {
 			return null;
 		}
 
@@ -1320,17 +1316,12 @@ class SubscriptionsModule {
 			return null;
 		}
 
-		$attempt = (int) $subscription->get_meta( 'create_follow_up_payment_attempt' );
-		$attempt = empty( $attempt ) ? 1 : $attempt + 1;
-
-		$action_id = \as_schedule_single_action(
-			\time() + $this->get_subscription_payment_retry_seconds( $attempt ),
+		$action_id = \as_enqueue_async_action(
 			'pronamic_pay_create_subscription_follow_up_payment',
 			$actions_args,
 			'pronamic_pay'
 		);
 
-		$subscription->set_meta( 'create_follow_up_payment_attempt', $attempt );
 		$subscription->set_meta( 'create_follow_up_payment_action_id', $action_id );
 
 		$subscription->save();
@@ -1343,7 +1334,7 @@ class SubscriptionsModule {
 	 *
 	 * @param int $subscription_id Subscription ID.
 	 * @return void
-	 * @throws \Exception Throws exception when creating subscription follow-up payment failed after 4 attempts.
+	 * @throws \Exception Throws exception when unable to load subscription.
 	 */
 	public function action_create_subscription_follow_up_payment( $subscription_id ) {
 		// Check subscription.
@@ -1358,48 +1349,11 @@ class SubscriptionsModule {
 			);
 		}
 
-		$attempt = (int) $subscription->get_meta( 'create_follow_up_payment_attempt' );
-		$attempt = empty( $attempt ) ? 1 : $attempt + 1;
-
 		$subscription->set_meta( 'create_follow_up_payment_action_id', null );
 
-		try {
-			$this->create_subscription_follow_up_payment( $subscription );
+		$this->create_subscription_follow_up_payment( $subscription );
 
-			$subscription->set_meta( 'create_follow_up_payment_attempt', null );
-		} catch ( \Exception $e ) {
-			$attempt++;
-
-			if ( $attempt <= 4 ) {
-				$this->schedule_subscription_follow_up_payment( $subscription );
-
-				$retry_time = time() + $this->get_subscription_payment_retry_seconds( $attempt );
-
-				$subscription->add_note(
-					\sprintf(
-						/* translators: 1: Retry time, 2: Exception message. */
-						\__( 'Unable to start recurring payment. Retry on %1$s. Error: %2$s', 'pronamic_ideal' ),
-						( new DateTime( '@' . $retry_time ) )->format_i18n(),
-						$e->getMessage()
-					)
-				);
-			}
-
-			if ( $attempt > 4 ) {
-				$subscription->add_note(
-					\sprintf(
-						/* translators: %s: Exception message. */
-						\__( 'Unable to start recurring payment. Will not try again. Error: %s', 'pronamic_ideal' ),
-						$e->getMessage()
-					)
-				);
-
-				// Rethrow exception.
-				throw $e;
-			}
-		} finally {
-			$subscription->save();
-		}
+		$subscription->save();
 	}
 
 	/**
@@ -1410,6 +1364,10 @@ class SubscriptionsModule {
 	 * @throws \Exception Throws exception when gateway not found.
 	 */
 	public function create_subscription_follow_up_payment( Subscription $subscription ) {
+		if ( ! $this->meets_follow_up_payment_requirements( $subscription ) ) {
+			return;
+		}
+
 		// Check gateway.
 		$config_id = $subscription->config_id;
 
