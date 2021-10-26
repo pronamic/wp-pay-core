@@ -1264,6 +1264,28 @@ class SubscriptionsModule {
 	 * @return void
 	 */
 	private function schedule_subscription_follow_up_payment( Subscription $subscription ) {
+		if ( 'woocommerce' === $subscription->get_source() ) {
+			return;
+		}
+
+		if ( null === $subscription->next_payment_date ) {
+			return;
+		}
+
+		if ( null === $subscription->next_payment_delivery_date ) {
+			return;
+		}
+
+		$date = new \DateTimeImmutable();
+
+		if ( $subscription->next_payment_date > $date ) {
+			return;
+		}
+
+		if ( $subscription->next_payment_delivery_date > $date ) {
+			return;
+		}
+
 		$actions_args = array(
 			'subscription_id' => $subscription->get_id(),
 		);
