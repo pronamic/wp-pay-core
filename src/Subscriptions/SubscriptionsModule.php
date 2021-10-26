@@ -1199,8 +1199,6 @@ class SubscriptionsModule {
 			return null;
 		}
 
-		$this->send_subscription_renewal_notices();
-
 		$query = $this->get_subscriptions_wp_query_that_require_follow_up_payment();
 
 		$action_id = \as_enqueue_async_action(
