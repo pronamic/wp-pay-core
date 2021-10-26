@@ -107,11 +107,37 @@ class SubscriptionsModule {
 						WP_CLI::error( 'Subscriptions processing is disabled.' );
 					}
 
-					WP_CLI::line( 'Schedule subscription follow-up payments…' );
+					$all = \WP_CLI\Utils\get_flag_value( $assoc_args, 'all', false );
 
-					$action_id = $this->update_subscription_payments();
+					if ( $all ) {
+						WP_CLI::line( 'Schedule subscription follow-up payments…' );
 
-					WP_CLI::line( \sprintf( 'Action scheduled: %s', (string) $action_id ) );
+						$action_id = $this->update_subscription_payments();
+
+						if ( null === $action_id ) {
+							WP_CLI::error( 'Could not schedule action.' );
+						}
+
+						WP_CLI::line( \sprintf( 'Action scheduled: %s', (string) $action_id ) );
+					}
+
+					foreach ( $args as $id ) {
+						$subscription = \get_pronamic_subscription( $id );
+
+						if ( null === $subscription ) {
+							WP_CLI::error( \sprintf( 'Could not find a subscription with ID: %s', $id ) );
+						}
+
+						WP_CLI::line( \sprintf( 'Schedule subscription %s follow-up payment…', $id ) );
+
+						$action_id = $this->schedule_subscription_follow_up_payment( $subscription );
+
+						if ( null === $action_id ) {
+							WP_CLI::error( 'Could not schedule action.' );
+						}
+
+						WP_CLI::line( \sprintf( 'Action scheduled: %s', (string) $action_id ) );
+					}
 				}
 			);
 		}
@@ -1255,29 +1281,35 @@ class SubscriptionsModule {
 	 * Schedule subscription follow-up payment.
 	 *
 	 * @param Subscription $subscription Subscription.
-	 * @return void
+	 * @return int|null
 	 */
 	private function schedule_subscription_follow_up_payment( Subscription $subscription ) {
 		if ( 'woocommerce' === $subscription->get_source() ) {
-			return;
+			return null;
 		}
 
 		if ( null === $subscription->next_payment_date ) {
-			return;
+			return null;
 		}
 
 		if ( null === $subscription->next_payment_delivery_date ) {
-			return;
+			return null;
 		}
 
 		$date = new \DateTimeImmutable();
 
 		if ( $subscription->next_payment_date > $date ) {
-			return;
+			return null;
 		}
 
 		if ( $subscription->next_payment_delivery_date > $date ) {
-			return;
+			return null;
+		}
+
+		$action_id = $subscription->get_meta( 'create_follow_up_payment_action_id' );
+
+		if ( ! empty( $action_id ) ) {
+			return $action_id;
 		}
 
 		$actions_args = array(
@@ -1285,13 +1317,7 @@ class SubscriptionsModule {
 		);
 
 		if ( false !== \as_next_scheduled_action( 'pronamic_pay_create_subscription_follow_up_payment', $actions_args ) ) {
-			return;
-		}
-
-		$action_id = $subscription->get_meta( 'create_follow_up_payment_action_id' );
-
-		if ( ! empty( $action_id ) ) {
-			return;
+			return null;
 		}
 
 		$attempt = (int) $subscription->get_meta( 'create_follow_up_payment_attempt' );
@@ -1308,6 +1334,8 @@ class SubscriptionsModule {
 		$subscription->set_meta( 'create_follow_up_payment_action_id', $action_id );
 
 		$subscription->save();
+
+		return $action_id;
 	}
 
 	/**
