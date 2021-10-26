@@ -124,22 +124,33 @@ class SubscriptionsModule {
 						WP_CLI::error( 'Subscriptions processing is disabled.' );
 					}
 
+					/**
+					 * Schedule all subscriptions pages.
+					 */
 					$all = \WP_CLI\Utils\get_flag_value( $assoc_args, 'all', false );
 
 					if ( $all ) {
 						WP_CLI::line( 'Schedule subscription follow-up payments…' );
 
-						$action_id = $this->update_subscription_payments();
+						$this->schedule_all();
+					}
 
-						if ( null === $action_id ) {
-							WP_CLI::error( 'Could not schedule action.' );
+					/**
+					 * Schedule one subscriptions page.
+					 */
+					$page = (int) \WP_CLI\Utils\get_flag_value( $assoc_args, 'page' );
 
-							exit;
-						}
+					if ( $page > 0 ) {
+						WP_CLI::line( 'Schedule subscription follow-up payments…' );
+
+						$action_id = $this->schedule_page( $page );
 
 						WP_CLI::line( \sprintf( 'Action scheduled: %s', (string) $action_id ) );
 					}
 
+					/**
+					 * Schedule specific subscriptions.
+					 */
 					foreach ( $args as $id ) {
 						$subscription = \get_pronamic_subscription( $id );
 
@@ -1200,26 +1211,38 @@ class SubscriptionsModule {
 	}
 
 	/**
-	 * Update subscription payments.
+	 * Schedule all.
 	 *
-	 * @return int|null Action ID.
+	 * @return void
 	 */
-	public function update_subscription_payments() {
+	public function schedule_all() {
 		if ( $this->is_processing_disabled() ) {
-			return null;
+			return;
 		}
 
 		$query = $this->get_subscriptions_wp_query_that_require_follow_up_payment();
 
-		$action_id = \as_enqueue_async_action(
+		$pages = \range( $query->max_num_pages, 1 );
+
+		foreach ( $pages as $page ) {
+			$this->schedule_page( $page );
+		}
+	}
+
+	/**
+	 * Schedule page.
+	 *
+	 * @param int $page Page.
+	 * @return int
+	 */
+	private function schedule_page( $page ) {
+		return \as_enqueue_async_action(
 			'pronamic_pay_schedule_subscriptions_follow_up_payment',
 			array(
-				'page' => $query->max_num_pages,
+				'page' => $page,
 			),
 			'pronamic_pay'
 		);
-
-		return $action_id;
 	}
 
 	/**
@@ -1229,16 +1252,6 @@ class SubscriptionsModule {
 	 * @return void
 	 */
 	public function schedule_subscriptions_follow_up_payment( $page ) {
-		if ( $page > 1 ) {
-			\as_enqueue_async_action(
-				'pronamic_pay_schedule_subscriptions_follow_up_payment',
-				array(
-					'page' => $page - 1,
-				),
-				'pronamic_pay'
-			);
-		}
-
 		$query = $this->get_subscriptions_wp_query_that_require_follow_up_payment(
 			array(
 				'page' => $page,
