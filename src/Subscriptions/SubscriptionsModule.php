@@ -101,7 +101,23 @@ class SubscriptionsModule {
 		// @link https://make.wordpress.org/cli/handbook/commands-cookbook/.
 		if ( Util::doing_cli() ) {
 			WP_CLI::add_command(
-				'pay subscriptions schedule',
+				'pay subscription list',
+				function( $args, $assoc_args ) {
+					$query = $this->get_subscriptions_wp_query_that_require_follow_up_payment();
+
+					WP_CLI\Utils\format_items(
+						'table',
+						$query->posts,
+						array(
+							'ID',
+							'post_title',
+						)
+					);
+				}
+			);
+
+			WP_CLI::add_command(
+				'pay subscription schedule',
 				function( $args, $assoc_args ) {
 					if ( $this->is_processing_disabled() ) {
 						WP_CLI::error( 'Subscriptions processing is disabled.' );
