@@ -1170,6 +1170,8 @@ class SubscriptionsModule {
 					),
 				),
 			),
+			'order'          => 'DESC',
+			'orderby'        => 'ID',
 		);
 
 		if ( \array_key_exists( 'page', $args ) ) {
