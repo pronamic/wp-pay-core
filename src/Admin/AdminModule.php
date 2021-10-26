@@ -982,20 +982,6 @@ class AdminModule {
 			);
 		}
 
-		if ( 'pronamic_pay_debug' === \filter_input( INPUT_GET, 'page', \FILTER_SANITIZE_STRING ) ) {
-			$submenu_pages[] = array(
-				'page_title' => __( 'Debug', 'pronamic_ideal' ),
-				'menu_title' => __( 'Debug', 'pronamic_ideal' ),
-				'capability' => 'manage_options',
-				'menu_slug'  => 'pronamic_pay_debug',
-				'function'   => function() {
-					$plugin = $this->plugin;
-
-					include __DIR__ . '/../../views/page-debug.php';
-				},
-			);
-		}
-
 		$minimum_capability = $this->get_minimum_capability( $submenu_pages );
 
 		try {

@@ -82,7 +82,6 @@
     "js-build-blocks-json": "rsync -a --prune-empty-dirs --include '*/' --include 'block.json' --exclude '*' js/src/ js/dist/",
     "js-minify": "npm-run-all js-minify-*",
     "js-minify-admin": "terser --compress --mangle --output js/dist/admin.min.js js/src/admin.js",
-    "js-minify-admin-debug": "terser --compress --mangle --output js/dist/admin-debug.min.js js/src/admin-debug.js",
     "js-minify-admin-reports": "terser --compress --mangle --output js/dist/admin-reports.min.js js/src/admin-reports.js",
     "js-minify-admin-tour": "terser --compress --mangle --output js/dist/admin-tour.min.js js/src/admin-tour.js",
     "js-minify-block-payment-form": "terser --compress --mangle --output js/dist/block-payment-form.min.js js/src/block-payment-form.js",

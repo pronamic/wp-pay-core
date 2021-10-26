@@ -203,13 +203,6 @@ class Plugin {
 	public $integrations;
 
 	/**
-	 * Tools manager.
-	 *
-	 * @var ToolsManager
-	 */
-	public $tools_manager;
-
-	/**
 	 * Webhook logger.
 	 *
 	 * @var WebhookLogger
@@ -612,12 +605,6 @@ class Plugin {
 		// Admin.
 		if ( is_admin() ) {
 			$this->admin = new Admin\AdminModule( $this );
-		}
-
-		// Debug.
-		if ( $this->is_debug_mode() ) {
-			// Tools.
-			$this->tools_manager = new ToolsManager( $this );
 		}
 
 		$gateways = array();
