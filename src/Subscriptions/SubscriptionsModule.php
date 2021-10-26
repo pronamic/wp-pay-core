@@ -94,6 +94,27 @@ class SubscriptionsModule {
 
 		// REST API.
 		\add_action( 'rest_api_init', array( $this, 'rest_api_init' ) );
+
+		// WordPress CLI.
+		// @link https://github.com/woocommerce/woocommerce/blob/3.3.1/includes/class-woocommerce.php#L365-L369.
+		// @link https://github.com/woocommerce/woocommerce/blob/3.3.1/includes/class-wc-cli.php.
+		// @link https://make.wordpress.org/cli/handbook/commands-cookbook/.
+		if ( Util::doing_cli() ) {
+			WP_CLI::add_command(
+				'pay subscriptions schedule',
+				function( $args, $assoc_args ) {
+					if ( $this->is_processing_disabled() ) {
+						WP_CLI::error( 'Subscriptions processing is disabled.' );
+					}
+
+					WP_CLI::line( 'Schedule subscription follow-up payments…' );
+
+					$action_id = $this->update_subscription_payments();
+
+					WP_CLI::line( \sprintf( 'Action scheduled: %s', (string) $action_id ) );
+				}
+			);
+		}
 	}
 
 	/**
@@ -1171,24 +1192,26 @@ class SubscriptionsModule {
 	/**
 	 * Update subscription payments.
 	 *
-	 * @return void
+	 * @return int|null Action ID.
 	 */
 	public function update_subscription_payments() {
 		if ( $this->is_processing_disabled() ) {
-			return;
+			return null;
 		}
 
 		$this->send_subscription_renewal_notices();
 
 		$query = $this->get_subscriptions_wp_query_that_require_follow_up_payment();
 
-		\as_enqueue_async_action(
+		$action_id = \as_enqueue_async_action(
 			'pronamic_pay_schedule_subscriptions_follow_up_payment',
 			array(
 				'page' => $query->max_num_pages,
 			),
 			'pronamic_pay'
 		);
+
+		return $action_id;
 	}
 
 	/**
