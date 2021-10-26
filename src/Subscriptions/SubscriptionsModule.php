@@ -130,7 +130,7 @@ class SubscriptionsModule {
 					$all = \WP_CLI\Utils\get_flag_value( $assoc_args, 'all', false );
 
 					if ( $all ) {
-						WP_CLI::line( 'Schedule subscription follow-up payments…' );
+						WP_CLI::line( 'Schedule all subscriptions pages follow-up payments…' );
 
 						$this->schedule_all();
 					}
@@ -141,7 +141,7 @@ class SubscriptionsModule {
 					$page = (int) \WP_CLI\Utils\get_flag_value( $assoc_args, 'page' );
 
 					if ( $page > 0 ) {
-						WP_CLI::line( 'Schedule subscription follow-up payments…' );
+						WP_CLI::line( \sprintf( 'Schedule subscriptions page %s follow-up payments…', $page ) );
 
 						$action_id = $this->schedule_page( $page );
 
