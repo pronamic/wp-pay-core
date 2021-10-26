@@ -100,7 +100,11 @@ class SubscriptionsModule {
 			WP_CLI::add_command(
 				'pay subscription list',
 				function( $args, $assoc_args ) {
+					WP_CLI::debug( 'Query subscriptions that require follow-up payment.' );
+
 					$query = $this->get_subscriptions_wp_query_that_require_follow_up_payment();
+
+					WP_CLI::debug( \sprintf( 'Query executed: `found_posts` = %s, `max_num_pages`: %s.', $query->found_posts, $query->max_num_pages ) );
 
 					WP_CLI\Utils\format_items(
 						'table',
