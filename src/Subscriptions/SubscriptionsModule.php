@@ -1155,14 +1155,6 @@ class SubscriptionsModule {
 			),
 			'meta_query'     => array(
 				array(
-					'key'     => '_pronamic_subscription_source',
-					'compare' => 'NOT IN',
-					'value'   => array(
-						// Don't create payments for sources which schedule payments.
-						'woocommerce',
-					),
-				),
-				array(
 					'relation' => 'OR',
 					array(
 						'key'     => '_pronamic_subscription_next_payment',
