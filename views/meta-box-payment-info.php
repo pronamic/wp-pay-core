@@ -607,6 +607,11 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 		$account_number = $consumer_bank_details->get_account_number();
 
 		if ( null !== $account_number ) :
+
+			if ( PaymentMethods::CREDIT_CARD === $payment->get_payment_method() && 4 === strlen( $account_number ) ) {
+				$account_number = sprintf( 'XXXX XXXX XXXX %d', $account_number );
+			}
+
 			?>
 
 			<tr>
