@@ -551,7 +551,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	}
 
 	/**
-	 * Check if the payyment is the first for this subcription.
+	 * Check if the payment is the first for this subscription.
 	 *
 	 * @param Payment $payment Payment.
 	 * @return bool True if payment is the first, false otherwise.
