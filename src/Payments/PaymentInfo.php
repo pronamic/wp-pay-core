@@ -98,7 +98,6 @@ abstract class PaymentInfo {
 	/**
 	 * Origin post ID.
 	 *
-	 * @deprecated
 	 * @var int|null
 	 */
 	private $origin_id;
@@ -329,7 +328,6 @@ abstract class PaymentInfo {
 	/**
 	 * Get origin post ID.
 	 *
-	 * @deprecated
 	 * @return int|null
 	 */
 	public function get_origin_id() {
@@ -339,7 +337,6 @@ abstract class PaymentInfo {
 	/**
 	 * Set origin post ID.
 	 *
-	 * @deprecated
 	 * @param int|null $origin_id Origin post ID.
 	 * @return void
 	 */
