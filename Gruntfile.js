@@ -39,7 +39,10 @@ module.exports = function( grunt ) {
 						{ // Tippy.js - https://atomiks.github.io/tippyjs/.
 							expand: true,
 							cwd: 'node_modules/tippy.js/dist/',
-							src: 'tippy.all.js',
+							src: [
+								'tippy.all.js',
+								'tippy.all.js.map'
+							],
 							dest: 'assets/tippy.js/'
 						}
 					]
