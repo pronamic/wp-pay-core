@@ -298,7 +298,7 @@ $sections = array_filter(
 
 									$element = new Element( 'input', $attributes );
 
-									$element->print();
+									$element->output();
 
 									break;
 								case 'number':
@@ -315,7 +315,7 @@ $sections = array_filter(
 
 									$element = new Element( 'input', $attributes );
 
-									$element->print();
+									$element->output();
 
 									break;
 								case 'checkbox':
@@ -371,7 +371,7 @@ $sections = array_filter(
 
 									$element = new Element( 'input', $attributes );
 
-									$element->print();
+									$element->output();
 
 									break;
 								case 'select':
