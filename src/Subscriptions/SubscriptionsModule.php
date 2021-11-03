@@ -739,14 +739,6 @@ class SubscriptionsModule {
 		$subscription->next_payment_date          = SubscriptionHelper::calculate_next_payment_date( $subscription );
 		$subscription->next_payment_delivery_date = SubscriptionHelper::calculate_next_payment_delivery_date( $subscription );
 
-		// Delete next payment post meta if not set.
-		if ( null === $subscription->next_payment_date ) {
-			$subscription->next_payment_delivery_date = null;
-
-			$subscription->set_meta( 'next_payment', null );
-			$subscription->set_meta( 'next_payment_delivery_date', null );
-		}
-
 		// Update subscription.
 		$subscription->save();
 
