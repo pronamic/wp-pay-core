@@ -404,7 +404,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			}
 
 			// Phase.
-			$start_date = $subscription->start_date;
+			$start_date = $this->get_meta_date( $id, 'start_date' );
 
 			if ( null === $start_date ) {
 				$start_date = clone $subscription->get_date();
