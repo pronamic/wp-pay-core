@@ -600,16 +600,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	}
 
 	/**
-	 * Set the expiry date of this subscription.
-	 *
-	 * @param DateTime|null $date Expiry date.
-	 * @return void
-	 */
-	public function set_expiry_date( DateTime $date = null ) {
-		$this->expiry_date = $date;
-	}
-
-	/**
 	 * Set the next payment date of this subscription.
 	 *
 	 * @param DateTime|null $date Next payment date.
