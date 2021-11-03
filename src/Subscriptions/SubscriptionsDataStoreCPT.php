@@ -423,10 +423,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			// Set periods created.
 			$end_date = $subscription->get_next_payment_date();
 
-			if ( null === $end_date ) {
-				$end_date = $subscription->get_expiry_date();
-			}
-
 			if ( null !== $end_date ) {
 				$period = new DatePeriod( $start_date, new \DateInterval( $interval_spec ), $end_date );
 
@@ -614,18 +610,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		$subscription->start_date = $start_date;
 
-		// Expiry Date.
-		$expiry_date = $this->get_meta_date( $id, 'expiry_date' );
-
-		if ( empty( $expiry_date ) && null !== $date_interval ) {
-			// If no meta expiry date is set, use start date + 1 interval period.
-			$expiry_date = clone $start_date;
-
-			$expiry_date->add( $date_interval );
-		}
-
-		$subscription->expiry_date = $expiry_date;
-
 		// Next Payment Date.
 		$subscription->next_payment_date = $this->get_meta_date( $id, 'next_payment' );
 
@@ -681,7 +665,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$this->update_meta( $id, 'source', $subscription->source );
 		$this->update_meta( $id, 'source_id', $subscription->source_id );
 		$this->update_meta( $id, 'email', ( null === $customer ? null : $customer->get_email() ) );
-		$this->update_meta( $id, 'expiry_date', $subscription->expiry_date );
 		$this->update_meta( $id, 'next_payment', $subscription->next_payment_date );
 		$this->update_meta( $id, 'next_payment_delivery_date', $subscription->next_payment_delivery_date );
 		$this->update_meta( $id, 'version', $subscription->get_version() );

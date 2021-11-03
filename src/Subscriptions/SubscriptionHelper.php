@@ -136,11 +136,6 @@ class SubscriptionHelper {
 	 * @return void
 	 */
 	public static function complement_subscription_dates( Subscription $subscription ) {
-		// Expiry date.
-		if ( null === $subscription->expiry_date ) {
-			$subscription->set_expiry_date( self::calculate_expiry_date( $subscription ) );
-		}
-
 		// Next payment date.
 		if ( null === $subscription->next_payment_date ) {
 			$subscription->set_next_payment_date( self::calculate_next_payment_date( $subscription ) );

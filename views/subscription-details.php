@@ -73,16 +73,6 @@ $details[] = array(
 	'description' => $recurrence,
 );
 
-// Expiry date.
-$expiry_date = $subscription->get_expiry_date();
-
-if ( null !== $expiry_date ) {
-	$details[] = array(
-		'term'        => __( 'Expiry Date', 'pronamic_ideal' ),
-		'description' => $expiry_date->format_i18n(),
-	);
-}
-
 ?>
 
 <h2><?php esc_html_e( 'Subscription', 'pronamic_ideal' ); ?></h2>

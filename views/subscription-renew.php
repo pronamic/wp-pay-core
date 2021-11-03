@@ -18,8 +18,6 @@ if ( ! isset( $subscription, $gateway ) ) {
 
 $phase = $subscription->get_current_phase();
 
-$expiry_date = $subscription->get_expiry_date();
-
 ?>
 <!DOCTYPE html>
 

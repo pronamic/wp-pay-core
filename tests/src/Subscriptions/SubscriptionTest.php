@@ -115,7 +115,6 @@ class SubscriptionTest extends WP_UnitTestCase {
 		$subscription->set_id( 1 );
 
 		// Dates.
-		$subscription->set_expiry_date( new DateTime( '2010-05-05' ) );
 		$subscription->set_next_payment_date( new DateTime( '2005-06-05' ) );
 		$subscription->set_next_payment_delivery_date( new DateTime( '2005-06-01' ) );
 		$subscription->set_activated_at( new DateTime( '2005-05-05' ) );
@@ -170,7 +169,6 @@ class SubscriptionTest extends WP_UnitTestCase {
 
 		// Dates.
 		$subscription->set_end_date( new DateTime( '2005-06-05' ) );
-		$subscription->set_expiry_date( new DateTime( '2010-05-05' ) );
 		$subscription->set_next_payment_date( new DateTime( '2005-06-05' ) );
 		$subscription->set_next_payment_delivery_date( new DateTime( '2005-06-01' ) );
 

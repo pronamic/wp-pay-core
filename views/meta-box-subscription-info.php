@@ -131,20 +131,6 @@ $phase = $subscription->get_display_phase();
 			?>
 		</td>
 	</tr>
-	<tr>
-		<th scope="row">
-			<?php esc_html_e( 'Paid up to', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<?php
-
-			$expiry_date = $subscription->get_expiry_date();
-
-			echo empty( $expiry_date ) ? '—' : esc_html( $expiry_date->format_i18n() );
-
-			?>
-		</td>
-	</tr>
 
 	<?php
 

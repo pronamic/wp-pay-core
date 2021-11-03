@@ -106,6 +106,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	/**
 	 * The end date of the last successful payment.
 	 *
+	 * @deprecated
 	 * @var DateTime|null
 	 */
 	public $expiry_date;
@@ -735,10 +736,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 
 		PaymentInfoHelper::from_json( $json, $subscription );
 
-		if ( isset( $json->expiry_date ) ) {
-			$subscription->set_expiry_date( new DateTime( $json->expiry_date ) );
-		}
-
 		if ( isset( $json->next_payment_date ) ) {
 			$subscription->set_next_payment_date( new DateTime( $json->next_payment_date ) );
 		}
@@ -781,10 +778,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 		$properties = (array) $object;
 
 		$properties['phases'] = $this->phases;
-
-		if ( null !== $this->expiry_date ) {
-			$properties['expiry_date'] = $this->expiry_date->format( \DATE_ATOM );
-		}
 
 		if ( null !== $this->next_payment_date ) {
 			$properties['next_payment_date'] = $this->next_payment_date->format( \DATE_ATOM );

@@ -228,22 +228,6 @@ class SubscriptionsModule {
 				case PaymentStatus::SUCCESS:
 					$status_update = SubscriptionStatus::ACTIVE;
 
-					$periods = $payment->get_periods();
-
-					if ( null !== $periods ) {
-						foreach ( $periods as $period ) {
-							// Check subscription.
-							if ( $period->get_phase()->get_subscription()->get_id() !== $subscription->get_id() ) {
-								continue;
-							}
-
-							// Update subscription expiry date.
-							if ( isset( $subscription->expiry_date ) && $subscription->expiry_date < $period->get_end_date() ) {
-								$subscription->expiry_date = clone $period->get_end_date();
-							}
-						}
-					}
-
 					break;
 				case PaymentStatus::FAILURE:
 					/**
@@ -967,7 +951,7 @@ class SubscriptionsModule {
 	 * @link https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/classes/class-sl-emails.php#L41-L126
 	 *
 	 * @return void
-	 *
+	 * @todo Rewrite using next payment date.
 	 * @throws \Exception Throws exception on start date error.
 	 */
 	private function send_subscription_renewal_notices() {
@@ -1435,8 +1419,7 @@ class SubscriptionsModule {
 				$subscription = \get_pronamic_subscription( $post->ID );
 
 				if ( null !== $subscription ) {
-					$subscription->status      = SubscriptionStatus::COMPLETED;
-					$subscription->expiry_date = $subscription->end_date;
+					$subscription->status = SubscriptionStatus::COMPLETED;
 
 					$subscription->save();
 				}
