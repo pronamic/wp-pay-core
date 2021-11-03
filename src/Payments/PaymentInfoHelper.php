@@ -123,18 +123,6 @@ class PaymentInfoHelper {
 			$object->anonymized = $payment_info->is_anonymized();
 		}
 
-		$start_date = $payment_info->get_start_date();
-
-		if ( null !== $start_date ) {
-			$object->start_date = $start_date->format( \DATE_ATOM );
-		}
-
-		$end_date = $payment_info->get_end_date();
-
-		if ( null !== $end_date ) {
-			$object->end_date = $end_date->format( \DATE_ATOM );
-		}
-
 		$version = $payment_info->get_version();
 
 		if ( null !== $version ) {
