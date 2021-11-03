@@ -47,15 +47,6 @@ trait SubscriptionPhasesTrait {
 		$this->phases[] = $phase;
 
 		$phase->set_sequence_number( \count( $this->phases ) );
-
-		// Update subscription end date.
-		$end_date = $phase->get_end_date();
-
-		if ( null !== $end_date ) {
-			$end_date = DateTime::create_from_immutable( $end_date );
-		}
-
-		$this->set_end_date( $end_date );
 	}
 
 	/**
