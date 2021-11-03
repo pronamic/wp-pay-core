@@ -33,21 +33,6 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 	}
 
 	/**
-	 * Test calculate expiry date.
-	 */
-	public function test_calculate_expiry_date() {
-		$subscription = new Subscription();
-
-		$subscription->set_start_date( new \DateTime( '2005-05-05 00:00:00' ) );
-
-		// Calculate.
-		$expiry_date = SubscriptionHelper::calculate_expiry_date( $subscription );
-
-		$this->assertInstanceOf( \DateTimeInterface::class, $expiry_date );
-		$this->assertEquals( '2005-05-05 00:00:00', $expiry_date->format( 'Y-m-d H:i:s' ) );
-	}
-
-	/**
 	 * Test calculate next payment date no start date.
 	 */
 	public function test_calculate_next_payment_date_no_start_date() {
