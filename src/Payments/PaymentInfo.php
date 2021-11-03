@@ -286,17 +286,6 @@ abstract class PaymentInfo {
 	}
 
 	/**
-	 * Set end date.
-	 *
-	 * @deprecated
-	 * @param DateTime|null $end_date End date.
-	 * @return void
-	 */
-	public function set_end_date( $end_date ) {
-		$this->end_date = $end_date;
-	}
-
-	/**
 	 * Get origin post ID.
 	 *
 	 * @return int|null

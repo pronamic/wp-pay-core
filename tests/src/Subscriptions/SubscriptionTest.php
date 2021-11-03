@@ -168,7 +168,6 @@ class SubscriptionTest extends WP_UnitTestCase {
 		$subscription->add_phase( $phase );
 
 		// Dates.
-		$subscription->set_end_date( new DateTime( '2005-06-05' ) );
 		$subscription->set_next_payment_date( new DateTime( '2005-06-05' ) );
 		$subscription->set_next_payment_delivery_date( new DateTime( '2005-06-01' ) );
 
