@@ -968,8 +968,8 @@ class SubscriptionsModule {
 		\wp_unschedule_hook( 'pronamic_pay_complete_subscriptions' );
 
 		// Action to create follow-up payments for subscriptions.
-		if ( false === \as_next_scheduled_action( 'pronamic_pay_schedule_follow_up_payments' ) ) {
-			\as_schedule_cron_action( \time(), '0 3 * * *', 'pronamic_pay_schedule_follow_up_payments' );
+		if ( false === \as_next_scheduled_action( 'pronamic_pay_schedule_follow_up_payments', array(), 'pronamic-pay' ) ) {
+			\as_schedule_cron_action( \time(), '0 3 * * *', 'pronamic_pay_schedule_follow_up_payments', array(), 'pronamic-pay' );
 		}
 	}
 
@@ -1247,7 +1247,7 @@ class SubscriptionsModule {
 			array(
 				'page' => $page,
 			),
-			'pronamic_pay'
+			'pronamic-pay'
 		);
 	}
 
@@ -1335,14 +1335,14 @@ class SubscriptionsModule {
 			'subscription_id' => $subscription->get_id(),
 		);
 
-		if ( false !== \as_next_scheduled_action( 'pronamic_pay_create_subscription_follow_up_payment', $actions_args ) ) {
+		if ( false !== \as_next_scheduled_action( 'pronamic_pay_create_subscription_follow_up_payment', $actions_args, 'pronamic-pay' ) ) {
 			return null;
 		}
 
 		$action_id = \as_enqueue_async_action(
 			'pronamic_pay_create_subscription_follow_up_payment',
 			$actions_args,
-			'pronamic_pay'
+			'pronamic-pay'
 		);
 
 		$subscription->set_meta( 'create_follow_up_payment_action_id', $action_id );

@@ -70,7 +70,8 @@ class StatusChecker {
 			array(
 				'payment_id' => $payment->get_id(),
 				'try'        => 1,
-			)
+			),
+			'pronamic-pay'
 		);
 	}
 
@@ -180,7 +181,8 @@ class StatusChecker {
 				array(
 					'payment_id' => $payment->get_id(),
 					'try'        => $next_try,
-				)
+				),
+				'pronamic-pay'
 			);
 		}
 	}
