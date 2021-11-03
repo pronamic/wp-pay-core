@@ -950,7 +950,9 @@ class Plugin {
 				$issuer = \filter_input( INPUT_POST, 'pronamic_ideal_issuer_id', FILTER_SANITIZE_STRING );
 			}
 
-			$payment->set_meta( 'issuer', $issuer );
+			if ( ! empty( $issuer ) ) {
+				$payment->set_meta( 'issuer', $issuer );
+			}
 		}
 
 		/**
