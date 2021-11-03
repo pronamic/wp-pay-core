@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay\Upgrades;
 
+use DateTime;
+use DateTimeZone;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 
 /**
@@ -76,9 +78,15 @@ class Upgrade620 extends Upgrade {
 				continue;
 			}
 
-			$expiry_date = $subscription->get_expiry_date();
+			$value = \get_post_meta( $subscription_id, '_pronamic_subscription_expiry_date', true );
 
-			if ( null === $expiry_date ) {
+			if ( empty( $value ) ) {
+				continue;
+			}
+
+			try {
+				$expiry_date = new DateTime( $value, new DateTimeZone( 'UTC' ) );
+			} catch ( Exception $e ) {
 				continue;
 			}
 
