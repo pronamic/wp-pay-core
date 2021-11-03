@@ -10,8 +10,8 @@
 
 namespace Pronamic\WordPress\Pay\Upgrades;
 
-use DateTime;
-use DateTimeZone;
+use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 
 /**
