@@ -66,8 +66,6 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 	public function test_calculate_next_payment_date_no_interval() {
 		$subscription = new Subscription();
 
-		$subscription->set_start_date( new \DateTime( '2005-05-05 00:00:00' ) );
-
 		// Calculate.
 		$this->expectException( \InvalidArgumentException::class );
 		$this->expectExceptionMessage( 'Can not calculate next payment date of subscription without phases.' );
