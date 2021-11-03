@@ -755,9 +755,6 @@ class SubscriptionsModule {
 			$subscription->set_meta( 'next_payment_delivery_date', null );
 		}
 
-		$payment->start_date = $start_date;
-		$payment->end_date   = $end_date;
-
 		// Update subscription.
 		$subscription->save();
 
