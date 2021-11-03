@@ -104,14 +104,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	public $status;
 
 	/**
-	 * The end date of the last successful payment.
-	 *
-	 * @deprecated
-	 * @var DateTime|null
-	 */
-	public $expiry_date;
-
-	/**
 	 * The next payment date.
 	 *
 	 * @var DateTime|null
@@ -588,15 +580,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Get the expiry date of this subscription.
-	 *
-	 * @return DateTime|null
-	 */
-	public function get_expiry_date() {
-		return $this->expiry_date;
 	}
 
 	/**
