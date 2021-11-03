@@ -748,9 +748,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			return;
 		}
 
-		$payment->start_date = $this->get_meta_date( $id, 'start_date' );
-		$payment->end_date   = $this->get_meta_date( $id, 'end_date' );
-		$payment->status     = $this->get_meta_string( $id, 'status' );
+		$payment->status = $this->get_meta_string( $id, 'status' );
 
 		// Action URL.
 		$action_url = $payment->get_action_url();
