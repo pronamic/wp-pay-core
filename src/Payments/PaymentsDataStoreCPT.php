@@ -918,34 +918,13 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			 * Payment status updated for plugin integration source from old to new status.
 			 *
 			 * [`{$source}`](https://github.com/pronamic/wp-pronamic-pay/wiki#sources)
-			 *
-			 * **Action status**
-			 *
-			 * Status | Value
-			 * ------ | -----
-			 * (empty) | `unknown`
-			 * Cancelled | `cancelled`
-			 * Expired | `expired`
-			 * Failure | `failure`
-			 * Open | `open`
-			 * Reserved | `reserved`
-			 * Success | `success`
-			 *
-			 * **Payment status**
-			 *
-			 * Status | Value
-			 * ------ | -----
-			 * Cancelled | `Cancelled`
-			 * Expired | `Expired`
-			 * Failure | `Failure`
-			 * Open | `Open`
-			 * Reserved | `Reserved`
-			 * Success | `Success`
+			 * [`{$old_status}`](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status)
+			 * [`{$new_status}`](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status)
 			 *
 			 * @param Payment     $payment         Payment.
 			 * @param bool        $can_redirect    Flag to indicate if redirect is allowed after the payment update.
-			 * @param null|string $previous_status Previous payment status.
-			 * @param string      $updated_status  Updated payment status.
+			 * @param null|string $previous_status Previous [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
+			 * @param string      $updated_status  Updated [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
 			 */
 			do_action( 'pronamic_payment_status_update_' . $source . '_' . $old_status . '_to_' . $new_status, $payment, $can_redirect, $previous_status, $updated_status );
 
@@ -954,54 +933,20 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			 *
 			 * [`{$source}`](https://github.com/pronamic/wp-pronamic-pay/wiki#sources)
 			 *
-			 * **Action status**
-			 *
-			 * Status | Value
-			 * ------ | -----
-			 * (empty) | `unknown`
-			 * Cancelled | `cancelled`
-			 * Expired | `expired`
-			 * Failure | `failure`
-			 * Open | `open`
-			 * Reserved | `reserved`
-			 * Success | `success`
-			 *
-			 * **Payment status**
-			 *
-			 * Status | Value
-			 * ------ | -----
-			 * Cancelled | `Cancelled`
-			 * Expired | `Expired`
-			 * Failure | `Failure`
-			 * Open | `Open`
-			 * Reserved | `Reserved`
-			 * Success | `Success`
-			 *
 			 * @param Payment     $payment         Payment.
 			 * @param bool        $can_redirect    Flag to indicate if redirect is allowed after the payment update.
-			 * @param null|string $previous_status Previous payment status.
-			 * @param string      $updated_status  Updated payment status.
+			 * @param null|string $previous_status Previous [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
+			 * @param string      $updated_status  Updated [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status)).
 			 */
 			do_action( 'pronamic_payment_status_update_' . $source, $payment, $can_redirect, $previous_status, $updated_status );
 
 			/**
 			 * Payment status updated.
 			 *
-			 * **Payment status**
-			 *
-			 * Status | Value
-			 * ------ | -----
-			 * Cancelled | `Cancelled`
-			 * Expired | `Expired`
-			 * Failure | `Failure`
-			 * Open | `Open`
-			 * Reserved | `Reserved`
-			 * Success | `Success`
-			 *
 			 * @param Payment     $payment         Payment.
 			 * @param bool        $can_redirect    Flag to indicate if redirect is allowed after the payment update.
-			 * @param null|string $previous_status Previous payment status.
-			 * @param string      $updated_status  Updated payment status.
+			 * @param null|string $previous_status Previous [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
+			 * @param string      $updated_status  Updated [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
 			 */
 			do_action( 'pronamic_payment_status_update', $payment, $can_redirect, $previous_status, $updated_status );
 		}

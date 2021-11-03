@@ -46,29 +46,8 @@ Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStor
 *Payment status updated for plugin integration source from old to new status.*
 
 [`{$source}`](https://github.com/pronamic/wp-pronamic-pay/wiki#sources)
-
-**Action status**
-
-Status | Value
------- | -----
-(empty) | `unknown`
-Cancelled | `cancelled`
-Expired | `expired`
-Failure | `failure`
-Open | `open`
-Reserved | `reserved`
-Success | `success`
-
-**Payment status**
-
-Status | Value
------- | -----
-Cancelled | `Cancelled`
-Expired | `Expired`
-Failure | `Failure`
-Open | `Open`
-Reserved | `Reserved`
-Success | `Success`
+[`{$old_status}`](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status)
+[`{$new_status}`](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status)
 
 **Arguments**
 
@@ -76,10 +55,10 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 `$can_redirect` | `bool` | Flag to indicate if redirect is allowed after the payment update.
-`$previous_status` | `null\|string` | Previous payment status.
-`$updated_status` | `string` | Updated payment status.
+`$previous_status` | `null\|string` | Previous [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
+`$updated_status` | `string` | Updated [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
 
-Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 917](../src/Payments/PaymentsDataStoreCPT.php#L917-L950)
+Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 917](../src/Payments/PaymentsDataStoreCPT.php#L917-L929)
 
 ### `pronamic_payment_status_update_{$source}`
 
@@ -87,65 +66,31 @@ Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStor
 
 [`{$source}`](https://github.com/pronamic/wp-pronamic-pay/wiki#sources)
 
-**Action status**
-
-Status | Value
------- | -----
-(empty) | `unknown`
-Cancelled | `cancelled`
-Expired | `expired`
-Failure | `failure`
-Open | `open`
-Reserved | `reserved`
-Success | `success`
-
-**Payment status**
-
-Status | Value
------- | -----
-Cancelled | `Cancelled`
-Expired | `Expired`
-Failure | `Failure`
-Open | `Open`
-Reserved | `Reserved`
-Success | `Success`
-
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 `$can_redirect` | `bool` | Flag to indicate if redirect is allowed after the payment update.
-`$previous_status` | `null\|string` | Previous payment status.
-`$updated_status` | `string` | Updated payment status.
+`$previous_status` | `null\|string` | Previous [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
+`$updated_status` | `string` | Updated [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status)).
 
-Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 952](../src/Payments/PaymentsDataStoreCPT.php#L952-L985)
+Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 931](../src/Payments/PaymentsDataStoreCPT.php#L931-L941)
 
 ### `pronamic_payment_status_update`
 
 *Payment status updated.*
 
-**Payment status**
-
-Status | Value
------- | -----
-Cancelled | `Cancelled`
-Expired | `Expired`
-Failure | `Failure`
-Open | `Open`
-Reserved | `Reserved`
-Success | `Success`
-
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 `$can_redirect` | `bool` | Flag to indicate if redirect is allowed after the payment update.
-`$previous_status` | `null\|string` | Previous payment status.
-`$updated_status` | `string` | Updated payment status.
+`$previous_status` | `null\|string` | Previous [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
+`$updated_status` | `string` | Updated [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
 
-Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 987](../src/Payments/PaymentsDataStoreCPT.php#L987-L1006)
+Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 943](../src/Payments/PaymentsDataStoreCPT.php#L943-L951)
 
 ### `pronamic_pay_privacy_register_exporters`
 
