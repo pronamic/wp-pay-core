@@ -86,7 +86,7 @@ class Upgrade620 extends Upgrade {
 
 			try {
 				$expiry_date = new DateTime( $value, new DateTimeZone( 'UTC' ) );
-			} catch ( Exception $e ) {
+			} catch ( \Exception $e ) {
 				continue;
 			}
 
