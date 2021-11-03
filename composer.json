@@ -48,7 +48,7 @@
 		"ext-simplexml": "*",
 		"composer/installers": "^1.7",
 		"pronamic/wp-datetime": "^1.2",
-		"pronamic/wp-html": "^1.0",
+		"pronamic/wp-html": "dev-develop as 1.0",
 		"pronamic/wp-http": "^1.0",
 		"pronamic/wp-money": "^2.0",
 		"pronamic/wp-number": "^1.0",
