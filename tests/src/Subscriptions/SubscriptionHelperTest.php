@@ -32,19 +32,6 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 	}
 
 	/**
-	 * Test calculate end date no interval.
-	 */
-	public function test_calculate_end_date_no_interval() {
-		$subscription = new Subscription();
-
-		$subscription->set_start_date( new DateTime( '2005-05-05 00:00:00' ) );
-
-		$end_date = SubscriptionHelper::calculate_end_date( $subscription );
-
-		$this->assertNull( $end_date );
-	}
-
-	/**
 	 * Test calculate end date.
 	 */
 	public function test_calculate_end_date() {
