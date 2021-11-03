@@ -885,7 +885,9 @@ class Plugin {
 		if ( null === $google_analytics_client_id ) {
 			$google_analytics_client_id = GoogleAnalyticsEcommerce::get_cookie_client_id();
 
-			$payment->set_meta( 'google_analytics_client_id', $google_analytics_client_id );
+			if ( null !== $google_analytics_client_id ) {
+				$payment->set_meta( 'google_analytics_client_id', $google_analytics_client_id );
+			}
 		}
 
 		// Customer.
