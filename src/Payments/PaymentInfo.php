@@ -29,7 +29,6 @@ use WP_Post;
  * @since   1.0.0
  *
  * @property string|null $email
- * @property string|null $customer_name
  * @property int|string|null $user_id
  * @property mixed $user_agent
  */

@@ -587,7 +587,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$subscription->interval        = $this->get_meta_int( $id, 'interval' );
 		$subscription->interval_period = $this->get_meta_string( $id, 'interval_period' );
 		$subscription->transaction_id  = $this->get_meta_string( $id, 'transaction_id' );
-		$subscription->customer_name   = $this->get_meta_string( $id, 'customer_name' );
 		$subscription->status          = $this->get_meta_string( $id, 'status' );
 
 		// Payment method.
