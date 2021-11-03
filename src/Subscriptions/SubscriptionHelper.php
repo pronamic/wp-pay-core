@@ -148,24 +148,6 @@ class SubscriptionHelper {
 	}
 
 	/**
-	 * Calculate expiry date.
-	 *
-	 * @param Subscription $subscription Subscription.
-	 * @return DateTime|null
-	 */
-	public static function calculate_expiry_date( Subscription $subscription ) {
-		$start_date = $subscription->get_start_date();
-
-		if ( null === $start_date ) {
-			return null;
-		}
-
-		$expiry_date = clone $start_date;
-
-		return $expiry_date;
-	}
-
-	/**
 	 * Calculate next payment date.
 	 *
 	 * @param Subscription $subscription Subscription.
