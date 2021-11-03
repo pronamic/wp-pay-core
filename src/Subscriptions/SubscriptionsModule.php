@@ -77,6 +77,7 @@ class SubscriptionsModule {
 		\add_action( 'pronamic_pay_pre_create_subscription', array( SubscriptionHelper::class, 'complement_subscription_dates' ), 10, 1 );
 		\add_action( 'pronamic_pay_pre_create_payment', array( $this, 'complement_subscription_by_payment' ), 10, 1 );
 
+		\add_action( 'pronamic_pay_schedule_follow_up_payments', array( $this, 'schedule_all' ) );
 		\add_action( 'pronamic_pay_schedule_subscriptions_follow_up_payment', array( $this, 'schedule_subscriptions_follow_up_payment' ) );
 		\add_action( 'pronamic_pay_create_subscription_follow_up_payment', array( $this, 'action_create_subscription_follow_up_payment' ) );
 
@@ -965,6 +966,11 @@ class SubscriptionsModule {
 		// Unschedule legacy WordPress Cron hook.
 		\wp_unschedule_hook( 'pronamic_pay_update_subscription_payments' );
 		\wp_unschedule_hook( 'pronamic_pay_complete_subscriptions' );
+
+		// Action to create follow-up payments for subscriptions.
+		if ( false === \as_next_scheduled_action( 'pronamic_pay_schedule_follow_up_payments' ) ) {
+			\as_schedule_cron_action( \time(), '0 3 * * *', 'pronamic_pay_schedule_follow_up_payments' );
+		}
 	}
 
 	/**
