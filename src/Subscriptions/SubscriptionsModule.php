@@ -975,13 +975,6 @@ class SubscriptionsModule {
 				continue;
 			}
 
-			// If expiry date is null we continue, subscription is not expiring.
-			$expiry_date = $subscription->get_expiry_date();
-
-			if ( null === $expiry_date ) {
-				continue;
-			}
-
 			// Date interval.
 			$date_interval = $subscription->get_date_interval();
 
