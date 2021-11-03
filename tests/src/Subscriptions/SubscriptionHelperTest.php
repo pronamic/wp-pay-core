@@ -21,18 +21,6 @@ use Pronamic\WordPress\Money\TaxedMoney;
  */
 class SubscriptionHelperTest extends \WP_UnitTestCase {
 	/**
-	 * Test calculate expirty date no start date.
-	 */
-	public function test_calculate_expiry_date_no_start_date() {
-		$subscription = new Subscription();
-
-		// Calculate.
-		$expiry_date = SubscriptionHelper::calculate_expiry_date( $subscription );
-
-		$this->assertNull( $expiry_date );
-	}
-
-	/**
 	 * Test calculate next payment date no start date.
 	 */
 	public function test_calculate_next_payment_date_no_start_date() {
