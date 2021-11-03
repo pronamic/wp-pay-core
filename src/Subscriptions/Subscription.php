@@ -49,7 +49,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * payments.
 	 *
 	 * @link https://docs.mollie.com/reference/v2/subscriptions-api/create-subscription
-	 *
+	 * @deprecated
 	 * @var int|null
 	 */
 	public $frequency;
@@ -58,7 +58,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * The interval of this subscription, for example: 1, 2, 3, etc.
 	 *
 	 * @todo Improve documentation?
-	 *
+	 * @deprecated
 	 * @var int|null
 	 */
 	public $interval;
@@ -67,7 +67,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * The interval period of this subscription.
 	 *
 	 * @todo Improve documentation?
-	 *
+	 * @deprecated
 	 * @var string|null
 	 */
 	public $interval_period;
@@ -75,6 +75,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	/**
 	 * The interval date of this subscription.
 	 *
+	 * @deprecated
 	 * @var string|null
 	 */
 	public $interval_date;
@@ -82,6 +83,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	/**
 	 * The interval date day of this subscription.
 	 *
+	 * @deprecated
 	 * @var string|null
 	 */
 	public $interval_date_day;
@@ -89,6 +91,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	/**
 	 * The interval date month of this subscription.
 	 *
+	 * @deprecated
 	 * @var string|null
 	 */
 	public $interval_date_month;
@@ -106,6 +109,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	/**
 	 * The next payment date.
 	 *
+	 * @deprecated
 	 * @var DateTime|null
 	 */
 	public $next_payment_date;
@@ -113,6 +117,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	/**
 	 * The next payment delivery date.
 	 *
+	 * @deprecated
 	 * @var DateTime|null
 	 */
 	public $next_payment_delivery_date;
