@@ -600,16 +600,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		// Date interval.
 		$date_interval = $subscription->get_date_interval();
 
-		// Start Date.
-		$start_date = $this->get_meta_date( $id, 'start_date' );
-
-		if ( empty( $start_date ) ) {
-			// If no meta start date is set, use subscription date.
-			$start_date = clone $subscription->date;
-		}
-
-		$subscription->start_date = $start_date;
-
 		// Next Payment Date.
 		$subscription->next_payment_date = $this->get_meta_date( $id, 'next_payment' );
 
