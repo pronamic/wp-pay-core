@@ -203,14 +203,6 @@ abstract class PaymentInfo {
 	private $credit_card;
 
 	/**
-	 * Start date if the payment is related to a specific period.
-	 *
-	 * @deprecated
-	 * @var DateTime|null
-	 */
-	public $start_date;
-
-	/**
 	 * End date if the payment is related to a specific period.
 	 *
 	 * @deprecated
@@ -281,27 +273,6 @@ abstract class PaymentInfo {
 	 */
 	public function set_date( $date ) {
 		$this->date = $date;
-	}
-
-	/**
-	 * Get start date.
-	 *
-	 * @deprecated
-	 * @return DateTime|null
-	 */
-	public function get_start_date() {
-		return $this->start_date;
-	}
-
-	/**
-	 * Set start date.
-	 *
-	 * @deprecated
-	 * @param DateTime|null $start_date Start date.
-	 * @return void
-	 */
-	public function set_start_date( $start_date ) {
-		$this->start_date = $start_date;
 	}
 
 	/**
