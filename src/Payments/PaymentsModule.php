@@ -10,7 +10,9 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
+use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\Plugin;
+use WP_CLI;
 
 /**
  * Payments Module
@@ -68,6 +70,47 @@ class PaymentsModule {
 
 		// Payment Status Checker.
 		$this->status_checker = new StatusChecker();
+
+		// CLI.
+		if ( Util::doing_cli() ) {
+			WP_CLI::add_command(
+				'pay payment status',
+				function ( $args, $assoc_args ) {
+					foreach ( $args as $id ) {
+						$payment = get_pronamic_payment( $id );
+
+						if ( null === $payment ) {
+							WP_CLI::error(
+								\sprintf(
+									'Cannot find payment based on ID %s.',
+									$id
+								)
+							);
+
+							exit( 1 );
+						}
+
+						WP_CLI::log(
+							\sprintf(
+								'Check the status (current: %s) of payment with ID %s…',
+								$payment->get_status(),
+								$id
+							)
+						);
+
+						Plugin::update_payment( $payment, false );
+
+						WP_CLI::log(
+							\sprintf(
+								'Checked the status (current: %s) of payment with ID %s.',
+								$payment->get_status(),
+								$id
+							)
+						);
+					}
+				}
+			);
+		}
 	}
 
 	/**
