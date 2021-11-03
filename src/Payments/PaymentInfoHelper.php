@@ -242,14 +242,6 @@ class PaymentInfoHelper {
 			$payment_info->set_anonymized( $json->anonymized );
 		}
 
-		if ( isset( $json->start_date ) ) {
-			$payment_info->set_start_date( new DateTime( $json->start_date ) );
-		}
-
-		if ( isset( $json->end_date ) ) {
-			$payment_info->set_end_date( new DateTime( $json->end_date ) );
-		}
-
 		if ( isset( $json->version ) ) {
 			$payment_info->set_version( $json->version );
 		}
