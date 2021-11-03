@@ -1048,37 +1048,6 @@ class SubscriptionsModule {
 	}
 
 	/**
-	 * Maybe expire subscription.
-	 *
-	 * @param Subscription $subscription Subscription.
-	 * @return void
-	 */
-	private function maybe_expire_subscription( Subscription $subscription ) {
-		// Do not expire completed subscription.
-		if ( SubscriptionStatus::COMPLETED === $subscription->status ) {
-			return;
-		}
-
-		// Check expiry date.
-		$now = new DateTime();
-
-		if ( ! isset( $subscription->expiry_date ) || $subscription->expiry_date > $now ) {
-			return;
-		}
-
-		// Expire subscription.
-		$subscription->status = SubscriptionStatus::EXPIRED;
-
-		$subscription->save();
-
-		// Delete next payment date, so it won't get used as start date of the
-		// new payment period when manually renewing and to keep the subscription
-		// out of updating subscription payments.
-		$subscription->set_meta( 'next_payment', null );
-		$subscription->set_meta( 'next_payment_delivery_date', null );
-	}
-
-	/**
 	 * Is subscriptions processing disabled.
 	 *
 	 * @return bool True if processing recurring payment is disabled, false otherwise.
@@ -1330,13 +1299,6 @@ class SubscriptionsModule {
 					$config_id
 				)
 			);
-		}
-
-		// Handle gateway without recurring payments support.
-		if ( ! $gateway->supports( 'recurring' ) ) {
-			$this->maybe_expire_subscription( $subscription );
-
-			return;
 		}
 
 		// Start payment.
