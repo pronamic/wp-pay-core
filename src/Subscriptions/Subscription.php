@@ -167,6 +167,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * - Repeat every *1* months
 	 * - Repeat every *2* year
 	 *
+	 * @deprecated
 	 * @return int|null
 	 */
 	public function get_interval() {
@@ -177,7 +178,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * Get the interval period, for example 'D', 'M', 'Y', etc.
 	 *
 	 * @link http://php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters
-	 *
+	 * @deprecated
 	 * @return string|null
 	 */
 	public function get_interval_period() {
@@ -187,6 +188,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	/**
 	 * Get the interval period date (1-31).
 	 *
+	 * @deprecated
 	 * @return string|null
 	 */
 	public function get_interval_date() {
@@ -196,6 +198,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	/**
 	 * Get the interval period day (Monday-Sunday).
 	 *
+	 * @deprecated
 	 * @return string|null
 	 */
 	public function get_interval_date_day() {
@@ -205,6 +208,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	/**
 	 * Get the interval period month (1-12).
 	 *
+	 * @deprecated
 	 * @return string|null
 	 */
 	public function get_interval_date_month() {
@@ -215,7 +219,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * Get date interval.
 	 *
 	 * @link http://php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters
-	 *
+	 * @deprecated
 	 * @return SubscriptionInterval|null
 	 */
 	public function get_date_interval() {
@@ -232,7 +236,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * Get the status of this subscription.
 	 *
 	 * @todo Check constant?
-	 *
 	 * @return string|null
 	 */
 	public function get_status() {
@@ -243,7 +246,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * Set the status of this subscription.
 	 *
 	 * @todo Check constant?
-	 *
 	 * @param string|null $status A status string.
 	 * @return void
 	 */
@@ -590,6 +592,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	/**
 	 * Set the next payment date of this subscription.
 	 *
+	 * @deprecated
 	 * @param DateTime|null $date Next payment date.
 	 * @return void
 	 */
@@ -600,6 +603,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	/**
 	 * Get the next payment date of this subscription.
 	 *
+	 * @deprecated
 	 * @return DateTime|null
 	 */
 	public function get_next_payment_date() {
@@ -609,8 +613,8 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	/**
 	 * Set the next payment delivery date of this subscription.
 	 *
+	 * @deprecated
 	 * @param DateTime|null $date Next payment delivery date.
-	 *
 	 * @return void
 	 */
 	public function set_next_payment_delivery_date( DateTime $date = null ) {
@@ -620,6 +624,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	/**
 	 * Get the next payment delivery date of this subscription.
 	 *
+	 * @deprecated
 	 * @return DateTime|null
 	 */
 	public function get_next_payment_delivery_date() {
