@@ -133,45 +133,6 @@ $phase = $subscription->get_display_phase();
 	</tr>
 	<tr>
 		<th scope="row">
-			<?php esc_html_e( 'Start Date', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<?php
-
-			$start_date = $subscription->get_start_date();
-
-			echo empty( $start_date ) ? '—' : esc_html( $start_date->format_i18n() );
-
-			?>
-		</td>
-	</tr>
-
-	<?php
-
-	$end_date = ( null === $phase ? null : $phase->get_end_date() );
-
-	// Show end date if frequency is limited.
-	if ( null !== $end_date ) :
-
-		?>
-
-		<tr>
-			<th scope="row">
-				<?php esc_html_e( 'End Date', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php
-
-				echo esc_html( ( new DateTime( $end_date->format( \DATE_ATOM ) ) )->format_i18n() );
-
-				?>
-			</td>
-		</tr>
-
-	<?php endif; ?>
-
-	<tr>
-		<th scope="row">
 			<?php esc_html_e( 'Paid up to', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
