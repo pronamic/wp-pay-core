@@ -127,11 +127,6 @@ class SubscriptionHelper {
 		if ( null === $payment_method ) {
 			$subscription->set_payment_method( $payment->get_payment_method() );
 		}
-
-		// Start date.
-		if ( null === $subscription->start_date ) {
-			$subscription->start_date = clone $payment->date;
-		}
 	}
 
 	/**
