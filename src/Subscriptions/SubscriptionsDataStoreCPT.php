@@ -597,9 +597,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			$subscription->set_payment_method( $this->get_meta_string( $id, 'payment_method' ) );
 		}
 
-		// Date interval.
-		$date_interval = $subscription->get_date_interval();
-
 		// Next Payment Date.
 		$subscription->next_payment_date = $this->get_meta_date( $id, 'next_payment' );
 
