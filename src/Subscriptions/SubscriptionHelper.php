@@ -153,28 +153,6 @@ class SubscriptionHelper {
 	}
 
 	/**
-	 * Calculate end date of subscription.
-	 *
-	 * @param Subscription $subscription Subscription.
-	 * @return DateTime|null
-	 */
-	public static function calculate_end_date( Subscription $subscription ) {
-		$end_date = null;
-
-		$phase = $subscription->get_current_phase();
-
-		if ( null !== $phase ) {
-			$phase_end = $phase->get_end_date();
-
-			if ( null !== $phase_end ) {
-				$end_date = new DateTime( $phase_end->format( \DATE_ATOM ) );
-			}
-		}
-
-		return $end_date;
-	}
-
-	/**
 	 * Calculate expiry date.
 	 *
 	 * @param Subscription $subscription Subscription.
