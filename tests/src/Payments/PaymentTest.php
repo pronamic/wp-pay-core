@@ -230,8 +230,6 @@ class PaymentTest extends WP_UnitTestCase {
 		$payment->set_lines( $lines );
 
 		// Dates.
-		$payment->set_start_date( new DateTime( '2005-05-05' ) );
-		$payment->set_end_date( new DateTime( '2100-05-05' ) );
 		$payment->set_expiry_date( new DateTime( '2005-05-05 00:30:00' ) );
 
 		// Consumer bank details.
