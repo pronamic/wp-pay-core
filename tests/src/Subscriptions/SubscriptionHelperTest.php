@@ -87,9 +87,6 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 	public function test_calculate_next_payment_date( $start_date, $interval_spec, $recurrences, $expected_date ) {
 		$subscription = new Subscription();
 
-		// Start Date.
-		$subscription->set_start_date( new \DateTime( $start_date ) );
-
 		// Recurrences.
 		$subscription->frequency = $recurrences;
 
