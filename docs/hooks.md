@@ -166,31 +166,8 @@ Source: [src/Subscriptions/SubscriptionsDataStoreCPT.php](../src/Subscriptions/S
 *Subscription status updated for plugin integration source from old to new status.*
 
 [`{$source}`](https://github.com/pronamic/wp-pronamic-pay/wiki#sources)
-
-**Action status**
-
-Status | Value
------- | -----
-(empty) | `unknown`
-Active | `active`
-Cancelled | `cancelled`
-Completed | `completed`
-Expired | `expired`
-Failure | `failure`
-On Hold | `on_hold`
-Open | `open`
-
-**Subscription status**
-
-Status | Value
------- | -----
-Active | `Active`
-Cancelled | `Cancelled`
-Completed | `Completed`
-Expired | `Expired`
-Failure | `Failure`
-On Hold | `On Hold`
-Open | `Open`
+[`{$old_status}`](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status)
+[`{$new_status}`](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status)
 
 **Arguments**
 
@@ -198,10 +175,10 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$subscription` | `\Pronamic\WordPress\Pay\Subscriptions\Subscription` | Subscription.
 `$can_redirect` | `bool` | Flag to indicate if redirect is allowed after the subscription update.
-`$previous_status` | `null\|string` | Previous subscription status.
-`$updated_status` | `string` | Updated subscription status.
+`$previous_status` | `null\|string` | Previous [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
+`$updated_status` | `string` | Updated [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
 
-Source: [src/Subscriptions/SubscriptionsDataStoreCPT.php](../src/Subscriptions/SubscriptionsDataStoreCPT.php), [line 696](../src/Subscriptions/SubscriptionsDataStoreCPT.php#L696-L731)
+Source: [src/Subscriptions/SubscriptionsDataStoreCPT.php](../src/Subscriptions/SubscriptionsDataStoreCPT.php), [line 696](../src/Subscriptions/SubscriptionsDataStoreCPT.php#L696-L708)
 
 ### `pronamic_subscription_status_update_{$source}`
 
@@ -209,68 +186,31 @@ Source: [src/Subscriptions/SubscriptionsDataStoreCPT.php](../src/Subscriptions/S
 
 [`{$source}`](https://github.com/pronamic/wp-pronamic-pay/wiki#sources)
 
-**Action status**
-
-Status | Value
------- | -----
-(empty) | `unknown`
-Active | `active`
-Cancelled | `cancelled`
-Completed | `completed`
-Expired | `expired`
-Failure | `failure`
-On Hold | `on_hold`
-Open | `open`
-
-**Subscription status**
-
-Status | Value
------- | -----
-Active | `Active`
-Cancelled | `Cancelled`
-Completed | `Completed`
-Expired | `Expired`
-Failure | `Failure`
-On Hold | `On Hold`
-Open | `Open`
-
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
 `$subscription` | `\Pronamic\WordPress\Pay\Subscriptions\Subscription` | Subscription.
 `$can_redirect` | `bool` | Flag to indicate if redirect is allowed after the subscription update.
-`$previous_status` | `null\|string` | Previous subscription status.
-`$updated_status` | `string` | Updated subscription status.
+`$previous_status` | `null\|string` | Previous [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
+`$updated_status` | `string` | Updated [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
 
-Source: [src/Subscriptions/SubscriptionsDataStoreCPT.php](../src/Subscriptions/SubscriptionsDataStoreCPT.php), [line 733](../src/Subscriptions/SubscriptionsDataStoreCPT.php#L733-L768)
+Source: [src/Subscriptions/SubscriptionsDataStoreCPT.php](../src/Subscriptions/SubscriptionsDataStoreCPT.php), [line 710](../src/Subscriptions/SubscriptionsDataStoreCPT.php#L710-L720)
 
 ### `pronamic_subscription_status_update`
 
 *Subscription status updated.*
 
-**Subscription status**
-
-Status | Value
------- | -----
-Active | `Active`
-Cancelled | `Cancelled`
-Completed | `Completed`
-Expired | `Expired`
-Failure | `Failure`
-On Hold | `On Hold`
-Open | `Open`
-
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
 `$subscription` | `\Pronamic\WordPress\Pay\Subscriptions\Subscription` | Subscription.
 `$can_redirect` | `bool` | Flag to indicate if redirect is allowed after the subscription update.
-`$previous_status` | `null\|string` | Previous subscription status.
-`$updated_status` | `string` | Updated subscription status.
+`$previous_status` | `null\|string` | Previous [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
+`$updated_status` | `string` | Updated [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
 
-Source: [src/Subscriptions/SubscriptionsDataStoreCPT.php](../src/Subscriptions/SubscriptionsDataStoreCPT.php), [line 770](../src/Subscriptions/SubscriptionsDataStoreCPT.php#L770-L790)
+Source: [src/Subscriptions/SubscriptionsDataStoreCPT.php](../src/Subscriptions/SubscriptionsDataStoreCPT.php), [line 722](../src/Subscriptions/SubscriptionsDataStoreCPT.php#L722-L730)
 
 ## Filters
 

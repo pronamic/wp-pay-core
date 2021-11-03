@@ -697,36 +697,13 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			 * Subscription status updated for plugin integration source from old to new status.
 			 *
 			 * [`{$source}`](https://github.com/pronamic/wp-pronamic-pay/wiki#sources)
-			 *
-			 * **Action status**
-			 *
-			 * Status | Value
-			 * ------ | -----
-			 * (empty) | `unknown`
-			 * Active | `active`
-			 * Cancelled | `cancelled`
-			 * Completed | `completed`
-			 * Expired | `expired`
-			 * Failure | `failure`
-			 * On Hold | `on_hold`
-			 * Open | `open`
-			 *
-			 * **Subscription status**
-			 *
-			 * Status | Value
-			 * ------ | -----
-			 * Active | `Active`
-			 * Cancelled | `Cancelled`
-			 * Completed | `Completed`
-			 * Expired | `Expired`
-			 * Failure | `Failure`
-			 * On Hold | `On Hold`
-			 * Open | `Open`
+			 * [`{$old_status}`](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status)
+			 * [`{$new_status}`](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status)
 			 *
 			 * @param Subscription $subscription    Subscription.
 			 * @param bool         $can_redirect    Flag to indicate if redirect is allowed after the subscription update.
-			 * @param null|string  $previous_status Previous subscription status.
-			 * @param string       $updated_status  Updated subscription status.
+			 * @param null|string  $previous_status Previous [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
+			 * @param string       $updated_status  Updated [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
 			 */
 			do_action( 'pronamic_subscription_status_update_' . $source . '_' . $old_status . '_to_' . $new_status, $subscription, $can_redirect, $previous_status, $updated_status );
 
@@ -735,57 +712,20 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			 *
 			 * [`{$source}`](https://github.com/pronamic/wp-pronamic-pay/wiki#sources)
 			 *
-			 * **Action status**
-			 *
-			 * Status | Value
-			 * ------ | -----
-			 * (empty) | `unknown`
-			 * Active | `active`
-			 * Cancelled | `cancelled`
-			 * Completed | `completed`
-			 * Expired | `expired`
-			 * Failure | `failure`
-			 * On Hold | `on_hold`
-			 * Open | `open`
-			 *
-			 * **Subscription status**
-			 *
-			 * Status | Value
-			 * ------ | -----
-			 * Active | `Active`
-			 * Cancelled | `Cancelled`
-			 * Completed | `Completed`
-			 * Expired | `Expired`
-			 * Failure | `Failure`
-			 * On Hold | `On Hold`
-			 * Open | `Open`
-			 *
 			 * @param Subscription $subscription    Subscription.
 			 * @param bool         $can_redirect    Flag to indicate if redirect is allowed after the subscription update.
-			 * @param null|string  $previous_status Previous subscription status.
-			 * @param string       $updated_status  Updated subscription status.
+			 * @param null|string  $previous_status Previous [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
+			 * @param string       $updated_status  Updated [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
 			 */
 			do_action( 'pronamic_subscription_status_update_' . $source, $subscription, $can_redirect, $previous_status, $updated_status );
 
 			/**
 			 * Subscription status updated.
 			 *
-			 * **Subscription status**
-			 *
-			 * Status | Value
-			 * ------ | -----
-			 * Active | `Active`
-			 * Cancelled | `Cancelled`
-			 * Completed | `Completed`
-			 * Expired | `Expired`
-			 * Failure | `Failure`
-			 * On Hold | `On Hold`
-			 * Open | `Open`
-			 *
 			 * @param Subscription $subscription    Subscription.
 			 * @param bool         $can_redirect    Flag to indicate if redirect is allowed after the subscription update.
-			 * @param null|string  $previous_status Previous subscription status.
-			 * @param string       $updated_status  Updated subscription status.
+			 * @param null|string  $previous_status Previous [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
+			 * @param string       $updated_status  Updated [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
 			 */
 			do_action( 'pronamic_subscription_status_update', $subscription, $can_redirect, $previous_status, $updated_status );
 		}
