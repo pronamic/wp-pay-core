@@ -76,8 +76,6 @@ class PaymentTest extends WP_UnitTestCase {
 			array( 'set_config_id', 'get_config_id', 2 ),
 			array( 'set_mode', 'get_mode', Gateway::MODE_LIVE ),
 			array( 'set_transaction_id', 'get_transaction_id', uniqid() ),
-			array( 'set_start_date', 'get_start_date', $now ),
-			array( 'set_end_date', 'get_end_date', $now ),
 			array( 'set_source', 'get_source', 'test' ),
 			array( 'set_source_id', 'get_source_id', 5 ),
 			array( 'set_status', 'get_status', 'completed' ),
