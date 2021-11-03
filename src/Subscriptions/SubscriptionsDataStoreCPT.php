@@ -696,22 +696,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			/**
 			 * Subscription status updated for plugin integration source from old to new status.
 			 *
-			 * **Source**
-			 *
-			 * Plugin | Source
-			 * ------ | ------
-			 * Charitable | `charitable`
-			 * Contact Form 7 | `contact-form-7`
-			 * Event Espresso | `eventespresso`
-			 * Event Espresso (legacy) | `event-espresso`
-			 * Formidable Forms | `formidable-forms`
-			 * Give | `give`
-			 * Gravity Forms | `gravityformsideal`
-			 * MemberPress | `memberpress`
-			 * Ninja Forms | `ninja-forms`
-			 * s2Member | `s2member`
-			 * WooCommerce | `woocommerce`
-			 * WP eCommerce | `wp-e-commerce`
+			 * [`{$source}`](https://github.com/pronamic/wp-pronamic-pay/wiki#sources)
 			 *
 			 * **Action status**
 			 *
@@ -748,22 +733,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			/**
 			 * Subscription status updated for plugin integration source.
 			 *
-			 * **Source**
-			 *
-			 * Plugin | Source
-			 * ------ | ------
-			 * Charitable | `charitable`
-			 * Contact Form 7 | `contact-form-7`
-			 * Event Espresso | `eventespresso`
-			 * Event Espresso (legacy) | `event-espresso`
-			 * Formidable Forms | `formidable-forms`
-			 * Give | `give`
-			 * Gravity Forms | `gravityformsideal`
-			 * MemberPress | `memberpress`
-			 * Ninja Forms | `ninja-forms`
-			 * s2Member | `s2member`
-			 * WooCommerce | `woocommerce`
-			 * WP eCommerce | `wp-e-commerce`
+			 * [`{$source}`](https://github.com/pronamic/wp-pronamic-pay/wiki#sources)
 			 *
 			 * **Action status**
 			 *
