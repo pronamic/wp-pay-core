@@ -32,30 +32,6 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 	}
 
 	/**
-	 * Test calculate end date.
-	 */
-	public function test_calculate_end_date() {
-		$subscription = new Subscription();
-
-		$phase = new SubscriptionPhase(
-			$subscription,
-			new \DateTimeImmutable( '2005-05-05 00:00:00' ),
-			new SubscriptionInterval( 'P1M' ),
-			new TaxedMoney( 5, 'EUR' )
-		);
-
-		$phase->set_total_periods( 12 );
-
-		$subscription->add_phase( $phase );
-
-		// Calculate.
-		$end_date = SubscriptionHelper::calculate_end_date( $subscription );
-
-		$this->assertInstanceOf( \DateTimeInterface::class, $end_date );
-		$this->assertEquals( '2006-05-05 00:00:00', $end_date->format( 'Y-m-d H:i:s' ) );
-	}
-
-	/**
 	 * Test calculate expirty date no start date.
 	 */
 	public function test_calculate_expiry_date_no_start_date() {
