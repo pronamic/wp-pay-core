@@ -71,8 +71,6 @@ class SubscriptionsModule {
 		// Exclude subscription notes.
 		\add_filter( 'comments_clauses', array( $this, 'exclude_subscription_comment_notes' ), 10, 2 );
 
-		\add_action( 'pronamic_pay_new_payment', array( $this, 'maybe_create_subscription' ) );
-
 		\add_action( 'pronamic_pay_pre_create_subscription', array( SubscriptionHelper::class, 'complement_subscription' ), 10, 1 );
 		\add_action( 'pronamic_pay_pre_create_subscription', array( SubscriptionHelper::class, 'complement_subscription_dates' ), 10, 1 );
 		\add_action( 'pronamic_pay_pre_create_payment', array( $this, 'complement_subscription_by_payment' ), 10, 1 );
@@ -192,35 +190,6 @@ class SubscriptionsModule {
 		}
 
 		return $clauses;
-	}
-
-	/**
-	 * Maybe create subscription for the specified payment.
-	 *
-	 * @param Payment $payment The new payment.
-	 * @return void
-	 * @throws \UnexpectedValueException Throw unexpected value exception if the subscription does not have a valid date interval.
-	 */
-	public function maybe_create_subscription( $payment ) {
-		// Check if there is a subscription object attached to the payment.
-		$subscription = $payment->get_subscription();
-
-		if ( empty( $subscription ) ) {
-			return;
-		}
-
-		// Save subscription.
-		$subscription->save();
-
-		if ( $subscription->is_first_payment( $payment ) ) {
-			$start_date = $subscription->get_start_date();
-			$end_date   = $subscription->get_next_payment_date();
-
-			$payment->start_date = ( null === $start_date ) ? null : clone $start_date;
-			$payment->end_date   = ( null === $end_date ) ? null : clone $end_date;
-
-			$payment->save();
-		}
 	}
 
 	/**
