@@ -814,8 +814,6 @@ class SubscriptionsModule {
 		$payment->set_shipping_address( $subscription->get_shipping_address() );
 
 		$payment->add_period( $period );
-		$payment->set_start_date( $period->get_start_date() );
-		$payment->set_end_date( $period->get_end_date() );
 
 		$payment->set_lines( $subscription->get_lines() );
 		$payment->set_total_amount( $period->get_phase()->get_amount() );
