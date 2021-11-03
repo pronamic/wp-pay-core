@@ -32,7 +32,6 @@ use WP_Post;
  * @property string|null $customer_name
  * @property int|string|null $user_id
  * @property mixed $user_agent
- * @property mixed $user_ip
  */
 abstract class PaymentInfo {
 	use \Pronamic\WordPress\Pay\Core\TimestampsTrait;
