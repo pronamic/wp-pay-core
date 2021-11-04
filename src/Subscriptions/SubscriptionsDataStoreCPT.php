@@ -410,7 +410,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 				$start_date = clone $subscription->get_date();
 			}
 
-			$interval_spec = 'P' . $subscription->get_interval() . $subscription->get_interval_period();
+			$interval_spec = 'P' . $this->get_meta_int( $id, 'interval' ) . $subscription->get_interval_period();
 
 			$phase = $subscription->new_phase(
 				$start_date,
@@ -583,7 +583,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			return;
 		}
 
-		$subscription->interval        = $this->get_meta_int( $id, 'interval' );
 		$subscription->interval_period = $this->get_meta_string( $id, 'interval_period' );
 		$subscription->transaction_id  = $this->get_meta_string( $id, 'transaction_id' );
 		$subscription->status          = $this->get_meta_string( $id, 'status' );

@@ -44,15 +44,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	public $title;
 
 	/**
-	 * The interval of this subscription, for example: 1, 2, 3, etc.
-	 *
-	 * @todo Improve documentation?
-	 * @deprecated
-	 * @var int|null
-	 */
-	public $interval;
-
-	/**
 	 * The interval period of this subscription.
 	 *
 	 * @todo Improve documentation?
@@ -123,19 +114,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 */
 	public function get_key() {
 		return $this->key;
-	}
-
-	/**
-	 * Get the interval, for example: 1, 2, 3, 4, etc., this specifies for example:
-	 * - Repeat every *2* days
-	 * - Repeat every *1* months
-	 * - Repeat every *2* year
-	 *
-	 * @deprecated
-	 * @return int|null
-	 */
-	public function get_interval() {
-		return $this->interval;
 	}
 
 	/**
