@@ -418,7 +418,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 				$amount
 			);
 
-			$phase->set_total_periods( $subscription->get_frequency() );
+			$phase->set_total_periods( $this->get_meta_int( $id, 'frequency' ) );
 
 			// Set periods created.
 			$end_date = $this->get_meta_date( $id, 'next_payment_date' );
@@ -583,7 +583,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			return;
 		}
 
-		$subscription->frequency       = $this->get_meta_int( $id, 'frequency' );
 		$subscription->interval        = $this->get_meta_int( $id, 'interval' );
 		$subscription->interval_period = $this->get_meta_string( $id, 'interval_period' );
 		$subscription->transaction_id  = $this->get_meta_string( $id, 'transaction_id' );

@@ -44,18 +44,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	public $title;
 
 	/**
-	 * The frequency of this subscription, also known as `times` or `product length`.
-	 * If the frequency is `2` then there will be in total `3` payments for the
-	 * subscription. One (`1`) at the start of the subscription and `2` follow-up
-	 * payments.
-	 *
-	 * @link https://docs.mollie.com/reference/v2/subscriptions-api/create-subscription
-	 * @deprecated
-	 * @var int|null
-	 */
-	public $frequency;
-
-	/**
 	 * The interval of this subscription, for example: 1, 2, 3, etc.
 	 *
 	 * @todo Improve documentation?
@@ -135,15 +123,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 */
 	public function get_key() {
 		return $this->key;
-	}
-
-	/**
-	 * Get the frequency of this subscription.
-	 *
-	 * @return int|null
-	 */
-	public function get_frequency() {
-		return $this->frequency;
 	}
 
 	/**
