@@ -430,9 +430,9 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Add subscription phase interval to date.
 	 *
-	 * @param \DateTimeImmutable $date  Date to add interval period to.
-	 * @param int                $times Number of times to add interval.
-	 * @return \DateTimeImmutable
+	 * @param DateTimeImmutable $date  Date to add interval period to.
+	 * @param int               $times Number of times to add interval.
+	 * @return DateTimeImmutable
 	 */
 	private function add_interval( $date, $times = 1 ) {
 		// If times is zero there is nothing to add.
@@ -579,7 +579,7 @@ class SubscriptionPhase implements \JsonSerializable {
 
 		if ( property_exists( $json, 'canceled_at' ) ) {
 			if ( null !== $json->canceled_at ) {
-				$phase->set_canceled_at( new \DateTimeImmutable( $json->canceled_at ) );
+				$phase->set_canceled_at( new DateTimeImmutable( $json->canceled_at ) );
 			}
 		}
 
@@ -589,12 +589,12 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Align the phase to align date.
 	 *
-	 * @param self              $phase          The phase to align.
-	 * @param DateTimeImmutable $align_date     The alignment date.
+	 * @param self               $phase          The phase to align.
+	 * @param \DateTimeInterface $align_date     The alignment date.
 	 * @return SubscriptionPhase
 	 * @throws \Exception Throws exception on invalid date interval.
 	 */
-	public static function align( self $phase, DateTimeImmutable $align_date ) {
+	public static function align( self $phase, \DateTimeInterface $align_date ) {
 		$start_date = $phase->get_start_date();
 
 		$next_date = $start_date->add( $phase->get_interval() );

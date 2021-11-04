@@ -54,10 +54,10 @@ class SubscriptionPeriod {
 	/**
 	 * Construct and initialize subscription period object.
 	 *
-	 * @param SubscriptionPhase $phase        Subscription phase.
-	 * @param DateTime          $start_date   Start date.
-	 * @param DateTime          $end_date     End date.
-	 * @param Money             $amount       Taxed amount.
+	 * @param SubscriptionPhase  $phase        Subscription phase.
+	 * @param \DateTimeInterface $start_date   Start date.
+	 * @param \DateTimeInterface $end_date     End date.
+	 * @param Money              $amount       Taxed amount.
 	 */
 	public function __construct( SubscriptionPhase $phase, \DateTimeInterface $start_date, \DateTimeInterface $end_date, Money $amount ) {
 		$this->phase      = $phase;

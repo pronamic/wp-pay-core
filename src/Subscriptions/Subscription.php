@@ -12,6 +12,7 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DateInterval;
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\DateTime\DateTimeInterface;
 use Pronamic\WordPress\DateTime\DateTimeImmutable;
 use Pronamic\WordPress\Pay\Payments\PaymentInfo;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
@@ -576,7 +577,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	/**
 	 * Get the next payment date of this subscription.
 	 *
-	 * @return DateTime|null
+	 * @return DateTimeInterface|null
 	 */
 	public function get_next_payment_date() {
 		// Get current phase.
@@ -592,7 +593,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	/**
 	 * Get the next payment delivery date of this subscription.
 	 *
-	 * @return DateTime|null
+	 * @return DateTimeInterface|null
 	 */
 	public function get_next_payment_delivery_date() {
 		$next_payment_date = $this->get_next_payment_date();

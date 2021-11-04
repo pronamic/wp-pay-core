@@ -636,7 +636,7 @@ class SubscriptionsModule {
 	public function new_subscription_payment( Subscription $subscription ) {
 		// Prevent creating a new subscription payment if next payment date is (later than) the subscription end date.
 		if ( ! $this->meets_follow_up_payment_requirements( $subscription ) ) {
-			return;
+			return null;
 		}
 
 		// Create payment.
