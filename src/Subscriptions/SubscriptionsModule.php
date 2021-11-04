@@ -901,7 +901,7 @@ class SubscriptionsModule {
 
 		// Action to create follow-up payments for subscriptions.
 		if ( false === \as_next_scheduled_action( 'pronamic_pay_schedule_follow_up_payments', array(), 'pronamic-pay' ) ) {
-			\as_schedule_cron_action( \time(), '0 3 * * *', 'pronamic_pay_schedule_follow_up_payments', array(), 'pronamic-pay' );
+			\as_schedule_cron_action( \time(), '0 * * * *', 'pronamic_pay_schedule_follow_up_payments', array(), 'pronamic-pay' );
 		}
 	}
 
