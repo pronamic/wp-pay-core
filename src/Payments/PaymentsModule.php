@@ -72,7 +72,7 @@ class PaymentsModule {
 		$this->status_checker = new StatusChecker();
 
 		// CLI.
-		if ( Util::doing_cli() ) {
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			WP_CLI::add_command(
 				'pay payment status',
 				function ( $args, $assoc_args ) {

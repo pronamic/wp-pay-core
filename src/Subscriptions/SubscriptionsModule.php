@@ -94,7 +94,7 @@ class SubscriptionsModule {
 		// @link https://github.com/woocommerce/woocommerce/blob/3.3.1/includes/class-woocommerce.php#L365-L369.
 		// @link https://github.com/woocommerce/woocommerce/blob/3.3.1/includes/class-wc-cli.php.
 		// @link https://make.wordpress.org/cli/handbook/commands-cookbook/.
-		if ( Util::doing_cli() ) {
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			WP_CLI::add_command(
 				'pay subscription list',
 				function( $args, $assoc_args ) {

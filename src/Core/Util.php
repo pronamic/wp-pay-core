@@ -143,15 +143,6 @@ class Util {
 	}
 
 	/**
-	 * Doing CLI.
-	 *
-	 * @return bool
-	 */
-	public static function doing_cli() {
-		return defined( 'WP_CLI' ) && WP_CLI;
-	}
-
-	/**
 	 * No cache.
 	 *
 	 * @return void
