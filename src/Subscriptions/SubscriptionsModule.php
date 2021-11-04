@@ -895,44 +895,6 @@ class SubscriptionsModule {
 	}
 
 	/**
-	 * Get expiring subscriptions.
-	 *
-	 * @link https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/license-renewals.php#L715-L746
-	 * @link https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/license-renewals.php#L652-L712
-	 *
-	 * @param DateTime $start_date The start date of the period to check for expiring subscriptions.
-	 * @param DateTime $end_date   The end date of the period to check for expiring subscriptions.
-	 * @return array
-	 */
-	public function get_expiring_subscription_posts( DateTime $start_date, DateTime $end_date ) {
-		$args = array(
-			'post_type'   => 'pronamic_pay_subscr',
-			'nopaging'    => true,
-			'orderby'     => 'post_date',
-			'order'       => 'ASC',
-			'post_status' => array(
-				'subscr_pending',
-				'subscr_active',
-			),
-			'meta_query'  => array(
-				array(
-					'key'     => '_pronamic_subscription_expiry_date',
-					'value'   => array(
-						$start_date->format( DateTime::MYSQL ),
-						$end_date->format( DateTime::MYSQL ),
-					),
-					'compare' => 'BETWEEN',
-					'type'    => 'DATETIME',
-				),
-			),
-		);
-
-		$query = new WP_Query( $args );
-
-		return $query->posts;
-	}
-
-	/**
 	 * Is subscriptions processing disabled.
 	 *
 	 * @return bool True if processing recurring payment is disabled, false otherwise.
