@@ -885,8 +885,8 @@ class SubscriptionsModule {
 	 */
 	public function maybe_schedule_subscription_events() {
 		// Unschedule legacy WordPress Cron hook.
-		\wp_unschedule_hook( 'pronamic_pay_update_subscription_payments' );
-		\wp_unschedule_hook( 'pronamic_pay_complete_subscriptions' );
+		\wp_clear_scheduled_hook( 'pronamic_pay_update_subscription_payments' );
+		\wp_clear_scheduled_hook( 'pronamic_pay_complete_subscriptions' );
 
 		// Action to create follow-up payments for subscriptions.
 		if ( false === \as_next_scheduled_action( 'pronamic_pay_schedule_follow_up_payments', array(), 'pronamic-pay' ) ) {
