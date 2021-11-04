@@ -118,31 +118,6 @@ class Util {
 	}
 
 	/**
-	 * Compat function to mimic wp_doing_cron().
-	 *
-	 * @link  https://github.com/WordPress/WordPress/blob/4.9/wp-includes/load.php#L1066-L1082
-	 * @ignore
-	 * @since 2.1.2
-	 *
-	 * @return bool True if it's a WordPress cron request, false otherwise.
-	 */
-	public static function doing_cron() {
-		if ( function_exists( '\wp_doing_cron' ) ) {
-			return \wp_doing_cron();
-		}
-
-		$wp_doing_cron = defined( 'DOING_CRON' ) && DOING_CRON;
-
-		/**
-		 * Filters whether the current request is a WordPress cron request.
-		 *
-		 * @param bool $wp_doing_cron Whether the current request is a WordPress cron request.
-		 * @since 4.8.0
-		 */
-		return apply_filters( 'wp_doing_cron', $wp_doing_cron );
-	}
-
-	/**
 	 * No cache.
 	 *
 	 * @return void

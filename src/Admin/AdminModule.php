@@ -188,9 +188,9 @@ class AdminModule {
 		if (
 			empty( $redirect )
 				||
-			wp_doing_ajax()
+			\wp_doing_ajax()
 				||
-			Util::doing_cron()
+			\wp_doing_cron()
 				||
 			is_network_admin()
 				||
