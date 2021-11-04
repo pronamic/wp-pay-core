@@ -201,14 +201,6 @@ abstract class PaymentInfo {
 	private $credit_card;
 
 	/**
-	 * End date if the payment is related to a specific period.
-	 *
-	 * @deprecated
-	 * @var DateTime|null
-	 */
-	public $end_date;
-
-	/**
 	 * Meta.
 	 *
 	 * @var array
@@ -271,16 +263,6 @@ abstract class PaymentInfo {
 	 */
 	public function set_date( $date ) {
 		$this->date = $date;
-	}
-
-	/**
-	 * Get end date.
-	 *
-	 * @deprecated
-	 * @return DateTime|null
-	 */
-	public function get_end_date() {
-		return $this->end_date;
 	}
 
 	/**
