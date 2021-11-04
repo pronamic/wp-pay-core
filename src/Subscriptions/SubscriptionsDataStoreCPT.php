@@ -264,6 +264,8 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		 */
 		\do_action( 'pronamic_pay_pre_create_subscription', $subscription );
 
+		$customer = $subscription->get_customer();
+
 		$result = wp_insert_post(
 			array(
 				'post_type'             => 'pronamic_pay_subscr',
@@ -272,7 +274,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 					'Subscription – %s',
 					date_i18n( _x( 'M d, Y @ h:i A', 'Subscription title date format parsed by `date_i18n`.', 'pronamic_ideal' ) )
 				),
-				'post_author'           => $subscription->user_id,
+				'post_author'           => null === $customer ? null : $customer->get_user_id(),
 				'pronamic_subscription' => $subscription,
 			),
 			true
