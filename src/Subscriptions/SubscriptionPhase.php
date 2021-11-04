@@ -10,8 +10,8 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
-use DateTimeImmutable;
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\DateTime\DateTimeImmutable;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 
@@ -126,14 +126,14 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * Construct subscription phase.
 	 *
 	 * @param Subscription         $subscription Subscription.
-	 * @param DateTimeImmutable    $start_date   Start date.
+	 * @param \DateTimeInterface   $start_date   Start date.
 	 * @param SubscriptionInterval $interval     Interval.
 	 * @param Money                $amount       Amount.
 	 * @return void
 	 */
-	public function __construct( Subscription $subscription, DateTimeImmutable $start_date, SubscriptionInterval $interval, Money $amount ) {
+	public function __construct( Subscription $subscription, \DateTimeInterface $start_date, SubscriptionInterval $interval, Money $amount ) {
 		$this->subscription = $subscription;
-		$this->start_date   = $start_date;
+		$this->start_date   = DateTimeImmutable::create_from_interface( $start_date );
 		$this->interval     = $interval;
 		$this->amount       = $amount;
 
@@ -462,12 +462,7 @@ class SubscriptionPhase implements \JsonSerializable {
 
 		$end = $this->add_interval( $start );
 
-		$period = new SubscriptionPeriod(
-			$this,
-			new DateTime( $start->format( \DATE_ATOM ) ),
-			new DateTime( $end->format( \DATE_ATOM ) ),
-			$this->get_amount()
-		);
+		$period = new SubscriptionPeriod( $this, $start, $end, $this->get_amount() );
 
 		return $period;
 	}
@@ -557,7 +552,7 @@ class SubscriptionPhase implements \JsonSerializable {
 
 		$phase = new self(
 			$json->subscription,
-			new \DateTimeImmutable( $json->start_date ),
+			new DateTimeImmutable( $json->start_date ),
 			new SubscriptionInterval( $json->interval ),
 			MoneyJsonTransformer::from_json( $json->amount )
 		);

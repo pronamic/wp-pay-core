@@ -52,17 +52,15 @@ trait SubscriptionPhasesTrait {
 	/**
 	 * Create new phase for this subscription.
 	 *
-	 * @param DateTime $start_date    Start date.
-	 * @param string   $interval_spec Interval specification.
-	 * @param Money    $amount        Amount.
+	 * @param \DateTimeInterface $start_date    Start date.
+	 * @param string             $interval_spec Interval specification.
+	 * @param Money              $amount        Amount.
 	 * @return SubscriptionPhase
 	 */
 	public function new_phase( $start_date, $interval_spec, $amount ) {
-		$start = new \DateTimeImmutable( $start_date->format( \DATE_ATOM ) );
-
 		$interval = new SubscriptionInterval( $interval_spec );
 
-		$phase = new SubscriptionPhase( $this, $start, $interval, $amount );
+		$phase = new SubscriptionPhase( $this, $start_date, $interval, $amount );
 
 		$this->add_phase( $phase );
 

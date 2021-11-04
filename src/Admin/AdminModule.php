@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
+use Pronamic\WordPress\DateTime\DateTimeImmutable;
 use Pronamic\WordPress\Number\Number;
 use Pronamic\WordPress\Money\Currency;
 use Pronamic\WordPress\Money\Money;
@@ -795,7 +796,7 @@ class AdminModule {
 			// Phase.
 			$phase = new SubscriptionPhase(
 				$subscription,
-				new \DateTimeImmutable(),
+				new DateTimeImmutable(),
 				new SubscriptionInterval( 'P' . $interval . Util::to_period( $interval_period ) ),
 				$price
 			);

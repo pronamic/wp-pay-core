@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\DateTime\DateTimeImmutable;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 
@@ -58,10 +59,10 @@ class SubscriptionPeriod {
 	 * @param DateTime          $end_date     End date.
 	 * @param Money             $amount       Taxed amount.
 	 */
-	public function __construct( SubscriptionPhase $phase, DateTime $start_date, DateTime $end_date, Money $amount ) {
+	public function __construct( SubscriptionPhase $phase, \DateTimeInterface $start_date, \DateTimeInterface $end_date, Money $amount ) {
 		$this->phase      = $phase;
-		$this->start_date = $start_date;
-		$this->end_date   = $end_date;
+		$this->start_date = DateTime::create_from_interface( $start_date );
+		$this->end_date   = DateTime::create_from_interface( $end_date );
 		$this->amount     = $amount;
 	}
 
