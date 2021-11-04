@@ -28,7 +28,6 @@ use WP_Post;
  * @version 2.5.0
  * @since   1.0.0
  *
- * @property string|null $email
  * @property int|string|null $user_id
  */
 abstract class PaymentInfo {
@@ -141,13 +140,6 @@ abstract class PaymentInfo {
 	 * @var BankAccountDetails|null
 	 */
 	private $consumer_bank_details;
-
-	/**
-	 * The email of the user who started this payment.
-	 *
-	 * @var string|null
-	 */
-	public $email;
 
 	/**
 	 * Payment method.
@@ -542,15 +534,6 @@ abstract class PaymentInfo {
 	 */
 	public function set_bank_transfer_recipient_details( $bank_transfer ) {
 		$this->bank_transfer_recipient_details = $bank_transfer;
-	}
-
-	/**
-	 * Get payment email.
-	 *
-	 * @return string|null
-	 */
-	public function get_email() {
-		return $this->email;
 	}
 
 	/**

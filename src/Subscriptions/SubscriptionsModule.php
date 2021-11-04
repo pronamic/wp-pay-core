@@ -646,7 +646,6 @@ class SubscriptionsModule {
 		$payment->order_id  = $subscription->get_order_id();
 		$payment->source    = $subscription->get_source();
 		$payment->source_id = $subscription->get_source_id();
-		$payment->email     = $subscription->get_email();
 
 		$payment->add_subscription( $subscription );
 
@@ -748,8 +747,6 @@ class SubscriptionsModule {
 		}
 
 		$payment = new Payment();
-
-		$payment->email = $subscription->get_email();
 
 		$payment->add_subscription( $subscription );
 

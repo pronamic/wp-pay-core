@@ -901,11 +901,6 @@ class Plugin {
 
 		CustomerHelper::complement_customer( $customer );
 
-		// Email.
-		if ( null === $payment->get_email() ) {
-			$payment->email = $customer->get_email();
-		}
-
 		// Billing address.
 		$billing_address = $payment->get_billing_address();
 
