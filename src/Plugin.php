@@ -352,9 +352,9 @@ class Plugin {
 		}
 
 		// Gateway.
-		$gateway = self::get_gateway( $payment->config_id );
+		$gateway = $payment->get_gateway();
 
-		if ( empty( $gateway ) ) {
+		if ( null === $gateway ) {
 			return;
 		}
 
@@ -502,9 +502,9 @@ class Plugin {
 			exit;
 		}
 
-		$gateway = self::get_gateway( $payment->config_id );
+		$gateway = $payment->get_gateway();
 
-		if ( $gateway ) {
+		if ( null !== $gateway ) {
 			// Give gateway a chance to handle redirect.
 			$gateway->payment_redirect( $payment );
 
@@ -1006,14 +1006,16 @@ class Plugin {
 	 * Start payment.
 	 *
 	 * @param Payment $payment The payment to start at the specified gateway.
-	 * @param Gateway $gateway The gateway to start the payment at.
-	 *
 	 * @return Payment
-	 *
 	 * @throws \Exception Throws exception if gateway payment start fails.
 	 */
-	public static function start_payment( Payment $payment, $gateway = null ) {
-		$config_id = $payment->get_config_id();
+	public static function start_payment( Payment $payment ) {
+		// Set default or filtered gateway.
+		$config_id = null;
+
+		if ( null === $payment->get_gateway() ) {
+			$config_id = \get_option( 'pronamic_pay_config_id' );
+		}
 
 		/**
 		 * Filters the payment gateway configuration ID.
@@ -1023,13 +1025,17 @@ class Plugin {
 		 */
 		$config_id = \apply_filters( 'pronamic_payment_gateway_configuration_id', $config_id, $payment );
 
-		$payment->set_config_id( $config_id );
+		if ( null !== $config_id ) {
+			$gateway = self::get_gateway( $config_id );
+
+			$payment->set_gateway( $gateway );
+		}
 
 		// Save payment.
 		$payment->save();
 
 		// Gateway.
-		$gateway = self::get_gateway( $payment->get_config_id() );
+		$gateway = $payment->get_gateway();
 
 		if ( null === $gateway ) {
 			$payment->set_status( PaymentStatus::FAILURE );

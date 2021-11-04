@@ -564,7 +564,7 @@ class SubscriptionsModule {
 				$payment->add_subscription( $subscription );
 
 				// Make sure to only start payments for supported gateways.
-				$gateway = Plugin::get_gateway( $payment->get_config_id() );
+				$gateway = $payment->get_gateway();
 
 				if ( null === $gateway ) {
 					require __DIR__ . '/../../views/subscription-mandate-failed.php';
@@ -573,7 +573,7 @@ class SubscriptionsModule {
 				}
 
 				// Start payment.
-				$payment = Plugin::start_payment( $payment, $gateway );
+				$payment = Plugin::start_payment( $payment );
 			} catch ( \Exception $e ) {
 				require __DIR__ . '/../../views/subscription-mandate-failed.php';
 
@@ -756,7 +756,7 @@ class SubscriptionsModule {
 		$payment->set_payment_method( $subscription->get_payment_method() );
 
 		$payment->set_description( $subscription->get_description() );
-		$payment->set_config_id( $config_id );
+		$payment->set_gateway( $subscription->get_gateway() );
 		$payment->set_origin_id( $subscription->get_origin_id() );
 		$payment->set_mode( $config->mode );
 
