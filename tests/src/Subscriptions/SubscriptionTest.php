@@ -87,9 +87,6 @@ class SubscriptionTest extends WP_UnitTestCase {
 			array( 'key', 'get_key', uniqid() ),
 			array( 'source', 'get_source', 'woocommerce' ),
 			array( 'source_id', 'get_source_id', '1234' ),
-			array( 'frequency', 'get_frequency', 'daily' ),
-			array( 'interval', 'get_interval', '1' ),
-			array( 'interval_period', 'get_interval_period', 'Y' ),
 		);
 	}
 
