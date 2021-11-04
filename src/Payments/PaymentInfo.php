@@ -27,8 +27,6 @@ use WP_Post;
  * @author  Remco Tolsma
  * @version 2.5.0
  * @since   1.0.0
- *
- * @property int|string|null $user_id
  */
 abstract class PaymentInfo {
 	use \Pronamic\WordPress\Pay\Core\TimestampsTrait;
