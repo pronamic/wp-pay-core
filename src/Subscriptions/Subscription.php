@@ -44,14 +44,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	public $title;
 
 	/**
-	 * The interval date day of this subscription.
-	 *
-	 * @deprecated
-	 * @var string|null
-	 */
-	public $interval_date_day;
-
-	/**
 	 * The interval date month of this subscription.
 	 *
 	 * @deprecated
@@ -97,16 +89,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 */
 	public function get_key() {
 		return $this->key;
-	}
-
-	/**
-	 * Get the interval period day (Monday-Sunday).
-	 *
-	 * @deprecated
-	 * @return string|null
-	 */
-	public function get_interval_date_day() {
-		return $this->interval_date_day;
 	}
 
 	/**
