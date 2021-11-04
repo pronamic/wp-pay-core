@@ -44,14 +44,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	public $title;
 
 	/**
-	 * The interval date month of this subscription.
-	 *
-	 * @deprecated
-	 * @var string|null
-	 */
-	public $interval_date_month;
-
-	/**
 	 * The status of this subscription, for example 'Success'.
 	 *
 	 * @todo How to reference to a class constant?
@@ -89,16 +81,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 */
 	public function get_key() {
 		return $this->key;
-	}
-
-	/**
-	 * Get the interval period month (1-12).
-	 *
-	 * @deprecated
-	 * @return string|null
-	 */
-	public function get_interval_date_month() {
-		return $this->interval_date_month;
 	}
 
 	/**
