@@ -90,13 +90,7 @@ class Upgrade620 extends Upgrade {
 				continue;
 			}
 
-			$subscription->next_payment_date = $expiry_date;
-
 			$subscription->save();
-
-			if ( null === $subscription->next_payment_date ) {
-				continue;
-			}
 
 			// Increase next payment date with an interval period if there already is a pending payment.
 			$args = array(
@@ -110,27 +104,7 @@ class Upgrade620 extends Upgrade {
 			if ( ! empty( $last_payment ) ) {
 				$last_payment = \array_shift( $last_payment );
 
-				$date_interval = $subscription->get_date_interval();
-
-				if ( null !== $last_payment && null !== $date_interval && PaymentStatus::OPEN === $last_payment->get_status() ) {
-					$subscription->next_payment_date->add( $date_interval );
-
-					$subscription->save();
-				}
 			}
-
-			if ( null === $subscription->next_payment_date ) {
-				continue;
-			}
-
-			// Add note.
-			$subscription->add_note(
-				\sprintf(
-					/* translators: %s: formatted next payment date */
-					__( 'Missing subscription next payment date restored to %s.', 'pronamic_ideal' ),
-					$subscription->next_payment_date->format_i18n()
-				)
-			);
 		}
 
 		\wp_reset_postdata();

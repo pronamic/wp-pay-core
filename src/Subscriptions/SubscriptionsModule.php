@@ -72,7 +72,6 @@ class SubscriptionsModule {
 		\add_filter( 'comments_clauses', array( $this, 'exclude_subscription_comment_notes' ), 10, 2 );
 
 		\add_action( 'pronamic_pay_pre_create_subscription', array( SubscriptionHelper::class, 'complement_subscription' ), 10, 1 );
-		\add_action( 'pronamic_pay_pre_create_subscription', array( SubscriptionHelper::class, 'complement_subscription_dates' ), 10, 1 );
 		\add_action( 'pronamic_pay_pre_create_payment', array( $this, 'complement_subscription_by_payment' ), 10, 1 );
 
 		\add_action( 'pronamic_pay_schedule_follow_up_payments', array( $this, 'schedule_all' ) );
@@ -636,15 +635,8 @@ class SubscriptionsModule {
 	 */
 	public function new_subscription_payment( Subscription $subscription ) {
 		// Prevent creating a new subscription payment if next payment date is (later than) the subscription end date.
-		if ( isset( $subscription->end_date, $subscription->next_payment_date ) && $subscription->next_payment_date >= $subscription->end_date ) {
-			$subscription->next_payment_date          = null;
-			$subscription->next_payment_delivery_date = null;
-
-			// Delete next payment post meta.
-			$subscription->set_meta( 'next_payment', null );
-			$subscription->set_meta( 'next_payment_delivery_date', null );
-
-			return null;
+		if ( ! $this->meets_follow_up_payment_requirements( $subscription ) ) {
+			return;
 		}
 
 		// Create payment.
@@ -719,9 +711,6 @@ class SubscriptionsModule {
 		if ( false === $period ) {
 			throw new \UnexpectedValueException( 'Can not create payment without period for subscription.' );
 		}
-
-		$subscription->next_payment_date          = SubscriptionHelper::calculate_next_payment_date( $subscription );
-		$subscription->next_payment_delivery_date = SubscriptionHelper::calculate_next_payment_delivery_date( $subscription );
 
 		// Update subscription.
 		$subscription->save();
@@ -1176,17 +1165,21 @@ class SubscriptionsModule {
 			return false;
 		}
 
-		if ( null === $subscription->next_payment_date ) {
+		$next_payment_date = $subscription->get_next_payment_date();
+
+		if ( null === $next_payment_date ) {
 			return false;
 		}
 
-		if ( null === $subscription->next_payment_delivery_date ) {
+		$next_payment_delivery_date = $subscription->get_next_payment_delivery_date();
+
+		if ( null === $next_payment_delivery_date ) {
 			return false;
 		}
 
 		$date = new \DateTimeImmutable();
 
-		if ( $subscription->next_payment_date > $date && $subscription->next_payment_delivery_date > $date ) {
+		if ( $next_payment_date > $date && $next_payment_delivery_date > $date ) {
 			return false;
 		}
 

@@ -421,7 +421,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			$phase->set_total_periods( $subscription->get_frequency() );
 
 			// Set periods created.
-			$end_date = $subscription->get_next_payment_date();
+			$end_date = $this->get_meta_date( $id, 'next_payment_date' );
 
 			if ( null !== $end_date ) {
 				$period = new DatePeriod( $start_date, new \DateInterval( $interval_spec ), $end_date );
@@ -596,16 +596,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			$subscription->set_payment_method( $this->get_meta_string( $id, 'payment_method' ) );
 		}
 
-		// Next Payment Date.
-		$subscription->next_payment_date = $this->get_meta_date( $id, 'next_payment' );
-
-		// Next Payment Delivery Date.
-		$subscription->next_payment_delivery_date = $this->get_meta_date( $id, 'next_payment_delivery_date' );
-
-		if ( empty( $subscription->next_payment_delivery_date ) && null !== $subscription->next_payment_date ) {
-			$subscription->next_payment_delivery_date = clone $subscription->next_payment_date;
-		}
-
 		// Legacy.
 		parent::read_post_meta( $subscription );
 
@@ -651,8 +641,8 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$this->update_meta( $id, 'source', $subscription->source );
 		$this->update_meta( $id, 'source_id', $subscription->source_id );
 		$this->update_meta( $id, 'email', ( null === $customer ? null : $customer->get_email() ) );
-		$this->update_meta( $id, 'next_payment', $subscription->next_payment_date );
-		$this->update_meta( $id, 'next_payment_delivery_date', $subscription->next_payment_delivery_date );
+		$this->update_meta( $id, 'next_payment', $subscription->get_next_payment_date() );
+		$this->update_meta( $id, 'next_payment_delivery_date', $subscription->get_next_payment_delivery_date() );
 		$this->update_meta( $id, 'version', $subscription->get_version() );
 
 		$this->update_meta_status( $subscription );

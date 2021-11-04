@@ -107,22 +107,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	public $status;
 
 	/**
-	 * The next payment date.
-	 *
-	 * @deprecated
-	 * @var DateTime|null
-	 */
-	public $next_payment_date;
-
-	/**
-	 * The next payment delivery date.
-	 *
-	 * @deprecated
-	 * @var DateTime|null
-	 */
-	public $next_payment_delivery_date;
-
-	/**
 	 * Activated at.
 	 *
 	 * The datetime this subscription was activated or reactivated.
@@ -590,45 +574,49 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	}
 
 	/**
-	 * Set the next payment date of this subscription.
-	 *
-	 * @deprecated
-	 * @param DateTime|null $date Next payment date.
-	 * @return void
-	 */
-	public function set_next_payment_date( DateTime $date = null ) {
-		$this->next_payment_date = $date;
-	}
-
-	/**
 	 * Get the next payment date of this subscription.
 	 *
-	 * @deprecated
 	 * @return DateTime|null
 	 */
 	public function get_next_payment_date() {
-		return $this->next_payment_date;
-	}
+		// Get current phase.
+		$phase = $this->get_current_phase();
 
-	/**
-	 * Set the next payment delivery date of this subscription.
-	 *
-	 * @deprecated
-	 * @param DateTime|null $date Next payment delivery date.
-	 * @return void
-	 */
-	public function set_next_payment_delivery_date( DateTime $date = null ) {
-		$this->next_payment_delivery_date = $date;
+		if ( null === $phase ) {
+			return null;
+		}
+
+		return $phase->get_next_date();
 	}
 
 	/**
 	 * Get the next payment delivery date of this subscription.
 	 *
-	 * @deprecated
 	 * @return DateTime|null
 	 */
 	public function get_next_payment_delivery_date() {
-		return $this->next_payment_delivery_date;
+		$next_payment_date = $this->get_next_payment_date();
+
+		// Check if there is next payment date.
+		if ( null === $next_payment_date ) {
+			return null;
+		}
+
+		$next_payment_delivery_date = clone $next_payment_date;
+
+		$subscription = $this;
+
+		/**
+		 * Filters the subscription next payment delivery date.
+		 *
+		 * @since unreleased
+		 *
+		 * @param DateTime     $next_payment_delivery_date Next payment delivery date.
+		 * @param Subscription $subscription               Subscription.
+		 */
+		$next_payment_delivery_date = \apply_filters( 'pronamic_pay_subscription_next_payment_delivery_date', $next_payment_delivery_date, $subscription );
+
+		return $next_payment_delivery_date;
 	}
 
 	/**
@@ -719,14 +707,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 
 		PaymentInfoHelper::from_json( $json, $subscription );
 
-		if ( isset( $json->next_payment_date ) ) {
-			$subscription->set_next_payment_date( new DateTime( $json->next_payment_date ) );
-		}
-
-		if ( isset( $json->next_payment_delivery_date ) ) {
-			$subscription->set_next_payment_delivery_date( new DateTime( $json->next_payment_delivery_date ) );
-		}
-
 		if ( isset( $json->status ) ) {
 			$subscription->set_status( $json->status );
 		}
@@ -761,14 +741,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 		$properties = (array) $object;
 
 		$properties['phases'] = $this->phases;
-
-		if ( null !== $this->next_payment_date ) {
-			$properties['next_payment_date'] = $this->next_payment_date->format( \DATE_ATOM );
-		}
-
-		if ( null !== $this->next_payment_delivery_date ) {
-			$properties['next_payment_delivery_date'] = $this->next_payment_delivery_date->format( \DATE_ATOM );
-		}
 
 		if ( null !== $this->get_status() ) {
 			$properties['status'] = $this->get_status();
