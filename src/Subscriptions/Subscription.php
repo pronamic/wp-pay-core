@@ -30,20 +30,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	use SubscriptionPhasesTrait;
 
 	/**
-	 * The key of this subscription, used in URL's for security.
-	 *
-	 * @var string|null
-	 */
-	public $key;
-
-	/**
-	 * The title of this subscription.
-	 *
-	 * @var string|null
-	 */
-	public $title;
-
-	/**
 	 * The status of this subscription, for example 'Success'.
 	 *
 	 * @todo How to reference to a class constant?
@@ -72,15 +58,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 
 		$this->activated_at    = new DateTime();
 		$this->meta_key_prefix = '_pronamic_subscription_';
-	}
-
-	/**
-	 * Get the unique key of this subscription.
-	 *
-	 * @return string|null
-	 */
-	public function get_key() {
-		return $this->key;
 	}
 
 	/**

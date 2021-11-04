@@ -600,4 +600,13 @@ abstract class PaymentInfo {
 	public function get_mode() {
 		return $this->mode;
 	}
+
+	/**
+	 * Get the unique key.
+	 *
+	 * @return string|null
+	 */
+	public function get_key() {
+		return $this->key;
+	}
 }
