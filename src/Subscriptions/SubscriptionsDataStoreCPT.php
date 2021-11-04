@@ -583,8 +583,8 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			return;
 		}
 
-		$subscription->transaction_id  = $this->get_meta_string( $id, 'transaction_id' );
-		$subscription->status          = $this->get_meta_string( $id, 'status' );
+		$subscription->transaction_id = $this->get_meta_string( $id, 'transaction_id' );
+		$subscription->status         = $this->get_meta_string( $id, 'status' );
 
 		// Payment method.
 		$payment_method = $subscription->get_payment_method();
