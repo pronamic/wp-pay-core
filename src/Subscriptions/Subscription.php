@@ -44,15 +44,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	public $title;
 
 	/**
-	 * The interval period of this subscription.
-	 *
-	 * @todo Improve documentation?
-	 * @deprecated
-	 * @var string|null
-	 */
-	public $interval_period;
-
-	/**
 	 * The interval date of this subscription.
 	 *
 	 * @deprecated
@@ -114,17 +105,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 */
 	public function get_key() {
 		return $this->key;
-	}
-
-	/**
-	 * Get the interval period, for example 'D', 'M', 'Y', etc.
-	 *
-	 * @link http://php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters
-	 * @deprecated
-	 * @return string|null
-	 */
-	public function get_interval_period() {
-		return $this->interval_period;
 	}
 
 	/**
