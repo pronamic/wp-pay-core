@@ -672,6 +672,7 @@ class AdminModule {
 			$order_id
 		);
 
+		$payment->set_gateway( $gateway );
 		$payment->set_config_id( $config_id );
 		$payment->set_description( $description );
 

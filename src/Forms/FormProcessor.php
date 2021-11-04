@@ -114,7 +114,7 @@ class FormProcessor {
 		// Gateway.
 		$gateway = Plugin::get_gateway( $config_id );
 
-		if ( ! $gateway ) {
+		if ( null === $gateway ) {
 			return;
 		}
 
@@ -153,12 +153,12 @@ class FormProcessor {
 		);
 
 		$payment->set_description( $description );
+		$payment->set_origin_id( $source_id );
+		$payment->set_gateway( $gateway );
 
-		$payment->config_id = $config_id;
 		$payment->order_id  = $order_id;
 		$payment->source    = $source;
 		$payment->source_id = $source_id;
-		$payment->set_origin_id( $source_id );
 
 		// Set default payment method if required.
 		if ( $gateway->payment_method_is_required() ) {
@@ -199,7 +199,7 @@ class FormProcessor {
 
 		// Start payment.
 		try {
-			$payment = Plugin::start_payment( $payment, $gateway );
+			$payment = Plugin::start_payment( $payment );
 		} catch ( \Exception $e ) {
 			Plugin::render_exception( $e );
 
