@@ -194,26 +194,6 @@ abstract class Gateway {
 	}
 
 	/**
-	 * Set has feedback.
-	 *
-	 * @param boolean $has_feedback Feedback from gateway indicator.
-	 * @return void
-	 * @deprecated 2.0.5 Not in use anymore.
-	 */
-	public function set_has_feedback( $has_feedback ) {
-	}
-
-	/**
-	 * Set the minimum amount required
-	 *
-	 * @param float $amount Minimum payment amount.
-	 * @return void
-	 * @deprecated 2.0.5 Not in use anymore.
-	 */
-	public function set_amount_minimum( $amount ) {
-	}
-
-	/**
 	 * Get iDEAL issuers.
 	 *
 	 * @return array
