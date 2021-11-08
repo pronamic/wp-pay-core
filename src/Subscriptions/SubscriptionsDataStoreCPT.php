@@ -599,17 +599,17 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		parent::read_post_meta( $subscription );
 
 		// Read subscription data from first payment.
-		$gateway = $subscription->get_gateway();
+		$config_id = $subscription->get_config_id();
 
 		$payment_method = $subscription->get_payment_method();
 
-		if ( null === $gateway || null === $payment_method ) {
+		if ( null === $config_id || null === $payment_method ) {
 			$first_payment = $subscription->get_first_payment();
 
 			if ( is_object( $first_payment ) ) {
 				// Gateway.
-				if ( empty( $gateway ) ) {
-					$subscription->set_gateway( $first_payment->get_gateway() );
+				if ( empty( $config_id ) ) {
+					$subscription->set_config_id( $first_payment->get_config_id() );
 				}
 
 				// Payment method.

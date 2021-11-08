@@ -409,9 +409,9 @@ class SubscriptionsModule {
 	 * @throws \Exception Throws exception if unable to redirect (empty payment action URL).
 	 */
 	private function handle_subscription_renew( Subscription $subscription ) {
-		$gateway = Plugin::get_gateway( $subscription->config_id );
+		$gateway = Plugin::get_gateway( $subscription->get_config_id() );
 
-		if ( empty( $gateway ) ) {
+		if ( null == $gateway ) {
 			require __DIR__ . '/../../views/subscription-renew-failed.php';
 
 			exit;
@@ -487,9 +487,9 @@ class SubscriptionsModule {
 	 * @throws \Exception Throws exception if unable to redirect (empty payment action URL).
 	 */
 	private function handle_subscription_mandate( Subscription $subscription ) {
-		$gateway = Plugin::get_gateway( $subscription->config_id );
+		$gateway = Plugin::get_gateway( $subscription->get_config_id() );
 
-		if ( empty( $gateway ) ) {
+		if ( null === $gateway ) {
 			require __DIR__ . '/../../views/subscription-mandate-failed.php';
 
 			exit;
@@ -753,7 +753,7 @@ class SubscriptionsModule {
 		$payment->set_payment_method( $subscription->get_payment_method() );
 
 		$payment->set_description( $subscription->get_description() );
-		$payment->set_gateway( $subscription->get_gateway() );
+		$payment->set_config_id( $subscription->get_config_id() );
 		$payment->set_origin_id( $subscription->get_origin_id() );
 		$payment->set_mode( $config->mode );
 
@@ -1133,29 +1133,25 @@ class SubscriptionsModule {
 			return;
 		}
 
-		// Check gateway.
-		$config_id = $subscription->config_id;
-
-		$gateway = Plugin::get_gateway( $config_id );
-
-		// If gateway is null we continue to next subscription.
-		if ( null === $gateway ) {
-			throw new \Exception(
-				sprintf(
-				/* translators: %s: Gateway configuration ID */
-					__( 'Could not find gateway with ID `%s`.', 'pronamic_ideal' ),
-					$config_id
-				)
-			);
-		}
-
-		// Start payment.
+		// New subscription payment.
 		$payment = $this->new_subscription_payment( $subscription );
 
 		if ( null === $payment ) {
 			return;
 		}
 
+		// Check gateway.
+		if ( null === $payment->get_gateway() ) {
+			throw new \Exception(
+				sprintf(
+				/* translators: %s: Gateway configuration ID */
+					__( 'Could not find gateway with ID `%s`.', 'pronamic_ideal' ),
+					$payment->get_config_id()
+				)
+			);
+		}
+
+		// Start payment.
 		$payment = $this->start_payment( $payment );
 
 		// Update payment.

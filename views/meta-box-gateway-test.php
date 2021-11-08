@@ -18,7 +18,7 @@ use Pronamic\WordPress\Pay\Plugin;
 
 $gateway = Plugin::get_gateway( get_the_ID() );
 
-if ( empty( $gateway ) ) {
+if ( null === $gateway ) {
 	printf(
 		'<em>%s</em>',
 		esc_html( __( 'Please save the entered account details of your payment provider, to make a test payment.', 'pronamic_ideal' ) )

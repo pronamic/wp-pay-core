@@ -160,7 +160,7 @@ class AdminPaymentPostType {
 
 		// Create invoice action.
 		if ( filter_has_var( INPUT_GET, 'pronamic_pay_create_invoice' ) && check_admin_referer( 'pronamic_payment_create_invoice_' . $post_id ) ) {
-			$gateway = Plugin::get_gateway( $payment->get_config_id() );
+			$gateway = $payment->get_gateway();
 
 			// Admin notice.
 			if ( null !== $gateway && is_callable( array( $gateway, 'create_invoice' ) ) && $gateway->create_invoice( $payment ) ) {
@@ -178,7 +178,7 @@ class AdminPaymentPostType {
 
 		// Cancel reservation action.
 		if ( filter_has_var( INPUT_GET, 'pronamic_pay_cancel_reservation' ) && check_admin_referer( 'pronamic_payment_cancel_reservation_' . $post_id ) ) {
-			$gateway = Plugin::get_gateway( $payment->get_config_id() );
+			$gateway = $payment->get_gateway();
 
 			// Admin notice.
 			if ( null !== $gateway && is_callable( array( $gateway, 'cancel_reservation' ) ) && $gateway->cancel_reservation( $payment ) ) {

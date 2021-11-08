@@ -145,17 +145,19 @@ class PaymentInfoHelper {
 			);
 		}
 
-		if ( null !== $payment_info->config_id ) {
+		$config_id = $payment_info->get_config_id();
+
+		if ( null !== $config_id ) {
 			$object->gateway = (object) array(
 				'$ref'    => \rest_url(
 					\sprintf(
 						'/%s/%s/%d',
 						'pronamic-pay/v1',
 						'gateways',
-						$payment_info->config_id
+						$config_id
 					)
 				),
-				'post_id' => $payment_info->config_id,
+				'post_id' => $config_id,
 			);
 		}
 
@@ -252,9 +254,7 @@ class PaymentInfoHelper {
 
 		if ( isset( $json->gateway ) && \is_object( $json->gateway ) ) {
 			if ( isset( $json->gateway->post_id ) ) {
-				$gateway = Plugin::get_gateway( $json->gateway->post_id );
-
-				$payment_info->set_gateway( $gateway );
+				$payment_info->set_config_id( $json->gateway->post_id );
 			}
 		}
 

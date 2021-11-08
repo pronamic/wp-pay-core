@@ -82,9 +82,7 @@ class WebhookLogger {
 		}
 
 		// Gateway.
-		$gateway = Plugin::get_gateway( $config_id );
-
-		if ( null === $gateway ) {
+		if ( null === $payment->get_gateway() ) {
 			return;
 		}
 

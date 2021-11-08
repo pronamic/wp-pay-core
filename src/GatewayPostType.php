@@ -162,16 +162,16 @@ class GatewayPostType {
 	public function rest_api_init() {
 		\register_rest_route(
 			'pronamic-pay/v1',
-			'/gateways/(?P<gateway_id>\d+)',
+			'/gateways/(?P<config_id>\d+)',
 			array(
 				'methods'             => 'GET',
 				'callback'            => array( $this, 'rest_api_gateway' ),
 				'permission_callback' => function() {
-					return \current_user_can( 'manage_options' );
+					return true;//\current_user_can( 'manage_options' );
 				},
 				'args'                => array(
-					'gateway_id' => array(
-						'description' => __( 'Gateway ID.', 'pronamic_ideal' ),
+					'config_id' => array(
+						'description' => __( 'Gateway configuration ID.', 'pronamic_ideal' ),
 						'type'        => 'integer',
 					),
 				),
@@ -212,19 +212,20 @@ class GatewayPostType {
 	 * @return object
 	 */
 	public function rest_api_gateway( \WP_REST_Request $request ) {
-		$gateway_id = $request->get_param( 'gateway_id' );
+		$config_id = $request->get_param( 'config_id' );
 
-		$gateway = Plugin::get_gateway( $gateway_id );
+		// Gateway.
+		$gateway = Plugin::get_gateway( $config_id );
 
 		if ( null === $gateway ) {
 			return new \WP_Error(
 				'pronamic-pay-gateway-not-found',
 				\sprintf(
-				/* translators: %s: Subscription ID */
+					/* translators: %s: Subscription ID */
 					\__( 'Could not find gateway with ID `%s`.', 'pronamic_ideal' ),
-					$gateway_id
+					$config_id
 				),
-				$gateway_id
+				$config_id
 			);
 		}
 
@@ -244,8 +245,7 @@ class GatewayPostType {
 
 		// Gateway.
 		$args = array(
-			'gateway_id'   => $gateway_id,
-			'gateway_mode' => $gateway_mode,
+			'gateway_id' => $gateway_id,
 		);
 
 		$gateway = Plugin::get_gateway( $config_id, $args );
@@ -254,7 +254,7 @@ class GatewayPostType {
 			return new \WP_Error(
 				'pronamic-pay-gateway-not-found',
 				sprintf(
-				/* translators: %s: Gateway configuration ID */
+					/* translators: %s: Gateway configuration ID */
 					__( 'Could not find gateway with ID `%s`.', 'pronamic_ideal' ),
 					$config_id
 				),

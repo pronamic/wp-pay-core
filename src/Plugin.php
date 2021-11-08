@@ -15,12 +15,15 @@ use Pronamic\WordPress\Pay\Admin\AdminModule;
 use Pronamic\WordPress\Pay\Banks\BankAccountDetails;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
+use Pronamic\WordPress\Pay\Gateways\GatewaysDataStoreCPT;
+use Pronamic\WordPress\Pay\Payments\PaymentsDataStoreCPT;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Payments\StatusChecker;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
+use Pronamic\WordPress\Pay\Subscriptions\SubscriptionsDataStoreCPT;
 use Pronamic\WordPress\Pay\Webhooks\WebhookLogger;
 use WP_Error;
 use WP_Query;
@@ -91,16 +94,23 @@ class Plugin {
 	public $settings;
 
 	/**
+	 * Gateway data storing.
+	 *
+	 * @var GatewaysDataStoreCPT
+	 */
+	public $gateways_data_store;
+
+	/**
 	 * Payment data storing.
 	 *
-	 * @var Payments\PaymentsDataStoreCPT
+	 * @var PaymentsDataStoreCPT
 	 */
 	public $payments_data_store;
 
 	/**
 	 * Subscription data storing.
 	 *
-	 * @var Subscriptions\SubscriptionsDataStoreCPT
+	 * @var SubscriptionsDataStoreCPT
 	 */
 	public $subscriptions_data_store;
 
@@ -566,8 +576,9 @@ class Plugin {
 		$this->settings = new Settings( $this );
 
 		// Data Stores.
-		$this->payments_data_store      = new Payments\PaymentsDataStoreCPT();
-		$this->subscriptions_data_store = new Subscriptions\SubscriptionsDataStoreCPT();
+		$this->gateways_data_store      = new GatewaysDataStoreCPT();
+		$this->payments_data_store      = new PaymentsDataStoreCPT();
+		$this->subscriptions_data_store = new SubscriptionsDataStoreCPT();
 
 		$this->payments_data_store->setup();
 		$this->subscriptions_data_store->setup();
@@ -805,38 +816,26 @@ class Plugin {
 	 * @return null|Gateway
 	 */
 	public static function get_gateway( $config_id, $args = array() ) {
-		// Check for 0, false, null and other empty values.
-		if ( empty( $config_id ) ) {
-			return null;
+		// Get gateway from data store.
+		$gateway = \pronamic_pay_plugin()->gateways_data_store->get_gateway( $config_id );
+
+		// Use gateway identifier from arguments to get new gateway.
+		if ( null === $gateway && ! empty( $args ) ) {
+			// Get integration.
+			$args = wp_parse_args(
+				$args,
+				array(
+					'gateway_id' => \get_post_meta( $config_id, '_pronamic_gateway_id', true ),
+				)
+			);
+
+			$integration = pronamic_pay_plugin()->gateway_integrations->get_integration( $args['gateway_id'] );
+
+			// Get new gateway.
+			if ( null !== $integration ) {
+				$gateway = $integration->get_gateway( $config_id );
+			}
 		}
-
-		$config_id = intval( $config_id );
-
-		// Check if config is trashed.
-		if ( 'trash' === get_post_status( $config_id ) ) {
-			return null;
-		}
-
-		// Arguments.
-		$args = wp_parse_args(
-			$args,
-			array(
-				'gateway_id' => get_post_meta( $config_id, '_pronamic_gateway_id', true ),
-				'mode'       => get_post_meta( $config_id, '_pronamic_gateway_mode', true ),
-			)
-		);
-
-		// Get config.
-		$gateway_id = $args['gateway_id'];
-		$mode       = $args['mode'];
-
-		$integration = pronamic_pay_plugin()->gateway_integrations->get_integration( $gateway_id );
-
-		if ( null === $integration ) {
-			return null;
-		}
-
-		$gateway = $integration->get_gateway( $config_id );
 
 		return $gateway;
 	}
@@ -1005,10 +1004,10 @@ class Plugin {
 	 * @throws \Exception Throws exception if gateway payment start fails.
 	 */
 	public static function start_payment( Payment $payment ) {
-		// Set default or filtered gateway.
-		$config_id = null;
+		// Set default or filtered config ID.
+		$config_id = $payment->get_config_id();
 
-		if ( null === $payment->get_gateway() ) {
+		if ( null === $config_id ) {
 			$config_id = \get_option( 'pronamic_pay_config_id' );
 		}
 
@@ -1021,9 +1020,7 @@ class Plugin {
 		$config_id = \apply_filters( 'pronamic_payment_gateway_configuration_id', $config_id, $payment );
 
 		if ( null !== $config_id ) {
-			$gateway = self::get_gateway( $config_id );
-
-			$payment->set_gateway( $gateway );
+			$payment->set_config_id( $config_id );
 		}
 
 		// Save payment.

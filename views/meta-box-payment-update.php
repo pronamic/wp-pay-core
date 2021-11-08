@@ -53,14 +53,12 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 
 	<?php
 
-	$config_id = get_post_meta( $post->ID, '_pronamic_payment_config_id', true );
-
-	$gateway = Plugin::get_gateway( $config_id );
+	$gateway = $payment->get_gateway();
 
 	/**
 	 * Check status button.
 	 */
-	if ( $gateway && $gateway->supports( 'payment_status_request' ) ) {
+	if ( null !== $gateway && $gateway->supports( 'payment_status_request' ) ) {
 		// Only show button if gateway exists and status check is supported.
 		$action_url = wp_nonce_url(
 			add_query_arg(

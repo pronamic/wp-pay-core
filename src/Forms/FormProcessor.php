@@ -111,13 +111,6 @@ class FormProcessor {
 			$config_id = get_post_meta( $source_id, '_pronamic_payment_form_config_id', true );
 		}
 
-		// Gateway.
-		$gateway = Plugin::get_gateway( $config_id );
-
-		if ( null === $gateway ) {
-			return;
-		}
-
 		/*
 		 * Start payment.
 		 */
@@ -152,18 +145,13 @@ class FormProcessor {
 			$description
 		);
 
+		$payment->set_config_id( $config_id );
 		$payment->set_description( $description );
 		$payment->set_origin_id( $source_id );
-		$payment->set_gateway( $gateway );
 
 		$payment->order_id  = $order_id;
 		$payment->source    = $source;
 		$payment->source_id = $source_id;
-
-		// Set default payment method if required.
-		if ( $gateway->payment_method_is_required() ) {
-			$payment->set_payment_method( PaymentMethods::IDEAL );
-		}
 
 		// Customer.
 		$customer = array(
@@ -196,6 +184,18 @@ class FormProcessor {
 		$line->set_quantity( 1 );
 		$line->set_unit_price( $payment->get_total_amount() );
 		$line->set_total_amount( $payment->get_total_amount() );
+
+		// Gateway.
+		$gateway = Plugin::get_gateway( $config_id );
+
+		if ( null === $gateway ) {
+			return;
+		}
+
+		// Set default payment method if required.
+		if ( $gateway->payment_method_is_required() ) {
+			$payment->set_payment_method( PaymentMethods::IDEAL );
+		}
 
 		// Start payment.
 		try {

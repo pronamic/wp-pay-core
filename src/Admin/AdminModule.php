@@ -641,15 +641,6 @@ class AdminModule {
 			return;
 		}
 
-		// Gateway.
-		$config_id = \filter_input( \INPUT_POST, 'post_ID', \FILTER_SANITIZE_NUMBER_INT );
-
-		$gateway = Plugin::get_gateway( $config_id );
-
-		if ( empty( $gateway ) ) {
-			return;
-		}
-
 		// Amount.
 		$string = \filter_input( INPUT_POST, 'test_amount', \FILTER_SANITIZE_STRING );
 
@@ -666,18 +657,20 @@ class AdminModule {
 
 		$order_id = (string) \time();
 
+		$payment->order_id = $order_id;
+
+		$payment->set_config_id( \filter_input( \INPUT_POST, 'post_ID', \FILTER_SANITIZE_NUMBER_INT ) );
+
+		$payment->set_payment_method( \filter_input( \INPUT_POST, 'pronamic_pay_test_payment_method', \FILTER_SANITIZE_STRING ) );
+
+		// Description.
 		$description = \sprintf(
 			/* translators: %s: order ID */
 			__( 'Test %s', 'pronamic_ideal' ),
 			$order_id
 		);
 
-		$payment->set_gateway( $gateway );
-		$payment->set_config_id( $config_id );
 		$payment->set_description( $description );
-
-		$payment->set_payment_method( \filter_input( \INPUT_POST, 'pronamic_pay_test_payment_method', \FILTER_SANITIZE_STRING ) );
-		$payment->order_id = $order_id;
 
 		// Source.
 		$payment->set_source( 'test' );
@@ -813,13 +806,17 @@ class AdminModule {
 			}
 		}
 
+		$gateway = $payment->get_gateway();
+
+		if ( null === $gateway ) {
+			return;
+		}
+
 		// Start.
 		try {
 			$payment = Plugin::start_payment( $payment );
 
-			if ( null !== $payment ) {
-				$gateway->redirect( $payment );
-			}
+			$gateway->redirect( $payment );
 		} catch ( \Exception $e ) {
 			Plugin::render_exception( $e );
 

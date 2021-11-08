@@ -301,13 +301,6 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		$payment->source    = $this->get_meta_string( $id, 'source' );
 		$payment->source_id = $this->get_meta_string( $id, 'source_id' );
 
-		// Gateway.
-		$gateway = $payment->get_gateway();
-
-		if ( null === $gateway && ! empty( $config_id ) ) {
-			$payment->set_gateway( Plugin::get_gateway( $config_id ) );
-		}
-
 		// Order ID.
 		if ( empty( $payment->order_id ) ) {
 			$payment->order_id = $this->get_meta_string( $id, 'order_id' );

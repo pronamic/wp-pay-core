@@ -19,6 +19,7 @@ use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\CreditCard;
 use Pronamic\WordPress\Pay\Customer;
+use Pronamic\WordPress\Pay\Plugin;
 use WP_Post;
 
 /**
@@ -70,7 +71,6 @@ abstract class PaymentInfo {
 	/**
 	 * The configuration ID.
 	 *
-	 * @deprecated
 	 * @var int|null
 	 */
 	public $config_id;
@@ -276,7 +276,6 @@ abstract class PaymentInfo {
 	/**
 	 * Get the config ID of this payment.
 	 *
-	 * @deprecated
 	 * @return int|null
 	 */
 	public function get_config_id() {
@@ -286,7 +285,6 @@ abstract class PaymentInfo {
 	/**
 	 * Set the config ID of this payment.
 	 *
-	 * @deprecated
 	 * @param int|null $config_id Config ID.
 	 * @return void
 	 */
@@ -300,7 +298,9 @@ abstract class PaymentInfo {
 	 * @return Gateway|null
 	 */
 	public function get_gateway() {
-		return $this->gateway;
+		$config_id = $this->get_config_id();
+
+		return \pronamic_pay_plugin()->gateways_data_store->get_gateway( $config_id );
 	}
 
 	/**
