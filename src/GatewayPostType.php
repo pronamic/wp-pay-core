@@ -167,7 +167,7 @@ class GatewayPostType {
 				'methods'             => 'GET',
 				'callback'            => array( $this, 'rest_api_gateway' ),
 				'permission_callback' => function() {
-					return true;//\current_user_can( 'manage_options' );
+					return \current_user_can( 'manage_options' );
 				},
 				'args'                => array(
 					'config_id' => array(
