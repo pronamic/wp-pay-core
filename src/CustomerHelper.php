@@ -101,8 +101,7 @@ class CustomerHelper {
 				 */
 				$http_locale = locale_accept_from_http( Server::get( 'HTTP_ACCEPT_LANGUAGE' ) );
 
-				// Add locale, if it includes a country (i.e. Firefox only sets `nl` as accepted language).
-				if ( false !== $http_locale && false !== strpos( $http_locale, '_' ) ) {
+				if ( false !== $http_locale ) {
 					$locales[] = $http_locale;
 				}
 			}
