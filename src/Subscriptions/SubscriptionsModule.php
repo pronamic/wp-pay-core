@@ -409,7 +409,7 @@ class SubscriptionsModule {
 	 * @throws \Exception Throws exception if unable to redirect (empty payment action URL).
 	 */
 	private function handle_subscription_renew( Subscription $subscription ) {
-		$gateway = Plugin::get_gateway( $subscription->get_config_id() );
+		$gateway = $subscription->get_gateway();
 
 		if ( null == $gateway ) {
 			require __DIR__ . '/../../views/subscription-renew-failed.php';
@@ -487,7 +487,7 @@ class SubscriptionsModule {
 	 * @throws \Exception Throws exception if unable to redirect (empty payment action URL).
 	 */
 	private function handle_subscription_mandate( Subscription $subscription ) {
-		$gateway = Plugin::get_gateway( $subscription->get_config_id() );
+		$gateway = $subscription->get_gateway();
 
 		if ( null === $gateway ) {
 			require __DIR__ . '/../../views/subscription-mandate-failed.php';

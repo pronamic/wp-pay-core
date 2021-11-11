@@ -300,6 +300,10 @@ abstract class PaymentInfo {
 	public function get_gateway() {
 		$config_id = $this->get_config_id();
 
+		if ( null === $config_id ) {
+			return null;
+		}
+
 		return \pronamic_pay_plugin()->gateways_data_store->get_gateway( $config_id );
 	}
 

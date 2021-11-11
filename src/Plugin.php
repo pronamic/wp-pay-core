@@ -810,8 +810,8 @@ class Plugin {
 	 *
 	 * @link https://wordpress.org/support/article/post-status/#default-statuses
 	 *
-	 * @param string|integer|boolean|null $config_id A gateway configuration ID.
-	 * @param array                       $args      Extra arguments.
+	 * @param int   $config_id A gateway configuration ID.
+	 * @param array $args      Extra arguments.
 	 *
 	 * @return null|Gateway
 	 */

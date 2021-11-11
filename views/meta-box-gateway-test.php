@@ -2,13 +2,13 @@
 /**
  * Meta Box Gateway Test
  *
- * @author    Pronamic <info@pronamic.eu>
+ * @author Pronamic <info@pronamic.eu>
  * @copyright 2005-2021 Pronamic
- * @license   GPL-3.0-or-later
- * @package   Pronamic\WordPress\Pay
+ * @license GPL-3.0-or-later
+ * @package Pronamic\WordPress\Pay
+ * @var \WP_Post $post                  WordPress post.
+ * @var array    $pronamic_ideal_errors Pronamic IDEAL errors.
  */
-
-global $pronamic_ideal_errors;
 
 use Pronamic\WordPress\Money\Currency;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
@@ -16,7 +16,9 @@ use Pronamic\WordPress\Pay\Gateways\IDealAdvancedV3\Gateway as IDealAdvancedV3_G
 use Pronamic\WordPress\Pay\Gateways\IDealBasic\Gateway as IDealBasic_Gateway;
 use Pronamic\WordPress\Pay\Plugin;
 
-$gateway = Plugin::get_gateway( get_the_ID() );
+global $pronamic_ideal_errors;
+
+$gateway = Plugin::get_gateway( $post->ID );
 
 if ( null === $gateway ) {
 	printf(

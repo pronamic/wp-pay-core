@@ -43,18 +43,11 @@ class GatewaysDataStoreCPT extends AbstractDataStoreCPT {
 	/**
 	 * Get gateway by ID.
 	 *
-	 * @param string|int|bool|null $post_id Gateway configuration post ID.
+	 * @param int $post_id Gateway configuration post ID.
 	 * @return Gateway|null
 	 */
 	public function get_gateway( $post_id ) {
 		if ( ! isset( $this->gateways[ $post_id ] ) ) {
-			// Check empty ID.
-			if ( empty( $post_id ) ) {
-				return null;
-			}
-
-			$post_id = (int) $post_id;
-
 			// Check post type.
 			$post_type = get_post_type( $post_id );
 
