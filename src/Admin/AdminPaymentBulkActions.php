@@ -118,7 +118,7 @@ class AdminPaymentBulkActions {
 				continue;
 			}
 
-			if ( ! \in_array( $config_id, $unsupported_gateways, true) ) {
+			if ( ! \in_array( $config_id, $unsupported_gateways, true ) ) {
 				$gateway = $payment->get_gateway();
 
 				if ( null !== $gateway && ! $gateway->supports( 'payment_status_request' ) ) {
