@@ -46,6 +46,11 @@ if ( ! isset( $subscription ) ) {
 
 			<?php
 
+			// Get next payment (delivery) date, before calling `next_period()`.
+			$next_payment_date = $subscription->get_next_payment_date();
+
+			$next_payment_delivery_date = $subscription->get_next_payment_delivery_date();
+
 			$next_period = $subscription->next_period();
 
 			$gateway = Plugin::get_gateway( $subscription->get_config_id() );
@@ -66,10 +71,6 @@ if ( ! isset( $subscription ) ) {
 							add_query_arg( 'pronamic_next_period', true, \get_edit_post_link( $subscription->get_id() ) ),
 							'pronamic_next_period_' . $subscription->get_id()
 						);
-
-						$next_payment_date = $subscription->get_next_payment_date();
-
-						$next_payment_delivery_date = $subscription->get_next_payment_delivery_date();
 
 						if ( in_array( $subscription->get_source(), array( 'woocommerce' ), true ) && null !== $next_payment_date ) :
 
