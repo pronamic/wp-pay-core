@@ -716,27 +716,10 @@ class SubscriptionsModule {
 	private function new_period_payment( SubscriptionPeriod $period ) {
 		$subscription = $period->get_phase()->get_subscription();
 
-		$config_id = (int) $subscription->get_config_id();
-
-		$integration_id = \get_post_meta( $config_id, '_pronamic_gateway_id', true );
-
-		$integration = $this->plugin->gateway_integrations->get_integration( $integration_id );
-
-		if ( null === $integration ) {
-			throw new \Exception( 'Gateway integration could not be found while creating new subscription period payment.' );
-		}
-
-		$config = $integration->get_config( $config_id );
-
-		if ( null === $config ) {
-			throw new \Exception( 'Config could not be found while creating new subscription period payment.' );
-		}
-
 		$payment = $subscription->new_payment();
 
 		$payment->add_period( $period );
 
-		$payment->set_mode( $config->mode );
 		$payment->set_lines( $subscription->get_lines() );
 		$payment->set_total_amount( $period->get_phase()->get_amount() );
 
