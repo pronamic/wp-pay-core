@@ -23,9 +23,7 @@ if ( ! class_exists( '\Pronamic\WordPress\Pay\Gateways\Mollie\Client' ) ) {
 	return;
 }
 
-$subscription_id = $subscription->get_id();
-
-$mollie_customer_id = \get_post_meta( $subscription_id, '_pronamic_subscription_mollie_customer_id', true );
+$mollie_customer_id = $subscription->get_meta( 'mollie_customer_id' );
 
 if ( empty( $mollie_customer_id ) ) {
 	include \get_404_template();
