@@ -703,13 +703,7 @@ class SubscriptionsModule {
 
 		$periods = $payment->get_periods();
 
-		if ( null === $periods ) {
-			throw new \UnexpectedValueException( 'Can not create payment without period for subscription.' );
-		}
-
-		$period = reset( $periods );
-
-		if ( false === $period ) {
+		if ( null === $periods || 0 === \count( $periods ) ) {
 			throw new \UnexpectedValueException( 'Can not create payment without period for subscription.' );
 		}
 
