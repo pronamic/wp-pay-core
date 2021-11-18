@@ -639,31 +639,19 @@ class SubscriptionsModule {
 			return null;
 		}
 
-		// Create payment.
-		$payment = new Payment();
-
-		$payment->config_id = $subscription->get_config_id();
-		$payment->order_id  = $subscription->get_order_id();
-		$payment->source    = $subscription->get_source();
-		$payment->source_id = $subscription->get_source_id();
-
-		$payment->add_subscription( $subscription );
-
-		$payment->set_payment_method( $subscription->get_payment_method() );
-		$payment->set_description( $subscription->get_description() );
-
-		$payment->set_origin_id( $subscription->get_origin_id() );
-		$payment->set_customer( $subscription->get_customer() );
-		$payment->set_billing_address( $subscription->get_billing_address() );
-		$payment->set_shipping_address( $subscription->get_shipping_address() );
-		$payment->set_lines( $subscription->get_lines() );
-
 		// Get amount from current subscription phase.
 		$current_phase = $subscription->get_current_phase();
 
 		if ( null === $current_phase ) {
 			return null;
 		}
+
+		// Create payment.
+		$payment = $subscription->new_payment();
+
+		$payment->order_id = $subscription->get_order_id();
+
+		$payment->set_lines( $subscription->get_lines() );
 
 		$payment->set_total_amount( $current_phase->get_amount() );
 
@@ -744,26 +732,11 @@ class SubscriptionsModule {
 			throw new \Exception( 'Config could not be found while creating new subscription period payment.' );
 		}
 
-		$payment = new Payment();
-
-		$payment->add_subscription( $subscription );
-
-		$payment->set_payment_method( $subscription->get_payment_method() );
-
-		$payment->set_description( $subscription->get_description() );
-		$payment->set_config_id( $subscription->get_config_id() );
-		$payment->set_origin_id( $subscription->get_origin_id() );
-		$payment->set_mode( $config->mode );
-
-		$payment->set_source( $subscription->get_source() );
-		$payment->set_source_id( $subscription->get_source_id() );
-
-		$payment->set_customer( $subscription->get_customer() );
-		$payment->set_billing_address( $subscription->get_billing_address() );
-		$payment->set_shipping_address( $subscription->get_shipping_address() );
+		$payment = $subscription->new_payment();
 
 		$payment->add_period( $period );
 
+		$payment->set_mode( $config->mode );
 		$payment->set_lines( $subscription->get_lines() );
 		$payment->set_total_amount( $period->get_phase()->get_amount() );
 

@@ -497,6 +497,36 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	}
 
 	/**
+	 * New subscription payment.
+	 *
+	 * Subscriptions lines and amount are deliberately not set in the payment for now.
+	 *
+	 * @return Payment
+	 */
+	public function new_payment() {
+		$payment = new Payment();
+
+		$payment->order_id = $subscription->get_order_id();
+
+		$payment->add_subscription( $this );
+
+		$payment->set_payment_method( $this->get_payment_method() );
+
+		$payment->set_description( $this->get_description() );
+		$payment->set_config_id( $this->get_config_id() );
+		$payment->set_origin_id( $this->get_origin_id() );
+
+		$payment->set_source( $this->get_source() );
+		$payment->set_source_id( $this->get_source_id() );
+
+		$payment->set_customer( $this->get_customer() );
+		$payment->set_billing_address( $this->get_billing_address() );
+		$payment->set_shipping_address( $this->get_shipping_address() );
+
+		return $payment;
+	}
+
+	/**
 	 * Get renewal period.
 	 *
 	 * @return SubscriptionPeriod|null
