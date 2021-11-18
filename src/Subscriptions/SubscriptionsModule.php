@@ -680,23 +680,25 @@ class SubscriptionsModule {
 	 * @return Payment
 	 */
 	public function start_payment( Payment $payment ) {
-		$subscription = $payment->get_subscription();
+		$subscriptions = $payment->get_subscriptions();
 
-		if ( empty( $subscription ) ) {
-			throw new \UnexpectedValueException( 'No subscription object found in payment.' );
+		if ( empty( $subscriptions ) ) {
+			throw new \UnexpectedValueException( 'No subscriptions found in payment.' );
 		}
 
 		// Calculate payment start and end dates.
 		$periods = $payment->get_periods();
 
 		if ( null === $periods ) {
-			$period = $subscription->new_period();
+			foreach ( $subscriptions as $subscription ) {
+				$period = $subscription->new_period();
 
-			if ( null === $period ) {
-				throw new \UnexpectedValueException( 'Can not create new period for subscription.' );
+				if ( null === $period ) {
+					throw new \UnexpectedValueException( 'Can not create new period for subscription.' );
+				}
+
+				$payment->add_period( $period );
 			}
-
-			$payment->add_period( $period );
 		}
 
 		$periods = $payment->get_periods();
@@ -711,8 +713,10 @@ class SubscriptionsModule {
 			throw new \UnexpectedValueException( 'Can not create payment without period for subscription.' );
 		}
 
-		// Update subscription.
-		$subscription->save();
+		// Update subscriptions.
+		foreach ( $subscriptions as $subscription ) {
+			$subscription->save();
+		}
 
 		// Start payment.
 		$payment = Plugin::start_payment( $payment );

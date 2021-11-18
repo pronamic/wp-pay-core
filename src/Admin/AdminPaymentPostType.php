@@ -436,9 +436,9 @@ class AdminPaymentPostType {
 
 				break;
 			case 'pronamic_payment_subscription':
-				$subscription = $payment->get_subscription();
+				$subscriptions = $payment->get_subscriptions();
 
-				if ( null !== $subscription ) {
+				foreach ( $subscriptions as $subscription ) {
 					$label = __( 'Recurring payment', 'pronamic_ideal' );
 					$class = 'pronamic-pay-icon-recurring';
 

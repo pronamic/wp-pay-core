@@ -11,9 +11,9 @@
 
 use Pronamic\WordPress\Pay\Util;
 
-$subscription = $payment->get_subscription();
+$subscriptions = $payment->get_subscriptions();
 
-if ( null === $subscription ) : ?>
+if ( empty( $subscriptions ) ) : ?>
 
 	<p>
 		<?php esc_html_e( 'This payment is not related to a subscription.', 'pronamic_ideal' ); ?>
@@ -21,109 +21,113 @@ if ( null === $subscription ) : ?>
 
 <?php else : ?>
 
-	<?php
+	<?php foreach ( $subscriptions as $subscription ) : ?>
 
-	$subscription_id = $subscription->get_id();
+		<?php
 
-	$phase = $subscription->get_display_phase();
+		$subscription_id = $subscription->get_id();
 
-	?>
+		$phase = $subscription->get_display_phase();
 
-	<table class="form-table">
+		?>
 
-		<?php if ( null !== $subscription_id ) : ?>
+		<table class="form-table">
+
+			<?php if ( null !== $subscription_id ) : ?>
+
+				<tr>
+					<th scope="row">
+						<?php esc_html_e( 'Subscription', 'pronamic_ideal' ); ?>
+					</th>
+					<td>
+						<?php edit_post_link( get_the_title( $subscription_id ), '', '', $subscription_id ); ?>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">
+						<?php esc_html_e( 'Status', 'pronamic_ideal' ); ?>
+					</th>
+					<td>
+						<?php
+
+						$status_object = get_post_status_object( (string) get_post_status( $subscription_id ) );
+
+						if ( isset( $status_object, $status_object->label ) ) {
+							echo esc_html( $status_object->label );
+						} else {
+							echo '—';
+						}
+
+						?>
+					</td>
+				</tr>
+
+			<?php endif; ?>
 
 			<tr>
 				<th scope="row">
-					<?php esc_html_e( 'Subscription', 'pronamic_ideal' ); ?>
+					<?php esc_html_e( 'Description', 'pronamic_ideal' ); ?>
 				</th>
 				<td>
-					<?php edit_post_link( get_the_title( $subscription_id ), '', '', $subscription_id ); ?>
+					<?php echo esc_html( (string) $subscription->get_description() ); ?>
 				</td>
 			</tr>
 			<tr>
 				<th scope="row">
-					<?php esc_html_e( 'Status', 'pronamic_ideal' ); ?>
+					<?php esc_html_e( 'Amount', 'pronamic_ideal' ); ?>
 				</th>
 				<td>
 					<?php
 
-					$status_object = get_post_status_object( (string) get_post_status( $subscription_id ) );
-
-					if ( isset( $status_object, $status_object->label ) ) {
-						echo esc_html( $status_object->label );
-					} else {
-						echo '—';
+					if ( null !== $phase ) {
+						echo esc_html( $phase->get_amount()->format_i18n() );
 					}
 
 					?>
 				</td>
 			</tr>
+			<tr>
+				<th scope="row">
+					<?php echo esc_html_x( 'Recurrence', 'Recurring payment', 'pronamic_ideal' ); ?>
+				</th>
+				<td>
+					<?php
 
-		<?php endif; ?>
+					$total_periods = ( null === $phase ) ? null : $phase->get_total_periods();
 
-		<tr>
-			<th scope="row">
-				<?php esc_html_e( 'Description', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php echo esc_html( (string) $subscription->get_description() ); ?>
-			</td>
-		</tr>
-		<tr>
-			<th scope="row">
-				<?php esc_html_e( 'Amount', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php
+					if ( null === $phase || 1 === $total_periods ) {
+						// No recurrence.
+						echo '—';
+					} elseif ( null === $total_periods ) {
+						// Infinite.
+						echo esc_html( strval( Util::format_recurrences( $phase->get_interval() ) ) );
+					} else {
+						// Fixed number of recurrences.
+						printf(
+							'%s (%s)',
+							esc_html( strval( Util::format_recurrences( $phase->get_interval() ) ) ),
+							esc_html( strval( Util::format_frequency( $total_periods ) ) )
+						);
+					}
 
-				if ( null !== $phase ) {
-					echo esc_html( $phase->get_amount()->format_i18n() );
-				}
+					?>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<?php esc_html_e( 'Source', 'pronamic_ideal' ); ?>
+				</th>
+				<td>
+					<?php
 
-				?>
-			</td>
-		</tr>
-		<tr>
-			<th scope="row">
-				<?php echo esc_html_x( 'Recurrence', 'Recurring payment', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo $subscription->get_source_text();
 
-				$total_periods = ( null === $phase ) ? null : $phase->get_total_periods();
+					?>
+				</td>
+			</tr>
+		</table>
 
-				if ( null === $phase || 1 === $total_periods ) {
-					// No recurrence.
-					echo '—';
-				} elseif ( null === $total_periods ) {
-					// Infinite.
-					echo esc_html( strval( Util::format_recurrences( $phase->get_interval() ) ) );
-				} else {
-					// Fixed number of recurrences.
-					printf(
-						'%s (%s)',
-						esc_html( strval( Util::format_recurrences( $phase->get_interval() ) ) ),
-						esc_html( strval( Util::format_frequency( $total_periods ) ) )
-					);
-				}
-
-				?>
-			</td>
-		</tr>
-		<tr>
-			<th scope="row">
-				<?php esc_html_e( 'Source', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php
-
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				echo $subscription->get_source_text();
-
-				?>
-			</td>
-		</tr>
-	</table>
+	<?php endforeach; ?>
 
 <?php endif; ?>
