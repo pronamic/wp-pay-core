@@ -740,17 +740,9 @@ class SubscriptionsModule {
 		}
 
 		// Start payment for next period.
-		$payment = null;
+		$payment = $this->new_period_payment( $next_period );
 
-		try {
-			$payment = $this->new_period_payment( $next_period );
-
-			$this->start_payment( $payment );
-		} catch ( \Exception $e ) {
-			Plugin::render_exception( $e );
-
-			exit;
-		}
+		$this->start_payment( $payment );
 
 		return $payment;
 	}

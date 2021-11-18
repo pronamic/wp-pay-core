@@ -146,17 +146,23 @@ class AdminSubscriptionPostType {
 
 		// Start payment for next period action.
 		if ( \filter_input( \INPUT_GET, 'pronamic_next_period', \FILTER_VALIDATE_BOOLEAN ) && \check_admin_referer( 'pronamic_next_period_' . $post_id ) ) {
-			$payment = $this->plugin->subscriptions_module->start_next_period_payment( $subscription );
+			try {
+				$payment = $this->plugin->subscriptions_module->start_next_period_payment( $subscription );
 
-			if ( null !== $payment ) {
-				// Redirect for notice.
-				$url = \add_query_arg(
-					'pronamic_payment_created',
-					$payment->get_id(),
-					\get_edit_post_link( $post_id, 'raw' )
-				);
+				if ( null !== $payment ) {
+					// Redirect for notice.
+					$url = \add_query_arg(
+						'pronamic_payment_created',
+						$payment->get_id(),
+						\get_edit_post_link( $post_id, 'raw' )
+					);
 
-				\wp_safe_redirect( $url );
+					\wp_safe_redirect( $url );
+
+					exit;
+				}
+			} catch ( \Exception $e ) {
+				Plugin::render_exception( $e );
 
 				exit;
 			}
