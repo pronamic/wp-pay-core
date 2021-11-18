@@ -175,23 +175,29 @@ class AdminSubscriptionPostType {
 			$payment = \get_pronamic_payment( $payment_id );
 
 			if ( null !== $payment ) {
-				$payments = $this->plugin->subscriptions_module->retry_payment( $payment );
+				try {
+					$payments = $this->plugin->subscriptions_module->retry_payment( $payment );
 
-				if ( ! empty( $payments ) ) {
-					$payment_ids = array();
+					if ( ! empty( $payments ) ) {
+						$payment_ids = array();
 
-					foreach ( $payments as $payment ) {
-						$payment_ids[] = $payment->get_id();
+						foreach ( $payments as $payment ) {
+							$payment_ids[] = $payment->get_id();
+						}
+
+						// Redirect for notice.
+						$url = \add_query_arg(
+							'pronamic_payment_created',
+							\rawurlencode( \implode( ',', $payment_ids ) ),
+							\get_edit_post_link( $post_id, 'raw' )
+						);
+
+						\wp_safe_redirect( $url );
+
+						exit;
 					}
-
-					// Redirect for notice.
-					$url = \add_query_arg(
-						'pronamic_payment_created',
-						\rawurlencode( \implode( ',', $payment_ids ) ),
-						\get_edit_post_link( $post_id, 'raw' )
-					);
-
-					\wp_safe_redirect( $url );
+				} catch ( \Exception $e ) {
+					Plugin::render_exception( $e );
 
 					exit;
 				}
