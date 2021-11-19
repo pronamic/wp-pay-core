@@ -27,6 +27,32 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 	</tr>
 	<tr>
 		<th scope="row">
+			<?php esc_html_e( 'Status', 'pronamic_ideal' ); ?>
+		</th>
+		<td>
+			<?php
+
+			$status_label = $payment->get_status_label();
+
+			echo \esc_html( ( null === $status_label ) ? '—' : $status_label );
+
+			// Failure reason.
+			$failure_reason = $payment->get_failure_reason();
+
+			if ( PaymentStatus::FAILURE === $payment->get_status() && null !== $failure_reason ) :
+
+				printf(
+					' — %s',
+					esc_html( $failure_reason )
+				);
+
+			endif;
+
+			?>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">
 			<?php esc_html_e( 'ID', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
@@ -153,6 +179,146 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 
 	<?php
 
+	$consumer_bank_details = $payment->get_consumer_bank_details();
+
+	if ( null !== $consumer_bank_details ) :
+
+		$consumer_name = $consumer_bank_details->get_name();
+
+		if ( null !== $consumer_name ) :
+
+			?>
+
+			<tr>
+				<th scope="row">
+					<?php esc_html_e( 'Account Holder', 'pronamic_ideal' ); ?>
+				</th>
+				<td>
+					<?php echo esc_html( $consumer_name ); ?>
+				</td>
+			</tr>
+
+			<?php
+
+		endif;
+
+		$account_holder_city = $consumer_bank_details->get_city();
+
+		if ( null !== $account_holder_city ) :
+			?>
+
+			<tr>
+				<th scope="row">
+					<?php esc_html_e( 'Account Holder City', 'pronamic_ideal' ); ?>
+				</th>
+				<td>
+					<?php echo esc_html( $account_holder_city ); ?>
+				</td>
+			</tr>
+
+			<?php
+
+		endif;
+
+		$account_holder_country = $consumer_bank_details->get_country();
+
+		if ( null !== $account_holder_country ) :
+			?>
+
+			<tr>
+				<th scope="row">
+					<?php esc_html_e( 'Account Holder Country', 'pronamic_ideal' ); ?>
+				</th>
+				<td>
+					<?php echo esc_html( $account_holder_country ); ?>
+				</td>
+			</tr>
+
+			<?php
+
+		endif;
+
+		$account_number = $consumer_bank_details->get_account_number();
+
+		if ( null !== $account_number ) :
+
+			if ( PaymentMethods::CREDIT_CARD === $payment->get_payment_method() && 4 === strlen( $account_number ) ) {
+				$account_number = sprintf( 'XXXX XXXX XXXX %d', $account_number );
+			}
+
+			?>
+
+			<tr>
+				<th scope="row">
+					<?php esc_html_e( 'Account Number', 'pronamic_ideal' ); ?>
+				</th>
+				<td>
+					<?php echo esc_html( $account_number ); ?>
+				</td>
+			</tr>
+
+			<?php
+
+		endif;
+
+		$iban = $consumer_bank_details->get_iban();
+
+		if ( null !== $iban ) :
+			?>
+
+			<tr>
+				<th scope="row">
+					<?php
+
+					printf(
+						'<abbr title="%s">%s</abbr>',
+						esc_attr( _x( 'International Bank Account Number', 'IBAN abbreviation title', 'pronamic_ideal' ) ),
+						esc_html__( 'IBAN', 'pronamic_ideal' )
+					);
+
+					?>
+				</th>
+				<td>
+					<?php echo esc_html( $iban ); ?>
+				</td>
+			</tr>
+
+			<?php
+
+		endif;
+
+		$bic = $consumer_bank_details->get_bic();
+
+		if ( null !== $bic ) :
+			?>
+
+			<tr>
+				<th scope="row">
+					<?php
+
+					printf(
+						'<abbr title="%s">%s</abbr>',
+						esc_attr( _x( 'Bank Identifier Code', 'BIC abbreviation title', 'pronamic_ideal' ) ),
+						esc_html__( 'BIC', 'pronamic_ideal' )
+					);
+
+					?>
+				</th>
+				<td>
+					<?php echo esc_html( $bic ); ?>
+				</td>
+			</tr>
+
+			<?php
+
+		endif;
+
+	endif;
+
+	?>
+
+	<?php
+
 	$bank_transfer_recipient = $payment->get_bank_transfer_recipient_details();
 
 	?>
@@ -179,89 +345,6 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 		</tr>
 
 	<?php endif; ?>
-
-	<tr>
-		<th scope="row">
-			<?php esc_html_e( 'Action URL', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<?php
-
-			$url = $payment->get_action_url();
-
-			if ( null !== $url ) {
-				printf(
-					'<a href="%s" target="_blank">%s</a>',
-					esc_attr( $url ),
-					esc_html( $url )
-				);
-			}
-
-			?>
-		</td>
-	</tr>
-	<tr>
-		<th scope="row">
-			<?php esc_html_e( 'Return URL', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<?php
-
-			$url = $payment->get_return_url();
-
-			printf(
-				'<a href="%s">%s</a>',
-				esc_attr( $url ),
-				esc_html( $url )
-			);
-
-			?>
-		</td>
-	</tr>
-	<tr>
-		<th scope="row">
-			<?php esc_html_e( 'Redirect URL', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<?php
-
-			$url = $payment->get_return_redirect_url();
-
-			printf(
-				'<a href="%s">%s</a>',
-				esc_attr( $url ),
-				esc_html( $url )
-			);
-
-			?>
-		</td>
-	</tr>
-	<tr>
-		<th scope="row">
-			<?php esc_html_e( 'Status', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<?php
-
-			$status_label = $payment->get_status_label();
-
-			echo \esc_html( ( null === $status_label ) ? '—' : $status_label );
-
-			// Failure reason.
-			$failure_reason = $payment->get_failure_reason();
-
-			if ( PaymentStatus::FAILURE === $payment->get_status() && null !== $failure_reason ) :
-
-				printf(
-					' — %s',
-					esc_html( $failure_reason )
-				);
-
-			endif;
-
-			?>
-		</td>
-	</tr>
 
 	<?php
 
@@ -488,24 +571,6 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 
 		<?php
 
-		$ip_address = $customer->get_ip_address();
-
-		if ( null !== $ip_address ) :
-			?>
-
-			<tr>
-				<th scope="row">
-					<?php esc_html_e( 'IP Address', 'pronamic_ideal' ); ?>
-				</th>
-				<td>
-					<?php echo esc_html( $ip_address ); ?>
-				</td>
-			</tr>
-
-		<?php endif; ?>
-
-		<?php
-
 		$user_id = $customer->get_user_id();
 
 		if ( null !== $user_id ) :
@@ -541,147 +606,25 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 
 		<?php endif; ?>
 
+		<?php
+
+		$ip_address = $customer->get_ip_address();
+
+		if ( null !== $ip_address ) :
+			?>
+
+			<tr>
+				<th scope="row">
+					<?php esc_html_e( 'IP Address', 'pronamic_ideal' ); ?>
+				</th>
+				<td>
+					<?php echo esc_html( $ip_address ); ?>
+				</td>
+			</tr>
+
+		<?php endif; ?>
+
 	<?php endif; ?>
-
-	<?php
-
-	$consumer_bank_details = $payment->get_consumer_bank_details();
-
-	if ( null !== $consumer_bank_details ) :
-
-		$consumer_name = $consumer_bank_details->get_name();
-
-		if ( null !== $consumer_name ) :
-
-			?>
-
-			<tr>
-				<th scope="row">
-					<?php esc_html_e( 'Account Holder', 'pronamic_ideal' ); ?>
-				</th>
-				<td>
-					<?php echo esc_html( $consumer_name ); ?>
-				</td>
-			</tr>
-
-			<?php
-
-		endif;
-
-		$account_holder_city = $consumer_bank_details->get_city();
-
-		if ( null !== $account_holder_city ) :
-			?>
-
-			<tr>
-				<th scope="row">
-					<?php esc_html_e( 'Account Holder City', 'pronamic_ideal' ); ?>
-				</th>
-				<td>
-					<?php echo esc_html( $account_holder_city ); ?>
-				</td>
-			</tr>
-
-			<?php
-
-		endif;
-
-		$account_holder_country = $consumer_bank_details->get_country();
-
-		if ( null !== $account_holder_country ) :
-			?>
-
-			<tr>
-				<th scope="row">
-					<?php esc_html_e( 'Account Holder Country', 'pronamic_ideal' ); ?>
-				</th>
-				<td>
-					<?php echo esc_html( $account_holder_country ); ?>
-				</td>
-			</tr>
-
-			<?php
-
-		endif;
-
-		$account_number = $consumer_bank_details->get_account_number();
-
-		if ( null !== $account_number ) :
-
-			if ( PaymentMethods::CREDIT_CARD === $payment->get_payment_method() && 4 === strlen( $account_number ) ) {
-				$account_number = sprintf( 'XXXX XXXX XXXX %d', $account_number );
-			}
-
-			?>
-
-			<tr>
-				<th scope="row">
-					<?php esc_html_e( 'Account Number', 'pronamic_ideal' ); ?>
-				</th>
-				<td>
-					<?php echo esc_html( $account_number ); ?>
-				</td>
-			</tr>
-
-			<?php
-
-		endif;
-
-		$iban = $consumer_bank_details->get_iban();
-
-		if ( null !== $iban ) :
-			?>
-
-			<tr>
-				<th scope="row">
-					<?php
-
-					printf(
-						'<abbr title="%s">%s</abbr>',
-						esc_attr( _x( 'International Bank Account Number', 'IBAN abbreviation title', 'pronamic_ideal' ) ),
-						esc_html__( 'IBAN', 'pronamic_ideal' )
-					);
-
-					?>
-				</th>
-				<td>
-					<?php echo esc_html( $iban ); ?>
-				</td>
-			</tr>
-
-			<?php
-
-		endif;
-
-		$bic = $consumer_bank_details->get_bic();
-
-		if ( null !== $bic ) :
-			?>
-
-			<tr>
-				<th scope="row">
-					<?php
-
-					printf(
-						'<abbr title="%s">%s</abbr>',
-						esc_attr( _x( 'Bank Identifier Code', 'BIC abbreviation title', 'pronamic_ideal' ) ),
-						esc_html__( 'BIC', 'pronamic_ideal' )
-					);
-
-					?>
-				</th>
-				<td>
-					<?php echo esc_html( $bic ); ?>
-				</td>
-			</tr>
-
-			<?php
-
-		endif;
-
-	endif;
-
-	?>
 
 	<?php if ( null !== $payment->get_billing_address() ) : ?>
 
@@ -852,19 +795,6 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 
 	<?php if ( $plugin->is_debug_mode() ) : ?>
 
-		<?php if ( ! empty( $payment->user_agent ) ) : ?>
-
-			<tr>
-				<th scope="row">
-					<?php esc_html_e( 'User Agent', 'pronamic_ideal' ); ?>
-				</th>
-				<td>
-					<?php echo esc_html( $payment->user_agent ); ?>
-				</td>
-			</tr>
-
-		<?php endif; ?>
-
 		<?php if ( null !== $payment->get_version() ) : ?>
 
 			<tr>
@@ -907,6 +837,91 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 			</tr>
 
 		<?php endif ?>
+
+	<?php endif; ?>
+
+	<?php
+
+	$customer = $payment->get_customer();
+
+	if ( null !== $customer ) :
+
+		$user_agent = $customer->get_user_agent();
+
+		if ( null !== $user_agent ) :
+			?>
+
+			<tr>
+				<th scope="row">
+					<?php esc_html_e( 'User Agent', 'pronamic_ideal' ); ?>
+				</th>
+				<td>
+					<?php echo esc_html( $user_agent ); ?>
+				</td>
+			</tr>
+
+		<?php endif; ?>
+
+	<?php endif; ?>
+
+	<tr>
+		<th scope="row">
+			<?php esc_html_e( 'Action URL', 'pronamic_ideal' ); ?>
+		</th>
+		<td>
+			<?php
+
+			$url = $payment->get_action_url();
+
+			if ( null !== $url ) {
+				printf(
+					'<a href="%s" target="_blank">%s</a>',
+					esc_attr( $url ),
+					esc_html( $url )
+				);
+			}
+
+			?>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">
+			<?php esc_html_e( 'Return URL', 'pronamic_ideal' ); ?>
+		</th>
+		<td>
+			<?php
+
+			$url = $payment->get_return_url();
+
+			printf(
+				'<a href="%s">%s</a>',
+				esc_attr( $url ),
+				esc_html( $url )
+			);
+
+			?>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">
+			<?php esc_html_e( 'Redirect URL', 'pronamic_ideal' ); ?>
+		</th>
+		<td>
+			<?php
+
+			$url = $payment->get_return_redirect_url();
+
+			printf(
+				'<a href="%s">%s</a>',
+				esc_attr( $url ),
+				esc_html( $url )
+			);
+
+			?>
+		</td>
+	</tr>
+
+	<?php if ( $plugin->is_debug_mode() ) : ?>
 
 		<tr>
 			<th scope="row">

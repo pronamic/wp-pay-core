@@ -34,14 +34,6 @@ $phase = $subscription->get_display_phase();
 	</tr>
 	<tr>
 		<th scope="row">
-			<?php esc_html_e( 'ID', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<?php echo esc_html( (string) $subscription->get_id() ); ?>
-		</td>
-	</tr>
-	<tr>
-		<th scope="row">
 			<?php esc_html_e( 'Status', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
@@ -56,6 +48,14 @@ $phase = $subscription->get_display_phase();
 			}
 
 			?>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">
+			<?php esc_html_e( 'ID', 'pronamic_ideal' ); ?>
+		</th>
+		<td>
+			<?php echo esc_html( (string) $subscription->get_id() ); ?>
 		</td>
 	</tr>
 	<tr>
