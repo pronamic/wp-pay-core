@@ -506,7 +506,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	public function new_payment() {
 		$payment = new Payment();
 
-		$payment->order_id = $subscription->get_order_id();
+		$payment->order_id = $this->get_order_id();
 
 		$payment->add_subscription( $this );
 
