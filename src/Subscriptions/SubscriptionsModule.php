@@ -1131,6 +1131,11 @@ class SubscriptionsModule {
 		);
 
 		if ( ! $cli_test ) {
+			/**
+			 * End date.
+			 *
+			 * @todo needs update, meta key `_pronamic_subscription_end_date` has been removed.
+			 */
 			$args['meta_query'][1][] = array(
 				'key'     => '_pronamic_subscription_end_date',
 				'compare' => '<=',
