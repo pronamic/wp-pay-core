@@ -255,7 +255,7 @@ class SubscriptionsModule {
 			 */
 			$is_renewal = false;
 
-			if ( SubscriptionStatus::CANCELLED === $status_before && SubscriptionStatus::ACTIVE === $status_update && '1' === $payment->get_meta( 'manual_subscription_renewal' ) ) {
+			if ( true === $payment->get_meta( 'manual_subscription_renewal' ) && SubscriptionStatus::CANCELLED === $status_before && SubscriptionStatus::ACTIVE === $status_update ) {
 				$is_renewal = true;
 			}
 
@@ -409,6 +409,7 @@ class SubscriptionsModule {
 	 * @throws \Exception Throws exception if unable to redirect (empty payment action URL).
 	 */
 	private function handle_subscription_renew( Subscription $subscription ) {
+		// Check gateway.
 		$gateway = $subscription->get_gateway();
 
 		if ( null == $gateway ) {
@@ -417,26 +418,35 @@ class SubscriptionsModule {
 			exit;
 		}
 
+		// Check current phase.
+		$current_phase = $subscription->get_current_phase();
+
+		if ( null === $current_phase ) {
+			require __DIR__ . '/../../views/subscription-renew-failed.php';
+
+			exit;
+		}
+
 		if ( 'POST' === Server::get( 'REQUEST_METHOD' ) ) {
 			try {
-				$payment = $this->new_subscription_payment( $subscription );
+				// Create payment.
+				$payment = $subscription->new_payment();
 
-				if ( null === $payment ) {
-					throw new \Exception( 'Unable to create renewal payment for subscription.' );
-				}
+				$payment->order_id = $subscription->get_order_id();
+
+				$payment->set_lines( $subscription->get_lines() );
+				$payment->set_total_amount( $current_phase->get_amount() );
 
 				// Maybe cancel current expired phase and add new phase.
 				if ( SubscriptionStatus::CANCELLED === $subscription->get_status() && 'gravityformsideal' === $subscription->get_source() ) {
-					$phase = $subscription->get_current_phase();
-
 					$now = new DateTimeImmutable();
 
-					if ( null !== $phase && $phase->get_next_date() < $now ) {
+					if ( $current_phase->get_next_date() < $now ) {
 						// Cancel current phase.
-						$phase->set_canceled_at( $now );
+						$current_phase->set_canceled_at( $now );
 
 						// Add new phase, starting now.
-						$new_phase = new SubscriptionPhase( $subscription, $now, $phase->get_interval(), $phase->get_amount() );
+						$new_phase = new SubscriptionPhase( $subscription, $now, $current_phase->get_interval(), $current_phase->get_amount() );
 
 						$subscription->add_phase( $new_phase );
 					}
@@ -446,12 +456,16 @@ class SubscriptionsModule {
 				$renewal_period = $subscription->get_renewal_period();
 
 				if ( null !== $renewal_period ) {
+					$payment->set_total_amount( $renewal_period->get_amount() );
+
 					$payment->add_period( $renewal_period );
 				}
 
-				$payment = $this->start_payment( $payment );
-
+				// Set manual subscription renewal meta.
 				$payment->set_meta( 'manual_subscription_renewal', true );
+
+				// Start payment.
+				$payment = $this->start_payment( $payment );
 			} catch ( \Exception $e ) {
 				require __DIR__ . '/../../views/subscription-renew-failed.php';
 
@@ -466,7 +480,14 @@ class SubscriptionsModule {
 				exit;
 			}
 
-			$gateway->redirect( $payment );
+			// Redirect.
+			try {
+				$gateway->redirect( $payment );
+			} catch ( \Exception $e ) {
+				Plugin::render_exception( $e );
+
+				exit;
+			}
 
 			return;
 		}
