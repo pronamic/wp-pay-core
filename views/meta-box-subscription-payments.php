@@ -46,12 +46,11 @@ if ( ! isset( $subscription ) ) {
 
 			<?php
 
-			// Get next payment (delivery) date, before calling `next_period()`.
 			$next_payment_date = $subscription->get_next_payment_date();
 
 			$next_payment_delivery_date = $subscription->get_next_payment_delivery_date();
 
-			$next_period = $subscription->next_period();
+			$next_period = $subscription->get_next_period();
 
 			$gateway = Plugin::get_gateway( $subscription->get_config_id() );
 
