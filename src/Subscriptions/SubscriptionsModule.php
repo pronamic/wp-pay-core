@@ -670,8 +670,6 @@ class SubscriptionsModule {
 		// Create payment.
 		$payment = $subscription->new_payment();
 
-		$payment->order_id = $subscription->get_order_id();
-
 		$payment->set_lines( $subscription->get_lines() );
 
 		$payment->set_total_amount( $current_phase->get_amount() );
