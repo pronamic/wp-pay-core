@@ -67,8 +67,17 @@ if ( ! isset( $subscription ) ) {
 					<td colspan="2">
 						<?php
 
-						$create_next_payment_url = wp_nonce_url(
-							add_query_arg( 'pronamic_next_period', true, \get_edit_post_link( $subscription->get_id() ) ),
+						$create_next_payment_url = \wp_nonce_url(
+							\add_query_arg(
+								array(
+									'pronamic_next_period'   => true,
+									'subscription_id'        => $subscription->get_id(),
+									'phase_sequence_number'  => $next_period->get_phase()->get_sequence_number(),
+									'start_date'             => $next_period->get_start_date()->format( DATE_W3C ),
+									'end_date'               => $next_period->get_end_date()->format( DATE_W3C ),
+								),
+								\get_edit_post_link( $subscription->get_id() )
+							),
 							'pronamic_next_period_' . $subscription->get_id()
 						);
 
@@ -172,6 +181,10 @@ if ( ! isset( $subscription ) ) {
 									\add_query_arg(
 										array(
 											'pronamic_retry_payment' => $payment_id,
+											'subscription_id'        => $subscription->get_id(),
+											'phase_sequence_number'  => $period->get_phase()->get_sequence_number(),
+											'start_date'             => $period->get_start_date()->format( DATE_W3C ),
+											'end_date'               => $period->get_end_date()->format( DATE_W3C ),
 										),
 										\get_edit_post_link( $payment_id )
 									),
