@@ -191,6 +191,25 @@ class SubscriptionPhase implements \JsonSerializable {
 	}
 
 	/**
+	 * Get end date.
+	 *
+	 * @return DateTimeImmutable|null
+	 */
+	public function get_end_date() {
+		return $this->end_date;
+	}
+
+	/**
+	 * Set end date.
+	 *
+	 * @param DateTimeImmutable $end_date End date.
+	 * @return void
+	 */
+	public function set_end_date( $end_date ) {
+		$this->end_date = $end_date;
+	}
+
+	/**
 	 * Get next date.
 	 *
 	 * @return DateTimeImmutable|null
@@ -214,6 +233,15 @@ class SubscriptionPhase implements \JsonSerializable {
 		 * If there are periods created we add these created periods.
 		 */
 		return $this->add_interval( $this->start_date, $this->periods_created );
+	}
+
+	/**
+	 * Set next date.
+	 *
+	 * @return void
+	 */
+	public function set_next_date( $next_date ) {
+		$this->next_date = $next_date;
 	}
 
 	/**
