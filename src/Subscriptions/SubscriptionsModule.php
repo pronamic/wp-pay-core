@@ -1060,10 +1060,6 @@ class SubscriptionsModule {
 		// New subscription payment.
 		$payment = $subscription->new_payment();
 
-		if ( null === $payment ) {
-			return;
-		}
-
 		// Check gateway.
 		if ( null === $payment->get_gateway() ) {
 			throw new \Exception(
