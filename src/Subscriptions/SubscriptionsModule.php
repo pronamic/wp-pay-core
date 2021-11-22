@@ -541,13 +541,7 @@ class SubscriptionsModule {
 
 			// Start new first payment.
 			try {
-				$payment = $this->new_subscription_payment( $subscription );
-
-				if ( null === $payment ) {
-					require __DIR__ . '/../../views/subscription-mandate-failed.php';
-
-					exit;
-				}
+				$payment = $subscription->new_payment();
 
 				// Set payment method.
 				$payment_method = \filter_input( \INPUT_POST, 'pronamic_pay_subscription_payment_method', \FILTER_SANITIZE_STRING );
@@ -646,35 +640,6 @@ class SubscriptionsModule {
 		require __DIR__ . '/../../views/subscription-mandate.php';
 
 		exit;
-	}
-
-	/**
-	 * Create a new subscription payment.
-	 *
-	 * @param Subscription $subscription Subscription.
-	 * @return null|Payment
-	 */
-	public function new_subscription_payment( Subscription $subscription ) {
-		// Prevent creating a new subscription payment if next payment date is (later than) the subscription end date.
-		if ( ! $this->meets_follow_up_payment_requirements( $subscription ) ) {
-			return null;
-		}
-
-		// Get amount from current subscription phase.
-		$current_phase = $subscription->get_current_phase();
-
-		if ( null === $current_phase ) {
-			return null;
-		}
-
-		// Create payment.
-		$payment = $subscription->new_payment();
-
-		$payment->set_lines( $subscription->get_lines() );
-
-		$payment->set_total_amount( $current_phase->get_amount() );
-
-		return $payment;
 	}
 
 	/**
@@ -1093,7 +1058,7 @@ class SubscriptionsModule {
 		}
 
 		// New subscription payment.
-		$payment = $this->new_subscription_payment( $subscription );
+		$payment = $subscription->new_payment();
 
 		if ( null === $payment ) {
 			return;
@@ -1109,6 +1074,17 @@ class SubscriptionsModule {
 				)
 			);
 		}
+
+		// Get amount from current subscription phase.
+		$current_phase = $subscription->get_current_phase();
+
+		if ( null === $current_phase ) {
+			return null;
+		}
+
+		$payment->set_lines( $subscription->get_lines() );
+
+		$payment->set_total_amount( $current_phase->get_amount() );
 
 		// Start payment.
 		$payment = $this->start_payment( $payment );
