@@ -66,7 +66,8 @@
 		"phpunit/phpunit": "^5.7 || ^6.0",
 		"pronamic/wp-coding-standards": "^1.0",
 		"wp-cli/wp-cli": "^2.3",
-		"wp-phpunit/wp-phpunit": ">=5.2"
+		"wp-phpunit/wp-phpunit": ">=5.2",
+		"yoast/phpunit-polyfills": "^1.0"
 	},
 	"scripts": {
 		"ci": [
