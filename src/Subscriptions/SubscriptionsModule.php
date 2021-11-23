@@ -465,7 +465,7 @@ class SubscriptionsModule {
 				$payment->set_meta( 'manual_subscription_renewal', true );
 
 				// Start payment.
-				$payment = $this->start_payment( $payment );
+				$payment = Plugin::start_payment( $payment );
 			} catch ( \Exception $e ) {
 				require __DIR__ . '/../../views/subscription-renew-failed.php';
 
@@ -640,49 +640,6 @@ class SubscriptionsModule {
 		require __DIR__ . '/../../views/subscription-mandate.php';
 
 		exit;
-	}
-
-	/**
-	 * Start payment.
-	 *
-	 * @param Payment $payment Payment.
-	 *
-	 * @throws \UnexpectedValueException Throw unexpected value exception when no subscription was found in payment.
-	 *
-	 * @return Payment
-	 */
-	public function start_payment( Payment $payment ) {
-		$subscriptions = $payment->get_subscriptions();
-
-		if ( empty( $subscriptions ) ) {
-			throw new \UnexpectedValueException( 'No subscriptions found in payment.' );
-		}
-
-		// Calculate payment start and end dates.
-		$periods = $payment->get_periods();
-
-		if ( null === $periods ) {
-			foreach ( $subscriptions as $subscription ) {
-				$period = $subscription->new_period();
-
-				if ( null === $period ) {
-					throw new \UnexpectedValueException( 'Can not create new period for subscription.' );
-				}
-
-				$payment->add_period( $period );
-			}
-		}
-
-		$periods = $payment->get_periods();
-
-		if ( null === $periods || 0 === \count( $periods ) ) {
-			throw new \UnexpectedValueException( 'Can not create payment without period for subscription.' );
-		}
-
-		// Start payment.
-		$payment = Plugin::start_payment( $payment );
-
-		return $payment;
 	}
 
 	/**
@@ -975,33 +932,20 @@ class SubscriptionsModule {
 			return;
 		}
 
-		// New subscription payment.
-		$payment = $subscription->new_payment();
+		// Next period.
+		$next_period = $subscription->get_next_period();
 
-		// Check gateway.
-		if ( null === $payment->get_gateway() ) {
-			throw new \Exception(
-				sprintf(
-				/* translators: %s: Gateway configuration ID */
-					__( 'Could not find gateway with ID `%s`.', 'pronamic_ideal' ),
-					$payment->get_config_id()
-				)
-			);
-		}
-
-		// Get amount from current subscription phase.
-		$current_phase = $subscription->get_current_phase();
-
-		if ( null === $current_phase ) {
+		if ( null === $next_period ) {
 			return;
 		}
 
+		// New payment.
+		$payment = $next_period->new_payment();
+
 		$payment->set_lines( $subscription->get_lines() );
 
-		$payment->set_total_amount( $current_phase->get_amount() );
-
 		// Start payment.
-		$payment = $this->start_payment( $payment );
+		$payment = Plugin::start_payment( $payment );
 
 		// Update payment.
 		Plugin::update_payment( $payment, false );
