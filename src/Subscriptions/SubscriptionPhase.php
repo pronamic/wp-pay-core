@@ -300,7 +300,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return void
 	 */
 	public function set_total_periods( $total_periods ) {
-		$this->set_end_date( null === $total_periods ? null :  $this->add_interval( $this->start_date, $total_periods ) );
+		$this->set_end_date( null === $total_periods ? null : $this->add_interval( $this->start_date, $total_periods ) );
 	}
 
 	/**
