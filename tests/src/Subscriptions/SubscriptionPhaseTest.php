@@ -142,10 +142,14 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 		$period_1 = $phase->next_period();
 		$period_2 = $phase->next_period();
 		$period_3 = $phase->next_period();
+		$period_4 = $phase->next_period();
+		$period_5 = $phase->next_period();
 
 		$this->assertEquals( '2020-01-31 00:00:00', $period_1->get_start_date()->format( 'Y-m-d H:i:s' ) );
 		$this->assertEquals( '2020-03-02 00:00:00', $period_2->get_start_date()->format( 'Y-m-d H:i:s' ) );
-		$this->assertEquals( '2020-03-31 00:00:00', $period_3->get_start_date()->format( 'Y-m-d H:i:s' ) );
+		$this->assertEquals( '2020-04-02 00:00:00', $period_3->get_start_date()->format( 'Y-m-d H:i:s' ) );
+		$this->assertEquals( '2020-05-02 00:00:00', $period_4->get_start_date()->format( 'Y-m-d H:i:s' ) );
+		$this->assertEquals( '2020-06-02 00:00:00', $period_5->get_start_date()->format( 'Y-m-d H:i:s' ) );
 	}
 
 	/**
