@@ -422,13 +422,11 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 			$phase->set_total_periods( $this->get_meta_int( $id, 'frequency' ) );
 
-			// Set periods created.
-			$end_date = $this->get_meta_date( $id, 'next_payment_date' );
+			// Set next date.
+			$next_date = $this->get_meta_date( $id, 'next_payment_date' );
 
-			if ( null !== $end_date ) {
-				$period = new DatePeriod( $start_date, new \DateInterval( $interval_spec ), $end_date );
-
-				$phase->set_periods_created( \iterator_count( $period ) );
+			if ( null !== $next_date ) {
+				$phase->set_next_date( $next_date );
 			}
 		}
 	}

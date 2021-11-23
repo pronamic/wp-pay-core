@@ -1075,7 +1075,7 @@ class SubscriptionsModule {
 		$current_phase = $subscription->get_current_phase();
 
 		if ( null === $current_phase ) {
-			return null;
+			return;
 		}
 
 		$payment->set_lines( $subscription->get_lines() );

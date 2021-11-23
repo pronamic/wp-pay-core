@@ -21,6 +21,44 @@ use Pronamic\WordPress\Money\TaxedMoney;
  */
 class SubscriptionHelperTest extends \WP_UnitTestCase {
 	/**
+	 * Test next.
+	 */
+	public function test_next() {
+		$subscription = new Subscription();
+
+		// Phase.
+		$phase = new SubscriptionPhase(
+			$subscription,
+			new \DateTimeImmutable( '2005-05-05' ),
+			new SubscriptionInterval( 'P1W' ),
+			new TaxedMoney( 100, 'USD' )
+		);
+
+		$phase->set_total_periods( 1 );
+
+		$subscription->add_phase( $phase );
+
+		$current_phase = $subscription->get_current_phase();
+
+		$this->assertSame( $phase, $current_phase );
+
+		$period = $phase->next_period();
+
+		$current_phase = $subscription->get_current_phase();
+
+		$this->assertNull( $current_phase );
+
+		$this->assertEquals( '2005-05-12', $phase->get_end_date()->format( 'Y-m-d' ) );
+
+		$this->assertEquals( '2005-05-05', $period->get_start_date()->format( 'Y-m-d' ) );
+		$this->assertEquals( '2005-05-12', $period->get_end_date()->format( 'Y-m-d' ) );
+
+		$next_payment_date = $subscription->get_next_payment_date();
+
+		$this->assertNull( $next_payment_date );
+	}
+
+	/**
 	 * Test calculate next payment.
 	 *
 	 * @dataProvider subscription_interval_provider
@@ -44,7 +82,7 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 
 		$subscription->add_phase( $phase );
 
-		$phase->next_period( $subscription );
+		$phase->next_period();
 
 		// Calculate.
 		$next_payment_date = $subscription->get_next_payment_date();
