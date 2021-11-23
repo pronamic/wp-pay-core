@@ -182,11 +182,11 @@ if ( ! isset( $subscription ) ) {
 									\add_query_arg(
 										\urlencode_deep(
 											array(
-												'period_payment'  => true,
+												'period_payment' => true,
 												'subscription_id' => $subscription->get_id(),
 												'sequence_number' => $period->get_phase()->get_sequence_number(),
-												'start_date'      => $period->get_start_date()->format( DATE_ATOM ),
-												'end_date'        => $period->get_end_date()->format( DATE_ATOM ),
+												'start_date' => $period->get_start_date()->format( DATE_ATOM ),
+												'end_date' => $period->get_end_date()->format( DATE_ATOM ),
 											)
 										),
 										\get_edit_post_link( $subscription->get_id() )

@@ -153,6 +153,10 @@ class AdminSubscriptionPostType {
 
 				$phase = $subscription->get_phase_by_sequence_number( $sequence_number );
 
+				if ( null === $phase ) {
+					return;
+				}
+
 				$start_date = new DateTimeImmutable( \filter_input( \INPUT_GET, 'start_date', \FILTER_SANITIZE_STRING ) );
 				$end_date   = new DateTimeImmutable( \filter_input( \INPUT_GET, 'end_date', \FILTER_SANITIZE_STRING ) );
 
@@ -163,8 +167,6 @@ class AdminSubscriptionPostType {
 				$payment->set_lines( $subscription->get_lines() );
 
 				$payment = Plugin::start_payment( $payment );
-
-				$subscription->save();
 
 				// Redirect for notice.
 				$url = \add_query_arg(
