@@ -1044,6 +1044,22 @@ class Plugin {
 			throw new \Exception( 'Gateway does not support recurring payments.' );
 		}
 
+		// Periods.
+		$periods = $payment->get_periods();
+
+		if ( null !== $periods ) {
+			foreach ( $periods as $period ) {
+				$phase = $period->get_phase();
+
+				$phase->set_next_date( \max( $phase->get_next_date(), $period->get_end_date() ) );
+			}
+		}
+
+		// Subscriptions.
+		foreach ( $subscriptions as $subscription ) {
+			$subscription->save();
+		}
+
 		// Start payment at the gateway.
 		try {
 			$gateway->start( $payment );

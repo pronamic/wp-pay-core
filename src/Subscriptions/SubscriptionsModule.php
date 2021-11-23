@@ -679,11 +679,6 @@ class SubscriptionsModule {
 			throw new \UnexpectedValueException( 'Can not create payment without period for subscription.' );
 		}
 
-		// Update subscriptions.
-		foreach ( $subscriptions as $subscription ) {
-			$subscription->save();
-		}
-
 		// Start payment.
 		$payment = Plugin::start_payment( $payment );
 

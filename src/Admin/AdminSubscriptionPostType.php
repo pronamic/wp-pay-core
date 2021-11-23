@@ -162,8 +162,6 @@ class AdminSubscriptionPostType {
 
 				$payment->set_lines( $subscription->get_lines() );
 
-				$phase->set_next_date( \max( $phase->get_next_date(), $end_date ) );
-
 				$payment = Plugin::start_payment( $payment );
 
 				$subscription->save();
