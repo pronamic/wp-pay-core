@@ -10,7 +10,9 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
+use Pronamic\WordPress\DateTime\DateTimeImmutable;
 use Pronamic\WordPress\Pay\Plugin;
+use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPeriod;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
 use Pronamic\WordPress\Pay\Util;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
@@ -145,62 +147,41 @@ class AdminSubscriptionPostType {
 		}
 
 		// Start payment for next period action.
-		if ( \filter_input( \INPUT_GET, 'pronamic_next_period', \FILTER_VALIDATE_BOOLEAN ) && \check_admin_referer( 'pronamic_next_period_' . $post_id ) ) {
+		if ( \filter_input( \INPUT_GET, 'period_payment', \FILTER_VALIDATE_BOOLEAN ) && \check_admin_referer( 'pronamic_period_payment_' . $post_id ) ) {
 			try {
-				$payment = $this->plugin->subscriptions_module->start_next_period_payment( $subscription );
+				$sequence_number = \filter_input( INPUT_GET, 'sequence_number', \FILTER_VALIDATE_INT );
 
-				if ( null !== $payment ) {
-					// Redirect for notice.
-					$url = \add_query_arg(
-						'pronamic_payment_created',
-						$payment->get_id(),
-						\get_edit_post_link( $post_id, 'raw' )
-					);
+				$phase = $subscription->get_phase_by_sequence_number( $sequence_number );
 
-					\wp_safe_redirect( $url );
+				$start_date = new DateTimeImmutable( \filter_input( \INPUT_GET, 'start_date', \FILTER_SANITIZE_STRING ) );
+				$end_date   = new DateTimeImmutable( \filter_input( \INPUT_GET, 'end_date', \FILTER_SANITIZE_STRING ) );
 
-					exit;
-				}
+				$period = new SubscriptionPeriod( $phase, $start_date, $end_date, $phase->get_amount() );
+
+				$payment = $period->new_payment();
+
+				$payment->set_lines( $subscription->get_lines() );
+
+				$phase->set_next_date( \max( $phase->get_next_date(), $end_date ) );
+
+				$payment = Plugin::start_payment( $payment );
+
+				$subscription->save();
+
+				// Redirect for notice.
+				$url = \add_query_arg(
+					'pronamic_payment_created',
+					$payment->get_id(),
+					\get_edit_post_link( $post_id, 'raw' )
+				);
+
+				\wp_safe_redirect( $url );
+
+				exit;
 			} catch ( \Exception $e ) {
 				Plugin::render_exception( $e );
 
 				exit;
-			}
-		}
-
-		// Payment retry action.
-		$payment_id = \filter_input( \INPUT_GET, 'pronamic_retry_payment', \FILTER_SANITIZE_NUMBER_INT );
-
-		if ( null !== $payment_id && \check_admin_referer( 'pronamic_retry_payment_' . $payment_id ) ) {
-			$payment = \get_pronamic_payment( $payment_id );
-
-			if ( null !== $payment ) {
-				try {
-					$payments = $this->plugin->subscriptions_module->retry_payment( $payment );
-
-					if ( ! empty( $payments ) ) {
-						$payment_ids = array();
-
-						foreach ( $payments as $payment ) {
-							$payment_ids[] = $payment->get_id();
-						}
-
-						// Redirect for notice.
-						$url = \add_query_arg(
-							'pronamic_payment_created',
-							\rawurlencode( \implode( ',', $payment_ids ) ),
-							\get_edit_post_link( $post_id, 'raw' )
-						);
-
-						\wp_safe_redirect( $url );
-
-						exit;
-					}
-				} catch ( \Exception $e ) {
-					Plugin::render_exception( $e );
-
-					exit;
-				}
 			}
 		}
 	}

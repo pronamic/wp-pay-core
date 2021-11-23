@@ -691,47 +691,6 @@ class SubscriptionsModule {
 	}
 
 	/**
-	 * New payment based on period.
-	 *
-	 * @param SubscriptionPeriod $period Subscription period.
-	 * @return Payment
-	 * @throws \Exception Throws exception if gateway integration can not be found.
-	 */
-	private function new_period_payment( SubscriptionPeriod $period ) {
-		$subscription = $period->get_phase()->get_subscription();
-
-		$payment = $subscription->new_payment();
-
-		$payment->add_period( $period );
-
-		$payment->set_lines( $subscription->get_lines() );
-		$payment->set_total_amount( $period->get_phase()->get_amount() );
-
-		return $payment;
-	}
-
-	/**
-	 * Start payment for next period.
-	 *
-	 * @param Subscription $subscription Subscription.
-	 * @return Payment|null
-	 */
-	public function start_next_period_payment( Subscription $subscription ) {
-		$next_period = $subscription->new_period();
-
-		if ( null === $next_period ) {
-			return null;
-		}
-
-		// Start payment for next period.
-		$payment = $this->new_period_payment( $next_period );
-
-		$this->start_payment( $payment );
-
-		return $payment;
-	}
-
-	/**
 	 * Can payment be retried.
 	 *
 	 * @param Payment $payment Payment to retry.
@@ -760,42 +719,6 @@ class SubscriptionsModule {
 		}
 
 		return true;
-	}
-
-	/**
-	 * Retry a payment by starting a payment for each period of given payment.
-	 *
-	 * @param Payment $payment Payment.
-	 * @return array<int, Payment>|null
-	 */
-	public function retry_payment( Payment $payment ) {
-		// Check if payment can be retried.
-		if ( ! $this->can_retry_payment( $payment ) ) {
-			return null;
-		}
-
-		// Check periods.
-		$periods = $payment->get_periods();
-
-		if ( null === $periods ) {
-			return null;
-		}
-
-		// Start new payment for period.
-		$payments = array();
-
-		foreach ( $periods as $period ) {
-			$period_payment = $this->new_period_payment( $period );
-
-			$period_payment->set_source( $payment->get_source() );
-			$period_payment->set_source_id( $payment->get_source_id() );
-
-			$period_payment = $this->start_payment( $period_payment );
-
-			$payments[] = $period_payment;
-		}
-
-		return $payments;
 	}
 
 	/**

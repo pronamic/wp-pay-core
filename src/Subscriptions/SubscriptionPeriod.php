@@ -122,6 +122,23 @@ class SubscriptionPeriod {
 	}
 
 	/**
+	 * New payment.
+	 *
+	 * @return Payment
+	 */
+	public function new_payment() {
+		$subscription = $this->phase->get_subscription();
+
+		$payment = $subscription->new_payment();
+
+		$payment->add_period( $this );
+
+		$payment->set_total_amount( $this->phase->get_amount() );
+
+		return $payment;
+	}
+
+	/**
 	 * From JSON.
 	 *
 	 * @param object $json Subscription period JSON.
