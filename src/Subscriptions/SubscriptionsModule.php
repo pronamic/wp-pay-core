@@ -461,8 +461,8 @@ class SubscriptionsModule {
 					$payment->add_period( $renewal_period );
 				}
 
-				// Set manual subscription renewal meta.
-				$payment->set_meta( 'manual_subscription_renewal', true );
+				// Set Mollie sequence type to first.
+				$payment->set_meta( 'mollie_sequence_type', 'first' );
 
 				// Start payment.
 				$payment = Plugin::start_payment( $payment );
@@ -943,6 +943,8 @@ class SubscriptionsModule {
 		$payment = $next_period->new_payment();
 
 		$payment->set_lines( $subscription->get_lines() );
+
+		$payment->set_meta( 'mollie_sequence_type', 'recurring' );
 
 		// Start payment.
 		$payment = Plugin::start_payment( $payment );

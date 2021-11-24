@@ -435,30 +435,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	}
 
 	/**
-	 * Check if manual renewal payment for this subscription.
-	 *
-	 * @param Payment $payment Payment.
-	 * @return bool
-	 */
-	public function is_manual_renewal_payment( Payment $payment ) {
-		// Check manual renewal meta.
-		$manual_renewal = $payment->get_meta( 'manual_subscription_renewal' );
-
-		if ( true !== $manual_renewal ) {
-			return false;
-		}
-
-		// Check subscription.
-		foreach ( $payment->get_subscriptions() as $subscription ) {
-			if ( $subscription === $this ) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
 	 * Get the next payment date of this subscription.
 	 *
 	 * @return DateTimeInterface|null
