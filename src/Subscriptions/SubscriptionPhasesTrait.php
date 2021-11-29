@@ -41,6 +41,7 @@ trait SubscriptionPhasesTrait {
 	 * Set phases.
 	 *
 	 * @param array<int, SubscriptionPhase> $phases Phases.
+	 * @return void
 	 */
 	public function set_phases( $phases ) {
 		$this->phases = $phases;
