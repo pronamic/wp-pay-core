@@ -171,6 +171,11 @@ class SubscriptionsModule {
 				}
 			);
 		}
+
+		// Notifications.
+		$notifications_controller = new SubscriptionsNotificationsController( $this );
+
+		$notifications_controller->setup();
 	}
 
 	/**
@@ -745,7 +750,8 @@ class SubscriptionsModule {
 		);
 
 		if ( \array_key_exists( 'page', $args ) ) {
-			$query_args['paged'] = $args['page'];
+			$query_args['paged']         = $args['paged'];
+			$query_args['no_found_rows'] = true;
 		}
 
 		$query = new WP_Query( $query_args );
