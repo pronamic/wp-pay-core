@@ -149,13 +149,6 @@ class Install {
 
 		$current_version = get_option( 'pronamic_pay_version', null );
 
-		// Upgrade 6.2.0 - Fixes missing subscription next payment dates.
-		if ( null !== $current_version && \version_compare( $current_version, '6.2.0', '<' ) ) {
-			$upgrade = new Upgrade620();
-
-			$upgrade->execute();
-		}
-
 		// Redirect.
 		if ( null !== $this->admin->about_page ) {
 			try {
