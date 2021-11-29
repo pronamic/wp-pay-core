@@ -87,7 +87,6 @@ class StatusChecker {
 		if ( \in_array(
 			$payment->get_payment_method(),
 			array(
-				PaymentMethods::AFTERPAY,
 				PaymentMethods::AFTERPAY_NL,
 				PaymentMethods::BANK_TRANSFER,
 				PaymentMethods::DIRECT_DEBIT,

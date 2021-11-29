@@ -15,6 +15,7 @@ use Pronamic\WordPress\Pay\Banks\BankAccountDetails;
 use Pronamic\WordPress\Pay\AbstractDataStoreCPT;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\ContactName;
+use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\Plugin;
 
@@ -327,6 +328,15 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			$payment_method = $this->get_meta_string( $id, 'method' );
 
 			$payment->set_payment_method( $payment_method );
+		}
+
+		/**
+		 * Clarify difference between afterpay.nl and afterpay.com.
+		 *
+		 * @link https://github.com/pronamic/wp-pronamic-pay/issues/282
+		 */
+		if ( PaymentMethods::AFTERPAY === $payment_method ) {
+			$payment->set_payment_method( PaymentMethods::AFTERPAY_NL );
 		}
 
 		// Version.
