@@ -543,7 +543,6 @@ abstract class Gateway {
 	 */
 	public function get_gender_field() {
 		$payment_methods = array(
-			PaymentMethods::AFTERPAY,
 			PaymentMethods::AFTERPAY_NL,
 			PaymentMethods::FOCUM,
 			PaymentMethods::IN3,
@@ -583,7 +582,6 @@ abstract class Gateway {
 	 */
 	public function get_birth_date_field() {
 		$payment_methods = array(
-			PaymentMethods::AFTERPAY,
 			PaymentMethods::AFTERPAY_NL,
 			PaymentMethods::FOCUM,
 			PaymentMethods::IN3,
