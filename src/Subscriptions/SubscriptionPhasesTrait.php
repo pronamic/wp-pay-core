@@ -38,6 +38,15 @@ trait SubscriptionPhasesTrait {
 	}
 
 	/**
+	 * Set phases.
+	 *
+	 * @param array<int, SubscriptionPhase> $phases Phases.
+	 */
+	public function set_phases( $phases ) {
+		$this->phases = $phases;
+	}
+
+	/**
 	 * Add the specified phase to this subscription.
 	 *
 	 * @param SubscriptionPhase $phase Phase.
