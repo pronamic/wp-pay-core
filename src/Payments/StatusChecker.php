@@ -88,6 +88,7 @@ class StatusChecker {
 			$payment->get_payment_method(),
 			array(
 				PaymentMethods::AFTERPAY,
+				PaymentMethods::AFTERPAY_NL,
 				PaymentMethods::BANK_TRANSFER,
 				PaymentMethods::DIRECT_DEBIT,
 				PaymentMethods::KLARNA_PAY_LATER,
