@@ -621,7 +621,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
 	 * Get first payment for subscription.
 	 *
-	 * @param Subscription $subscription Subscription
+	 * @param Subscription $subscription Subscription.
 	 * @return \Pronamic\WordPress\Pay\Payments\Payment|null
 	 */
 	private function get_first_payment( $subscription ) {
@@ -631,11 +631,15 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			return null;
 		}
 
-		$payments = get_pronamic_payments_by_meta( '_pronamic_payment_subscription_id', $id, array(
-			'posts_per_page' => 1,
-			'orderby'        => 'post_date',
-			'order'          => 'ASC',
-		) );
+		$payments = get_pronamic_payments_by_meta(
+			'_pronamic_payment_subscription_id',
+			$id,
+			array(
+				'posts_per_page' => 1,
+				'orderby'        => 'post_date',
+				'order'          => 'ASC',
+			)
+		);
 
 		$payment = \reset( $payments );
 

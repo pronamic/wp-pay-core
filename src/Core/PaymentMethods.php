@@ -360,7 +360,7 @@ class PaymentMethods {
 	public static function get_payment_methods() {
 		$payment_methods = array(
 			self::AFTERPAY_NL             => _x( 'AfterPay', 'afterpay.nl', 'pronamic_ideal' ),
-			self::AFTERPAY_COM            => _x( 'Afterpay', 'afterpay.com',  'pronamic_ideal' ),
+			self::AFTERPAY_COM            => _x( 'Afterpay', 'afterpay.com', 'pronamic_ideal' ),
 			self::ALIPAY                  => __( 'Alipay', 'pronamic_ideal' ),
 			self::AMERICAN_EXPRESS        => __( 'American Express', 'pronamic_ideal' ),
 			self::APPLE_PAY               => __( 'Apple Pay', 'pronamic_ideal' ),
