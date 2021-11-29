@@ -369,33 +369,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	}
 
 	/**
-	 * Get the first payment of this subscription.
-	 *
-	 * @deprecated
-	 * @return Payment|null
-	 */
-	public function get_first_payment() {
-		if ( null === $this->id ) {
-			return null;
-		}
-
-		// Query arguments to get first payment.
-		$args = array(
-			'posts_per_page' => 1,
-			'orderby'        => 'post_date',
-			'order'          => 'ASC',
-		);
-
-		$first_payment = get_pronamic_payments_by_meta( '_pronamic_payment_subscription_id', $this->id, $args );
-
-		if ( ! empty( $first_payment ) ) {
-			return $first_payment[0];
-		}
-
-		return null;
-	}
-
-	/**
 	 * Check if the payment is the first for this subscription.
 	 *
 	 * @param Payment $payment Payment.

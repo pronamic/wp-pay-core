@@ -602,7 +602,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$payment_method = $subscription->get_payment_method();
 
 		if ( null === $config_id || null === $payment_method ) {
-			$first_payment = $subscription->get_first_payment();
+			$first_payment = $this->get_first_payment( $subscription );
 
 			if ( is_object( $first_payment ) ) {
 				// Gateway.
@@ -616,6 +616,34 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Get first payment for subscription.
+	 *
+	 * @param Subscription $subscription Subscription
+	 * @return \Pronamic\WordPress\Pay\Payments\Payment|null
+	 */
+	private function get_first_payment( $subscription ) {
+		$id = $subscription->get_id();
+
+		if ( empty( $id ) ) {
+			return null;
+		}
+
+		$payments = get_pronamic_payments_by_meta( '_pronamic_payment_subscription_id', $id, array(
+			'posts_per_page' => 1,
+			'orderby'        => 'post_date',
+			'order'          => 'ASC',
+		) );
+
+		$payment = \reset( $payments );
+
+		if ( false !== $payment ) {
+			return $payment;
+		}
+
+		return null;
 	}
 
 	/**
