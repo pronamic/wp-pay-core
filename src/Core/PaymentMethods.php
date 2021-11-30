@@ -114,6 +114,15 @@ class PaymentMethods {
 	const BITCOIN = 'bitcoin';
 
 	/**
+	 * BLIK
+	 *
+	 * @since unreleased
+	 * @link  https://blik.com/
+	 * @var string
+	 */
+	const BLIK = 'blik';
+
+	/**
 	 * Bunq
 	 *
 	 * @link https://www.sisow.nl/news/00009
@@ -262,6 +271,15 @@ class PaymentMethods {
 	const MASTERCARD = 'mastercard';
 
 	/**
+	 * MB WAY
+	 *
+	 * @since unreleased
+	 * @link  https://www.mbway.pt/
+	 * @var string
+	 */
+	const MB_WAY = 'mb_way';
+
+	/**
 	 * Bancontact/Mister Cash
 	 *
 	 * @deprecated "Bancontact/Mister Cash" was renamed to just "Bancontact".
@@ -369,6 +387,7 @@ class PaymentMethods {
 			self::BELFIUS                 => __( 'Belfius Direct Net', 'pronamic_ideal' ),
 			self::BILLINK                 => __( 'Billink', 'pronamic_ideal' ),
 			self::BITCOIN                 => __( 'Bitcoin', 'pronamic_ideal' ),
+			self::BLIK                    => __( 'BLIK', 'pronamic_ideal' ),
 			self::BUNQ                    => __( 'Bunq', 'pronamic_ideal' ),
 			self::CAPAYABLE               => __( 'Capayable', 'pronamic_ideal' ),
 			self::IN3                     => __( 'In3', 'pronamic_ideal' ),
@@ -400,6 +419,7 @@ class PaymentMethods {
 			self::KLARNA_PAY_LATER        => __( 'Klarna Pay Later', 'pronamic_ideal' ),
 			self::MAESTRO                 => __( 'Maestro', 'pronamic_ideal' ),
 			self::MASTERCARD              => __( 'Mastercard', 'pronamic_ideal' ),
+			self::MB_WAY                  => __( 'MB WAY', 'pronamic_ideal' ),
 			self::PAYCONIQ                => __( 'Payconiq', 'pronamic_ideal' ),
 			self::PAYPAL                  => __( 'PayPal', 'pronamic_ideal' ),
 			self::PRZELEWY24              => __( 'Przelewy24', 'pronamic_ideal' ),
