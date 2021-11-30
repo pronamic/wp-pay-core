@@ -10,6 +10,10 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
+use WP_CLI;
+use WP_Post;
+use WP_Query;
+
 /**
  * Subscriptions completion controller
  */
@@ -105,7 +109,7 @@ class SubscriptionsCompletionController {
 		$posts = \array_filter(
 			$query->posts,
 			function( $post ) {
-				return ( $post instanceof \WP_Post );
+				return ( $post instanceof WP_Post );
 			}
 		);
 

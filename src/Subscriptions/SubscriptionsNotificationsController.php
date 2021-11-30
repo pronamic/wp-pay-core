@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use Pronamic\WordPress\DateTime\DateTime;
+use WP_Post;
 use WP_Query;
 
 /**
@@ -111,7 +112,7 @@ class SubscriptionsNotificationsController {
 		$posts = \array_filter(
 			$query->posts,
 			function( $post ) {
-				return ( $post instanceof \WP_Post );
+				return ( $post instanceof WP_Post );
 			}
 		);
 

@@ -12,6 +12,7 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use Pronamic\WordPress\Pay\Plugin;
 use WP_CLI;
+use WP_Post;
 use WP_Query;
 
 /**
@@ -204,7 +205,7 @@ class SubscriptionsFollowUpPaymentsController {
 		$posts = \array_filter(
 			$query->posts,
 			function( $post ) {
-				return ( $post instanceof \WP_Post );
+				return ( $post instanceof WP_Post );
 			}
 		);
 
