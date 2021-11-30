@@ -10,7 +10,6 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
-use Give\Framework\FieldsAPI\Date;
 use Pronamic\WordPress\DateTime\DateTime;
 use WP_Query;
 
