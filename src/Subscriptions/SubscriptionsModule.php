@@ -74,9 +74,6 @@ class SubscriptionsModule {
 		\add_action( 'pronamic_pay_pre_create_subscription', array( SubscriptionHelper::class, 'complement_subscription' ), 10, 1 );
 		\add_action( 'pronamic_pay_pre_create_payment', array( $this, 'complement_subscription_by_payment' ), 10, 1 );
 
-		// The 'pronamic_pay_complete_subscriptions' hook completes active subscriptions.
-		\add_action( 'pronamic_pay_complete_subscriptions', array( $this, 'complete_subscriptions' ) );
-
 		// Listen to payment status changes so we can update related subscriptions.
 		\add_action( 'pronamic_payment_status_update', array( $this, 'payment_status_update' ) );
 
@@ -95,6 +92,11 @@ class SubscriptionsModule {
 		$notifications_controller = new SubscriptionsNotificationsController( $this );
 
 		$notifications_controller->setup();
+
+		// Completion.
+		$completion_controller = new SubscriptionsCompletionController( $this );
+
+		$completion_controller->setup();
 	}
 
 	/**
@@ -616,81 +618,6 @@ class SubscriptionsModule {
 	 */
 	public function is_processing_disabled() {
 		return (bool) \get_option( 'pronamic_pay_subscriptions_processing_disabled', false );
-	}
-
-	/**
-	 * Complete subscriptions.
-	 *
-	 * @param bool $cli_test Whether or not this a CLI test.
-	 * @return void
-	 */
-	public function complete_subscriptions( $cli_test = false ) {
-		$args = array(
-			'post_type'   => 'pronamic_pay_subscr',
-			'nopaging'    => true,
-			'orderby'     => 'post_date',
-			'order'       => 'ASC',
-			'post_status' => 'subscr_active',
-			'meta_query'  => array(
-				array(
-					'key'     => '_pronamic_subscription_source',
-					'compare' => 'NOT IN',
-					'value'   => array(
-						// Don't create payments for sources which schedule payments.
-						'woocommerce',
-					),
-				),
-				array(
-					'relation' => 'AND',
-					array(
-						'key'     => '_pronamic_subscription_next_payment',
-						'compare' => 'NOT EXISTS',
-					),
-				),
-			),
-		);
-
-		if ( ! $cli_test ) {
-			/**
-			 * End date.
-			 *
-			 * @todo needs update, meta key `_pronamic_subscription_end_date` has been removed.
-			 */
-			$args['meta_query'][1][] = array(
-				'key'     => '_pronamic_subscription_end_date',
-				'compare' => '<=',
-				'value'   => current_time( 'mysql', true ),
-				'type'    => 'DATETIME',
-			);
-		}
-
-		$query = new WP_Query( $args );
-
-		$posts = \array_filter(
-			$query->posts,
-			function( $post ) {
-				return ( $post instanceof \WP_Post );
-			}
-		);
-
-		foreach ( $posts as $post ) {
-			if ( $cli_test ) {
-				WP_CLI::log( sprintf( 'Processing post `%d` - "%s"…', $post->ID, get_the_title( $post ) ) );
-			}
-
-			// Complete subscription.
-			try {
-				$subscription = \get_pronamic_subscription( $post->ID );
-
-				if ( null !== $subscription ) {
-					$subscription->status = SubscriptionStatus::COMPLETED;
-
-					$subscription->save();
-				}
-			} catch ( \Exception $e ) {
-				continue;
-			}
-		}
 	}
 
 	/**

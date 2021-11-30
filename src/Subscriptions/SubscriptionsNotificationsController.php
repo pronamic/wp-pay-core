@@ -32,6 +32,7 @@ class SubscriptionsNotificationsController {
 	public function __construct( SubscriptionsModule $subscriptions_module ) {
 		$this->subscriptions_module = $subscriptions_module;
 	}
+
 	/**
 	 * Setup.
 	 *
