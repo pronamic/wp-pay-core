@@ -19,9 +19,9 @@ use Pronamic\WordPress\Pay\GatewayIntegrations;
 // phpcs:disable Generic.Files.OneObjectStructurePerFile.MultipleFound
 
 /**
- * Test integration.
+ * Test gateway integration.
  */
-class TestIntegration extends AbstractGatewayIntegration {
+class TestGatewayIntegration extends AbstractGatewayIntegration {
 	/**
 	 * Construct test integration.
 	 */
@@ -88,7 +88,7 @@ class SubscriptionsFollowUpPaymentsControllerTest extends \WP_UnitTestCase {
 		 */
 		$plugin->gateway_integrations = new GatewayIntegrations(
 			array(
-				new TestIntegration(),
+				new TestGatewayIntegration(),
 			)
 		);
 
