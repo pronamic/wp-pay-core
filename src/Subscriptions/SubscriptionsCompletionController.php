@@ -19,22 +19,6 @@ use WP_Query;
  */
 class SubscriptionsCompletionController {
 	/**
-	 * Subscriptions module.
-	 *
-	 * @var SubscriptionsModule
-	 */
-	private $subscriptions_module;
-
-	/**
-	 * Construct subscriptions notifications controller.
-	 *
-	 * @param SubscriptionsModule $subscriptions_module Subscriptions module.
-	 */
-	public function __construct( SubscriptionsModule $subscriptions_module ) {
-		$this->subscriptions_module = $subscriptions_module;
-	}
-
-	/**
 	 * Setup.
 	 *
 	 * @return void
@@ -42,8 +26,11 @@ class SubscriptionsCompletionController {
 	public function setup() {
 		\add_action( 'init', array( $this, 'maybe_schedule_actions' ) );
 
-		// The 'pronamic_pay_complete_subscriptions' hook completes active subscriptions.
-		\add_action( 'pronamic_pay_complete_subscriptions', array( $this, 'complete_subscriptions' ) );
+		\add_action( 'pronamic_pay_schedule_subscriptions_completion', array( $this, 'schedule_all' ) );
+
+		\add_action( 'pronamic_pay_schedule_paged_subscriptions_completion', array( $this, 'schedule_paged' ) );
+
+		\add_action( 'pronamic_pay_complete_subscription', array( $this, 'action_complete_subscription' ) );
 	}
 
 	/**
@@ -53,58 +40,58 @@ class SubscriptionsCompletionController {
 	 * @return void
 	 */
 	public function maybe_schedule_actions() {
-		if ( false === \as_next_scheduled_action( 'pronamic_pay_complete_subscriptions', array(), 'pronamic-pay' ) ) {
-			\as_schedule_cron_action( \time(), '0 * * * *', 'pronamic_pay_complete_subscriptions', array(), 'pronamic-pay' );
+		if ( false === \as_next_scheduled_action( 'pronamic_pay_schedule_subscriptions_completion', array(), 'pronamic-pay' ) ) {
+			\as_schedule_cron_action( \time(), '0 * * * *', 'pronamic_pay_schedule_subscriptions_completion', array(), 'pronamic-pay' );
 		}
 	}
 
 	/**
-	 * Complete subscriptions.
+	 * Schedule all.
 	 *
-	 * @param bool $cli_test Whether or not this a CLI test.
 	 * @return void
 	 */
-	public function complete_subscriptions( $cli_test = false ) {
-		$args = array(
-			'post_type'   => 'pronamic_pay_subscr',
-			'nopaging'    => true,
-			'orderby'     => 'post_date',
-			'order'       => 'ASC',
-			'post_status' => 'subscr_active',
-			'meta_query'  => array(
-				array(
-					'key'     => '_pronamic_subscription_source',
-					'compare' => 'NOT IN',
-					'value'   => array(
-						// Don't create payments for sources which schedule payments.
-						'woocommerce',
-					),
-				),
-				array(
-					'relation' => 'AND',
-					array(
-						'key'     => '_pronamic_subscription_next_payment',
-						'compare' => 'NOT EXISTS',
-					),
-				),
-			),
-		);
-
-		if ( ! $cli_test ) {
-			/**
-			 * End date.
-			 *
-			 * @todo needs update, meta key `_pronamic_subscription_end_date` has been removed.
-			 */
-			$args['meta_query'][1][] = array(
-				'key'     => '_pronamic_subscription_end_date',
-				'compare' => '<=',
-				'value'   => current_time( 'mysql', true ),
-				'type'    => 'DATETIME',
-			);
+	public function schedule_all() {
+		if ( $this->is_processing_disabled() ) {
+			return;
 		}
 
-		$query = new WP_Query( $args );
+		$query = $this->get_subscriptions_wp_query_that_require_completion();
+
+		$pages = \range( $query->max_num_pages, 1 );
+
+		foreach ( $pages as $page ) {
+			$this->schedule_page( $page );
+		}
+	}
+
+	/**
+	 * Schedule page.
+	 *
+	 * @param int $page Page.
+	 * @return int
+	 */
+	private function schedule_page( $page ) {
+		return \as_enqueue_async_action(
+			'pronamic_pay_schedule_paged_subscriptions_completion',
+			array(
+				'page' => $page,
+			),
+			'pronamic-pay'
+		);
+	}
+
+	/**
+	 * Schedule paged.
+	 *
+	 * @param int $page Page.
+	 * @return void
+	 */
+	public function schedule_paged( $page ) {
+		$query = $this->get_subscriptions_wp_query_that_require_completion(
+			array(
+				'paged' => $page,
+			)
+		);
 
 		$posts = \array_filter(
 			$query->posts,
@@ -113,23 +100,175 @@ class SubscriptionsCompletionController {
 			}
 		);
 
+		$subscriptions = array();
+
 		foreach ( $posts as $post ) {
-			if ( $cli_test ) {
-				WP_CLI::log( sprintf( 'Processing post `%d` - "%s"…', $post->ID, get_the_title( $post ) ) );
-			}
+			$subscription = \get_pronamic_subscription( $post->ID );
 
-			// Complete subscription.
-			try {
-				$subscription = \get_pronamic_subscription( $post->ID );
-
-				if ( null !== $subscription ) {
-					$subscription->status = SubscriptionStatus::COMPLETED;
-
-					$subscription->save();
-				}
-			} catch ( \Exception $e ) {
-				continue;
+			if ( null !== $subscription ) {
+				$subscriptions[] = $subscription;
 			}
 		}
+
+		foreach ( $subscriptions as $subscription ) {
+			$this->schedule_subscription_completion( $subscription );
+		}
+	}
+
+
+	/**
+	 * Test if the subscription meets the notification requirements.
+	 *
+	 * @param Subscription $subscription Subscription.
+	 * @return bool True if meets requirements, false otherwise.
+	 */
+	private function meets_completion_requirements( Subscription $subscription ) {
+		/**
+		 * If a subscription does not have a end date, it makes no sense to complete.
+		 */
+		$end_date = $subscription->get_end_date();
+
+		if ( null === $end_date ) {
+			return false;
+		}
+
+		/**
+		 * If the end date is in the future, it makes no sense to complete.
+		 */
+		$date = new \DateTimeImmutable();
+
+		if ( $end_date > $date ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Schedule subscription completion.
+	 *
+	 * @param Subscription $subscription Subscription.
+	 * @return int|null
+	 */
+	private function schedule_subscription_completion( Subscription $subscription ) {
+		if ( ! $this->meets_completion_requirements( $subscription ) ) {
+			return null;
+		}
+
+		$action_id = $subscription->get_meta( 'completion_action_id' );
+
+		if ( ! empty( $action_id ) ) {
+			return $action_id;
+		}
+
+		$actions_args = array(
+			'subscription_id' => $subscription->get_id(),
+		);
+
+		if ( false !== \as_next_scheduled_action( 'pronamic_pay_complete_subscription', $actions_args, 'pronamic-pay' ) ) {
+			return null;
+		}
+
+		$action_id = \as_enqueue_async_action(
+			'pronamic_pay_complete_subscription',
+			$actions_args,
+			'pronamic-pay'
+		);
+
+		$subscription->set_meta( 'completion_action_id', $action_id );
+
+		$subscription->save();
+
+		return $action_id;
+	}
+
+	/**
+	 * Action complete subscription.
+	 *
+	 * @param int $subscription_id Subscription ID.
+	 * @return void
+	 * @throws \Exception Throws exception when unable to load subscription.
+	 */
+	public function action_complete_subscription( $subscription_id ) {
+		// Check subscription.
+		$subscription = \get_pronamic_subscription( (int) $subscription_id );
+
+		if ( null === $subscription ) {
+			throw new \Exception(
+				\sprintf(
+					'Unable to load subscription from post ID: %d.',
+					$subscription_id
+				)
+			);
+		}
+
+		$this->complete_subscription( $subscription );
+
+		$subscription->set_meta( 'completion_action_id', null );
+
+		$subscription->save();
+	}
+
+	/**
+	 * Complete subscription.
+	 *
+	 * @param Subscription $subscription Subscription.
+	 * @return void
+	 */
+	public function complete_subscription( Subscription $subscription ) {
+		if ( ! $this->meets_completion_requirements( $subscription ) ) {
+			return;
+		}
+
+		$subscription->status = SubscriptionStatus::COMPLETED;
+	}
+
+	/**
+	 * Get WordPress query for subscriptions that require a notification.
+	 *
+	 * @param array $args Arguments.
+	 * @return WP_Query
+	 */
+	private function get_subscriptions_wp_query_that_require_completion( $args = array() ) {
+		$date = new \DateTimeImmutable( 'now', new \DateTimeZone( 'GMT' ) );
+
+		$query_args = array(
+			'post_type'      => 'pronamic_pay_subscr',
+			/**
+			 * Posts per page is set to 100, higher could result in performance issues.
+			 *
+			 * @link https://github.com/WordPress/WordPress-Coding-Standards/wiki/Customizable-sniff-properties#wp-postsperpage-post-limit
+			 */
+			'posts_per_page' => 100,
+			'post_status'    => 'subscr_active',
+			'meta_query'     => array(
+				array(
+					'key'     => '_pronamic_subscription_end_date',
+					'compare' => '<=',
+					'value'   => $date->format( 'Y-m-d H:i:s' ),
+					'type'    => 'DATETIME',
+				),
+			),
+			'order'          => 'DESC',
+			'orderby'        => 'ID',
+		);
+
+		if ( \array_key_exists( 'paged', $args ) ) {
+			$query_args['paged']         = $args['paged'];
+			$query_args['no_found_rows'] = true;
+		}
+
+		$query = new WP_Query( $query_args );
+
+		return $query;
+	}
+
+	/**
+	 * Is subscriptions processing disabled.
+	 *
+	 * @return bool True if processing recurring payment is disabled, false otherwise.
+	 */
+	private function is_processing_disabled() {
+		return (bool) \get_option( 'pronamic_pay_subscriptions_processing_disabled', false );
 	}
 }

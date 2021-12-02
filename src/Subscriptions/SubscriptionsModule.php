@@ -94,7 +94,7 @@ class SubscriptionsModule {
 		$notifications_controller->setup();
 
 		// Completion.
-		$completion_controller = new SubscriptionsCompletionController( $this );
+		$completion_controller = new SubscriptionsCompletionController();
 
 		$completion_controller->setup();
 	}

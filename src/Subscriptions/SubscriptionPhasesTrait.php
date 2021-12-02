@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\DateTime\DateTimeImmutable;
 use Pronamic\WordPress\Money\Money;
 
 /**
@@ -236,5 +237,20 @@ trait SubscriptionPhasesTrait {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get end date.
+	 * 
+	 * @return DateTimeImmutable|null
+	 */
+	public function get_end_date() {
+		$end_phase = \end( $this->phases );
+
+		if ( false === $end_phase ) {
+			return null;
+		}
+
+		return $end_phase->get_end_date();
 	}
 }

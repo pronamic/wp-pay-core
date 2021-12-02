@@ -81,7 +81,7 @@ class SubscriptionsNotificationsController {
 	}
 
 	/**
-	 * Scheduel subscriptions follow-up payment.
+	 * Schedule paged.
 	 *
 	 * @param int $page Page.
 	 * @return void
