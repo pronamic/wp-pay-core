@@ -19,22 +19,6 @@ use WP_Query;
  */
 class SubscriptionsNotificationsController {
 	/**
-	 * Subscriptions module.
-	 *
-	 * @var SubscriptionsModule
-	 */
-	private $subscriptions_module;
-
-	/**
-	 * Construct subscriptions notifications controller.
-	 *
-	 * @param SubscriptionsModule $subscriptions_module Subscriptions module.
-	 */
-	public function __construct( SubscriptionsModule $subscriptions_module ) {
-		$this->subscriptions_module = $subscriptions_module;
-	}
-
-	/**
 	 * Setup.
 	 *
 	 * @return void
@@ -67,7 +51,7 @@ class SubscriptionsNotificationsController {
 	 * @return void
 	 */
 	public function schedule_all() {
-		if ( $this->subscriptions_module->is_processing_disabled() ) {
+		if ( $this->is_processing_disabled() ) {
 			return;
 		}
 
@@ -238,7 +222,6 @@ class SubscriptionsNotificationsController {
 		$this->send_subscription_renewal_notification( $subscription );
 
 		$subscription->set_meta( 'send_subscription_renewal_notification_action_id', null );
-		$subscription->set_meta( 'notification_date_1_week', \gmdate( DATE_ATOM ) );
 
 		$subscription->save();
 	}
@@ -265,6 +248,8 @@ class SubscriptionsNotificationsController {
 		 * @param Subscription $subscription Subscription.
 		 */
 		\do_action( 'pronamic_subscription_renewal_notice_' . $source, $subscription );
+
+		$subscription->set_meta( 'notification_date_1_week', \gmdate( DATE_ATOM ) );
 	}
 
 	/**
@@ -314,5 +299,14 @@ class SubscriptionsNotificationsController {
 		$query = new WP_Query( $query_args );
 
 		return $query;
+	}
+
+	/**
+	 * Is subscriptions processing disabled.
+	 *
+	 * @return bool True if processing recurring payment is disabled, false otherwise.
+	 */
+	private function is_processing_disabled() {
+		return (bool) \get_option( 'pronamic_pay_subscriptions_processing_disabled', false );
 	}
 }

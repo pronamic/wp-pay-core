@@ -89,7 +89,7 @@ class SubscriptionsModule {
 		$follow_up_payments_controller->setup();
 
 		// Notifications.
-		$notifications_controller = new SubscriptionsNotificationsController( $this );
+		$notifications_controller = new SubscriptionsNotificationsController();
 
 		$notifications_controller->setup();
 

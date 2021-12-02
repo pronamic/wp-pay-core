@@ -1,11 +1,11 @@
 <?php
 /**
- * Subscription Phase Test
+ * Subscriptions follow-up payments controller test
  *
  * @author    Pronamic <info@pronamic.eu>
  * @copyright 2005-2021 Pronamic
  * @license   GPL-3.0-or-later
- * @package   Pronamic\WordPress\Pay\Payments
+ * @package   Pronamic\WordPress\Pay\Subscriptions
  */
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
@@ -68,10 +68,7 @@ class TestGateway extends Gateway {
 }
 
 /**
- * Subscription Phase Test
- *
- * @author  Remco Tolsma
- * @version 2.5.0
+ * Subscriptions follow-up payments controller test.
  */
 class SubscriptionsFollowUpPaymentsControllerTest extends \WP_UnitTestCase {
 	/**
