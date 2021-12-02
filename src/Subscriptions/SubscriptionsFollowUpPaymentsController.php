@@ -20,22 +20,6 @@ use WP_Query;
  */
 class SubscriptionsFollowUpPaymentsController {
 	/**
-	 * Subscriptions module.
-	 *
-	 * @var SubscriptionsModule
-	 */
-	private $subscriptions_module;
-
-	/**
-	 * Construct subscriptions follow-up payments controller.
-	 *
-	 * @param SubscriptionsModule $subscriptions_module Subscriptions module.
-	 */
-	public function __construct( SubscriptionsModule $subscriptions_module ) {
-		$this->subscriptions_module = $subscriptions_module;
-	}
-
-	/**
 	 * Setup.
 	 *
 	 * @return void
@@ -88,7 +72,7 @@ class SubscriptionsFollowUpPaymentsController {
 		WP_CLI::add_command(
 			'pay subscription schedule',
 			function( $args, $assoc_args ) {
-				if ( $this->subscriptions_module->is_processing_disabled() ) {
+				if ( $this->is_processing_disabled() ) {
 					WP_CLI::error( 'Subscriptions processing is disabled.' );
 				}
 
@@ -160,7 +144,7 @@ class SubscriptionsFollowUpPaymentsController {
 	 * @return void
 	 */
 	public function schedule_all() {
-		if ( $this->subscriptions_module->is_processing_disabled() ) {
+		if ( $this->is_processing_disabled() ) {
 			return;
 		}
 
@@ -406,5 +390,14 @@ class SubscriptionsFollowUpPaymentsController {
 		$query = new WP_Query( $query_args );
 
 		return $query;
+	}
+
+	/**
+	 * Is subscriptions processing disabled.
+	 *
+	 * @return bool True if processing recurring payment is disabled, false otherwise.
+	 */
+	private function is_processing_disabled() {
+		return (bool) \get_option( 'pronamic_pay_subscriptions_processing_disabled', false );
 	}
 }

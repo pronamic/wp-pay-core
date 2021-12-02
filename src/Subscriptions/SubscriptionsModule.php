@@ -84,7 +84,7 @@ class SubscriptionsModule {
 		\add_action( 'rest_api_init', array( $this, 'rest_api_init' ) );
 
 		// Follow-up payments.
-		$follow_up_payments_controller = new SubscriptionsFollowUpPaymentsController( $this );
+		$follow_up_payments_controller = new SubscriptionsFollowUpPaymentsController();
 
 		$follow_up_payments_controller->setup();
 

@@ -997,6 +997,25 @@ class Plugin {
 	}
 
 	/**
+	 * Get default gateway configuration ID.
+	 *
+	 * @return int|null
+	 */
+	private static function get_default_config_id() {
+		$value = (int) \get_option( 'pronamic_pay_config_id' );
+
+		if ( 0 === $value ) {
+			return null;
+		}
+
+		if ( 'publish' !== \get_post_status( $value ) ) {
+			return null;
+		}
+
+		return $value;
+	}
+
+	/**
 	 * Start payment.
 	 *
 	 * @param Payment $payment The payment to start at the specified gateway.
@@ -1008,7 +1027,7 @@ class Plugin {
 		$config_id = $payment->get_config_id();
 
 		if ( null === $config_id ) {
-			$config_id = \get_option( 'pronamic_pay_config_id' );
+			$config_id = self::get_default_config_id();
 		}
 
 		/**
