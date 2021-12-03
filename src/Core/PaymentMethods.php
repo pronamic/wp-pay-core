@@ -344,6 +344,14 @@ class PaymentMethods {
 	const SWISH = 'swish';
 
 	/**
+	 * TWINT
+	 *
+	 * @var string
+	 * @since unreleased
+	 */
+	const TWINT = 'twint';
+
+	/**
 	 * Constant for the V PAY payment method.
 	 *
 	 * @link https://en.wikipedia.org/wiki/V_Pay
@@ -427,6 +435,7 @@ class PaymentMethods {
 			self::SOFORT                  => __( 'SOFORT Banking', 'pronamic_ideal' ),
 			self::SPRAYPAY                => __( 'SprayPay', 'pronamic_ideal' ),
 			self::SWISH                   => __( 'Swish', 'pronamic_ideal' ),
+			self::TWINT                   => __( 'TWINT', 'pronamic_ideal' ),
 			self::V_PAY                   => __( 'V PAY', 'pronamic_ideal' ),
 			self::VIPPS                   => __( 'Vipps', 'pronamic_ideal' ),
 			self::VISA                    => __( 'Visa', 'pronamic_ideal' ),
