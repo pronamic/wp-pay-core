@@ -486,12 +486,8 @@ class PaymentMethods {
 			$size = '640x360';
 		}
 
-		if ( self::KLARNA_PAY_LATER === $method ) {
-			$method = 'klarna';
-		}
-
 		return \sprintf(
-			'https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.6.8/dist/methods/%1$s/method-%1$s-%2$s.svg',
+			'https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.7.0/dist/methods/%1$s/method-%1$s-%2$s.svg',
 			\str_replace( '_', '-', $method ),
 			$size
 		);
