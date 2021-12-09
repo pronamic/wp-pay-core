@@ -410,7 +410,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	/**
 	 * Get the next payment date of this subscription.
 	 *
-	 * @return DateTimeInterface|null
+	 * @return DateTimeImmutable|null
 	 */
 	public function get_next_payment_date() {
 		// Get current phase.
@@ -443,10 +443,9 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 		/**
 		 * Filters the subscription next payment delivery date.
 		 *
+		 * @param DateTimeImmutable $next_payment_delivery_date Next payment delivery date.
+		 * @param Subscription      $subscription               Subscription.
 		 * @since unreleased
-		 *
-		 * @param DateTime     $next_payment_delivery_date Next payment delivery date.
-		 * @param Subscription $subscription               Subscription.
 		 */
 		$next_payment_delivery_date = \apply_filters( 'pronamic_pay_subscription_next_payment_delivery_date', $next_payment_delivery_date, $subscription );
 
