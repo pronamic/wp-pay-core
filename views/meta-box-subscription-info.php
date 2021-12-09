@@ -85,7 +85,25 @@ $phase = $subscription->get_display_phase();
 			<?php esc_html_e( 'Payment Method', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
-			<?php echo esc_html( (string) PaymentMethods::get_name( $subscription->get_payment_method() ) ); ?>
+			<?php
+
+			$payment_method = $subscription->get_payment_method();
+
+			// Icon.
+			$icon_url = PaymentMethods::get_icon_url( $payment_method );
+
+			if ( null !== $icon_url ) {
+				\printf(
+					'<span class="pronamic-pay-tip" title="%2$s"><img src="%1$s" alt="%2$s" title="%2$s" width="32" valign="bottom" /></span> ',
+					\esc_url( $icon_url ),
+					\esc_attr( (string) PaymentMethods::get_name( $payment_method ) )
+				);
+			}
+
+			// Name.
+			echo esc_html( (string) PaymentMethods::get_name( $payment_method ) );
+
+			?>
 		</td>
 	</tr>
 	<tr>

@@ -160,13 +160,26 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 		<td>
 			<?php
 
-			$method = $payment->get_payment_method();
+			$payment_method = $payment->get_payment_method();
 
-			$name = PaymentMethods::get_name( $method );
-			$name = ( null === $name ) ? $method : $name;
+			// Icon.
+			$icon_url = PaymentMethods::get_icon_url( $payment_method );
+
+			if ( null !== $icon_url ) {
+				\printf(
+					'<span class="pronamic-pay-tip" title="%2$s"><img src="%1$s" alt="%2$s" title="%2$s" width="32" valign="bottom" /></span> ',
+					\esc_url( $icon_url ),
+					\esc_attr( (string) PaymentMethods::get_name( $payment_method ) )
+				);
+			}
+
+			// Name.
+			$name = PaymentMethods::get_name( $payment_method );
+			$name = ( null === $name ) ? $payment_method : $name;
 
 			echo esc_html( (string) $name );
 
+			// Issuer.
 			$issuer = $payment->get_meta( 'issuer' );
 
 			if ( $issuer ) {

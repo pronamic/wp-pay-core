@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
+use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Plugin;
@@ -560,6 +561,20 @@ class AdminPaymentPostType {
 
 				break;
 			case 'pronamic_payment_amount':
+				// Payment method icon.
+				$payment_method = $payment->get_payment_method();
+
+				$icon_url = PaymentMethods::get_icon_url( $payment_method );
+
+				if ( null !== $icon_url ) {
+					\printf(
+						'<span class="pronamic-pay-tip" title="%2$s"><img src="%1$s" alt="%2$s" title="%2$s" width="32" valign="bottom" /></span> ',
+						\esc_url( $icon_url ),
+						\esc_attr( (string) PaymentMethods::get_name( $payment_method ) )
+					);
+				}
+
+				// Amount.
 				$total_amount = $payment->get_total_amount();
 
 				$refunded_value = null;
