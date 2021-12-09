@@ -283,6 +283,7 @@ class AdminSubscriptionPostType {
 				esc_html__( 'Status', 'pronamic_ideal' ),
 				esc_html__( 'Status', 'pronamic_ideal' )
 			),
+			'pronamic_subscription_method'    => '',
 			'pronamic_subscription_title'     => __( 'Subscription', 'pronamic_ideal' ),
 			'pronamic_subscription_customer'  => __( 'Customer', 'pronamic_ideal' ),
 			'pronamic_subscription_amount'    => __( 'Amount', 'pronamic_ideal' ),
@@ -366,6 +367,20 @@ class AdminSubscriptionPostType {
 				);
 
 				break;
+			case 'pronamic_subscription_method':
+				$payment_method = $subscription->get_payment_method();
+
+				$icon_url = PaymentMethods::get_icon_url( $payment_method );
+
+				if ( null !== $icon_url ) {
+					\printf(
+						'<span class="pronamic-pay-tip" title="%2$s"><img src="%1$s" alt="%2$s" title="%2$s" width="32" valign="bottom" /></span> ',
+						\esc_url( $icon_url ),
+						\esc_attr( (string) PaymentMethods::get_name( $payment_method ) )
+					);
+				}
+
+				break;
 			case 'pronamic_subscription_title':
 				$source_id          = $subscription->get_source_id();
 				$source_description = $subscription->get_source_description();
@@ -436,20 +451,6 @@ class AdminSubscriptionPostType {
 
 				break;
 			case 'pronamic_subscription_amount':
-				// Payment method icon.
-				$payment_method = $subscription->get_payment_method();
-
-				$icon_url = PaymentMethods::get_icon_url( $payment_method );
-
-				if ( null !== $icon_url ) {
-					\printf(
-						'<span class="pronamic-pay-tip" title="%2$s"><img src="%1$s" alt="%2$s" title="%2$s" width="32" valign="bottom" /></span> ',
-						\esc_url( $icon_url ),
-						\esc_attr( (string) PaymentMethods::get_name( $payment_method ) )
-					);
-				}
-
-				// Amount.
 				echo esc_html( null === $phase ? '—' : $phase->get_amount()->format_i18n() );
 
 				break;

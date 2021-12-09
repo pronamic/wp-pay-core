@@ -333,6 +333,7 @@ class AdminPaymentPostType {
 				esc_html__( 'Subscription', 'pronamic_ideal' ),
 				esc_html__( 'Subscription', 'pronamic_ideal' )
 			),
+			'pronamic_payment_method'       => '',
 			'pronamic_payment_title'        => __( 'Payment', 'pronamic_ideal' ),
 			'pronamic_payment_transaction'  => __( 'Transaction', 'pronamic_ideal' ),
 			'pronamic_payment_gateway'      => __( 'Gateway', 'pronamic_ideal' ),
@@ -462,6 +463,20 @@ class AdminPaymentPostType {
 				}
 
 				break;
+			case 'pronamic_payment_method':
+				$payment_method = $payment->get_payment_method();
+
+				$icon_url = PaymentMethods::get_icon_url( $payment_method );
+
+				if ( null !== $icon_url ) {
+					\printf(
+						'<span class="pronamic-pay-tip" title="%2$s"><img src="%1$s" alt="%2$s" title="%2$s" width="32" valign="bottom" /></span> ',
+						\esc_url( $icon_url ),
+						\esc_attr( (string) PaymentMethods::get_name( $payment_method ) )
+					);
+				}
+
+				break;
 			case 'pronamic_payment_title':
 				$source_id          = $payment->get_source_id();
 				$source_description = $payment->get_source_description();
@@ -561,20 +576,6 @@ class AdminPaymentPostType {
 
 				break;
 			case 'pronamic_payment_amount':
-				// Payment method icon.
-				$payment_method = $payment->get_payment_method();
-
-				$icon_url = PaymentMethods::get_icon_url( $payment_method );
-
-				if ( null !== $icon_url ) {
-					\printf(
-						'<span class="pronamic-pay-tip" title="%2$s"><img src="%1$s" alt="%2$s" title="%2$s" width="32" valign="bottom" /></span> ',
-						\esc_url( $icon_url ),
-						\esc_attr( (string) PaymentMethods::get_name( $payment_method ) )
-					);
-				}
-
-				// Amount.
 				$total_amount = $payment->get_total_amount();
 
 				$refunded_value = null;
