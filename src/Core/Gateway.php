@@ -120,6 +120,7 @@ abstract class Gateway {
 		 *
 		 * Possible values:
 		 *  - payment_status_request      Gateway can request current payment status.
+		 *  - recurring_apple_pay         Recurring payments through Apple Pay.
 		 *  - recurring_credit_card       Recurring payments through credit card.
 		 *  - recurring_direct_debit      Recurring payments through direct debit.
 		 */
