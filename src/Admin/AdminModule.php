@@ -914,9 +914,13 @@ class AdminModule {
 
 		if ( isset( $counts->payment_pending ) && $counts->payment_pending > 0 ) {
 			$badge = sprintf(
-				' <span class="awaiting-mod update-plugins count-%s"><span class="processing-count">%s</span></span>',
+				' <span class="awaiting-mod update-plugins count-%1$s" title="%2$s"><span class="processing-count">%1$s</span></span>',
 				$counts->payment_pending,
-				$counts->payment_pending
+				sprintf(
+					/* translators: %d: pending payments count */
+					\_n( '%d payment pending', '%d payments pending', $counts->payment_pending, 'pronamic_ideal' ),
+					$counts->payment_pending
+				)
 			);
 		}
 
