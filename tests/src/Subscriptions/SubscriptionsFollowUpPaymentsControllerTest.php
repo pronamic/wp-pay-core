@@ -3,7 +3,7 @@
  * Subscriptions follow-up payments controller test
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Subscriptions
  */
@@ -35,7 +35,7 @@ class TestGatewayIntegration extends AbstractGatewayIntegration {
 
 	/**
 	 * Get gateway.
-	 * 
+	 *
 	 * @param int $post_id Post ID.
 	 * @return TestGateway
 	 */
@@ -57,7 +57,7 @@ class TestGatewayConfig extends GatewayConfig {
 class TestGateway extends Gateway {
 	/**
 	 * Construct test gateway.
-	 * 
+	 *
 	 * @param TestGatewayConfig $config Test gateway configuration.
 	 */
 	public function __construct( TestGatewayConfig $config ) {
