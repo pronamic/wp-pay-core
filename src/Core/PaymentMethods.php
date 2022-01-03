@@ -535,6 +535,7 @@ class PaymentMethods {
 		// Add additional methods suitable for recurring payments.
 		$payment_methods[ self::APPLE_PAY ]   = self::APPLE_PAY;
 		$payment_methods[ self::CREDIT_CARD ] = self::CREDIT_CARD;
+		$payment_methods[ self::PAYPAL ]      = self::PAYPAL;
 
 		return $payment_methods;
 	}
