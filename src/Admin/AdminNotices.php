@@ -89,5 +89,79 @@ class AdminNotices {
 				wp_kses_post( $notice )
 			);
 		}
+
+		$this->removed_support_notices();
+	}
+
+	/**
+	 * Removed support notices.
+	 *
+	 * @link https://github.com/pronamic/wp-pronamic-pay/issues/293
+	 */
+	private function removed_support_notices() {
+		$items = array(
+			(object) array(
+				'id'          => 'removed-extension-active-event-espresso-legacy',
+				'name'        => \__( 'Event Espresso 3', 'pronamic_ideal' ),
+				'condition'   => \defined( '\EVENT_ESPRESSO_VERSION' ) && \version_compare( \EVENT_ESPRESSO_VERSION, '4.0.0', '<' ),
+				'dismissible' => true,
+				'version'     => '8',
+			),
+			(object) array(
+				'id'          => 'removed-extension-active-s2member',
+				'name'        => \__( 's2Member', 'pronamic_ideal' ),
+				'condition'   => \defined( '\WS_PLUGIN__S2MEMBER_VERSION' ),
+				'dismissible' => true,
+				'version'     => '8',
+			),
+			(object) array(
+				'id'          => 'removed-extension-active-wp-e-commerce',
+				'name'        => \__( 'WP eCommerce', 'pronamic_ideal' ),
+				'condition'   => \class_exists( '\WP_eCommerce' ),
+				'dismissible' => true,
+				'version'     => '8',
+			),
+		);
+
+		foreach ( $items as $item ) {
+			$this->removed_support_notice( $item );
+		}
+	}
+
+	/**
+	 * Removed support notice.
+	 *
+	 * @param object $item Item.
+	 * @retun void
+	 */
+	private function removed_support_notice( $item ) {
+		if ( false === $item->condition ) {
+			return;
+		}
+
+		$is_dismissed = (bool) \get_user_option( 'pronamic_pay_dismissed_notification_' . $item->id, \get_current_user_id() );
+
+		if ( true === $is_dismissed ) {
+			return;
+		}
+
+		$message = \sprintf(
+			'We notice that the "%1$s" plugin is active, support for the "%1$s" plugin has been removed from the Pronamic Pay plugin since version %2$s.',
+			$item->name,
+			$item->version
+		);
+
+		$dismiss_notification_url = \add_query_arg( 'pronamic_pay_dismiss_notification', $item->id );
+
+		?>
+		<div class="error notice is-dismissible">
+			<p>
+				<strong><?php esc_html_e( 'Pronamic Pay', 'pronamic_ideal' ); ?></strong> —
+				<?php echo \esc_html( $message ); ?>
+			</p>
+
+			<a href="<?php echo \esc_url( $dismiss_notification_url ); ?>" class="notice-dismiss"><span class="screen-reader-text"><?php \esc_html_e( 'Dismiss this notice.', 'pronamic_ideal' ); ?></span></a>
+		</div>
+		<?php
 	}
 }
