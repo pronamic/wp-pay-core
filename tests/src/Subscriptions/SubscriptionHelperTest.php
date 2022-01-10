@@ -3,7 +3,7 @@
  * Subscription Helper Test
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -21,106 +21,41 @@ use Pronamic\WordPress\Money\TaxedMoney;
  */
 class SubscriptionHelperTest extends \WP_UnitTestCase {
 	/**
-	 * Test calculate end date no start date.
+	 * Test next.
 	 */
-	public function test_calculate_end_date_no_start_date() {
+	public function test_next() {
 		$subscription = new Subscription();
 
-		$end_date = SubscriptionHelper::calculate_end_date( $subscription );
-
-		$this->assertNull( $end_date );
-	}
-
-	/**
-	 * Test calculate end date no interval.
-	 */
-	public function test_calculate_end_date_no_interval() {
-		$subscription = new Subscription();
-
-		$subscription->set_start_date( new DateTime( '2005-05-05 00:00:00' ) );
-
-		$end_date = SubscriptionHelper::calculate_end_date( $subscription );
-
-		$this->assertNull( $end_date );
-	}
-
-	/**
-	 * Test calculate end date.
-	 */
-	public function test_calculate_end_date() {
-		$subscription = new Subscription();
-
+		// Phase.
 		$phase = new SubscriptionPhase(
 			$subscription,
-			new \DateTimeImmutable( '2005-05-05 00:00:00' ),
-			new SubscriptionInterval( 'P1M' ),
-			new TaxedMoney( 5, 'EUR' )
+			new \DateTimeImmutable( '2005-05-05' ),
+			new SubscriptionInterval( 'P1W' ),
+			new TaxedMoney( 100, 'USD' )
 		);
 
-		$phase->set_total_periods( 12 );
+		$phase->set_total_periods( 1 );
 
 		$subscription->add_phase( $phase );
 
-		// Calculate.
-		$end_date = SubscriptionHelper::calculate_end_date( $subscription );
+		$current_phase = $subscription->get_current_phase();
 
-		$this->assertInstanceOf( \DateTimeInterface::class, $end_date );
-		$this->assertEquals( '2006-05-05 00:00:00', $end_date->format( 'Y-m-d H:i:s' ) );
-	}
+		$this->assertSame( $phase, $current_phase );
 
-	/**
-	 * Test calculate expirty date no start date.
-	 */
-	public function test_calculate_expiry_date_no_start_date() {
-		$subscription = new Subscription();
+		$period = $phase->next_period();
 
-		// Calculate.
-		$expiry_date = SubscriptionHelper::calculate_expiry_date( $subscription );
+		$current_phase = $subscription->get_current_phase();
 
-		$this->assertNull( $expiry_date );
-	}
+		$this->assertNull( $current_phase );
 
-	/**
-	 * Test calculate expiry date.
-	 */
-	public function test_calculate_expiry_date() {
-		$subscription = new Subscription();
+		$this->assertEquals( '2005-05-12', $phase->get_end_date()->format( 'Y-m-d' ) );
 
-		$subscription->set_start_date( new \DateTime( '2005-05-05 00:00:00' ) );
+		$this->assertEquals( '2005-05-05', $period->get_start_date()->format( 'Y-m-d' ) );
+		$this->assertEquals( '2005-05-12', $period->get_end_date()->format( 'Y-m-d' ) );
 
-		// Calculate.
-		$expiry_date = SubscriptionHelper::calculate_expiry_date( $subscription );
+		$next_payment_date = $subscription->get_next_payment_date();
 
-		$this->assertInstanceOf( \DateTimeInterface::class, $expiry_date );
-		$this->assertEquals( '2005-05-05 00:00:00', $expiry_date->format( 'Y-m-d H:i:s' ) );
-	}
-
-	/**
-	 * Test calculate next payment date no start date.
-	 */
-	public function test_calculate_next_payment_date_no_start_date() {
-		$subscription = new Subscription();
-
-		// Calculate.
-		$this->expectException( \InvalidArgumentException::class );
-		$this->expectExceptionMessage( 'Can not calculate next payment date of subscription without phases.' );
-
-		$next_payment_date = SubscriptionHelper::calculate_next_payment_date( $subscription );
-	}
-
-	/**
-	 * Test calculate next payment date no interval.
-	 */
-	public function test_calculate_next_payment_date_no_interval() {
-		$subscription = new Subscription();
-
-		$subscription->set_start_date( new \DateTime( '2005-05-05 00:00:00' ) );
-
-		// Calculate.
-		$this->expectException( \InvalidArgumentException::class );
-		$this->expectExceptionMessage( 'Can not calculate next payment date of subscription without phases.' );
-
-		$next_payment_date = SubscriptionHelper::calculate_next_payment_date( $subscription );
+		$this->assertNull( $next_payment_date );
 	}
 
 	/**
@@ -132,14 +67,8 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 	 * @param int    $recurrences   Recurrences.
 	 * @param string $expected_date Expected date.
 	 */
-	public function test_calculate_next_payment_date( $start_date, $interval_spec, $recurrences, $expected_date ) {
+	public function test_next_payment_date( $start_date, $interval_spec, $recurrences, $expected_date ) {
 		$subscription = new Subscription();
-
-		// Start Date.
-		$subscription->set_start_date( new \DateTime( $start_date ) );
-
-		// Recurrences.
-		$subscription->frequency = $recurrences;
 
 		// Phase.
 		$phase = new SubscriptionPhase(
@@ -153,10 +82,10 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 
 		$subscription->add_phase( $phase );
 
-		$phase->next_period( $subscription );
+		$phase->next_period();
 
 		// Calculate.
-		$next_payment_date = SubscriptionHelper::calculate_next_payment_date( $subscription );
+		$next_payment_date = $subscription->get_next_payment_date();
 
 		if ( null !== $next_payment_date ) {
 			$this->assertInstanceOf( \DateTimeInterface::class, $next_payment_date );
@@ -190,7 +119,7 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 		$subscription = new Subscription();
 
 		// Calculate.
-		$next_payment_delivery_date = SubscriptionHelper::calculate_next_payment_delivery_date( $subscription );
+		$next_payment_delivery_date = $subscription->get_next_payment_delivery_date();
 
 		$this->assertNull( $next_payment_delivery_date );
 	}
@@ -201,11 +130,18 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 	public function test_calculate_next_payment_delivery_date() {
 		$subscription = new Subscription();
 
-		// Next Payment Date.
-		$subscription->set_next_payment_date( new \Pronamic\WordPress\DateTime\DateTime( '2005-05-05' ) );
+		// Phase.
+		$phase = new SubscriptionPhase(
+			$subscription,
+			new \DateTimeImmutable( '2005-05-05' ),
+			new SubscriptionInterval( 'P1M' ),
+			new TaxedMoney( 100, 'USD' )
+		);
 
-		// Calculate.
-		$next_payment_delivery_date = SubscriptionHelper::calculate_next_payment_delivery_date( $subscription );
+		$subscription->add_phase( $phase );
+
+		// Test.
+		$next_payment_delivery_date = $subscription->get_next_payment_delivery_date();
 
 		$this->assertInstanceOf( \DateTimeInterface::class, $next_payment_delivery_date );
 		$this->assertEquals( '2005-05-05', $next_payment_delivery_date->format( 'Y-m-d' ) );
@@ -217,8 +153,15 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 	public function test_calculate_next_payment_delivery_date_filter() {
 		$subscription = new Subscription();
 
-		// Next Payment Date.
-		$subscription->set_next_payment_date( new \Pronamic\WordPress\DateTime\DateTime( '2005-05-05' ) );
+		// Phase.
+		$phase = new SubscriptionPhase(
+			$subscription,
+			new \DateTimeImmutable( '2005-05-05' ),
+			new SubscriptionInterval( 'P1M' ),
+			new TaxedMoney( 100, 'USD' )
+		);
+
+		$subscription->add_phase( $phase );
 
 		// Filter.
 		\add_filter(
@@ -230,8 +173,8 @@ class SubscriptionHelperTest extends \WP_UnitTestCase {
 			2
 		);
 
-		// Calculate.
-		$next_payment_delivery_date = SubscriptionHelper::calculate_next_payment_delivery_date( $subscription );
+		// Test.
+		$next_payment_delivery_date = $subscription->get_next_payment_delivery_date();
 
 		$this->assertInstanceOf( \DateTimeInterface::class, $next_payment_delivery_date );
 		$this->assertEquals( '1970-01-01', $next_payment_delivery_date->format( 'Y-m-d' ) );

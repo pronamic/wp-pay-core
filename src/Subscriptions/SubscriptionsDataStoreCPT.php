@@ -3,7 +3,7 @@
  * Subscriptions Data Store CPT
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Subscriptions
  */
@@ -254,8 +254,18 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 *
 	 * @param Subscription $subscription Create the specified subscription in this data store.
 	 * @return bool
+	 * @throws \Exception Throws exception when create fails.
 	 */
 	public function create( $subscription ) {
+		/**
+		 * Pre-create subscription.
+		 *
+		 * @param Subscription $subscription Subscription.
+		 */
+		\do_action( 'pronamic_pay_pre_create_subscription', $subscription );
+
+		$customer = $subscription->get_customer();
+
 		$result = wp_insert_post(
 			array(
 				'post_type'             => 'pronamic_pay_subscr',
@@ -264,14 +274,14 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 					'Subscription – %s',
 					date_i18n( _x( 'M d, Y @ h:i A', 'Subscription title date format parsed by `date_i18n`.', 'pronamic_ideal' ) )
 				),
-				'post_author'           => $subscription->user_id,
+				'post_author'           => null === $customer ? null : $customer->get_user_id(),
 				'pronamic_subscription' => $subscription,
 			),
 			true
 		);
 
 		if ( is_wp_error( $result ) ) {
-			return false;
+			throw new \Exception( 'Could not craete subscription' );
 		}
 
 		$this->update_post_meta( $subscription );
@@ -294,6 +304,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 *
 	 * @param Subscription $subscription The subscription to update in this data store.
 	 * @return bool
+	 * @throws \Exception Throws exception when update fails.
 	 */
 	public function update( $subscription ) {
 		$id = $subscription->get_id();
@@ -310,7 +321,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$result = wp_update_post( $data, true );
 
 		if ( is_wp_error( $result ) ) {
-			return false;
+			throw new \Exception( 'Could not update subscription' );
 		}
 
 		return true;
@@ -395,13 +406,13 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			}
 
 			// Phase.
-			$start_date = $subscription->start_date;
+			$start_date = $this->get_meta_date( $id, 'start_date' );
 
 			if ( null === $start_date ) {
 				$start_date = clone $subscription->get_date();
 			}
 
-			$interval_spec = 'P' . $subscription->get_interval() . $subscription->get_interval_period();
+			$interval_spec = 'P' . $this->get_meta_int( $id, 'interval' ) . $this->get_meta_string( $id, 'interval_period' );
 
 			$phase = $subscription->new_phase(
 				$start_date,
@@ -409,19 +420,13 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 				$amount
 			);
 
-			$phase->set_total_periods( $subscription->get_frequency() );
+			$phase->set_total_periods( $this->get_meta_int( $id, 'frequency' ) );
 
-			// Set periods created.
-			$end_date = $subscription->get_next_payment_date();
+			// Set next date.
+			$next_date = $this->get_meta_date( $id, 'next_payment_date' );
 
-			if ( null === $end_date ) {
-				$end_date = $subscription->get_expiry_date();
-			}
-
-			if ( null !== $end_date ) {
-				$period = new DatePeriod( $start_date, new \DateInterval( $interval_spec ), $end_date );
-
-				$phase->set_periods_created( \iterator_count( $period ) );
+			if ( null !== $next_date ) {
+				$phase->set_next_date( $next_date );
 			}
 		}
 	}
@@ -578,98 +583,71 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			return;
 		}
 
-		$subscription->config_id       = $this->get_meta_int( $id, 'config_id' );
-		$subscription->key             = $this->get_meta_string( $id, 'key' );
-		$subscription->source          = $this->get_meta_string( $id, 'source' );
-		$subscription->source_id       = $this->get_meta_string( $id, 'source_id' );
-		$subscription->frequency       = $this->get_meta_int( $id, 'frequency' );
-		$subscription->interval        = $this->get_meta_int( $id, 'interval' );
-		$subscription->interval_period = $this->get_meta_string( $id, 'interval_period' );
-		$subscription->transaction_id  = $this->get_meta_string( $id, 'transaction_id' );
-		$subscription->status          = $this->get_meta_string( $id, 'status' );
-		$subscription->description     = $this->get_meta_string( $id, 'description' );
-		$subscription->email           = $this->get_meta_string( $id, 'email' );
-		$subscription->customer_name   = $this->get_meta_string( $id, 'customer_name' );
-		$subscription->payment_method  = $this->get_meta_string( $id, 'payment_method' );
+		$subscription->transaction_id = $this->get_meta_string( $id, 'transaction_id' );
+		$subscription->status         = $this->get_meta_string( $id, 'status' );
 
-		// First Payment.
-		$first_payment = $subscription->get_first_payment();
+		// Payment method.
+		$payment_method = $subscription->get_payment_method();
 
-		if ( is_object( $first_payment ) ) {
-			if ( empty( $subscription->config_id ) ) {
-				$subscription->config_id = $first_payment->config_id;
-			}
-
-			if ( empty( $subscription->payment_method ) ) {
-				$subscription->payment_method = $first_payment->method;
-			}
-
-			$customer = $subscription->get_customer();
-
-			$first_customer = $first_payment->get_customer();
-
-			if ( null !== $customer && null !== $first_customer ) {
-				$user_id = $customer->get_user_id();
-
-				$first_customer_user_id = $first_customer->get_user_id();
-
-				if ( empty( $user_id ) && ! empty( $first_customer_user_id ) ) {
-					$customer->set_user_id( $first_customer_user_id );
-				}
-			}
-		}
-
-		// Date interval.
-		$date_interval = $subscription->get_date_interval();
-
-		// Start Date.
-		$start_date = $this->get_meta_date( $id, 'start_date' );
-
-		if ( empty( $start_date ) ) {
-			// If no meta start date is set, use subscription date.
-			$start_date = clone $subscription->date;
-		}
-
-		$subscription->start_date = $start_date;
-
-		// End Date.
-		$end_date = $this->get_meta_date( $id, 'end_date' );
-
-		if ( empty( $end_date ) && null !== $subscription->frequency && null !== $date_interval ) {
-			// @link https://stackoverflow.com/a/10818981/6411283
-			$period = new DatePeriod( $start_date, $date_interval, $subscription->frequency );
-
-			$dates = iterator_to_array( $period );
-
-			$end_date = end( $dates );
-		}
-
-		$subscription->end_date = $end_date;
-
-		// Expiry Date.
-		$expiry_date = $this->get_meta_date( $id, 'expiry_date' );
-
-		if ( empty( $expiry_date ) && null !== $date_interval ) {
-			// If no meta expiry date is set, use start date + 1 interval period.
-			$expiry_date = clone $start_date;
-
-			$expiry_date->add( $date_interval );
-		}
-
-		$subscription->expiry_date = $expiry_date;
-
-		// Next Payment Date.
-		$subscription->next_payment_date = $this->get_meta_date( $id, 'next_payment' );
-
-		// Next Payment Delivery Date.
-		$subscription->next_payment_delivery_date = $this->get_meta_date( $id, 'next_payment_delivery_date' );
-
-		if ( empty( $subscription->next_payment_delivery_date ) && null !== $subscription->next_payment_date ) {
-			$subscription->next_payment_delivery_date = clone $subscription->next_payment_date;
+		if ( empty( $payment_method ) ) {
+			$subscription->set_payment_method( $this->get_meta_string( $id, 'payment_method' ) );
 		}
 
 		// Legacy.
 		parent::read_post_meta( $subscription );
+
+		// Read subscription data from first payment.
+		$config_id = $subscription->get_config_id();
+
+		$payment_method = $subscription->get_payment_method();
+
+		if ( null === $config_id || null === $payment_method ) {
+			$first_payment = $this->get_first_payment( $subscription );
+
+			if ( is_object( $first_payment ) ) {
+				// Gateway.
+				if ( empty( $config_id ) ) {
+					$subscription->set_config_id( $first_payment->get_config_id() );
+				}
+
+				// Payment method.
+				if ( empty( $payment_method ) ) {
+					$subscription->set_payment_method( $first_payment->get_payment_method() );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Get first payment for subscription.
+	 *
+	 * @param Subscription $subscription Subscription.
+	 * @return \Pronamic\WordPress\Pay\Payments\Payment|null
+	 */
+	private function get_first_payment( $subscription ) {
+		$id = $subscription->get_id();
+
+		if ( empty( $id ) ) {
+			return null;
+		}
+
+		$payments = get_pronamic_payments_by_meta(
+			'_pronamic_payment_subscription_id',
+			$id,
+			array(
+				'posts_per_page' => 1,
+				'orderby'        => 'post_date',
+				'order'          => 'ASC',
+			)
+		);
+
+		$payment = \reset( $payments );
+
+		if ( false !== $payment ) {
+			return $payment;
+		}
+
+		return null;
 	}
 
 	/**
@@ -689,27 +667,22 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$customer = $subscription->get_customer();
 
 		$this->update_meta( $id, 'config_id', $subscription->config_id );
-		$this->update_meta( $id, 'key', $subscription->key );
 		$this->update_meta( $id, 'source', $subscription->source );
 		$this->update_meta( $id, 'source_id', $subscription->source_id );
-		$this->update_meta( $id, 'frequency', $subscription->frequency );
-		$this->update_meta( $id, 'interval', $subscription->interval );
-		$this->update_meta( $id, 'interval_period', $subscription->interval_period );
-		$this->update_meta( $id, 'description', $subscription->description );
 		$this->update_meta( $id, 'email', ( null === $customer ? null : $customer->get_email() ) );
-		$this->update_meta( $id, 'customer_name', ( null === $customer ? null : strval( $customer->get_name() ) ) );
-		$this->update_meta( $id, 'payment_method', $subscription->payment_method );
-		$this->update_meta( $id, 'start_date', $subscription->start_date );
-		$this->update_meta( $id, 'end_date', $subscription->end_date );
-		$this->update_meta( $id, 'expiry_date', $subscription->expiry_date );
-		$this->update_meta( $id, 'next_payment', $subscription->next_payment_date );
-		$this->update_meta( $id, 'next_payment_delivery_date', $subscription->next_payment_delivery_date );
+		$this->update_meta( $id, 'end_payment', $subscription->get_end_date() );
+		$this->update_meta( $id, 'next_payment', $subscription->get_next_payment_date() );
+		$this->update_meta( $id, 'next_payment_delivery_date', $subscription->get_next_payment_delivery_date() );
+		$this->update_meta( $id, 'version', $subscription->get_version() );
 
-		$display_phase = $subscription->get_display_phase();
+		// Maybe delete next payment date post meta.
+		if ( null === $subscription->get_next_payment_date() ) {
+			\delete_post_meta( $id, $this->meta_key_prefix . 'next_payment' );
+			\delete_post_meta( $id, $this->meta_key_prefix . 'next_payment_delivery_date' );
+		}
 
-		if ( null !== $display_phase ) {
-			$this->update_meta( $id, 'currency', $display_phase->get_amount()->get_currency()->get_alphabetic_code() );
-			$this->update_meta( $id, 'amount', $display_phase->get_amount()->get_number()->get_value() );
+		if ( null === $subscription->get_end_date() ) {
+			\delete_post_meta( $id, $this->meta_key_prefix . 'end_date' );
 		}
 
 		$this->update_meta_status( $subscription );
@@ -752,126 +725,36 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			/**
 			 * Subscription status updated for plugin integration source from old to new status.
 			 *
-			 * **Source**
-			 *
-			 * Plugin | Source
-			 * ------ | ------
-			 * Charitable | `charitable`
-			 * Contact Form 7 | `contact-form-7`
-			 * Event Espresso | `eventespresso`
-			 * Event Espresso (legacy) | `event-espresso`
-			 * Formidable Forms | `formidable-forms`
-			 * Give | `give`
-			 * Gravity Forms | `gravityformsideal`
-			 * MemberPress | `memberpress`
-			 * Ninja Forms | `ninja-forms`
-			 * s2Member | `s2member`
-			 * WooCommerce | `woocommerce`
-			 * WP eCommerce | `wp-e-commerce`
-			 *
-			 * **Action status**
-			 *
-			 * Status | Value
-			 * ------ | -----
-			 * (empty) | `unknown`
-			 * Active | `active`
-			 * Cancelled | `cancelled`
-			 * Completed | `completed`
-			 * Expired | `expired`
-			 * Failure | `failure`
-			 * On Hold | `on_hold`
-			 * Open | `open`
-			 *
-			 * **Subscription status**
-			 *
-			 * Status | Value
-			 * ------ | -----
-			 * Active | `Active`
-			 * Cancelled | `Cancelled`
-			 * Completed | `Completed`
-			 * Expired | `Expired`
-			 * Failure | `Failure`
-			 * On Hold | `On Hold`
-			 * Open | `Open`
+			 * [`{$source}`](https://github.com/pronamic/wp-pronamic-pay/wiki#sources)
+			 * [`{$old_status}`](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status)
+			 * [`{$new_status}`](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status)
 			 *
 			 * @param Subscription $subscription    Subscription.
 			 * @param bool         $can_redirect    Flag to indicate if redirect is allowed after the subscription update.
-			 * @param null|string  $previous_status Previous subscription status.
-			 * @param string       $updated_status  Updated subscription status.
+			 * @param null|string  $previous_status Previous [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
+			 * @param string       $updated_status  Updated [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
 			 */
 			do_action( 'pronamic_subscription_status_update_' . $source . '_' . $old_status . '_to_' . $new_status, $subscription, $can_redirect, $previous_status, $updated_status );
 
 			/**
 			 * Subscription status updated for plugin integration source.
 			 *
-			 * **Source**
-			 *
-			 * Plugin | Source
-			 * ------ | ------
-			 * Charitable | `charitable`
-			 * Contact Form 7 | `contact-form-7`
-			 * Event Espresso | `eventespresso`
-			 * Event Espresso (legacy) | `event-espresso`
-			 * Formidable Forms | `formidable-forms`
-			 * Give | `give`
-			 * Gravity Forms | `gravityformsideal`
-			 * MemberPress | `memberpress`
-			 * Ninja Forms | `ninja-forms`
-			 * s2Member | `s2member`
-			 * WooCommerce | `woocommerce`
-			 * WP eCommerce | `wp-e-commerce`
-			 *
-			 * **Action status**
-			 *
-			 * Status | Value
-			 * ------ | -----
-			 * (empty) | `unknown`
-			 * Active | `active`
-			 * Cancelled | `cancelled`
-			 * Completed | `completed`
-			 * Expired | `expired`
-			 * Failure | `failure`
-			 * On Hold | `on_hold`
-			 * Open | `open`
-			 *
-			 * **Subscription status**
-			 *
-			 * Status | Value
-			 * ------ | -----
-			 * Active | `Active`
-			 * Cancelled | `Cancelled`
-			 * Completed | `Completed`
-			 * Expired | `Expired`
-			 * Failure | `Failure`
-			 * On Hold | `On Hold`
-			 * Open | `Open`
+			 * [`{$source}`](https://github.com/pronamic/wp-pronamic-pay/wiki#sources)
 			 *
 			 * @param Subscription $subscription    Subscription.
 			 * @param bool         $can_redirect    Flag to indicate if redirect is allowed after the subscription update.
-			 * @param null|string  $previous_status Previous subscription status.
-			 * @param string       $updated_status  Updated subscription status.
+			 * @param null|string  $previous_status Previous [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
+			 * @param string       $updated_status  Updated [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
 			 */
 			do_action( 'pronamic_subscription_status_update_' . $source, $subscription, $can_redirect, $previous_status, $updated_status );
 
 			/**
 			 * Subscription status updated.
 			 *
-			 * **Subscription status**
-			 *
-			 * Status | Value
-			 * ------ | -----
-			 * Active | `Active`
-			 * Cancelled | `Cancelled`
-			 * Completed | `Completed`
-			 * Expired | `Expired`
-			 * Failure | `Failure`
-			 * On Hold | `On Hold`
-			 * Open | `Open`
-			 *
 			 * @param Subscription $subscription    Subscription.
 			 * @param bool         $can_redirect    Flag to indicate if redirect is allowed after the subscription update.
-			 * @param null|string  $previous_status Previous subscription status.
-			 * @param string       $updated_status  Updated subscription status.
+			 * @param null|string  $previous_status Previous [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
+			 * @param string       $updated_status  Updated [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
 			 */
 			do_action( 'pronamic_subscription_status_update', $subscription, $can_redirect, $previous_status, $updated_status );
 		}

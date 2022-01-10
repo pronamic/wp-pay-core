@@ -3,7 +3,7 @@
  * Util
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -24,106 +24,6 @@ use WP_Error;
  * @since   2.0.1
  */
 class Util {
-	/**
-	 * Remote get body.
-	 *
-	 * @link       https://developer.wordpress.org/reference/functions/wp_remote_request/
-	 *
-	 * @param string $url                    The URL to use for the remote request.
-	 * @param int    $required_response_code The required response code.
-	 * @param array  $args                   The WordPress HTTP API request arguments.
-	 *
-	 * @deprecated 2.0.9 Use Pronamic\WordPress\Pay\Core\Util::remote_get_body() instead.
-	 *
-	 * @return array|bool|string|WP_Error
-	 */
-	public static function remote_get_body( $url, $required_response_code = 200, array $args = array() ) {
-		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Pay\Core\Util::remote_get_body()' );
-
-		return Core_Util::remote_get_body( $url, $required_response_code, $args );
-	}
-
-	/**
-	 * SimpleXML load string.
-	 *
-	 * @param string $string The XML string to convert to a SimpleXMLElement object.
-	 *
-	 * @deprecated 2.0.9 Use Pronamic\WordPress\Pay\Core\Util::simplexml_load_string() instead.
-	 *
-	 * @return SimpleXMLElement|WP_Error
-	 */
-	public static function simplexml_load_string( $string ) {
-		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Pay\Core\Util::simplexml_load_string()' );
-
-		return Core_Util::simplexml_load_string( $string );
-	}
-
-	/**
-	 * Amount to cents.
-	 *
-	 * @param float $price The amount to convert to cents.
-	 *
-	 * @deprecated 2.0.9 Use \Pronamic\WordPress\Money\Money::get_minor_units()->to_int() instead.
-	 *
-	 * @return int
-	 */
-	public static function amount_to_cents( $price ) {
-		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Money\Money::get_minor_units()->to_int()' );
-
-		$money = new Money( $price );
-
-		return $money->get_minor_units()->to_int();
-	}
-
-	/**
-	 * Cents to amount.
-	 *
-	 * @param int $cents The number of cents to convert to an amount.
-	 *
-	 * @deprecated 2.0.9 Use \Pronamic\WordPress\Pay\Core\Util::cents_to_amount() instead.
-	 *
-	 * @return float
-	 */
-	public static function cents_to_amount( $cents ) {
-		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Pay\Core\Util::cents_to_amount()' );
-
-		return Core_Util::cents_to_amount( $cents );
-	}
-
-	/**
-	 * Convert boolean to an numeric boolean.
-	 *
-	 * @link https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
-	 *
-	 * @param boolean $boolean The boolean to convert to 1 or 0.
-	 *
-	 * @deprecated 2.0.9 Use \Pronamic\WordPress\Pay\Core\Util::boolean_to_numeric() instead.
-	 *
-	 * @return int
-	 */
-	public static function boolean_to_numeric( $boolean ) {
-		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Pay\Core\Util::boolean_to_numeric()' );
-
-		return Core_Util::boolean_to_numeric( $boolean );
-	}
-
-	/**
-	 * Convert boolean to an string boolean.
-	 *
-	 * @link https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
-	 *
-	 * @param boolean $boolean The boolean to convert to the string 'true' or 'false'.
-	 *
-	 * @deprecated 2.0.9 Use \Pronamic\WordPress\Pay\Core\Util::boolean_to_string() instead.
-	 *
-	 * @return string
-	 */
-	public static function boolean_to_string( $boolean ) {
-		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Pay\Core\Util::boolean_to_string()' );
-
-		return Core_Util::boolean_to_string( $boolean );
-	}
-
 	/**
 	 * Format date interval.
 	 *
@@ -296,22 +196,6 @@ class Util {
 
 		/* translators: %s: frequency */
 		return sprintf( _n( '%s period', '%s periods', $frequency, 'pronamic_ideal' ), $frequency );
-	}
-
-	/**
-	 * Build URL with the specified parameters
-	 *
-	 * @param string $url        The URL to extend with specified parameters.
-	 * @param array  $parameters The parameters to add to the specified URL.
-	 *
-	 * @deprecated 2.0.9 Use \Pronamic\WordPress\Pay\Core\Util::build_url() instead.
-	 *
-	 * @return string
-	 */
-	public static function build_url( $url, array $parameters ) {
-		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Pay\Core\Util::build_url()' );
-
-		return Core_Util::build_url( $url, $parameters );
 	}
 
 	/**

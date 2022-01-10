@@ -3,7 +3,7 @@
  * Subscription
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Subscriptions
  */
@@ -12,8 +12,9 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use DateInterval;
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\DateTime\DateTimeInterface;
 use Pronamic\WordPress\DateTime\DateTimeImmutable;
-use Pronamic\WordPress\Pay\Payments\LegacyPaymentInfo;
+use Pronamic\WordPress\Pay\Payments\PaymentInfo;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentInfoHelper;
@@ -25,73 +26,8 @@ use Pronamic\WordPress\Pay\Payments\PaymentInfoHelper;
  * @version 2.7.1
  * @since   1.0.0
  */
-class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
+class Subscription extends PaymentInfo implements \JsonSerializable {
 	use SubscriptionPhasesTrait;
-
-	/**
-	 * The key of this subscription, used in URL's for security.
-	 *
-	 * @var string|null
-	 */
-	public $key;
-
-	/**
-	 * The title of this subscription.
-	 *
-	 * @var string|null
-	 */
-	public $title;
-
-	/**
-	 * The frequency of this subscription, also known as `times` or `product length`.
-	 * If the frequency is `2` then there will be in total `3` payments for the
-	 * subscription. One (`1`) at the start of the subscription and `2` follow-up
-	 * payments.
-	 *
-	 * @link https://docs.mollie.com/reference/v2/subscriptions-api/create-subscription
-	 *
-	 * @var int|null
-	 */
-	public $frequency;
-
-	/**
-	 * The interval of this subscription, for example: 1, 2, 3, etc.
-	 *
-	 * @todo Improve documentation?
-	 *
-	 * @var int|null
-	 */
-	public $interval;
-
-	/**
-	 * The interval period of this subscription.
-	 *
-	 * @todo Improve documentation?
-	 *
-	 * @var string|null
-	 */
-	public $interval_period;
-
-	/**
-	 * The interval date of this subscription.
-	 *
-	 * @var string|null
-	 */
-	public $interval_date;
-
-	/**
-	 * The interval date day of this subscription.
-	 *
-	 * @var string|null
-	 */
-	public $interval_date_day;
-
-	/**
-	 * The interval date month of this subscription.
-	 *
-	 * @var string|null
-	 */
-	public $interval_date_month;
 
 	/**
 	 * The status of this subscription, for example 'Success'.
@@ -102,41 +38,6 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 	 * @var string|null
 	 */
 	public $status;
-
-	/**
-	 * The payment method which was used to create this subscription.
-	 *
-	 * @var string|null
-	 */
-	public $payment_method;
-
-	/**
-	 * The end date of the last successful payment.
-	 *
-	 * @var DateTime|null
-	 */
-	public $expiry_date;
-
-	/**
-	 * The next payment date.
-	 *
-	 * @var DateTime|null
-	 */
-	public $next_payment_date;
-
-	/**
-	 * The next payment delivery date.
-	 *
-	 * @var DateTime|null
-	 */
-	public $next_payment_delivery_date;
-
-	/**
-	 * Array for extra meta data to store with this subscription.
-	 *
-	 * @var array
-	 */
-	public $meta;
 
 	/**
 	 * Activated at.
@@ -155,84 +56,15 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 	public function __construct() {
 		parent::__construct();
 
-		$this->meta = array();
-
-		$this->activated_at = new DateTime();
-	}
-
-	/**
-	 * Get the unique key of this subscription.
-	 *
-	 * @return string|null
-	 */
-	public function get_key() {
-		return $this->key;
-	}
-
-	/**
-	 * Get the frequency of this subscription.
-	 *
-	 * @return int|null
-	 */
-	public function get_frequency() {
-		return $this->frequency;
-	}
-
-	/**
-	 * Get the interval, for example: 1, 2, 3, 4, etc., this specifies for example:
-	 * - Repeat every *2* days
-	 * - Repeat every *1* months
-	 * - Repeat every *2* year
-	 *
-	 * @return int|null
-	 */
-	public function get_interval() {
-		return $this->interval;
-	}
-
-	/**
-	 * Get the interval period, for example 'D', 'M', 'Y', etc.
-	 *
-	 * @link http://php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters
-	 *
-	 * @return string|null
-	 */
-	public function get_interval_period() {
-		return $this->interval_period;
-	}
-
-	/**
-	 * Get the interval period date (1-31).
-	 *
-	 * @return string|null
-	 */
-	public function get_interval_date() {
-		return $this->interval_date;
-	}
-
-	/**
-	 * Get the interval period day (Monday-Sunday).
-	 *
-	 * @return string|null
-	 */
-	public function get_interval_date_day() {
-		return $this->interval_date_day;
-	}
-
-	/**
-	 * Get the interval period month (1-12).
-	 *
-	 * @return string|null
-	 */
-	public function get_interval_date_month() {
-		return $this->interval_date_month;
+		$this->activated_at    = new DateTime();
+		$this->meta_key_prefix = '_pronamic_subscription_';
 	}
 
 	/**
 	 * Get date interval.
 	 *
 	 * @link http://php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters
-	 *
+	 * @deprecated
 	 * @return SubscriptionInterval|null
 	 */
 	public function get_date_interval() {
@@ -249,7 +81,6 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 	 * Get the status of this subscription.
 	 *
 	 * @todo Check constant?
-	 *
 	 * @return string|null
 	 */
 	public function get_status() {
@@ -260,7 +91,6 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 	 * Set the status of this subscription.
 	 *
 	 * @todo Check constant?
-	 *
 	 * @param string|null $status A status string.
 	 * @return void
 	 */
@@ -302,50 +132,6 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Get meta by the specified meta key.
-	 *
-	 * @param string $key A meta key.
-	 * @return string|false
-	 */
-	public function get_meta( $key ) {
-		if ( null === $this->id ) {
-			return false;
-		}
-
-		$key = '_pronamic_subscription_' . $key;
-
-		return get_post_meta( $this->id, $key, true );
-	}
-
-	/**
-	 * Set meta data.
-	 *
-	 * @param  string $key   A meta key.
-	 * @param  mixed  $value A meta value.
-	 *
-	 * @return bool True on successful update, false on failure.
-	 */
-	public function set_meta( $key, $value = false ) {
-		if ( null === $this->id ) {
-			return false;
-		}
-
-		$key = '_pronamic_subscription_' . $key;
-
-		if ( $value instanceof \DateTime ) {
-			$value = $value->format( 'Y-m-d H:i:s' );
-		}
-
-		if ( empty( $value ) ) {
-			return delete_post_meta( $this->id, $key );
-		}
-
-		$result = update_post_meta( $this->id, $key, $value );
-
-		return ( false !== $result );
 	}
 
 	/**
@@ -583,87 +369,87 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 	}
 
 	/**
-	 * Get the first payment of this subscription.
+	 * Check if the payment is the first for this subscription.
 	 *
-	 * @return Payment|null
+	 * @param Payment $payment Payment.
+	 * @return bool True if payment is the first, false otherwise.
 	 */
-	public function get_first_payment() {
-		if ( null === $this->id ) {
-			return null;
+	public function is_first_payment( Payment $payment ) {
+		$phases = $this->get_phases();
+
+		$phase = \reset( $phases );
+
+		if ( false === $phase ) {
+			return false;
 		}
 
-		// Query arguments to get first payment.
-		$args = array(
-			'posts_per_page' => 1,
-			'orderby'        => 'post_date',
-			'order'          => 'ASC',
-		);
+		$periods = $payment->get_periods();
 
-		$first_payment = get_pronamic_payments_by_meta( '_pronamic_payment_subscription_id', $this->id, $args );
-
-		if ( ! empty( $first_payment ) ) {
-			return $first_payment[0];
+		if ( null === $periods ) {
+			return false;
 		}
 
-		return null;
-	}
+		foreach ( $periods as $period ) {
+			if ( $period->get_phase()->get_subscription() !== $this ) {
+				continue;
+			}
 
-	/**
-	 * Get the expiry date of this subscription.
-	 *
-	 * @return DateTime|null
-	 */
-	public function get_expiry_date() {
-		return $this->expiry_date;
-	}
+			// Compare formatted dates instead of date objects,
+			// to account for differences in microseconds.
+			$period_start = $period->get_start_date()->format( 'Y-m-d H:i:s' );
+			$phase_start  = $phase->get_start_date()->format( 'Y-m-d H:i:s' );
 
-	/**
-	 * Set the expiry date of this subscription.
-	 *
-	 * @param DateTime|null $date Expiry date.
-	 * @return void
-	 */
-	public function set_expiry_date( DateTime $date = null ) {
-		$this->expiry_date = $date;
-	}
+			if ( $period_start === $phase_start ) {
+				return true;
+			}
+		}
 
-	/**
-	 * Set the next payment date of this subscription.
-	 *
-	 * @param DateTime|null $date Next payment date.
-	 * @return void
-	 */
-	public function set_next_payment_date( DateTime $date = null ) {
-		$this->next_payment_date = $date;
+		return false;
 	}
 
 	/**
 	 * Get the next payment date of this subscription.
 	 *
-	 * @return DateTime|null
+	 * @return DateTimeImmutable|null
 	 */
 	public function get_next_payment_date() {
-		return $this->next_payment_date;
-	}
+		// Get current phase.
+		$phase = $this->get_current_phase();
 
-	/**
-	 * Set the next payment delivery date of this subscription.
-	 *
-	 * @param DateTime|null $date Next payment delivery date.
-	 *
-	 * @return void
-	 */
-	public function set_next_payment_delivery_date( DateTime $date = null ) {
-		$this->next_payment_delivery_date = $date;
+		if ( null === $phase ) {
+			return null;
+		}
+
+		return $phase->get_next_date();
 	}
 
 	/**
 	 * Get the next payment delivery date of this subscription.
 	 *
-	 * @return DateTime|null
+	 * @return DateTimeInterface|null
 	 */
 	public function get_next_payment_delivery_date() {
-		return $this->next_payment_delivery_date;
+		$next_payment_date = $this->get_next_payment_date();
+
+		// Check if there is next payment date.
+		if ( null === $next_payment_date ) {
+			return null;
+		}
+
+		$next_payment_delivery_date = clone $next_payment_date;
+
+		$subscription = $this;
+
+		/**
+		 * Filters the subscription next payment delivery date.
+		 *
+		 * @param DateTimeImmutable $next_payment_delivery_date Next payment delivery date.
+		 * @param Subscription      $subscription               Subscription.
+		 * @since unreleased
+		 */
+		$next_payment_delivery_date = \apply_filters( 'pronamic_pay_subscription_next_payment_delivery_date', $next_payment_delivery_date, $subscription );
+
+		return $next_payment_delivery_date;
 	}
 
 	/**
@@ -680,6 +466,36 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 		}
 
 		return $this->next_period();
+	}
+
+	/**
+	 * New subscription payment.
+	 *
+	 * Subscriptions lines and amount are deliberately not set in the payment for now.
+	 *
+	 * @return Payment
+	 */
+	public function new_payment() {
+		$payment = new Payment();
+
+		$payment->order_id = $this->get_order_id();
+
+		$payment->add_subscription( $this );
+
+		$payment->set_payment_method( $this->get_payment_method() );
+
+		$payment->set_description( $this->get_description() );
+		$payment->set_config_id( $this->get_config_id() );
+		$payment->set_origin_id( $this->get_origin_id() );
+
+		$payment->set_source( $this->get_source() );
+		$payment->set_source_id( $this->get_source_id() );
+
+		$payment->set_customer( $this->get_customer() );
+		$payment->set_billing_address( $this->get_billing_address() );
+		$payment->set_shipping_address( $this->get_shipping_address() );
+
+		return $payment;
 	}
 
 	/**
@@ -754,18 +570,6 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 
 		PaymentInfoHelper::from_json( $json, $subscription );
 
-		if ( isset( $json->expiry_date ) ) {
-			$subscription->set_expiry_date( new DateTime( $json->expiry_date ) );
-		}
-
-		if ( isset( $json->next_payment_date ) ) {
-			$subscription->set_next_payment_date( new DateTime( $json->next_payment_date ) );
-		}
-
-		if ( isset( $json->next_payment_delivery_date ) ) {
-			$subscription->set_next_payment_delivery_date( new DateTime( $json->next_payment_delivery_date ) );
-		}
-
 		if ( isset( $json->status ) ) {
 			$subscription->set_status( $json->status );
 		}
@@ -800,18 +604,6 @@ class Subscription extends LegacyPaymentInfo implements \JsonSerializable {
 		$properties = (array) $object;
 
 		$properties['phases'] = $this->phases;
-
-		if ( null !== $this->expiry_date ) {
-			$properties['expiry_date'] = $this->expiry_date->format( \DATE_ATOM );
-		}
-
-		if ( null !== $this->next_payment_date ) {
-			$properties['next_payment_date'] = $this->next_payment_date->format( \DATE_ATOM );
-		}
-
-		if ( null !== $this->next_payment_delivery_date ) {
-			$properties['next_payment_delivery_date'] = $this->next_payment_delivery_date->format( \DATE_ATOM );
-		}
 
 		if ( null !== $this->get_status() ) {
 			$properties['status'] = $this->get_status();

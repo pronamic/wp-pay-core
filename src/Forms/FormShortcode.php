@@ -3,7 +3,7 @@
  * Form Shortcode
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Forms
  */
@@ -61,6 +61,6 @@ class FormShortcode {
 			return '';
 		}
 
-		return $this->forms_module->get_form_output_by_id( $atts['id'] );
+		return $this->forms_module->get_form_output_by_id( (int) $atts['id'] );
 	}
 }

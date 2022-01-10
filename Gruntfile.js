@@ -2,7 +2,7 @@
  * Grunt tasks.
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -39,7 +39,10 @@ module.exports = function( grunt ) {
 						{ // Tippy.js - https://atomiks.github.io/tippyjs/.
 							expand: true,
 							cwd: 'node_modules/tippy.js/dist/',
-							src: 'tippy.all.js',
+							src: [
+								'tippy.all.js',
+								'tippy.all.js.map'
+							],
 							dest: 'assets/tippy.js/'
 						}
 					]

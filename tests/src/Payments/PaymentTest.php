@@ -3,7 +3,7 @@
  * Payment test
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -76,8 +76,6 @@ class PaymentTest extends WP_UnitTestCase {
 			array( 'set_config_id', 'get_config_id', 2 ),
 			array( 'set_mode', 'get_mode', Gateway::MODE_LIVE ),
 			array( 'set_transaction_id', 'get_transaction_id', uniqid() ),
-			array( 'set_start_date', 'get_start_date', $now ),
-			array( 'set_end_date', 'get_end_date', $now ),
 			array( 'set_source', 'get_source', 'test' ),
 			array( 'set_source_id', 'get_source_id', 5 ),
 			array( 'set_status', 'get_status', 'completed' ),
@@ -86,47 +84,9 @@ class PaymentTest extends WP_UnitTestCase {
 			array( 'set_total_amount', 'get_total_amount', new TaxedMoney( 89.95, 'EUR' ) ),
 			array( 'set_shipping_address', 'get_shipping_address', new Address() ),
 			array( 'set_shipping_amount', 'get_shipping_amount', new Money( 10, 'EUR' ) ),
-			array( 'set_ga_tracked', 'get_ga_tracked', true ),
 			array( 'set_consumer_bank_details', 'get_consumer_bank_details', new BankAccountDetails() ),
 			array( 'set_bank_transfer_recipient_details', 'get_bank_transfer_recipient_details', new BankTransferDetails() ),
 			array( 'set_failure_reason', 'get_failure_reason', new FailureReason() ),
-
-			// Deprecated.
-			array( 'set_amount', 'get_amount', new TaxedMoney( 89.95, 'EUR' ), true ),
-		);
-	}
-
-	/**
-	 * Test set.
-	 *
-	 * @dataProvider set_provider
-	 *
-	 * @param string $set_function Setter function name.
-	 * @param string $property     Property name.
-	 * @param string $value        Expected value.
-	 */
-	public function test_set( $set_function, $property, $value ) {
-		$this->setExpectedDeprecated( $set_function );
-
-		$payment = new Payment();
-
-		$payment->$set_function( $value );
-
-		$this->assertEquals( $value, $payment->$property );
-	}
-
-	/**
-	 * Set provider.
-	 *
-	 * @return array
-	 */
-	public function set_provider() {
-		return array(
-			array( 'set_consumer_name', 'consumer_name', 'John Doe' ),
-			array( 'set_consumer_account_number', 'consumer_account_number', '1086.34.779' ),
-			array( 'set_consumer_iban', 'consumer_iban', 'NL56 RABO 0108 6347 79' ),
-			array( 'set_consumer_bic', 'consumer_bic', 'RABONL2U' ),
-			array( 'set_consumer_city', 'consumer_city', 'Drachten' ),
 		);
 	}
 
@@ -169,24 +129,7 @@ class PaymentTest extends WP_UnitTestCase {
 	public function get_provider() {
 		return array(
 			array( 'order_id', 'get_order_id', 1234 ),
-			array( 'method', 'get_method', 'ideal' ),
-			array( 'issuer', 'get_issuer', 'ideal_KNABNL2H' ),
-			array( 'description', 'get_description', 'Lorem ipsum dolor sit amet, consectetur.' ),
 			array( 'email', 'get_email', 'john.doe@example.com' ),
-			array( 'analytics_client_id', 'get_analytics_client_id', 'GA1.2.1234567890.1234567890' ),
-			array( 'entrance_code', 'get_entrance_code', uniqid() ),
-
-			// Deprecated.
-			array( 'language', 'get_language', 'nl', true ),
-			array( 'locale', 'get_locale', 'nl_NL', true ),
-			array( 'first_name', 'get_first_name', 'John', true ),
-			array( 'last_name', 'get_last_name', 'Doe', true ),
-			array( 'customer_name', 'get_customer_name', 'John Doe', true ),
-			array( 'address', 'get_address', 'Burgemeester Wuiteweg 39b', true ),
-			array( 'city', 'get_city', 'Drachten', true ),
-			array( 'zip', 'get_zip', '9203 KA', true ),
-			array( 'country', 'get_country', 'NL', true ),
-			array( 'telephone_number', 'get_telephone_number', '1234567890', true ),
 		);
 	}
 
@@ -229,8 +172,8 @@ class PaymentTest extends WP_UnitTestCase {
 		$payment = new Payment();
 		$payment->set_id( 1 );
 		$payment->set_mode( Gateway::MODE_LIVE );
-		$payment->set_ga_tracked( true );
 		$payment->set_total_amount( new TaxedMoney( 242, 'EUR', 42, 21 ) );
+		$payment->set_meta( 'google_analytics_tracked', true );
 
 		// Name.
 		$name = new ContactName();
@@ -285,8 +228,6 @@ class PaymentTest extends WP_UnitTestCase {
 		$payment->set_lines( $lines );
 
 		// Dates.
-		$payment->set_start_date( new DateTime( '2005-05-05' ) );
-		$payment->set_end_date( new DateTime( '2100-05-05' ) );
 		$payment->set_expiry_date( new DateTime( '2005-05-05 00:30:00' ) );
 
 		// Consumer bank details.
@@ -344,37 +285,5 @@ class PaymentTest extends WP_UnitTestCase {
 		$this->assertEquals( wp_json_encode( $json_data, JSON_PRETTY_PRINT ), $json_string );
 
 		$this->assertJsonStringEqualsJsonFile( $json_file, $json_string );
-	}
-
-	/**
-	 * Test legacy consumer bank details.
-	 *
-	 * @return void
-	 */
-	public function test_legacy_consumer_bank_details() {
-		$payment = new Payment();
-
-		$payment->consumer_name           = 'Pronamic';
-		$payment->consumer_account_number = '1086.34.779';
-		$payment->consumer_iban           = 'NL56 RABO 0108 6347 79';
-		$payment->consumer_bic            = 'RABONL2U';
-		$payment->consumer_city           = 'Drachten';
-
-		$this->assertEquals( 'Pronamic', $payment->consumer_name );
-		$this->assertEquals( '1086.34.779', $payment->consumer_account_number );
-		$this->assertEquals( 'NL56 RABO 0108 6347 79', $payment->consumer_iban );
-		$this->assertEquals( 'RABONL2U', $payment->consumer_bic );
-		$this->assertEquals( 'Drachten', $payment->consumer_city );
-
-		$consumer_bank_details = $payment->get_consumer_bank_details();
-
-		$this->assertNotNull( $consumer_bank_details );
-		$this->assertInstanceOf( BankAccountDetails::class, $consumer_bank_details );
-
-		$this->assertEquals( 'Pronamic', $consumer_bank_details->get_name() );
-		$this->assertEquals( '1086.34.779', $consumer_bank_details->get_account_number() );
-		$this->assertEquals( 'NL56 RABO 0108 6347 79', $consumer_bank_details->get_iban() );
-		$this->assertEquals( 'RABONL2U', $consumer_bank_details->get_bic() );
-		$this->assertEquals( 'Drachten', $consumer_bank_details->get_city() );
 	}
 }

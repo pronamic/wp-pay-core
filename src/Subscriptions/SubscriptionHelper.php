@@ -3,7 +3,7 @@
  * Subscription Helper
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Subscriptions
  */
@@ -96,14 +96,20 @@ class SubscriptionHelper {
 		}
 
 		// Source.
-		if ( empty( $subscription->source ) && empty( $subscription->source_id ) ) {
-			$subscription->source    = $payment->source;
-			$subscription->source_id = $payment->subscription_source_id;
+		if ( empty( $subscription->source ) ) {
+			$subscription->source = $payment->source;
+		}
+
+		// Source ID.
+		if ( empty( $subscription->source_id ) ) {
+			$subscription->source_id = $payment->source_id;
 		}
 
 		// Description.
-		if ( null === $subscription->description ) {
-			$subscription->description = $payment->description;
+		$description = $subscription->get_description();
+
+		if ( null === $description ) {
+			$subscription->set_description( $payment->get_description() );
 		}
 
 		// Email.
@@ -116,143 +122,10 @@ class SubscriptionHelper {
 		}
 
 		// Payment method.
-		if ( null === $subscription->payment_method ) {
-			$subscription->payment_method = $payment->method;
+		$payment_method = $subscription->get_payment_method();
+
+		if ( null === $payment_method ) {
+			$subscription->set_payment_method( $payment->get_payment_method() );
 		}
-
-		// Start date.
-		if ( null === $subscription->start_date ) {
-			$subscription->start_date = clone $payment->date;
-		}
-	}
-
-	/**
-	 * Complement subscription dates.
-	 *
-	 * @param Subscription $subscription Subscription.
-	 * @return void
-	 */
-	public static function complement_subscription_dates( Subscription $subscription ) {
-		// End date.
-		if ( null === $subscription->end_date ) {
-			$subscription->set_end_date( self::calculate_end_date( $subscription ) );
-		}
-
-		// Expiry date.
-		if ( null === $subscription->expiry_date ) {
-			$subscription->set_expiry_date( self::calculate_expiry_date( $subscription ) );
-		}
-
-		// Next payment date.
-		if ( null === $subscription->next_payment_date ) {
-			$subscription->set_next_payment_date( self::calculate_next_payment_date( $subscription ) );
-		}
-
-		// Next payment delivery date.
-		if ( null === $subscription->next_payment_delivery_date ) {
-			$subscription->set_next_payment_delivery_date( self::calculate_next_payment_delivery_date( $subscription ) );
-		}
-	}
-
-	/**
-	 * Calculate end date of subscription.
-	 *
-	 * @param Subscription $subscription Subscription.
-	 * @return DateTime|null
-	 */
-	public static function calculate_end_date( Subscription $subscription ) {
-		$end_date = null;
-
-		$phase = $subscription->get_current_phase();
-
-		if ( null !== $phase ) {
-			$phase_end = $phase->get_end_date();
-
-			if ( null !== $phase_end ) {
-				$end_date = new DateTime( $phase_end->format( \DATE_ATOM ) );
-			}
-		}
-
-		return $end_date;
-	}
-
-	/**
-	 * Calculate expiry date.
-	 *
-	 * @param Subscription $subscription Subscription.
-	 * @return DateTime|null
-	 */
-	public static function calculate_expiry_date( Subscription $subscription ) {
-		$start_date = $subscription->get_start_date();
-
-		if ( null === $start_date ) {
-			return null;
-		}
-
-		$expiry_date = clone $start_date;
-
-		return $expiry_date;
-	}
-
-	/**
-	 * Calculate next payment date.
-	 *
-	 * @param Subscription $subscription Subscription.
-	 * @return DateTime|null
-	 * @throws \InvalidArgumentException Throws invalid argument exception if no phases are defined.
-	 */
-	public static function calculate_next_payment_date( Subscription $subscription ) {
-		$phases = $subscription->get_phases();
-
-		if ( empty( $phases ) ) {
-			throw new \InvalidArgumentException( 'Can not calculate next payment date of subscription without phases.' );
-		}
-
-		// Get current phase.
-		$phase = $subscription->get_current_phase();
-
-		if ( null === $phase ) {
-			return null;
-		}
-
-		// Get next payment date.
-		$next_date = $phase->get_next_date();
-
-		if ( null === $next_date ) {
-			return null;
-		}
-
-		$next_date = new DateTime( $next_date->format( \DATE_ATOM ) );
-
-		return $next_date;
-	}
-
-	/**
-	 * Calculate next payment delivery date.
-	 *
-	 * @param Subscription $subscription Subscription.
-	 * @return DateTime|null
-	 */
-	public static function calculate_next_payment_delivery_date( $subscription ) {
-		$next_payment_date = $subscription->get_next_payment_date();
-
-		// Check if there is next payment date.
-		if ( null === $next_payment_date ) {
-			return null;
-		}
-
-		$next_payment_delivery_date = clone $next_payment_date;
-
-		/**
-		 * Filters the subscription next payment delivery date.
-		 *
-		 * @since unreleased
-		 *
-		 * @param DateTime     $next_payment_delivery_date Next payment delivery date.
-		 * @param Subscription $subscription               Subscription.
-		 */
-		$next_payment_delivery_date = \apply_filters( 'pronamic_pay_subscription_next_payment_delivery_date', $next_payment_delivery_date, $subscription );
-
-		return $next_payment_delivery_date;
 	}
 }

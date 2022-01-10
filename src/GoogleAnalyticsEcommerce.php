@@ -3,7 +3,7 @@
  * Google Analytics E-Commerce
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -82,7 +82,7 @@ class GoogleAnalyticsEcommerce {
 	 */
 	public function valid_payment( $payment ) {
 		// Is payment already tracked?
-		if ( $payment->get_ga_tracked() ) {
+		if ( true === $payment->get_meta( 'google_analytics_tracked' ) ) {
 			return false;
 		}
 
@@ -188,7 +188,7 @@ class GoogleAnalyticsEcommerce {
 		);
 
 		// Mark payment as tracked.
-		$payment->set_ga_tracked( true );
+		$payment->set_meta( 'google_analytics_tracked', true );
 		$payment->save();
 
 		// Item Hit.
@@ -291,7 +291,7 @@ class GoogleAnalyticsEcommerce {
 	 * @return string
 	 */
 	private function get_client_id( Payment $payment ) {
-		$client_id = $payment->get_analytics_client_id();
+		$client_id = $payment->get_meta( 'google_analytics_client_id' );
 
 		if ( ! empty( $client_id ) ) {
 			return $client_id;

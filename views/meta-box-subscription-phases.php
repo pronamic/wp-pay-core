@@ -3,7 +3,7 @@
  * Meta Box Subscription Phases
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -59,23 +59,24 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 
 							$total_periods = $phase->get_total_periods();
 
-							if ( 1 === $total_periods ) :
-								// No recurrence.
-								echo '—';
-
-							elseif ( $phase->is_infinite() ) :
+							if ( null === $total_periods ) {
 								// Unlimited.
 								echo esc_html( strval( Util::format_recurrences( $phase->get_interval() ) ) );
+							}
 
-							else :
+							if ( 1 === $total_periods ) {
+								// No recurrence.
+								echo '—';
+							}
+
+							if ( $total_periods > 1 ) {
 								// Fixed number of recurrences.
 								printf(
 									'%s (%s)',
 									esc_html( strval( Util::format_recurrences( $phase->get_interval() ) ) ),
 									esc_html( strval( Util::format_frequency( $total_periods ) ) )
 								);
-
-							endif;
+							}
 
 							?>
 						</td>
@@ -109,7 +110,7 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 						<td>
 							<?php
 
-							echo esc_html( $phase->get_periods_created() );
+							echo esc_html( (string) $phase->get_periods_created() );
 
 							?>
 						</td>

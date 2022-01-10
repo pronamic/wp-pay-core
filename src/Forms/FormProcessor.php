@@ -3,7 +3,7 @@
  * Form Processor
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Forms
  */
@@ -111,20 +111,13 @@ class FormProcessor {
 			$config_id = get_post_meta( $source_id, '_pronamic_payment_form_config_id', true );
 		}
 
-		// Gateway.
-		$gateway = Plugin::get_gateway( $config_id );
-
-		if ( ! $gateway ) {
-			return;
-		}
-
 		/*
 		 * Start payment.
 		 */
 		$first_name = filter_input( INPUT_POST, 'pronamic_pay_first_name', FILTER_SANITIZE_STRING );
 		$last_name  = filter_input( INPUT_POST, 'pronamic_pay_last_name', FILTER_SANITIZE_STRING );
 		$email      = filter_input( INPUT_POST, 'pronamic_pay_email', FILTER_VALIDATE_EMAIL );
-		$order_id   = time();
+		$order_id   = (string) time();
 
 		$description = null;
 
@@ -152,17 +145,13 @@ class FormProcessor {
 			$description
 		);
 
-		$payment->description = $description;
-		$payment->config_id   = $config_id;
-		$payment->order_id    = $order_id;
-		$payment->source      = $source;
-		$payment->source_id   = $source_id;
+		$payment->set_config_id( $config_id );
+		$payment->set_description( $description );
 		$payment->set_origin_id( $source_id );
 
-		// Set default payment method if required.
-		if ( $gateway->payment_method_is_required() ) {
-			$payment->method = PaymentMethods::IDEAL;
-		}
+		$payment->order_id  = $order_id;
+		$payment->source    = $source;
+		$payment->source_id = $source_id;
 
 		// Customer.
 		$customer = array(
@@ -196,9 +185,21 @@ class FormProcessor {
 		$line->set_unit_price( $payment->get_total_amount() );
 		$line->set_total_amount( $payment->get_total_amount() );
 
+		// Gateway.
+		$gateway = Plugin::get_gateway( $config_id );
+
+		if ( null === $gateway ) {
+			return;
+		}
+
+		// Set default payment method if required.
+		if ( $gateway->payment_method_is_required() ) {
+			$payment->set_payment_method( PaymentMethods::IDEAL );
+		}
+
 		// Start payment.
 		try {
-			$payment = Plugin::start_payment( $payment, $gateway );
+			$payment = Plugin::start_payment( $payment );
 		} catch ( \Exception $e ) {
 			Plugin::render_exception( $e );
 

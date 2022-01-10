@@ -87,6 +87,11 @@
 	.column-pronamic_payment_subscription {
 		width: 1em;
 	}
+
+	.column-pronamic_payment_method,
+	.column-pronamic_subscription_method {
+		width: 2.5em;
+	}
 }
 
 @media only screen and (max-width: 782px) {

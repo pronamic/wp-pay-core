@@ -3,7 +3,7 @@
  * Abstract Data Store Custom Post Type
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -65,7 +65,7 @@ abstract class AbstractDataStoreCPT {
 	 * @param string $key A key.
 	 * @return string
 	 */
-	private function get_meta_key( $key ) {
+	protected function get_meta_key( $key ) {
 		return $this->meta_key_prefix . $key;
 	}
 

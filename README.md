@@ -13,6 +13,7 @@
 ## Table of contents
 
 - [Status](#status)
+- [CLI](#cli)
 - [WordPress Filters](#wordpress-filters)
 
 ## Status
@@ -22,6 +23,14 @@
 [![Latest Unstable Version](https://poser.pugx.org/wp-pay/core/v/unstable.svg)](https://packagist.org/packages/wp-pay/core)
 [![License](https://poser.pugx.org/wp-pay/core/license.svg)](https://packagist.org/packages/wp-pay/core)
 [![Built with Grunt](http://cdn.gruntjs.com/builtwith.svg)](http://gruntjs.com/)
+
+## CLI
+
+### Check pending payment status
+
+```
+wp pay payment status $( wp post list --field=ID --post_type=pronamic_payment --post_status=payment_pending --order=ASC --orderby=date --posts_per_page=100 --paged=1 )
+```
 
 ## WordPress Filters
 
@@ -96,3 +105,5 @@
 	2
 );
 ```
+
+[![Pronamic - Work with us](https://github.com/pronamic/brand-resources/blob/main/banners/pronamic-work-with-us-leaderboard-728x90%404x.png)](https://www.pronamic.eu/contact/)

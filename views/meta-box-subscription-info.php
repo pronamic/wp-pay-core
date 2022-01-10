@@ -3,19 +3,17 @@
  * Meta Box Subscription Info
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
+ * @var \Pronamic\WordPress\Pay\Plugin $plugin Plugin.
+ * @var \Pronamic\WordPress\Pay\Subscriptions\Subscription $subscription Subscription.
  */
 
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
 use Pronamic\WordPress\Pay\Util;
-
-if ( ! isset( $subscription ) ) {
-	return;
-}
 
 $subscription_id = $subscription->get_id();
 
@@ -36,20 +34,12 @@ $phase = $subscription->get_display_phase();
 	</tr>
 	<tr>
 		<th scope="row">
-			<?php esc_html_e( 'ID', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<?php echo esc_html( $subscription_id ); ?>
-		</td>
-	</tr>
-	<tr>
-		<th scope="row">
 			<?php esc_html_e( 'Status', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
 			<?php
 
-			$status_object = get_post_status_object( get_post_status( $subscription_id ) );
+			$status_object = get_post_status_object( (string) get_post_status( $subscription->get_id() ) );
 
 			if ( isset( $status_object, $status_object->label ) ) {
 				echo esc_html( $status_object->label );
@@ -62,26 +52,58 @@ $phase = $subscription->get_display_phase();
 	</tr>
 	<tr>
 		<th scope="row">
-			<?php esc_html_e( 'Description', 'pronamic_ideal' ); ?>
+			<?php esc_html_e( 'ID', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
-			<?php echo esc_html( $subscription->get_description() ); ?>
+			<?php echo esc_html( (string) $subscription->get_id() ); ?>
 		</td>
 	</tr>
 	<tr>
 		<th scope="row">
-			<?php esc_html_e( 'Gateway', 'pronamic_ideal' ); ?>
+			<?php esc_html_e( 'Description', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
-			<?php edit_post_link( get_the_title( $subscription->config_id ), '', '', $subscription->config_id ); ?>
+			<?php echo esc_html( (string) $subscription->get_description() ); ?>
 		</td>
 	</tr>
+
+	<?php if ( null !== $subscription->config_id ) : ?>
+
+		<tr>
+			<th scope="row">
+				<?php esc_html_e( 'Gateway', 'pronamic_ideal' ); ?>
+			</th>
+			<td>
+				<?php edit_post_link( get_the_title( $subscription->config_id ), '', '', $subscription->config_id ); ?>
+			</td>
+		</tr>
+
+	<?php endif; ?>
+
 	<tr>
 		<th scope="row">
 			<?php esc_html_e( 'Payment Method', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
-			<?php echo esc_html( PaymentMethods::get_name( $subscription->payment_method ) ); ?>
+			<?php
+
+			$payment_method = $subscription->get_payment_method();
+
+			// Icon.
+			$icon_url = PaymentMethods::get_icon_url( $payment_method );
+
+			if ( null !== $icon_url ) {
+				\printf(
+					'<span class="pronamic-pay-tip" title="%2$s"><img src="%1$s" alt="%2$s" title="%2$s" width="32" valign="bottom" /></span> ',
+					\esc_url( $icon_url ),
+					\esc_attr( (string) PaymentMethods::get_name( $payment_method ) )
+				);
+			}
+
+			// Name.
+			echo esc_html( (string) PaymentMethods::get_name( $payment_method ) );
+
+			?>
 		</td>
 	</tr>
 	<tr>
@@ -107,76 +129,22 @@ $phase = $subscription->get_display_phase();
 		<td>
 			<?php
 
-			if ( null === $phase || 1 === $phase->get_total_periods() ) :
+			$total_periods = ( null === $phase ) ? null : $phase->get_total_periods();
+
+			if ( null === $phase || 1 === $total_periods ) {
 				// No recurrence.
 				echo '—';
-
-			elseif ( $phase->is_infinite() ) :
+			} elseif ( null === $total_periods ) {
 				// Infinite.
 				echo esc_html( strval( Util::format_recurrences( $phase->get_interval() ) ) );
-
-			else :
+			} else {
 				// Fixed number of recurrences.
 				printf(
 					'%s (%s)',
 					esc_html( strval( Util::format_recurrences( $phase->get_interval() ) ) ),
-					esc_html( strval( Util::format_frequency( $phase->get_total_periods() ) ) )
+					esc_html( strval( Util::format_frequency( $total_periods ) ) )
 				);
-
-			endif;
-
-			?>
-		</td>
-	</tr>
-	<tr>
-		<th scope="row">
-			<?php esc_html_e( 'Start Date', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<?php
-
-			$start_date = $subscription->get_start_date();
-
-			echo empty( $start_date ) ? '—' : esc_html( $start_date->format_i18n() );
-
-			?>
-		</td>
-	</tr>
-
-	<?php
-
-	$end_date = ( null === $phase ? null : $phase->get_end_date() );
-
-	// Show end date if frequency is limited.
-	if ( null !== $end_date ) :
-
-		?>
-
-		<tr>
-			<th scope="row">
-				<?php esc_html_e( 'End Date', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php
-
-				echo esc_html( ( new DateTime( $end_date->format( \DATE_ATOM ) ) )->format_i18n() );
-
-				?>
-			</td>
-		</tr>
-
-	<?php endif; ?>
-
-	<tr>
-		<th scope="row">
-			<?php esc_html_e( 'Paid up to', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<?php
-
-			$expiry_date = $subscription->get_expiry_date();
-
-			echo empty( $expiry_date ) ? '—' : esc_html( $expiry_date->format_i18n() );
+			}
 
 			?>
 		</td>
@@ -305,7 +273,7 @@ $phase = $subscription->get_display_phase();
 				<?php esc_html_e( 'Period', 'pronamic_ideal' ); ?>
 			</th>
 			<td>
-				<?php echo esc_html( get_post_meta( $subscription->get_id(), '_pronamic_subscription_s2member_period', true ) ); ?>
+				<?php echo esc_html( (string) $subscription->get_meta( 's2member_period' ) ); ?>
 			</td>
 		</tr>
 		<tr>
@@ -313,7 +281,7 @@ $phase = $subscription->get_display_phase();
 				<?php esc_html_e( 'Level', 'pronamic_ideal' ); ?>
 			</th>
 			<td>
-				<?php echo esc_html( get_post_meta( $subscription->get_id(), '_pronamic_subscription_s2member_level', true ) ); ?>
+				<?php echo esc_html( (string) $subscription->get_meta( 's2member_level' ) ); ?>
 			</td>
 		</tr>
 
@@ -374,7 +342,7 @@ $phase = $subscription->get_display_phase();
 		</td>
 	</tr>
 
-	<?php if ( $this->plugin->is_debug_mode() ) : ?>
+	<?php if ( $plugin->is_debug_mode() ) : ?>
 
 		<tr>
 			<th scope="row">

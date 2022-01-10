@@ -3,7 +3,7 @@
  * Legacy Payments Data Store Custom Post Type
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -15,12 +15,14 @@ use Pronamic\WordPress\Pay\Banks\BankAccountDetails;
 use Pronamic\WordPress\Pay\AbstractDataStoreCPT;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\ContactName;
+use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Customer;
+use Pronamic\WordPress\Pay\Plugin;
 
 /**
  * Title: Payments data store CPT
  * Description:
- * Copyright: 2005-2021 Pronamic
+ * Copyright: 2005-2022 Pronamic
  * Company: Pronamic
  *
  * @see     https://woocommerce.com/2017/04/woocommerce-3-0-release/
@@ -287,62 +289,66 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	 * @return void
 	 */
 	protected function read_post_meta( $payment ) {
+		$id = $payment->get_id();
+
+		if ( empty( $id ) ) {
+			return;
+		}
+
+		// General.
+		$config_id = $this->get_meta_int( $id, 'config_id' );
+
+		$payment->config_id = $config_id;
+		$payment->source    = $this->get_meta_string( $id, 'source' );
+		$payment->source_id = $this->get_meta_string( $id, 'source_id' );
+
+		// Order ID.
+		if ( empty( $payment->order_id ) ) {
+			$payment->order_id = $this->get_meta_string( $id, 'order_id' );
+		}
+
+		// Key.
+		if ( empty( $payment->key ) ) {
+			$payment->key = $this->get_meta_string( $id, 'key' );
+		}
+
+		// Description.
+		$description = $payment->get_description();
+
+		if ( empty( $description ) ) {
+			$description = $this->get_meta_string( $id, 'description' );
+
+			$payment->set_description( $description );
+		}
+
+		// Payment method.
+		$payment_method = $payment->get_payment_method();
+
+		if ( empty( $payment_method ) ) {
+			$payment_method = $this->get_meta_string( $id, 'method' );
+
+			$payment->set_payment_method( $payment_method );
+		}
+
+		/**
+		 * Clarify difference between afterpay.nl and afterpay.com.
+		 *
+		 * @link https://github.com/pronamic/wp-pronamic-pay/issues/282
+		 */
+		if ( PaymentMethods::AFTERPAY === $payment_method ) {
+			$payment->set_payment_method( PaymentMethods::AFTERPAY_NL );
+		}
+
+		// Version.
+		$meta_version = $this->get_meta_string( $id, 'version' );
+
+		if ( ! empty( $meta_version ) ) {
+			$payment->set_version( $meta_version );
+		}
+
+		// Other.
 		$this->maybe_create_customer_from_legacy_meta( $payment );
 		$this->maybe_create_billing_address_from_legacy_meta( $payment );
 		$this->maybe_create_consumer_bank_details_from_legacy_meta( $payment );
-	}
-
-	/**
-	 * Get update meta.
-	 *
-	 * @param PaymentInfo $payment The payment to update.
-	 * @param array       $meta    Meta array.
-	 *
-	 * @return array
-	 */
-	protected function get_update_meta( $payment, $meta = array() ) {
-		// Customer.
-		$customer = $payment->get_customer();
-
-		if ( null !== $customer ) {
-			// Deprecated meta values.
-			$meta['language']   = $customer->get_language();
-			$meta['locale']     = $customer->get_locale();
-			$meta['user_agent'] = $customer->get_user_agent();
-			$meta['user_ip']    = $customer->get_ip_address();
-
-			$name = $customer->get_name();
-
-			if ( null !== $name ) {
-				$meta['customer_name'] = (string) $name;
-				$meta['first_name']    = $name->get_first_name();
-				$meta['last_name']     = $name->get_last_name();
-			}
-		}
-
-		$billing_address = $payment->get_billing_address();
-
-		if ( null !== $billing_address ) {
-			// Deprecated meta values.
-			$meta['address']          = $billing_address->get_line_1();
-			$meta['zip']              = $billing_address->get_postal_code();
-			$meta['city']             = $billing_address->get_city();
-			$meta['country']          = $billing_address->get_country_name();
-			$meta['telephone_number'] = $billing_address->get_phone();
-		}
-
-		// Consumer.
-		$consumer_bank_details = $payment->get_consumer_bank_details();
-
-		if ( null !== $consumer_bank_details ) {
-			// Deprecated meta values.
-			$meta['consumer_name']           = $consumer_bank_details->get_name();
-			$meta['consumer_account_number'] = $consumer_bank_details->get_account_number();
-			$meta['consumer_iban']           = $consumer_bank_details->get_iban();
-			$meta['consumer_bic']            = $consumer_bank_details->get_bic();
-			$meta['consumer_city']           = $consumer_bank_details->get_city();
-		}
-
-		return $meta;
 	}
 }

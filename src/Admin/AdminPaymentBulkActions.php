@@ -3,7 +3,7 @@
  * Payment Bulk Actions
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Admin
  */
@@ -96,7 +96,6 @@ class AdminPaymentBulkActions {
 		$status_updated       = 0;
 		$skipped_check        = 0;
 		$unsupported_gateways = array();
-		$gateways             = array();
 
 		foreach ( $post_ids as $post_id ) {
 			$payment = get_pronamic_payment( $post_id );
@@ -113,21 +112,21 @@ class AdminPaymentBulkActions {
 			}
 
 			// Make sure gateway supports `payment_status_request` feature.
-			$config_id = $payment->config_id;
+			$config_id = $payment->get_config_id();
 
 			if ( null === $config_id ) {
 				continue;
 			}
 
-			if ( ! isset( $gateways[ $config_id ] ) ) {
-				$gateways[ $config_id ] = Plugin::get_gateway( $config_id );
+			if ( ! \in_array( $config_id, $unsupported_gateways, true ) ) {
+				$gateway = $payment->get_gateway();
 
-				if ( $gateways[ $config_id ] && ! $gateways[ $config_id ]->supports( 'payment_status_request' ) ) {
+				if ( null !== $gateway && ! $gateway->supports( 'payment_status_request' ) ) {
 					$unsupported_gateways[] = $config_id;
 				}
 			}
 
-			if ( in_array( $config_id, $unsupported_gateways, true ) ) {
+			if ( \in_array( $config_id, $unsupported_gateways, true ) ) {
 				continue;
 			}
 

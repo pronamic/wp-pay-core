@@ -3,7 +3,7 @@
  * Admin Tour
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Admin
  */
@@ -66,7 +66,7 @@ class AdminTour {
 	 * @return void
 	 */
 	public function admin_enqueue_scripts() {
-		$min = SCRIPT_DEBUG ? '' : '.min';
+		$min = \SCRIPT_DEBUG ? '' : '.min';
 
 		// Pointers.
 		wp_register_style(

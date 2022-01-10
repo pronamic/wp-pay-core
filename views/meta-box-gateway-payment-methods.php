@@ -3,23 +3,15 @@
  * Meta box gateway config payment methods.
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
+ * @var array<string, string> $columns                  Columns.
+ * @var array                 $payment_methods          Payment methods.
+ * @var bool                  $supports_methods_request Supports methods request.
  */
 
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
-
-$columns = array(
-	'payment_method' => __( 'Payment method', 'pronamic_ideal' ),
-	'active'         => __( 'Active', 'pronamic_ideal' ),
-);
-
-$integration = pronamic_pay_plugin()->gateway_integrations->get_integration( $gateway_id );
-
-if ( $integration->supports( 'recurring' ) ) :
-	$columns['recurring'] = __( 'Recurring', 'pronamic_ideal' );
-endif;
 
 ?>
 <table class="form-table widefat pronamic-pay-payment-methods">
@@ -34,10 +26,8 @@ endif;
 	</thead>
 
 	<tbody>
-		<?php
 
-		foreach ( $payment_methods as $method ) {
-			?>
+		<?php foreach ( $payment_methods as $method ) : ?>
 
 			<tr>
 
@@ -87,11 +77,7 @@ endif;
 
 			</tr>
 
-			<?php
+		<?php endforeach; ?>
 
-		}
-
-		?>
 	</tbody>
-
 </table>

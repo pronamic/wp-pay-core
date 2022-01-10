@@ -3,7 +3,7 @@
  * Util
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Core
  */
@@ -17,7 +17,7 @@ use Pronamic\WordPress\Pay\Util as Pay_Util;
 /**
  * Title: WordPress utility class
  * Description:
- * Copyright: 2005-2021 Pronamic
+ * Copyright: 2005-2022 Pronamic
  * Company: Pronamic
  *
  * @author Remco Tolsma
@@ -118,40 +118,6 @@ class Util {
 	}
 
 	/**
-	 * Compat function to mimic wp_doing_cron().
-	 *
-	 * @link  https://github.com/WordPress/WordPress/blob/4.9/wp-includes/load.php#L1066-L1082
-	 * @ignore
-	 * @since 2.1.2
-	 *
-	 * @return bool True if it's a WordPress cron request, false otherwise.
-	 */
-	public static function doing_cron() {
-		if ( function_exists( '\wp_doing_cron' ) ) {
-			return \wp_doing_cron();
-		}
-
-		$wp_doing_cron = defined( 'DOING_CRON' ) && DOING_CRON;
-
-		/**
-		 * Filters whether the current request is a WordPress cron request.
-		 *
-		 * @param bool $wp_doing_cron Whether the current request is a WordPress cron request.
-		 * @since 4.8.0
-		 */
-		return apply_filters( 'wp_doing_cron', $wp_doing_cron );
-	}
-
-	/**
-	 * Doing CLI.
-	 *
-	 * @return bool
-	 */
-	public static function doing_cli() {
-		return defined( 'WP_CLI' ) && WP_CLI;
-	}
-
-	/**
 	 * No cache.
 	 *
 	 * @return void
@@ -174,34 +140,6 @@ class Util {
 		}
 
 		nocache_headers();
-	}
-
-	/**
-	 * Amount to cents.
-	 *
-	 * @param float $amount The amount to convert to cents.
-	 *
-	 * @deprecated 2.0.9 Use \Pronamic\WordPress\Money\Money::get_minor_units()->to_int() instead.
-	 *
-	 * @return int
-	 */
-	public static function amount_to_cents( $amount ) {
-		_deprecated_function( __FUNCTION__, '2.0.9', 'Pronamic\WordPress\Money\Money::get_minor_units()->to_int()' );
-
-		$money = new Money( $amount );
-
-		return $money->get_minor_units()->to_int();
-	}
-
-	/**
-	 * Cents to amount.
-	 *
-	 * @param int $cents The cents to convert to float value.
-	 *
-	 * @return float
-	 */
-	public static function cents_to_amount( $cents ) {
-		return $cents / 100;
 	}
 
 	/**
@@ -247,31 +185,6 @@ class Util {
 	}
 
 	/**
-	 * Convert boolean to an numeric boolean.
-	 *
-	 * @link https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
-	 *
-	 * @param boolean $boolean The boolean value to convert to an integer value.
-	 *
-	 * @return int
-	 */
-	public static function boolean_to_numeric( $boolean ) {
-		return $boolean ? 1 : 0;
-	}
-
-	/**
-	 * Convert boolean to an string boolean
-	 *
-	 * @link https://github.com/eet-nu/buckaroo-ideal/blob/master/lib/buckaroo-ideal/request.rb#L136
-	 *
-	 * @param bool $boolean The boolean value to convert to a string value.
-	 * @return string
-	 */
-	public static function boolean_to_string( $boolean ) {
-		return $boolean ? 'true' : 'false';
-	}
-
-	/**
 	 * Convert the specified period to a single char notation.
 	 *
 	 * @since 1.3.9
@@ -298,18 +211,6 @@ class Util {
 		}
 
 		return $period;
-	}
-
-	/**
-	 * Build URL with the specified parameters
-	 *
-	 * @param string $url        URL to extend with the specified parameters.
-	 * @param array  $parameters URL parameters.
-	 *
-	 * @return string
-	 */
-	public static function build_url( $url, array $parameters ) {
-		return $url . '?' . _http_build_query( $parameters, null, '&' );
 	}
 
 	/**

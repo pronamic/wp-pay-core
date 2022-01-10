@@ -7,7 +7,6 @@ env:
   WP_TESTS_DB_PASS: password
   php-version: '7.4'
   wp-version: '*'
-  phpunit-version: '^6.0'
 
 jobs:
   phpcs:
@@ -162,25 +161,6 @@ jobs:
           - name: WP 5.2
             php-version: 7.3
             wp-version: 5.2.*
-          - name: WP 5.1
-            php-version: 7.3
-            wp-version: 5.1.*
-          - name: WP 5.0
-            php-version: 7.3
-            wp-version: 5.0.*
-          - name: WP 4.9
-            php-version: 7.3
-            wp-version: 4.9.*
-          # WordPress 4.8 (or lower) will trigger PHP 7.2 (or higher) errors.
-          # @link https://make.wordpress.org/core/2018/10/15/wordpress-and-php-7-3/
-          # @link https://make.wordpress.org/core/handbook/best-practices/coding-standards/php/
-          # @link https://make.wordpress.org/core/tag/4-9/?s=7.2
-          - name: WP 4.8
-            php-version: 7.1
-            wp-version: 4.8.*
-          - name: WP 4.7
-            php-version: 7.1
-            wp-version: 4.7.*
           - name: Multisite
             php-version: 7.4
             WP_MULTISITE: 1

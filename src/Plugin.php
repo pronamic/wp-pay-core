@@ -3,7 +3,7 @@
  * Plugin
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -15,12 +15,15 @@ use Pronamic\WordPress\Pay\Admin\AdminModule;
 use Pronamic\WordPress\Pay\Banks\BankAccountDetails;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
+use Pronamic\WordPress\Pay\Gateways\GatewaysDataStoreCPT;
+use Pronamic\WordPress\Pay\Payments\PaymentsDataStoreCPT;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Payments\StatusChecker;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
+use Pronamic\WordPress\Pay\Subscriptions\SubscriptionsDataStoreCPT;
 use Pronamic\WordPress\Pay\Webhooks\WebhookLogger;
 use WP_Error;
 use WP_Query;
@@ -91,16 +94,23 @@ class Plugin {
 	public $settings;
 
 	/**
+	 * Gateway data storing.
+	 *
+	 * @var GatewaysDataStoreCPT
+	 */
+	public $gateways_data_store;
+
+	/**
 	 * Payment data storing.
 	 *
-	 * @var Payments\PaymentsDataStoreCPT
+	 * @var PaymentsDataStoreCPT
 	 */
 	public $payments_data_store;
 
 	/**
 	 * Subscription data storing.
 	 *
-	 * @var Subscriptions\SubscriptionsDataStoreCPT
+	 * @var SubscriptionsDataStoreCPT
 	 */
 	public $subscriptions_data_store;
 
@@ -285,6 +295,17 @@ class Plugin {
 
 		// Default date time format.
 		add_filter( 'pronamic_datetime_default_format', array( $this, 'datetime_format' ), 10, 1 );
+
+		/**
+		 * Action scheduler.
+		 *
+		 * @link https://actionscheduler.org/
+		 */
+		if ( ! \array_key_exists( 'action_scheduler', $args ) ) {
+			$args['action_scheduler'] = self::$dirname . '/wp-content/plugins/action-scheduler/action-scheduler.php';
+		}
+
+		require_once $args['action_scheduler'];
 	}
 
 	/**
@@ -341,9 +362,9 @@ class Plugin {
 		}
 
 		// Gateway.
-		$gateway = self::get_gateway( $payment->config_id );
+		$gateway = $payment->get_gateway();
 
-		if ( empty( $gateway ) ) {
+		if ( null === $gateway ) {
 			return;
 		}
 
@@ -373,7 +394,7 @@ class Plugin {
 		 * @link https://github.com/pronamic/wp-pronamic-ideal/commit/bb967a3e7804ecfbd83dea110eb8810cbad097d7
 		 * @link https://github.com/pronamic/wp-pronamic-ideal/commit/3ab4a7c1fc2cef0b6f565f8205da42aa1203c3c5
 		 */
-		if ( Core_Util::doing_cron() ) {
+		if ( \wp_doing_cron() ) {
 			return;
 		}
 
@@ -491,9 +512,9 @@ class Plugin {
 			exit;
 		}
 
-		$gateway = self::get_gateway( $payment->config_id );
+		$gateway = $payment->get_gateway();
 
-		if ( $gateway ) {
+		if ( null !== $gateway ) {
 			// Give gateway a chance to handle redirect.
 			$gateway->payment_redirect( $payment );
 
@@ -512,8 +533,10 @@ class Plugin {
 		}
 
 		// Redirect to payment action URL.
-		if ( ! empty( $payment->action_url ) ) {
-			wp_redirect( $payment->action_url );
+		$action_url = $payment->get_action_url();
+
+		if ( ! empty( $action_url ) ) {
+			wp_redirect( $action_url );
 
 			exit;
 		}
@@ -553,8 +576,9 @@ class Plugin {
 		$this->settings = new Settings( $this );
 
 		// Data Stores.
-		$this->payments_data_store      = new Payments\PaymentsDataStoreCPT();
-		$this->subscriptions_data_store = new Subscriptions\SubscriptionsDataStoreCPT();
+		$this->gateways_data_store      = new GatewaysDataStoreCPT();
+		$this->payments_data_store      = new PaymentsDataStoreCPT();
+		$this->subscriptions_data_store = new SubscriptionsDataStoreCPT();
 
 		$this->payments_data_store->setup();
 		$this->subscriptions_data_store->setup();
@@ -632,6 +656,9 @@ class Plugin {
 
 		// Filters.
 		\add_filter( 'pronamic_payment_redirect_url', array( $this, 'payment_redirect_url' ), 10, 2 );
+
+		// Actions.
+		\add_action( 'pronamic_pay_pre_create_payment', array( __CLASS__, 'complement_payment' ), 10, 1 );
 	}
 
 	/**
@@ -700,11 +727,11 @@ class Plugin {
 	 * @return void
 	 */
 	public function register_styles() {
-		$min = SCRIPT_DEBUG ? '' : '.min';
+		$min = \SCRIPT_DEBUG ? '' : '.min';
 
-		wp_register_style(
+		\wp_register_style(
 			'pronamic-pay-redirect',
-			plugins_url( 'css/redirect' . $min . '.css', dirname( __FILE__ ) ),
+			\plugins_url( 'css/redirect' . $min . '.css', \dirname( __FILE__ ) ),
 			array(),
 			$this->get_version()
 		);
@@ -783,44 +810,32 @@ class Plugin {
 	 *
 	 * @link https://wordpress.org/support/article/post-status/#default-statuses
 	 *
-	 * @param string|integer|boolean|null $config_id A gateway configuration ID.
-	 * @param array                       $args      Extra arguments.
+	 * @param int   $config_id A gateway configuration ID.
+	 * @param array $args      Extra arguments.
 	 *
 	 * @return null|Gateway
 	 */
 	public static function get_gateway( $config_id, $args = array() ) {
-		// Check for 0, false, null and other empty values.
-		if ( empty( $config_id ) ) {
-			return null;
+		// Get gateway from data store.
+		$gateway = \pronamic_pay_plugin()->gateways_data_store->get_gateway( $config_id );
+
+		// Use gateway identifier from arguments to get new gateway.
+		if ( null === $gateway && ! empty( $args ) ) {
+			// Get integration.
+			$args = wp_parse_args(
+				$args,
+				array(
+					'gateway_id' => \get_post_meta( $config_id, '_pronamic_gateway_id', true ),
+				)
+			);
+
+			$integration = pronamic_pay_plugin()->gateway_integrations->get_integration( $args['gateway_id'] );
+
+			// Get new gateway.
+			if ( null !== $integration ) {
+				$gateway = $integration->get_gateway( $config_id );
+			}
 		}
-
-		$config_id = intval( $config_id );
-
-		// Check if config is trashed.
-		if ( 'trash' === get_post_status( $config_id ) ) {
-			return null;
-		}
-
-		// Arguments.
-		$args = wp_parse_args(
-			$args,
-			array(
-				'gateway_id' => get_post_meta( $config_id, '_pronamic_gateway_id', true ),
-				'mode'       => get_post_meta( $config_id, '_pronamic_gateway_mode', true ),
-			)
-		);
-
-		// Get config.
-		$gateway_id = $args['gateway_id'];
-		$mode       = $args['mode'];
-
-		$integration = pronamic_pay_plugin()->gateway_integrations->get_integration( $gateway_id );
-
-		if ( null === $integration ) {
-			return null;
-		}
-
-		$gateway = $integration->get_gateway( $config_id );
 
 		return $gateway;
 	}
@@ -832,19 +847,9 @@ class Plugin {
 	 * @return void
 	 */
 	public static function complement_payment( Payment $payment ) {
-		// Entrance Code.
-		if ( null === $payment->entrance_code ) {
-			$payment->entrance_code = uniqid();
-		}
-
 		// Key.
 		if ( null === $payment->key ) {
 			$payment->key = uniqid( 'pay_' );
-		}
-
-		// User ID.
-		if ( null === $payment->user_id && is_user_logged_in() ) {
-			$payment->user_id = get_current_user_id();
 		}
 
 		$origin_id = $payment->get_origin_id();
@@ -874,8 +879,14 @@ class Plugin {
 		}
 
 		// Google Analytics client ID.
-		if ( null === $payment->analytics_client_id ) {
-			$payment->analytics_client_id = GoogleAnalyticsEcommerce::get_cookie_client_id();
+		$google_analytics_client_id = $payment->get_meta( 'google_analytics_client_id' );
+
+		if ( null === $google_analytics_client_id ) {
+			$google_analytics_client_id = GoogleAnalyticsEcommerce::get_cookie_client_id();
+
+			if ( null !== $google_analytics_client_id ) {
+				$payment->set_meta( 'google_analytics_client_id', $google_analytics_client_id );
+			}
 		}
 
 		// Customer.
@@ -888,11 +899,6 @@ class Plugin {
 		}
 
 		CustomerHelper::complement_customer( $customer );
-
-		// Email.
-		if ( null === $payment->get_email() ) {
-			$payment->email = $customer->get_email();
-		}
 
 		// Billing address.
 		$billing_address = $payment->get_billing_address();
@@ -923,17 +929,23 @@ class Plugin {
 		}
 
 		// Issuer.
-		if ( null === $payment->issuer ) {
+		$issuer = $payment->get_meta( 'issuer' );
+
+		if ( null === $issuer ) {
 			// Credit card.
-			if ( PaymentMethods::CREDIT_CARD === $payment->method && filter_has_var( INPUT_POST, 'pronamic_credit_card_issuer_id' ) ) {
-				$payment->issuer = filter_input( INPUT_POST, 'pronamic_credit_card_issuer_id', FILTER_SANITIZE_STRING );
+			if ( PaymentMethods::CREDIT_CARD === $payment->get_payment_method() && \filter_has_var( INPUT_POST, 'pronamic_credit_card_issuer_id' ) ) {
+				$issuer = \filter_input( INPUT_POST, 'pronamic_credit_card_issuer_id', FILTER_SANITIZE_STRING );
 			}
 
 			// iDEAL.
 			$ideal_methods = array( PaymentMethods::IDEAL, PaymentMethods::DIRECT_DEBIT_IDEAL );
 
-			if ( \in_array( $payment->method, $ideal_methods, true ) && filter_has_var( INPUT_POST, 'pronamic_ideal_issuer_id' ) ) {
-				$payment->issuer = filter_input( INPUT_POST, 'pronamic_ideal_issuer_id', FILTER_SANITIZE_STRING );
+			if ( \in_array( $payment->get_payment_method(), $ideal_methods, true ) && \filter_has_var( INPUT_POST, 'pronamic_ideal_issuer_id' ) ) {
+				$issuer = \filter_input( INPUT_POST, 'pronamic_ideal_issuer_id', FILTER_SANITIZE_STRING );
+			}
+
+			if ( ! empty( $issuer ) ) {
+				$payment->set_meta( 'issuer', $issuer );
 			}
 		}
 
@@ -949,8 +961,12 @@ class Plugin {
 		 * @link https://github.com/wp-pay-extensions/ninjaforms/blob/1.2.0/src/PaymentGateway.php#L80-L83
 		 * @link https://github.com/wp-pay/core/blob/2.4.0/src/Forms/FormProcessor.php#L131-L134
 		 */
-		if ( null !== $payment->issuer && null === $payment->method ) {
-			$payment->method = PaymentMethods::IDEAL;
+		$issuer = $payment->get_meta( 'issuer' );
+
+		$payment_method = $payment->get_payment_method();
+
+		if ( null !== $issuer && null === $payment_method ) {
+			$payment->set_payment_method( PaymentMethods::IDEAL );
 		}
 
 		// Consumer bank details.
@@ -981,22 +997,38 @@ class Plugin {
 	}
 
 	/**
+	 * Get default gateway configuration ID.
+	 *
+	 * @return int|null
+	 */
+	private static function get_default_config_id() {
+		$value = (int) \get_option( 'pronamic_pay_config_id' );
+
+		if ( 0 === $value ) {
+			return null;
+		}
+
+		if ( 'publish' !== \get_post_status( $value ) ) {
+			return null;
+		}
+
+		return $value;
+	}
+
+	/**
 	 * Start payment.
 	 *
 	 * @param Payment $payment The payment to start at the specified gateway.
-	 * @param Gateway $gateway The gateway to start the payment at.
-	 *
 	 * @return Payment
-	 *
 	 * @throws \Exception Throws exception if gateway payment start fails.
 	 */
-	public static function start_payment( Payment $payment, $gateway = null ) {
-		global $pronamic_ideal;
-
-		// Complement payment.
-		self::complement_payment( $payment );
-
+	public static function start_payment( Payment $payment ) {
+		// Set default or filtered config ID.
 		$config_id = $payment->get_config_id();
+
+		if ( null === $config_id ) {
+			$config_id = self::get_default_config_id();
+		}
 
 		/**
 		 * Filters the payment gateway configuration ID.
@@ -1006,13 +1038,15 @@ class Plugin {
 		 */
 		$config_id = \apply_filters( 'pronamic_payment_gateway_configuration_id', $config_id, $payment );
 
-		$payment->set_config_id( $config_id );
+		if ( null !== $config_id ) {
+			$payment->set_config_id( $config_id );
+		}
 
-		// Create payment.
-		$pronamic_ideal->payments_data_store->create( $payment );
+		// Save payment.
+		$payment->save();
 
 		// Gateway.
-		$gateway = self::get_gateway( $payment->get_config_id() );
+		$gateway = $payment->get_gateway();
 
 		if ( null === $gateway ) {
 			$payment->set_status( PaymentStatus::FAILURE );
@@ -1022,9 +1056,27 @@ class Plugin {
 			return $payment;
 		}
 
-		// Recurring.
-		if ( true === $payment->get_recurring() && ! $gateway->supports( 'recurring' ) ) {
+		// Subscriptions.
+		$subscriptions = $payment->get_subscriptions();
+
+		if ( \count( $subscriptions ) > 0 && ! $gateway->supports( 'recurring' ) ) {
 			throw new \Exception( 'Gateway does not support recurring payments.' );
+		}
+
+		// Periods.
+		$periods = $payment->get_periods();
+
+		if ( null !== $periods ) {
+			foreach ( $periods as $period ) {
+				$phase = $period->get_phase();
+
+				$phase->set_next_date( \max( $phase->get_next_date(), $period->get_end_date() ) );
+			}
+		}
+
+		// Subscriptions.
+		foreach ( $subscriptions as $subscription ) {
+			$subscription->save();
 		}
 
 		// Start payment at the gateway.

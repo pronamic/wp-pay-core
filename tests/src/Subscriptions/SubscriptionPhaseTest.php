@@ -3,7 +3,7 @@
  * Subscription Phase Test
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -139,13 +139,17 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 
 		$subscription->add_phase( $phase );
 
-		$period_1 = $phase->next_period( $subscription );
-		$period_2 = $phase->next_period( $subscription );
-		$period_3 = $phase->next_period( $subscription );
+		$period_1 = $phase->next_period();
+		$period_2 = $phase->next_period();
+		$period_3 = $phase->next_period();
+		$period_4 = $phase->next_period();
+		$period_5 = $phase->next_period();
 
 		$this->assertEquals( '2020-01-31 00:00:00', $period_1->get_start_date()->format( 'Y-m-d H:i:s' ) );
 		$this->assertEquals( '2020-03-02 00:00:00', $period_2->get_start_date()->format( 'Y-m-d H:i:s' ) );
-		$this->assertEquals( '2020-03-31 00:00:00', $period_3->get_start_date()->format( 'Y-m-d H:i:s' ) );
+		$this->assertEquals( '2020-04-02 00:00:00', $period_3->get_start_date()->format( 'Y-m-d H:i:s' ) );
+		$this->assertEquals( '2020-05-02 00:00:00', $period_4->get_start_date()->format( 'Y-m-d H:i:s' ) );
+		$this->assertEquals( '2020-06-02 00:00:00', $period_5->get_start_date()->format( 'Y-m-d H:i:s' ) );
 	}
 
 	/**
@@ -167,9 +171,9 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 
 		$subscription->add_phase( $phase );
 
-		$period_1 = $phase->next_period( $subscription );
-		$period_2 = $phase->next_period( $subscription );
-		$period_3 = $phase->next_period( $subscription );
+		$period_1 = $phase->next_period();
+		$period_2 = $phase->next_period();
+		$period_3 = $phase->next_period();
 
 		$this->assertEquals( '2020-01-29 00:00:00', $period_1->get_start_date()->format( 'Y-m-d H:i:s' ) );
 		$this->assertEquals( '2020-02-29 00:00:00', $period_2->get_start_date()->format( 'Y-m-d H:i:s' ) );
@@ -195,9 +199,9 @@ class SubscriptionPhaseTest extends \WP_UnitTestCase {
 
 		$subscription->add_phase( $phase );
 
-		$period_1 = $phase->next_period( $subscription );
-		$period_2 = $phase->next_period( $subscription );
-		$period_3 = $phase->next_period( $subscription );
+		$period_1 = $phase->next_period();
+		$period_2 = $phase->next_period();
+		$period_3 = $phase->next_period();
 
 		$this->assertEquals( '2020-01-29 00:00:00', $period_1->get_start_date()->format( 'Y-m-d H:i:s' ) );
 		$this->assertEquals( '2020-02-05 00:00:00', $period_2->get_start_date()->format( 'Y-m-d H:i:s' ) );

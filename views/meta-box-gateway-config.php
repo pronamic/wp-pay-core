@@ -3,14 +3,16 @@
  * Meta Box Gateway Config
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
+ * @var \Pronamic\WordPress\Pay\Plugin $plugin Plugin.
+ * @var \WP_Post                       $post   Post.
  */
 
 use Pronamic\WordPress\Pay\Util;
 
-$integrations = iterator_to_array( $this->plugin->gateway_integrations );
+$integrations = iterator_to_array( $plugin->gateway_integrations );
 
 usort(
 	$integrations,
@@ -20,7 +22,7 @@ usort(
 );
 
 // Sections.
-$config_id = get_the_ID();
+$config_id = $post->ID;
 
 $gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 
@@ -99,7 +101,7 @@ $gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 						if ( null !== $manual_url ) {
 							$links[] = sprintf(
 								'<a href="%s" target="_blank" title="%s">%s</a>',
-								\esc_url( $this->plugin->tracking_module->get_tracking_url( $manual_url ) ),
+								\esc_url( $plugin->tracking_module->get_tracking_url( $manual_url ) ),
 								\esc_attr__( 'Manual', 'pronamic_ideal' ),
 								\esc_html__( 'Manual', 'pronamic_ideal' )
 							);
@@ -110,11 +112,11 @@ $gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 						printf(
 							'<option data-gateway-description="%s" data-pronamic-pay-settings="%s" value="%s" %s class="%s">%s</option>',
 							esc_attr( $description ),
-							esc_attr( wp_json_encode( $integration->get_settings() ) ),
-							esc_attr( $integration_id ),
+							esc_attr( (string) wp_json_encode( $integration->get_settings() ) ),
+							esc_attr( (string) $integration_id ),
 							selected( $gateway_id, $integration_id, false ),
 							esc_attr( implode( ' ', $classes ) ),
-							esc_attr( $name )
+							esc_attr( (string) $name )
 						);
 					}
 
@@ -148,7 +150,7 @@ $gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 					),
 				);
 
-				$value = get_post_meta( get_the_ID(), '_pronamic_gateway_mode', true );
+				$value = get_post_meta( $config_id, '_pronamic_gateway_mode', true );
 
 				printf(
 					'<select %s>%s</select>',
@@ -166,6 +168,6 @@ $gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 
 <div id="pronamic-pay-gateway-settings" style="padding-top: 5px;">
 
-	<?php require 'meta-box-gateway-settings.php'; ?>
+	<?php require __DIR__ . '/meta-box-gateway-settings.php'; ?>
 
 </div>

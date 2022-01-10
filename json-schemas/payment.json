@@ -1,0 +1,14 @@
+{
+	"$id": "https://github.com/pronamic/wp-pay-core/blob/master/json-schemas/payment.json",
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "Pronamic Pay payment.",
+	"type": "object",
+	"properties": {
+		"ga_tracked": {
+			"description": "Indicates if the payment is Google Analytics e-commerce tracked.",
+			"type": "boolean",
+			"deprecated": true
+		}
+	},
+	"required": []
+}

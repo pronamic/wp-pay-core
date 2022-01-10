@@ -3,7 +3,7 @@
  * Meta Box Payment Update
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -53,14 +53,12 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 
 	<?php
 
-	$config_id = get_post_meta( $post->ID, '_pronamic_payment_config_id', true );
-
-	$gateway = Plugin::get_gateway( $config_id );
+	$gateway = $payment->get_gateway();
 
 	/**
 	 * Check status button.
 	 */
-	if ( $gateway && $gateway->supports( 'payment_status_request' ) ) {
+	if ( null !== $gateway && $gateway->supports( 'payment_status_request' ) ) {
 		// Only show button if gateway exists and status check is supported.
 		$action_url = wp_nonce_url(
 			add_query_arg(
@@ -101,7 +99,7 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 		$link_text = sprintf(
 			/* translators: %s: payment method name */
 			__( 'Create %1$s invoice', 'pronamic_ideal' ),
-			PaymentMethods::get_name( $payment->get_method() )
+			PaymentMethods::get_name( $payment->get_payment_method() )
 		);
 
 		printf(
@@ -131,7 +129,7 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 		$link_text = sprintf(
 			/* translators: %s: payment method name */
 			__( 'Cancel %1$s reservation', 'pronamic_ideal' ),
-			PaymentMethods::get_name( $payment->get_method() )
+			PaymentMethods::get_name( $payment->get_payment_method() )
 		);
 
 		printf(

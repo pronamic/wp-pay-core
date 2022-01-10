@@ -3,7 +3,7 @@
  * Settings
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -89,6 +89,16 @@ class Settings {
 			array(
 				'type'        => 'boolean',
 				'description' => 'Setting that can be used to trigger the “debug” mode throughout Pronamic Pay.',
+				'default'     => false,
+			)
+		);
+
+		\register_setting(
+			'pronamic_pay',
+			'pronamic_pay_subscriptions_processing_disabled',
+			array(
+				'type'        => 'boolean',
+				'description' => 'Setting that can be used to disable processing of recurring payments.',
 				'default'     => false,
 			)
 		);

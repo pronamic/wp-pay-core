@@ -3,7 +3,7 @@
  * Subscription test
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -61,38 +61,6 @@ class SubscriptionTest extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test set.
-	 *
-	 * @dataProvider set_provider
-	 *
-	 * @param string $set_function Setter function name.
-	 * @param string $property     Property name.
-	 * @param string $value        Expected value.
-	 */
-	public function test_set( $set_function, $property, $value ) {
-		$this->setExpectedDeprecated( $set_function );
-
-		$subscription = new Subscription();
-
-		$subscription->$set_function( $value );
-
-		$this->assertEquals( $value, $subscription->$property );
-	}
-
-	/**
-	 * Set provider.
-	 *
-	 * @return array
-	 */
-	public function set_provider() {
-		return array(
-			array( 'set_consumer_name', 'consumer_name', 'John Doe' ),
-			array( 'set_consumer_iban', 'consumer_iban', 'NL56 RABO 0108 6347 79' ),
-			array( 'set_consumer_bic', 'consumer_bic', 'RABONL2U' ),
-		);
-	}
-
-	/**
 	 * Test get.
 	 *
 	 * @dataProvider get_provider
@@ -119,10 +87,6 @@ class SubscriptionTest extends WP_UnitTestCase {
 			array( 'key', 'get_key', uniqid() ),
 			array( 'source', 'get_source', 'woocommerce' ),
 			array( 'source_id', 'get_source_id', '1234' ),
-			array( 'frequency', 'get_frequency', 'daily' ),
-			array( 'interval', 'get_interval', '1' ),
-			array( 'interval_period', 'get_interval_period', 'Y' ),
-			array( 'description', 'get_description', 'Lorem ipsum dolor sit amet, consectetur.' ),
 		);
 	}
 
@@ -148,11 +112,6 @@ class SubscriptionTest extends WP_UnitTestCase {
 		$subscription->set_id( 1 );
 
 		// Dates.
-		$subscription->set_start_date( new DateTime( '2005-05-05' ) );
-		$subscription->set_end_date( new DateTime( '2005-06-05' ) );
-		$subscription->set_expiry_date( new DateTime( '2010-05-05' ) );
-		$subscription->set_next_payment_date( new DateTime( '2005-06-05' ) );
-		$subscription->set_next_payment_delivery_date( new DateTime( '2005-06-01' ) );
 		$subscription->set_activated_at( new DateTime( '2005-05-05' ) );
 
 		// Test.
@@ -202,12 +161,6 @@ class SubscriptionTest extends WP_UnitTestCase {
 		);
 
 		$subscription->add_phase( $phase );
-
-		// Dates.
-		$subscription->set_end_date( new DateTime( '2005-06-05' ) );
-		$subscription->set_expiry_date( new DateTime( '2010-05-05' ) );
-		$subscription->set_next_payment_date( new DateTime( '2005-06-05' ) );
-		$subscription->set_next_payment_delivery_date( new DateTime( '2005-06-01' ) );
 
 		return $subscription;
 	}

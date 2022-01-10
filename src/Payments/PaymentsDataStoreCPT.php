@@ -3,7 +3,7 @@
  * Payments Data Store Custom Post Type
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -15,11 +15,12 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Customer;
+use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPeriod;
 
 /**
  * Title: Payments data store CPT
  * Description:
- * Copyright: 2005-2021 Pronamic
+ * Copyright: 2005-2022 Pronamic
  * Company: Pronamic
  *
  * @see     https://woocommerce.com/2017/04/woocommerce-3-0-release/
@@ -255,10 +256,17 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L47-L76
 	 *
 	 * @param Payment $payment The payment to create in this data store.
-	 *
 	 * @return bool
+	 * @throws \Exception Throws exception when create fails.
 	 */
 	public function create( Payment $payment ) {
+		/**
+		 * Pre-create payment.
+		 *
+		 * @param Payment $payment Payment.
+		 */
+		\do_action( 'pronamic_pay_pre_create_payment', $payment );
+
 		$title = $payment->title;
 
 		if ( empty( $title ) ) {
@@ -282,7 +290,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		);
 
 		if ( is_wp_error( $result ) ) {
-			return false;
+			throw new \Exception( 'Could not craete payment' );
 		}
 
 		/**
@@ -302,8 +310,8 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
 	 *
 	 * @param Payment $payment The payment to update in this data store.
-	 *
 	 * @return bool
+	 * @throws \Exception Throws exception when update fails.
 	 */
 	public function update( Payment $payment ) {
 		$id = $payment->get_id();
@@ -320,7 +328,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$result = wp_update_post( $data, true );
 
 		if ( is_wp_error( $result ) ) {
-			return false;
+			throw new \Exception( 'Could not update payment' );
 		}
 
 		return true;
@@ -740,26 +748,16 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			return;
 		}
 
-		$payment->config_id           = $this->get_meta_int( $id, 'config_id' );
-		$payment->key                 = $this->get_meta_string( $id, 'key' );
-		$payment->method              = $this->get_meta_string( $id, 'method' );
-		$payment->issuer              = $this->get_meta_string( $id, 'issuer' );
-		$payment->order_id            = $this->get_meta_string( $id, 'order_id' );
-		$payment->entrance_code       = $this->get_meta_string( $id, 'entrance_code' );
-		$payment->action_url          = $this->get_meta_string( $id, 'action_url' );
-		$payment->source              = $this->get_meta_string( $id, 'source' );
-		$payment->source_id           = $this->get_meta_string( $id, 'source_id' );
-		$payment->description         = $this->get_meta_string( $id, 'description' );
-		$payment->email               = $this->get_meta_string( $id, 'email' );
-		$payment->status              = $this->get_meta_string( $id, 'status' );
-		$payment->analytics_client_id = $this->get_meta_string( $id, 'analytics_client_id' );
-		$payment->subscription_id     = $this->get_meta_int( $id, 'subscription_id' );
-		$payment->recurring_type      = $this->get_meta_string( $id, 'recurring_type' );
-		$payment->recurring           = $this->get_meta_bool( $id, 'recurring' );
-		$payment->start_date          = $this->get_meta_date( $id, 'start_date' );
-		$payment->end_date            = $this->get_meta_date( $id, 'end_date' );
+		$payment->status = $this->get_meta_string( $id, 'status' );
 
-		$payment->set_version( $this->get_meta_string( $id, 'version' ) );
+		// Action URL.
+		$action_url = $payment->get_action_url();
+
+		if ( empty( $action_url ) ) {
+			$action_url = $this->get_meta_string( $id, 'action_url' );
+
+			$payment->set_action_url( $action_url );
+		}
 
 		// Legacy.
 		parent::read_post_meta( $payment );
@@ -784,61 +782,61 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		}
 
 		// Subscription.
-		if ( ! empty( $payment->subscription_id ) ) {
-			$subscription = get_pronamic_subscription( $payment->subscription_id );
+		$subscription_id = $this->get_meta_int( $id, 'subscription_id' );
+
+		if ( ! empty( $subscription_id ) ) {
+			$subscription = \get_pronamic_subscription( $subscription_id );
 
 			if ( null !== $subscription ) {
 				$payment->add_subscription( $subscription );
 			}
 		}
-	}
 
-	/**
-	 * Get update meta.
-	 *
-	 * @param Payment $payment The payment to update.
-	 * @param array   $meta    Meta array.
-	 *
-	 * @return array
-	 */
-	protected function get_update_meta( $payment, $meta = array() ) {
-		$customer = $payment->get_customer();
-
-		$consumer_bank_details = $payment->get_consumer_bank_details();
-
-		$meta = array(
-			'config_id'               => $payment->config_id,
-			'key'                     => $payment->key,
-			'order_id'                => $payment->order_id,
-			'currency'                => $payment->get_total_amount()->get_currency()->get_alphabetic_code(),
-			'amount'                  => $payment->get_total_amount()->get_number()->get_value(),
-			'method'                  => $payment->method,
-			'issuer'                  => $payment->issuer,
-			'expiration_period'       => null,
-			'entrance_code'           => $payment->entrance_code,
-			'description'             => $payment->description,
-			'consumer_name'           => ( null === $consumer_bank_details ? null : $consumer_bank_details->get_name() ),
-			'consumer_account_number' => ( null === $consumer_bank_details ? null : $consumer_bank_details->get_account_number() ),
-			'consumer_iban'           => ( null === $consumer_bank_details ? null : $consumer_bank_details->get_iban() ),
-			'consumer_bic'            => ( null === $consumer_bank_details ? null : $consumer_bank_details->get_bic() ),
-			'consumer_city'           => ( null === $consumer_bank_details ? null : $consumer_bank_details->get_city() ),
-			'source'                  => $payment->source,
-			'source_id'               => $payment->source_id,
-			'email'                   => ( null === $customer ? null : $customer->get_email() ),
-			'analytics_client_id'     => $payment->analytics_client_id,
-			'subscription_id'         => $payment->subscription_id,
-			'recurring_type'          => $payment->recurring_type,
-			'recurring'               => $payment->recurring,
-			'transaction_id'          => $payment->get_transaction_id(),
-			'action_url'              => $payment->get_action_url(),
-			'start_date'              => $payment->start_date,
-			'end_date'                => $payment->end_date,
-			'version'                 => $payment->get_version(),
+		// Meta.
+		$keys = array(
+			'_pronamic_payment_issuer'              => 'issuer',
+			'_pronamic_payment_analytics_client_id' => 'google_analytics_client_id',
 		);
 
-		$meta = parent::get_update_meta( $payment, $meta );
+		foreach ( $keys as $post_meta_key => $payment_meta_key ) {
+			$payment_meta_value = $payment->get_meta( $payment_meta_key );
+			$post_meta_value    = \get_post_meta( $id, $post_meta_key, true );
 
-		return $meta;
+			if ( empty( $payment_meta_value ) && ! empty( $post_meta_value ) ) {
+				$payment->set_meta( $payment_meta_key, $post_meta_value );
+			}
+		}
+
+		// Legacy periods.
+		$periods = $payment->get_periods();
+
+		if ( null === $periods ) {
+			$start_date = \get_post_meta( $id, '_pronamic_payment_start_date', true );
+			$end_date   = \get_post_meta( $id, '_pronamic_payment_end_date', true );
+
+			if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+				$subscriptions = $payment->get_subscriptions();
+
+				$subscription = reset( $subscriptions );
+
+				if ( false !== $subscription ) {
+					$phases = $subscription->get_phases();
+
+					$phase = reset( $phases );
+
+					if ( false !== $phase ) {
+						$period = new SubscriptionPeriod(
+							$phase,
+							new DateTime( $start_date ),
+							new DateTime( $end_date ),
+							$payment->get_total_amount()
+						);
+
+						$payment->add_period( $period );
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -855,10 +853,27 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			return;
 		}
 
-		$meta = $this->get_update_meta( $payment );
+		$customer = $payment->get_customer();
 
-		foreach ( $meta as $meta_key => $meta_value ) {
-			$this->update_meta( $id, $meta_key, $meta_value );
+		$this->update_meta( $id, 'config_id', $payment->config_id );
+		$this->update_meta( $id, 'source', $payment->source );
+		$this->update_meta( $id, 'source_id', $payment->source_id );
+		$this->update_meta( $id, 'email', ( null === $customer ? null : $customer->get_email() ) );
+		$this->update_meta( $id, 'purchase_id', $payment->get_meta( 'purchase_id' ) );
+		$this->update_meta( $id, 'transaction_id', $payment->get_transaction_id() );
+		$this->update_meta( $id, 'version', $payment->get_version() );
+
+		// Subscriptions.
+		$meta_key = $this->get_meta_key( 'subscription_id' );
+
+		$subscriptions_ids = \get_post_meta( $id, 'subscription_id' );
+
+		foreach ( $payment->get_subscriptions() as $subscription ) {
+			$subscription_id = $subscription->get_id();
+
+			if ( ! in_array( $subscription_id, $subscriptions_ids ) ) {
+				\add_post_meta( $id, $meta_key, $subscription_id, false );
+			}
 		}
 
 		$this->update_meta_status( $payment );
@@ -902,121 +917,36 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			/**
 			 * Payment status updated for plugin integration source from old to new status.
 			 *
-			 * **Source**
-			 *
-			 * Plugin | Source
-			 * ------ | ------
-			 * Charitable | `charitable`
-			 * Contact Form 7 | `contact-form-7`
-			 * Event Espresso | `eventespresso`
-			 * Event Espresso (legacy) | `event-espresso`
-			 * Formidable Forms | `formidable-forms`
-			 * Give | `give`
-			 * Gravity Forms | `gravityformsideal`
-			 * MemberPress | `memberpress`
-			 * Ninja Forms | `ninja-forms`
-			 * s2Member | `s2member`
-			 * WooCommerce | `woocommerce`
-			 * WP eCommerce | `wp-e-commerce`
-			 *
-			 * **Action status**
-			 *
-			 * Status | Value
-			 * ------ | -----
-			 * (empty) | `unknown`
-			 * Cancelled | `cancelled`
-			 * Expired | `expired`
-			 * Failure | `failure`
-			 * Open | `open`
-			 * Reserved | `reserved`
-			 * Success | `success`
-			 *
-			 * **Payment status**
-			 *
-			 * Status | Value
-			 * ------ | -----
-			 * Cancelled | `Cancelled`
-			 * Expired | `Expired`
-			 * Failure | `Failure`
-			 * Open | `Open`
-			 * Reserved | `Reserved`
-			 * Success | `Success`
+			 * [`{$source}`](https://github.com/pronamic/wp-pronamic-pay/wiki#sources)
+			 * [`{$old_status}`](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status)
+			 * [`{$new_status}`](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status)
 			 *
 			 * @param Payment     $payment         Payment.
 			 * @param bool        $can_redirect    Flag to indicate if redirect is allowed after the payment update.
-			 * @param null|string $previous_status Previous payment status.
-			 * @param string      $updated_status  Updated payment status.
+			 * @param null|string $previous_status Previous [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
+			 * @param string      $updated_status  Updated [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
 			 */
 			do_action( 'pronamic_payment_status_update_' . $source . '_' . $old_status . '_to_' . $new_status, $payment, $can_redirect, $previous_status, $updated_status );
 
 			/**
 			 * Payment status updated for plugin integration source.
 			 *
-			 * **Source**
-			 *
-			 * Plugin | Source
-			 * ------ | ------
-			 * Charitable | `charitable`
-			 * Contact Form 7 | `contact-form-7`
-			 * Event Espresso | `eventespresso`
-			 * Event Espresso (legacy) | `event-espresso`
-			 * Formidable Forms | `formidable-forms`
-			 * Give | `give`
-			 * Gravity Forms | `gravityformsideal`
-			 * MemberPress | `memberpress`
-			 * Ninja Forms | `ninja-forms`
-			 * s2Member | `s2member`
-			 * WooCommerce | `woocommerce`
-			 * WP eCommerce | `wp-e-commerce`
-			 *
-			 * **Action status**
-			 *
-			 * Status | Value
-			 * ------ | -----
-			 * (empty) | `unknown`
-			 * Cancelled | `cancelled`
-			 * Expired | `expired`
-			 * Failure | `failure`
-			 * Open | `open`
-			 * Reserved | `reserved`
-			 * Success | `success`
-			 *
-			 * **Payment status**
-			 *
-			 * Status | Value
-			 * ------ | -----
-			 * Cancelled | `Cancelled`
-			 * Expired | `Expired`
-			 * Failure | `Failure`
-			 * Open | `Open`
-			 * Reserved | `Reserved`
-			 * Success | `Success`
+			 * [`{$source}`](https://github.com/pronamic/wp-pronamic-pay/wiki#sources)
 			 *
 			 * @param Payment     $payment         Payment.
 			 * @param bool        $can_redirect    Flag to indicate if redirect is allowed after the payment update.
-			 * @param null|string $previous_status Previous payment status.
-			 * @param string      $updated_status  Updated payment status.
+			 * @param null|string $previous_status Previous [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
+			 * @param string      $updated_status  Updated [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status)).
 			 */
 			do_action( 'pronamic_payment_status_update_' . $source, $payment, $can_redirect, $previous_status, $updated_status );
 
 			/**
 			 * Payment status updated.
 			 *
-			 * **Payment status**
-			 *
-			 * Status | Value
-			 * ------ | -----
-			 * Cancelled | `Cancelled`
-			 * Expired | `Expired`
-			 * Failure | `Failure`
-			 * Open | `Open`
-			 * Reserved | `Reserved`
-			 * Success | `Success`
-			 *
 			 * @param Payment     $payment         Payment.
 			 * @param bool        $can_redirect    Flag to indicate if redirect is allowed after the payment update.
-			 * @param null|string $previous_status Previous payment status.
-			 * @param string      $updated_status  Updated payment status.
+			 * @param null|string $previous_status Previous [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
+			 * @param string      $updated_status  Updated [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
 			 */
 			do_action( 'pronamic_payment_status_update', $payment, $can_redirect, $previous_status, $updated_status );
 		}

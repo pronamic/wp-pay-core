@@ -3,7 +3,7 @@
  * Subscription Period
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Subscriptions
  */
@@ -11,8 +11,10 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\DateTime\DateTimeImmutable;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
+use Pronamic\WordPress\Pay\Payments\Payment;
 
 /**
  * Subscription Period
@@ -53,15 +55,15 @@ class SubscriptionPeriod {
 	/**
 	 * Construct and initialize subscription period object.
 	 *
-	 * @param SubscriptionPhase $phase        Subscription phase.
-	 * @param DateTime          $start_date   Start date.
-	 * @param DateTime          $end_date     End date.
-	 * @param Money             $amount       Taxed amount.
+	 * @param SubscriptionPhase  $phase        Subscription phase.
+	 * @param \DateTimeInterface $start_date   Start date.
+	 * @param \DateTimeInterface $end_date     End date.
+	 * @param Money              $amount       Taxed amount.
 	 */
-	public function __construct( SubscriptionPhase $phase, DateTime $start_date, DateTime $end_date, Money $amount ) {
+	public function __construct( SubscriptionPhase $phase, \DateTimeInterface $start_date, \DateTimeInterface $end_date, Money $amount ) {
 		$this->phase      = $phase;
-		$this->start_date = $start_date;
-		$this->end_date   = $end_date;
+		$this->start_date = DateTime::create_from_interface( $start_date );
+		$this->end_date   = DateTime::create_from_interface( $end_date );
 		$this->amount     = $amount;
 	}
 
@@ -118,6 +120,23 @@ class SubscriptionPeriod {
 	 */
 	public function is_trial() {
 		return $this->phase->is_trial();
+	}
+
+	/**
+	 * New payment.
+	 *
+	 * @return Payment
+	 */
+	public function new_payment() {
+		$subscription = $this->phase->get_subscription();
+
+		$payment = $subscription->new_payment();
+
+		$payment->add_period( $this );
+
+		$payment->set_total_amount( $this->phase->get_amount() );
+
+		return $payment;
 	}
 
 	/**

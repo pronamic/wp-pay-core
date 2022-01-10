@@ -3,7 +3,7 @@
  * Payment info
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -19,6 +19,7 @@ use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\CreditCard;
 use Pronamic\WordPress\Pay\Customer;
+use Pronamic\WordPress\Pay\Plugin;
 use WP_Post;
 
 /**
@@ -75,6 +76,13 @@ abstract class PaymentInfo {
 	public $config_id;
 
 	/**
+	 * Gateway.
+	 *
+	 * @var Gateway|null
+	 */
+	private $gateway;
+
+	/**
 	 * The key of this payment info, used in URL's for security.
 	 *
 	 * @var string|null
@@ -92,7 +100,6 @@ abstract class PaymentInfo {
 	 * The order ID of this payment.
 	 *
 	 * @todo Is this required/used?
-	 *
 	 * @var string|null
 	 */
 	public $order_id;
@@ -116,7 +123,7 @@ abstract class PaymentInfo {
 	 *
 	 * @var string|null
 	 */
-	public $description;
+	private $description;
 
 	/**
 	 * Bank transfer recipient details.
@@ -133,39 +140,11 @@ abstract class PaymentInfo {
 	private $consumer_bank_details;
 
 	/**
-	 * The Google Analytics client ID of the user who started this payment.
+	 * Payment method.
 	 *
 	 * @var string|null
 	 */
-	public $analytics_client_id;
-
-	/**
-	 * Google Analytics e-commerce tracked.
-	 *
-	 * @var bool|null
-	 */
-	public $ga_tracked;
-
-	/**
-	 * The email of the user who started this payment.
-	 *
-	 * @var string|null
-	 */
-	public $email;
-
-	/**
-	 * The payment method chosen by the user who started this payment.
-	 *
-	 * @var string|null
-	 */
-	public $method;
-
-	/**
-	 * The issuer chosen by the user who started this payment.
-	 *
-	 * @var string|null
-	 */
-	public $issuer;
+	private $payment_method;
 
 	/**
 	 * Customer.
@@ -205,23 +184,10 @@ abstract class PaymentInfo {
 	/**
 	 * Credit card
 	 *
+	 * @deprecated
 	 * @var CreditCard|null
 	 */
 	private $credit_card;
-
-	/**
-	 * Start date if the payment is related to a specific period.
-	 *
-	 * @var DateTime|null
-	 */
-	public $start_date;
-
-	/**
-	 * End date if the payment is related to a specific period.
-	 *
-	 * @var DateTime|null
-	 */
-	public $end_date;
 
 	/**
 	 * Meta.
@@ -229,6 +195,13 @@ abstract class PaymentInfo {
 	 * @var array
 	 */
 	public $meta;
+
+	/**
+	 * Meta key prefix.
+	 *
+	 * @var string
+	 */
+	public $meta_key_prefix = '_pronamic_pay_';
 
 	/**
 	 * Construct and initialize payment object.
@@ -282,44 +255,6 @@ abstract class PaymentInfo {
 	}
 
 	/**
-	 * Get start date.
-	 *
-	 * @return DateTime|null
-	 */
-	public function get_start_date() {
-		return $this->start_date;
-	}
-
-	/**
-	 * Set start date.
-	 *
-	 * @param DateTime|null $start_date Start date.
-	 * @return void
-	 */
-	public function set_start_date( $start_date ) {
-		$this->start_date = $start_date;
-	}
-
-	/**
-	 * Get end date.
-	 *
-	 * @return DateTime|null
-	 */
-	public function get_end_date() {
-		return $this->end_date;
-	}
-
-	/**
-	 * Set end date.
-	 *
-	 * @param DateTime|null $end_date End date.
-	 * @return void
-	 */
-	public function set_end_date( $end_date ) {
-		$this->end_date = $end_date;
-	}
-
-	/**
 	 * Get origin post ID.
 	 *
 	 * @return int|null
@@ -355,6 +290,31 @@ abstract class PaymentInfo {
 	 */
 	public function set_config_id( $config_id ) {
 		$this->config_id = $config_id;
+	}
+
+	/**
+	 * Get gateway.
+	 *
+	 * @return Gateway|null
+	 */
+	public function get_gateway() {
+		$config_id = $this->get_config_id();
+
+		if ( null === $config_id ) {
+			return null;
+		}
+
+		return \pronamic_pay_plugin()->gateways_data_store->get_gateway( $config_id );
+	}
+
+	/**
+	 * Set gateway.
+	 *
+	 * @param Gateway|null $gateway Gateway.
+	 * @return void
+	 */
+	public function set_gateway( $gateway ) {
+		$this->gateway = $gateway;
 	}
 
 	/**
@@ -462,26 +422,6 @@ abstract class PaymentInfo {
 	}
 
 	/**
-	 * Get the payment method.
-	 *
-	 * @todo Constant?
-	 *
-	 * @return string|null
-	 */
-	public function get_method() {
-		return $this->method;
-	}
-
-	/**
-	 * Get the payment issuer.
-	 *
-	 * @return string|null
-	 */
-	public function get_issuer() {
-		return $this->issuer;
-	}
-
-	/**
 	 * Get the payment description.
 	 *
 	 * @return string|null
@@ -501,17 +441,40 @@ abstract class PaymentInfo {
 	}
 
 	/**
+	 * Get the payment method.
+	 *
+	 * @return string|null
+	 */
+	public function get_payment_method() {
+		return $this->payment_method;
+	}
+
+	/**
+	 * Set the payment method.
+	 *
+	 * @param string|null $payment_method Payment method.
+	 * @return void
+	 */
+	public function set_payment_method( $payment_method ) {
+		$this->payment_method = $payment_method;
+	}
+
+	/**
 	 * Get the meta value of this specified meta key.
 	 *
 	 * @param string $key Meta key.
 	 * @return mixed
 	 */
 	public function get_meta( $key ) {
+		if ( \array_key_exists( $key, $this->meta ) ) {
+			return $this->meta[ $key ];
+		}
+
 		if ( null === $this->id ) {
 			return null;
 		}
 
-		$key = '_pronamic_payment_' . $key;
+		$key = $this->meta_key_prefix . $key;
 
 		return get_post_meta( $this->id, $key, true );
 	}
@@ -521,27 +484,20 @@ abstract class PaymentInfo {
 	 *
 	 * @param  string $key   A meta key.
 	 * @param  mixed  $value A meta value.
-	 *
-	 * @return bool True on successful update, false on failure.
+	 * @return void
 	 */
 	public function set_meta( $key, $value ) {
-		if ( null === $this->id ) {
-			return false;
-		}
+		$this->meta[ $key ] = $value;
+	}
 
-		$key = '_pronamic_payment_' . $key;
-
-		if ( $value instanceof \DateTime ) {
-			$value = $value->format( 'Y-m-d H:i:s' );
-		}
-
-		if ( empty( $value ) ) {
-			return delete_post_meta( $this->id, $key );
-		}
-
-		$result = update_post_meta( $this->id, $key, $value );
-
-		return ( false !== $result );
+	/**
+	 * Delete meta data.
+	 *
+	 * @param string $key Meta key.
+	 * @return void
+	 */
+	public function delete_meta( $key ) {
+		unset( $this->meta[ $key ] );
 	}
 
 	/**
@@ -580,24 +536,6 @@ abstract class PaymentInfo {
 	 */
 	public function set_bank_transfer_recipient_details( $bank_transfer ) {
 		$this->bank_transfer_recipient_details = $bank_transfer;
-	}
-
-	/**
-	 * Get payment email.
-	 *
-	 * @return string|null
-	 */
-	public function get_email() {
-		return $this->email;
-	}
-
-	/**
-	 * Get Google Analytics client ID.
-	 *
-	 * @return string|null
-	 */
-	public function get_analytics_client_id() {
-		return $this->analytics_client_id;
 	}
 
 	/**
@@ -645,5 +583,14 @@ abstract class PaymentInfo {
 	 */
 	public function get_mode() {
 		return $this->mode;
+	}
+
+	/**
+	 * Get the unique key.
+	 *
+	 * @return string|null
+	 */
+	public function get_key() {
+		return $this->key;
 	}
 }

@@ -33,10 +33,6 @@
 		</properties>
 	</rule>
 
-	<rule ref="Squiz.PHP.CommentedOutCode.Found">
-		<exclude-pattern>/tests/UtilTest.php</exclude-pattern>
-	</rule>
-
 	<rule ref="WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_putenv">
 		<exclude-pattern>/tests/phpstan-bootstrap.php</exclude-pattern>
 	</rule>

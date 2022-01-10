@@ -3,13 +3,14 @@
  * Payment Post Type
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Admin
  */
 
 namespace Pronamic\WordPress\Pay\Admin;
 
+use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Plugin;
@@ -160,7 +161,7 @@ class AdminPaymentPostType {
 
 		// Create invoice action.
 		if ( filter_has_var( INPUT_GET, 'pronamic_pay_create_invoice' ) && check_admin_referer( 'pronamic_payment_create_invoice_' . $post_id ) ) {
-			$gateway = Plugin::get_gateway( $payment->get_config_id() );
+			$gateway = $payment->get_gateway();
 
 			// Admin notice.
 			if ( null !== $gateway && is_callable( array( $gateway, 'create_invoice' ) ) && $gateway->create_invoice( $payment ) ) {
@@ -178,7 +179,7 @@ class AdminPaymentPostType {
 
 		// Cancel reservation action.
 		if ( filter_has_var( INPUT_GET, 'pronamic_pay_cancel_reservation' ) && check_admin_referer( 'pronamic_payment_cancel_reservation_' . $post_id ) ) {
-			$gateway = Plugin::get_gateway( $payment->get_config_id() );
+			$gateway = $payment->get_gateway();
 
 			// Admin notice.
 			if ( null !== $gateway && is_callable( array( $gateway, 'cancel_reservation' ) ) && $gateway->cancel_reservation( $payment ) ) {
@@ -206,7 +207,7 @@ class AdminPaymentPostType {
 			} else {
 				pronamic_pay_plugin()->google_analytics_ecommerce->send_transaction( $payment );
 
-				if ( $payment->get_ga_tracked() ) {
+				if ( true === $payment->get_meta( 'google_analytics_tracked' ) ) {
 					$notice = array(
 						'type'    => 'info',
 						'message' => __( 'Payment sent to Google Analytics.', 'pronamic_ideal' ),
@@ -332,6 +333,7 @@ class AdminPaymentPostType {
 				esc_html__( 'Subscription', 'pronamic_ideal' ),
 				esc_html__( 'Subscription', 'pronamic_ideal' )
 			),
+			'pronamic_payment_method'       => '',
 			'pronamic_payment_title'        => __( 'Payment', 'pronamic_ideal' ),
 			'pronamic_payment_transaction'  => __( 'Transaction', 'pronamic_ideal' ),
 			'pronamic_payment_gateway'      => __( 'Gateway', 'pronamic_ideal' ),
@@ -436,16 +438,13 @@ class AdminPaymentPostType {
 
 				break;
 			case 'pronamic_payment_subscription':
-				$subscription_id = get_post_meta( $post_id, '_pronamic_payment_subscription_id', true );
-				$subscription_id = intval( $subscription_id );
+				$subscriptions = $payment->get_subscriptions();
 
-				if ( $subscription_id ) {
+				foreach ( $subscriptions as $subscription ) {
 					$label = __( 'Recurring payment', 'pronamic_ideal' );
 					$class = 'pronamic-pay-icon-recurring';
 
-					$recurring = get_post_meta( $post_id, '_pronamic_payment_recurring', true );
-
-					if ( ! $recurring ) {
+					if ( $subscription->is_first_payment( $payment ) ) {
 						$label = __( 'First of recurring payment', 'pronamic_ideal' );
 						$class = ' pronamic-pay-icon-recurring-first';
 					}
@@ -459,7 +458,21 @@ class AdminPaymentPostType {
 						),
 						'',
 						'',
-						$subscription_id
+						(int) $subscription->get_id()
+					);
+				}
+
+				break;
+			case 'pronamic_payment_method':
+				$payment_method = $payment->get_payment_method();
+
+				$icon_url = PaymentMethods::get_icon_url( $payment_method );
+
+				if ( null !== $icon_url ) {
+					\printf(
+						'<span class="pronamic-pay-tip" title="%2$s"><img src="%1$s" alt="%2$s" title="%2$s" width="32" valign="bottom" /></span> ',
+						\esc_url( $icon_url ),
+						\esc_attr( (string) PaymentMethods::get_name( $payment_method ) )
 					);
 				}
 
@@ -581,11 +594,13 @@ class AdminPaymentPostType {
 				}
 
 				// Show original amount and refunded amount.
-				echo \sprintf(
-					'<del>%1$s</del> %2$s',
-					esc_html( $total_amount->format_i18n() ),
-					\esc_html( $total_amount->subtract( $refunded_amount )->format_i18n() )
-				);
+				if ( null !== $refunded_amount ) {
+					echo \sprintf(
+						'<del>%1$s</del> %2$s',
+						esc_html( $total_amount->format_i18n() ),
+						\esc_html( $total_amount->subtract( $refunded_amount )->format_i18n() )
+					);
+				}
 
 				break;
 			case 'pronamic_payment_date':
@@ -676,6 +691,13 @@ class AdminPaymentPostType {
 	 * @return void
 	 */
 	public function meta_box_info( $post ) {
+		$plugin  = $this->plugin;
+		$payment = get_pronamic_payment( $post->ID );
+
+		if ( null === $payment ) {
+			return;
+		}
+
 		include __DIR__ . '/../../views/meta-box-payment-info.php';
 	}
 
@@ -722,6 +744,12 @@ class AdminPaymentPostType {
 	 * @return void
 	 */
 	public function meta_box_subscription( $post ) {
+		$payment = get_pronamic_payment( $post->ID );
+
+		if ( null === $payment ) {
+			return;
+		}
+
 		include __DIR__ . '/../../views/meta-box-payment-subscription.php';
 	}
 

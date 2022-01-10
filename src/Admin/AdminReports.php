@@ -3,7 +3,7 @@
  * Admin Report
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Admin
  */
@@ -73,7 +73,7 @@ class AdminReports {
 			return;
 		}
 
-		$min = SCRIPT_DEBUG ? '' : '.min';
+		$min = \SCRIPT_DEBUG ? '' : '.min';
 
 		// Flot - http://www.flotcharts.org/.
 		$flot_version = '0.8.0-alpha';

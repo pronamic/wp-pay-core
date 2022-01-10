@@ -2,13 +2,13 @@
 /**
  * Meta Box Gateway Test
  *
- * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
- * @license   GPL-3.0-or-later
- * @package   Pronamic\WordPress\Pay
+ * @author Pronamic <info@pronamic.eu>
+ * @copyright 2005-2022 Pronamic
+ * @license GPL-3.0-or-later
+ * @package Pronamic\WordPress\Pay
+ * @var \WP_Post $post                  WordPress post.
+ * @var array    $pronamic_ideal_errors Pronamic IDEAL errors.
  */
-
-global $pronamic_ideal_errors;
 
 use Pronamic\WordPress\Money\Currency;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
@@ -16,9 +16,11 @@ use Pronamic\WordPress\Pay\Gateways\IDealAdvancedV3\Gateway as IDealAdvancedV3_G
 use Pronamic\WordPress\Pay\Gateways\IDealBasic\Gateway as IDealBasic_Gateway;
 use Pronamic\WordPress\Pay\Plugin;
 
-$gateway = Plugin::get_gateway( get_the_ID() );
+global $pronamic_ideal_errors;
 
-if ( empty( $gateway ) ) {
+$gateway = Plugin::get_gateway( $post->ID );
+
+if ( null === $gateway ) {
 	printf(
 		'<em>%s</em>',
 		esc_html( __( 'Please save the entered account details of your payment provider, to make a test payment.', 'pronamic_ideal' ) )
@@ -29,17 +31,13 @@ if ( empty( $gateway ) ) {
 
 wp_nonce_field( 'test_pay_gateway', 'pronamic_pay_test_nonce' );
 
-$is_ideal  = false;
-$is_ideal |= $gateway instanceof IDealBasic_Gateway;
-$is_ideal |= $gateway instanceof IDealAdvancedV3_Gateway;
-
 // Payment method selector.
 $payment_methods = $gateway->get_payment_method_field_options( true );
 
 $inputs = array();
 
 foreach ( $payment_methods as $payment_method => $method_name ) {
-	if ( 0 === $payment_method ) {
+	if ( ! \is_string( $payment_method ) ) {
 		$payment_method = null;
 	}
 
@@ -80,7 +78,7 @@ $currency = Currency::get_instance( 'EUR' );
 					printf(
 						'<option value="%s" data-is-recurring="%d">%s</option>',
 						esc_attr( $payment_method ),
-						esc_attr( PaymentMethods::is_recurring_method( $payment_method ) ),
+						esc_attr( PaymentMethods::is_recurring_method( $payment_method ) ? '1' : ' 0' ),
 						esc_html( $method_name )
 					);
 				}
@@ -113,7 +111,7 @@ $currency = Currency::get_instance( 'EUR' );
 			<?php esc_html_e( 'Amount', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
-			<label for="test_amount"><?php echo \esc_html( $currency->get_symbol() ); ?></label>
+			<label for="test_amount"><?php echo \esc_html( (string) $currency->get_symbol() ); ?></label>
 
 			<input name="test_amount" id="test_amount" class="regular-text code pronamic-pay-form-control" value="" type="number" step="any" size="6" autocomplete="off" />
 		</td>
@@ -211,8 +209,8 @@ $currency = Currency::get_instance( 'EUR' );
 					foreach ( range( 1, 30 ) as $value ) {
 						printf(
 							'<option value="%s">%s</option>',
-							esc_attr( $value ),
-							esc_html( $value )
+							esc_attr( (string) $value ),
+							esc_html( (string) $value )
 						);
 					}
 
@@ -319,9 +317,3 @@ $currency = Currency::get_instance( 'EUR' );
 		} );
 	} );
 </script>
-
-<?php
-
-if ( $is_ideal || $gateway instanceof \Pronamic\WordPress\Pay\Gateways\OmniKassa2\Gateway ) {
-	include Plugin::$dirname . '/views/ideal-test-cases.php';
-}

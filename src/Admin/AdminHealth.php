@@ -3,7 +3,7 @@
  * Site health
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -418,8 +418,8 @@ class AdminHealth {
 				}
 
 				if ( 0 === \strcasecmp( \dirname( $file ), $extension->slug ) ) {
-					$tested_up_to_ok      = \version_compare( $plugin['Version'], $tested_up_to, '<=' );
-					$requires_at_least_ok = \version_compare( $plugin['Version'], $requires_at_least, '>=' );
+					$is_below_tested_version   = \version_compare( $plugin['Version'], $tested_up_to, '<=' );
+					$is_above_required_version = \version_compare( $plugin['Version'], $requires_at_least, '>=' );
 
 					$description_text = sprintf(
 						'– %1$s %2$s (requires at least version %3$s, tested up to %4$s)',
@@ -429,14 +429,16 @@ class AdminHealth {
 						\esc_html( $tested_up_to )
 					);
 
-					if ( $tested_up_to_ok && $requires_at_least_ok ) {
+					if ( $is_below_tested_version && $is_above_required_version ) {
 						// Plugin version is between minimum and tested versions.
 						$supported_extensions[] = sprintf(
 							'– %1$s %2$s',
 							\esc_html( $extension->name ),
 							\esc_html( $plugin['Version'] )
 						);
-					} elseif ( ! $requires_at_least_ok ) {
+					}
+
+					if ( ! $is_above_required_version ) {
 						// Plugin version is lower than minimum required version.
 						$outdated_plugin_versions[] = sprintf(
 							'– %1$s %2$s (requires at least version %3$s, tested up to %4$s)',
@@ -445,7 +447,9 @@ class AdminHealth {
 							\esc_html( $requires_at_least ),
 							\esc_html( $tested_up_to )
 						);
-					} elseif ( ! $tested_up_to_ok ) {
+					}
+
+					if ( ! $is_below_tested_version ) {
 						// Plugin version is higher than tested version.
 						$untested_plugin_versions[] = sprintf(
 							'– %1$s %2$s (tested up to %3$s)',

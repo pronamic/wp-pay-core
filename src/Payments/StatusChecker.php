@@ -3,13 +3,14 @@
  * Status Checker
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
 
 namespace Pronamic\WordPress\Pay\Payments;
 
+use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Plugin;
 
 /**
@@ -27,18 +28,16 @@ class StatusChecker {
 		// Payment status check events are scheduled when payments are started.
 		add_action( 'pronamic_pay_payment_status_check', array( $this, 'check_status' ), 10, 2 );
 
-		// Deprecated `pronamic_ideal_check_transaction_status` hooks got scheduled to request the payment status.
-		add_action( 'pronamic_ideal_check_transaction_status', array( $this, 'check_transaction_status' ), 10, 3 );
-
-		// Clear scheduled status check once payment reaches a final status.
+		// Clear scheduled status checks.
 		add_action( 'pronamic_payment_status_update', array( $this, 'maybe_clear_scheduled_status_check' ), 10, 1 );
+		add_action( 'trashed_post', array( $this, 'clear_scheduled_status_check' ), 10, 1 );
+		add_action( 'delete_post', array( $this, 'clear_scheduled_status_check' ), 10, 1 );
 	}
 
 	/**
 	 * Schedule event.
 	 *
 	 * @param Payment $payment The payment to schedule the status check event.
-	 *
 	 * @return void
 	 */
 	public static function schedule_event( $payment ) {
@@ -55,12 +54,6 @@ class StatusChecker {
 		 * - No status request for transactions older than 7 days.
 		 */
 
-		/*
-		 * The function `wp_schedule_single_event` uses the arguments array as an key for the event,
-		 * that's why we also add the time to this array, besides that it's also much clearer on
-		 * the Cron View (http://wordpress.org/extend/plugins/cron-view/) page.
-		 */
-
 		// Bail if payment already has a final status (e.g. failed payments).
 		$status = $payment->get_status();
 
@@ -69,29 +62,38 @@ class StatusChecker {
 		}
 
 		// Get delay seconds for first status check.
-		$delay = self::get_delay_seconds( 1, $payment->get_recurring() );
+		$delay = self::get_delay_seconds( 1, $payment );
 
-		wp_schedule_single_event(
+		\as_schedule_single_action(
 			time() + $delay,
 			'pronamic_pay_payment_status_check',
 			array(
 				'payment_id' => $payment->get_id(),
 				'try'        => 1,
-			)
+			),
+			'pronamic-pay'
 		);
 	}
 
 	/**
 	 * Get the delay seconds for the specified try.
 	 *
-	 * @param int       $try       Which try/round to get the delay seconds for.
-	 * @param bool|null $recurring Whether or not to use the delay scheme for recurring payments.
+	 * @param int     $try     Which try/round to get the delay seconds for.
+	 * @param Payment $payment Payment.
 	 *
 	 * @return int
 	 */
-	private static function get_delay_seconds( $try, $recurring = false ) {
-		// Delays for recurring payments.
-		if ( $recurring ) {
+	private static function get_delay_seconds( $try, $payment ) {
+		if ( \in_array(
+			$payment->get_payment_method(),
+			array(
+				PaymentMethods::AFTERPAY_NL,
+				PaymentMethods::BANK_TRANSFER,
+				PaymentMethods::DIRECT_DEBIT,
+				PaymentMethods::KLARNA_PAY_LATER,
+			),
+			true
+		) ) {
 			switch ( $try ) {
 				case 1:
 					return 15 * MINUTE_IN_SECONDS;
@@ -126,21 +128,6 @@ class StatusChecker {
 	}
 
 	/**
-	 * Backwards compatible transaction status check.
-	 *
-	 * @param integer $payment_id   The ID of a payment to check.
-	 * @param integer $seconds      The number of seconds this status check was delayed.
-	 * @param integer $number_tries The number of status check tries.
-	 *
-	 * @return void
-	 *
-	 * @deprecated 2.1.6 In favor of event `pronamic_pay_payment_status_check`.
-	 */
-	public function check_transaction_status( $payment_id = null, $seconds = null, $number_tries = 1 ) {
-		$this->check_status( $payment_id, $number_tries );
-	}
-
-	/**
 	 * Check status of the specified payment.
 	 *
 	 * @param integer $payment_id The payment ID to check.
@@ -172,7 +159,7 @@ class StatusChecker {
 		$payment->add_note( $note );
 
 		// Update payment.
-		Plugin::update_payment( $payment );
+		Plugin::update_payment( $payment, false );
 
 		// Limit number of tries.
 		if ( 4 === $try ) {
@@ -186,15 +173,16 @@ class StatusChecker {
 			$next_try = ( $try + 1 );
 
 			// Get delay seconds for next status check.
-			$delay = self::get_delay_seconds( $next_try, $payment->get_recurring() );
+			$delay = self::get_delay_seconds( $next_try, $payment );
 
-			wp_schedule_single_event(
+			\as_schedule_single_action(
 				time() + $delay,
 				'pronamic_pay_payment_status_check',
 				array(
 					'payment_id' => $payment->get_id(),
 					'try'        => $next_try,
-				)
+				),
+				'pronamic-pay'
 			);
 		}
 	}
@@ -214,15 +202,38 @@ class StatusChecker {
 			return;
 		}
 
-		// Clear scheduled hooks for all 4 tries.
+		// Check payment.
+		$payment_id = $payment->get_id();
+
+		if ( null === $payment_id ) {
+			return;
+		}
+
+		// Clear scheduled status check.
+		$this->clear_scheduled_status_check( $payment_id );
+	}
+
+	/**
+	 * Clear scheduled status check.
+	 *
+	 * @param int $post_id Post ID.
+	 * @return void
+	 */
+	public function clear_scheduled_status_check( $post_id ) {
+		// Check post type.
+		if ( 'pronamic_payment' !== \get_post_type( $post_id ) ) {
+			return;
+		}
+
+		// Unschedule action for all 4 tries.
 		$args = array(
-			'payment_id' => $payment->get_id(),
+			'payment_id' => $post_id,
 		);
 
 		foreach ( range( 1, 4 ) as $try ) {
 			$args['try'] = $try;
 
-			wp_clear_scheduled_hook( 'pronamic_pay_payment_status_check', $args );
+			\as_unschedule_action( 'pronamic_pay_payment_status_check', $args );
 		}
 	}
 }

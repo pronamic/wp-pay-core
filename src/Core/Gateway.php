@@ -3,7 +3,7 @@
  * Gateway
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Core
  */
@@ -20,7 +20,7 @@ use WP_Error;
 /**
  * Title: Gateway
  * Description:
- * Copyright: 2005-2021 Pronamic
+ * Copyright: 2005-2022 Pronamic
  * Company: Pronamic
  *
  * @author  Remco Tolsma
@@ -120,6 +120,7 @@ abstract class Gateway {
 		 *
 		 * Possible values:
 		 *  - payment_status_request      Gateway can request current payment status.
+		 *  - recurring_apple_pay         Recurring payments through Apple Pay.
 		 *  - recurring_credit_card       Recurring payments through credit card.
 		 *  - recurring_direct_debit      Recurring payments through direct debit.
 		 */
@@ -191,26 +192,6 @@ abstract class Gateway {
 	 */
 	public function is_html_form() {
 		return self::METHOD_HTML_FORM === $this->method;
-	}
-
-	/**
-	 * Set has feedback.
-	 *
-	 * @param boolean $has_feedback Feedback from gateway indicator.
-	 * @return void
-	 * @deprecated 2.0.5 Not in use anymore.
-	 */
-	public function set_has_feedback( $has_feedback ) {
-	}
-
-	/**
-	 * Set the minimum amount required
-	 *
-	 * @param float $amount Minimum payment amount.
-	 * @return void
-	 * @deprecated 2.0.5 Not in use anymore.
-	 */
-	public function set_amount_minimum( $amount ) {
 	}
 
 	/**
@@ -563,7 +544,7 @@ abstract class Gateway {
 	 */
 	public function get_gender_field() {
 		$payment_methods = array(
-			PaymentMethods::AFTERPAY,
+			PaymentMethods::AFTERPAY_NL,
 			PaymentMethods::FOCUM,
 			PaymentMethods::IN3,
 			PaymentMethods::KLARNA_PAY_LATER,
@@ -602,7 +583,7 @@ abstract class Gateway {
 	 */
 	public function get_birth_date_field() {
 		$payment_methods = array(
-			PaymentMethods::AFTERPAY,
+			PaymentMethods::AFTERPAY_NL,
 			PaymentMethods::FOCUM,
 			PaymentMethods::IN3,
 			PaymentMethods::KLARNA_PAY_LATER,

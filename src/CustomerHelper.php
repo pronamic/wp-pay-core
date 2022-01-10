@@ -3,7 +3,7 @@
  * Customer helper
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -47,6 +47,11 @@ class CustomerHelper {
 
 				$customer->set_name( $name );
 			}
+		}
+
+		// User ID.
+		if ( null === $customer->get_user_id() && is_user_logged_in() ) {
+			$customer->set_user_id( \get_current_user_id() );
 		}
 
 		// Name.
@@ -96,16 +101,7 @@ class CustomerHelper {
 				 */
 				$http_locale = locale_accept_from_http( Server::get( 'HTTP_ACCEPT_LANGUAGE' ) );
 
-				// Make sure locale includes a country (i.e. Firefox sets `nl` as accepted language).
 				if ( false !== $http_locale ) {
-					if ( false === strpos( $http_locale, '_' ) ) {
-						$http_locale = sprintf(
-							'%1$s_%2$s',
-							$http_locale,
-							strtoupper( $http_locale )
-						);
-					}
-
 					$locales[] = $http_locale;
 				}
 			}

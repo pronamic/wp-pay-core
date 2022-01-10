@@ -3,7 +3,7 @@
  * Payment info helper
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -16,6 +16,7 @@ use Pronamic\WordPress\Pay\Banks\BankTransferDetails;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
+use Pronamic\WordPress\Pay\Plugin;
 
 /**
  * Payment info helper
@@ -34,8 +35,32 @@ class PaymentInfoHelper {
 	public static function to_json( PaymentInfo $payment_info ) {
 		$object = (object) array();
 
-		if ( null !== $payment_info->get_id() ) {
-			$object->id = $payment_info->get_id();
+		$id = $payment_info->get_id();
+
+		if ( null !== $id ) {
+			$object->id = $id;
+		}
+
+		if ( null !== $payment_info->order_id ) {
+			$object->order_id = $payment_info->order_id;
+		}
+
+		$key = $payment_info->key;
+
+		if ( null !== $key ) {
+			$object->key = $key;
+		}
+
+		$description = $payment_info->get_description();
+
+		if ( null !== $description ) {
+			$object->description = $description;
+		}
+
+		$payment_method = $payment_info->get_payment_method();
+
+		if ( null !== $payment_method ) {
+			$object->payment_method = $payment_method;
 		}
 
 		$origin_id = $payment_info->get_origin_id();
@@ -98,16 +123,42 @@ class PaymentInfoHelper {
 			$object->anonymized = $payment_info->is_anonymized();
 		}
 
-		$start_date = $payment_info->get_start_date();
+		$version = $payment_info->get_version();
 
-		if ( null !== $start_date ) {
-			$object->start_date = $start_date->format( \DATE_ATOM );
+		if ( null !== $version ) {
+			$object->version = $version;
 		}
 
-		$end_date = $payment_info->get_end_date();
+		$meta = $payment_info->meta;
 
-		if ( null !== $end_date ) {
-			$object->end_date = $end_date->format( \DATE_ATOM );
+		if ( ! empty( $meta ) ) {
+			$object->meta = (object) $meta;
+		}
+
+		$source_key   = $payment_info->get_source();
+		$source_value = $payment_info->get_source_id();
+
+		if ( null !== $source_key || null !== $source_value ) {
+			$object->source = (object) array(
+				'key'   => $source_key,
+				'value' => $source_value,
+			);
+		}
+
+		$config_id = $payment_info->get_config_id();
+
+		if ( null !== $config_id ) {
+			$object->gateway = (object) array(
+				'$ref'    => \rest_url(
+					\sprintf(
+						'/%s/%s/%d',
+						'pronamic-pay/v1',
+						'gateways',
+						$config_id
+					)
+				),
+				'post_id' => $config_id,
+			);
 		}
 
 		return $object;
@@ -123,6 +174,18 @@ class PaymentInfoHelper {
 	public static function from_json( $json, PaymentInfo $payment_info ) {
 		if ( isset( $json->id ) ) {
 			$payment_info->set_id( $json->id );
+		}
+
+		if ( isset( $json->order_id ) ) {
+			$payment_info->order_id = $json->order_id;
+		}
+
+		if ( isset( $json->description ) ) {
+			$payment_info->set_description( $json->description );
+		}
+
+		if ( isset( $json->payment_method ) ) {
+			$payment_info->set_payment_method( $json->payment_method );
 		}
 
 		if ( isset( $json->origin_id ) ) {
@@ -169,12 +232,43 @@ class PaymentInfoHelper {
 			$payment_info->set_anonymized( $json->anonymized );
 		}
 
-		if ( isset( $json->start_date ) ) {
-			$payment_info->set_start_date( new DateTime( $json->start_date ) );
+		if ( isset( $json->version ) ) {
+			$payment_info->set_version( $json->version );
 		}
 
-		if ( isset( $json->end_date ) ) {
-			$payment_info->set_end_date( new DateTime( $json->end_date ) );
+		if ( isset( $json->meta ) ) {
+			foreach ( $json->meta as $key => $value ) {
+				$payment_info->meta[ $key ] = $value;
+			}
+		}
+
+		if ( isset( $json->source ) && \is_object( $json->source ) ) {
+			if ( isset( $json->source->key ) ) {
+				$payment_info->set_source( $json->source->key );
+			}
+
+			if ( isset( $json->source->value ) ) {
+				$payment_info->set_source_id( $json->source->value );
+			}
+		}
+
+		if ( isset( $json->gateway ) && \is_object( $json->gateway ) ) {
+			if ( isset( $json->gateway->post_id ) ) {
+				$payment_info->set_config_id( $json->gateway->post_id );
+			}
+		}
+
+		if ( isset( $json->key ) ) {
+			$payment_info->key = $json->key;
+		}
+
+		/*
+		 * Legacy.
+		 */
+
+		// Google Analytics tracked.
+		if ( isset( $json->ga_tracked ) ) {
+			$payment_info->set_meta( 'google_analytics_tracked', $json->ga_tracked );
 		}
 
 		return $payment_info;

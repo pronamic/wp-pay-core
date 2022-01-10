@@ -3,7 +3,7 @@
  * Subscription info.
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -58,12 +58,12 @@ if ( null !== $phase ) {
 }
 
 // Payment method.
-$method = $subscription->payment_method;
+$payment_method = $subscription->get_payment_method();
 
-if ( ! empty( $method ) ) {
+if ( ! empty( $payment_method ) ) {
 	$details[] = array(
 		'term'        => __( 'Payment method', 'pronamic_ideal' ),
-		'description' => PaymentMethods::get_name( $method ),
+		'description' => PaymentMethods::get_name( $payment_method ),
 	);
 }
 
@@ -72,16 +72,6 @@ $details[] = array(
 	'term'        => __( 'Recurrence', 'pronamic_ideal' ),
 	'description' => $recurrence,
 );
-
-// Expiry date.
-$expiry_date = $subscription->get_expiry_date();
-
-if ( null !== $expiry_date ) {
-	$details[] = array(
-		'term'        => __( 'Expiry Date', 'pronamic_ideal' ),
-		'description' => $expiry_date->format_i18n(),
-	);
-}
 
 ?>
 

@@ -2,18 +2,15 @@
 /**
  * Page Reports
  *
- * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
- * @license   GPL-3.0-or-later
- * @package   Pronamic\WordPress\Pay
+ * @author Pronamic <info@pronamic.eu>
+ * @copyright 2005-2022 Pronamic
+ * @license GPL-3.0-or-later
+ * @package Pronamic\WordPress\Pay
+ * @var \Pronamic\WordPress\Pay\Admin\AdminReports $admin_reports Admin reports.
  */
 
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Util;
-
-if ( ! isset( $admin_reports ) ) {
-	return;
-}
 
 ?>
 <div class="wrap">
@@ -40,12 +37,14 @@ if ( ! isset( $admin_reports ) ) {
 
 								echo '<strong>';
 
+								$legend_value = \property_exists( $serie, 'legendValue' ) ? $serie->legendValue : '';
+
 								if ( isset( $serie->tooltipFormatter ) && 'money' === $serie->tooltipFormatter ) {
-									$money = new Money( $serie->legendValue, 'EUR' );
+									$money = new Money( $legend_value, 'EUR' );
 
 									echo esc_html( $money->format_i18n() );
 								} else {
-									echo esc_html( $serie->legendValue );
+									echo esc_html( $legend_value );
 								}
 
 								echo '</strong>';

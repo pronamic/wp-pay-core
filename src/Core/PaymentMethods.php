@@ -3,7 +3,7 @@
  * Payment methods
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Core
  */
@@ -17,7 +17,7 @@ use WP_Query;
 /**
  * Title: WordPress pay payment methods
  * Description:
- * Copyright: 2005-2021 Pronamic
+ * Copyright: 2005-2022 Pronamic
  * Company: Pronamic
  *
  * @author  Remco Tolsma
@@ -26,12 +26,29 @@ use WP_Query;
  */
 class PaymentMethods {
 	/**
-	 * AfterPay.
+	 * AfterPay (afterpay.nl).
 	 *
+	 * @deprecated Use `AFTERPAY_NL` or `AFTERPAY_COM` instead.
 	 * @var string
 	 * @since 2.1.0
 	 */
 	const AFTERPAY = 'afterpay';
+
+	/**
+	 * AfterPay (afterpay.nl).
+	 *
+	 * @link https://www.afterpay.nl/
+	 * @var string
+	 */
+	const AFTERPAY_NL = 'afterpay_nl';
+
+	/**
+	 * Afterpay (afterpay.com).
+	 *
+	 * @link https://www.afterpay.com/
+	 * @var string
+	 */
+	const AFTERPAY_COM = 'afterpay_com';
 
 	/**
 	 * Alipay
@@ -43,7 +60,7 @@ class PaymentMethods {
 
 	/**
 	 * American Express.
-	 * 
+	 *
 	 * @var string
 	 * @since 3.0.1
 	 */
@@ -95,6 +112,15 @@ class PaymentMethods {
 	 * @var string
 	 */
 	const BITCOIN = 'bitcoin';
+
+	/**
+	 * BLIK
+	 *
+	 * @since unreleased
+	 * @link  https://blik.com/
+	 * @var string
+	 */
+	const BLIK = 'blik';
 
 	/**
 	 * Bunq
@@ -245,6 +271,15 @@ class PaymentMethods {
 	const MASTERCARD = 'mastercard';
 
 	/**
+	 * MB WAY
+	 *
+	 * @since unreleased
+	 * @link  https://www.mbway.pt/
+	 * @var string
+	 */
+	const MB_WAY = 'mb_way';
+
+	/**
 	 * Bancontact/Mister Cash
 	 *
 	 * @deprecated "Bancontact/Mister Cash" was renamed to just "Bancontact".
@@ -309,6 +344,14 @@ class PaymentMethods {
 	const SWISH = 'swish';
 
 	/**
+	 * TWINT
+	 *
+	 * @var string
+	 * @since unreleased
+	 */
+	const TWINT = 'twint';
+
+	/**
 	 * Constant for the V PAY payment method.
 	 *
 	 * @link https://en.wikipedia.org/wiki/V_Pay
@@ -342,7 +385,8 @@ class PaymentMethods {
 	 */
 	public static function get_payment_methods() {
 		$payment_methods = array(
-			self::AFTERPAY                => __( 'AfterPay', 'pronamic_ideal' ),
+			self::AFTERPAY_NL             => _x( 'AfterPay', 'afterpay.nl', 'pronamic_ideal' ),
+			self::AFTERPAY_COM            => _x( 'Afterpay', 'afterpay.com', 'pronamic_ideal' ),
 			self::ALIPAY                  => __( 'Alipay', 'pronamic_ideal' ),
 			self::AMERICAN_EXPRESS        => __( 'American Express', 'pronamic_ideal' ),
 			self::APPLE_PAY               => __( 'Apple Pay', 'pronamic_ideal' ),
@@ -351,6 +395,7 @@ class PaymentMethods {
 			self::BELFIUS                 => __( 'Belfius Direct Net', 'pronamic_ideal' ),
 			self::BILLINK                 => __( 'Billink', 'pronamic_ideal' ),
 			self::BITCOIN                 => __( 'Bitcoin', 'pronamic_ideal' ),
+			self::BLIK                    => __( 'BLIK', 'pronamic_ideal' ),
 			self::BUNQ                    => __( 'Bunq', 'pronamic_ideal' ),
 			self::CAPAYABLE               => __( 'Capayable', 'pronamic_ideal' ),
 			self::IN3                     => __( 'In3', 'pronamic_ideal' ),
@@ -382,6 +427,7 @@ class PaymentMethods {
 			self::KLARNA_PAY_LATER        => __( 'Klarna Pay Later', 'pronamic_ideal' ),
 			self::MAESTRO                 => __( 'Maestro', 'pronamic_ideal' ),
 			self::MASTERCARD              => __( 'Mastercard', 'pronamic_ideal' ),
+			self::MB_WAY                  => __( 'MB WAY', 'pronamic_ideal' ),
 			self::PAYCONIQ                => __( 'Payconiq', 'pronamic_ideal' ),
 			self::PAYPAL                  => __( 'PayPal', 'pronamic_ideal' ),
 			self::PRZELEWY24              => __( 'Przelewy24', 'pronamic_ideal' ),
@@ -389,6 +435,7 @@ class PaymentMethods {
 			self::SOFORT                  => __( 'SOFORT Banking', 'pronamic_ideal' ),
 			self::SPRAYPAY                => __( 'SprayPay', 'pronamic_ideal' ),
 			self::SWISH                   => __( 'Swish', 'pronamic_ideal' ),
+			self::TWINT                   => __( 'TWINT', 'pronamic_ideal' ),
 			self::V_PAY                   => __( 'V PAY', 'pronamic_ideal' ),
 			self::VIPPS                   => __( 'Vipps', 'pronamic_ideal' ),
 			self::VISA                    => __( 'Visa', 'pronamic_ideal' ),
@@ -439,12 +486,8 @@ class PaymentMethods {
 			$size = '640x360';
 		}
 
-		if ( self::KLARNA_PAY_LATER === $method ) {
-			$method = 'klarna';
-		}
-
 		return \sprintf(
-			'https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.6.8/dist/methods/%1$s/method-%1$s-%2$s.svg',
+			'https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.7.0/dist/methods/%1$s/method-%1$s-%2$s.svg',
 			\str_replace( '_', '-', $method ),
 			$size
 		);
@@ -492,6 +535,7 @@ class PaymentMethods {
 		// Add additional methods suitable for recurring payments.
 		$payment_methods[ self::APPLE_PAY ]   = self::APPLE_PAY;
 		$payment_methods[ self::CREDIT_CARD ] = self::CREDIT_CARD;
+		$payment_methods[ self::PAYPAL ]      = self::PAYPAL;
 
 		return $payment_methods;
 	}

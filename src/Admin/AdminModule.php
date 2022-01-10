@@ -3,13 +3,14 @@
  * Admin Module
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Admin
  */
 
 namespace Pronamic\WordPress\Pay\Admin;
 
+use Pronamic\WordPress\DateTime\DateTimeImmutable;
 use Pronamic\WordPress\Number\Number;
 use Pronamic\WordPress\Money\Currency;
 use Pronamic\WordPress\Money\Money;
@@ -187,9 +188,9 @@ class AdminModule {
 		if (
 			empty( $redirect )
 				||
-			wp_doing_ajax()
+			\wp_doing_ajax()
 				||
-			Util::doing_cron()
+			\wp_doing_cron()
 				||
 			is_network_admin()
 				||
@@ -640,18 +641,6 @@ class AdminModule {
 			return;
 		}
 
-		// Gateway.
-		$config_id = \filter_input( \INPUT_POST, 'post_ID', \FILTER_SANITIZE_NUMBER_INT );
-
-		$gateway = Plugin::get_gateway( $config_id );
-
-		if ( empty( $gateway ) ) {
-			return;
-		}
-
-		// Currency.
-		$currency = Currency::get_instance( 'EUR' );
-
 		// Amount.
 		$string = \filter_input( INPUT_POST, 'test_amount', \FILTER_SANITIZE_STRING );
 
@@ -668,17 +657,20 @@ class AdminModule {
 
 		$order_id = (string) \time();
 
+		$payment->order_id = $order_id;
+
+		$payment->set_config_id( \filter_input( \INPUT_POST, 'post_ID', \FILTER_SANITIZE_NUMBER_INT ) );
+
+		$payment->set_payment_method( \filter_input( \INPUT_POST, 'pronamic_pay_test_payment_method', \FILTER_SANITIZE_STRING ) );
+
+		// Description.
 		$description = \sprintf(
 			/* translators: %s: order ID */
 			__( 'Test %s', 'pronamic_ideal' ),
 			$order_id
 		);
 
-		$payment->set_config_id( $config_id );
 		$payment->set_description( $description );
-
-		$payment->method   = \filter_input( \INPUT_POST, 'pronamic_pay_test_payment_method', \FILTER_SANITIZE_STRING );
-		$payment->order_id = $order_id;
 
 		// Source.
 		$payment->set_source( 'test' );
@@ -798,7 +790,7 @@ class AdminModule {
 			// Phase.
 			$phase = new SubscriptionPhase(
 				$subscription,
-				new \DateTimeImmutable(),
+				new DateTimeImmutable(),
 				new SubscriptionInterval( 'P' . $interval . Util::to_period( $interval_period ) ),
 				$price
 			);
@@ -812,18 +804,19 @@ class AdminModule {
 			if ( null !== $period ) {
 				$payment->add_period( $period );
 			}
+		}
 
-			$payment->subscription           = $subscription;
-			$payment->subscription_source_id = $payment->get_source_id();
+		$gateway = $payment->get_gateway();
+
+		if ( null === $gateway ) {
+			return;
 		}
 
 		// Start.
 		try {
 			$payment = Plugin::start_payment( $payment );
 
-			if ( null !== $payment ) {
-				$gateway->redirect( $payment );
-			}
+			$gateway->redirect( $payment );
 		} catch ( \Exception $e ) {
 			Plugin::render_exception( $e );
 
@@ -921,9 +914,13 @@ class AdminModule {
 
 		if ( isset( $counts->payment_pending ) && $counts->payment_pending > 0 ) {
 			$badge = sprintf(
-				' <span class="awaiting-mod update-plugins count-%s"><span class="processing-count">%s</span></span>',
+				' <span class="awaiting-mod update-plugins count-%1$s" title="%2$s"><span class="processing-count">%1$s</span></span>',
 				$counts->payment_pending,
-				$counts->payment_pending
+				sprintf(
+					/* translators: %d: pending payments count */
+					\_n( '%d payment pending', '%d payments pending', $counts->payment_pending, 'pronamic_ideal' ),
+					$counts->payment_pending
+				)
 			);
 		}
 
@@ -981,18 +978,6 @@ class AdminModule {
 				'menu_slug'  => 'pronamic_pay_tools',
 				'function'   => function() {
 					$this->render_page( 'tools' );
-				},
-			);
-		}
-
-		if ( \filter_input( INPUT_GET, 'pronamic_pay_debug', FILTER_VALIDATE_BOOLEAN ) ) {
-			$submenu_pages[] = array(
-				'page_title' => __( 'Debug', 'pronamic_ideal' ),
-				'menu_title' => __( 'Debug', 'pronamic_ideal' ),
-				'capability' => 'manage_options',
-				'menu_slug'  => 'pronamic_pay_debug',
-				'function'   => function() {
-					$this->render_page( 'debug' );
 				},
 			);
 		}

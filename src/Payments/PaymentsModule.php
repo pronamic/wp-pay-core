@@ -3,14 +3,16 @@
  * Payments Module
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Subscriptions
  */
 
 namespace Pronamic\WordPress\Pay\Payments;
 
+use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\Plugin;
+use WP_CLI;
 
 /**
  * Payments Module
@@ -68,6 +70,47 @@ class PaymentsModule {
 
 		// Payment Status Checker.
 		$this->status_checker = new StatusChecker();
+
+		// CLI.
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			WP_CLI::add_command(
+				'pay payment status',
+				function ( $args, $assoc_args ) {
+					foreach ( $args as $id ) {
+						$payment = get_pronamic_payment( $id );
+
+						if ( null === $payment ) {
+							WP_CLI::error(
+								\sprintf(
+									'Cannot find payment based on ID %s.',
+									$id
+								)
+							);
+
+							exit( 1 );
+						}
+
+						WP_CLI::log(
+							\sprintf(
+								'Check the status (current: %s) of payment with ID %s…',
+								$payment->get_status(),
+								$id
+							)
+						);
+
+						Plugin::update_payment( $payment, false );
+
+						WP_CLI::log(
+							\sprintf(
+								'Checked the status (current: %s) of payment with ID %s.',
+								$payment->get_status(),
+								$id
+							)
+						);
+					}
+				}
+			);
+		}
 	}
 
 	/**
@@ -207,32 +250,6 @@ class PaymentsModule {
 				),
 			)
 		);
-
-		register_rest_route(
-			'pronamic-pay/v1',
-			'/gateways/(?P<config_id>\d+)',
-			array(
-				'methods'             => 'GET',
-				'callback'            => array( $this, 'rest_api_gateway' ),
-				'permission_callback' => function() {
-					return current_user_can( 'manage_options' );
-				},
-				'args'                => array(
-					'config_id'    => array(
-						'description' => __( 'Gateway configuration ID.', 'pronamic_ideal' ),
-						'type'        => 'integer',
-					),
-					'gateway_id'   => array(
-						'description' => __( 'Gateway ID.', 'pronamic_ideal' ),
-						'type'        => 'string',
-					),
-					'gateway_mode' => array(
-						'description' => __( 'Gateway mode.', 'pronamic_ideal' ),
-						'type'        => 'string',
-					),
-				),
-			)
-		);
 	}
 
 	/**
@@ -259,54 +276,5 @@ class PaymentsModule {
 		}
 
 		return $payment->get_json();
-	}
-
-	/**
-	 * REST API gateway.
-	 *
-	 * @param \WP_REST_Request $request Request.
-	 * @return object
-	 */
-	public function rest_api_gateway( \WP_REST_Request $request ) {
-		$config_id    = $request->get_param( 'config_id' );
-		$gateway_id   = $request->get_param( 'gateway_id' );
-		$gateway_mode = $request->get_param( 'gateway_mode' );
-
-		// Gateway.
-		$args = array(
-			'gateway_id'   => $gateway_id,
-			'gateway_mode' => $gateway_mode,
-		);
-
-		$gateway = Plugin::get_gateway( $config_id, $args );
-
-		if ( empty( $gateway ) ) {
-			return new \WP_Error(
-				'pronamic-pay-gateway-not-found',
-				sprintf(
-					/* translators: %s: Gateway configuration ID */
-					__( 'Could not find gateway with ID `%s`.', 'pronamic_ideal' ),
-					$config_id
-				),
-				$config_id
-			);
-		}
-
-		// Settings.
-		ob_start();
-
-		require __DIR__ . '/../../views/meta-box-gateway-settings.php';
-
-		$meta_box_settings = ob_get_clean();
-
-		// Object.
-		return (object) array(
-			'config_id'    => $config_id,
-			'gateway_id'   => $gateway_id,
-			'gateway_mode' => $gateway_mode,
-			'meta_boxes'   => (object) array(
-				'settings' => $meta_box_settings,
-			),
-		);
 	}
 }

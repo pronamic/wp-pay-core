@@ -3,7 +3,7 @@
  * Subscription Phases Trait
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Subscriptions
  */
@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\DateTime\DateTimeImmutable;
 use Pronamic\WordPress\Money\Money;
 
 /**
@@ -38,6 +39,16 @@ trait SubscriptionPhasesTrait {
 	}
 
 	/**
+	 * Set phases.
+	 *
+	 * @param array<int, SubscriptionPhase> $phases Phases.
+	 * @return void
+	 */
+	public function set_phases( $phases ) {
+		$this->phases = $phases;
+	}
+
+	/**
 	 * Add the specified phase to this subscription.
 	 *
 	 * @param SubscriptionPhase $phase Phase.
@@ -47,31 +58,20 @@ trait SubscriptionPhasesTrait {
 		$this->phases[] = $phase;
 
 		$phase->set_sequence_number( \count( $this->phases ) );
-
-		// Update subscription end date.
-		$end_date = $phase->get_end_date();
-
-		if ( null !== $end_date ) {
-			$end_date = DateTime::create_from_immutable( $end_date );
-		}
-
-		$this->set_end_date( $end_date );
 	}
 
 	/**
 	 * Create new phase for this subscription.
 	 *
-	 * @param DateTime $start_date    Start date.
-	 * @param string   $interval_spec Interval specification.
-	 * @param Money    $amount        Amount.
+	 * @param \DateTimeInterface $start_date    Start date.
+	 * @param string             $interval_spec Interval specification.
+	 * @param Money              $amount        Amount.
 	 * @return SubscriptionPhase
 	 */
 	public function new_phase( $start_date, $interval_spec, $amount ) {
-		$start = new \DateTimeImmutable( $start_date->format( \DATE_ATOM ) );
-
 		$interval = new SubscriptionInterval( $interval_spec );
 
-		$phase = new SubscriptionPhase( $this, $start, $interval, $amount );
+		$phase = new SubscriptionPhase( $this, $start_date, $interval, $amount );
 
 		$this->add_phase( $phase );
 
@@ -237,5 +237,20 @@ trait SubscriptionPhasesTrait {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get end date.
+	 *
+	 * @return DateTimeImmutable|null
+	 */
+	public function get_end_date() {
+		$end_phase = \end( $this->phases );
+
+		if ( false === $end_phase ) {
+			return null;
+		}
+
+		return $end_phase->get_end_date();
 	}
 }

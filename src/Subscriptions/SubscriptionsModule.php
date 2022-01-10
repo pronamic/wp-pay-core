@@ -3,7 +3,7 @@
  * Subscriptions Module
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Subscriptions
  */
@@ -15,10 +15,7 @@ use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeImmutable;
 use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Money\Money;
-use Pronamic\WordPress\Money\TaxedMoney;
-use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
-use Pronamic\WordPress\Pay\Core\Recurring;
 use Pronamic\WordPress\Pay\Core\Server;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Core\Util;
@@ -31,7 +28,7 @@ use WP_Query;
 /**
  * Title: Subscriptions module
  * Description:
- * Copyright: 2005-2021 Pronamic
+ * Copyright: 2005-2022 Pronamic
  * Company: Pronamic
  *
  * @link https://woocommerce.com/2017/04/woocommerce-3-0-release/
@@ -67,39 +64,181 @@ class SubscriptionsModule {
 		$this->privacy = new SubscriptionsPrivacy();
 
 		// Actions.
-		add_action( 'wp_loaded', array( $this, 'handle_subscription' ) );
+		\add_action( 'wp_loaded', array( $this, 'maybe_handle_subscription_action' ) );
 
-		add_action( 'plugins_loaded', array( $this, 'maybe_schedule_subscription_events' ), 6 );
-
-		add_action( 'admin_init', array( $this, 'maybe_process_debug' ) );
+		\add_action( 'init', array( $this, 'maybe_schedule_subscription_events' ) );
 
 		// Exclude subscription notes.
-		add_filter( 'comments_clauses', array( $this, 'exclude_subscription_comment_notes' ), 10, 2 );
+		\add_filter( 'comments_clauses', array( $this, 'exclude_subscription_comment_notes' ), 10, 2 );
 
-		add_action( 'pronamic_pay_new_payment', array( $this, 'maybe_create_subscription' ) );
-
-		// The 'pronamic_pay_update_subscription_payments' hook adds subscription payments and sends renewal notices.
-		add_action( 'pronamic_pay_update_subscription_payments', array( $this, 'update_subscription_payments' ) );
-
-		// The 'pronamic_pay_complete_subscriptions' hook completes active subscriptions.
-		add_action( 'pronamic_pay_complete_subscriptions', array( $this, 'complete_subscriptions' ) );
+		\add_action( 'pronamic_pay_pre_create_subscription', array( SubscriptionHelper::class, 'complement_subscription' ), 10, 1 );
+		\add_action( 'pronamic_pay_pre_create_payment', array( $this, 'complement_subscription_by_payment' ), 10, 1 );
 
 		// Listen to payment status changes so we can update related subscriptions.
-		add_action( 'pronamic_payment_status_update', array( $this, 'payment_status_update' ) );
+		\add_action( 'pronamic_payment_status_update', array( $this, 'payment_status_update' ) );
 
 		// Listen to subscription status changes so we can log these in a note.
-		add_action( 'pronamic_subscription_status_update', array( $this, 'log_subscription_status_update' ), 10, 4 );
-
-		// WordPress CLI.
-		// @link https://github.com/woocommerce/woocommerce/blob/3.3.1/includes/class-woocommerce.php#L365-L369.
-		// @link https://github.com/woocommerce/woocommerce/blob/3.3.1/includes/class-wc-cli.php.
-		// @link https://make.wordpress.org/cli/handbook/commands-cookbook/.
-		if ( Util::doing_cli() ) {
-			WP_CLI::add_command( 'pay subscriptions test', array( $this, 'cli_subscriptions_test' ) );
-		}
+		\add_action( 'pronamic_subscription_status_update', array( $this, 'log_subscription_status_update' ), 10, 4 );
 
 		// REST API.
-		add_action( 'rest_api_init', array( $this, 'rest_api_init' ) );
+		\add_action( 'rest_api_init', array( $this, 'rest_api_init' ) );
+
+		// Follow-up payments.
+		$follow_up_payments_controller = new SubscriptionsFollowUpPaymentsController();
+
+		$follow_up_payments_controller->setup();
+
+		// Notifications.
+		$notifications_controller = new SubscriptionsNotificationsController();
+
+		$notifications_controller->setup();
+
+		// Completion.
+		$completion_controller = new SubscriptionsCompletionController();
+
+		$completion_controller->setup();
+	}
+
+	/**
+	 * Comments clauses.
+	 *
+	 * @param array             $clauses The database query clauses.
+	 * @param \WP_Comment_Query $query   The WordPress comment query object.
+	 * @return array
+	 */
+	public function exclude_subscription_comment_notes( $clauses, $query ) {
+		$type = $query->query_vars['type'];
+
+		// Ignore subscription notes comments if it's not specifically requested.
+		if ( 'subscription_note' !== $type ) {
+			$clauses['where'] .= " AND comment_type != 'subscription_note'";
+		}
+
+		return $clauses;
+	}
+
+	/**
+	 * Complement subscription by payment.
+	 *
+	 * @param Payment $payment Payment.
+	 * @return void
+	 */
+	public function complement_subscription_by_payment( $payment ) {
+		foreach ( $payment->get_subscriptions() as $subscription ) {
+			if ( ! $subscription->is_first_payment( $payment ) ) {
+				continue;
+			}
+
+			// Complement subscription.
+			SubscriptionHelper::complement_subscription_by_payment( $subscription, $payment );
+		}
+	}
+
+	/**
+	 * Payment status update.
+	 *
+	 * @param Payment $payment The status updated payment.
+	 * @return void
+	 */
+	public function payment_status_update( $payment ) {
+		foreach ( $payment->get_subscriptions() as $subscription ) {
+			// Status.
+			$status_before = $subscription->get_status();
+			$status_update = $status_before;
+
+			switch ( $payment->get_status() ) {
+				case PaymentStatus::OPEN:
+					// @todo
+					break;
+				case PaymentStatus::SUCCESS:
+					$status_update = SubscriptionStatus::ACTIVE;
+
+					break;
+				case PaymentStatus::FAILURE:
+					/**
+					 * Subscription status for failed payment.
+					 *
+					 * @todo Determine update status based on reason of failed payment. Use `failure` for now as that is usually the desired status.
+					 * @link https://www.europeanpaymentscouncil.eu/document-library/guidance-documents/guidance-reason-codes-sepa-direct-debit-r-transactions
+					 * @link https://github.com/pronamic/wp-pronamic-ideal/commit/48449417eac49eb6a93480e3b523a396c7db9b3d#diff-6712c698c6b38adfa7190a4be983a093
+					 */
+					$status_update = SubscriptionStatus::FAILURE;
+
+					break;
+				case PaymentStatus::CANCELLED:
+				case PaymentStatus::EXPIRED:
+					// Set subscription status to 'On Hold' only if the subscription is not already active when processing the first payment.
+					if ( $subscription->is_first_payment( $payment ) && SubscriptionStatus::ACTIVE === $subscription->get_status() ) {
+						$status_update = SubscriptionStatus::ON_HOLD;
+					}
+
+					break;
+			}
+
+			/*
+			 * The status of canceled or completed subscriptions will not be changed automatically,
+			 * unless the cancelled subscription is manually being renewed.
+			 */
+			$is_renewal = false;
+
+			if ( true === $payment->get_meta( 'manual_subscription_renewal' ) && SubscriptionStatus::CANCELLED === $status_before && SubscriptionStatus::ACTIVE === $status_update ) {
+				$is_renewal = true;
+			}
+
+			if ( $is_renewal || ! in_array( $status_before, array( SubscriptionStatus::CANCELLED, SubscriptionStatus::COMPLETED, SubscriptionStatus::ON_HOLD ), true ) ) {
+				$subscription->set_status( $status_update );
+			}
+
+			// Update.
+			$subscription->save();
+		}
+	}
+
+	/**
+	 * Get subscription status update note.
+	 *
+	 * @param string|null $old_status   Old meta status.
+	 * @param string      $new_status   New meta status.
+	 * @return string
+	 */
+	private function get_subscription_status_update_note( $old_status, $new_status ) {
+		$old_label = $this->plugin->subscriptions_data_store->get_meta_status_label( $old_status );
+		$new_label = $this->plugin->subscriptions_data_store->get_meta_status_label( $new_status );
+
+		if ( null === $old_status ) {
+			return sprintf(
+			/* translators: 1: new status */
+				__( 'Subscription created with status "%1$s".', 'pronamic_ideal' ),
+				esc_html( empty( $new_label ) ? $new_status : $new_label )
+			);
+		}
+
+		return sprintf(
+		/* translators: 1: old status, 2: new status */
+			__( 'Subscription status changed from "%1$s" to "%2$s".', 'pronamic_ideal' ),
+			esc_html( empty( $old_label ) ? $old_status : $old_label ),
+			esc_html( empty( $new_label ) ? $new_status : $new_label )
+		);
+	}
+
+	/**
+	 * Subscription status update.
+	 *
+	 * @param Subscription $subscription The status updated subscription.
+	 * @param bool         $can_redirect Whether or not redirects should be performed.
+	 * @param string|null  $old_status   Old meta status.
+	 * @param string       $new_status   New meta status.
+	 *
+	 * @return void
+	 */
+	public function log_subscription_status_update( $subscription, $can_redirect, $old_status, $new_status ) {
+		$note = $this->get_subscription_status_update_note( $old_status, $new_status );
+
+		try {
+			$subscription->add_note( $note );
+		} catch ( \Exception $e ) {
+			return;
+		}
 	}
 
 	/**
@@ -110,7 +249,7 @@ class SubscriptionsModule {
 	 *
 	 * @return void
 	 */
-	public function handle_subscription() {
+	public function maybe_handle_subscription_action() {
 		if ( ! Util::input_has_vars( INPUT_GET, array( 'subscription', 'action', 'key' ) ) ) {
 			return;
 		}
@@ -196,9 +335,19 @@ class SubscriptionsModule {
 	 * @throws \Exception Throws exception if unable to redirect (empty payment action URL).
 	 */
 	private function handle_subscription_renew( Subscription $subscription ) {
-		$gateway = Plugin::get_gateway( $subscription->config_id );
+		// Check gateway.
+		$gateway = $subscription->get_gateway();
 
-		if ( empty( $gateway ) ) {
+		if ( null == $gateway ) {
+			require __DIR__ . '/../../views/subscription-renew-failed.php';
+
+			exit;
+		}
+
+		// Check current phase.
+		$current_phase = $subscription->get_current_phase();
+
+		if ( null === $current_phase ) {
 			require __DIR__ . '/../../views/subscription-renew-failed.php';
 
 			exit;
@@ -206,41 +355,43 @@ class SubscriptionsModule {
 
 		if ( 'POST' === Server::get( 'REQUEST_METHOD' ) ) {
 			try {
-				$payment = $this->new_subscription_payment( $subscription );
+				// Create payment.
+				$payment = $subscription->new_payment();
 
-				if ( null === $payment ) {
-					throw new \Exception( 'Unable to create renewal payment for subscription.' );
-				}
+				$payment->order_id = $subscription->get_order_id();
+
+				$payment->set_lines( $subscription->get_lines() );
+				$payment->set_total_amount( $current_phase->get_amount() );
 
 				// Maybe cancel current expired phase and add new phase.
 				if ( SubscriptionStatus::CANCELLED === $subscription->get_status() && 'gravityformsideal' === $subscription->get_source() ) {
-					$phase = $subscription->get_current_phase();
-
 					$now = new DateTimeImmutable();
 
-					if ( null !== $phase && $phase->get_next_date() < $now ) {
+					if ( $current_phase->get_next_date() < $now ) {
 						// Cancel current phase.
-						$phase->set_canceled_at( $now );
+						$current_phase->set_canceled_at( $now );
 
 						// Add new phase, starting now.
-						$new_phase = new SubscriptionPhase( $subscription, $now, $phase->get_interval(), $phase->get_amount() );
+						$new_phase = new SubscriptionPhase( $subscription, $now, $current_phase->get_interval(), $current_phase->get_amount() );
 
 						$subscription->add_phase( $new_phase );
 					}
 				}
 
-				$payment->recurring = false;
-
 				// Set payment period.
 				$renewal_period = $subscription->get_renewal_period();
 
 				if ( null !== $renewal_period ) {
+					$payment->set_total_amount( $renewal_period->get_amount() );
+
 					$payment->add_period( $renewal_period );
 				}
 
-				$payment = $this->start_payment( $payment );
+				// Set Mollie sequence type to first.
+				$payment->set_meta( 'mollie_sequence_type', 'first' );
 
-				$payment->set_meta( 'manual_subscription_renewal', true );
+				// Start payment.
+				$payment = Plugin::start_payment( $payment );
 			} catch ( \Exception $e ) {
 				require __DIR__ . '/../../views/subscription-renew-failed.php';
 
@@ -255,13 +406,20 @@ class SubscriptionsModule {
 				exit;
 			}
 
-			$gateway->redirect( $payment );
+			// Redirect.
+			try {
+				$gateway->redirect( $payment );
+			} catch ( \Exception $e ) {
+				Plugin::render_exception( $e );
+
+				exit;
+			}
 
 			return;
 		}
 
 		// Payment method input HTML.
-		$gateway->set_payment_method( $subscription->payment_method );
+		$gateway->set_payment_method( $subscription->get_payment_method() );
 
 		require __DIR__ . '/../../views/subscription-renew.php';
 
@@ -276,9 +434,9 @@ class SubscriptionsModule {
 	 * @throws \Exception Throws exception if unable to redirect (empty payment action URL).
 	 */
 	private function handle_subscription_mandate( Subscription $subscription ) {
-		$gateway = Plugin::get_gateway( $subscription->config_id );
+		$gateway = $subscription->get_gateway();
 
-		if ( empty( $gateway ) ) {
+		if ( null === $gateway ) {
 			require __DIR__ . '/../../views/subscription-mandate-failed.php';
 
 			exit;
@@ -309,29 +467,21 @@ class SubscriptionsModule {
 
 			// Start new first payment.
 			try {
-				$payment = $this->new_subscription_payment( $subscription );
-
-				if ( null === $payment ) {
-					require __DIR__ . '/../../views/subscription-mandate-failed.php';
-
-					exit;
-				}
+				$payment = $subscription->new_payment();
 
 				// Set payment method.
 				$payment_method = \filter_input( \INPUT_POST, 'pronamic_pay_subscription_payment_method', \FILTER_SANITIZE_STRING );
 
 				if ( ! empty( $payment_method ) ) {
-					$payment->method = $payment_method;
+					$payment->set_payment_method( $payment_method );
 				}
-
-				$payment->recurring = false;
 
 				/*
 				 * Use payment method minimum amount for verification payment.
 				 *
 				 * @link https://help.mollie.com/hc/en-us/articles/115000667365-What-are-the-minimum-and-maximum-amounts-per-payment-method-
 				 */
-				switch ( $payment->method ) {
+				switch ( $payment->get_payment_method() ) {
 					case PaymentMethods::DIRECT_DEBIT_BANCONTACT:
 						$amount = 0.02;
 
@@ -352,17 +502,10 @@ class SubscriptionsModule {
 				$payment->set_total_amount( $total_amount );
 
 				// Add period.
-				$payment->add_period(
-					new SubscriptionPeriod(
-						$subscription->get_current_phase(),
-						$payment->get_date(),
-						$payment->get_date(),
-						$total_amount
-					)
-				);
+				$payment->add_subscription( $subscription );
 
 				// Make sure to only start payments for supported gateways.
-				$gateway = Plugin::get_gateway( $payment->get_config_id() );
+				$gateway = $payment->get_gateway();
 
 				if ( null === $gateway ) {
 					require __DIR__ . '/../../views/subscription-mandate-failed.php';
@@ -371,7 +514,7 @@ class SubscriptionsModule {
 				}
 
 				// Start payment.
-				$payment = Plugin::start_payment( $payment, $gateway );
+				$payment = Plugin::start_payment( $payment );
 			} catch ( \Exception $e ) {
 				require __DIR__ . '/../../views/subscription-mandate-failed.php';
 
@@ -426,135 +569,6 @@ class SubscriptionsModule {
 	}
 
 	/**
-	 * Create a new subscription payment.
-	 *
-	 * @param Subscription $subscription Subscription.
-	 * @return null|Payment
-	 */
-	public function new_subscription_payment( Subscription $subscription ) {
-		// Prevent creating a new subscription payment if next payment date is (later than) the subscription end date.
-		if ( isset( $subscription->end_date, $subscription->next_payment_date ) && $subscription->next_payment_date >= $subscription->end_date ) {
-			$subscription->next_payment_date          = null;
-			$subscription->next_payment_delivery_date = null;
-
-			// Delete next payment post meta.
-			$subscription->set_meta( 'next_payment', null );
-			$subscription->set_meta( 'next_payment_delivery_date', null );
-
-			return null;
-		}
-
-		// Create payment.
-		$payment = new Payment();
-
-		$payment->config_id       = $subscription->get_config_id();
-		$payment->order_id        = $subscription->get_order_id();
-		$payment->description     = $subscription->description;
-		$payment->source          = $subscription->get_source();
-		$payment->source_id       = $subscription->get_source_id();
-		$payment->email           = $subscription->get_email();
-		$payment->method          = $subscription->payment_method;
-		$payment->issuer          = $subscription->issuer;
-		$payment->recurring       = true;
-		$payment->subscription    = $subscription;
-		$payment->subscription_id = $subscription->get_id();
-
-		$payment->set_origin_id( $subscription->get_origin_id() );
-		$payment->set_customer( $subscription->get_customer() );
-		$payment->set_billing_address( $subscription->get_billing_address() );
-		$payment->set_shipping_address( $subscription->get_shipping_address() );
-		$payment->set_lines( $subscription->get_lines() );
-
-		// Get amount from current subscription phase.
-		$current_phase = $subscription->get_current_phase();
-
-		if ( null === $current_phase ) {
-			return null;
-		}
-
-		$payment->set_total_amount( $current_phase->get_amount() );
-
-		return $payment;
-	}
-
-	/**
-	 * Start payment.
-	 *
-	 * @param Payment $payment Payment.
-	 *
-	 * @throws \UnexpectedValueException Throw unexpected value exception when no subscription was found in payment.
-	 *
-	 * @return Payment
-	 */
-	public function start_payment( Payment $payment ) {
-		// Set recurring type.
-		if ( $payment->get_recurring() ) {
-			$payment->recurring_type = Recurring::RECURRING;
-		}
-
-		$subscription = $payment->get_subscription();
-
-		if ( empty( $subscription ) ) {
-			throw new \UnexpectedValueException( 'No subscription object found in payment.' );
-		}
-
-		// Calculate payment start and end dates.
-		$periods = $payment->get_periods();
-
-		if ( null === $periods ) {
-			$period = $subscription->new_period();
-
-			if ( null === $period ) {
-				throw new \UnexpectedValueException( 'Can not create new period for subscription.' );
-			}
-
-			$payment->add_period( $period );
-		}
-
-		$periods = $payment->get_periods();
-
-		if ( null === $periods ) {
-			throw new \UnexpectedValueException( 'Can not create payment without period for subscription.' );
-		}
-
-		$period = reset( $periods );
-
-		if ( false === $period ) {
-			throw new \UnexpectedValueException( 'Can not create payment without period for subscription.' );
-		}
-
-		$start_date = $period->get_start_date();
-		$end_date   = $period->get_end_date();
-
-		$subscription->next_payment_date          = SubscriptionHelper::calculate_next_payment_date( $subscription );
-		$subscription->next_payment_delivery_date = SubscriptionHelper::calculate_next_payment_delivery_date( $subscription );
-
-		// Unset next payment date if this is the last payment according to subscription end date.
-		if ( null !== $subscription->end_date && $subscription->next_payment_date >= $subscription->end_date ) {
-			$subscription->next_payment_date = null;
-		}
-
-		// Delete next payment post meta if not set.
-		if ( null === $subscription->next_payment_date ) {
-			$subscription->next_payment_delivery_date = null;
-
-			$subscription->set_meta( 'next_payment', null );
-			$subscription->set_meta( 'next_payment_delivery_date', null );
-		}
-
-		$payment->start_date = $start_date;
-		$payment->end_date   = $end_date;
-
-		// Update subscription.
-		$subscription->save();
-
-		// Start payment.
-		$payment = Plugin::start_payment( $payment );
-
-		return $payment;
-	}
-
-	/**
 	 * Can payment be retried.
 	 *
 	 * @param Payment $payment Payment to retry.
@@ -563,11 +577,6 @@ class SubscriptionsModule {
 	public function can_retry_payment( Payment $payment ) {
 		// Check status.
 		if ( PaymentStatus::FAILURE !== $payment->get_status() ) {
-			return false;
-		}
-
-		// Check recurring.
-		if ( ! $payment->get_recurring() ) {
 			return false;
 		}
 
@@ -591,802 +600,24 @@ class SubscriptionsModule {
 	}
 
 	/**
-	 * New payment based on period.
-	 *
-	 * @param SubscriptionPeriod $period Subscription period.
-	 * @return Payment
-	 * @throws \Exception Throws exception if gateway integration can not be found.
-	 */
-	public function new_period_payment( SubscriptionPeriod $period ) {
-		$subscription = $period->get_phase()->get_subscription();
-
-		$config_id = (int) $subscription->get_config_id();
-
-		$integration_id = \get_post_meta( $config_id, '_pronamic_gateway_id', true );
-
-		$integration = $this->plugin->gateway_integrations->get_integration( $integration_id );
-
-		if ( null === $integration ) {
-			throw new \Exception( 'Gateway integration could not be found while creating new subscription period payment.' );
-		}
-
-		$config = $integration->get_config( $config_id );
-
-		if ( null === $config ) {
-			throw new \Exception( 'Config could not be found while creating new subscription period payment.' );
-		}
-
-		$payment = new Payment();
-
-		$payment->email           = $subscription->get_email();
-		$payment->method          = $subscription->payment_method;
-		$payment->issuer          = $subscription->get_issuer();
-		$payment->recurring       = true;
-		$payment->subscription    = $subscription;
-		$payment->subscription_id = $subscription->get_id();
-
-		$payment->set_description( $subscription->get_description() );
-		$payment->set_config_id( $config_id );
-		$payment->set_origin_id( $subscription->get_origin_id() );
-		$payment->set_mode( $config->mode );
-
-		$payment->set_source( $subscription->get_source() );
-		$payment->set_source_id( $subscription->get_source_id() );
-
-		$payment->set_customer( $subscription->get_customer() );
-		$payment->set_billing_address( $subscription->get_billing_address() );
-		$payment->set_shipping_address( $subscription->get_shipping_address() );
-
-		$payment->add_period( $period );
-		$payment->set_start_date( $period->get_start_date() );
-		$payment->set_end_date( $period->get_end_date() );
-
-		$payment->set_lines( $subscription->get_lines() );
-		$payment->set_total_amount( $period->get_phase()->get_amount() );
-
-		return $payment;
-	}
-
-	/**
-	 * Start payment for next period.
-	 *
-	 * @param Subscription $subscription Subscription.
-	 * @return Payment|null
-	 */
-	public function start_next_period_payment( Subscription $subscription ) {
-		$next_period = $subscription->new_period();
-
-		if ( null === $next_period ) {
-			return null;
-		}
-
-		// Start payment for next period.
-		$payment = null;
-
-		try {
-			$payment = $this->new_period_payment( $next_period );
-
-			$this->start_payment( $payment );
-		} catch ( \Exception $e ) {
-			Plugin::render_exception( $e );
-
-			exit;
-		}
-
-		return $payment;
-	}
-
-	/**
-	 * Retry a payment by starting a payment for each period of given payment.
-	 *
-	 * @param Payment $payment Payment.
-	 * @return array<int, Payment>|null
-	 */
-	public function retry_payment( Payment $payment ) {
-		// Check if payment can be retried.
-		if ( ! $this->can_retry_payment( $payment ) ) {
-			return null;
-		}
-
-		// Check periods.
-		$periods = $payment->get_periods();
-
-		if ( null === $periods ) {
-			return null;
-		}
-
-		// Start new payment for period.
-		$payments = array();
-
-		foreach ( $periods as $period ) {
-			try {
-				$period_payment = $this->new_period_payment( $period );
-
-				$period_payment->set_source( $payment->get_source() );
-				$period_payment->set_source_id( $payment->get_source_id() );
-
-				$period_payment = $this->start_payment( $period_payment );
-
-				$payments[] = $period_payment;
-			} catch ( \Exception $e ) {
-				Plugin::render_exception( $e );
-
-				exit;
-			}
-		}
-
-		return $payments;
-	}
-
-	/**
-	 * Comments clauses.
-	 *
-	 * @param array             $clauses The database query clauses.
-	 * @param \WP_Comment_Query $query   The WordPress comment query object.
-	 * @return array
-	 */
-	public function exclude_subscription_comment_notes( $clauses, $query ) {
-		$type = $query->query_vars['type'];
-
-		// Ignore subscription notes comments if it's not specifically requested.
-		if ( 'subscription_note' !== $type ) {
-			$clauses['where'] .= " AND comment_type != 'subscription_note'";
-		}
-
-		return $clauses;
-	}
-
-	/**
 	 * Maybe schedule subscription payments.
 	 *
+	 * @todo Start using https://actionscheduler.org/.
 	 * @return void
 	 */
 	public function maybe_schedule_subscription_events() {
-		if ( ! wp_next_scheduled( 'pronamic_pay_update_subscription_payments' ) ) {
-			wp_schedule_event( time(), 'hourly', 'pronamic_pay_update_subscription_payments' );
-		}
-
-		if ( ! wp_next_scheduled( 'pronamic_pay_complete_subscriptions' ) ) {
-			wp_schedule_event( time(), 'hourly', 'pronamic_pay_complete_subscriptions' );
-		}
+		// Unschedule legacy WordPress Cron hook.
+		\wp_clear_scheduled_hook( 'pronamic_pay_update_subscription_payments' );
+		\wp_clear_scheduled_hook( 'pronamic_pay_complete_subscriptions' );
 	}
 
 	/**
-	 * Maybe create subscription for the specified payment.
+	 * Is subscriptions processing disabled.
 	 *
-	 * @param Payment $payment The new payment.
-	 *
-	 * @return void
-	 *
-	 * @throws \UnexpectedValueException Throw unexpected value exception if the subscription does not have a valid date interval.
+	 * @return bool True if processing recurring payment is disabled, false otherwise.
 	 */
-	public function maybe_create_subscription( $payment ) {
-		// Check if there is already subscription attached to the payment.
-		$subscription_id = $payment->get_subscription_id();
-
-		if ( ! empty( $subscription_id ) ) {
-			// Subscription already created.
-			return;
-		}
-
-		// Check if there is a subscription object attached to the payment.
-		$subscription = $payment->subscription;
-
-		if ( empty( $subscription ) ) {
-			return;
-		}
-
-		// Complement subscription.
-		SubscriptionHelper::complement_subscription( $subscription );
-		SubscriptionHelper::complement_subscription_by_payment( $subscription, $payment );
-		SubscriptionHelper::complement_subscription_dates( $subscription );
-
-		// Create.
-		$result = $this->plugin->subscriptions_data_store->create( $subscription );
-
-		if ( $result ) {
-			$payment->subscription    = $subscription;
-			$payment->subscription_id = $subscription->get_id();
-
-			$payment->recurring_type = Recurring::FIRST;
-
-			$start_date = $subscription->get_start_date();
-			$end_date   = $subscription->get_next_payment_date();
-
-			$payment->start_date = ( null === $start_date ) ? null : clone $start_date;
-			$payment->end_date   = ( null === $end_date ) ? null : clone $end_date;
-
-			$payment->save();
-		}
-	}
-
-	/**
-	 * Get expiring subscriptions.
-	 *
-	 * @link https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/license-renewals.php#L715-L746
-	 * @link https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/license-renewals.php#L652-L712
-	 *
-	 * @param DateTime $start_date The start date of the period to check for expiring subscriptions.
-	 * @param DateTime $end_date   The end date of the period to check for expiring subscriptions.
-	 * @return array
-	 */
-	public function get_expiring_subscription_posts( DateTime $start_date, DateTime $end_date ) {
-		$args = array(
-			'post_type'   => 'pronamic_pay_subscr',
-			'nopaging'    => true,
-			'orderby'     => 'post_date',
-			'order'       => 'ASC',
-			'post_status' => array(
-				'subscr_pending',
-				'subscr_active',
-			),
-			'meta_query'  => array(
-				array(
-					'key'     => '_pronamic_subscription_expiry_date',
-					'value'   => array(
-						$start_date->format( DateTime::MYSQL ),
-						$end_date->format( DateTime::MYSQL ),
-					),
-					'compare' => 'BETWEEN',
-					'type'    => 'DATETIME',
-				),
-			),
-		);
-
-		$query = new WP_Query( $args );
-
-		return $query->posts;
-	}
-
-	/**
-	 * Payment status update.
-	 *
-	 * @param Payment $payment The status updated payment.
-	 * @return void
-	 */
-	public function payment_status_update( $payment ) {
-		// Check if the payment is connected to a subscription.
-		$subscription = $payment->get_subscription();
-
-		if ( empty( $subscription ) || null === $subscription->get_id() ) {
-			// Payment not connected to a subscription, nothing to do.
-			return;
-		}
-
-		// Make sure to use fresh subscription data.
-		$subscription = \get_pronamic_subscription( $subscription->get_id() );
-
-		// Make sure the subscription exists.
-		if ( null === $subscription ) {
-			return;
-		}
-
-		// Status.
-		$status_before = $subscription->get_status();
-		$status_update = $status_before;
-
-		switch ( $payment->get_status() ) {
-			case PaymentStatus::OPEN:
-				// @todo
-				break;
-			case PaymentStatus::SUCCESS:
-				$status_update = SubscriptionStatus::ACTIVE;
-
-				if ( isset( $subscription->expiry_date, $payment->end_date ) && $subscription->expiry_date < $payment->end_date ) {
-					$subscription->expiry_date = clone $payment->end_date;
-				}
-
-				break;
-			case PaymentStatus::FAILURE:
-				/**
-				 * Subscription status for failed payment.
-				 *
-				 * @todo Determine update status based on reason of failed payment. Use `failure` for now as that is usually the desired status.
-				 *
-				 * @link https://www.europeanpaymentscouncil.eu/document-library/guidance-documents/guidance-reason-codes-sepa-direct-debit-r-transactions
-				 * @link https://github.com/pronamic/wp-pronamic-ideal/commit/48449417eac49eb6a93480e3b523a396c7db9b3d#diff-6712c698c6b38adfa7190a4be983a093
-				 */
-				$status_update = SubscriptionStatus::FAILURE;
-
-				break;
-			case PaymentStatus::CANCELLED:
-			case PaymentStatus::EXPIRED:
-				$first_payment = $subscription->get_first_payment();
-
-				// Set subscription status to 'On Hold' only if the subscription is not already active when processing the first payment.
-				if ( ! ( null !== $first_payment && $first_payment->get_id() === $payment->get_id() && SubscriptionStatus::ACTIVE === $subscription->get_status() ) ) {
-					$status_update = SubscriptionStatus::ON_HOLD;
-				}
-
-				break;
-		}
-
-		/*
-		 * The status of canceled or completed subscriptions will not be changed automatically,
-		 * unless the cancelled subscription is manually being renewed.
-		 */
-		$is_renewal = false;
-
-		if ( SubscriptionStatus::CANCELLED === $status_before && SubscriptionStatus::ACTIVE === $status_update && '1' === $payment->get_meta( 'manual_subscription_renewal' ) ) {
-			$is_renewal = true;
-		}
-
-		if ( $is_renewal || ! in_array( $status_before, array( SubscriptionStatus::CANCELLED, SubscriptionStatus::COMPLETED, SubscriptionStatus::ON_HOLD ), true ) ) {
-			$subscription->set_status( $status_update );
-		}
-
-		// Update.
-		$subscription->save();
-	}
-
-	/**
-	 * Get subscription status update note.
-	 *
-	 * @param string|null $old_status   Old meta status.
-	 * @param string      $new_status   New meta status.
-	 * @return string
-	 */
-	private function get_subscription_status_update_note( $old_status, $new_status ) {
-		$old_label = $this->plugin->subscriptions_data_store->get_meta_status_label( $old_status );
-		$new_label = $this->plugin->subscriptions_data_store->get_meta_status_label( $new_status );
-
-		if ( null === $old_status ) {
-			return sprintf(
-				/* translators: 1: new status */
-				__( 'Subscription created with status "%1$s".', 'pronamic_ideal' ),
-				esc_html( empty( $new_label ) ? $new_status : $new_label )
-			);
-		}
-
-		return sprintf(
-			/* translators: 1: old status, 2: new status */
-			__( 'Subscription status changed from "%1$s" to "%2$s".', 'pronamic_ideal' ),
-			esc_html( empty( $old_label ) ? $old_status : $old_label ),
-			esc_html( empty( $new_label ) ? $new_status : $new_label )
-		);
-	}
-
-	/**
-	 * Subscription status update.
-	 *
-	 * @param Subscription $subscription The status updated subscription.
-	 * @param bool         $can_redirect Whether or not redirects should be performed.
-	 * @param string|null  $old_status   Old meta status.
-	 * @param string       $new_status   New meta status.
-	 *
-	 * @return void
-	 */
-	public function log_subscription_status_update( $subscription, $can_redirect, $old_status, $new_status ) {
-		$note = $this->get_subscription_status_update_note( $old_status, $new_status );
-
-		try {
-			$subscription->add_note( $note );
-		} catch ( \Exception $e ) {
-			return;
-		}
-	}
-
-	/**
-	 * Send renewal notices.
-	 *
-	 * @link https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/license-renewals.php#L652-L712
-	 * @link https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/license-renewals.php#L715-L746
-	 * @link https://github.com/wp-premium/edd-software-licensing/blob/3.5.23/includes/classes/class-sl-emails.php#L41-L126
-	 *
-	 * @return void
-	 *
-	 * @throws \Exception Throws exception on start date error.
-	 */
-	public function send_subscription_renewal_notices() {
-		$interval = new DateInterval( 'P1W' ); // 1 week
-
-		$start_date = new DateTime( 'midnight', new DateTimeZone( 'UTC' ) );
-
-		$end_date = clone $start_date;
-		$end_date->add( $interval );
-
-		$expiring_subscription_posts = $this->get_expiring_subscription_posts( $start_date, $end_date );
-
-		foreach ( $expiring_subscription_posts as $post ) {
-			$subscription = \get_pronamic_subscription( $post->ID );
-
-			// If expiry date is null we continue, subscription is not expiring.
-			$expiry_date = $subscription->get_expiry_date();
-
-			if ( null === $expiry_date ) {
-				continue;
-			}
-
-			// Date interval.
-			$date_interval = $subscription->get_date_interval();
-
-			if ( null === $date_interval ) {
-				continue;
-			}
-
-			$sent_date_string = get_post_meta( $post->ID, '_pronamic_subscription_renewal_sent_1week', true );
-
-			if ( $sent_date_string ) {
-				$first_date = clone $expiry_date;
-				$first_date->sub( $date_interval );
-
-				$sent_date = new DateTime( $sent_date_string, new DateTimeZone( 'UTC' ) );
-
-				if ( $sent_date >= $first_date || $expiry_date < $subscription->get_next_payment_date() ) {
-					// Prevent renewal notices from being sent more than once.
-					continue;
-				}
-
-				delete_post_meta( $post->ID, '_pronamic_subscription_renewal_sent_1week' );
-			}
-
-			// Add renewal notice payment note.
-			$note = sprintf(
-				/* translators: %s: expiry date */
-				__( 'Subscription renewal due on %s.', 'pronamic_ideal' ),
-				$expiry_date->format_i18n()
-			);
-
-			$subscription->add_note( $note );
-
-			// Send renewal notice.
-			$source = $subscription->get_source();
-
-			/**
-			 * Send renewal notice for source.
-			 *
-			 * **Source**
-			 *
-			 * Plugin | Source
-			 * ------ | ------
-			 * Charitable | `charitable`
-			 * Contact Form 7 | `contact-form-7`
-			 * Event Espresso | `eventespresso`
-			 * Event Espresso (legacy) | `event-espresso`
-			 * Formidable Forms | `formidable-forms`
-			 * Give | `give`
-			 * Gravity Forms | `gravityformsideal`
-			 * MemberPress | `memberpress`
-			 * Ninja Forms | `ninja-forms`
-			 * s2Member | `s2member`
-			 * WooCommerce | `woocommerce`
-			 * WP eCommerce | `wp-e-commerce`
-			 *
-			 * @param Subscription $subscription Subscription.
-			 */
-			do_action( 'pronamic_subscription_renewal_notice_' . $source, $subscription );
-
-			// Update renewal notice sent date meta.
-			$renewal_sent_date = clone $start_date;
-
-			$renewal_sent_date->setTime(
-				intval( $expiry_date->format( 'H' ) ),
-				intval( $expiry_date->format( 'i' ) ),
-				intval( $expiry_date->format( 's' ) )
-			);
-
-			update_post_meta( $post->ID, '_pronamic_subscription_renewal_sent_1week', $renewal_sent_date->format( DateTime::MYSQL ) );
-		}
-	}
-
-	/**
-	 * Get WordPress query for subscriptions that require a follow-up payment.
-	 *
-	 * @param array $args Arguments.
-	 * @return WP_Query
-	 */
-	public function get_subscriptions_wp_query_that_require_follow_up_payment( $args = array() ) {
-		$args = \wp_parse_args(
-			$args,
-			array(
-				'date'   => new \DateTimeImmutable(),
-				'number' => -1,
-			)
-		);
-
-		$date = $args['date'];
-
-		$date_utc = $date->setTimezone( new \DateTimeZone( 'UTC' ) );
-
-		$query_args = array(
-			'post_type'      => 'pronamic_pay_subscr',
-			'posts_per_page' => $args['number'],
-			'orderby'        => 'post_date',
-			'order'          => 'ASC',
-			'post_status'    => array(
-				'subscr_pending',
-				'subscr_failed',
-				'subscr_active',
-			),
-			'meta_query'     => array(
-				array(
-					'key'     => '_pronamic_subscription_source',
-					'compare' => 'NOT IN',
-					'value'   => array(
-						// Don't create payments for sources which schedule payments.
-						'woocommerce',
-					),
-				),
-				array(
-					'relation' => 'OR',
-					array(
-						'key'     => '_pronamic_subscription_next_payment',
-						'compare' => '<=',
-						'value'   => $date_utc->format( 'Y-m-d H:i:s' ),
-						'type'    => 'DATETIME',
-					),
-					array(
-						'key'     => '_pronamic_subscription_next_payment_delivery_date',
-						'compare' => '<=',
-						'value'   => $date_utc->format( 'Y-m-d H:i:s' ),
-						'type'    => 'DATETIME',
-					),
-				),
-			),
-		);
-
-		$query = new WP_Query( $query_args );
-
-		return $query;
-	}
-
-	/**
-	 * Process subscriptions follow-up payment.
-	 *
-	 * @param array $args Arguments.
-	 * @return void
-	 * @throws \Exception Throws exception when unable to load subscription from post ID.
-	 */
-	private function process_subscriptions_follow_up_payment( $args = array() ) {
-		$args = wp_parse_args(
-			$args,
-			array(
-				'date'         => null,
-				'number'       => null,
-				'on_progress'  => null,
-				'on_exception' => null,
-			)
-		);
-
-		$query = $this->get_subscriptions_wp_query_that_require_follow_up_payment(
-			array(
-				'date'   => $args['date'],
-				'number' => $args['number'],
-			)
-		);
-
-		foreach ( $query->posts as $post ) {
-			if ( null !== $args['on_progress'] ) {
-				\call_user_func( $args['on_progress'], $post );
-			}
-
-			$subscription = \get_pronamic_subscription( $post->ID );
-
-			if ( null === $subscription ) {
-				throw new \Exception(
-					\sprintf(
-						'Unable to load subscription from post ID: %d.',
-						$post->ID
-					)
-				);
-			}
-
-			$gateway = Plugin::get_gateway( $subscription->config_id );
-
-			// If gateway is null we continue to next subscription.
-			if ( null === $gateway ) {
-				continue;
-			}
-
-			// Start payment.
-			try {
-				$payment = $this->new_subscription_payment( $subscription );
-
-				if ( null === $payment ) {
-					continue;
-				}
-
-				$payment->recurring = true;
-
-				$payment = $this->start_payment( $payment );
-			} catch ( \Exception $e ) {
-				if ( null !== $args['on_exception'] ) {
-					\call_user_func( $args['on_exception'], $e );
-				}
-
-				continue;
-			}
-
-			if ( is_object( $payment ) ) {
-				// Update payment.
-				Plugin::update_payment( $payment, false );
-			}
-
-			// Expire manual renewal subscriptions.
-			if ( ! $gateway->supports( 'recurring' ) ) {
-				$now = new DateTime();
-
-				if ( SubscriptionStatus::COMPLETED !== $subscription->status && isset( $subscription->expiry_date ) && $subscription->expiry_date <= $now ) {
-					$subscription->status = SubscriptionStatus::EXPIRED;
-
-					$subscription->save();
-
-					// Delete next payment date so it won't get used as start date
-					// of the new payment period when manually renewing and to keep
-					// the subscription out of updating subscription payments (this method).
-					$subscription->set_meta( 'next_payment', null );
-				}
-			}
-		}
-	}
-
-	/**
-	 * Update subscription payments.
-	 *
-	 * @return void
-	 */
-	public function update_subscription_payments() {
-		$this->send_subscription_renewal_notices();
-
-		$this->process_subscriptions_follow_up_payment(
-			array(
-				'date'   => new \DateTimeImmutable(),
-				'number' => -1,
-			)
-		);
-	}
-
-	/**
-	 * Maybe process debug.
-	 */
-	public function maybe_process_debug() {
-		if ( ! \filter_has_var( \INPUT_POST, 'pronamic_pay_process_subscriptions_follow_up_payment' ) ) {
-			return;
-		}
-
-		if ( ! \check_admin_referer( 'pronamic_pay_process_subscriptions_follow_up_payment', 'pronamic_pay_nonce' ) ) {
-			return;
-		}
-
-		$date = new \DateTimeImmutable();
-
-		if ( \array_key_exists( 'date', $_POST ) ) {
-			$date = new \DateTimeImmutable( \sanitize_text_field( \wp_unslash( $_POST['date'] ) ) );
-		}
-
-		$number = 10;
-
-		if ( \array_key_exists( 'number', $_POST ) ) {
-			$number = (int) $_POST['number'];
-		}
-
-		$this->process_subscriptions_follow_up_payment(
-			array(
-				'date'         => $date,
-				'number'       => $number,
-				'on_exception' => function( $e ) {
-					\wp_die( \esc_html( $e->getMessage() ) );
-				},
-			)
-		);
-
-		$location = \add_query_arg(
-			array(
-				'page'               => 'pronamic_pay_debug',
-				'pronamic_pay_debug' => 'true',
-			),
-			\admin_url( 'admin.php' )
-		);
-
-		\wp_safe_redirect( $location );
-
-		exit;
-	}
-
-	/**
-	 * Complete subscriptions.
-	 *
-	 * @param bool $cli_test Whether or not this a CLI test.
-	 * @return void
-	 */
-	public function complete_subscriptions( $cli_test = false ) {
-		$args = array(
-			'post_type'   => 'pronamic_pay_subscr',
-			'nopaging'    => true,
-			'orderby'     => 'post_date',
-			'order'       => 'ASC',
-			'post_status' => 'subscr_active',
-			'meta_query'  => array(
-				array(
-					'key'     => '_pronamic_subscription_source',
-					'compare' => 'NOT IN',
-					'value'   => array(
-						// Don't create payments for sources which schedule payments.
-						'woocommerce',
-					),
-				),
-				array(
-					'relation' => 'AND',
-					array(
-						'key'     => '_pronamic_subscription_next_payment',
-						'compare' => 'NOT EXISTS',
-					),
-				),
-			),
-		);
-
-		if ( ! $cli_test ) {
-			$args['meta_query'][1][] = array(
-				'key'     => '_pronamic_subscription_end_date',
-				'compare' => '<=',
-				'value'   => current_time( 'mysql', true ),
-				'type'    => 'DATETIME',
-			);
-		}
-
-		$query = new WP_Query( $args );
-
-		foreach ( $query->posts as $post ) {
-			if ( $cli_test ) {
-				WP_CLI::log( sprintf( 'Processing post `%d` - "%s"…', $post->ID, get_the_title( $post ) ) );
-			}
-
-			// Complete subscription.
-			try {
-				$subscription = \get_pronamic_subscription( $post->ID );
-
-				$subscription->status      = SubscriptionStatus::COMPLETED;
-				$subscription->expiry_date = $subscription->end_date;
-
-				$subscription->save();
-			} catch ( \Exception $e ) {
-				continue;
-			}
-		}
-	}
-
-	/**
-	 * CLI subscriptions test.
-	 *
-	 * @param array $args       Arguments.
-	 * @param array $assoc_args Associative arguments.
-	 * @return void
-	 */
-	public function cli_subscriptions_test( $args, $assoc_args ) {
-		$date = new \DateTimeImmutable();
-
-		if ( \array_key_exists( 'date', $assoc_args ) ) {
-			$date = new \DateTimeImmutable( $assoc_args['date'] );
-		}
-
-		$number = -1;
-
-		if ( \array_key_exists( 'number', $assoc_args ) ) {
-			$number = (int) $assoc_args['number'];
-		}
-
-		WP_CLI::log( 'Updating subscription payments…' );
-
-		$this->process_subscriptions_follow_up_payment(
-			array(
-				'date'         => $date,
-				'number'       => $number,
-				'on_progress'  => function( $post ) {
-					WP_CLI::log( \sprintf( 'Processing post `%d` - "%s"…', $post->ID, \get_the_title( $post ) ) );
-				},
-				'on_exception' => function( $e ) {
-					WP_CLI::error( $e->getMessage(), false );
-				},
-			)
-		);
-
-		WP_CLI::log( 'Completing subscriptions…' );
-
-		$cli_test = true;
-
-		$this->complete_subscriptions( $cli_test );
-
-		WP_CLI::success( 'Pronamic Pay subscriptions test.' );
+	public function is_processing_disabled() {
+		return (bool) \get_option( 'pronamic_pay_subscriptions_processing_disabled', false );
 	}
 
 	/**

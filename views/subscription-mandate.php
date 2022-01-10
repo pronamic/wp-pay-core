@@ -3,7 +3,7 @@
  * Subscription mandate.
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -15,9 +15,15 @@ if ( ! isset( $subscription ) ) {
 	return;
 }
 
-$subscription_id = $subscription->get_id();
+if ( ! isset( $gateway ) ) {
+	return;
+}
 
-$mollie_customer_id = \get_post_meta( $subscription_id, '_pronamic_subscription_mollie_customer_id', true );
+if ( ! class_exists( '\Pronamic\WordPress\Pay\Gateways\Mollie\Client' ) ) {
+	return;
+}
+
+$mollie_customer_id = $subscription->get_meta( 'mollie_customer_id' );
 
 if ( empty( $mollie_customer_id ) ) {
 	include \get_404_template();
@@ -88,9 +94,9 @@ if ( is_array( $current_mandate ) ) {
 									$cards = new Cards();
 
 									foreach ( $mollie_customer_mandates as $mandate ) :
-										if ( 'valid' !== $mandate->status ) :
+										if ( 'valid' !== $mandate->status ) {
 											continue;
-										endif;
+										}
 
 										$card_name      = null;
 										$account_number = null;
@@ -98,7 +104,7 @@ if ( is_array( $current_mandate ) ) {
 										$bic_or_brand   = null;
 										$logo_url       = null;
 
-										switch ( $mandate->method ) :
+										switch ( $mandate->method ) {
 											case 'creditcard':
 												$card_name      = $mandate->details->cardHolder;
 												$account_number = str_pad( $mandate->details->cardNumber, 16, '*', \STR_PAD_LEFT );
@@ -115,12 +121,14 @@ if ( is_array( $current_mandate ) ) {
 												$bic_or_brand = substr( $mandate->details->consumerAccount, 4, 4 );
 
 												break;
-										endswitch;
+										}
 
 										// Split account number in chunks.
-										if ( null !== $account_number ) :
+										if ( null !== $account_number ) {
 											$account_number = \chunk_split( $account_number, 4, ' ' );
-										endif;
+										}
+
+										$card_title = '';
 
 										$classes = array( 'pp-card' );
 
@@ -129,13 +137,15 @@ if ( is_array( $current_mandate ) ) {
 										$card = $cards->get_card( $bic_or_brand );
 
 										// Set card brand specific details.
-										if ( null !== $card ) :
+										if ( null !== $card ) {
+											$card_title = $card['title'];
+
 											$classes[] = 'brand-' . $card['brand'];
 
 											$logo_url = $cards->get_card_logo_url( $card['brand'] );
 
 											$bg_color = 'transparent';
-										endif;
+										}
 
 										?>
 
@@ -148,12 +158,12 @@ if ( is_array( $current_mandate ) ) {
 
 													<div class="pt-card__indicator"></div>
 
-													<h3 class="pp-card__title"><?php echo esc_html( $title ); ?></h3>
+													<h3 class="pp-card__title"><?php echo esc_html( $card_title ); ?></h3>
 
 													<figure class="pp-card__logo">
-														<?php if ( null !== $logo_url && array_key_exists( 'title', $card ) ) : ?>
+														<?php if ( null !== $logo_url ) : ?>
 
-															<img class="pp-card__logo__img" src="<?php echo esc_url( $logo_url ); ?>" alt="<?php echo esc_attr( $card['title'] ); ?>" />
+															<img class="pp-card__logo__img" src="<?php echo esc_url( $logo_url ); ?>" alt="<?php echo esc_attr( $card_title ); ?>" />
 
 														<?php endif; ?>
 													</figure>
@@ -164,8 +174,8 @@ if ( is_array( $current_mandate ) ) {
 													</dl>
 
 													<dl class="pp-card__number">
-														<dt class="pp-card__label"><?php echo esc_html( $account_label ); ?></dt>
-														<dd class="pp-card__value"><?php echo esc_html( $account_number ); ?></dd>
+														<dt class="pp-card__label"><?php echo esc_html( (string) $account_label ); ?></dt>
+														<dd class="pp-card__value"><?php echo esc_html( (string) $account_number ); ?></dd>
 													</dl>
 												</div>
 											</div>
@@ -211,10 +221,13 @@ if ( is_array( $current_mandate ) ) {
 												continue;
 											endif;
 
+											$name = PaymentMethods::get_name( $method );
+											$name = ( null === $name ) ? $method : $name;
+
 											printf(
 												'<option value="%s">%s</option>',
 												esc_attr( $method ),
-												esc_html( PaymentMethods::get_name( $method ) )
+												esc_html( $name )
 											);
 										}
 									}
@@ -244,29 +257,29 @@ if ( is_array( $current_mandate ) ) {
 		<?php wp_print_scripts( 'pronamic-pay-subscription-mandate' ); ?>
 
 		<script type="text/javascript">
-		jQuery( document ).ready( function () {
-			var $slider = jQuery( '.pp-card-slider' ).slick( {
-				dots: true,
-				arrows: false,
-				infinite: false,
-				slidesToShow: 1,
-				centerMode: true,
+			jQuery( document ).ready( function () {
+				var $slider = jQuery( '.pp-card-slider' ).slick( {
+					dots: true,
+					arrows: false,
+					infinite: false,
+					slidesToShow: 1,
+					centerMode: true,
+				} );
+
+				$slider.find( '.slick-current input[type="radio"]' ).attr( 'checked', 'checked' );
+
+				$slider.find( '.slick-slide' ).on( 'click', function () {
+					var index = jQuery( this ).data( 'slick-index' );
+
+					$slider.slick( 'slickGoTo', index );
+				} );
+
+				$slider.on( 'afterChange', function ( event, slick, currentSlide, nextSlide ) {
+					$slider.find( 'input[type="radio"]' ).removeAttr( 'checked' );
+
+					$slider.find( '.slick-slide' ).eq( currentSlide ).find( 'input[type="radio"]' ).attr( 'checked', 'checked' );
+				} );
 			} );
-
-			$slider.find( '.slick-current input[type="radio"]' ).attr( 'checked', 'checked' );
-
-			$slider.find( '.slick-slide' ).on( 'click', function () {
-				var index = jQuery( this ).data( 'slick-index' );
-
-				$slider.slick( 'slickGoTo', index );
-			} );
-
-			$slider.on( 'afterChange', function ( event, slick, currentSlide, nextSlide ) {
-				$slider.find( 'input[type="radio"]' ).removeAttr( 'checked' );
-
-				$slider.find( '.slick-slide' ).eq( currentSlide ).find( 'input[type="radio"]' ).attr( 'checked', 'checked' );
-			} );
-		} );
 		</script>
 	</body>
 </html>

@@ -3,7 +3,7 @@
  * Gateway Post Type
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -40,6 +40,9 @@ class GatewayPostType {
 		add_action( 'init', array( $this, 'register_gateway_post_type' ), 0 ); // Highest priority.
 
 		add_action( 'save_post_' . self::POST_TYPE, array( $this, 'maybe_set_default_gateway' ) );
+
+		// REST API.
+		add_action( 'rest_api_init', array( $this, 'rest_api_init' ) );
 	}
 
 	/**
@@ -145,6 +148,137 @@ class GatewayPostType {
 			'edit_private_posts'     => 'manage_options',
 			'edit_published_posts'   => 'manage_options',
 			'create_posts'           => 'manage_options',
+		);
+	}
+
+	/**
+	 * REST API init.
+	 *
+	 * @link https://developer.wordpress.org/rest-api/extending-the-rest-api/adding-custom-endpoints/
+	 * @link https://developer.wordpress.org/reference/hooks/rest_api_init/
+	 *
+	 * @return void
+	 */
+	public function rest_api_init() {
+		\register_rest_route(
+			'pronamic-pay/v1',
+			'/gateways/(?P<config_id>\d+)',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $this, 'rest_api_gateway' ),
+				'permission_callback' => function() {
+					return \current_user_can( 'manage_options' );
+				},
+				'args'                => array(
+					'config_id' => array(
+						'description' => __( 'Gateway configuration ID.', 'pronamic_ideal' ),
+						'type'        => 'integer',
+					),
+				),
+			)
+		);
+
+		register_rest_route(
+			'pronamic-pay/v1',
+			'/gateways/(?P<config_id>\d+)/admin',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $this, 'rest_api_gateway_admin' ),
+				'permission_callback' => function() {
+					return current_user_can( 'manage_options' );
+				},
+				'args'                => array(
+					'config_id'    => array(
+						'description' => __( 'Gateway configuration ID.', 'pronamic_ideal' ),
+						'type'        => 'integer',
+					),
+					'gateway_id'   => array(
+						'description' => __( 'Gateway ID.', 'pronamic_ideal' ),
+						'type'        => 'string',
+					),
+					'gateway_mode' => array(
+						'description' => __( 'Gateway mode.', 'pronamic_ideal' ),
+						'type'        => 'string',
+					),
+				),
+			)
+		);
+	}
+
+	/**
+	 * REST API gateway.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return object
+	 */
+	public function rest_api_gateway( \WP_REST_Request $request ) {
+		$config_id = $request->get_param( 'config_id' );
+
+		// Gateway.
+		$gateway = Plugin::get_gateway( $config_id );
+
+		if ( null === $gateway ) {
+			return new \WP_Error(
+				'pronamic-pay-gateway-not-found',
+				\sprintf(
+					/* translators: %s: Subscription ID */
+					\__( 'Could not find gateway with ID `%s`.', 'pronamic_ideal' ),
+					$config_id
+				),
+				$config_id
+			);
+		}
+
+		return $gateway;
+	}
+
+	/**
+	 * REST API gateway.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return object
+	 */
+	public function rest_api_gateway_admin( \WP_REST_Request $request ) {
+		$config_id    = $request->get_param( 'config_id' );
+		$gateway_id   = $request->get_param( 'gateway_id' );
+		$gateway_mode = $request->get_param( 'gateway_mode' );
+
+		// Gateway.
+		$args = array(
+			'gateway_id' => $gateway_id,
+		);
+
+		$gateway = Plugin::get_gateway( $config_id, $args );
+
+		if ( empty( $gateway ) ) {
+			return new \WP_Error(
+				'pronamic-pay-gateway-not-found',
+				sprintf(
+					/* translators: %s: Gateway configuration ID */
+					__( 'Could not find gateway with ID `%s`.', 'pronamic_ideal' ),
+					$config_id
+				),
+				$config_id
+			);
+		}
+
+		// Settings.
+		ob_start();
+
+		$plugin = \pronamic_pay_plugin();
+
+		require __DIR__ . '/../views/meta-box-gateway-settings.php';
+
+		$meta_box_settings = ob_get_clean();
+
+		// Object.
+		return (object) array(
+			'config_id'    => $config_id,
+			'gateway_id'   => $gateway_id,
+			'gateway_mode' => $gateway_mode,
+			'meta_boxes'   => (object) array(
+				'settings' => $meta_box_settings,
+			),
 		);
 	}
 }

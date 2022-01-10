@@ -3,9 +3,10 @@
  * Meta Box Subscription Payments
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
+ * @var \Pronamic\WordPress\Pay\Plugin $plugin Plugin.
  */
 
 use Pronamic\WordPress\Pay\Plugin;
@@ -45,7 +46,11 @@ if ( ! isset( $subscription ) ) {
 
 			<?php
 
-			$next_period = $subscription->next_period();
+			$next_payment_date = $subscription->get_next_payment_date();
+
+			$next_payment_delivery_date = $subscription->get_next_payment_delivery_date();
+
+			$next_period = $subscription->get_next_period();
 
 			$gateway = Plugin::get_gateway( $subscription->get_config_id() );
 
@@ -61,14 +66,21 @@ if ( ! isset( $subscription ) ) {
 					<td colspan="2">
 						<?php
 
-						$create_next_payment_url = wp_nonce_url(
-							add_query_arg( 'pronamic_next_period', true, \get_edit_post_link( $subscription->get_id() ) ),
-							'pronamic_next_period_' . $subscription->get_id()
+						$create_next_payment_url = \wp_nonce_url(
+							\add_query_arg(
+								\urlencode_deep(
+									array(
+										'period_payment'  => true,
+										'subscription_id' => $subscription->get_id(),
+										'sequence_number' => $next_period->get_phase()->get_sequence_number(),
+										'start_date'      => $next_period->get_start_date()->format( DATE_ATOM ),
+										'end_date'        => $next_period->get_end_date()->format( DATE_ATOM ),
+									)
+								),
+								\get_edit_post_link( $subscription->get_id() )
+							),
+							'pronamic_period_payment_' . $subscription->get_id()
 						);
-
-						$next_payment_date = $subscription->get_next_payment_date();
-
-						$next_payment_delivery_date = $subscription->get_next_payment_delivery_date();
 
 						if ( in_array( $subscription->get_source(), array( 'woocommerce' ), true ) && null !== $next_payment_date ) :
 
@@ -159,7 +171,7 @@ if ( ! isset( $subscription ) ) {
 						</td>
 					</tr>
 
-					<?php if ( $is_first && $can_retry && $this->plugin->subscriptions_module->can_retry_payment( $payment ) ) : ?>
+					<?php if ( $is_first && $can_retry && $plugin->subscriptions_module->can_retry_payment( $payment ) ) : ?>
 
 						<tr>
 							<td>&nbsp;</td>
@@ -168,12 +180,18 @@ if ( ! isset( $subscription ) ) {
 
 								$action_url = \wp_nonce_url(
 									\add_query_arg(
-										array(
-											'pronamic_retry_payment' => $payment_id,
+										\urlencode_deep(
+											array(
+												'period_payment' => true,
+												'subscription_id' => $subscription->get_id(),
+												'sequence_number' => $period->get_phase()->get_sequence_number(),
+												'start_date' => $period->get_start_date()->format( DATE_ATOM ),
+												'end_date' => $period->get_end_date()->format( DATE_ATOM ),
+											)
 										),
-										\get_edit_post_link( $post->ID )
+										\get_edit_post_link( $subscription->get_id() )
 									),
-									'pronamic_retry_payment_' . $payment_id
+									'pronamic_period_payment_' . $subscription->get_id()
 								);
 
 								\printf(

@@ -3,7 +3,7 @@
  * Payment
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -26,14 +26,7 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPeriod;
  * @version 2.5.0
  * @since   1.0.0
  */
-class Payment extends LegacyPayment {
-	/**
-	 * The subscription.
-	 *
-	 * @var Subscription|null
-	 */
-	public $subscription;
-
+class Payment extends PaymentInfo {
 	/**
 	 * The total amount of this payment.
 	 *
@@ -49,62 +42,8 @@ class Payment extends LegacyPayment {
 	private $refunded_amount;
 
 	/**
-	 * The purchase ID.
-	 *
-	 * @todo Is this required/used?
-	 * @var string|null
-	 */
-	public $purchase_id;
-
-	/**
-	 * The order ID of this payment.
-	 *
-	 * @todo Is this required/used?
-	 * @var string|int|null
-	 */
-	public $order_id;
-
-	/**
-	 * The expiration period of this payment.
-	 *
-	 * @todo Is this required/used?
-	 * @var string
-	 */
-	public $expiration_period;
-
-	/**
-	 * The entrance code of this payment.
-	 *
-	 * @todo Is this required/used?
-	 * @var string|null
-	 */
-	public $entrance_code;
-
-	/**
-	 * The description of this payment.
-	 *
-	 * @var string|null
-	 */
-	public $description;
-
-	/**
-	 * The Google Analytics client ID of the user who started this payment.
-	 *
-	 * @var string|null
-	 */
-	public $analytics_client_id;
-
-	/**
-	 * Google Analytics e-commerce tracked.
-	 *
-	 * @var bool|null
-	 */
-	public $ga_tracked;
-
-	/**
 	 * The status of this payment.
 	 *
-	 * @todo   Check constant?
 	 * @var string|null
 	 */
 	public $status;
@@ -128,7 +67,7 @@ class Payment extends LegacyPayment {
 	 *
 	 * @var string|null
 	 */
-	public $action_url;
+	private $action_url;
 
 	/**
 	 * The date this payment expires.
@@ -136,20 +75,6 @@ class Payment extends LegacyPayment {
 	 * @var DateTime|null
 	 */
 	private $expiry_date;
-
-	/**
-	 * The payment method chosen by the user who started this payment.
-	 *
-	 * @var string|null
-	 */
-	public $method;
-
-	/**
-	 * The issuer chosen by the user who started this payment.
-	 *
-	 * @var string|null
-	 */
-	public $issuer;
 
 	/**
 	 * Subscriptions.
@@ -165,41 +90,6 @@ class Payment extends LegacyPayment {
 	 * @var SubscriptionPeriod[]|null
 	 */
 	private $periods;
-
-	/**
-	 * Subscription ID.
-	 *
-	 * @todo Is this required?
-	 * @var int|null
-	 */
-	public $subscription_id;
-
-	/**
-	 * Subscription source ID.
-	 *
-	 * @var string|int|null
-	 */
-	public $subscription_source_id;
-
-	/**
-	 * Flag to indicate a recurring payment
-	 *
-	 * @todo Is this required?
-	 *
-	 * @var boolean|null
-	 */
-	public $recurring;
-
-	/**
-	 * The recurring type:
-	 * - 'first'
-	 * - 'recurring'
-	 *
-	 * @todo Improve documentation, is this used?
-	 *
-	 * @var string|null
-	 */
-	public $recurring_type;
 
 	/**
 	 * Customer.
@@ -230,27 +120,6 @@ class Payment extends LegacyPayment {
 	public $lines;
 
 	/**
-	 * Version.
-	 *
-	 * @var string|null
-	 */
-	private $version;
-
-	/**
-	 * Mode.
-	 *
-	 * @var string|null
-	 */
-	private $mode;
-
-	/**
-	 * Is anonymized.
-	 *
-	 * @var bool|null
-	 */
-	private $anonymized;
-
-	/**
 	 * Construct and initialize payment object.
 	 *
 	 * @param integer $post_id A payment post ID or null.
@@ -258,7 +127,8 @@ class Payment extends LegacyPayment {
 	public function __construct( $post_id = null ) {
 		parent::__construct( $post_id );
 
-		$this->subscriptions = array();
+		$this->meta_key_prefix = '_pronamic_payment_';
+		$this->subscriptions   = array();
 
 		$this->set_status( PaymentStatus::OPEN );
 
@@ -308,15 +178,6 @@ class Payment extends LegacyPayment {
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Get the payment description.
-	 *
-	 * @return string|null
-	 */
-	public function get_description() {
-		return $this->description;
 	}
 
 	/**
@@ -425,25 +286,6 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
-	 * Is tracked in Google Analytics?
-	 *
-	 * @return bool|null
-	 */
-	public function get_ga_tracked() {
-		return $this->ga_tracked;
-	}
-
-	/**
-	 * Set if payment is tracked in Google Analytics.
-	 *
-	 * @param bool|null $tracked Tracked in Google Analytics.
-	 * @return void
-	 */
-	public function set_ga_tracked( $tracked ) {
-		$this->ga_tracked = $tracked;
-	}
-
-	/**
 	 * Get the pay redirect URL.
 	 *
 	 * @return string
@@ -501,7 +343,7 @@ class Payment extends LegacyPayment {
 	/**
 	 * Set the action URL.
 	 *
-	 * @param string $action_url Action URL.
+	 * @param string|null $action_url Action URL.
 	 * @return void
 	 */
 	public function set_action_url( $action_url ) {
@@ -548,19 +390,6 @@ class Payment extends LegacyPayment {
 		$url = apply_filters( 'pronamic_payment_redirect_url', $url, $payment );
 
 		return $url;
-	}
-
-	/**
-	 * Get the redirect URL for this payment.
-	 *
-	 * @deprecated 4.1.2 Use get_return_redirect_url()
-	 *
-	 * @return string
-	 */
-	public function get_redirect_url() {
-		_deprecated_function( __FUNCTION__, '4.1.2', 'get_return_redirect_url()' );
-
-		return $this->get_return_redirect_url();
 	}
 
 	/**
@@ -734,20 +563,17 @@ class Payment extends LegacyPayment {
 	/**
 	 * Get subscription.
 	 *
+	 * @deprecated Use `get_subscriptions()`.
 	 * @return Subscription|null
 	 */
 	public function get_subscription() {
-		if ( is_object( $this->subscription ) ) {
-			return $this->subscription;
-		}
+		$first = \reset( $this->subscriptions );
 
-		if ( empty( $this->subscription_id ) ) {
+		if ( false === $first ) {
 			return null;
 		}
 
-		$this->subscription = \get_pronamic_subscription( $this->subscription_id );
-
-		return $this->subscription;
+		return $first;
 	}
 
 	/**
@@ -766,6 +592,10 @@ class Payment extends LegacyPayment {
 	 * @return void
 	 */
 	public function add_subscription( Subscription $subscription ) {
+		if ( \in_array( $subscription, $this->subscriptions, true ) ) {
+			return;
+		}
+
 		$this->subscriptions[] = $subscription;
 	}
 
@@ -815,24 +645,6 @@ class Payment extends LegacyPayment {
 	}
 
 	/**
-	 * Get Google Analytics client ID.
-	 *
-	 * @return string|null
-	 */
-	public function get_analytics_client_id() {
-		return $this->analytics_client_id;
-	}
-
-	/**
-	 * Get entrance code.
-	 *
-	 * @return string|null
-	 */
-	public function get_entrance_code() {
-		return $this->entrance_code;
-	}
-
-	/**
 	 * Get subscription periods.
 	 *
 	 * @since 2.5.0
@@ -854,25 +666,9 @@ class Payment extends LegacyPayment {
 			$this->periods = array();
 		}
 
+		$this->add_subscription( $period->get_phase()->get_subscription() );
+
 		$this->periods[] = $period;
-	}
-
-	/**
-	 * Get payment subscription ID.
-	 *
-	 * @return int|null
-	 */
-	public function get_subscription_id() {
-		return $this->subscription_id;
-	}
-
-	/**
-	 * Get recurring.
-	 *
-	 * @return bool|null
-	 */
-	public function get_recurring() {
-		return $this->recurring;
 	}
 
 	/**
@@ -893,6 +689,10 @@ class Payment extends LegacyPayment {
 		}
 
 		PaymentInfoHelper::from_json( $json, $payment );
+
+		if ( isset( $json->action_url ) ) {
+			$payment->set_action_url( $json->action_url );
+		}
 
 		if ( isset( $json->total_amount ) ) {
 			$payment->set_total_amount( MoneyJsonTransformer::from_json( $json->total_amount ) );
@@ -921,12 +721,20 @@ class Payment extends LegacyPayment {
 			}
 		}
 
-		if ( isset( $json->failure_reason ) ) {
-			$payment->set_failure_reason( FailureReason::from_json( $json->failure_reason ) );
+		if ( isset( $json->subscriptions ) ) {
+			foreach ( $json->subscriptions as $json_subscription ) {
+				if ( \property_exists( $json_subscription, 'id' ) ) {
+					$subscription = \get_pronamic_subscription( $json_subscription->id );
+
+					if ( null !== $subscription ) {
+						$payment->add_subscription( $subscription );
+					}
+				}
+			}
 		}
 
-		if ( isset( $json->ga_tracked ) ) {
-			$payment->set_ga_tracked( $json->ga_tracked );
+		if ( isset( $json->failure_reason ) ) {
+			$payment->set_failure_reason( FailureReason::from_json( $json->failure_reason ) );
 		}
 
 		if ( isset( $json->origin_id ) ) {
@@ -950,6 +758,11 @@ class Payment extends LegacyPayment {
 
 		$properties = (array) $object;
 
+		// Action URL.
+		if ( null !== $this->action_url ) {
+			$properties['action_url'] = $this->action_url;
+		}
+
 		// Expiry date.
 		$expiry_date = $this->get_expiry_date();
 
@@ -971,6 +784,27 @@ class Payment extends LegacyPayment {
 			$properties['refunded_amount'] = $refunded_amount->jsonSerialize();
 		}
 
+		// Subscriptions.
+		$subscriptions = $this->get_subscriptions();
+
+		if ( \count( $subscriptions ) > 0 ) {
+			$properties['subscriptions'] = array();
+
+			foreach ( $subscriptions as $subscription ) {
+				$properties['subscriptions'][] = (object) array(
+					'$ref' => \rest_url(
+						\sprintf(
+							'/%s/%s/%d',
+							'pronamic-pay/v1',
+							'subscriptions',
+							$subscription->get_id()
+						)
+					),
+					'id'   => $subscription->get_id(),
+				);
+			}
+		}
+
 		// Periods.
 		$periods = $this->get_periods();
 
@@ -990,11 +824,6 @@ class Payment extends LegacyPayment {
 
 		if ( null !== $failure_reason ) {
 			$properties['failure_reason'] = $failure_reason->get_json();
-		}
-
-		// Google Analytics tracked.
-		if ( null !== $this->get_ga_tracked() ) {
-			$properties['ga_tracked'] = $this->get_ga_tracked();
 		}
 
 		// Origin ID.

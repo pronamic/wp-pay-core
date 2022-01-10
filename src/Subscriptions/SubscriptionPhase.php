@@ -3,15 +3,16 @@
  * Subscription Phase
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Subscriptions
  */
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
-use DateTimeImmutable;
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\DateTime\DateTimeImmutable;
+use Pronamic\WordPress\DateTime\DateTimeInterface;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 
@@ -59,36 +60,18 @@ class SubscriptionPhase implements \JsonSerializable {
 	private $interval;
 
 	/**
-	 * Total periods, also known as:
-	 * - Number recurrences
-	 * - Frequency.
-	 * - Times.
-	 * - Recurrences.
-	 * - Cycles number.
-	 * - Total cycles.
-	 * - Maximum renewals.
-	 * - Product length.
-	 * - Limit cycles number.
-	 * - Number billing cycles.
-	 *
-	 * @var int|null
-	 */
-	private $total_periods;
-
-	/**
-	 * Number periods created, also known as:
-	 * - Number recurrences created.
-	 *
-	 * @var int
-	 */
-	private $periods_created;
-
-	/**
 	 * The date this phase will start.
 	 *
 	 * @var DateTimeImmutable
 	 */
 	private $start_date;
+
+	/**
+	 * The date this phase will end.
+	 *
+	 * @var DateTimeImmutable|null
+	 */
+	private $end_date;
 
 	/**
 	 * The start date of the next period, also known as:
@@ -97,7 +80,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 *
 	 * @link https://stripe.com/docs/billing/subscriptions/billing-cycle
 	 * @link https://stripe.com/docs/api/subscriptions/create#create_subscription-billing_cycle_anchor
-	 * @var DateTimeImmutable
+	 * @var DateTimeImmutable|null
 	 */
 	private $next_date;
 
@@ -126,18 +109,19 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * Construct subscription phase.
 	 *
 	 * @param Subscription         $subscription Subscription.
-	 * @param DateTimeImmutable    $start_date   Start date.
+	 * @param \DateTimeInterface   $start_date   Start date.
 	 * @param SubscriptionInterval $interval     Interval.
 	 * @param Money                $amount       Amount.
 	 * @return void
 	 */
-	public function __construct( Subscription $subscription, DateTimeImmutable $start_date, SubscriptionInterval $interval, Money $amount ) {
+	public function __construct( Subscription $subscription, \DateTimeInterface $start_date, SubscriptionInterval $interval, Money $amount ) {
 		$this->subscription = $subscription;
-		$this->start_date   = $start_date;
-		$this->interval     = $interval;
-		$this->amount       = $amount;
 
-		$this->periods_created = 0;
+		$this->set_start_date( $start_date );
+		$this->set_next_date( $start_date );
+
+		$this->interval = $interval;
+		$this->amount   = $amount;
 
 		$this->is_prorated = false;
 		$this->is_trial    = false;
@@ -183,11 +167,30 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Set start date.
 	 *
-	 * @param DateTimeImmutable $start_date Start date.
+	 * @param \DateTimeInterface $start_date Start date.
 	 * @return void
 	 */
 	public function set_start_date( $start_date ) {
-		$this->start_date = $start_date;
+		$this->start_date = DateTimeImmutable::create_from_interface( $start_date );
+	}
+
+	/**
+	 * Get end date.
+	 *
+	 * @return DateTimeImmutable|null
+	 */
+	public function get_end_date() {
+		return $this->end_date;
+	}
+
+	/**
+	 * Set end date.
+	 *
+	 * @param \DateTimeInterface|null $end_date End date.
+	 * @return void
+	 */
+	public function set_end_date( $end_date ) {
+		$this->end_date = ( null === $end_date ) ? null : DateTimeImmutable::create_from_interface( $end_date );
 	}
 
 	/**
@@ -211,9 +214,19 @@ class SubscriptionPhase implements \JsonSerializable {
 		}
 
 		/**
-		 * If there are periods created we add these created periods.
+		 * Ok.
 		 */
-		return $this->add_interval( $this->start_date, $this->periods_created );
+		return $this->next_date;
+	}
+
+	/**
+	 * Set next date.
+	 *
+	 * @param \DateTimeInterface|null $next_date Next date.
+	 * @return void
+	 */
+	public function set_next_date( $next_date ) {
+		$this->next_date = ( null === $next_date ) ? null : DateTimeImmutable::create_from_interface( $next_date );
 	}
 
 	/**
@@ -271,7 +284,13 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return int|null
 	 */
 	public function get_total_periods() {
-		return $this->total_periods;
+		if ( null === $this->end_date ) {
+			return null;
+		}
+
+		$period = new \DatePeriod( $this->start_date, $this->interval, $this->end_date );
+
+		return \iterator_count( $period );
 	}
 
 	/**
@@ -281,7 +300,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return void
 	 */
 	public function set_total_periods( $total_periods ) {
-		$this->total_periods = $total_periods;
+		$this->set_end_date( null === $total_periods ? null : $this->add_interval( $this->start_date, $total_periods ) );
 	}
 
 	/**
@@ -290,7 +309,13 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return int
 	 */
 	public function get_periods_created() {
-		return $this->periods_created;
+		if ( null === $this->next_date ) {
+			return 0;
+		}
+
+		$period = new \DatePeriod( $this->start_date, $this->interval, $this->next_date );
+
+		return \iterator_count( $period );
 	}
 
 	/**
@@ -300,7 +325,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return void
 	 */
 	public function set_periods_created( $periods_created ) {
-		$this->periods_created = $periods_created;
+		$this->set_next_date( $this->add_interval( $this->start_date, $periods_created ) );
 	}
 
 	/**
@@ -309,12 +334,16 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return int|null
 	 */
 	public function get_periods_remaining() {
-		if ( null === $this->total_periods ) {
+		if ( null === $this->end_date ) {
 			// Infinite.
 			return null;
 		}
 
-		return $this->total_periods - $this->periods_created;
+		$period = new \DatePeriod( $this->start_date, $this->interval, $this->end_date );
+
+		$total_periods = \iterator_count( $period );
+
+		return $total_periods - $this->get_periods_created();
 	}
 
 	/**
@@ -389,7 +418,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return bool True if infinite, false otherwise.
 	 */
 	public function is_infinite() {
-		return ( null === $this->total_periods );
+		return ( null === $this->end_date );
 	}
 
 	/**
@@ -398,7 +427,15 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return bool True if all periods are created, false otherwise.
 	 */
 	public function all_periods_created() {
-		return ( $this->total_periods === $this->periods_created );
+		if ( null === $this->next_date ) {
+			return true;
+		}
+
+		if ( null === $this->end_date ) {
+			return false;
+		}
+
+		return $this->next_date >= $this->end_date;
 	}
 
 	/**
@@ -413,26 +450,11 @@ class SubscriptionPhase implements \JsonSerializable {
 	}
 
 	/**
-	 * Get end date.
-	 *
-	 * @return DateTimeImmutable|null
-	 * @throws \Exception Throws exception on invalid interval spec.
-	 */
-	public function get_end_date() {
-		if ( null === $this->total_periods ) {
-			// Infinite.
-			return null;
-		}
-
-		return $this->add_interval( $this->start_date, $this->total_periods );
-	}
-
-	/**
 	 * Add subscription phase interval to date.
 	 *
-	 * @param \DateTimeImmutable $date  Date to add interval period to.
-	 * @param int                $times Number of times to add interval.
-	 * @return \DateTimeImmutable
+	 * @param DateTimeImmutable $date  Date to add interval period to.
+	 * @param int               $times Number of times to add interval.
+	 * @return DateTimeImmutable
 	 */
 	private function add_interval( $date, $times = 1 ) {
 		// If times is zero there is nothing to add.
@@ -462,18 +484,16 @@ class SubscriptionPhase implements \JsonSerializable {
 
 		$end = $this->add_interval( $start );
 
-		$period = new SubscriptionPeriod(
-			$this,
-			new DateTime( $start->format( \DATE_ATOM ) ),
-			new DateTime( $end->format( \DATE_ATOM ) ),
-			$this->get_amount()
-		);
+		$period = new SubscriptionPeriod( $this, $start, $end, $this->get_amount() );
 
 		return $period;
 	}
 
 	/**
 	 * Next period.
+	 *
+	 * This method works like the PHP native `next` function, it will advance the internal
+	 * pointer of this subscription phase.
 	 *
 	 * @return SubscriptionPeriod|null
 	 */
@@ -484,7 +504,7 @@ class SubscriptionPhase implements \JsonSerializable {
 			return null;
 		}
 
-		$this->periods_created++;
+		$this->set_next_date( $next_period->get_end_date() );
 
 		return $next_period;
 	}
@@ -508,11 +528,13 @@ class SubscriptionPhase implements \JsonSerializable {
 			),
 			'sequence_number'   => $this->get_sequence_number(),
 			'start_date'        => $this->start_date->format( \DATE_ATOM ),
+			'end_date'          => ( null === $this->end_date ) ? null : $this->end_date->format( \DATE_ATOM ),
+			'next_date'         => ( null === $this->next_date ) ? null : $this->next_date->format( \DATE_ATOM ),
 			'interval'          => $this->interval->get_specification(),
 			'amount'            => $this->amount->jsonSerialize(),
 			// Numbers.
-			'total_periods'     => $this->total_periods,
-			'periods_created'   => $this->periods_created,
+			'total_periods'     => $this->get_total_periods(),
+			'periods_created'   => $this->get_periods_created(),
 			'periods_remaining' => $this->get_periods_remaining(),
 			// Other.
 			'canceled_at'       => ( null === $this->canceled_at ) ? null : $this->canceled_at->format( \DATE_ATOM ),
@@ -555,9 +577,11 @@ class SubscriptionPhase implements \JsonSerializable {
 			throw new \InvalidArgumentException( 'Object must contain `amount` property.' );
 		}
 
+		$start_date = new DateTimeImmutable( $json->start_date );
+
 		$phase = new self(
 			$json->subscription,
-			new \DateTimeImmutable( $json->start_date ),
+			$start_date,
 			new SubscriptionInterval( $json->interval ),
 			MoneyJsonTransformer::from_json( $json->amount )
 		);
@@ -566,8 +590,16 @@ class SubscriptionPhase implements \JsonSerializable {
 			$phase->set_total_periods( $json->total_periods );
 		}
 
+		if ( property_exists( $json, 'end_date' ) ) {
+			$phase->set_end_date( null === $json->end_date ? null : new DateTimeImmutable( $json->end_date ) );
+		}
+
 		if ( property_exists( $json, 'periods_created' ) ) {
 			$phase->set_periods_created( $json->periods_created );
+		}
+
+		if ( property_exists( $json, 'next_date' ) ) {
+			$phase->set_next_date( null === $json->next_date ? null : new DateTimeImmutable( $json->next_date ) );
 		}
 
 		if ( property_exists( $json, 'alignment_rate' ) ) {
@@ -584,7 +616,7 @@ class SubscriptionPhase implements \JsonSerializable {
 
 		if ( property_exists( $json, 'canceled_at' ) ) {
 			if ( null !== $json->canceled_at ) {
-				$phase->set_canceled_at( new \DateTimeImmutable( $json->canceled_at ) );
+				$phase->set_canceled_at( new DateTimeImmutable( $json->canceled_at ) );
 			}
 		}
 
@@ -594,12 +626,12 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Align the phase to align date.
 	 *
-	 * @param self              $phase          The phase to align.
-	 * @param DateTimeImmutable $align_date     The alignment date.
+	 * @param self               $phase          The phase to align.
+	 * @param \DateTimeInterface $align_date     The alignment date.
 	 * @return SubscriptionPhase
 	 * @throws \Exception Throws exception on invalid date interval.
 	 */
-	public static function align( self $phase, DateTimeImmutable $align_date ) {
+	public static function align( self $phase, \DateTimeInterface $align_date ) {
 		$start_date = $phase->get_start_date();
 
 		$next_date = $start_date->add( $phase->get_interval() );

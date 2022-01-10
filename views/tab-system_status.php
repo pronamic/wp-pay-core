@@ -3,7 +3,7 @@
  * Tab System Status
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2021 Pronamic
+ * @copyright 2005-2022 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -116,10 +116,18 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 			<td>
 				<?php
 
-				if ( version_compare( phpversion(), '5.2', '>' ) ) {
-					echo '✓';
-				} else {
-					esc_html_e( 'Pronamic Pay requires PHP 5.2 or above.', 'pronamic_ideal' );
+				$php_version = \phpversion();
+
+				if ( false === $php_version ) {
+					\esc_html_e( 'Unable to get the current PHP version.', 'pronamic_ideal' );
+				}
+
+				if ( false !== $php_version ) {
+					if ( \version_compare( $php_version, '5.2', '>' ) ) {
+						echo '✓';
+					} else {
+						esc_html_e( 'Pronamic Pay requires PHP 5.2 or above.', 'pronamic_ideal' );
+					}
 				}
 
 				?>
@@ -178,7 +186,15 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 
 				$memory = pronamic_pay_let_to_num( WP_MEMORY_LIMIT );
 
-				echo esc_html( size_format( $memory ) );
+				$memory_formatted = size_format( $memory );
+
+				if ( false === $memory_formatted ) {
+					echo \esc_html( (string) $memory );
+				}
+
+				if ( false !== $memory_formatted ) {
+					echo \esc_html( $memory_formatted );
+				}
 
 				?>
 			</td>
@@ -244,15 +260,19 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 			<td>
 				<?php
 
-				if ( function_exists( 'curl_version' ) ) {
-					// @codingStandardsIgnoreStart
-					// Using cURL functions is highly discouraged within VIP context
-					// We only use this cURL function for on the system status page
-					$version = curl_version();
-					// @codingStandardsIgnoreEnd
+				if ( \function_exists( 'curl_version' ) ) {
+					/**
+					 * Using cURL functions is highly discouraged within VIP context.
+					 * We only use this cURL function for on the system status page.
+					 */
+					$curl_version = curl_version();
 
-					if ( isset( $version['version'] ) ) {
-						echo esc_html( $version['version'] );
+					if ( false === $curl_version ) {
+						\esc_html_e( 'Unable to get the current cURL version.', 'pronamic_ideal' );
+					}
+
+					if ( \is_array( $curl_version ) && \array_key_exists( 'version', $curl_version ) ) {
+						echo \esc_html( $curl_version['version'] );
 					}
 				}
 
@@ -269,19 +289,20 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 			<td>
 				<?php
 
-				if ( defined( 'OPENSSL_VERSION_TEXT' ) ) {
-					echo esc_html( OPENSSL_VERSION_TEXT );
+				if ( \defined( 'OPENSSL_VERSION_TEXT' ) ) {
+					echo \esc_html( OPENSSL_VERSION_TEXT );
 				}
 
 				// @link https://www.openssl.org/docs/crypto/OPENSSL_VERSION_NUMBER.html
-				$version_required = 0x000908000;
+				$version_current  = (string) OPENSSL_VERSION_NUMBER;
+				$version_required = (string) 0x000908000;
 
 				?>
 			</td>
 			<td>
 				<?php
 
-				if ( version_compare( OPENSSL_VERSION_NUMBER, 0x000908000, '>' ) ) {
+				if ( \version_compare( $version_current, $version_required, '>' ) ) {
 					echo '✓';
 				} else {
 					esc_html_e( 'Pronamic Pay requires OpenSSL 0.9.8 or above.', 'pronamic_ideal' );
@@ -322,7 +343,7 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 			<td>
 				<?php
 
-				$url = add_query_arg( 'branch', $this->plugin->get_version(), 'https://travis-ci.org/pronamic/wp-pronamic-ideal.png' );
+				$url = add_query_arg( 'branch', pronamic_pay_plugin()->get_version(), 'https://travis-ci.org/pronamic/wp-pronamic-ideal.png' );
 
 				?>
 				<a href="https://travis-ci.org/pronamic/wp-pronamic-ideal">
@@ -333,111 +354,5 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 
 			</td>
 		</tr>
-	</tbody>
-</table>
-
-<?php
-
-$data = get_transient( 'pronamic_pay_ideal_issuers_status' );
-
-if ( ! $data ) {
-
-	$url = 'http://www.ideal-status.nl/static/issuers_current.json';
-
-	$response = wp_remote_get( $url );
-
-	$status_data = null;
-
-	if ( ! is_wp_error( $response ) ) {
-		if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
-			$body = wp_remote_retrieve_body( $response );
-
-			$data = json_decode( $body );
-
-			if ( false !== $data ) {
-				set_transient( 'pronamic_pay_ideal_issuers_status', $data, 30 );
-			}
-		}
-	}
-}
-
-?>
-
-<table class="wp-list-table widefat pronamic-pay-table pronamic-pay-status-table">
-	<thead>
-		<tr>
-			<th colspan="5">
-				<?php esc_html_e( 'iDEAL issuers status', 'pronamic_ideal' ); ?>
-
-				—
-
-				<?php
-
-				echo wp_kses(
-					sprintf(
-						/* translators: %s: iDEAL-status.nl link */
-						__( 'monitored by <a href="%s" target="_blank">iDEAL-status.nl</a>', 'pronamic_ideal' ),
-						'http://www.ideal-status.nl/'
-					),
-					array(
-						'a' => array(
-							'href'   => true,
-							'target' => true,
-						),
-					)
-				);
-
-				?>
-			</th>
-		</tr>
-		<tr class="alternate">
-			<th scope="col">
-				<?php esc_html_e( 'Issuer', 'pronamic_ideal' ); ?>
-			</th>
-			<th scope="col">
-				<?php esc_html_e( 'Success', 'pronamic_ideal' ); ?>
-			</th>
-			<th scope="col">
-				<?php esc_html_e( 'Failure', 'pronamic_ideal' ); ?>
-			</th>
-			<th scope="col">
-				<?php esc_html_e( 'Date', 'pronamic_ideal' ); ?>
-			</th>
-		</tr>
-	</thead>
-
-	<tbody>
-
-		<?php if ( is_object( $data ) ) : ?>
-
-			<?php $alternate = true; ?>
-
-			<?php foreach ( $data as $issuer ) : ?>
-
-				<?php $alternate = ! $alternate; ?>
-
-				<tr<?php echo ( $alternate ? ' class="alternate"' : null ); ?>>
-					<td>
-						<small><?php echo esc_html( $issuer->issuer_id ); ?></small>
-
-						–
-
-						<?php echo esc_html( $issuer->issuer_name ); ?>
-					</td>
-					<td>
-						<?php echo esc_html( number_format( $issuer->rate_success * 100, 1, ',', '.' ) ); ?>%
-					</td>
-					<td>
-						<?php echo esc_html( number_format( $issuer->rate_failure * 100, 1, ',', '.' ) ); ?>%
-					</td>
-					<td>
-						<?php echo esc_html( $issuer->datetime ); ?>
-					</td>
-				</tr>
-
-			<?php endforeach; ?>
-
-		<?php endif; ?>
-
 	</tbody>
 </table>
