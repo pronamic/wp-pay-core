@@ -7,6 +7,29 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [4.0.0] - 2022-01-10
+### Added
+- Added setting to disable subscriptions processing (requires debug mode to enable).
+- Added https://actionscheduler.org/ library for subscription processes.
+- Added BLIK and MB WAY payment methods.
+- Added support for TWINT payment method.
+- Added payment method icon to amount column and info meta boxes.
+
+### Changed
+- Refactored subscription follow-up payments processes.
+- Increased WordPress requirement to version `5.2` or higher.
+- Improved usage of https://github.com/pronamic/wp-money.
+- Updated https://github.com/pronamic/wp-html library.
+- Updated https://github.com/pronamic/wp-pay-logos to version `1.7.0`.
+- Cleaned up legacy properties and functions.
+- Store less data in post meta.
+- Solved all PHPStan errors.
+- Explain badge count in admin menu by adding `title` attribute.
+
+### Removed
+- Removed http://www.ideal-status.nl/ dashboard widget.
+- Removed Moneyou brand.
+
 ## [3.2.0] - 2021-09-30
 - Start using `<input type="number">` in payment forms en test meta box.
 - Removed `Util::string_to_amount( $value )` function.
@@ -417,7 +440,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/pronamic/wp-pay-core/compare/3.2.0...HEAD
+[unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.0.0...HEAD
+[4.0.0]: https://github.com/pronamic/wp-pay-core/compare/3.2.0...4.0.0
 [3.2.0]: https://github.com/pronamic/wp-pay-core/compare/3.1.1...3.2.0
 [3.1.1]: https://github.com/pronamic/wp-pay-core/compare/3.1.0...3.1.1
 [3.1.0]: https://github.com/pronamic/wp-pay-core/compare/3.0.1...3.1.0
