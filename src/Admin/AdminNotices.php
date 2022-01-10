@@ -38,6 +38,7 @@ class AdminNotices {
 		$this->plugin = $plugin;
 
 		// Actions.
+		add_action( 'admin_init', array( $this, 'admin_init' ) );
 		add_action( 'admin_notices', array( $this, 'admin_notices' ), 11 );
 	}
 
@@ -97,71 +98,92 @@ class AdminNotices {
 	 * Removed support notices.
 	 *
 	 * @link https://github.com/pronamic/wp-pronamic-pay/issues/293
+	 * @return void
 	 */
 	private function removed_support_notices() {
-		$items = array(
-			(object) array(
-				'id'          => 'removed-extension-active-event-espresso-legacy',
-				'name'        => \__( 'Event Espresso 3', 'pronamic_ideal' ),
-				'condition'   => \defined( '\EVENT_ESPRESSO_VERSION' ) && \version_compare( \EVENT_ESPRESSO_VERSION, '4.0.0', '<' ),
-				'dismissible' => true,
-				'version'     => '8',
-			),
-			(object) array(
-				'id'          => 'removed-extension-active-s2member',
-				'name'        => \__( 's2Member', 'pronamic_ideal' ),
-				'condition'   => \defined( '\WS_PLUGIN__S2MEMBER_VERSION' ),
-				'dismissible' => true,
-				'version'     => '8',
-			),
-			(object) array(
-				'id'          => 'removed-extension-active-wp-e-commerce',
-				'name'        => \__( 'WP eCommerce', 'pronamic_ideal' ),
-				'condition'   => \class_exists( '\WP_eCommerce' ),
-				'dismissible' => true,
-				'version'     => '8',
-			),
-		);
+		$notifications = \apply_filters( 'pronamic_pay_removed_extension_notifications', array() );
 
-		foreach ( $items as $item ) {
-			$this->removed_support_notice( $item );
+		foreach ( $notifications as $notification ) {
+			$this->removed_support_notice( $notification );
 		}
 	}
 
 	/**
 	 * Removed support notice.
 	 *
-	 * @param object $item Item.
-	 * @retun void
+	 * @param AdminNotification $notification Notification.
+	 * @return void
 	 */
-	private function removed_support_notice( $item ) {
-		if ( false === $item->condition ) {
-			return;
+	private function removed_support_notice( $notification ) {
+		if ( ! $notification->is_met() ) {
+			//return;
 		}
 
-		$is_dismissed = (bool) \get_user_option( 'pronamic_pay_dismissed_notification_' . $item->id, \get_current_user_id() );
+		$is_dismissed = (bool) \get_user_option( 'pronamic_pay_dismissed_notification:' . $notification->get_id(), \get_current_user_id() );
 
 		if ( true === $is_dismissed ) {
 			return;
 		}
 
-		$message = \sprintf(
-			'We notice that the "%1$s" plugin is active, support for the "%1$s" plugin has been removed from the Pronamic Pay plugin since version %2$s.',
-			$item->name,
-			$item->version
-		);
-
-		$dismiss_notification_url = \add_query_arg( 'pronamic_pay_dismiss_notification', $item->id );
+		$dismiss_notification_url = \add_query_arg( 'pronamic_pay_dismiss_notification', $notification->get_id() );
+		$dismiss_notification_url = \wp_nonce_url( $dismiss_notification_url, 'pronamic_pay_dismiss_notification:' . $notification->get_id(), 'pronamic_pay_dismiss_notification_nonce' )
 
 		?>
 		<div class="error notice is-dismissible">
 			<p>
 				<strong><?php esc_html_e( 'Pronamic Pay', 'pronamic_ideal' ); ?></strong> —
-				<?php echo \esc_html( $message ); ?>
+				<?php echo \esc_html( $notification->get_message() ); ?>
 			</p>
 
 			<a href="<?php echo \esc_url( $dismiss_notification_url ); ?>" class="notice-dismiss"><span class="screen-reader-text"><?php \esc_html_e( 'Dismiss this notice.', 'pronamic_ideal' ); ?></span></a>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Maybe dismiss notification.
+	 * 
+	 * @link https://github.com/woocommerce/woocommerce/blob/c3405cf06f7ddea3aad2185dc8541955853c2575/plugins/woocommerce/includes/admin/class-wc-admin-notices.php#L160-L181
+	 * @return void
+	 */
+	public function admin_init() {
+		if ( ! \array_key_exists( 'pronamic_pay_dismiss_notification', $_GET ) ) {
+			return;
+		}
+
+		if ( ! \array_key_exists( 'pronamic_pay_dismiss_notification_nonce', $_GET ) ) {
+			return;
+		}
+
+		$id    = \sanitize_text_field( \wp_unslash( $_GET['pronamic_pay_dismiss_notification'] ) );
+		$nonce = \sanitize_text_field( \wp_unslash( $_GET['pronamic_pay_dismiss_notification_nonce'] ) );
+
+		if ( ! \wp_verify_nonce( $nonce, 'pronamic_pay_dismiss_notification:' . $id ) ) {
+			\wp_die( \esc_html__( 'Action failed. Please refresh the page and retry.', 'pronamic_ideal' ) );
+		}
+
+		if ( ! \current_user_can( 'manage_options' ) ) {
+			\wp_die( \esc_html__( 'You don’t have permission to do this.', 'pronamic_ideal' ) );
+		}
+
+		$result = \update_user_option( \get_current_user_id(), 'pronamic_pay_dismissed_notification:' . $id, true );
+
+		if ( false === $result ) {
+			\wp_die( \esc_html__( 'Action failed. Please refresh the page and retry.', 'pronamic_ideal' ) );
+		}
+
+		// Redirect.
+		$url = \add_query_arg(
+			array(
+				'pronamic_pay_dismiss_notification'       => false,
+				'pronamic_pay_dismiss_notification_nonce' => false,
+				'pronamic_pay_dismissed_notification'     => $id,
+			),
+			\wp_get_referer()
+		);
+
+		\wp_safe_redirect( $url );
+
+		exit;
 	}
 }
