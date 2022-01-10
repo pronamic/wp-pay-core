@@ -116,7 +116,7 @@ class AdminNotices {
 	 */
 	private function removed_support_notice( $notification ) {
 		if ( ! $notification->is_met() ) {
-			//return;
+			return;
 		}
 
 		$is_dismissed = (bool) \get_user_option( 'pronamic_pay_dismissed_notification:' . $notification->get_id(), \get_current_user_id() );
