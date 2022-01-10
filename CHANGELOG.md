@@ -7,6 +7,10 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [4.0.1] - 2022-01-10
+### Changed
+- Set https://actionscheduler.org/ version constraint to `^3.0`.
+
 ## [4.0.0] - 2022-01-10
 ### Added
 - Added setting to disable subscriptions processing (requires debug mode to enable).
@@ -440,7 +444,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.0.0...HEAD
+[unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.0.1...HEAD
+[4.0.1]: https://github.com/pronamic/wp-pay-core/compare/4.0.0...4.0.1
 [4.0.0]: https://github.com/pronamic/wp-pay-core/compare/3.2.0...4.0.0
 [3.2.0]: https://github.com/pronamic/wp-pay-core/compare/3.1.1...3.2.0
 [3.1.1]: https://github.com/pronamic/wp-pay-core/compare/3.1.0...3.1.1
