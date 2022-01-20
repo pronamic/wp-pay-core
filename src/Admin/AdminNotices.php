@@ -101,7 +101,14 @@ class AdminNotices {
 	 * @return void
 	 */
 	private function removed_support_notices() {
-		$notifications = \apply_filters( 'pronamic_pay_removed_extension_notifications', array() );
+		$notifications = array();
+
+		/**
+		 * Filters the removed extensions notifications.
+		 *
+		 * @param AdminNotification[] $notifications Notifications for removed extensions.
+		 */
+		$notifications = \apply_filters( 'pronamic_pay_removed_extension_notifications', $notifications );
 
 		foreach ( $notifications as $notification ) {
 			$this->removed_support_notice( $notification );
@@ -142,7 +149,7 @@ class AdminNotices {
 
 	/**
 	 * Maybe dismiss notification.
-	 * 
+	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/c3405cf06f7ddea3aad2185dc8541955853c2575/plugins/woocommerce/includes/admin/class-wc-admin-notices.php#L160-L181
 	 * @return void
 	 */
