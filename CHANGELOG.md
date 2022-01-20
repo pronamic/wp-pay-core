@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
--
+- Updated https://github.com/pronamic/wp-pay-logos to version `1.7.1`.
 
 ## [4.0.1] - 2022-01-10
 ### Changed
