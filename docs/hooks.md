@@ -451,6 +451,18 @@ Argument | Type | Description
 
 Source: [src/Admin/AdminGatewayPostType.php](../src/Admin/AdminGatewayPostType.php), [line 147](../src/Admin/AdminGatewayPostType.php#L147-L158)
 
+### `pronamic_pay_removed_extension_notifications`
+
+*Filters the removed extensions notifications.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$notifications` | `\Pronamic\WordPress\Pay\Admin\AdminNotification[]` | Notifications for removed extensions.
+
+Source: [src/Admin/AdminNotices.php](../src/Admin/AdminNotices.php), [line 106](../src/Admin/AdminNotices.php#L106-L111)
+
 ### `pronamic_subscription_source_text_{$source}`
 
 *Filters the subscription source text by plugin integration source.*
