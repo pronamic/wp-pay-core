@@ -534,8 +534,7 @@ class AdminPaymentPostType {
 
 				break;
 			case 'pronamic_payment_gateway':
-				$config_id = get_post_meta( $post_id, '_pronamic_payment_config_id', true );
-				$config_id = intval( $config_id );
+				$config_id = (int) $payment->get_config_id();
 
 				$gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 
@@ -572,7 +571,7 @@ class AdminPaymentPostType {
 
 				break;
 			case 'pronamic_payment_description':
-				echo esc_html( get_post_meta( $post_id, '_pronamic_payment_description', true ) );
+				echo esc_html( (string) $payment->get_description() );
 
 				break;
 			case 'pronamic_payment_amount':
