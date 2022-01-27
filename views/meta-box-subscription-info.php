@@ -166,7 +166,7 @@ $phase = $subscription->get_display_phase();
 
 				$next_payment_date = $subscription->get_next_payment_date();
 
-				echo empty( $next_payment_date ) ? '—' : esc_html( $next_payment_date->format_i18n() );
+				echo empty( $next_payment_date ) ? '—' : esc_html( $next_payment_date->format_i18n( 'D j M Y' ) );
 
 				?>
 			</td>
@@ -181,7 +181,7 @@ $phase = $subscription->get_display_phase();
 
 				$next_payment_delivery_date = $subscription->get_next_payment_delivery_date();
 
-				echo empty( $next_payment_delivery_date ) ? '—' : esc_html( $next_payment_delivery_date->format_i18n() );
+				echo empty( $next_payment_delivery_date ) ? '—' : esc_html( $next_payment_delivery_date->format_i18n( 'D j M Y' ) );
 
 				?>
 			</td>
