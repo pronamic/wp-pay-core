@@ -40,9 +40,13 @@ $client = new \Pronamic\WordPress\Pay\Gateways\Mollie\Client( $api_key );
  *
  * @link https://docs.mollie.com/reference/v2/mandates-api/list-mandates
  */
-$response = $client->get_mandates( $mollie_customer_id );
+try {
+	$response = $client->get_mandates( $mollie_customer_id );
 
-$mollie_customer_mandates = $response->_embedded->mandates;
+	$mollie_customer_mandates = $response->_embedded->mandates;
+} catch ( \Exception $exception ) {
+	$mollie_customer_mandates = array();
+}
 
 $subscription_mandate_id = $subscription->get_meta( 'mollie_mandate_id' );
 
