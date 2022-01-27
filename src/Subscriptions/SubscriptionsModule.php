@@ -498,9 +498,6 @@ class SubscriptionsModule {
 
 				$payment->set_total_amount( $total_amount );
 
-				// Add period.
-				$payment->add_subscription( $subscription );
-
 				// Make sure to only start payments for supported gateways.
 				$gateway = $payment->get_gateway();
 
