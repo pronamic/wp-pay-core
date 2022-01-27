@@ -231,9 +231,15 @@ class SubscriptionsFollowUpPaymentsController {
 			return false;
 		}
 
-		$date = new \DateTimeImmutable();
+		$today = new \DateTimeImmutable( 'today', new \DateTimeZone( 'GMT' ) );
 
-		if ( $next_payment_date > $date && $next_payment_delivery_date > $date ) {
+		if ( $next_payment_date < $today && $next_payment_delivery_date < $today ) {
+			return false;
+		}
+
+		$tomorrow = new \DateTimeImmutable( 'tomorrow', new \DateTimeZone( 'GMT' ) );
+
+		if ( $next_payment_date >= $tomorrow && $next_payment_delivery_date >= $tomorrow ) {
 			return false;
 		}
 
@@ -346,7 +352,8 @@ class SubscriptionsFollowUpPaymentsController {
 	 * @return WP_Query
 	 */
 	private function get_subscriptions_wp_query_that_require_follow_up_payment( $args = array() ) {
-		$date = new \DateTimeImmutable( 'now', new \DateTimeZone( 'GMT' ) );
+		$today    = new \DateTimeImmutable( 'today', new \DateTimeZone( 'GMT' ) );
+		$tomorrow = new \DateTimeImmutable( 'tomorrow', new \DateTimeZone( 'GMT' ) );
 
 		$query_args = array(
 			'post_type'      => 'pronamic_pay_subscr',
@@ -366,14 +373,20 @@ class SubscriptionsFollowUpPaymentsController {
 					'relation' => 'OR',
 					array(
 						'key'     => '_pronamic_subscription_next_payment',
-						'compare' => '<=',
-						'value'   => $date->format( 'Y-m-d H:i:s' ),
+						'compare' => 'BETWEEN',
+						'value'   => array(
+							$today->format( 'Y-m-d H:i:s' ),
+							$tomorrow->format( 'Y-m-d H:i:s' ),
+						),
 						'type'    => 'DATETIME',
 					),
 					array(
 						'key'     => '_pronamic_subscription_next_payment_delivery_date',
-						'compare' => '<=',
-						'value'   => $date->format( 'Y-m-d H:i:s' ),
+						'compare' => 'BETWEEN',
+						'value'   => array(
+							$today->format( 'Y-m-d H:i:s' ),
+							$tomorrow->format( 'Y-m-d H:i:s' ),
+						),
 						'type'    => 'DATETIME',
 					),
 				),
