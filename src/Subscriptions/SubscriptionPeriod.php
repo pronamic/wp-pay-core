@@ -265,11 +265,12 @@ class SubscriptionPeriod {
 		$start = $this->get_start_date();
 		$end   = $this->get_end_date();
 
-		$format_start = $format;
-
-		if ( null === $format_start ) {
-			$format_start = __( 'D j M Y', 'pronamic_ideal' );
+		if ( null === $format ) {
+			$format = __( 'D j M Y', 'pronamic_ideal' );
 		}
+
+		$format_start = $format;
+		$format_end   = $format;
 
 		// Check if year is equal.
 		if ( $start->format( 'Y' ) === $end->format( 'Y' ) ) {
@@ -278,14 +279,20 @@ class SubscriptionPeriod {
 			// Check if month is equal.
 			if ( $start->format( 'm' ) === $end->format( 'm' ) ) {
 				$format_start = \str_replace( ' m', '', $format_start );
+				$format_start = \str_replace( ' M', '', $format_start );
 			}
+		}
+
+		// Check if day is equal.
+		if ( $start->format( 'D' ) === $end->format( 'D' ) ) {
+			$format_end = \str_replace( 'D ', '', $format_end );
 		}
 
 		return \sprintf(
 			'%1$s %2$s %3$s',
 			$start->format_i18n( $format_start ),
 			\esc_html( $separator ),
-			$end->format_i18n( $format )
+			$end->format_i18n( $format_end )
 		);
 	}
 }
