@@ -387,9 +387,6 @@ class SubscriptionsModule {
 					$payment->add_period( $renewal_period );
 				}
 
-				// Set Mollie sequence type to first.
-				$payment->set_meta( 'mollie_sequence_type', 'first' );
-
 				// Start payment.
 				$payment = Plugin::start_payment( $payment );
 			} catch ( \Exception $e ) {
