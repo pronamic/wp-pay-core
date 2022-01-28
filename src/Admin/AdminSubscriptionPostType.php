@@ -482,7 +482,7 @@ class AdminSubscriptionPostType {
 			case 'pronamic_subscription_next_payment':
 				$next_payment_date = $subscription->get_next_payment_date();
 
-				echo empty( $next_payment_date ) ? '—' : esc_html( $next_payment_date->format_i18n( 'D j M Y' ) );
+				echo empty( $next_payment_date ) ? '—' : esc_html( $next_payment_date->format_i18n( \__( 'D j M Y', 'pronamic_ideal' ) ) );
 
 				break;
 			case 'pronamic_subscription_date':

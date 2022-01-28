@@ -103,7 +103,7 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 
 							$next_date = $phase->get_next_date();
 
-							echo esc_html( null === $next_date ? '—' : ( new \Pronamic\WordPress\DateTime\DateTime( '@' . $next_date->getTimestamp() ) )->format_i18n( 'D j M Y' ) );
+							echo esc_html( null === $next_date ? '—' : ( new \Pronamic\WordPress\DateTime\DateTime( '@' . $next_date->getTimestamp() ) )->format_i18n( __( 'D j M Y', 'pronamic_ideal' ) ) );
 
 							?>
 						</td>
