@@ -231,15 +231,15 @@ class SubscriptionsFollowUpPaymentsController {
 			return false;
 		}
 
-		$today = new \DateTimeImmutable( 'today', new \DateTimeZone( 'GMT' ) );
+		$query_start_date = $this->get_follow_up_payment_query_start_date();
 
-		if ( $next_payment_date < $today && $next_payment_delivery_date < $today ) {
+		if ( $next_payment_date < $query_start_date && $next_payment_delivery_date < $query_start_date ) {
 			return false;
 		}
 
-		$tomorrow = new \DateTimeImmutable( 'tomorrow', new \DateTimeZone( 'GMT' ) );
+		$query_end_date = $this->get_follow_up_payment_query_end_date();
 
-		if ( $next_payment_date >= $tomorrow && $next_payment_delivery_date >= $tomorrow ) {
+		if ( $next_payment_date > $query_end_date && $next_payment_delivery_date > $query_end_date ) {
 			return false;
 		}
 
@@ -346,14 +346,34 @@ class SubscriptionsFollowUpPaymentsController {
 	}
 
 	/**
+	 * Get query start date for subscriptions that require a follow-up payment.
+	 *
+	 * @return \DateTimeImmutable
+	 * @throws \Exception Throws exception in case of error.
+	 */
+	private function get_follow_up_payment_query_start_date() {
+		return new \DateTimeImmutable( '-1 day', new \DateTimeZone( 'GMT' ) );
+	}
+
+	/**
+	 * Get query end date for subscriptions that require a follow-up payment.
+	 *
+	 * @return \DateTimeImmutable
+	 * @throws \Exception Throws exception in case of error.
+	 */
+	private function get_follow_up_payment_query_end_date() {
+		return new \DateTimeImmutable( 'now', new \DateTimeZone( 'GMT' ) );
+	}
+
+	/**
 	 * Get WordPress query for subscriptions that require a follow-up payment.
 	 *
 	 * @param array $args Arguments.
 	 * @return WP_Query
 	 */
 	private function get_subscriptions_wp_query_that_require_follow_up_payment( $args = array() ) {
-		$today    = new \DateTimeImmutable( 'today', new \DateTimeZone( 'GMT' ) );
-		$tomorrow = new \DateTimeImmutable( 'tomorrow', new \DateTimeZone( 'GMT' ) );
+		$start_date = $this->get_follow_up_payment_query_start_date();
+		$end_date   = $this->get_follow_up_payment_query_end_date();
 
 		$query_args = array(
 			'post_type'      => 'pronamic_pay_subscr',
@@ -375,8 +395,8 @@ class SubscriptionsFollowUpPaymentsController {
 						'key'     => '_pronamic_subscription_next_payment',
 						'compare' => 'BETWEEN',
 						'value'   => array(
-							$today->format( 'Y-m-d H:i:s' ),
-							$tomorrow->format( 'Y-m-d H:i:s' ),
+							$start_date->format( 'Y-m-d H:i:s' ),
+							$end_date->format( 'Y-m-d H:i:s' ),
 						),
 						'type'    => 'DATETIME',
 					),
@@ -384,8 +404,8 @@ class SubscriptionsFollowUpPaymentsController {
 						'key'     => '_pronamic_subscription_next_payment_delivery_date',
 						'compare' => 'BETWEEN',
 						'value'   => array(
-							$today->format( 'Y-m-d H:i:s' ),
-							$tomorrow->format( 'Y-m-d H:i:s' ),
+							$start_date->format( 'Y-m-d H:i:s' ),
+							$end_date->format( 'Y-m-d H:i:s' ),
 						),
 						'type'    => 'DATETIME',
 					),
