@@ -150,6 +150,10 @@ class SubscriptionsFollowUpPaymentsController {
 
 		$query = $this->get_subscriptions_wp_query_that_require_follow_up_payment();
 
+		if ( 0 === $query->max_num_pages ) {
+			return;
+		}
+
 		$pages = \range( $query->max_num_pages, 1 );
 
 		foreach ( $pages as $page ) {
@@ -174,7 +178,7 @@ class SubscriptionsFollowUpPaymentsController {
 	}
 
 	/**
-	 * Scheduel subscriptions follow-up payment.
+	 * Schedule subscriptions follow-up payment.
 	 *
 	 * @param int $page Page.
 	 * @return void
