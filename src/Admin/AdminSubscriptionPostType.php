@@ -165,6 +165,8 @@ class AdminSubscriptionPostType {
 
 				$payment = $period->new_payment();
 
+				$payment->set_meta( 'mollie_sequence_type', 'recurring' );
+
 				$payment->set_lines( $subscription->get_lines() );
 
 				$payment = Plugin::start_payment( $payment );
