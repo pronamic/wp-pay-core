@@ -252,7 +252,6 @@ class AdminSubscriptionPostType {
 		}
 
 		$map = array(
-			'pronamic_subscription_amount'       => '_pronamic_subscription_amount',
 			'pronamic_subscription_customer'     => '_pronamic_subscription_customer_name',
 			'pronamic_subscription_next_payment' => '_pronamic_subscription_next_payment',
 		);
@@ -265,11 +264,6 @@ class AdminSubscriptionPostType {
 
 		$query->set( 'meta_key', $meta_key );
 		$query->set( 'orderby', 'meta_value' );
-
-		// Set query meta key.
-		if ( 'pronamic_subscription_amount' === $orderby ) {
-			$query->set( 'orderby', 'meta_value_num' );
-		}
 	}
 
 	/**
@@ -306,7 +300,6 @@ class AdminSubscriptionPostType {
 	 */
 	public function sortable_columns( $sortable_columns ) {
 		$sortable_columns['pronamic_subscription_title']        = 'ID';
-		$sortable_columns['pronamic_subscription_amount']       = 'pronamic_subscription_amount';
 		$sortable_columns['pronamic_subscription_customer']     = 'pronamic_subscription_customer_name';
 		$sortable_columns['pronamic_subscription_next_payment'] = 'pronamic_subscription_next_payment';
 		$sortable_columns['pronamic_subscription_date']         = 'date';

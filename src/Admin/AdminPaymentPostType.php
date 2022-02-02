@@ -294,7 +294,6 @@ class AdminPaymentPostType {
 		}
 
 		$map = array(
-			'pronamic_payment_amount'      => '_pronamic_payment_amount',
 			'pronamic_payment_customer'    => '_pronamic_payment_customer_name',
 			'pronamic_payment_transaction' => '_pronamic_payment_transaction_id',
 		);
@@ -307,11 +306,6 @@ class AdminPaymentPostType {
 
 		$query->set( 'meta_key', $meta_key );
 		$query->set( 'orderby', 'meta_value' );
-
-		// Set query meta key.
-		if ( 'pronamic_payment_amount' === $orderby ) {
-			$query->set( 'orderby', 'meta_value_num' );
-		}
 	}
 
 	/**
@@ -369,7 +363,6 @@ class AdminPaymentPostType {
 		$sortable_columns['pronamic_payment_title']       = 'ID';
 		$sortable_columns['pronamic_payment_transaction'] = 'pronamic_payment_transaction';
 		$sortable_columns['pronamic_payment_customer']    = 'pronamic_payment_customer';
-		$sortable_columns['pronamic_payment_amount']      = 'pronamic_payment_amount';
 		$sortable_columns['pronamic_payment_date']        = 'date';
 
 		return $sortable_columns;
