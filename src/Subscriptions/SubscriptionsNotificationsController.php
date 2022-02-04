@@ -57,6 +57,10 @@ class SubscriptionsNotificationsController {
 
 		$query = $this->get_subscriptions_wp_query_that_require_notification();
 
+		if ( 0 === $query->max_num_pages ) {
+			return;
+		}
+
 		$pages = \range( $query->max_num_pages, 1 );
 
 		foreach ( $pages as $page ) {
