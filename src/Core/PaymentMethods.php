@@ -247,7 +247,7 @@ class PaymentMethods {
 
 	/**
 	 * Constant for the Klarna Pay Later payment method.
-	 * 
+	 *
 	 * Klarna Pay Later is not one specific payment method, but a category with a number of pay later payment methods.
 	 *
 	 * @link https://docs.klarna.com/klarna-payments/in-depth-knowledge/payment-method-grouping/
@@ -258,7 +258,7 @@ class PaymentMethods {
 
 	/**
 	 * Constant for the Klarna Pay Now payment method.
-	 * 
+	 *
 	 * Klarna Pay Now is not one specific payment method, but a category with a number of pay later payment methods.
 	 *
 	 * @link https://docs.klarna.com/klarna-payments/in-depth-knowledge/payment-method-grouping/
@@ -269,7 +269,7 @@ class PaymentMethods {
 
 	/**
 	 * Constant for the Klarna Pay Over Time payment method.
-	 * 
+	 *
 	 * Klarna Pay Over Time is not one specific payment method, but a category with a number of pay over time payment methods.
 	 * Klarna Pay Over Time is also known as Klarna Slice It, some payment providers also use this naming convention.
 	 *

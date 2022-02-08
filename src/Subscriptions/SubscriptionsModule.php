@@ -596,7 +596,6 @@ class SubscriptionsModule {
 	/**
 	 * Maybe schedule subscription payments.
 	 *
-	 * @todo Start using https://actionscheduler.org/.
 	 * @return void
 	 */
 	public function maybe_schedule_subscription_events() {
