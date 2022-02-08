@@ -210,7 +210,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$subscription` | `\Pronamic\WordPress\Pay\Subscriptions\Subscription` | Subscription.
 
-Source: [src/Subscriptions/SubscriptionsNotificationsController.php](../src/Subscriptions/SubscriptionsNotificationsController.php), [line 243](../src/Subscriptions/SubscriptionsNotificationsController.php#L243-L250)
+Source: [src/Subscriptions/SubscriptionsNotificationsController.php](../src/Subscriptions/SubscriptionsNotificationsController.php), [line 247](../src/Subscriptions/SubscriptionsNotificationsController.php#L247-L254)
 
 ## Filters
 
