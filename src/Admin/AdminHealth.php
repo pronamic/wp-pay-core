@@ -449,6 +449,23 @@ class AdminHealth {
 						);
 					}
 
+					// Ignore patch version if plugin and tested versions are equal.
+					if ( ! $is_below_tested_version ) {
+						$plugin_parts = explode( '.', $plugin['Version'] );
+						$tested_parts = explode( '.', $tested_up_to );
+
+						$num_parts = count( $tested_parts );
+
+						if ( $num_parts >= 2 && count( $plugin_parts ) === $num_parts ) {
+							$short_plugin_version = sprintf( '%s.%s', $plugin_parts[0], $plugin_parts[1] );
+							$short_tested_version = sprintf( '%s.%s', $tested_parts[0], $tested_parts[1] );
+
+							if ( $short_plugin_version === $short_tested_version ) {
+								$is_below_tested_version = true;
+							}
+						}
+					}
+
 					if ( ! $is_below_tested_version ) {
 						// Plugin version is higher than tested version.
 						$untested_plugin_versions[] = sprintf(
