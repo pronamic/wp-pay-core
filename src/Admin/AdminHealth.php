@@ -161,11 +161,7 @@ class AdminHealth {
 
 			$integration = $this->plugin->gateway_integrations->get_integration( $gateway_id );
 
-			$active[] = sprintf(
-				'%s (%s)',
-				null === $integration ? $gateway_id : $integration->get_name(),
-				\get_post_meta( $post->ID, '_pronamic_gateway_mode', true )
-			);
+			$active[] = ( null === $integration ) ? $gateway_id : $integration->get_name();
 		}
 
 		$active = \array_unique( $active );
