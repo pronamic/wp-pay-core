@@ -7,6 +7,19 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 - Updated https://github.com/pronamic/wp-pay-logos to version `1.7.1`.
 
+## [4.0.2] - 2022-02-16
+- Changed minimum PHP version requirement to `7.4` ([pronamic/wp-pronamic-pay#274](https://github.com/pronamic/wp-pronamic-pay/issues/274)).
+- Changed follow-up payments query to subscriptions which needed renewal in past 24 hours only.
+- Added next payment date column in subscriptions admin ([pronamic/wp-pronamic-pay#288](https://github.com/pronamic/wp-pronamic-pay/issues/288)).
+- Fixed empty payment description admin column.
+- Fixed error on subscription mandate selection page with invalid Mollie customer.
+- Fixed possible infinite loop on updating active payment methods ([#54](https://github.com/pronamic/wp-pay-core/issues/54)).
+- Fixed setting Mollie sequence type when manually re-trying payment for a period.
+- Updated scheduling follow-up payments pages.
+- Updated site health tests and debug information.
+- Updated [pronamic/wp-pay-logos](https://github.com/pronamic/wp-pay-logos) library to version `1.7.1`.
+- Removed time from next payment dates in admin.
+
 ## [4.0.1] - 2022-01-10
 ### Changed
 - Set https://actionscheduler.org/ version constraint to `^3.0`.
@@ -444,7 +457,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.0.1...HEAD
+[unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.0.2...HEAD
+[4.0.2]: https://github.com/pronamic/wp-pay-core/compare/4.0.1...4.0.2
 [4.0.1]: https://github.com/pronamic/wp-pay-core/compare/4.0.0...4.0.1
 [4.0.0]: https://github.com/pronamic/wp-pay-core/compare/3.2.0...4.0.0
 [3.2.0]: https://github.com/pronamic/wp-pay-core/compare/3.1.1...3.2.0
