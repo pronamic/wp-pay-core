@@ -769,11 +769,7 @@ class Plugin {
 
 			$id = $post->ID;
 
-			$options[ $id ] = sprintf(
-				'%s (%s)',
-				get_the_title( $id ),
-				get_post_meta( $id, '_pronamic_gateway_mode', true )
-			);
+			$options[ $id ] = \get_the_title( $id );
 		}
 
 		return $options;
