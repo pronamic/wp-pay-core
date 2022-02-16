@@ -915,15 +915,6 @@ class Plugin {
 			$payment->set_version( pronamic_pay_plugin()->get_version() );
 		}
 
-		// Mode.
-		$config_id = $payment->get_config_id();
-
-		if ( null === $payment->get_mode() && null !== $config_id ) {
-			$mode = get_post_meta( $config_id, '_pronamic_gateway_mode', true );
-
-			$payment->set_mode( $mode );
-		}
-
 		// Issuer.
 		$issuer = $payment->get_meta( 'issuer' );
 
@@ -1051,6 +1042,9 @@ class Plugin {
 
 			return $payment;
 		}
+
+		// Mode.
+		$payment->set_mode( $gateway->get_mode() );
 
 		// Subscriptions.
 		$subscriptions = $payment->get_subscriptions();
