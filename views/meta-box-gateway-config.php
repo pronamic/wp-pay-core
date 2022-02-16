@@ -126,43 +126,6 @@ $gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 				<p id="pronamic-pay-gateway-description"></p>
 			</td>
 		</tr>
-		<tr class="">
-			<th scope="row">
-				<label for="pronamic_ideal_mode">
-					<?php echo esc_html__( 'Mode', 'pronamic_ideal' ); ?>
-				</label>
-			</th>
-			<td>
-				<?php
-
-				$attributes = array(
-					'id'    => 'pronamic_ideal_mode',
-					'name'  => '_pronamic_gateway_mode',
-					'class' => 'pronamic-pay-form-control',
-				);
-
-				$options = array(
-					array(
-						'options' => array(
-							'test' => __( 'Test', 'pronamic_ideal' ),
-							'live' => __( 'Live', 'pronamic_ideal' ),
-						),
-					),
-				);
-
-				$value = get_post_meta( $config_id, '_pronamic_gateway_mode', true );
-
-				printf(
-					'<select %s>%s</select>',
-					// @codingStandardsIgnoreStart
-					Util::array_to_html_attributes( $attributes ),
-					Util::select_options_grouped( $options, $value )
-					// @codingStandardsIgnoreEnd
-				);
-
-				?>
-			</td>
-		</tr>
 	</table>
 </div>
 
