@@ -539,7 +539,7 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 				<td>
 					<?php
 
-					echo esc_html( $birth_date->format_i18n( 'D j M Y' ) )
+					echo esc_html( $birth_date->format_i18n( __( 'D j M Y', 'pronamic_ideal' ) ) )
 
 					?>
 				</td>

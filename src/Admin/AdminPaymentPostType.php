@@ -294,7 +294,6 @@ class AdminPaymentPostType {
 		}
 
 		$map = array(
-			'pronamic_payment_amount'      => '_pronamic_payment_amount',
 			'pronamic_payment_customer'    => '_pronamic_payment_customer_name',
 			'pronamic_payment_transaction' => '_pronamic_payment_transaction_id',
 		);
@@ -307,11 +306,6 @@ class AdminPaymentPostType {
 
 		$query->set( 'meta_key', $meta_key );
 		$query->set( 'orderby', 'meta_value' );
-
-		// Set query meta key.
-		if ( 'pronamic_payment_amount' === $orderby ) {
-			$query->set( 'orderby', 'meta_value_num' );
-		}
 	}
 
 	/**
@@ -369,7 +363,6 @@ class AdminPaymentPostType {
 		$sortable_columns['pronamic_payment_title']       = 'ID';
 		$sortable_columns['pronamic_payment_transaction'] = 'pronamic_payment_transaction';
 		$sortable_columns['pronamic_payment_customer']    = 'pronamic_payment_customer';
-		$sortable_columns['pronamic_payment_amount']      = 'pronamic_payment_amount';
 		$sortable_columns['pronamic_payment_date']        = 'date';
 
 		return $sortable_columns;
@@ -534,8 +527,7 @@ class AdminPaymentPostType {
 
 				break;
 			case 'pronamic_payment_gateway':
-				$config_id = get_post_meta( $post_id, '_pronamic_payment_config_id', true );
-				$config_id = intval( $config_id );
+				$config_id = (int) $payment->get_config_id();
 
 				$gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 
@@ -572,7 +564,7 @@ class AdminPaymentPostType {
 
 				break;
 			case 'pronamic_payment_description':
-				echo esc_html( get_post_meta( $post_id, '_pronamic_payment_description', true ) );
+				echo esc_html( (string) $payment->get_description() );
 
 				break;
 			case 'pronamic_payment_amount':

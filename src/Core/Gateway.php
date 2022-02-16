@@ -302,9 +302,10 @@ abstract class Gateway {
 	 * Get the payment methods transient
 	 *
 	 * @since 1.3.0
+	 * @param bool $update_active_methods Whether active payment methods option should be updated.
 	 * @return array|null
 	 */
-	public function get_transient_available_payment_methods() {
+	public function get_transient_available_payment_methods( $update_active_methods = true ) {
 		// Transient name.
 		$transient = 'pronamic_gateway_payment_methods_' . md5( serialize( $this->config ) );
 
@@ -316,7 +317,9 @@ abstract class Gateway {
 			if ( is_array( $methods ) ) {
 				set_transient( $transient, $methods, DAY_IN_SECONDS );
 
-				PaymentMethods::update_active_payment_methods();
+				if ( $update_active_methods ) {
+					PaymentMethods::update_active_payment_methods();
+				}
 			}
 		}
 

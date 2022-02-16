@@ -95,6 +95,12 @@ class AdminHealth {
 			'value' => $this->get_active_plugin_integrations_debug(),
 		);
 
+		// Active gateway integrations.
+		$fields['active_gateway_integrations'] = array(
+			'label' => __( 'Active gateway integrations', 'pronamic_ideal' ),
+			'value' => $this->get_active_gateway_integrations_debug(),
+		);
+
 		// Add debug information section.
 		$debug_information['pronamic-pay'] = array(
 			'label'  => __( 'Pronamic Pay', 'pronamic_ideal' ),
@@ -120,6 +126,51 @@ class AdminHealth {
 
 			$active[] = $integration->get_name();
 		}
+
+		// Default result no active integrations.
+		if ( empty( $active ) ) {
+			$active[] = __( 'None', 'pronamic_ideal' );
+		}
+
+		$result = \implode( ', ', $active );
+
+		return $result;
+	}
+
+	/**
+	 * Get active gateway integrations debug.
+	 *
+	 * @return string
+	 */
+	private function get_active_gateway_integrations_debug() {
+		$active = array();
+
+		$args = array(
+			'post_type' => 'pronamic_gateway',
+			'nopaging'  => true,
+		);
+
+		$query = new \WP_Query( $args );
+
+		foreach ( $query->posts as $post ) {
+			if ( ! \is_object( $post ) ) {
+				continue;
+			}
+
+			$gateway_id = \get_post_meta( $post->ID, '_pronamic_gateway_id', true );
+
+			$integration = $this->plugin->gateway_integrations->get_integration( $gateway_id );
+
+			$active[] = sprintf(
+				'%s (%s)',
+				null === $integration ? $gateway_id : $integration->get_name(),
+				\get_post_meta( $post->ID, '_pronamic_gateway_mode', true )
+			);
+		}
+
+		$active = \array_unique( $active );
+
+		\sort( $active );
 
 		// Default result no active integrations.
 		if ( empty( $active ) ) {
@@ -447,6 +498,23 @@ class AdminHealth {
 							\esc_html( $requires_at_least ),
 							\esc_html( $tested_up_to )
 						);
+					}
+
+					// Ignore patch version if plugin and tested versions are equal.
+					if ( ! $is_below_tested_version ) {
+						$plugin_parts = explode( '.', $plugin['Version'] );
+						$tested_parts = explode( '.', $tested_up_to );
+
+						$num_parts = count( $tested_parts );
+
+						if ( $num_parts >= 2 && count( $plugin_parts ) === $num_parts ) {
+							$short_plugin_version = sprintf( '%s.%s', $plugin_parts[0], $plugin_parts[1] );
+							$short_tested_version = sprintf( '%s.%s', $tested_parts[0], $tested_parts[1] );
+
+							if ( $short_plugin_version === $short_tested_version ) {
+								$is_below_tested_version = true;
+							}
+						}
 					}
 
 					if ( ! $is_below_tested_version ) {

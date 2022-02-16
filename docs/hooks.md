@@ -210,7 +210,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$subscription` | `\Pronamic\WordPress\Pay\Subscriptions\Subscription` | Subscription.
 
-Source: [src/Subscriptions/SubscriptionsNotificationsController.php](../src/Subscriptions/SubscriptionsNotificationsController.php), [line 243](../src/Subscriptions/SubscriptionsNotificationsController.php#L243-L250)
+Source: [src/Subscriptions/SubscriptionsNotificationsController.php](../src/Subscriptions/SubscriptionsNotificationsController.php), [line 247](../src/Subscriptions/SubscriptionsNotificationsController.php#L247-L254)
 
 ## Filters
 
@@ -450,6 +450,18 @@ Argument | Type | Description
 `$post_id` | `int` | Gateway configuration post ID.
 
 Source: [src/Admin/AdminGatewayPostType.php](../src/Admin/AdminGatewayPostType.php), [line 147](../src/Admin/AdminGatewayPostType.php#L147-L158)
+
+### `pronamic_pay_removed_extension_notifications`
+
+*Filters the removed extensions notifications.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$notifications` | `\Pronamic\WordPress\Pay\Admin\AdminNotification[]` | Notifications for removed extensions.
+
+Source: [src/Admin/AdminNotices.php](../src/Admin/AdminNotices.php), [line 106](../src/Admin/AdminNotices.php#L106-L111)
 
 ### `pronamic_subscription_source_text_{$source}`
 

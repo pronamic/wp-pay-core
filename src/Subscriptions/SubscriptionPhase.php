@@ -313,7 +313,11 @@ class SubscriptionPhase implements \JsonSerializable {
 			return 0;
 		}
 
-		$period = new \DatePeriod( $this->start_date, $this->interval, $this->next_date );
+		$period = new \DatePeriod(
+			new \DateTimeImmutable( $this->start_date->format( 'Y-m-d 00:00:00' ) ),
+			$this->interval,
+			new \DateTimeImmutable( $this->next_date->format( 'Y-m-d 00:00:00' ) )
+		);
 
 		return \iterator_count( $period );
 	}

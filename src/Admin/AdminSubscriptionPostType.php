@@ -165,6 +165,8 @@ class AdminSubscriptionPostType {
 
 				$payment = $period->new_payment();
 
+				$payment->set_meta( 'mollie_sequence_type', 'recurring' );
+
 				$payment->set_lines( $subscription->get_lines() );
 
 				$payment = Plugin::start_payment( $payment );
@@ -250,8 +252,8 @@ class AdminSubscriptionPostType {
 		}
 
 		$map = array(
-			'pronamic_subscription_amount'   => '_pronamic_subscription_amount',
-			'pronamic_subscription_customer' => '_pronamic_subscription_customer_name',
+			'pronamic_subscription_customer'     => '_pronamic_subscription_customer_name',
+			'pronamic_subscription_next_payment' => '_pronamic_subscription_next_payment',
 		);
 
 		if ( ! isset( $map[ $orderby ] ) ) {
@@ -262,11 +264,6 @@ class AdminSubscriptionPostType {
 
 		$query->set( 'meta_key', $meta_key );
 		$query->set( 'orderby', 'meta_value' );
-
-		// Set query meta key.
-		if ( 'pronamic_subscription_amount' === $orderby ) {
-			$query->set( 'orderby', 'meta_value_num' );
-		}
 	}
 
 	/**
@@ -277,18 +274,19 @@ class AdminSubscriptionPostType {
 	 */
 	public function columns( $columns ) {
 		$columns = array(
-			'cb'                              => '<input type="checkbox" />',
-			'pronamic_subscription_status'    => sprintf(
+			'cb'                                 => '<input type="checkbox" />',
+			'pronamic_subscription_status'       => sprintf(
 				'<span class="pronamic-pay-tip pronamic-pay-icon" title="%s">%s</span>',
 				esc_html__( 'Status', 'pronamic_ideal' ),
 				esc_html__( 'Status', 'pronamic_ideal' )
 			),
-			'pronamic_subscription_method'    => '',
-			'pronamic_subscription_title'     => __( 'Subscription', 'pronamic_ideal' ),
-			'pronamic_subscription_customer'  => __( 'Customer', 'pronamic_ideal' ),
-			'pronamic_subscription_amount'    => __( 'Amount', 'pronamic_ideal' ),
-			'pronamic_subscription_recurring' => __( 'Recurrence', 'pronamic_ideal' ),
-			'pronamic_subscription_date'      => __( 'Date', 'pronamic_ideal' ),
+			'pronamic_subscription_method'       => '',
+			'pronamic_subscription_title'        => __( 'Subscription', 'pronamic_ideal' ),
+			'pronamic_subscription_customer'     => __( 'Customer', 'pronamic_ideal' ),
+			'pronamic_subscription_amount'       => __( 'Amount', 'pronamic_ideal' ),
+			'pronamic_subscription_recurring'    => __( 'Recurrence', 'pronamic_ideal' ),
+			'pronamic_subscription_next_payment' => __( 'Next payment', 'pronamic_ideal' ),
+			'pronamic_subscription_date'         => __( 'Date', 'pronamic_ideal' ),
 		);
 
 		return $columns;
@@ -301,10 +299,10 @@ class AdminSubscriptionPostType {
 	 * @return array
 	 */
 	public function sortable_columns( $sortable_columns ) {
-		$sortable_columns['pronamic_subscription_title']    = 'ID';
-		$sortable_columns['pronamic_subscription_amount']   = 'pronamic_subscription_amount';
-		$sortable_columns['pronamic_subscription_customer'] = 'pronamic_subscription_customer_name';
-		$sortable_columns['pronamic_subscription_date']     = 'date';
+		$sortable_columns['pronamic_subscription_title']        = 'ID';
+		$sortable_columns['pronamic_subscription_customer']     = 'pronamic_subscription_customer_name';
+		$sortable_columns['pronamic_subscription_next_payment'] = 'pronamic_subscription_next_payment';
+		$sortable_columns['pronamic_subscription_date']         = 'date';
 
 		return $sortable_columns;
 	}
@@ -474,6 +472,12 @@ class AdminSubscriptionPostType {
 					);
 
 				endif;
+
+				break;
+			case 'pronamic_subscription_next_payment':
+				$next_payment_date = $subscription->get_next_payment_date();
+
+				echo empty( $next_payment_date ) ? '—' : esc_html( $next_payment_date->format_i18n( \__( 'D j M Y', 'pronamic_ideal' ) ) );
 
 				break;
 			case 'pronamic_subscription_date':

@@ -248,10 +248,36 @@ class PaymentMethods {
 	/**
 	 * Constant for the Klarna Pay Later payment method.
 	 *
-	 * @var string
+	 * Klarna Pay Later is not one specific payment method, but a category with a number of pay later payment methods.
+	 *
+	 * @link https://docs.klarna.com/klarna-payments/in-depth-knowledge/payment-method-grouping/
 	 * @since 2.1.0
+	 * @var string
 	 */
 	const KLARNA_PAY_LATER = 'klarna_pay_later';
+
+	/**
+	 * Constant for the Klarna Pay Now payment method.
+	 *
+	 * Klarna Pay Now is not one specific payment method, but a category with a number of pay later payment methods.
+	 *
+	 * @link https://docs.klarna.com/klarna-payments/in-depth-knowledge/payment-method-grouping/
+	 * @since 4.1.0
+	 * @var string
+	 */
+	const KLARNA_PAY_NOW = 'klarna_pay_now';
+
+	/**
+	 * Constant for the Klarna Pay Over Time payment method.
+	 *
+	 * Klarna Pay Over Time is not one specific payment method, but a category with a number of pay over time payment methods.
+	 * Klarna Pay Over Time is also known as Klarna Slice It, some payment providers also use this naming convention.
+	 *
+	 * @link https://docs.klarna.com/klarna-payments/in-depth-knowledge/payment-method-grouping/
+	 * @since 4.1.0
+	 * @var string
+	 */
+	const KLARNA_PAY_OVER_TIME = 'klarna_pay_over_time';
 
 	/**
 	 * Constant for the Maestro payment method.
@@ -425,6 +451,8 @@ class PaymentMethods {
 			self::IDEALQR                 => __( 'iDEAL QR', 'pronamic_ideal' ),
 			self::KBC                     => __( 'KBC/CBC Payment Button', 'pronamic_ideal' ),
 			self::KLARNA_PAY_LATER        => __( 'Klarna Pay Later', 'pronamic_ideal' ),
+			self::KLARNA_PAY_NOW          => __( 'Klarna Pay Now', 'pronamic_ideal' ),
+			self::KLARNA_PAY_OVER_TIME    => __( 'Klarna Pay Over Time', 'pronamic_ideal' ),
 			self::MAESTRO                 => __( 'Maestro', 'pronamic_ideal' ),
 			self::MASTERCARD              => __( 'Mastercard', 'pronamic_ideal' ),
 			self::MB_WAY                  => __( 'MB WAY', 'pronamic_ideal' ),
@@ -487,7 +515,7 @@ class PaymentMethods {
 		}
 
 		return \sprintf(
-			'https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.7.0/dist/methods/%1$s/method-%1$s-%2$s.svg',
+			'https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.7.1/dist/methods/%1$s/method-%1$s-%2$s.svg',
 			\str_replace( '_', '-', $method ),
 			$size
 		);
@@ -621,7 +649,7 @@ class PaymentMethods {
 			}
 
 			try {
-				$payment_methods = $gateway->get_transient_available_payment_methods();
+				$payment_methods = $gateway->get_transient_available_payment_methods( false );
 			} catch ( \Exception $e ) {
 				// Do not update active payment methods on error.
 				return;

@@ -98,7 +98,7 @@ if ( ! isset( $subscription ) ) {
 								sprintf(
 									/* translators: 1: next payment delivery date, 2: create next period payment anchor */
 									__( 'Will be created on %1$s or %2$s', 'pronamic_ideal' ),
-									\esc_html( $next_payment_delivery_date->format_i18n() ),
+									\esc_html( $next_payment_delivery_date->format_i18n( __( 'D j M Y', 'pronamic_ideal' ) ) ),
 									\sprintf(
 										'<a href="%1$s">%2$s</a>',
 										\esc_url( $create_next_payment_url ),

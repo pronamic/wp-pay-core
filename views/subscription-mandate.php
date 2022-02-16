@@ -40,9 +40,27 @@ $client = new \Pronamic\WordPress\Pay\Gateways\Mollie\Client( $api_key );
  *
  * @link https://docs.mollie.com/reference/v2/mandates-api/list-mandates
  */
-$response = $client->get_mandates( $mollie_customer_id );
+$mollie_customer_mandates = array();
 
-$mollie_customer_mandates = $response->_embedded->mandates;
+try {
+	$response = $client->get_mandates( $mollie_customer_id );
+
+	if (
+		property_exists( $response, '_embedded' )
+			&&
+		property_exists( $response->_embedded, 'mandates' )
+	) {
+		$mollie_customer_mandates = $response->_embedded->mandates;
+	}
+} catch ( \Exception $exception ) {
+	/**
+	 * Nothing to do.
+	 *
+	 * Retrieval of customer mandates could fail for example when the configuration
+	 * has changed and the customer is invalid now. We cannot retrieve mandates, but
+	 * it should still be possible to add a new payment method to the subscription.
+	 */
+}
 
 $subscription_mandate_id = $subscription->get_meta( 'mollie_mandate_id' );
 
