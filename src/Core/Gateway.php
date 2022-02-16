@@ -831,4 +831,13 @@ abstract class Gateway {
 	public function cancel_reservation( $payment ) {
 		return false;
 	}
+
+	/**
+	 * Get mode.
+	 * 
+	 * @return string
+	 */
+	public function get_mode() {
+		return self::MODE_LIVE;
+	}
 }

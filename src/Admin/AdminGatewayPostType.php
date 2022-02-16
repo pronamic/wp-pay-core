@@ -429,13 +429,6 @@ class AdminGatewayPostType {
 
 		\update_post_meta( $post_id, '_pronamic_gateway_id', $gateway_id );
 
-		// Mode.
-		if ( \filter_has_var( INPUT_POST, '_pronamic_gateway_mode' ) ) {
-			$gateway_mode = \filter_input( INPUT_POST, '_pronamic_gateway_mode', FILTER_SANITIZE_STRING );
-
-			\update_post_meta( $post_id, '_pronamic_gateway_mode', $gateway_mode );
-		}
-
 		// Transient.
 		\delete_transient( 'pronamic_outdated_webhook_urls' );
 
