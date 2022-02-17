@@ -73,9 +73,9 @@ $gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 						// Product link.
 						if ( null !== $integration->get_product_url() ) {
 							$links[] = sprintf(
-								'<a href="%s" target="_blank" title="%s">%2$s</a>',
-								$integration->get_product_url(),
-								__( 'Product information', 'pronamic_ideal' )
+								'<a href="%s" target="_blank">%s</a>',
+								\esc_url( $integration->get_product_url() ),
+								\esc_html__( 'Product information', 'pronamic_ideal' )
 							);
 						}
 
@@ -84,9 +84,8 @@ $gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 
 						if ( null !== $manual_url ) {
 							$links[] = sprintf(
-								'<a href="%s" target="_blank" title="%s">%s</a>',
+								'<a href="%s" target="_blank">%s</a>',
 								\esc_url( $plugin->tracking_module->get_tracking_url( $manual_url ) ),
-								\esc_attr__( 'Manual', 'pronamic_ideal' ),
 								\esc_html__( 'Manual', 'pronamic_ideal' )
 							);
 						}
