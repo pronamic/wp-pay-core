@@ -159,16 +159,6 @@ abstract class Gateway {
 	}
 
 	/**
-	 * Set error
-	 *
-	 * @param WP_Error|null $error WordPress error object or null.
-	 * @return void
-	 */
-	public function set_error( WP_Error $error = null ) {
-		$this->error = $error;
-	}
-
-	/**
 	 * Set the method.
 	 *
 	 * @param int $method HTML form or HTTP redirect method.
