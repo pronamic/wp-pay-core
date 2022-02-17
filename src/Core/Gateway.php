@@ -100,13 +100,6 @@ abstract class Gateway {
 	 */
 	protected $supports;
 
-	/**
-	 * Error
-	 *
-	 * @var WP_Error|null
-	 */
-	public $error;
-
 	use ModeTrait;
 
 	/**
@@ -138,15 +131,6 @@ abstract class Gateway {
 	 */
 	public function supports( $feature ) {
 		return in_array( $feature, $this->supports, true );
-	}
-
-	/**
-	 * Get the error
-	 *
-	 * @return WP_Error|null
-	 */
-	public function get_error() {
-		return $this->error;
 	}
 
 	/**
