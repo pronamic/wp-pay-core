@@ -54,10 +54,6 @@ foreach ( $payment_methods as $payment_method => $method_name ) {
 	}
 }
 
-if ( $gateway->has_error() ) {
-	$pronamic_ideal_errors[] = $gateway->get_error();
-}
-
 require Plugin::$dirname . '/views/errors.php';
 
 $currency = Currency::get_instance( 'EUR' );
