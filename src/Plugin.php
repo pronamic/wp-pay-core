@@ -369,19 +369,24 @@ class Plugin {
 		}
 
 		// Update status.
-		$gateway->update_status( $payment );
+		try {
+			$gateway->update_status( $payment );
 
-		// Add gateway errors as payment notes.
-		$error = $gateway->get_error();
+			// Update payment in data store.
+			$payment->save();
+		} catch ( \Exception $error ) {
+			$message = $error->getMessage();
 
-		if ( $error instanceof WP_Error ) {
-			foreach ( $error->get_error_codes() as $code ) {
-				$payment->add_note( sprintf( '%s: %s', $code, $error->get_error_message( $code ) ) );
+			// Maybe include error code in message.
+			$code = $error->getCode();
+
+			if ( $code > 0 ) {
+				$message = \sprintf( '%s: %s', $code, $message );
 			}
-		}
 
-		// Update payment in data store.
-		$payment->save();
+			// Add note.
+			$payment->add_note( $message );
+		}
 
 		// Maybe redirect.
 		if ( ! $can_redirect ) {
