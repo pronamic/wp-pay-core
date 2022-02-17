@@ -275,6 +275,8 @@ $sections = array_filter(
 
 							// Set default.
 							if ( empty( $value ) && isset( $field['default'] ) ) {
+								$default = $field['default'];
+
 								/**
 								 * An empty value can also be an empty string, this
 								 * should not always be overwritten with the default
@@ -286,7 +288,7 @@ $sections = array_filter(
 								$meta = get_post_meta( $config_id, $field['meta_key'], false );
 
 								if ( empty( $meta ) ) {
-									$value = $field['default'];
+									$value = \is_callable( $default ) ? call_user_func( $default, $config_id ) : $default;
 								}
 							}
 
