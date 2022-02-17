@@ -60,29 +60,13 @@ $gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 						}
 
 						// Dashboard links.
-						$dashboards = $integration->get_dashboard_url();
+						$dashboard_url = $integration->get_dashboard_url();
 
-						if ( 1 === count( $dashboards ) ) {
+						if ( null !== $dashboard_url ) {if ( is_array( $dashboard_url ) ) {var_dump($integration );}
 							$links[] = sprintf(
-								'<a href="%s" title="%s">%2$s</a>',
-								esc_attr( $dashboards[0] ),
-								__( 'Dashboard', 'pronamic_ideal' )
-							);
-						} elseif ( count( $dashboards ) > 1 ) {
-							$dashboard_urls = array();
-
-							foreach ( $dashboards as $dashboard_name => $dashboard_url ) {
-								$dashboard_urls[] = sprintf(
-									'<a href="%s" title="%s">%2$s</a>',
-									esc_attr( $dashboard_url ),
-									esc_html( ucfirst( $dashboard_name ) )
-								);
-							}
-
-							$links[] = sprintf(
-								'%s: %s',
-								__( 'Dashboards', 'pronamic_ideal' ),
-								strtolower( implode( ', ', $dashboard_urls ) )
+								'<a href="%s">%2$s</a>',
+								\esc_url( $dashboard_url ),
+								\esc_html__( 'Dashboard', 'pronamic_ideal' )
 							);
 						}
 
