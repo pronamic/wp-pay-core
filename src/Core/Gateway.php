@@ -150,15 +150,6 @@ abstract class Gateway {
 	}
 
 	/**
-	 * Has error
-	 *
-	 * @return boolean
-	 */
-	public function has_error() {
-		return null !== $this->error;
-	}
-
-	/**
 	 * Set the method.
 	 *
 	 * @param int $method HTML form or HTTP redirect method.
