@@ -522,13 +522,7 @@ class Plugin {
 			if ( $gateway->is_html_form() ) {
 				$gateway->start( $payment );
 
-				$error = $gateway->get_error();
-
-				if ( $error instanceof WP_Error ) {
-					self::render_errors( $error );
-				} else {
-					$gateway->redirect( $payment );
-				}
+				$gateway->redirect( $payment );
 			}
 		}
 
