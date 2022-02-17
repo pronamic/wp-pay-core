@@ -57,13 +57,6 @@ abstract class Gateway {
 	const MODE_LIVE = 'live';
 
 	/**
-	 * Config
-	 *
-	 * @var GatewayConfig
-	 */
-	protected $config;
-
-	/**
 	 * The method of this gateway
 	 *
 	 * @var int
@@ -107,9 +100,7 @@ abstract class Gateway {
 	 *
 	 * @param GatewayConfig $config Gateway configuration object.
 	 */
-	public function __construct( GatewayConfig $config ) {
-		$this->config = $config;
-
+	public function __construct( GatewayConfig $config = null ) {
 		/**
 		 * Supported features.
 		 *
@@ -188,7 +179,7 @@ abstract class Gateway {
 		$issuers = null;
 
 		// Transient name.
-		$transient = 'pronamic_pay_issuers_' . md5( serialize( $this->config ) );
+		$transient = 'pronamic_pay_issuers_' . md5( serialize( $this ) );
 
 		$result = get_transient( $transient );
 
@@ -215,7 +206,7 @@ abstract class Gateway {
 		$issuers = null;
 
 		// Transient name.
-		$transient = 'pronamic_pay_credit_card_issuers_' . md5( serialize( $this->config ) );
+		$transient = 'pronamic_pay_credit_card_issuers_' . md5( serialize( $this ) );
 
 		$result = get_transient( $transient );
 
@@ -274,7 +265,7 @@ abstract class Gateway {
 	 */
 	public function get_transient_available_payment_methods( $update_active_methods = true ) {
 		// Transient name.
-		$transient = 'pronamic_gateway_payment_methods_' . md5( serialize( $this->config ) );
+		$transient = 'pronamic_gateway_payment_methods_' . md5( serialize( $this ) );
 
 		$methods = get_transient( $transient );
 
