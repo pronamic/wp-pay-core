@@ -21,10 +21,5 @@ namespace Pronamic\WordPress\Pay\Core;
  * @since   1.0.0
  */
 abstract class GatewayConfig {
-	/**
-	 * Mode
-	 *
-	 * @var string
-	 */
-	public $mode;
+
 }
