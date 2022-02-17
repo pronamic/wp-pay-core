@@ -1072,21 +1072,6 @@ class Plugin {
 		// Start payment at the gateway.
 		try {
 			$gateway->start( $payment );
-
-			// Add gateway errors as payment notes.
-			$error = $gateway->get_error();
-
-			if ( $error instanceof \WP_Error ) {
-				$message = $error->get_error_message();
-				$code    = $error->get_error_code();
-
-				if ( ! \is_int( $code ) ) {
-					$message = sprintf( '%s: %s', $code, $message );
-					$code    = 0;
-				}
-
-				throw new \Exception( $message, $code );
-			}
 		} catch ( \Exception $error ) {
 			$message = $error->getMessage();
 
