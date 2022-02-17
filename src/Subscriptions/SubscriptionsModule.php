@@ -395,14 +395,6 @@ class SubscriptionsModule {
 				exit;
 			}
 
-			$error = $gateway->get_error();
-
-			if ( $error instanceof WP_Error ) {
-				Plugin::render_errors( $error );
-
-				exit;
-			}
-
 			// Redirect.
 			try {
 				$gateway->redirect( $payment );
