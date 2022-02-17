@@ -12,6 +12,7 @@ namespace Pronamic\WordPress\Pay;
 
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\GatewayConfig;
+use Pronamic\WordPress\Pay\Core\ModeTrait;
 
 /**
  * Title: Abstract gateway integration
@@ -67,6 +68,8 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	 */
 	protected $supports = array();
 
+	use ModeTrait;
+
 	/**
 	 * Construct.
 	 *
@@ -76,6 +79,7 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 		$args = wp_parse_args(
 			$args,
 			array(
+				'mode'          => 'live',
 				'provider'      => null,
 				'url'           => null,
 				'product_url'   => null,
@@ -86,6 +90,9 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 		);
 
 		parent::__construct( $args );
+
+		// Mode.
+		$this->set_mode( $args['mode'] );
 
 		// Provider.
 		$this->provider = $args['provider'];
