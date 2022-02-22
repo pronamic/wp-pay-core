@@ -62,7 +62,7 @@ $gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 						// Dashboard links.
 						$dashboard_url = $integration->get_dashboard_url();
 
-						if ( null !== $dashboard_url ) {if ( is_array( $dashboard_url ) ) {var_dump($integration );}
+						if ( null !== $dashboard_url ) {
 							$links[] = sprintf(
 								'<a href="%s">%2$s</a>',
 								\esc_url( $dashboard_url ),
