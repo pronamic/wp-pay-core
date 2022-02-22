@@ -1097,7 +1097,7 @@ class Plugin {
 		}
 
 		// Throw/rethrow exception.
-		if ( $error instanceof \Exception ) {
+		if ( isset( $error ) && $error instanceof \Exception ) {
 			throw $error;
 		}
 
