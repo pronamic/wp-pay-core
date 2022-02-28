@@ -1081,16 +1081,12 @@ class Plugin {
 				$message = \sprintf( '%s: %s', $code, $message );
 			}
 
-			// Add note.
 			$payment->add_note( $message );
 
-			// Set payment status.
 			$payment->set_status( PaymentStatus::FAILURE );
 
-			// Rethrow.
 			throw $exception;
 		} finally {
-			// Save payment.
 			$payment->save();
 		}
 
