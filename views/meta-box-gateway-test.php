@@ -11,8 +11,6 @@
 
 use Pronamic\WordPress\Money\Currency;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
-use Pronamic\WordPress\Pay\Gateways\IDealAdvancedV3\Gateway as IDealAdvancedV3_Gateway;
-use Pronamic\WordPress\Pay\Gateways\IDealBasic\Gateway as IDealBasic_Gateway;
 use Pronamic\WordPress\Pay\Plugin;
 
 $gateway = Plugin::get_gateway( $post->ID );
