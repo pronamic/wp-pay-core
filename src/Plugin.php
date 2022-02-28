@@ -1071,11 +1071,11 @@ class Plugin {
 		// Start payment at the gateway.
 		try {
 			$gateway->start( $payment );
-		} catch ( \Exception $error ) {
-			$message = $error->getMessage();
+		} catch ( \Exception $exception ) {
+			$message = $exception->getMessage();
 
 			// Maybe include error code in message.
-			$code = $error->getCode();
+			$code = $exception->getCode();
 
 			if ( $code > 0 ) {
 				$message = \sprintf( '%s: %s', $code, $message );
@@ -1086,19 +1086,17 @@ class Plugin {
 
 			// Set payment status.
 			$payment->set_status( PaymentStatus::FAILURE );
-		}
 
-		// Save payment.
-		$payment->save();
+			// Rethrow.
+			throw $exception;
+		} finally {
+			// Save payment.
+			$payment->save();
+		}
 
 		// Schedule payment status check.
 		if ( $gateway->supports( 'payment_status_request' ) ) {
 			StatusChecker::schedule_event( $payment );
-		}
-
-		// Throw/rethrow exception.
-		if ( isset( $error ) && $error instanceof \Exception ) {
-			throw $error;
 		}
 
 		return $payment;
