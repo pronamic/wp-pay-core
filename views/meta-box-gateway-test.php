@@ -6,8 +6,7 @@
  * @copyright 2005-2022 Pronamic
  * @license GPL-3.0-or-later
  * @package Pronamic\WordPress\Pay
- * @var \WP_Post $post                  WordPress post.
- * @var array    $pronamic_ideal_errors Pronamic IDEAL errors.
+ * @var \WP_Post $post WordPress post.
  */
 
 use Pronamic\WordPress\Money\Currency;
@@ -15,8 +14,6 @@ use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Gateways\IDealAdvancedV3\Gateway as IDealAdvancedV3_Gateway;
 use Pronamic\WordPress\Pay\Gateways\IDealBasic\Gateway as IDealBasic_Gateway;
 use Pronamic\WordPress\Pay\Plugin;
-
-global $pronamic_ideal_errors;
 
 $gateway = Plugin::get_gateway( $post->ID );
 
