@@ -36,25 +36,41 @@ $payment_methods = $gateway->get_payment_method_field_options( true );
 
 $inputs = array();
 
-foreach ( $payment_methods as $payment_method => $method_name ) {
-	if ( ! \is_string( $payment_method ) ) {
-		$payment_method = null;
+try {
+	foreach ( $payment_methods as $payment_method => $method_name ) {
+		if ( ! \is_string( $payment_method ) ) {
+			$payment_method = null;
+		}
+
+		$gateway->set_payment_method( $payment_method );
+
+		// Payment method input HTML.
+		$html = $gateway->get_input_html();
+
+		if ( ! empty( $html ) ) {
+			$inputs[ $payment_method ] = array(
+				'label' => $method_name,
+				'html'  => $html,
+			);
+		}
 	}
+} catch ( \Exception $exception ) {
+	?>
+	<div class="error">
+		<dl>
+			<dt><?php esc_html_e( 'Message', 'pronamic_ideal' ); ?></dt>
+			<dd><?php echo esc_html( $exception->getMessage() ); ?></dd>
 
-	$gateway->set_payment_method( $payment_method );
+			<?php if ( 0 !== $exception->getCode() ) : ?>
 
-	// Payment method input HTML.
-	$html = $gateway->get_input_html();
+				<dt><?php esc_html_e( 'Code', 'pronamic_ideal' ); ?></dt>
+				<dd><?php echo esc_html( $exception->getCode() ); ?></dd>
 
-	if ( ! empty( $html ) ) {
-		$inputs[ $payment_method ] = array(
-			'label' => $method_name,
-			'html'  => $html,
-		);
-	}
+			<?php endif; ?>
+		</dl>
+	</div>
+	<?php
 }
-
-require Plugin::$dirname . '/views/errors.php';
 
 $currency = Currency::get_instance( 'EUR' );
 
