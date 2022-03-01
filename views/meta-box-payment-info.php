@@ -899,6 +899,24 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 	</tr>
 	<tr>
 		<th scope="row">
+			<?php esc_html_e( 'Pay Redirect URL', 'pronamic_ideal' ); ?>
+		</th>
+		<td>
+			<?php
+
+			$url = $payment->get_pay_redirect_url();
+
+			printf(
+				'<a href="%s">%s</a>',
+				esc_attr( $url ),
+				esc_html( $url )
+			);
+
+			?>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">
 			<?php esc_html_e( 'Return URL', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
@@ -917,7 +935,7 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 	</tr>
 	<tr>
 		<th scope="row">
-			<?php esc_html_e( 'Redirect URL', 'pronamic_ideal' ); ?>
+			<?php esc_html_e( 'Return Redirect URL', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
 			<?php
