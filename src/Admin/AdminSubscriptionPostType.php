@@ -14,9 +14,8 @@ use Pronamic\WordPress\DateTime\DateTimeImmutable;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPeriod;
-use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
-use Pronamic\WordPress\Pay\Util;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
+use Pronamic\WordPress\Pay\Util;
 use WP_Post;
 use WP_Query;
 
@@ -252,7 +251,6 @@ class AdminSubscriptionPostType {
 		}
 
 		$map = array(
-			'pronamic_subscription_customer'     => '_pronamic_subscription_customer_name',
 			'pronamic_subscription_next_payment' => '_pronamic_subscription_next_payment',
 		);
 
@@ -300,7 +298,6 @@ class AdminSubscriptionPostType {
 	 */
 	public function sortable_columns( $sortable_columns ) {
 		$sortable_columns['pronamic_subscription_title']        = 'ID';
-		$sortable_columns['pronamic_subscription_customer']     = 'pronamic_subscription_customer_name';
 		$sortable_columns['pronamic_subscription_next_payment'] = 'pronamic_subscription_next_payment';
 		$sortable_columns['pronamic_subscription_date']         = 'date';
 

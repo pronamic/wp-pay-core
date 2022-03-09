@@ -15,7 +15,6 @@ use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Plugin;
 use WP_Post;
-use WP_Query;
 
 /**
  * WordPress admin payment post type
@@ -70,8 +69,6 @@ class AdminPaymentPostType {
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 
 		add_filter( 'post_row_actions', array( $this, 'post_row_actions' ), 10, 2 );
-
-		add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
 
 		add_filter( 'default_hidden_columns', array( $this, 'default_hidden_columns' ) );
 
@@ -273,42 +270,6 @@ class AdminPaymentPostType {
 	}
 
 	/**
-	 * Pre get posts.
-	 *
-	 * @param WP_Query $query WordPress query.
-	 * @return void
-	 */
-	public function pre_get_posts( $query ) {
-		/**
-		 * The `WP_Query::get` function can return different variable type.
-		 * For now this function can only handle one specific string orderby.
-		 *
-		 * @link https://developer.wordpress.org/reference/classes/wp_query/get/
-		 * @link https://developer.wordpress.org/reference/classes/wp_query/#order-orderby-parameters
-		 * @link https://github.com/WordPress/WordPress/blob/5.2/wp-includes/class-wp-query.php#L1697-L1713
-		 */
-		$orderby = $query->get( 'orderby' );
-
-		if ( ! is_string( $orderby ) ) {
-			return;
-		}
-
-		$map = array(
-			'pronamic_payment_customer'    => '_pronamic_payment_customer_name',
-			'pronamic_payment_transaction' => '_pronamic_payment_transaction_id',
-		);
-
-		if ( ! isset( $map[ $orderby ] ) ) {
-			return;
-		}
-
-		$meta_key = $map[ $orderby ];
-
-		$query->set( 'meta_key', $meta_key );
-		$query->set( 'orderby', 'meta_value' );
-	}
-
-	/**
 	 * Columns.
 	 *
 	 * @param array $columns Columns.
@@ -360,10 +321,8 @@ class AdminPaymentPostType {
 	 * @return array
 	 */
 	public function sortable_columns( $sortable_columns ) {
-		$sortable_columns['pronamic_payment_title']       = 'ID';
-		$sortable_columns['pronamic_payment_transaction'] = 'pronamic_payment_transaction';
-		$sortable_columns['pronamic_payment_customer']    = 'pronamic_payment_customer';
-		$sortable_columns['pronamic_payment_date']        = 'date';
+		$sortable_columns['pronamic_payment_title'] = 'ID';
+		$sortable_columns['pronamic_payment_date']  = 'date';
 
 		return $sortable_columns;
 	}
