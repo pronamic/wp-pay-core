@@ -716,7 +716,7 @@ class Plugin {
 	 * @return string
 	 */
 	public static function get_default_error_message() {
-		return __( 'Something went wrong with the payment. Please try again later or pay another way.', 'pronamic_ideal' );
+		return __( 'Something went wrong with the payment. Please try again or pay another way.', 'pronamic_ideal' );
 	}
 
 	/**
