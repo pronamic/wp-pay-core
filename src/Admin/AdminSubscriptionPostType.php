@@ -53,6 +53,7 @@ class AdminSubscriptionPostType {
 
 		add_filter( 'manage_edit-' . self::POST_TYPE . '_columns', array( $this, 'columns' ) );
 		add_filter( 'manage_edit-' . self::POST_TYPE . '_sortable_columns', array( $this, 'sortable_columns' ) );
+		add_filter( 'bulk_actions-edit-' . self::POST_TYPE, array( $this, 'bulk_actions' ) );
 		add_filter( 'list_table_primary_column', array( $this, 'primary_column' ), 10, 2 );
 
 		add_action( 'manage_' . self::POST_TYPE . '_posts_custom_column', array( $this, 'custom_columns' ), 10, 2 );
@@ -114,6 +115,21 @@ class AdminSubscriptionPostType {
 		$args[] = 'pronamic_payment_created';
 
 		return $args;
+	}
+
+	/**
+	 * Custom bulk actions.
+	 *
+	 * @link https://make.wordpress.org/core/2016/10/04/custom-bulk-actions/
+	 * @link https://github.com/WordPress/WordPress/blob/4.7/wp-admin/includes/class-wp-list-table.php#L440-L452
+	 * @param array $bulk_actions Bulk actions.
+	 * @return array
+	 */
+	public function bulk_actions( $bulk_actions ) {
+		// Don't allow edit in bulk.
+		unset( $bulk_actions['edit'] );
+
+		return $bulk_actions;
 	}
 
 	/**
