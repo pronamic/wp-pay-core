@@ -418,7 +418,7 @@ Argument | Type | Description
 `$url` | `null\|string` | Redirect URL.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 1207](../src/Plugin.php#L1207-L1213)
+Source: [src/Plugin.php](../src/Plugin.php), [line 1201](../src/Plugin.php#L1201-L1207)
 
 ### `pronamic_gateway_configuration_display_value`
 

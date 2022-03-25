@@ -9,12 +9,15 @@
  */
 
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
+use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
 
 if ( ! isset( $post ) ) {
 	return;
 }
 
 $states = SubscriptionPostType::get_states();
+
+ksort( $states );
 
 // WordPress by default doesn't allow `post_author` values of `0`, that's why we use a dash (`-`).
 // @link https://github.com/WordPress/WordPress/blob/4.9.5/wp-admin/includes/post.php#L56-L64.
@@ -25,23 +28,66 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 <input type="hidden" name="post_author_override" value="<?php echo esc_attr( $post_author ); ?>" />
 
 <div class="pronamic-pay-inner">
-	<p>
-		<label for="pronamic-subscription-status">Status:&nbsp;</label>
-		<select id="pronamic-subscription-status" name="pronamic_subscription_post_status" class="medium-text">
+	<div id="minor-publishing-actions">
+		<div class="clear"></div>
+	</div>
+
+	<div class="pronamic-pay-minor-actions">
+		<div class="misc-pub-post-status">
+			<?php echo esc_html( __( 'Status:', 'pronamic_ideal' ) ); ?>
+
 			<?php
 
-			foreach ( $states as $subscription_status => $label ) {
-				printf(
-					'<option value="%s" %s>%s</option>',
-					esc_attr( $subscription_status ),
-					selected( $subscription_status, $post->post_status, false ),
-					esc_html( $label )
-				);
-			}
+			$status_object = get_post_status_object( $post->post_status );
+
+			$status_label = isset( $status_object, $status_object->label ) ? $status_object->label : '—';
 
 			?>
-		</select>
-	</p>
+
+			<span id="pronamic-pay-status-display"><?php echo esc_html( $status_label ); ?></span>
+
+			<?php if ( 'subscr_completed' !== $post->post_status ) : ?>
+
+				<a href="#pronamic-pay-post-status" class="edit-pronamic-pay-post-status hide-if-no-js" role="button">
+					<span aria-hidden="true"><?php _e( 'Edit', 'pronamic_ideal' ); ?></span>
+					<span class="screen-reader-text"><?php _e( 'Edit status', 'pronamic_ideal' ); ?></span>
+				</a>
+
+				<div id="pronamic-pay-post-status-select" class="hide-if-js">
+					<input type="hidden" name="hidden_pronamic_pay_post_status" id="hidden_pronamic_pay_post_status" value="<?php echo esc_attr( ( 'auto-draft' === $post->post_status ) ? 'draft' : $post->post_status ); ?>" />
+					<label for="pronamic-pay-post-status" class="screen-reader-text"><?php _e( 'Set status' ); ?></label>
+					<select id="pronamic-pay-post-status" name="pronamic_subscription_post_status">
+						<?php
+
+						$states_options = array(
+							'subscr_active',
+							'subscr_cancelled',
+							'subscr_on_hold',
+						);
+
+						foreach ( $states as $subscription_status => $label ) {
+							if ( ! in_array( $subscription_status, $states_options, true ) && $subscription_status !== $post->post_status ) {
+								continue;
+							}
+
+							printf(
+								'<option value="%s" %s>%s</option>',
+								esc_attr( $subscription_status ),
+								selected( $subscription_status, $post->post_status, false ),
+								esc_html( $label )
+							);
+						}
+
+						?>
+					</select>
+
+					<a href="#pronamic-pay-post-status" class="save-pronamic-pay-post-status hide-if-no-js button"><?php _e( 'OK' ); ?></a>
+					<a href="#pronamic-pay-post-status" class="cancel-pronamic-pay-post-status hide-if-no-js button-cancel"><?php _e( 'Cancel' ); ?></a>
+				</div>
+
+			<?php endif; ?>
+		</div>
+	</div>
 </div>
 
 <div class="pronamic-pay-major-actions">

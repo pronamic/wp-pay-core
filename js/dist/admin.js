@@ -234,6 +234,61 @@
 	};
 
 	/**
+	 * Pronamic Pay post status.
+	 */
+	var PronamicPayPostStatus = function( element ) {
+		var $element = $( element );
+
+		// Post Status edit click.
+		$element.siblings( 'a.edit-pronamic-pay-post-status' ).on( 'click', function( event ) {
+			if ( $element.is( ':hidden' ) ) {
+				$element.slideDown( 'fast', function() { $element.find( 'select' ).trigger( 'focus' ); } );
+
+				$( this ).hide();
+			}
+
+			event.preventDefault();
+		} );
+
+		// Save post status changes and hide options.
+		$element.find( '.save-pronamic-pay-post-status' ).on( 'click', function( event ) {
+			$element.slideUp( 'fast' ).siblings( 'a.edit-pronamic-pay-post-status' ).show().trigger( 'focus' );
+
+			$( '#pronamic-pay-status-display' ).text( $( '#pronamic-pay-post-status option:selected' ).text() );
+
+			event.preventDefault();
+		} );
+
+		// Cancel post status editing and hide options.
+		$element.find( '.cancel-pronamic-pay-post-status' ).on( 'click', function( event ) {
+			$element.slideUp( 'fast' ).siblings( 'a.edit-pronamic-pay-post-status' ).show().trigger( 'focus' );
+
+			$( '#pronamic-pay-post-status' ).val( $( '#hidden_pronamic_pay_post_status' ).val() );
+
+			$( '#pronamic-pay-status-display' ).text( $( '#pronamic-pay-post-status option:selected' ).text() );
+
+			event.preventDefault();
+		} );
+	};
+
+	/**
+	 * jQuery plugin - Pronamic Pay post status
+	 */
+	$.fn.pronamicPayPostStatus = function() {
+		return this.each( function() {
+			var $this = $( this );
+
+			if ( $this.data( 'pronamic-pay-post-status' ) ) {
+				return;
+			}
+
+			var postStatus = new PronamicPayPostStatus( this );
+
+			$this.data( 'pronamic-pay-post-status', postStatus );
+		} );
+	};
+
+	/**
 	 * Pronamic pay gateway test
 	 */
 	var PronamicPayGatewayTest = function( element ) {
@@ -370,6 +425,7 @@
 	$( document ).ready( function() {
 		$( '#pronamic-pay-gateway-config-editor' ).pronamicPayGatewayConfigEditor();
 		$( '#pronamic_payment_form_options').pronamicPayFormOptions();
+		$( '#pronamic-pay-post-status-select' ).pronamicPayPostStatus();
 		$( '#pronamic_gateway_test').pronamicPayGatewayTest();
 		$( '.pronamic-pay-tabs' ).pronamicPayTabs();
 
