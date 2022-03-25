@@ -24,7 +24,7 @@ trait ModeTrait {
 	 *
 	 * @var string
 	 */
-	private $mode = 'live';
+	protected $mode = 'live';
 
 	/**
 	 * Set mode.
