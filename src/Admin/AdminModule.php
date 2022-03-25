@@ -907,34 +907,81 @@ class AdminModule {
 	 * @return void
 	 */
 	public function admin_menu() {
-		// @link https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin-menus.php#L145
+		/**
+		 * Badges.
+		 *
+		 * @link https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin-menus.php#L145
+		 */
 		$counts = wp_count_posts( 'pronamic_payment' );
 
-		$badge = '';
+		$payments_pending_count = \property_exists( $counts, 'payment_pending' ) ? $counts->payment_pending : 0;
 
-		if ( isset( $counts->payment_pending ) && $counts->payment_pending > 0 ) {
-			$badge = sprintf(
-				' <span class="awaiting-mod update-plugins count-%1$s" title="%2$s"><span class="processing-count">%1$s</span></span>',
-				$counts->payment_pending,
-				sprintf(
-					/* translators: %d: pending payments count */
-					\_n( '%d payment pending', '%d payments pending', $counts->payment_pending, 'pronamic_ideal' ),
-					$counts->payment_pending
-				)
+		$counts = wp_count_posts( 'pronamic_pay_subscr' );
+
+		$subscriptions_on_hold_count = \property_exists( $counts, 'subscr_on_hold' ) ? $counts->subscr_on_hold : 0;
+
+		$badges = array(
+			'pay'           => array(
+				'title' => array(),
+				'count' => 0,
+				'html'  => '',
+			),
+			'payments'      => array(
+				'title' => \sprintf(
+					/* translators: %d: payments pending count */
+					\_n( '%d payment pending', '%d payments pending', $payments_pending_count, 'pronamic_ideal' ),
+					$payments_pending_count
+				),
+				'count' => $payments_pending_count,
+				'html'  => '',
+			),
+			'subscriptions' => array(
+				'title' => \sprintf(
+					/* translators: %d: subscriptions on hold count */
+					\_n( '%d subscription on hold', '%d subscriptions on hold', $subscriptions_on_hold_count, 'pronamic_ideal' ),
+					$subscriptions_on_hold_count
+				),
+				'count' => $subscriptions_on_hold_count,
+				'html'  => '',
+			),
+		);
+
+		foreach ( $badges as &$badge ) {
+			$count = $badge['count'];
+
+			if ( 0 === $count ) {
+				continue;
+			}
+
+			$title = \array_key_exists( 'title', $badge ) && \is_string( $badge['title'] ) ? $badge['title'] : '';
+
+			$badge['html'] = \sprintf(
+				' <span class="awaiting-mod update-plugins count-%1$d" title="%2$s"><span class="processing-count">%1$d</span></span>',
+				$count,
+				$title
 			);
+
+			// Pay badge.
+			$badges['pay']['count'] += $count;
+
+			if ( ! empty( $title ) ) {
+				$badges['pay']['title'][] = $title;
+			}
 		}
 
-		// Submenu pages.
+		/**
+		 * Submenu pages.
+		 */
 		$submenu_pages = array(
 			array(
 				'page_title' => __( 'Payments', 'pronamic_ideal' ),
-				'menu_title' => __( 'Payments', 'pronamic_ideal' ) . $badge,
+				'menu_title' => __( 'Payments', 'pronamic_ideal' ) . $badges['payments']['html'],
 				'capability' => 'edit_payments',
 				'menu_slug'  => 'edit.php?post_type=pronamic_payment',
 			),
 			array(
 				'page_title' => __( 'Subscriptions', 'pronamic_ideal' ),
-				'menu_title' => __( 'Subscriptions', 'pronamic_ideal' ),
+				'menu_title' => __( 'Subscriptions', 'pronamic_ideal' ) . $badges['subscriptions']['html'],
 				'capability' => 'edit_payments',
 				'menu_slug'  => 'edit.php?post_type=pronamic_pay_subscr',
 			),
@@ -998,9 +1045,19 @@ class AdminModule {
 			$menu_icon_url = 'dashicons-money';
 		}
 
+		$pay_badge = '';
+
+		if ( 0 !== $badges['pay']['count'] ) {
+			$pay_badge = \sprintf(
+				' <span class="awaiting-mod update-plugins count-%1$d" title="%2$s"><span class="processing-count">%1$d</span></span>',
+				$badges['pay']['count'],
+				\implode( ', ', $badges['pay']['title'] )
+			);
+		}
+
 		add_menu_page(
 			__( 'Pronamic Pay', 'pronamic_ideal' ),
-			__( 'Pay', 'pronamic_ideal' ) . $badge,
+			__( 'Pay', 'pronamic_ideal' ) . $pay_badge,
 			$minimum_capability,
 			'pronamic_ideal',
 			function() {
