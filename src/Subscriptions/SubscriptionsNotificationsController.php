@@ -275,7 +275,6 @@ class SubscriptionsNotificationsController {
 			 */
 			'posts_per_page' => 100,
 			'post_status'    => array(
-				'subscr_pending',
 				'subscr_active',
 			),
 			'meta_query'     => array(
