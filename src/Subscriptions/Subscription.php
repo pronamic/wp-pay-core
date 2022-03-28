@@ -141,7 +141,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 */
 	public function get_source_text() {
 		$pieces = array(
-			$this->get_source(),
+			\ucfirst( (string) $this->get_source() ),
 			$this->get_source_id(),
 		);
 
