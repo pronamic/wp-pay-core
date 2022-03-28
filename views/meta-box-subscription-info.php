@@ -134,8 +134,8 @@ $phase = $subscription->get_display_phase();
 
 	<?php
 
-	// Show next payment (delivery) date if subscription is not cancelled or completed.
-	if ( ! in_array( $subscription->get_status(), array( SubscriptionStatus::CANCELLED, SubscriptionStatus::COMPLETED, SubscriptionStatus::EXPIRED ), true ) ) :
+	// Show next payment (delivery) date if subscription is active.
+	if ( SubscriptionStatus::ACTIVE === $subscription->get_status() ) :
 
 		?>
 
