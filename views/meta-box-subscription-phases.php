@@ -19,6 +19,23 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 
 <?php else : ?>
 
+	<?php
+
+	$has_trial     = false;
+	$has_alignment = false;
+
+	foreach ( $phases as $phase ) {
+		if ( $phase->is_trial() ) {
+			$has_trial = true;
+		}
+
+		if ( $phase->is_alignment() || $phase->is_prorated() ) {
+			$has_alignment = true;
+		}
+	}
+
+	?>
+
 	<div class="pronamic-pay-table-responsive">
 		<table class="pronamic-pay-table widefat">
 			<thead>
@@ -28,10 +45,19 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 					<th scope="col"><?php esc_html_e( 'Start Date', 'pronamic_ideal' ); ?></th>
 					<th scope="col"><?php esc_html_e( 'End Date', 'pronamic_ideal' ); ?></th>
 					<th scope="col"><?php esc_html_e( 'Next Date', 'pronamic_ideal' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Periods created', 'pronamic_ideal' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Trial', 'pronamic_ideal' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Aligned', 'pronamic_ideal' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Prorated', 'pronamic_ideal' ); ?></th>
+
+					<?php if ( $has_trial ) : ?>
+
+						<th scope="col"><?php esc_html_e( 'Trial', 'pronamic_ideal' ); ?></th>
+
+					<?php endif; ?>
+
+					<?php if ( $has_alignment ) : ?>
+
+						<th scope="col"><?php esc_html_e( 'Aligned', 'pronamic_ideal' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Prorated', 'pronamic_ideal' ); ?></th>
+
+					<?php endif; ?>
 				</tr>
 			</thead>
 
@@ -103,34 +129,37 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 
 							?>
 						</td>
-						<td>
-							<?php
 
-							echo esc_html( (string) $phase->get_periods_created() );
+						<?php if ( $has_trial ) : ?>
 
-							?>
-						</td>
-						<td>
-							<?php
+							<td>
+								<?php
 
-							echo esc_html( $phase->is_trial() ? __( 'Yes', 'pronamic_ideal' ) : __( 'No', 'pronamic_ideal' ) );
+								echo esc_html( $phase->is_trial() ? __( 'Yes', 'pronamic_ideal' ) : __( 'No', 'pronamic_ideal' ) );
 
-							?>
-						</td>
-						<td>
-							<?php
+								?>
+							</td>
 
-							echo esc_html( $phase->is_alignment() ? __( 'Yes', 'pronamic_ideal' ) : __( 'No', 'pronamic_ideal' ) );
+						<?php endif; ?>
 
-							?>
-						</td>
-						<td>
-							<?php
+						<?php if ( $has_alignment ) : ?>
 
-							echo esc_html( $phase->is_prorated() ? __( 'Yes', 'pronamic_ideal' ) : __( 'No', 'pronamic_ideal' ) );
+							<td>
+								<?php
 
-							?>
-						</td>
+								echo esc_html( $phase->is_alignment() ? __( 'Yes', 'pronamic_ideal' ) : __( 'No', 'pronamic_ideal' ) );
+
+								?>
+							</td>
+							<td>
+								<?php
+
+								echo esc_html( $phase->is_prorated() ? __( 'Yes', 'pronamic_ideal' ) : __( 'No', 'pronamic_ideal' ) );
+
+								?>
+							</td>
+
+						<?php endif; ?>
 					</tr>
 
 				<?php endforeach; ?>
