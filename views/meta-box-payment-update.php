@@ -39,7 +39,7 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 	</div>
 
 	<div class="pronamic-pay-minor-actions">
-		<div class="misc-pub-post-status">
+		<div class="misc-pub-section misc-pub-post-status">
 			<?php echo esc_html( __( 'Status:', 'pronamic_ideal' ) ); ?>
 
 			<?php
@@ -102,7 +102,7 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 			);
 
 			printf(
-				'<p><a class="button" href="%s">%s</a></p>',
+				'<div class="misc-pub-section"><a class="button" href="%s">%s</a></div>',
 				esc_url( $action_url ),
 				esc_html__( 'Check status', 'pronamic_ideal' )
 			);
@@ -132,7 +132,7 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 			);
 
 			printf(
-				'<p><a class="button" href="%s">%s</a></p>',
+				'<div class="misc-pub-section"><a class="button" href="%s">%s</a></div>',
 				esc_url( $action_url ),
 				esc_html( $link_text )
 			);
@@ -162,7 +162,7 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 			);
 
 			printf(
-				'<p><a class="button" href="%s">%s</a></p>',
+				'<div class="misc-pub-section"><a class="button" href="%s">%s</a></div>',
 				esc_url( $action_url ),
 				esc_html( $link_text )
 			);
@@ -188,7 +188,7 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 			);
 
 			printf(
-				'<p><a class="button" href="%s">%s</a></p>',
+				'<div class="misc-pub-section"><a class="button" href="%s">%s</a></div>',
 				esc_url( $action_url ),
 				esc_html__( 'Send to Google Analytics', 'pronamic_ideal' )
 			);

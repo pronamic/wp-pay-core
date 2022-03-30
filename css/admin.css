@@ -268,7 +268,6 @@ body.post-type-pronamic_payment #post-body-content, body.post-type-pronamic_pay_
 
 .pronamic-pay-inner {
   margin: 6px 0 0;
-  padding: 0 12px 12px;
 }
 
 .pronamic-pay-major-actions {
@@ -282,11 +281,13 @@ body.post-type-pronamic_payment #post-body-content, body.post-type-pronamic_pay_
   text-align: right;
 }
 
-#pronamic-pay-status-display {
+#pronamic-pay-post-status-display,
+#pronamic-pay-next-payment-date-display {
   font-weight: 600;
 }
 
-#pronamic-pay-post-status-select {
+#pronamic-pay-post-status-input,
+#pronamic-pay-next-payment-date-input {
   margin-top: 3px;
 }
 

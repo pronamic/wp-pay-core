@@ -10,8 +10,8 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
-use DatePeriod;
 use Pronamic\WordPress\DateTime\DateTime;
+use Pronamic\WordPress\DateTime\DateTimeImmutable;
 use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Payments\LegacyPaymentsDataStoreCPT;
@@ -221,6 +221,36 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		if ( ! check_admin_referer( 'pronamic_subscription_update', 'pronamic_subscription_update_nonce' ) ) {
 			return;
+		}
+
+		// Next payment date.
+		if ( \array_key_exists( 'hidden_pronamic_pay_next_payment_date', $postarr ) && \array_key_exists( 'pronamic_subscription_next_payment_date', $postarr ) ) {
+			$old_value = $postarr['hidden_pronamic_pay_next_payment_date'];
+
+			$new_value = $postarr['pronamic_subscription_next_payment_date'];
+
+			$current_phase = $subscription->get_current_phase();
+
+			if ( null !== $current_phase && ! empty( $new_value ) && $old_value !== $new_value ) {
+				$new_date = new DateTimeImmutable( $new_value );
+
+				$next_date = $current_phase->get_next_date();
+
+				$updated_date = null === $next_date ? clone $new_date : clone $next_date;
+
+				$updated_date = $updated_date->setDate( (int) $new_date->format( 'Y' ), (int) $new_date->format( 'm' ), (int) $new_date->format( 'd' ) );
+
+				$current_phase->set_next_date( $updated_date );
+
+				$note = \sprintf(
+					/* translators: %1: old formatted date, %2: new formatted date */
+					\__( 'Next payment date updated from %1$s to %2$s.', 'pronamic_ideal' ),
+					null === $next_date ? '' : $next_date->format_i18n( \__( 'D j M Y', 'pronamic_ideal' ) ),
+					$updated_date->format_i18n( \__( 'D j M Y', 'pronamic_ideal' ) )
+				);
+
+				$subscription->add_note( $note );
+			}
 		}
 	}
 

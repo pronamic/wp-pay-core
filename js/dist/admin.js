@@ -236,38 +236,145 @@
 	/**
 	 * Pronamic Pay post status.
 	 */
-	var PronamicPayPostStatus = function( element ) {
+	var PronamicPayPostEdit = function( element, elementId ) {
+		var obj = this;
 		var $element = $( element );
+		var $input = $element.find( 'select, input:not([type="hidden"])' );
 
-		// Post Status edit click.
-		$element.siblings( 'a.edit-pronamic-pay-post-status' ).on( 'click', function( event ) {
-			if ( $element.is( ':hidden' ) ) {
-				$element.slideDown( 'fast', function() { $element.find( 'select' ).trigger( 'focus' ); } );
+		this.hideOptions = function() {
+			$element.slideUp( 'fast' ).siblings( 'a.edit-' + elementId ).show().trigger( 'focus' );
+		};
 
-				$( this ).hide();
+		this.updateDisplayText = function() {
+			var text = $( '#' + elementId + '-display' )[0].innerHTML;
+
+			var tagName = $input.prop( 'tagName' ).toLowerCase();
+
+			var type = 'input' === tagName ? $input.prop( 'type' ) : tagName;
+
+			switch ( type ) {
+				case 'date' :
+					/**
+					 * Language-sensitive date formatting.
+					 *
+					 * @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat
+					 */
+					var intlDate = new Intl.DateTimeFormat(
+						[],
+						{
+							'weekday': 'short',
+							'day': 'numeric',
+							'month': 'short',
+							'year': 'numeric'
+						}
+					);
+
+					var inputValue = $input.val();
+
+					if ( '' !== inputValue ) {
+						text = intlDate.format( new Date( inputValue ) );
+					}
+
+					break;
+				case 'select' :
+					text = $input.find( 'option:selected' ).text();
+
+					break;
 			}
 
+			$( '#' + elementId + '-display' ).text( text );
+		};
+
+		this.validateDateInput = function() {
+			var minDate = $input.attr( 'min' );
+
+			var inputDate = $input.val();
+
+			if (  undefined === minDate ) {
+				return;
+			}
+
+			minDate = new Date( minDate );
+
+			inputDate = new Date( inputDate );
+
+			var $error = $( '#' + elementId + '-error' );
+
+			var isValidInput = inputDate >= minDate;
+
+			if ( isValidInput ) {
+				$error.hide();
+			} else {
+				$error.show();
+			}
+
+			$element.find( '.save-' + elementId ).attr( 'disabled', ! isValidInput );
+		};
+
+		// Edit click.
+		$element.siblings( 'a.edit-' + elementId ).on( 'click', function( event ) {
 			event.preventDefault();
+
+			if ( ! $element.is( ':hidden' ) ) {
+				return;
+			}
+
+			var $error = $( '#' + elementId + '-error' );
+
+			if ( $error.length > 0 && ! $error.is( ':hidden' ) ) {
+				$element.find( '.save-' + elementId ).attr( 'disabled', true );
+
+				$error.hide();
+			}
+
+			var dataMin = $input.data( 'min' );
+
+			if ( undefined !== dataMin && dataMin !== '' ) {
+				$input.attr( 'min', dataMin );
+			}
+
+			$element.slideDown( 'fast', function() {
+				$input.trigger( 'focus' );
+			} );
+
+			$( this ).hide();
+
+			obj.validateDateInput();
 		} );
 
-		// Save post status changes and hide options.
-		$element.find( '.save-pronamic-pay-post-status' ).on( 'click', function( event ) {
-			$element.slideUp( 'fast' ).siblings( 'a.edit-pronamic-pay-post-status' ).show().trigger( 'focus' );
+		// Validate date input on changes.
+		$element.find( 'input[type="date"][data-min!=""][data-min]' ).on( 'change', obj.validateDateInput );
 
-			$( '#pronamic-pay-status-display' ).text( $( '#pronamic-pay-post-status option:selected' ).text() );
-
+		// Save changes and hide options.
+		$element.find( '.save-' + elementId ).on( 'click', function( event ) {
 			event.preventDefault();
+
+			if ( $( this ).is( '[disabled]' ) ) {
+				return;
+			}
+
+			obj.hideOptions();
+
+			obj.updateDisplayText();
 		} );
 
-		// Cancel post status editing and hide options.
-		$element.find( '.cancel-pronamic-pay-post-status' ).on( 'click', function( event ) {
-			$element.slideUp( 'fast' ).siblings( 'a.edit-pronamic-pay-post-status' ).show().trigger( 'focus' );
-
-			$( '#pronamic-pay-post-status' ).val( $( '#hidden_pronamic_pay_post_status' ).val() );
-
-			$( '#pronamic-pay-status-display' ).text( $( '#pronamic-pay-post-status option:selected' ).text() );
-
+		// Cancel editing and hide options.
+		$element.find( '.cancel-' + elementId ).on( 'click', function( event ) {
 			event.preventDefault();
+
+			obj.hideOptions();
+
+			var originalValue = $( '#hidden_' + elementId.replace( /-/g, '_' ) ).val();
+
+			$( '#' + elementId ).val( originalValue );
+
+			var dataMin = $input.data( 'min' );
+
+			if ( undefined !== dataMin && dataMin !== '' ) {
+				$input.removeAttr( 'min' );
+			}
+
+			obj.updateDisplayText();
 		} );
 	};
 
@@ -282,9 +389,26 @@
 				return;
 			}
 
-			var postStatus = new PronamicPayPostStatus( this );
+			var postStatus = new PronamicPayPostEdit( this, 'pronamic-pay-post-status' );
 
 			$this.data( 'pronamic-pay-post-status', postStatus );
+		} );
+	};
+
+	/**
+	 * jQuery plugin - Pronamic Pay next payment date
+	 */
+	$.fn.pronamicPayNextPaymentDate = function() {
+		return this.each( function() {
+			var $this = $( this );
+
+			if ( $this.data( 'pronamic-pay-next-payment-date' ) ) {
+				return;
+			}
+
+			var nextPaymentDate = new PronamicPayPostEdit( this, 'pronamic-pay-next-payment-date' );
+
+			$this.data( 'pronamic-pay-next-payment-date', nextPaymentDate );
 		} );
 	};
 
@@ -425,7 +549,8 @@
 	$( document ).ready( function() {
 		$( '#pronamic-pay-gateway-config-editor' ).pronamicPayGatewayConfigEditor();
 		$( '#pronamic_payment_form_options').pronamicPayFormOptions();
-		$( '#pronamic-pay-post-status-select' ).pronamicPayPostStatus();
+		$( '#pronamic-pay-post-status-input' ).pronamicPayPostStatus();
+		$( '#pronamic-pay-next-payment-date-input' ).pronamicPayNextPaymentDate();
 		$( '#pronamic_gateway_test').pronamicPayGatewayTest();
 		$( '.pronamic-pay-tabs' ).pronamicPayTabs();
 
