@@ -120,66 +120,75 @@ $subscription = \get_pronamic_subscription( (int) get_the_ID() );
 			<?php endif; ?>
 		</div>
 
-		<div class="misc-pub-section curtime">
-			<?php
+		<?php if ( null !== $subscription ) : ?>
 
-			$next_payment_date = null === $subscription ? null : $subscription->get_next_payment_date();
-
-			?>
-
-			<span id="timestamp">
-				<?php echo esc_html( __( 'Next payment:', 'pronamic_ideal' ) ); ?>
-			</span>
-
-			<span id="pronamic-pay-next-payment-date-display"><?php echo esc_html( null === $next_payment_date ? '—' : $next_payment_date->format_i18n( \__( 'D j M Y', 'pronamic_ideal' ) ) ); ?></span>
-
-			<a href="#pronamic-pay-next-payment-date" class="edit-pronamic-pay-next-payment-date hide-if-no-js" role="button">
-				<span aria-hidden="true"><?php _e( 'Edit', 'pronamic_ideal' ); ?></span>
-				<span class="screen-reader-text"><?php _e( 'Edit next payment date', 'pronamic_ideal' ); ?></span>
-			</a>
-
-			<div id="pronamic-pay-next-payment-date-input" class="hide-if-js">
-				<input type="hidden" name="hidden_pronamic_pay_next_payment_date" id="hidden_pronamic_pay_next_payment_date" value="<?php echo \esc_attr( null === $next_payment_date ? '' : $next_payment_date->format( 'Y-m-d' ) ); ?>" />
-				<label for="pronamic-pay-next-payment-date" class="screen-reader-text"><?php _e( 'Set date' ); ?></label>
-
+			<div class="misc-pub-section curtime">
 				<?php
 
-				$atts = array(
-					'id'       => 'pronamic-pay-next-payment-date',
-					'name'     => 'pronamic_subscription_next_payment_date',
-					'type'     => 'date',
-					'value'    => null === $next_payment_date ? '' : $next_payment_date->format( 'Y-m-d' ),
-					'data-min' => ( new DateTimeImmutable( 'tomorrow' ) )->format( 'Y-m-d' ),
-				);
-
-				\printf(
-					'<input %s>',
-					/* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */
-					Util::array_to_html_attributes( $atts )
-				);
+				$next_payment_date = $subscription->get_next_payment_date();
 
 				?>
 
-				<a href="#pronamic-pay-next-payment-date" class="save-pronamic-pay-next-payment-date hide-if-no-js button"><?php _e( 'OK' ); ?></a>
-				<a href="#pronamic-pay-next-payment-date" class="cancel-pronamic-pay-next-payment-date hide-if-no-js button-cancel"><?php _e( 'Cancel' ); ?></a>
+				<span id="timestamp">
+					<?php echo esc_html( __( 'Next payment:', 'pronamic_ideal' ) ); ?>
+				</span>
+
+				<span id="pronamic-pay-next-payment-date-display"><?php echo esc_html( null === $next_payment_date ? '—' : $next_payment_date->format_i18n( \__( 'D j M Y', 'pronamic_ideal' ) ) ); ?></span>
+
+				<?php if ( 'woocommerce' !== $subscription->get_source() ) : ?>
+
+					<a href="#pronamic-pay-next-payment-date" class="edit-pronamic-pay-next-payment-date hide-if-no-js" role="button">
+						<span aria-hidden="true"><?php _e( 'Edit', 'pronamic_ideal' ); ?></span>
+						<span class="screen-reader-text"><?php _e( 'Edit next payment date', 'pronamic_ideal' ); ?></span>
+					</a>
+
+				<?php endif; ?>
+
+				<div id="pronamic-pay-next-payment-date-input" class="hide-if-js">
+					<input type="hidden" name="hidden_pronamic_pay_next_payment_date" id="hidden_pronamic_pay_next_payment_date" value="<?php echo \esc_attr( null === $next_payment_date ? '' : $next_payment_date->format( 'Y-m-d' ) ); ?>" />
+					<label for="pronamic-pay-next-payment-date" class="screen-reader-text"><?php _e( 'Set date' ); ?></label>
+
+					<?php
+
+					$atts = array(
+						'id'       => 'pronamic-pay-next-payment-date',
+						'name'     => 'pronamic_subscription_next_payment_date',
+						'type'     => 'date',
+						'value'    => null === $next_payment_date ? '' : $next_payment_date->format( 'Y-m-d' ),
+						'data-min' => ( new DateTimeImmutable( 'tomorrow' ) )->format( 'Y-m-d' ),
+					);
+
+					\printf(
+						'<input %s>',
+						/* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */
+						Util::array_to_html_attributes( $atts )
+					);
+
+					?>
+
+					<a href="#pronamic-pay-next-payment-date" class="save-pronamic-pay-next-payment-date hide-if-no-js button"><?php _e( 'OK' ); ?></a>
+					<a href="#pronamic-pay-next-payment-date" class="cancel-pronamic-pay-next-payment-date hide-if-no-js button-cancel"><?php _e( 'Cancel' ); ?></a>
+				</div>
+
+				<?php
+
+				$tomorrow = new DateTimeImmutable( 'tomorrow midnight', new DateTimeZone( Plugin::TIMEZONE ) );
+
+				$class = 'hidden';
+
+				if ( null !== $subscription && SubscriptionStatus::ACTIVE === $subscription->get_status() ) {
+					$class = null !== $next_payment_date && $next_payment_date >= $tomorrow ? 'hidden' : '';
+				}
+
+				?>
+
+				<div id="pronamic-pay-next-payment-date-error" class="error inline <?php echo esc_attr( $class ); ?>">
+					<p><?php echo esc_html( __( 'Next payment date in the past. Please update the date to continue payments for this subscription.', 'pronamic_ideal' ) ); ?></p>
+				</div>
 			</div>
 
-			<?php
+		<?php endif; ?>
 
-			$tomorrow = new DateTimeImmutable( 'tomorrow midnight', new DateTimeZone( Plugin::TIMEZONE ) );
-
-			$class = 'hidden';
-
-			if ( null !== $subscription && SubscriptionStatus::ACTIVE === $subscription->get_status() ) {
-				$class = null !== $next_payment_date && $next_payment_date >= $tomorrow ? 'hidden' : '';
-			}
-
-			?>
-
-			<div id="pronamic-pay-next-payment-date-error" class="error inline <?php echo esc_attr( $class ); ?>">
-				<p><?php echo esc_html( __( 'Next payment date in the past. Please update the date to continue payments for this subscription.', 'pronamic_ideal' ) ); ?></p>
-			</div>
-		</div>
 	</div>
 </div>
 
