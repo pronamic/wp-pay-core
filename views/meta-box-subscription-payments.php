@@ -88,7 +88,7 @@ if ( ! isset( $subscription ) ) {
 								sprintf(
 									/* translators: %s: next payment date */
 									__( 'Will be created on %s', 'pronamic_ideal' ),
-									\esc_html( $next_payment_date->format_i18n() )
+									\esc_html( $next_payment_date->format_i18n( __( 'D j M Y', 'pronamic_ideal' ) ) )
 								)
 							);
 
