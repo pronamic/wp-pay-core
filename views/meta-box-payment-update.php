@@ -50,14 +50,14 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 
 			?>
 
-			<span id="pronamic-pay-status-display"><?php echo esc_html( $status_label ); ?></span>
+			<span id="pronamic-pay-post-status-display"><?php echo esc_html( $status_label ); ?></span>
 
 			<a href="#pronamic-pay-post-status" class="edit-pronamic-pay-post-status hide-if-no-js" role="button">
 				<span aria-hidden="true"><?php _e( 'Edit', 'pronamic_ideal' ); ?></span>
 				<span class="screen-reader-text"><?php _e( 'Edit status', 'pronamic_ideal' ); ?></span>
 			</a>
 
-			<div id="pronamic-pay-post-status-select" class="hide-if-js">
+			<div id="pronamic-pay-post-status-input" class="hide-if-js">
 				<input type="hidden" name="hidden_pronamic_pay_post_status" id="hidden_pronamic_pay_post_status" value="<?php echo esc_attr( ( 'auto-draft' === $post->post_status ) ? 'draft' : $post->post_status ); ?>" />
 				<label for="pronamic-pay-post-status" class="screen-reader-text"><?php _e( 'Set status' ); ?></label>
 				<select id="pronamic-pay-post-status" name="pronamic_payment_post_status">
