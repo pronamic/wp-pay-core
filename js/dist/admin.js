@@ -243,6 +243,22 @@
 
 		this.hideOptions = function() {
 			$element.slideUp( 'fast' ).siblings( 'a.edit-' + elementId ).show().trigger( 'focus' );
+
+			var $minError = $( '#' + elementId + '-min-error' );
+
+			// Show original field error.
+			if ( $minError.is( ':visible' ) ) {
+				$( '#' + elementId + '-error' ).show();
+			}
+
+			// Hide editing notice and error.
+			var hiddenNotices = $( '#' + elementId + '-notice:hidden' );
+
+			$( '#' + elementId + '-notice' ).hide();
+
+			hiddenNotices.show();
+
+			$minError.hide();
 		};
 
 		this.updateDisplayText = function() {
@@ -298,14 +314,14 @@
 
 			inputDate = new Date( inputDate );
 
-			var $error = $( '#' + elementId + '-error' );
+			var $minError = $( '#' + elementId + '-min-error' );
 
 			var isValidInput = inputDate >= minDate;
 
 			if ( isValidInput ) {
-				$error.hide();
+				$minError.hide();
 			} else {
-				$error.show();
+				$minError.show();
 			}
 
 			$element.find( '.save-' + elementId ).attr( 'disabled', ! isValidInput );
@@ -315,13 +331,13 @@
 		$element.siblings( 'a.edit-' + elementId ).on( 'click', function( event ) {
 			event.preventDefault();
 
-			if ( ! $element.is( ':hidden' ) ) {
+			if ( $element.is( ':visible' ) ) {
 				return;
 			}
 
 			var $error = $( '#' + elementId + '-error' );
 
-			if ( $error.length > 0 && ! $error.is( ':hidden' ) ) {
+			if ( $error.length > 0 ) {
 				$element.find( '.save-' + elementId ).attr( 'disabled', true );
 
 				$error.hide();
@@ -332,6 +348,13 @@
 			if ( undefined !== dataMin && dataMin !== '' ) {
 				$input.attr( 'min', dataMin );
 			}
+
+			// Field notice.
+			var hiddenNotice = $( '#' + elementId + '-notice:hidden' );
+
+			$( '#' + elementId + '-notice:visible' ).hide();
+
+			hiddenNotice.show();
 
 			$element.slideDown( 'fast', function() {
 				$input.trigger( 'focus' );
@@ -362,17 +385,19 @@
 		$element.find( '.cancel-' + elementId ).on( 'click', function( event ) {
 			event.preventDefault();
 
-			obj.hideOptions();
-
 			var originalValue = $( '#hidden_' + elementId.replace( /-/g, '_' ) ).val();
 
 			$( '#' + elementId ).val( originalValue );
+
+			obj.validateDateInput();
 
 			var dataMin = $input.data( 'min' );
 
 			if ( undefined !== dataMin && dataMin !== '' ) {
 				$input.removeAttr( 'min' );
 			}
+
+			obj.hideOptions();
 
 			obj.updateDisplayText();
 		} );

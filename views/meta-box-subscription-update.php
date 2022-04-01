@@ -89,33 +89,25 @@ $subscription = \get_pronamic_subscription( (int) get_the_ID() );
 					<a href="#pronamic-pay-post-status" class="cancel-pronamic-pay-post-status hide-if-no-js button-cancel"><?php _e( 'Cancel' ); ?></a>
 				</div>
 
-				<?php
+				<?php if ( null !== $subscription && in_array( $subscription->get_status(), array( SubscriptionStatus::FAILURE, SubscriptionStatus::ON_HOLD ), true ) ) : ?>
 
-				$tomorrow = new DateTimeImmutable( 'tomorrow midnight', new DateTimeZone( Plugin::TIMEZONE ) );
+					<div id="pronamic-pay-post-status-notice" class="notice inline">
+						<p>
+							<?php
 
-				$class = 'hidden';
+							echo \wp_kses_post(
+								\sprintf(
+									'%s <a href="#pronamic_subscription_notes">%s</a>',
+									\__( 'Recurring payments will not be created until manual reactivation of this subscription.', 'pronamic_ideal' ),
+									\__( 'See subscription and payment notes for details about status changes.', 'pronamic_ideal' )
+								)
+							);
 
-				if ( null !== $subscription && in_array( $subscription->get_status(), array( SubscriptionStatus::FAILURE, SubscriptionStatus::ON_HOLD ), true ) ) {
-					$class = '';
-				}
+							?>
+						</p>
+					</div>
 
-				?>
-
-				<div id="pronamic-pay-post-status-notice" class="notice inline <?php echo esc_attr( $class ); ?>">
-					<p>
-						<?php
-
-						echo \wp_kses_post(
-							\sprintf(
-								'%s <a href="#pronamic_subscription_notes">%s</a>',
-								\__( 'Recurring payments will not be created until manual reactivation of this subscription.', 'pronamic_ideal' ),
-								\__( 'See subscription and payment notes for details about status changes.', 'pronamic_ideal' )
-							)
-						);
-
-						?>
-					</p>
-				</div>
+				<?php endif; ?>
 
 			<?php endif; ?>
 		</div>
@@ -172,18 +164,38 @@ $subscription = \get_pronamic_subscription( (int) get_the_ID() );
 
 				<?php
 
-				$tomorrow = new DateTimeImmutable( 'tomorrow midnight', new DateTimeZone( Plugin::TIMEZONE ) );
+				$today = new DateTimeImmutable( 'today midnight', new DateTimeZone( Plugin::TIMEZONE ) );
 
-				$class = 'hidden';
+				if ( SubscriptionStatus::ACTIVE === $subscription->get_status() && null !== $next_payment_date && $next_payment_date < $today ) :
+					?>
 
-				if ( null !== $subscription && SubscriptionStatus::ACTIVE === $subscription->get_status() ) {
-					$class = null !== $next_payment_date && $next_payment_date >= $tomorrow ? 'hidden' : '';
-				}
+					<div id="pronamic-pay-next-payment-date-error" class="error inline">
+						<p><?php echo esc_html( __( 'Set the next payment date to a future date to continue payments for this subscription.', 'pronamic_ideal' ) ); ?></p>
+					</div>
 
-				?>
+				<?php endif; ?>
 
-				<div id="pronamic-pay-next-payment-date-error" class="error inline <?php echo esc_attr( $class ); ?>">
-					<p><?php echo esc_html( __( 'Next payment date in the past. Please update the date to continue payments for this subscription.', 'pronamic_ideal' ) ); ?></p>
+				<div id="pronamic-pay-next-payment-date-min-error" class="hidden error inline">
+					<p><?php echo esc_html( __( 'Please select a future date.', 'pronamic_ideal' ) ); ?></p>
+				</div>
+
+				<div id="pronamic-pay-next-payment-date-notice" class="hidden notice inline">
+					<p>
+						<?php
+
+						\printf(
+							/* translators: %s subscription source description */
+							\esc_html( \__( 'Editing the next payment date does not affect the current status or validity of %s.', 'pronamic_ideal' ) ),
+							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							\str_replace(
+								array( '<br>', '<br/>', '<br />' ),
+								' ',
+								$subscription->get_source_text()
+							)
+						);
+
+						?>
+					</p>
 				</div>
 			</div>
 
