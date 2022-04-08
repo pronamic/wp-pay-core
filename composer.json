@@ -101,6 +101,11 @@
 		],
 		"build-docs": [
 			"XDEBUG_MODE=off vendor/bin/wp-documentor parse src --format=markdown --relative=docs > docs/hooks.md"
+		],
+		"post-install-cmd": "echo 'Optionally run: composer bin all install'",
+		"post-update-cmd": [
+			"echo 'Optionally run: composer bin all update'",
+			"php -r \"copy('vendor/automattic/wordbless/src/dbless-wpdb.php', 'wordpress/wp-content/db.php');\""
 		]
 	}
 }
