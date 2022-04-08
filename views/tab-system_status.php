@@ -45,7 +45,9 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 
 						break;
 					default:
-						echo esc_html( $license_status );
+						if ( \is_string( $license_status ) ) {
+							echo \esc_html( $license_status );
+						}
 
 						break;
 				}
