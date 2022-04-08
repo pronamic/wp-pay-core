@@ -10,7 +10,7 @@
 
 namespace Pronamic\WordPress\Pay;
 
-use WP_UnitTestCase;
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 /**
  * Country test
@@ -19,7 +19,7 @@ use WP_UnitTestCase;
  * @version 2.1.6
  * @since   2.1.6
  */
-class CountryTest extends WP_UnitTestCase {
+class CountryTest extends TestCase {
 	/**
 	 * Test country.
 	 */

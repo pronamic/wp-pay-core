@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
+
 /**
  * Customer helper test
  *
@@ -17,7 +19,7 @@ namespace Pronamic\WordPress\Pay;
  * @version 2.6.0
  * @since   2.6.0
  */
-class CustomerHelperTest extends \PHPUnit\Framework\TestCase {
+class CustomerHelperTest extends TestCase {
 	/**
 	 * Test customer from array.
 	 */

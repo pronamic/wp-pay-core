@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
+
 /**
  * Abstract gateway integration test
  *
@@ -17,7 +19,7 @@ namespace Pronamic\WordPress\Pay;
  * @version 2.2.8
  * @since   2.2.8
  */
-class AbstractGatewayIntegrationTest extends \PHPUnit\Framework\TestCase {
+class AbstractGatewayIntegrationTest extends TestCase {
 	/**
 	 * Test gateway integration.
 	 */

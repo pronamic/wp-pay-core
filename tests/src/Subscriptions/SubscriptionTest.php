@@ -13,7 +13,7 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
-use WP_UnitTestCase;
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 /**
  * Subscription test
@@ -21,7 +21,7 @@ use WP_UnitTestCase;
  * @author  Remco Tolsma
  * @version 2.5.0
  */
-class SubscriptionTest extends WP_UnitTestCase {
+class SubscriptionTest extends TestCase {
 	/**
 	 * Test construct subscription object.
 	 */

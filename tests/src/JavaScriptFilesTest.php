@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
+
 /**
  * JavaScript files test
  *
@@ -17,7 +19,7 @@ namespace Pronamic\WordPress\Pay;
  * @version 2.1.6
  * @since   2.1.6
  */
-class JavaScriptFilesTest extends \PHPUnit\Framework\TestCase {
+class JavaScriptFilesTest extends TestCase {
 	/**
 	 * Test files.
 	 */

@@ -10,7 +10,7 @@
 
 namespace Pronamic\WordPress\Pay;
 
-use WP_UnitTestCase;
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 /**
  * House number test
@@ -21,7 +21,7 @@ use WP_UnitTestCase;
  * @version 2.1.6
  * @since   2.1.6
  */
-class HouseNumberTest extends WP_UnitTestCase {
+class HouseNumberTest extends TestCase {
 	/**
 	 * Test house number.
 	 */

@@ -57,7 +57,7 @@
 		"pronamic/wp-http": "^1.0",
 		"pronamic/wp-money": "^2.0",
 		"pronamic/wp-number": "^1.1",
-		"roots/wordpress": "^5.2",
+		"roots/wordpress": "^5.9",
 		"viison/address-splitter": "^0.3.4",
 		"woocommerce/action-scheduler": "^3.0"
 	},

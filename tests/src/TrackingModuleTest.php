@@ -10,13 +10,15 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
+
 /**
  * Tracking module test
  *
  * @author  Reüel van der Steege
  * @version 2.4.0
  */
-class TrackingModuleTest extends \PHPUnit_Framework_TestCase {
+class TrackingModuleTest extends TestCase {
 	/**
 	 * Test get tracking url.
 	 */

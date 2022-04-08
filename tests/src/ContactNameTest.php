@@ -10,7 +10,7 @@
 
 namespace Pronamic\WordPress\Pay;
 
-use WP_UnitTestCase;
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 /**
  * Personal Name test
@@ -18,7 +18,7 @@ use WP_UnitTestCase;
  * @author  Remco Tolsma
  * @version 1.0
  */
-class ContactNameTest extends WP_UnitTestCase {
+class ContactNameTest extends TestCase {
 	/**
 	 * Test personal name.
 	 */

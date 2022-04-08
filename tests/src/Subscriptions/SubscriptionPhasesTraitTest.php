@@ -12,6 +12,7 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 /**
  * Subscription Phases Trait Test
@@ -19,7 +20,7 @@ use Pronamic\WordPress\Money\TaxedMoney;
  * @author  Remco Tolsma
  * @version 2.5.0
  */
-class SubscriptionPhasesTraitTest extends \WP_UnitTestCase {
+class SubscriptionPhasesTraitTest extends TestCase {
 	/**
 	 * Create new subscription.
 	 *

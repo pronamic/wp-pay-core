@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
+
 /**
  * Failure reason test
  *
@@ -17,7 +19,7 @@ namespace Pronamic\WordPress\Pay\Payments;
  * @version 2.2.8
  * @since   2.2.8
  */
-class FailureReasonTest extends \PHPUnit\Framework\TestCase {
+class FailureReasonTest extends TestCase {
 	/**
 	 * Test failure reason object.
 	 *

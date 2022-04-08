@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay\Core;
 
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
+
 /**
  * Title: WordPress pay util test
  * Description:
@@ -20,7 +22,7 @@ namespace Pronamic\WordPress\Pay\Core;
  * @version 2.0.0
  * @since 1.1.0
  */
-class UtilTest extends \WP_UnitTestCase {
+class UtilTest extends TestCase {
 	/**
 	 * Test method exists.
 	 *

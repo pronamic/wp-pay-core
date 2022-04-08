@@ -20,7 +20,7 @@ use Pronamic\WordPress\Pay\ContactName;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\CreditCard;
 use Pronamic\WordPress\Pay\Customer;
-use WP_UnitTestCase;
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 /**
  * Payment test
@@ -29,7 +29,7 @@ use WP_UnitTestCase;
  * @version 2.2.6
  * @since   1.0.0
  */
-class PaymentTest extends WP_UnitTestCase {
+class PaymentTest extends TestCase {
 	/**
 	 * Test construct payment object.
 	 */
