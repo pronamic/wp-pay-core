@@ -14,7 +14,7 @@ parameters:
 		- vendor/php-stubs/wordpress-globals/wordpress-globals.php
 		- vendor/php-stubs/wp-cli-stubs/wp-cli-stubs.php
 	scanDirectories:
-		- wp-content/plugins/action-scheduler
+		- vendor/woocommerce/action-scheduler
 	paths:
 		- src/
 		- views/
