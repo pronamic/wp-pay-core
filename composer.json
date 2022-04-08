@@ -69,10 +69,9 @@
 		"php-stubs/wordpress-globals": "^0.2.0",
 		"php-stubs/wp-cli-stubs": "^2.4",
 		"phpmd/phpmd": "^2.9",
-		"phpunit/phpunit": "^5.7 || ^6.0",
 		"pronamic/wp-coding-standards": "^1.0",
 		"wp-cli/wp-cli": "^2.3",
-		"wp-phpunit/wp-phpunit": ">=5.2",
+		"wp-phpunit/wp-phpunit": "^5.8",
 		"yoast/phpunit-polyfills": "^1.0"
 	},
 	"scripts": {
