@@ -10,7 +10,7 @@
 
 namespace Pronamic\WordPress\Pay;
 
-use WP_UnitTestCase;
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 /**
  * Address test
@@ -19,7 +19,7 @@ use WP_UnitTestCase;
  * @version 2.1.0
  * @since   2.1.0
  */
-class AddressTest extends WP_UnitTestCase {
+class AddressTest extends TestCase {
 	/**
 	 * Address.
 	 *
@@ -37,7 +37,9 @@ class AddressTest extends WP_UnitTestCase {
 	/**
 	 * Setup.
 	 */
-	public function setUp() {
+	public function set_up() {
+		parent::set_up();
+
 		$this->address = new Address();
 
 		$this->name = new ContactName();
