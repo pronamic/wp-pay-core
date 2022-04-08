@@ -300,9 +300,9 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			array(
 				'post_type'             => 'pronamic_pay_subscr',
 				'post_date_gmt'         => $this->get_mysql_utc_date( $subscription->date ),
-				'post_title'            => sprintf(
-					'Subscription – %s',
-					date_i18n( _x( 'M d, Y @ h:i A', 'Subscription title date format parsed by `date_i18n`.', 'pronamic_ideal' ) )
+				'post_title'            => \sprintf(
+					'Subscription %s',
+					$subscription->get_key()
 				),
 				'post_author'           => null === $customer ? null : $customer->get_user_id(),
 				'pronamic_subscription' => $subscription,
