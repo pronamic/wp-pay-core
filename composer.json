@@ -59,7 +59,7 @@
 		"pronamic/wp-number": "^1.1",
 		"roots/wordpress": "^5.9",
 		"viison/address-splitter": "^0.3.4",
-		"woocommerce/action-scheduler": "^3.0"
+		"woocommerce/action-scheduler": "^3.4"
 	},
 	"require-dev": {
 		"automattic/wordbless": "^0.3.1",

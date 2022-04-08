@@ -23,7 +23,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
  */
 $plugin = \Pronamic\WordPress\Pay\Plugin::instance(
     array(
-        'action_scheduler' => __DIR__ . '/../wp-content/plugins/action-scheduler/action-scheduler.php',
+        'action_scheduler' => __DIR__ . '/../vendor/woocommerce/action-scheduler/action-scheduler.php',
     )
 );
 
