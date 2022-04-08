@@ -120,10 +120,6 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 
 				$php_version = \phpversion();
 
-				if ( false === $php_version ) {
-					\esc_html_e( 'Unable to get the current PHP version.', 'pronamic_ideal' );
-				}
-
 				if ( false !== $php_version ) {
 					if ( \version_compare( $php_version, '5.2', '>' ) ) {
 						echo '✓';
