@@ -2,5 +2,6 @@
   "id": 1,
   "mode": "live",
   "phases": [],
-  "activated_at": "2005-05-05T00:00:00+00:00"
+  "activated_at": "2005-05-05T00:00:00+00:00",
+  "next_payment_date": null
 }

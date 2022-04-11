@@ -229,27 +229,27 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 			$new_value = $postarr['pronamic_subscription_next_payment_date'];
 
-			$current_phase = $subscription->get_current_phase();
-
-			if ( null !== $current_phase && ! empty( $new_value ) && $old_value !== $new_value ) {
+			if ( ! empty( $new_value ) && $old_value !== $new_value ) {
 				$new_date = new DateTimeImmutable( $new_value );
 
-				$next_date = $current_phase->get_next_date();
+				$next_payment_date = $subscription->get_next_payment_date();
 
-				$updated_date = null === $next_date ? clone $new_date : clone $next_date;
+				$updated_date = null === $next_payment_date ? clone $new_date : clone $next_payment_date;
 
 				$updated_date = $updated_date->setDate( (int) $new_date->format( 'Y' ), (int) $new_date->format( 'm' ), (int) $new_date->format( 'd' ) );
 
-				$current_phase->set_next_date( $updated_date );
+				if ( false !== $updated_date ) {
+					$subscription->set_next_payment_date( $updated_date );
 
-				$note = \sprintf(
-					/* translators: %1: old formatted date, %2: new formatted date */
-					\__( 'Next payment date updated from %1$s to %2$s.', 'pronamic_ideal' ),
-					null === $next_date ? '' : $next_date->format_i18n( \__( 'D j M Y', 'pronamic_ideal' ) ),
-					$updated_date->format_i18n( \__( 'D j M Y', 'pronamic_ideal' ) )
-				);
+					$note = \sprintf(
+						/* translators: %1: old formatted date, %2: new formatted date */
+						\__( 'Next payment date updated from %1$s to %2$s.', 'pronamic_ideal' ),
+						null === $next_payment_date ? '' : $next_payment_date->format_i18n( \__( 'D j M Y', 'pronamic_ideal' ) ),
+						$updated_date->format_i18n( \__( 'D j M Y', 'pronamic_ideal' ) )
+					);
 
-				$subscription->add_note( $note );
+					$subscription->add_note( $note );
+				}
 			}
 		}
 	}
@@ -451,13 +451,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			);
 
 			$phase->set_total_periods( $this->get_meta_int( $id, 'frequency' ) );
-
-			// Set next date.
-			$next_date = $this->get_meta_date( $id, 'next_payment_date' );
-
-			if ( null !== $next_date ) {
-				$phase->set_next_date( $next_date );
-			}
 		}
 	}
 
@@ -622,6 +615,11 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		if ( empty( $payment_method ) ) {
 			$subscription->set_payment_method( $this->get_meta_string( $id, 'payment_method' ) );
 		}
+
+		// Set next date.
+		$next_date = $this->get_meta_date( $id, 'next_payment' );
+
+		$subscription->set_next_payment_date( $next_date );
 
 		// Legacy.
 		parent::read_post_meta( $subscription );

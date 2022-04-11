@@ -118,7 +118,6 @@ class SubscriptionPhase implements \JsonSerializable {
 		$this->subscription = $subscription;
 
 		$this->set_start_date( $start_date );
-		$this->set_next_date( $start_date );
 
 		$this->interval = $interval;
 		$this->amount   = $amount;
@@ -216,7 +215,7 @@ class SubscriptionPhase implements \JsonSerializable {
 		/**
 		 * Ok.
 		 */
-		return $this->next_date;
+		return $this->subscription->get_next_payment_date();
 	}
 
 	/**
@@ -226,7 +225,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return void
 	 */
 	public function set_next_date( $next_date ) {
-		$this->next_date = ( null === $next_date ) ? null : DateTimeImmutable::create_from_interface( $next_date );
+		$this->subscription->set_next_payment_date( $next_date );
 	}
 
 	/**
@@ -431,7 +430,9 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return bool True if all periods are created, false otherwise.
 	 */
 	public function all_periods_created() {
-		if ( null === $this->next_date ) {
+		$next_date = $this->subscription->get_next_payment_date();
+
+		if ( null === $next_date ) {
 			return true;
 		}
 
@@ -439,7 +440,7 @@ class SubscriptionPhase implements \JsonSerializable {
 			return false;
 		}
 
-		return $this->next_date >= $this->end_date;
+		return $next_date >= $this->end_date;
 	}
 
 	/**
@@ -533,7 +534,6 @@ class SubscriptionPhase implements \JsonSerializable {
 			'sequence_number'   => $this->get_sequence_number(),
 			'start_date'        => $this->start_date->format( \DATE_ATOM ),
 			'end_date'          => ( null === $this->end_date ) ? null : $this->end_date->format( \DATE_ATOM ),
-			'next_date'         => ( null === $this->next_date ) ? null : $this->next_date->format( \DATE_ATOM ),
 			'interval'          => $this->interval->get_specification(),
 			'amount'            => $this->amount->jsonSerialize(),
 			// Numbers.
@@ -600,10 +600,6 @@ class SubscriptionPhase implements \JsonSerializable {
 
 		if ( property_exists( $json, 'periods_created' ) ) {
 			$phase->set_periods_created( $json->periods_created );
-		}
-
-		if ( property_exists( $json, 'next_date' ) ) {
-			$phase->set_next_date( null === $json->next_date ? null : new DateTimeImmutable( $json->next_date ) );
 		}
 
 		if ( property_exists( $json, 'alignment_rate' ) ) {
