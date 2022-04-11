@@ -32,10 +32,6 @@ $subscription = \get_pronamic_subscription( (int) get_the_ID() );
 <input type="hidden" name="post_author_override" value="<?php echo esc_attr( $post_author ); ?>" />
 
 <div class="pronamic-pay-inner">
-	<div id="minor-publishing-actions">
-		<div class="clear"></div>
-	</div>
-
 	<div class="pronamic-pay-minor-actions">
 		<div class="misc-pub-section misc-pub-post-status">
 			<?php echo esc_html( __( 'Status:', 'pronamic_ideal' ) ); ?>
