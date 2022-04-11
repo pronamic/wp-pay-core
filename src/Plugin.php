@@ -1036,9 +1036,9 @@ class Plugin {
 
 		if ( null !== $periods ) {
 			foreach ( $periods as $period ) {
-				$phase = $period->get_phase();
+				$subscription = $period->get_phase()->get_subscription();
 
-				$phase->set_next_date( \max( $phase->get_next_date(), $period->get_end_date() ) );
+				$subscription->set_next_payment_date( \max( $subscription->get_next_payment_date(), $period->get_end_date() ) );
 			}
 		}
 

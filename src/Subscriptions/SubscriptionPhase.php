@@ -118,7 +118,6 @@ class SubscriptionPhase implements \JsonSerializable {
 		$this->subscription = $subscription;
 
 		$this->set_start_date( $start_date );
-		$this->set_next_date( $start_date );
 
 		$this->interval = $interval;
 		$this->amount   = $amount;
@@ -431,7 +430,9 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return bool True if all periods are created, false otherwise.
 	 */
 	public function all_periods_created() {
-		if ( null === $this->next_date ) {
+		$next_date = $this->subscription->get_next_payment_date();
+
+		if ( null === $next_date ) {
 			return true;
 		}
 
@@ -439,7 +440,7 @@ class SubscriptionPhase implements \JsonSerializable {
 			return false;
 		}
 
-		return $this->next_date >= $this->end_date;
+		return $next_date >= $this->end_date;
 	}
 
 	/**
@@ -600,10 +601,6 @@ class SubscriptionPhase implements \JsonSerializable {
 
 		if ( property_exists( $json, 'periods_created' ) ) {
 			$phase->set_periods_created( $json->periods_created );
-		}
-
-		if ( property_exists( $json, 'next_date' ) ) {
-			$phase->set_next_date( null === $json->next_date ? null : new DateTimeImmutable( $json->next_date ) );
 		}
 
 		if ( property_exists( $json, 'alignment_rate' ) ) {

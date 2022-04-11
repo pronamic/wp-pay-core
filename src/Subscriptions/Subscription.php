@@ -413,14 +413,17 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * @return DateTimeImmutable|null
 	 */
 	public function get_next_payment_date() {
-		// Get current phase.
-		$phase = $this->get_current_phase();
+		return $this->next_payment_date;
+	}
 
-		if ( null === $phase ) {
-			return null;
-		}
-
-		return $phase->get_next_date();
+	/**
+	 * Set the next payment date of this subscription.
+	 *
+	 * @param $date Date.
+	 * @return void
+	 */
+	public function set_next_payment_date( $date ) {
+		$this->next_payment_date = ( null === $date ) ? null : DateTimeImmutable::create_from_interface( $date );
 	}
 
 	/**
