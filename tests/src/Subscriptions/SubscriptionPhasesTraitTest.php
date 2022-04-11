@@ -80,13 +80,11 @@ class SubscriptionPhasesTraitTest extends TestCase {
 		$subscription = $this->new_subscription();
 
 		$phase_1 = $this->new_phase( $subscription );
+		$phase_2 = $this->new_phase( $subscription );
+		$phase_3 = $this->new_phase( $subscription );
 
 		$phase_1->set_total_periods( 1 );
 		$phase_1->set_periods_created( 1 );
-
-		$phase_2 = $this->new_phase( $subscription );
-
-		$phase_3 = $this->new_phase( $subscription );
 
 		$current_phase = $subscription->get_current_phase();
 

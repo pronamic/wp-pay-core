@@ -423,6 +423,14 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * @return void
 	 */
 	public function set_next_payment_date( $date ) {
+		$end_date = $this->get_end_date();
+
+		if ( null !== $end_date && $date >= $end_date ) {
+			$this->next_payment_date = null;
+
+			return;
+		}
+
 		$this->next_payment_date = ( null === $date ) ? null : DateTimeImmutable::create_from_interface( $date );
 	}
 
