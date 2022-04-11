@@ -215,7 +215,7 @@ class SubscriptionPhase implements \JsonSerializable {
 		/**
 		 * Ok.
 		 */
-		return $this->next_date;
+		return $this->subscription->get_next_payment_date();
 	}
 
 	/**
