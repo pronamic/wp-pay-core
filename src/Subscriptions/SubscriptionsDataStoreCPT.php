@@ -242,7 +242,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 					$subscription->set_next_payment_date( $updated_date );
 
 					$note = \sprintf(
-					/* translators: %1: old formatted date, %2: new formatted date */
+						/* translators: %1: old formatted date, %2: new formatted date */
 						\__( 'Next payment date updated from %1$s to %2$s.', 'pronamic_ideal' ),
 						null === $next_payment_date ? '' : $next_payment_date->format_i18n( \__( 'D j M Y', 'pronamic_ideal' ) ),
 						$updated_date->format_i18n( \__( 'D j M Y', 'pronamic_ideal' ) )
