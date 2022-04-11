@@ -617,7 +617,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		}
 
 		// Set next date.
-		$next_date = $this->get_meta_date( $id, 'next_payment_date' );
+		$next_date = $this->get_meta_date( $id, 'next_payment' );
 
 		$subscription->set_next_payment_date( $next_date );
 
