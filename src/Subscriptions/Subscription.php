@@ -593,6 +593,12 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 
 		$subscription->set_activated_at( $activated_at );
 
+		if ( \property_exists( $json, 'next_payment_date' ) ) {
+			if ( null !== $json->next_payment_date ) {
+				$subscription->set_next_payment_date( new DateTimeImmutable( $json->next_payment_date ) );
+			}
+		}
+
 		return $subscription;
 	}
 
@@ -613,6 +619,8 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 		}
 
 		$properties['activated_at'] = $this->get_activated_at()->format( \DATE_ATOM );
+
+		$properties['next_payment_date'] = ( null === $this->next_payment_date ) ? null : $this->next_payment_date->format( \DATE_ATOM );
 
 		$object = (object) $properties;
 
