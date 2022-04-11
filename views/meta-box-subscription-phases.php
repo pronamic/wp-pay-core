@@ -44,7 +44,6 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 					<th scope="col"><?php esc_html_e( 'Recurrence', 'pronamic_ideal' ); ?></th>
 					<th scope="col"><?php esc_html_e( 'Start Date', 'pronamic_ideal' ); ?></th>
 					<th scope="col"><?php esc_html_e( 'End Date', 'pronamic_ideal' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Next Date', 'pronamic_ideal' ); ?></th>
 
 					<?php if ( $has_trial ) : ?>
 
@@ -117,15 +116,6 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 							$end_date = $phase->get_end_date();
 
 							echo esc_html( null === $end_date ? '∞' : ( new \Pronamic\WordPress\DateTime\DateTime( '@' . $end_date->getTimestamp() ) )->format_i18n() );
-
-							?>
-						</td>
-						<td>
-							<?php
-
-							$next_date = $phase->get_next_date();
-
-							echo esc_html( null === $next_date ? '—' : ( new \Pronamic\WordPress\DateTime\DateTime( '@' . $next_date->getTimestamp() ) )->format_i18n( __( 'D j M Y', 'pronamic_ideal' ) ) );
 
 							?>
 						</td>
