@@ -55,6 +55,13 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	private $phases = array();
 
 	/**
+	 * Next payment date.
+	 *
+	 * @var DateTimeImmutable|null
+	 */
+	private $next_payment_date;
+
+	/**
 	 * Construct and initialize subscription object.
 	 *
 	 * @throws \Exception Throws exception on invalid post date.
@@ -425,7 +432,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	/**
 	 * Set the next payment date of this subscription.
 	 *
-	 * @param $date Date.
+	 * @param DateTimeInterface $date Date.
 	 * @return void
 	 */
 	public function set_next_payment_date( $date ) {
