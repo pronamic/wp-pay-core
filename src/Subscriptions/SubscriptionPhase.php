@@ -225,7 +225,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return void
 	 */
 	public function set_next_date( $next_date ) {
-		$this->next_date = ( null === $next_date ) ? null : DateTimeImmutable::create_from_interface( $next_date );
+		$this->subscription->set_next_payment_date( $next_date );
 	}
 
 	/**
