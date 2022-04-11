@@ -74,17 +74,6 @@ class SubscriptionPhase implements \JsonSerializable {
 	private $end_date;
 
 	/**
-	 * The start date of the next period, also known as:
-	 * - Billing cycle anchor (billing_cycle_anchor).
-	 * - Period anchor.
-	 *
-	 * @link https://stripe.com/docs/billing/subscriptions/billing-cycle
-	 * @link https://stripe.com/docs/api/subscriptions/create#create_subscription-billing_cycle_anchor
-	 * @var DateTimeImmutable|null
-	 */
-	private $next_date;
-
-	/**
 	 * Alignment rate.
 	 *
 	 * @var float|null
@@ -308,14 +297,16 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return int
 	 */
 	public function get_periods_created() {
-		if ( null === $this->next_date ) {
+		$next_date = $this->subscription->get_next_payment_date();
+
+		if ( null === $next_date ) {
 			return 0;
 		}
 
 		$period = new \DatePeriod(
 			new \DateTimeImmutable( $this->start_date->format( 'Y-m-d 00:00:00' ) ),
 			$this->interval,
-			new \DateTimeImmutable( $this->next_date->format( 'Y-m-d 00:00:00' ) )
+			new \DateTimeImmutable( $next_date->format( 'Y-m-d 00:00:00' ) )
 		);
 
 		return \iterator_count( $period );
