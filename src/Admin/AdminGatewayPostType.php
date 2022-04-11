@@ -177,35 +177,15 @@ class AdminGatewayPostType {
 				break;
 			case 'pronamic_gateway_dashboard':
 				if ( isset( $integration ) ) {
-					$urls = $integration->get_dashboard_url();
+					$url = $integration->get_dashboard_url();
 
-					// Output.
-					$content = array();
-
-					foreach ( $urls as $name => $url ) {
-						if ( empty( $name ) ) {
-							$name = __( 'Dashboard', 'pronamic_ideal' );
-						}
-
-						$content[] = sprintf(
+					if ( null !== $url ) {
+						\printf(
 							'<a href="%s" target="_blank">%s</a>',
-							esc_attr( $url ),
-							esc_html( ucfirst( strval( $name ) ) )
+							esc_url( $url ),
+							esc_html__( 'Dashboard', 'pronamic_ideal' )
 						);
 					}
-
-					echo wp_kses(
-						implode(
-							' | ',
-							$content
-						),
-						array(
-							'a' => array(
-								'href'   => array(),
-								'target' => array(),
-							),
-						)
-					);
 				}
 
 				break;
@@ -428,13 +408,6 @@ class AdminGatewayPostType {
 		$gateway_id = \filter_input( INPUT_POST, '_pronamic_gateway_id', FILTER_SANITIZE_STRING );
 
 		\update_post_meta( $post_id, '_pronamic_gateway_id', $gateway_id );
-
-		// Mode.
-		if ( \filter_has_var( INPUT_POST, '_pronamic_gateway_mode' ) ) {
-			$gateway_mode = \filter_input( INPUT_POST, '_pronamic_gateway_mode', FILTER_SANITIZE_STRING );
-
-			\update_post_meta( $post_id, '_pronamic_gateway_mode', $gateway_mode );
-		}
 
 		// Transient.
 		\delete_transient( 'pronamic_outdated_webhook_urls' );

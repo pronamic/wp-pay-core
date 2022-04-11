@@ -11,7 +11,7 @@
 namespace Pronamic\WordPress\Pay\Payments;
 
 use Pronamic\WordPress\Money\TaxedMoney;
-use WP_UnitTestCase;
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 /**
  * Payment lines test
@@ -20,7 +20,7 @@ use WP_UnitTestCase;
  * @version 2.1.0
  * @since   1.0.0
  */
-class PaymentLinesTest extends WP_UnitTestCase {
+class PaymentLinesTest extends TestCase {
 	/**
 	 * Lines.
 	 *
@@ -31,7 +31,9 @@ class PaymentLinesTest extends WP_UnitTestCase {
 	/**
 	 * Setup.
 	 */
-	public function setUp() {
+	public function set_up() {
+		parent::set_up();
+
 		$this->lines = new PaymentLines();
 
 		$line_a = new PaymentLine();

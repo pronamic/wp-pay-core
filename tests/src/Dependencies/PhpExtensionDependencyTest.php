@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay\Dependencies;
 
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
+
 /**
  * PHP Extension Dependency test
  *
@@ -17,7 +19,7 @@ namespace Pronamic\WordPress\Pay\Dependencies;
  * @version 2.2.6
  * @since   2.2.6
  */
-class PhpExtensionDependencyTest extends \WP_UnitTestCase {
+class PhpExtensionDependencyTest extends TestCase {
 	/**
 	 * Test loaded extensions.
 	 *

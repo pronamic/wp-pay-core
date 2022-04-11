@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay\VatNumbers;
 
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
+
 /**
  * VAT Number validity test
  *
@@ -17,7 +19,7 @@ namespace Pronamic\WordPress\Pay\VatNumbers;
  * @version 2.4.0
  * @since   2.1.6
  */
-class VatNumberValidityTest extends \WP_UnitTestCase {
+class VatNumberValidityTest extends TestCase {
 	/**
 	 * Test VAT number validity.
 	 */

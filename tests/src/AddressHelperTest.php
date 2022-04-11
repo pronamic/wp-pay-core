@@ -10,7 +10,7 @@
 
 namespace Pronamic\WordPress\Pay;
 
-use WP_UnitTestCase;
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 /**
  * Address helper test
@@ -19,7 +19,7 @@ use WP_UnitTestCase;
  * @version 2.1.0
  * @since   1.0.0
  */
-class AddressHelperTest extends WP_UnitTestCase {
+class AddressHelperTest extends TestCase {
 	/**
 	 * Test address setters and getters.
 	 */

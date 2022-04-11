@@ -34,6 +34,8 @@ abstract class PaymentInfo {
 
 	use \Pronamic\WordPress\Pay\Core\VersionTrait;
 
+	use \Pronamic\WordPress\Pay\Core\ModeTrait;
+
 	use \Pronamic\WordPress\Pay\Privacy\AnonymizedTrait;
 
 	use \Pronamic\WordPress\Pay\Payments\PaymentInfoTrait;
@@ -173,13 +175,6 @@ abstract class PaymentInfo {
 	 * @var PaymentLines|null
 	 */
 	public $lines;
-
-	/**
-	 * Mode.
-	 *
-	 * @var string|null
-	 */
-	private $mode;
 
 	/**
 	 * Credit card
@@ -555,34 +550,6 @@ abstract class PaymentInfo {
 	 */
 	public function get_credit_card() {
 		return $this->credit_card;
-	}
-
-	/**
-	 * Set mode.
-	 *
-	 * @param string|null $mode Mode.
-	 * @return void
-	 * @throws \InvalidArgumentException Throws invalid argument exception when mode is not a string or not one of the mode constants.
-	 */
-	public function set_mode( $mode ) {
-		if ( ! is_string( $mode ) ) {
-			throw new \InvalidArgumentException( 'Mode must be a string.' );
-		}
-
-		if ( ! in_array( $mode, array( Gateway::MODE_TEST, Gateway::MODE_LIVE ), true ) ) {
-			throw new \InvalidArgumentException( 'Invalid mode.' );
-		}
-
-		$this->mode = $mode;
-	}
-
-	/**
-	 * Get mode.
-	 *
-	 * @return string|null
-	 */
-	public function get_mode() {
-		return $this->mode;
 	}
 
 	/**

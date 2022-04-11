@@ -25,32 +25,37 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 			<?php echo esc_html( $payment->date->format_i18n() ); ?>
 		</td>
 	</tr>
-	<tr>
-		<th scope="row">
-			<?php esc_html_e( 'Status', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<?php
 
-			$status_label = $payment->get_status_label();
+	<?php
 
-			echo \esc_html( ( null === $status_label ) ? '—' : $status_label );
+	$failure_reason = $payment->get_failure_reason();
 
-			// Failure reason.
-			$failure_reason = $payment->get_failure_reason();
+	if ( PaymentStatus::FAILURE === $payment->get_status() && null !== $failure_reason ) :
 
-			if ( PaymentStatus::FAILURE === $payment->get_status() && null !== $failure_reason ) :
+		?>
+
+		<tr>
+			<th scope="row">
+				<?php esc_html_e( 'Status', 'pronamic_ideal' ); ?>
+			</th>
+			<td>
+				<?php
+
+				$status_label = $payment->get_status_label();
+
+				echo \esc_html( ( null === $status_label ) ? '—' : $status_label );
 
 				printf(
 					' — %s',
 					esc_html( $failure_reason )
 				);
 
-			endif;
+				?>
+			</td>
+		</tr>
 
-			?>
-		</td>
-	</tr>
+	<?php endif; ?>
+
 	<tr>
 		<th scope="row">
 			<?php esc_html_e( 'ID', 'pronamic_ideal' ); ?>
@@ -899,6 +904,24 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 	</tr>
 	<tr>
 		<th scope="row">
+			<?php esc_html_e( 'Pay Redirect URL', 'pronamic_ideal' ); ?>
+		</th>
+		<td>
+			<?php
+
+			$url = $payment->get_pay_redirect_url();
+
+			printf(
+				'<a href="%s">%s</a>',
+				esc_attr( $url ),
+				esc_html( $url )
+			);
+
+			?>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">
 			<?php esc_html_e( 'Return URL', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
@@ -917,7 +940,7 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 	</tr>
 	<tr>
 		<th scope="row">
-			<?php esc_html_e( 'Redirect URL', 'pronamic_ideal' ); ?>
+			<?php esc_html_e( 'Return Redirect URL', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
 			<?php

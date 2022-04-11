@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
+
 /**
  * Alignment Rule Test
  *
@@ -17,7 +19,7 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
  * @version 2.5.0
  * @since   2.5.0
  */
-class AlignmentRuleTest extends \WP_UnitTestCase {
+class AlignmentRuleTest extends TestCase {
 	/**
 	 * Test prorating rule week.
 	 */

@@ -7,6 +7,18 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 - Updated https://github.com/pronamic/wp-pay-logos to version `1.7.1`.
 
+## [4.1.0] - 2022-04-11
+### Added
+- Added a user interface to change a subscription's next payment date.
+- Added a count badge in the WordPress admin menu for the number of subscriptions on hold.
+
+### Changed
+- The next payment date is now stored in the subscription and no longer in the subscription phases.
+
+### Removed
+- The general / global gateway integration mode setting for test or live mode is removed.
+- Sorting payments by customer or transaction number in the WordPress admin dashboard has been removed.
+
 ## [4.0.2] - 2022-02-16
 - Changed minimum PHP version requirement to `7.4` ([pronamic/wp-pronamic-pay#274](https://github.com/pronamic/wp-pronamic-pay/issues/274)).
 - Changed follow-up payments query to subscriptions which needed renewal in past 24 hours only.

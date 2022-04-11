@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
+
 /**
  * Abstract plugin integration test
  *
@@ -17,7 +19,7 @@ namespace Pronamic\WordPress\Pay;
  * @version 2.2.6
  * @since   1.0.0
  */
-class AbstractPluginIntegrationTest extends \WP_UnitTestCase {
+class AbstractPluginIntegrationTest extends TestCase {
 	/**
 	 * Test plugin integration.
 	 */

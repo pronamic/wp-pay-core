@@ -10,7 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Banks;
 
-use PHPUnit\Framework\TestCase;
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 /**
  * Bank account details test

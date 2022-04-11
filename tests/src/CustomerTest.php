@@ -14,7 +14,7 @@ use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Pay\VatNumbers\VatNumber;
 use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidity;
 use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
-use WP_UnitTestCase;
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 /**
  * Customer test
@@ -22,7 +22,7 @@ use WP_UnitTestCase;
  * @author Remco Tolsma
  * @version 2.4.0
  */
-class CustomerTest extends WP_UnitTestCase {
+class CustomerTest extends TestCase {
 	/**
 	 * Customer.
 	 *
@@ -40,7 +40,9 @@ class CustomerTest extends WP_UnitTestCase {
 	/**
 	 * Setup.
 	 */
-	public function setUp() {
+	public function set_up() {
+		parent::set_up();
+
 		$this->customer = new Customer();
 
 		$this->name = new ContactName();

@@ -34,24 +34,6 @@ $phase = $subscription->get_display_phase();
 	</tr>
 	<tr>
 		<th scope="row">
-			<?php esc_html_e( 'Status', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<?php
-
-			$status_object = get_post_status_object( (string) get_post_status( $subscription->get_id() ) );
-
-			if ( isset( $status_object, $status_object->label ) ) {
-				echo esc_html( $status_object->label );
-			} else {
-				echo '—';
-			}
-
-			?>
-		</td>
-	</tr>
-	<tr>
-		<th scope="row">
 			<?php esc_html_e( 'ID', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
@@ -152,8 +134,8 @@ $phase = $subscription->get_display_phase();
 
 	<?php
 
-	// Show next payment (delivery) date if subscription is not cancelled or completed.
-	if ( ! in_array( $subscription->get_status(), array( SubscriptionStatus::CANCELLED, SubscriptionStatus::COMPLETED, SubscriptionStatus::EXPIRED ), true ) ) :
+	// Show next payment (delivery) date if subscription is active.
+	if ( SubscriptionStatus::ACTIVE === $subscription->get_status() ) :
 
 		?>
 

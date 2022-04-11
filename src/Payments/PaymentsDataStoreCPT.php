@@ -267,22 +267,16 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		 */
 		\do_action( 'pronamic_pay_pre_create_payment', $payment );
 
-		$title = $payment->title;
-
-		if ( empty( $title ) ) {
-			$title = sprintf(
-				'Payment – %s',
-				date_i18n( _x( 'M d, Y @ h:i A', 'Payment title date format parsed by `date_i18n`.', 'pronamic_ideal' ) )
-			);
-		}
-
 		$customer = $payment->get_customer();
 
 		$result = wp_insert_post(
 			array(
 				'post_type'        => 'pronamic_payment',
 				'post_date_gmt'    => $this->get_mysql_utc_date( $payment->date ),
-				'post_title'       => $title,
+				'post_title'       => \sprintf(
+					'Payment %s',
+					$payment->get_key()
+				),
 				'post_author'      => null === $customer ? null : $customer->get_user_id(),
 				'pronamic_payment' => $payment,
 			),

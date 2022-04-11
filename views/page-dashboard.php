@@ -423,7 +423,7 @@ $container_index = 1;
 							<?php
 
 							wp_widget_rss_output(
-								'http://feeds.feedburner.com/pronamic',
+								'https://feeds.feedburner.com/pronamic',
 								array(
 									'link'  => __( 'http://www.pronamic.eu/', 'pronamic_ideal' ),
 									'url'   => 'http://feeds.feedburner.com/pronamic',

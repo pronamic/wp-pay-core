@@ -15,6 +15,7 @@ use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\GatewayConfig;
 use Pronamic\WordPress\Pay\AbstractGatewayIntegration;
 use Pronamic\WordPress\Pay\GatewayIntegrations;
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 // phpcs:disable Generic.Files.OneObjectStructurePerFile.MultipleFound
 
@@ -70,7 +71,7 @@ class TestGateway extends Gateway {
 /**
  * Subscriptions follow-up payments controller test.
  */
-class SubscriptionsFollowUpPaymentsControllerTest extends \WP_UnitTestCase {
+class SubscriptionsFollowUpPaymentsControllerTest extends TestCase {
 	/**
 	 * Test follow-up payment.
 	 */
@@ -92,7 +93,7 @@ class SubscriptionsFollowUpPaymentsControllerTest extends \WP_UnitTestCase {
 		/**
 		 * Gateway.
 		 */
-		$config_id = $this->factory->post->create(
+		$config_id = wp_insert_post(
 			array(
 				'post_type'  => 'pronamic_gateway',
 				'meta_input' => array(

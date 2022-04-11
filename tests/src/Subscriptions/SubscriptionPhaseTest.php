@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use Pronamic\WordPress\Money\TaxedMoney;
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 /**
  * Subscription Phase Test
@@ -18,7 +19,7 @@ use Pronamic\WordPress\Money\TaxedMoney;
  * @author  Remco Tolsma
  * @version 2.5.0
  */
-class SubscriptionPhaseTest extends \WP_UnitTestCase {
+class SubscriptionPhaseTest extends TestCase {
 	/**
 	 * New period definition.
 	 *

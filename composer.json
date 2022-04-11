@@ -33,7 +33,13 @@
 		]
 	},
 	"config": {
-		"sort-packages": true
+		"sort-packages": true,
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true,
+			"bamarni/composer-bin-plugin": true,
+			"roots/wordpress-core-installer": true,
+			"composer/installers": true
+		}
 	},
 	"repositories": [
 		{
@@ -46,27 +52,26 @@
 		"ext-dom": "*",
 		"ext-libxml": "*",
 		"ext-simplexml": "*",
-		"composer/installers": "^1.7",
 		"pronamic/wp-datetime": "^2.0",
 		"pronamic/wp-html": "^2.0",
 		"pronamic/wp-http": "^1.0",
 		"pronamic/wp-money": "^2.0",
 		"pronamic/wp-number": "^1.1",
-		"roots/wordpress": "^5.2",
+		"roots/wordpress": "^5.9",
 		"viison/address-splitter": "^0.3.4",
-		"woocommerce/action-scheduler": "^3.0"
+		"woocommerce/action-scheduler": "^3.4"
 	},
 	"require-dev": {
+		"automattic/wordbless": "^0.3.1",
 		"bamarni/composer-bin-plugin": "^1.4",
 		"overtrue/phplint": "^2.2",
 		"php-coveralls/php-coveralls": "^2.4",
 		"php-stubs/wordpress-globals": "^0.2.0",
 		"php-stubs/wp-cli-stubs": "^2.4",
 		"phpmd/phpmd": "^2.9",
-		"phpunit/phpunit": "^5.7 || ^6.0",
 		"pronamic/wp-coding-standards": "^1.0",
 		"wp-cli/wp-cli": "^2.3",
-		"wp-phpunit/wp-phpunit": ">=5.2",
+		"wp-phpunit/wp-phpunit": "^5.8",
 		"yoast/phpunit-polyfills": "^1.0"
 	},
 	"scripts": {
@@ -87,8 +92,6 @@
 		"phpmd": "vendor/bin/phpmd src,tests text phpmd.ruleset.xml --suffixes php",
 		"phpstan": "vendor/bin/phpstan analyse --memory-limit=-1",
 		"phpunit": "vendor/bin/phpunit --colors=always",
-		"post-install-cmd": "echo 'Optionally run: composer bin all install'",
-		"post-update-cmd": "echo 'Optionally run: composer bin all update'",
 		"psalm": "vendor/bin/psalm",
 		"xmllint-phpcs": "xmllint --noout --schema vendor/squizlabs/php_codesniffer/phpcs.xsd phpcs.xml.dist",
 		"xmllint": [
@@ -96,6 +99,11 @@
 		],
 		"build-docs": [
 			"XDEBUG_MODE=off vendor/bin/wp-documentor parse src --format=markdown --relative=docs > docs/hooks.md"
+		],
+		"post-install-cmd": "echo 'Optionally run: composer bin all install'",
+		"post-update-cmd": [
+			"echo 'Optionally run: composer bin all update'",
+			"php -r \"copy('vendor/automattic/wordbless/src/dbless-wpdb.php', 'wordpress/wp-content/db.php');\""
 		]
 	}
 }

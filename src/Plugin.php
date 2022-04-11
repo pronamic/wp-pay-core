@@ -369,19 +369,24 @@ class Plugin {
 		}
 
 		// Update status.
-		$gateway->update_status( $payment );
+		try {
+			$gateway->update_status( $payment );
 
-		// Add gateway errors as payment notes.
-		$error = $gateway->get_error();
+			// Update payment in data store.
+			$payment->save();
+		} catch ( \Exception $error ) {
+			$message = $error->getMessage();
 
-		if ( $error instanceof WP_Error ) {
-			foreach ( $error->get_error_codes() as $code ) {
-				$payment->add_note( sprintf( '%s: %s', $code, $error->get_error_message( $code ) ) );
+			// Maybe include error code in message.
+			$code = $error->getCode();
+
+			if ( $code > 0 ) {
+				$message = \sprintf( '%s: %s', $code, $message );
 			}
-		}
 
-		// Update payment in data store.
-		$payment->save();
+			// Add note.
+			$payment->add_note( $message );
+		}
 
 		// Maybe redirect.
 		if ( ! $can_redirect ) {
@@ -522,13 +527,7 @@ class Plugin {
 			if ( $gateway->is_html_form() ) {
 				$gateway->start( $payment );
 
-				$error = $gateway->get_error();
-
-				if ( $error instanceof WP_Error ) {
-					self::render_errors( $error );
-				} else {
-					$gateway->redirect( $payment );
-				}
+				$gateway->redirect( $payment );
 			}
 		}
 
@@ -717,7 +716,7 @@ class Plugin {
 	 * @return string
 	 */
 	public static function get_default_error_message() {
-		return __( 'Something went wrong with the payment. Please try again later or pay another way.', 'pronamic_ideal' );
+		return __( 'Something went wrong with the payment. Please try again or pay another way.', 'pronamic_ideal' );
 	}
 
 	/**
@@ -769,11 +768,7 @@ class Plugin {
 
 			$id = $post->ID;
 
-			$options[ $id ] = sprintf(
-				'%s (%s)',
-				get_the_title( $id ),
-				get_post_meta( $id, '_pronamic_gateway_mode', true )
-			);
+			$options[ $id ] = \get_the_title( $id );
 		}
 
 		return $options;
@@ -919,15 +914,6 @@ class Plugin {
 			$payment->set_version( pronamic_pay_plugin()->get_version() );
 		}
 
-		// Mode.
-		$config_id = $payment->get_config_id();
-
-		if ( null === $payment->get_mode() && null !== $config_id ) {
-			$mode = get_post_meta( $config_id, '_pronamic_gateway_mode', true );
-
-			$payment->set_mode( $mode );
-		}
-
 		// Issuer.
 		$issuer = $payment->get_meta( 'issuer' );
 
@@ -1045,6 +1031,24 @@ class Plugin {
 		// Save payment.
 		$payment->save();
 
+		// Periods.
+		$periods = $payment->get_periods();
+
+		if ( null !== $periods ) {
+			foreach ( $periods as $period ) {
+				$subscription = $period->get_phase()->get_subscription();
+
+				$subscription->set_next_payment_date( \max( $subscription->get_next_payment_date(), $period->get_end_date() ) );
+			}
+		}
+
+		// Subscriptions.
+		$subscriptions = $payment->get_subscriptions();
+
+		foreach ( $subscriptions as $subscription ) {
+			$subscription->save();
+		}
+
 		// Gateway.
 		$gateway = $payment->get_gateway();
 
@@ -1056,6 +1060,9 @@ class Plugin {
 			return $payment;
 		}
 
+		// Mode.
+		$payment->set_mode( $gateway->get_mode() );
+
 		// Subscriptions.
 		$subscriptions = $payment->get_subscriptions();
 
@@ -1063,68 +1070,31 @@ class Plugin {
 			throw new \Exception( 'Gateway does not support recurring payments.' );
 		}
 
-		// Periods.
-		$periods = $payment->get_periods();
-
-		if ( null !== $periods ) {
-			foreach ( $periods as $period ) {
-				$phase = $period->get_phase();
-
-				$phase->set_next_date( \max( $phase->get_next_date(), $period->get_end_date() ) );
-			}
-		}
-
-		// Subscriptions.
-		foreach ( $subscriptions as $subscription ) {
-			$subscription->save();
-		}
-
 		// Start payment at the gateway.
 		try {
 			$gateway->start( $payment );
-
-			// Add gateway errors as payment notes.
-			$error = $gateway->get_error();
-
-			if ( $error instanceof \WP_Error ) {
-				$message = $error->get_error_message();
-				$code    = $error->get_error_code();
-
-				if ( ! \is_int( $code ) ) {
-					$message = sprintf( '%s: %s', $code, $message );
-					$code    = 0;
-				}
-
-				throw new \Exception( $message, $code );
-			}
-		} catch ( \Exception $error ) {
-			$message = $error->getMessage();
+		} catch ( \Exception $exception ) {
+			$message = $exception->getMessage();
 
 			// Maybe include error code in message.
-			$code = $error->getCode();
+			$code = $exception->getCode();
 
 			if ( $code > 0 ) {
 				$message = \sprintf( '%s: %s', $code, $message );
 			}
 
-			// Add note.
 			$payment->add_note( $message );
 
-			// Set payment status.
 			$payment->set_status( PaymentStatus::FAILURE );
-		}
 
-		// Save payment.
-		$payment->save();
+			throw $exception;
+		} finally {
+			$payment->save();
+		}
 
 		// Schedule payment status check.
 		if ( $gateway->supports( 'payment_status_request' ) ) {
 			StatusChecker::schedule_event( $payment );
-		}
-
-		// Throw/rethrow exception.
-		if ( $error instanceof \Exception ) {
-			throw $error;
 		}
 
 		return $payment;

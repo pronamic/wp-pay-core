@@ -10,20 +10,14 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
-use DateInterval;
-use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeImmutable;
-use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Core\Server;
-use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\Payments\Payment;
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Plugin;
-use WP_CLI;
-use WP_Error;
-use WP_Query;
 
 /**
  * Title: Subscriptions module
@@ -73,6 +67,10 @@ class SubscriptionsModule {
 
 		\add_action( 'pronamic_pay_pre_create_subscription', array( SubscriptionHelper::class, 'complement_subscription' ), 10, 1 );
 		\add_action( 'pronamic_pay_pre_create_payment', array( $this, 'complement_subscription_by_payment' ), 10, 1 );
+
+		// Payment source filters.
+		\add_filter( 'pronamic_payment_source_text_subscription_payment_method_change', array( $this, 'source_text_subscription_payment_method_change' ) );
+		\add_filter( 'pronamic_payment_source_description_subscription_payment_method_change', array( $this, 'source_description_subscription_payment_method_change' ) );
 
 		// Listen to payment status changes so we can update related subscriptions.
 		\add_action( 'pronamic_payment_status_update', array( $this, 'payment_status_update' ) );
@@ -162,7 +160,7 @@ class SubscriptionsModule {
 					 * @link https://www.europeanpaymentscouncil.eu/document-library/guidance-documents/guidance-reason-codes-sepa-direct-debit-r-transactions
 					 * @link https://github.com/pronamic/wp-pronamic-ideal/commit/48449417eac49eb6a93480e3b523a396c7db9b3d#diff-6712c698c6b38adfa7190a4be983a093
 					 */
-					$status_update = SubscriptionStatus::FAILURE;
+					$status_update = SubscriptionStatus::ON_HOLD;
 
 					break;
 				case PaymentStatus::CANCELLED:
@@ -395,14 +393,6 @@ class SubscriptionsModule {
 				exit;
 			}
 
-			$error = $gateway->get_error();
-
-			if ( $error instanceof WP_Error ) {
-				Plugin::render_errors( $error );
-
-				exit;
-			}
-
 			// Redirect.
 			try {
 				$gateway->redirect( $payment );
@@ -466,6 +456,10 @@ class SubscriptionsModule {
 			try {
 				$payment = $subscription->new_payment();
 
+				// Set source.
+				$payment->set_source( 'subscription_payment_method_change' );
+				$payment->set_source_id( null );
+
 				// Set payment method.
 				$payment_method = \filter_input( \INPUT_POST, 'pronamic_pay_subscription_payment_method', \FILTER_SANITIZE_STRING );
 
@@ -511,14 +505,6 @@ class SubscriptionsModule {
 				$payment = Plugin::start_payment( $payment );
 			} catch ( \Exception $e ) {
 				require __DIR__ . '/../../views/subscription-mandate-failed.php';
-
-				exit;
-			}
-
-			$error = $gateway->get_error();
-
-			if ( $error instanceof WP_Error ) {
-				Plugin::render_errors( $error );
 
 				exit;
 			}
@@ -729,5 +715,25 @@ class SubscriptionsModule {
 		}
 
 		return $phase;
+	}
+
+	/**
+	 * Source text filter.
+	 *
+	 * @param string $text The source text to filter.
+	 * @return string
+	 */
+	public function source_text_subscription_payment_method_change( $text ) {
+		return __( 'Subscription payment method change', 'pronamic_ideal' );
+	}
+
+	/**
+	 * Source description filter.
+	 *
+	 * @param string $text The source text to filter.
+	 * @return string
+	 */
+	public function source_description_subscription_payment_method_change( $text ) {
+		return __( 'subscription payment method change', 'pronamic_ideal' );
 	}
 }

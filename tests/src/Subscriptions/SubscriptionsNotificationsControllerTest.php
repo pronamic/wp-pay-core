@@ -11,11 +11,12 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use Pronamic\WordPress\Money\Money;
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 /**
  * Subscriptions notifications controller test.
  */
-class SubscriptionsNotificationsControllerTest extends \WP_UnitTestCase {
+class SubscriptionsNotificationsControllerTest extends TestCase {
 	/**
 	 * Test notification.
 	 */

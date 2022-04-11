@@ -11,7 +11,7 @@
 namespace Pronamic\WordPress\Pay;
 
 use InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 use Pronamic\WordPress\Money\Money;
 use stdClass;
 

@@ -60,38 +60,22 @@ $gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 						}
 
 						// Dashboard links.
-						$dashboards = $integration->get_dashboard_url();
+						$dashboard_url = $integration->get_dashboard_url();
 
-						if ( 1 === count( $dashboards ) ) {
+						if ( null !== $dashboard_url ) {
 							$links[] = sprintf(
-								'<a href="%s" title="%s">%2$s</a>',
-								esc_attr( $dashboards[0] ),
-								__( 'Dashboard', 'pronamic_ideal' )
-							);
-						} elseif ( count( $dashboards ) > 1 ) {
-							$dashboard_urls = array();
-
-							foreach ( $dashboards as $dashboard_name => $dashboard_url ) {
-								$dashboard_urls[] = sprintf(
-									'<a href="%s" title="%s">%2$s</a>',
-									esc_attr( $dashboard_url ),
-									esc_html( ucfirst( $dashboard_name ) )
-								);
-							}
-
-							$links[] = sprintf(
-								'%s: %s',
-								__( 'Dashboards', 'pronamic_ideal' ),
-								strtolower( implode( ', ', $dashboard_urls ) )
+								'<a href="%s">%2$s</a>',
+								\esc_url( $dashboard_url ),
+								\esc_html__( 'Dashboard', 'pronamic_ideal' )
 							);
 						}
 
 						// Product link.
 						if ( null !== $integration->get_product_url() ) {
 							$links[] = sprintf(
-								'<a href="%s" target="_blank" title="%s">%2$s</a>',
-								$integration->get_product_url(),
-								__( 'Product information', 'pronamic_ideal' )
+								'<a href="%s" target="_blank">%s</a>',
+								\esc_url( $integration->get_product_url() ),
+								\esc_html__( 'Product information', 'pronamic_ideal' )
 							);
 						}
 
@@ -100,9 +84,8 @@ $gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 
 						if ( null !== $manual_url ) {
 							$links[] = sprintf(
-								'<a href="%s" target="_blank" title="%s">%s</a>',
+								'<a href="%s" target="_blank">%s</a>',
 								\esc_url( $plugin->tracking_module->get_tracking_url( $manual_url ) ),
-								\esc_attr__( 'Manual', 'pronamic_ideal' ),
 								\esc_html__( 'Manual', 'pronamic_ideal' )
 							);
 						}
@@ -124,43 +107,6 @@ $gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 				</select>
 
 				<p id="pronamic-pay-gateway-description"></p>
-			</td>
-		</tr>
-		<tr class="">
-			<th scope="row">
-				<label for="pronamic_ideal_mode">
-					<?php echo esc_html__( 'Mode', 'pronamic_ideal' ); ?>
-				</label>
-			</th>
-			<td>
-				<?php
-
-				$attributes = array(
-					'id'    => 'pronamic_ideal_mode',
-					'name'  => '_pronamic_gateway_mode',
-					'class' => 'pronamic-pay-form-control',
-				);
-
-				$options = array(
-					array(
-						'options' => array(
-							'test' => __( 'Test', 'pronamic_ideal' ),
-							'live' => __( 'Live', 'pronamic_ideal' ),
-						),
-					),
-				);
-
-				$value = get_post_meta( $config_id, '_pronamic_gateway_mode', true );
-
-				printf(
-					'<select %s>%s</select>',
-					// @codingStandardsIgnoreStart
-					Util::array_to_html_attributes( $attributes ),
-					Util::select_options_grouped( $options, $value )
-					// @codingStandardsIgnoreEnd
-				);
-
-				?>
 			</td>
 		</tr>
 	</table>

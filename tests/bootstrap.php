@@ -8,46 +8,23 @@
  * @package   Pronamic\WordPress\Pay\Core
  */
 
-putenv( 'WP_PHPUNIT__TESTS_CONFIG=tests/wp-config.php' );
-
 /**
  * Composer.
  */
 require_once __DIR__ . '/../vendor/autoload.php';
 
 /**
- * WP CLI.
- *
- * @link https://polevaultweb.com/2016/11/unit-testing-custom-wp-cli-commands/
- * @link https://github.com/polevaultweb/phpunit-wp-cli-runner
+ * WorDBless.
  */
-if ( ! defined( 'WP_CLI_ROOT' ) ) {
-	define( 'WP_CLI_ROOT', __DIR__ . '/../vendor/wp-cli/wp-cli' );
-}
-
-include WP_CLI_ROOT . '/php/class-wp-cli.php';
+\WorDBless\Load::load();
 
 /**
- * WP PHPUnit.
- *
- * @link https://github.com/wp-phpunit/wp-phpunit
+ * Plugin.
  */
-require_once getenv( 'WP_PHPUNIT__DIR' ) . '/includes/functions.php';
+$plugin = \Pronamic\WordPress\Pay\Plugin::instance(
+    array(
+        'action_scheduler' => __DIR__ . '/../vendor/woocommerce/action-scheduler/action-scheduler.php',
+    )
+);
 
-/**
- * Manually load plugin.
- */
-function _manually_load_plugin() {
-	global $pronamic_ideal;
-
-	$pronamic_ideal = \Pronamic\WordPress\Pay\Plugin::instance(
-		array(
-			'action_scheduler' => __DIR__ . '/../wp-content/plugins/action-scheduler/action-scheduler.php',
-		)
-	);
-}
-
-tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
-
-// Bootstrap.
-require getenv( 'WP_PHPUNIT__DIR' ) . '/includes/bootstrap.php';
+$plugin->plugins_loaded();

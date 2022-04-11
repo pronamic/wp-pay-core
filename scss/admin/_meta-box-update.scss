@@ -9,7 +9,6 @@
 
 .pronamic-pay-inner {
 	margin: 6px 0 0;
-	padding: 0 12px 12px;
 }
 
 .pronamic-pay-major-actions {
@@ -24,4 +23,14 @@
 	float: right;
 
 	text-align: right;
+}
+
+#pronamic-pay-post-status-display,
+#pronamic-pay-next-payment-date-display {
+	font-weight: 600;
+}
+
+#pronamic-pay-post-status-input,
+#pronamic-pay-next-payment-date-input {
+	margin-top: 3px;
 }

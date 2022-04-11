@@ -368,7 +368,7 @@ Argument | Type | Description
 `$should_redirect` | `bool` | Flag to indicate if redirect is allowed on handling payment return.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 457](../src/Plugin.php#L457-L463)
+Source: [src/Plugin.php](../src/Plugin.php), [line 462](../src/Plugin.php#L462-L468)
 
 ### `pronamic_pay_gateways`
 
@@ -380,7 +380,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$gateways` | `\Pronamic\WordPress\Pay\AbstractGatewayIntegration[]` | Gateway integrations.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 623](../src/Plugin.php#L623-L628)
+Source: [src/Plugin.php](../src/Plugin.php), [line 622](../src/Plugin.php#L622-L627)
 
 ### `pronamic_pay_plugin_integrations`
 
@@ -392,7 +392,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$plugin_integrations` | `\Pronamic\WordPress\Pay\AbstractPluginIntegration[]` | Plugin integrations.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 638](../src/Plugin.php#L638-L643)
+Source: [src/Plugin.php](../src/Plugin.php), [line 637](../src/Plugin.php#L637-L642)
 
 ### `pronamic_payment_gateway_configuration_id`
 
@@ -405,7 +405,7 @@ Argument | Type | Description
 `$config_id` | `null\|int` | Gateway configuration ID.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 1033](../src/Plugin.php#L1033-L1039)
+Source: [src/Plugin.php](../src/Plugin.php), [line 1019](../src/Plugin.php#L1019-L1025)
 
 ### `pronamic_payment_redirect_url_{$source}`
 
@@ -418,7 +418,7 @@ Argument | Type | Description
 `$url` | `null\|string` | Redirect URL.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 1233](../src/Plugin.php#L1233-L1239)
+Source: [src/Plugin.php](../src/Plugin.php), [line 1201](../src/Plugin.php#L1201-L1207)
 
 ### `pronamic_gateway_configuration_display_value`
 

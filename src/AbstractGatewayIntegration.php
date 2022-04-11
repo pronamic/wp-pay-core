@@ -12,6 +12,7 @@ namespace Pronamic\WordPress\Pay;
 
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\GatewayConfig;
+use Pronamic\WordPress\Pay\Core\ModeTrait;
 
 /**
  * Title: Abstract gateway integration
@@ -49,7 +50,7 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	/**
 	 * Dashboard URL.
 	 *
-	 * @var string|array
+	 * @var string|null
 	 */
 	public $dashboard_url;
 
@@ -67,6 +68,8 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	 */
 	protected $supports = array();
 
+	use ModeTrait;
+
 	/**
 	 * Construct.
 	 *
@@ -76,16 +79,20 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 		$args = wp_parse_args(
 			$args,
 			array(
+				'mode'          => 'live',
 				'provider'      => null,
 				'url'           => null,
 				'product_url'   => null,
-				'dashboard_url' => array(),
+				'dashboard_url' => null,
 				'manual_url'    => null,
 				'supports'      => array(),
 			)
 		);
 
 		parent::__construct( $args );
+
+		// Mode.
+		$this->set_mode( $args['mode'] );
 
 		// Provider.
 		$this->provider = $args['provider'];
@@ -131,20 +138,10 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	/**
 	 * Get dashboard URL.
 	 *
-	 * @return array
+	 * @return string|null
 	 */
 	public function get_dashboard_url() {
-		$url = array();
-
-		if ( isset( $this->dashboard_url ) ) {
-			if ( is_string( $this->dashboard_url ) ) {
-				$url = array( $this->dashboard_url );
-			} elseif ( is_array( $this->dashboard_url ) ) {
-				$url = $this->dashboard_url;
-			}
-		}
-
-		return $url;
+		return $this->dashboard_url;
 	}
 
 	/**

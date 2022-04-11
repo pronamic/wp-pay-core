@@ -10,7 +10,7 @@
 
 namespace Pronamic\WordPress\Pay;
 
-use WP_UnitTestCase;
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 /**
  * Payment test
@@ -18,7 +18,7 @@ use WP_UnitTestCase;
  * @author Remco Tolsma
  * @version 2.2.6
  */
-class CreditCardTest extends WP_UnitTestCase {
+class CreditCardTest extends TestCase {
 	/**
 	 * Test construct payment object.
 	 */

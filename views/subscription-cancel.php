@@ -45,11 +45,9 @@ $phase = $subscription->get_current_phase();
 						// Subscription details.
 						require __DIR__ . '/subscription-details.php';
 
-						$is_active = in_array( $subscription->get_status(), array( SubscriptionStatus::ACTIVE, SubscriptionStatus::FAILURE, SubscriptionStatus::EXPIRED, SubscriptionStatus::ON_HOLD, SubscriptionStatus::OPEN ), true );
-
 						?>
 
-						<?php if ( ! $is_active ) : ?>
+						<?php if ( SubscriptionStatus::ACTIVE !== $subscription->get_status() ) : ?>
 
 							<p>
 								<?php esc_html_e( 'The subscription can not be canceled as it is not active anymore.', 'pronamic_ideal' ); ?>
@@ -58,7 +56,7 @@ $phase = $subscription->get_current_phase();
 						<?php endif; ?>
 					</div>
 
-					<?php if ( $is_active ) : ?>
+					<?php if ( SubscriptionStatus::ACTIVE === $subscription->get_status() ) : ?>
 
 						<div class="pp-page-section-wrapper">
 

@@ -19,22 +19,44 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 
 <?php else : ?>
 
+	<?php
+
+	$has_trial     = false;
+	$has_alignment = false;
+
+	foreach ( $phases as $phase ) {
+		if ( $phase->is_trial() ) {
+			$has_trial = true;
+		}
+
+		if ( $phase->is_alignment() || $phase->is_prorated() ) {
+			$has_alignment = true;
+		}
+	}
+
+	?>
+
 	<div class="pronamic-pay-table-responsive">
 		<table class="pronamic-pay-table widefat">
 			<thead>
 				<tr>
-					<th scope="col">
-						<span class="pronamic-pay-tip pronamic-pay-icon pronamic-pay-status" title="<?php esc_attr_e( 'Status', 'pronamic_ideal' ); ?>"><?php esc_html_e( 'Status', 'pronamic_ideal' ); ?></span>
-					</th>
 					<th scope="col"><?php esc_html_e( 'Amount', 'pronamic_ideal' ); ?></th>
 					<th scope="col"><?php esc_html_e( 'Recurrence', 'pronamic_ideal' ); ?></th>
 					<th scope="col"><?php esc_html_e( 'Start Date', 'pronamic_ideal' ); ?></th>
 					<th scope="col"><?php esc_html_e( 'End Date', 'pronamic_ideal' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Next Date', 'pronamic_ideal' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Periods created', 'pronamic_ideal' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Trial', 'pronamic_ideal' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Aligned', 'pronamic_ideal' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Prorated', 'pronamic_ideal' ); ?></th>
+
+					<?php if ( $has_trial ) : ?>
+
+						<th scope="col"><?php esc_html_e( 'Trial', 'pronamic_ideal' ); ?></th>
+
+					<?php endif; ?>
+
+					<?php if ( $has_alignment ) : ?>
+
+						<th scope="col"><?php esc_html_e( 'Aligned', 'pronamic_ideal' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Prorated', 'pronamic_ideal' ); ?></th>
+
+					<?php endif; ?>
 				</tr>
 			</thead>
 
@@ -50,7 +72,6 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 					?>
 
 					<tr>
-						<td></td>
 						<td>
 							<?php echo esc_html( $phase->get_amount()->format_i18n() ); ?>
 						</td>
@@ -98,43 +119,37 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 
 							?>
 						</td>
-						<td>
-							<?php
 
-							$next_date = $phase->get_next_date();
+						<?php if ( $has_trial ) : ?>
 
-							echo esc_html( null === $next_date ? '—' : ( new \Pronamic\WordPress\DateTime\DateTime( '@' . $next_date->getTimestamp() ) )->format_i18n( __( 'D j M Y', 'pronamic_ideal' ) ) );
+							<td>
+								<?php
 
-							?>
-						</td>
-						<td>
-							<?php
+								echo esc_html( $phase->is_trial() ? __( 'Yes', 'pronamic_ideal' ) : __( 'No', 'pronamic_ideal' ) );
 
-							echo esc_html( (string) $phase->get_periods_created() );
+								?>
+							</td>
 
-							?>
-						</td>
-						<td>
-							<?php
+						<?php endif; ?>
 
-							echo esc_html( $phase->is_trial() ? __( 'Yes', 'pronamic_ideal' ) : __( 'No', 'pronamic_ideal' ) );
+						<?php if ( $has_alignment ) : ?>
 
-							?>
-						</td>
-						<td>
-							<?php
+							<td>
+								<?php
 
-							echo esc_html( $phase->is_alignment() ? __( 'Yes', 'pronamic_ideal' ) : __( 'No', 'pronamic_ideal' ) );
+								echo esc_html( $phase->is_alignment() ? __( 'Yes', 'pronamic_ideal' ) : __( 'No', 'pronamic_ideal' ) );
 
-							?>
-						</td>
-						<td>
-							<?php
+								?>
+							</td>
+							<td>
+								<?php
 
-							echo esc_html( $phase->is_prorated() ? __( 'Yes', 'pronamic_ideal' ) : __( 'No', 'pronamic_ideal' ) );
+								echo esc_html( $phase->is_prorated() ? __( 'Yes', 'pronamic_ideal' ) : __( 'No', 'pronamic_ideal' ) );
 
-							?>
-						</td>
+								?>
+							</td>
+
+						<?php endif; ?>
 					</tr>
 
 				<?php endforeach; ?>

@@ -57,13 +57,6 @@ abstract class Gateway {
 	const MODE_LIVE = 'live';
 
 	/**
-	 * Config
-	 *
-	 * @var GatewayConfig
-	 */
-	protected $config;
-
-	/**
 	 * The method of this gateway
 	 *
 	 * @var int
@@ -100,21 +93,14 @@ abstract class Gateway {
 	 */
 	protected $supports;
 
-	/**
-	 * Error
-	 *
-	 * @var WP_Error|null
-	 */
-	public $error;
+	use ModeTrait;
 
 	/**
 	 * Constructs and initializes an gateway
 	 *
 	 * @param GatewayConfig $config Gateway configuration object.
 	 */
-	public function __construct( GatewayConfig $config ) {
-		$this->config = $config;
-
+	public function __construct( GatewayConfig $config = null ) {
 		/**
 		 * Supported features.
 		 *
@@ -136,34 +122,6 @@ abstract class Gateway {
 	 */
 	public function supports( $feature ) {
 		return in_array( $feature, $this->supports, true );
-	}
-
-	/**
-	 * Get the error
-	 *
-	 * @return WP_Error|null
-	 */
-	public function get_error() {
-		return $this->error;
-	}
-
-	/**
-	 * Has error
-	 *
-	 * @return boolean
-	 */
-	public function has_error() {
-		return null !== $this->error;
-	}
-
-	/**
-	 * Set error
-	 *
-	 * @param WP_Error|null $error WordPress error object or null.
-	 * @return void
-	 */
-	public function set_error( WP_Error $error = null ) {
-		$this->error = $error;
 	}
 
 	/**
@@ -221,12 +179,16 @@ abstract class Gateway {
 		$issuers = null;
 
 		// Transient name.
-		$transient = 'pronamic_pay_issuers_' . md5( serialize( $this->config ) );
+		$transient = 'pronamic_pay_issuers_' . md5( serialize( $this ) );
 
 		$result = get_transient( $transient );
 
 		if ( is_wp_error( $result ) || false === $result ) {
-			$issuers = $this->get_issuers();
+			try {
+				$issuers = $this->get_issuers();
+			} catch ( \Exception $e ) {
+				$issuers = null;
+			}
 
 			if ( ! empty( $issuers ) ) {
 				// 60 * 60 * 24 = 24 hours = 1 day
@@ -248,7 +210,7 @@ abstract class Gateway {
 		$issuers = null;
 
 		// Transient name.
-		$transient = 'pronamic_pay_credit_card_issuers_' . md5( serialize( $this->config ) );
+		$transient = 'pronamic_pay_credit_card_issuers_' . md5( serialize( $this ) );
 
 		$result = get_transient( $transient );
 
@@ -307,7 +269,7 @@ abstract class Gateway {
 	 */
 	public function get_transient_available_payment_methods( $update_active_methods = true ) {
 		// Transient name.
-		$transient = 'pronamic_gateway_payment_methods_' . md5( serialize( $this->config ) );
+		$transient = 'pronamic_gateway_payment_methods_' . md5( serialize( $this ) );
 
 		$methods = get_transient( $transient );
 
