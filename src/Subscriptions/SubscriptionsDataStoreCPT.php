@@ -451,13 +451,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			);
 
 			$phase->set_total_periods( $this->get_meta_int( $id, 'frequency' ) );
-
-			// Set next date.
-			$next_date = $this->get_meta_date( $id, 'next_payment_date' );
-
-			if ( null !== $next_date ) {
-				$phase->set_next_date( $next_date );
-			}
 		}
 	}
 
@@ -622,6 +615,11 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		if ( empty( $payment_method ) ) {
 			$subscription->set_payment_method( $this->get_meta_string( $id, 'payment_method' ) );
 		}
+
+		// Set next date.
+		$next_date = $this->get_meta_date( $id, 'next_payment_date' );
+
+		$subscription->set_next_payment_date( $next_date );
 
 		// Legacy.
 		parent::read_post_meta( $subscription );
