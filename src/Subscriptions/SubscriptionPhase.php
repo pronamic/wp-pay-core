@@ -534,7 +534,6 @@ class SubscriptionPhase implements \JsonSerializable {
 			'sequence_number'   => $this->get_sequence_number(),
 			'start_date'        => $this->start_date->format( \DATE_ATOM ),
 			'end_date'          => ( null === $this->end_date ) ? null : $this->end_date->format( \DATE_ATOM ),
-			'next_date'         => ( null === $this->next_date ) ? null : $this->next_date->format( \DATE_ATOM ),
 			'interval'          => $this->interval->get_specification(),
 			'amount'            => $this->amount->jsonSerialize(),
 			// Numbers.
