@@ -57,7 +57,7 @@
 		"pronamic/wp-http": "^1.0",
 		"pronamic/wp-money": "^2.0",
 		"pronamic/wp-number": "^1.1",
-		"roots/wordpress": "^5.9",
+		"roots/wordpress": "^5.7",
 		"viison/address-splitter": "^0.3.4",
 		"woocommerce/action-scheduler": "^3.4"
 	},
@@ -71,7 +71,7 @@
 		"phpmd/phpmd": "^2.9",
 		"pronamic/wp-coding-standards": "^1.0",
 		"wp-cli/wp-cli": "^2.3",
-		"wp-phpunit/wp-phpunit": "^5.8",
+		"wp-phpunit/wp-phpunit": "^5.7",
 		"yoast/phpunit-polyfills": "^1.0"
 	},
 	"scripts": {

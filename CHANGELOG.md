@@ -7,6 +7,10 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 - Updated https://github.com/pronamic/wp-pay-logos to version `1.7.1`.
 
+## [4.1.1] - 2022-04-12
+### Changed
+- Changed WordPress requirement from `^5.9` to `^5.7`.
+
 ## [4.1.0] - 2022-04-11
 ### Added
 - Added a user interface to change a subscription's next payment date.
@@ -469,7 +473,9 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.0.2...HEAD
+[unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.1.1...HEAD
+[4.1.1]: https://github.com/pronamic/wp-pay-core/compare/4.1.0...4.1.1
+[4.1.0]: https://github.com/pronamic/wp-pay-core/compare/4.0.2...4.1.0
 [4.0.2]: https://github.com/pronamic/wp-pay-core/compare/4.0.1...4.0.2
 [4.0.1]: https://github.com/pronamic/wp-pay-core/compare/4.0.0...4.0.1
 [4.0.0]: https://github.com/pronamic/wp-pay-core/compare/3.2.0...4.0.0
