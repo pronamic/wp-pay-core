@@ -134,11 +134,10 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 		}
 
 		$commentdata = array(
-			'comment_post_ID'  => $this->id,
-			'comment_content'  => $note,
-			'comment_type'     => 'subscription_note',
-			'user_id'          => get_current_user_id(),
-			'comment_approved' => true,
+			'comment_post_ID' => $this->id,
+			'comment_content' => $note,
+			'comment_type'    => 'subscription_note',
+			'user_id'         => get_current_user_id(),
 		);
 
 		$result = wp_insert_comment( $commentdata );
