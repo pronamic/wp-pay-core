@@ -17,7 +17,7 @@ $integrations = iterator_to_array( $plugin->gateway_integrations );
 usort(
 	$integrations,
 	function( $integration_a, $integration_b ) {
-		return strcasecmp( $integration_a->get_name(), $integration_b->get_name() );
+		return strcasecmp( (string) $integration_a->get_name(), (string) $integration_b->get_name() );
 	}
 );
 
