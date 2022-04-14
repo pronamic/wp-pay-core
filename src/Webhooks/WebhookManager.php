@@ -23,29 +23,9 @@ use WP_Query;
  */
 class WebhookManager {
 	/**
-	 * Plugin.
-	 *
-	 * @var Plugin
+	 * Construct webhook manager.
 	 */
-	private $plugin;
-
-	/**
-	 * Admin.
-	 *
-	 * @var AdminModule
-	 */
-	private $admin;
-
-	/**
-	 * Webhook manager.
-	 *
-	 * @param Plugin      $plugin Plugin.
-	 * @param AdminModule $admin  Admin.
-	 */
-	public function __construct( Plugin $plugin, AdminModule $admin ) {
-		$this->plugin = $plugin;
-		$this->admin  = $admin;
-
+	public function __construct() {
 		// Admin notices.
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 	}

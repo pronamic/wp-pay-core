@@ -145,7 +145,7 @@ class AdminModule {
 		}
 
 		// Webhook Manager.
-		$this->webhook_manager = new WebhookManager( $plugin, $this );
+		$this->webhook_manager = new WebhookManager();
 	}
 
 	/**
