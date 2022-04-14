@@ -281,20 +281,18 @@ class BankAccountDetails {
 	 */
 	public function __toString() {
 		$pieces = array(
-			$this->get_name(),
-			$this->get_bank_name(),
-			$this->get_iban(),
-			$this->get_bic(),
-			$this->get_account_number(),
-			$this->get_city(),
-			$this->get_country(),
+			\trim( (string) $this->get_name() ),
+			\trim( (string) $this->get_bank_name() ),
+			\trim( (string) $this->get_iban() ),
+			\trim( (string) $this->get_bic() ),
+			\trim( (string) $this->get_account_number() ),
+			\trim( (string) $this->get_city() ),
+			\trim( (string) $this->get_country() ),
 		);
 
-		$pieces = array_map( 'trim', $pieces );
+		$pieces = \array_filter( $pieces );
 
-		$pieces = array_filter( $pieces );
-
-		$string = implode( PHP_EOL, $pieces );
+		$string = \implode( PHP_EOL, $pieces );
 
 		return $string;
 	}
