@@ -55,7 +55,7 @@ class Updater {
 	 */
 	public function http_response( $response, $parsed_args, $url ) {
 		if ( ! \array_key_exists( 'method', $parsed_args ) ) {
-			return $repsonse;
+			return $response;
 		}
 
 		if ( 'POST' !== $parsed_args['method'] ) {
