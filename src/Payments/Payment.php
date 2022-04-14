@@ -157,15 +157,23 @@ class Payment extends PaymentInfo {
 	 * @throws \Exception Throws exception when adding note fails.
 	 */
 	public function add_note( $note ) {
+		if ( null === $this->id ) {
+			throw new \Exception(
+				\sprintf(
+					'Could not add note "%s" to payment without ID.',
+					$note
+				)
+			);
+		}
+
 		$commentdata = array(
 			'comment_post_ID'  => $this->id,
 			'comment_content'  => $note,
 			'comment_type'     => 'payment_note',
-			'user_id'          => get_current_user_id(),
-			'comment_approved' => true,
+			'user_id'          => \get_current_user_id(),
 		);
 
-		$result = wp_insert_comment( $commentdata );
+		$result = \wp_insert_comment( $commentdata );
 
 		if ( false === $result ) {
 			throw new \Exception(
