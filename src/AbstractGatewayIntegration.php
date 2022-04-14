@@ -29,14 +29,14 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	/**
 	 * URL.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $url;
 
 	/**
 	 * Product URL.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $product_url;
 
@@ -183,7 +183,7 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	/**
 	 * Get provider URL.
 	 *
-	 * @return string|false
+	 * @return string|null
 	 */
 	public function get_url() {
 		return $this->url;
