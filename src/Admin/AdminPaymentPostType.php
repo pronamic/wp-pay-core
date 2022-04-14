@@ -472,7 +472,7 @@ class AdminPaymentPostType {
 						/* translators: 1: edit post link with post ID, 2: source description, 3: source ID text */
 						__( '%1$s for %2$s %3$s', 'pronamic_ideal' ),
 						$text,
-						strval( $source_description ),
+						$source_description,
 						$source_id_text
 					),
 					array(

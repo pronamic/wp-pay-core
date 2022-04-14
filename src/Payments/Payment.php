@@ -462,14 +462,14 @@ class Payment extends PaymentInfo {
 	/**
 	 * Get source description.
 	 *
-	 * @return string|null
+	 * @return string
 	 */
 	public function get_source_description() {
 		$payment = $this;
 
 		$source = $payment->get_source();
 
-		$description = $source;
+		$description = (string) $source;
 
 		/**
 		 * Filters the payment source description.
@@ -528,7 +528,7 @@ class Payment extends PaymentInfo {
 	/**
 	 * Get provider link for this payment.
 	 *
-	 * @return string
+	 * @return null|string
 	 */
 	public function get_provider_link() {
 		$url = null;
