@@ -64,13 +64,6 @@ abstract class Gateway {
 	private $method;
 
 	/**
-	 * The transaction ID
-	 *
-	 * @var string
-	 */
-	private $transaction_id;
-
-	/**
 	 * Action URL
 	 *
 	 * @var string
