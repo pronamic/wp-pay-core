@@ -64,13 +64,6 @@ abstract class Gateway {
 	private $method;
 
 	/**
-	 * Action URL
-	 *
-	 * @var string
-	 */
-	private $action_url;
-
-	/**
 	 * Payment method to use on this gateway.
 	 *
 	 * @since 1.2.3
