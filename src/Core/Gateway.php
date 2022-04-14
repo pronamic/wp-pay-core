@@ -82,11 +82,9 @@ abstract class Gateway {
 	use ModeTrait;
 
 	/**
-	 * Constructs and initializes an gateway
-	 *
-	 * @param GatewayConfig $config Gateway configuration object.
+	 * Construct gateway.
 	 */
-	public function __construct( GatewayConfig $config = null ) {
+	public function __construct() {
 		/**
 		 * Supported features.
 		 *
