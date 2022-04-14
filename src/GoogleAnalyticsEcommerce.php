@@ -36,7 +36,7 @@ class GoogleAnalyticsEcommerce {
 	/**
 	 * Measurement Protocol API version.
 	 *
-	 * @var int
+	 * @var string
 	 */
 	const API_VERSION = '1';
 
@@ -210,7 +210,7 @@ class GoogleAnalyticsEcommerce {
 				 *
 				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#in
 				 */
-				$name = $line->get_name();
+				$name = (string) $line->get_name();
 
 				/**
 				 * Filters the item name for Google Analytics e-commerce tracking.

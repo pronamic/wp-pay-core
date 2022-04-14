@@ -45,14 +45,14 @@ abstract class Gateway {
 	/**
 	 * Indicator for test mode
 	 *
-	 * @var int
+	 * @var string
 	 */
 	const MODE_TEST = 'test';
 
 	/**
 	 * Indicator for live mode
 	 *
-	 * @var int
+	 * @var string
 	 */
 	const MODE_LIVE = 'live';
 

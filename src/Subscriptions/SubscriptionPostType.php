@@ -82,7 +82,9 @@ class SubscriptionPostType {
 				'show_in_admin_bar'  => false,
 				'show_in_rest'       => true,
 				'rest_base'          => 'pronamic-subscriptions',
-				'supports'           => false,
+				'supports'           => array(
+					'pronamic_pay_subscription',
+				),
 				'rewrite'            => false,
 				'query_var'          => false,
 				'capabilities'       => PaymentPostType::get_capabilities(),

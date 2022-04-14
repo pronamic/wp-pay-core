@@ -83,7 +83,9 @@ class PaymentPostType {
 				'show_in_admin_bar'  => false,
 				'show_in_rest'       => true,
 				'rest_base'          => 'pronamic-payments',
-				'supports'           => false,
+				'supports'           => array(
+					'pronamic_pay_payment',
+				),
 				'rewrite'            => false,
 				'query_var'          => false,
 				'capabilities'       => self::get_capabilities(),

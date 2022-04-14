@@ -23,20 +23,9 @@ use WP_Error;
  */
 class LicenseManager {
 	/**
-	 * Plugin.
-	 *
-	 * @var Plugin
+	 * Construct license manager.
 	 */
-	private $plugin;
-
-	/**
-	 * Construct and initialize an license manager object.
-	 *
-	 * @param Plugin $plugin Plugin.
-	 */
-	public function __construct( Plugin $plugin ) {
-		$this->plugin = $plugin;
-
+	public function __construct() {
 		// Actions.
 		add_action( 'pronamic_pay_license_check', array( $this, 'license_check_event' ) );
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
