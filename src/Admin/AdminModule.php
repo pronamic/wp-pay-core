@@ -103,13 +103,6 @@ class AdminModule {
 	public $install;
 
 	/**
-	 * Webhook manager.
-	 *
-	 * @var WebhookManager
-	 */
-	private $webhook_manager;
-
-	/**
 	 * Construct and initialize an admin object.
 	 *
 	 * @param Plugin $plugin Plugin.
@@ -133,8 +126,8 @@ class AdminModule {
 		$this->settings  = new AdminSettings( $plugin );
 		$this->dashboard = new AdminDashboard();
 		$this->health    = new AdminHealth( $plugin );
-		$this->notices   = new AdminNotices( $plugin );
-		$this->reports   = new AdminReports( $plugin, $this );
+		$this->notices   = new AdminNotices();
+		$this->reports   = new AdminReports( $plugin );
 		$this->tour      = new AdminTour( $plugin );
 
 		// About page.
@@ -145,7 +138,7 @@ class AdminModule {
 		}
 
 		// Webhook Manager.
-		$this->webhook_manager = new WebhookManager();
+		new WebhookManager();
 	}
 
 	/**
@@ -163,7 +156,7 @@ class AdminModule {
 		$this->maybe_redirect();
 
 		// Post types.
-		new AdminGatewayPostType( $this->plugin, $this );
+		new AdminGatewayPostType( $this->plugin );
 		new AdminPaymentPostType( $this->plugin );
 		new AdminSubscriptionPostType( $this->plugin );
 

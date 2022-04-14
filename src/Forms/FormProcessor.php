@@ -30,20 +30,9 @@ use WP_User;
  */
 class FormProcessor {
 	/**
-	 * Plugin.
-	 *
-	 * @var Plugin
+	 * Construct form processor object.
 	 */
-	private $plugin;
-
-	/**
-	 * Constructs and initialize an form processor object.
-	 *
-	 * @param Plugin $plugin Plugin.
-	 */
-	public function __construct( $plugin ) {
-		$this->plugin = $plugin;
-
+	public function __construct() {
 		// Actions.
 		add_action( 'init', array( $this, 'init' ) );
 	}

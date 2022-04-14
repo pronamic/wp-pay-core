@@ -1203,8 +1203,8 @@ class Plugin {
 		/**
 		 * Filters the payment redirect URL by plugin integration source.
 		 *
-		 * @param null|string $url     Redirect URL.
-		 * @param Payment     $payment Payment.
+		 * @param string  $url     Redirect URL.
+		 * @param Payment $payment Payment.
 		 */
 		$url = \apply_filters( 'pronamic_payment_redirect_url_' . $source, $url, $payment );
 

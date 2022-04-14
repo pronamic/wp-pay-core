@@ -23,59 +23,22 @@ use Pronamic\WordPress\Pay\Plugin;
  */
 class FormsModule {
 	/**
-	 * Plugin.
-	 *
-	 * @var Plugin
-	 */
-	private $plugin;
-
-	/**
-	 * Form post type.
-	 *
-	 * @var FormPostType
-	 */
-	private $form_post_type;
-
-	/**
-	 * Form processor.
-	 *
-	 * @var FormProcessor
-	 */
-	private $processor;
-
-	/**
-	 * Form scripts.
-	 *
-	 * @var FormScripts
-	 */
-	private $scripts;
-
-	/**
-	 * Form shortcode.
-	 *
-	 * @var FormShortcode
-	 */
-	private $shortcode;
-
-	/**
 	 * Construct and initialize a forms module object.
 	 *
 	 * @param Plugin $plugin Plugin.
 	 */
 	public function __construct( $plugin ) {
-		$this->plugin = $plugin;
-
 		// Form Post Type.
-		$this->form_post_type = new FormPostType( $plugin );
+		new FormPostType();
 
 		// Processor.
-		$this->processor = new FormProcessor( $plugin );
+		new FormProcessor();
 
 		// Scripts.
-		$this->scripts = new FormScripts( $plugin );
+		new FormScripts( $plugin );
 
 		// Shortcode.
-		$this->shortcode = new FormShortcode( $this );
+		new FormShortcode( $this );
 
 		// Actions.
 		add_filter( 'the_content', array( $this, 'maybe_add_form_to_content' ) );

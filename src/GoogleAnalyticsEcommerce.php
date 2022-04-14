@@ -262,7 +262,7 @@ class GoogleAnalyticsEcommerce {
 				/**
 				 * Filters the product category for Google Analytics e-commerce tracking.
 				 *
-				 * @param string      $product_category Product category.
+				 * @param string|null $product_category Product category.
 				 * @param PaymentLine $line             Payment line.
 				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#iv
 				 */

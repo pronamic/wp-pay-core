@@ -39,21 +39,12 @@ class AdminGatewayPostType {
 	private $plugin;
 
 	/**
-	 * Admin.
+	 * Construct admin gateway post type.
 	 *
-	 * @var AdminModule
+	 * @param Plugin $plugin Plugin.
 	 */
-	private $admin;
-
-	/**
-	 * Constructs and initializes an admin gateway post type object.
-	 *
-	 * @param Plugin      $plugin Plugin.
-	 * @param AdminModule $admin  Admin Module.
-	 */
-	public function __construct( Plugin $plugin, AdminModule $admin ) {
+	public function __construct( Plugin $plugin ) {
 		$this->plugin = $plugin;
-		$this->admin  = $admin;
 
 		add_filter( 'manage_edit-' . self::POST_TYPE . '_columns', array( $this, 'edit_columns' ) );
 

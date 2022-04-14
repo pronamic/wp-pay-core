@@ -21,22 +21,11 @@ use Pronamic\WordPress\Pay\Plugin;
  */
 class AdminNotices {
 	/**
-	 * Plugin.
-	 *
-	 * @var Plugin
-	 */
-	private $plugin;
-
-	/**
-	 * Constructs and initializes an notices object.
+	 * Construct admin notices.
 	 *
 	 * @link https://github.com/woothemes/woocommerce/blob/2.4.3/includes/admin/class-wc-admin-notices.php
-	 *
-	 * @param Plugin $plugin Plugin.
 	 */
-	public function __construct( Plugin $plugin ) {
-		$this->plugin = $plugin;
-
+	public function __construct() {
 		// Actions.
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 		add_action( 'admin_notices', array( $this, 'admin_notices' ), 11 );

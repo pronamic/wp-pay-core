@@ -197,7 +197,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 
 		$source = $subscription->get_source();
 
-		$description = $source;
+		$description = (string) $source;
 
 		if ( null !== $source ) {
 			/**
@@ -432,7 +432,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	/**
 	 * Set the next payment date of this subscription.
 	 *
-	 * @param DateTimeInterface $date Date.
+	 * @param \DateTimeInterface|null $date Date.
 	 * @return void
 	 */
 	public function set_next_payment_date( $date ) {

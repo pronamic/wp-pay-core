@@ -29,21 +29,12 @@ class AdminReports {
 	private $plugin;
 
 	/**
-	 * Admin.
-	 *
-	 * @var AdminModule
-	 */
-	private $admin;
-
-	/**
 	 * AdminReports constructor.
 	 *
-	 * @param Plugin      $plugin Plugin.
-	 * @param AdminModule $admin  Admin.
+	 * @param Plugin $plugin Plugin.
 	 */
-	public function __construct( Plugin $plugin, AdminModule $admin ) {
+	public function __construct( Plugin $plugin ) {
 		$this->plugin = $plugin;
-		$this->admin  = $admin;
 
 		// Actions.
 		add_action( 'admin_print_styles', array( $this, 'admin_css' ) );
@@ -147,12 +138,8 @@ class AdminReports {
 	 * @return array
 	 */
 	public function get_reports() {
-		try {
-			$start = new \DateTime( 'First day of January' );
-			$end   = new \DateTime( 'Last day of December' );
-		} catch ( \Exception $e ) {
-			return array();
-		}
+		$start = new \DateTime( 'First day of January' );
+		$end   = new \DateTime( 'Last day of December' );
 
 		$data = array(
 			(object) array(

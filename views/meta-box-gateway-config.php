@@ -48,7 +48,7 @@ $gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 						$description    = '';
 						$links          = array();
 
-						if ( isset( $integration->deprecated ) && $integration->deprecated ) {
+						if ( $integration->deprecated ) {
 							$classes[] = 'deprecated';
 
 							/* translators: %s: Integration name */

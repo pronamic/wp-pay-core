@@ -59,20 +59,9 @@ class FormPostType {
 	const AMOUNT_METHOD_CHOICES_AND_INPUT = 'choices_and_input';
 
 	/**
-	 * Plugin.
-	 *
-	 * @var Plugin
+	 * Construct form post type object.
 	 */
-	private $plugin;
-
-	/**
-	 * Constructs and initializes an admin form post type object.
-	 *
-	 * @param Plugin $plugin Plugin.
-	 */
-	public function __construct( $plugin ) {
-		$this->plugin = $plugin;
-
+	public function __construct() {
 		/**
 		 * Priority of the initial post types function should be set to < 10.
 		 *
