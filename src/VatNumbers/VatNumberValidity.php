@@ -192,10 +192,6 @@ class VatNumberValidity {
 			$data['service'] = $this->service;
 		}
 
-		if ( empty( $data ) ) {
-			return null;
-		}
-
 		return (object) $data;
 	}
 
