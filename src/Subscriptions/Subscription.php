@@ -124,6 +124,15 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * @throws \Exception Throws exception when adding note fails.
 	 */
 	public function add_note( $note ) {
+		if ( null === $this->id ) {
+			throw new \Exception(
+				\sprintf(
+					'Could not add note "%s" to subscription without ID.',
+					$note
+				)
+			);
+		}
+
 		$commentdata = array(
 			'comment_post_ID'  => $this->id,
 			'comment_content'  => $note,
