@@ -729,27 +729,6 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 
 	<?php endif; ?>
 
-	<?php if ( 'wp-e-commerce' === $payment->get_source() ) : ?>
-
-		<tr>
-			<th scope="row">
-				<?php esc_html_e( 'Purchase ID', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php echo esc_html( (string) $payment->get_meta( 'wpsc_purchase_id' ) ); ?>
-			</td>
-		</tr>
-		<tr>
-			<th scope="row">
-				<?php esc_html_e( 'Session ID', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php echo esc_html( (string) $payment->get_meta( 'wpsc_session_id' ) ); ?>
-			</td>
-		</tr>
-
-	<?php endif; ?>
-
 	<?php if ( 'membership' === $payment->get_source() ) : ?>
 
 		<tr>
