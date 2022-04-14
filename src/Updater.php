@@ -42,8 +42,6 @@ class Updater {
 		$this->plugins_filter_callback = $plugins_filter_callback;
 
 		\add_filter( 'http_response', array( $this, 'http_response' ), 10, 3 );
-
-		\add_filter( 'plugins_api', array( $this, 'plugins_api' ), 10, 3 );
 	}
 
 	/**
