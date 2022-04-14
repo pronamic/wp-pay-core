@@ -729,27 +729,6 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 
 	<?php endif; ?>
 
-	<?php if ( 's2member' === $payment->get_source() ) : ?>
-
-		<tr>
-			<th scope="row">
-				<?php esc_html_e( 'Period', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php echo esc_html( (string) $payment->get_meta( 's2member_period' ) ); ?>
-			</td>
-		</tr>
-		<tr>
-			<th scope="row">
-				<?php esc_html_e( 'Level', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php echo esc_html( (string) $payment->get_meta( 's2member_level' ) ); ?>
-			</td>
-		</tr>
-
-	<?php endif; ?>
-
 	<?php if ( 'wp-e-commerce' === $payment->get_source() ) : ?>
 
 		<tr>
