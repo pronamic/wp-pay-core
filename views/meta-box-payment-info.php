@@ -756,7 +756,7 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 
 	?>
 
-	<?php if ( ! empty( $ogone_alias ) ) : ?>
+	<?php if ( ! empty( $ogone_alias ) && \is_string( $ogone_alias ) ) : ?>
 
 		<tr>
 			<th scope="row">
