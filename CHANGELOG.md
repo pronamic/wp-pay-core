@@ -5,7 +5,11 @@ All notable changes to this project will be documented in this file.
 This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
-- Updated https://github.com/pronamic/wp-pay-logos to version `1.7.1`.
+-
+
+## [4.1.2] - 2022-04-19
+### Fixed
+- Fixed plugin updater.
 
 ## [4.1.1] - 2022-04-12
 ### Changed
@@ -473,7 +477,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.1.1...HEAD
+[unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.1.2...HEAD
+[4.1.2]: https://github.com/pronamic/wp-pay-core/compare/4.1.1...4.1.2
 [4.1.1]: https://github.com/pronamic/wp-pay-core/compare/4.1.0...4.1.1
 [4.1.0]: https://github.com/pronamic/wp-pay-core/compare/4.0.2...4.1.0
 [4.0.2]: https://github.com/pronamic/wp-pay-core/compare/4.0.1...4.0.2
