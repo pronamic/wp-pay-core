@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use WP_Error;
+
 /**
  * Updater class
  *
@@ -42,8 +44,6 @@ class Updater {
 		$this->plugins_filter_callback = $plugins_filter_callback;
 
 		\add_filter( 'http_response', array( $this, 'http_response' ), 10, 3 );
-
-		\add_filter( 'plugins_api', array( $this, 'plugins_api' ), 10, 3 );
 	}
 
 	/**
@@ -57,7 +57,7 @@ class Updater {
 	 */
 	public function http_response( $response, $parsed_args, $url ) {
 		if ( ! \array_key_exists( 'method', $parsed_args ) ) {
-			return $repsonse;
+			return $response;
 		}
 
 		if ( 'POST' !== $parsed_args['method'] ) {
@@ -111,7 +111,7 @@ class Updater {
 	 * @param string $url         URL to retrieve.
 	 * @param array  $args        Request arguments.
 	 * @param array  $parsed_args Parsed request arguments.
-	 * @return array
+	 * @return array|WP_Error
 	 */
 	private function remote_post( $url, $args, $parsed_args ) {
 		$keys = array(
@@ -133,7 +133,7 @@ class Updater {
 	 * Request plugins update check.
 	 *
 	 * @param array $parsed_args HTTP request arguments.
-	 * @return array
+	 * @return array|false
 	 */
 	private function request_plugins_update_check( $parsed_args ) {
 		$plugins = $this->get_plugins();
@@ -158,6 +158,10 @@ class Updater {
 		}
 
 		$response = \json_decode( \wp_remote_retrieve_body( $raw_response ), true );
+
+		if ( ! \is_array( $response ) ) {
+			return false;
+		}
 
 		return $response;
 	}
