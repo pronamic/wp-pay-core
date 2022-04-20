@@ -10,6 +10,11 @@
 
 namespace Pronamic\WordPress\Pay\Upgrades;
 
+use ArrayIterator;
+use Countable;
+use IteratorAggregate;
+use Traversable;
+
 /**
  * Upgrades
  *
@@ -18,7 +23,7 @@ namespace Pronamic\WordPress\Pay\Upgrades;
  * @since      2.2.6
  * @implements \IteratorAggregate<int, Upgrade>
  */
-class Upgrades implements \Countable, \IteratorAggregate {
+class Upgrades implements Countable, IteratorAggregate {
 	/**
 	 * Upgrades.
 	 *
@@ -73,10 +78,10 @@ class Upgrades implements \Countable, \IteratorAggregate {
 	/**
 	 * Get iterator.
 	 *
-	 * @return \ArrayIterator<int, Upgrade>
+	 * @return Traversable
 	 */
-	public function getIterator() {
-		return new \ArrayIterator( $this->upgrades );
+	public function getIterator() : Traversable {
+		return new ArrayIterator( $this->upgrades );
 	}
 
 	/**
@@ -84,7 +89,7 @@ class Upgrades implements \Countable, \IteratorAggregate {
 	 *
 	 * @return int
 	 */
-	public function count() {
+	public function count() : int {
 		return count( $this->upgrades );
 	}
 }
