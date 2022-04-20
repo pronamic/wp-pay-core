@@ -14,6 +14,7 @@ use Exception;
 use Pronamic\WordPress\Number\Number;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
+use Pronamic\WordPress\Pay\ContactName;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentLines;
@@ -142,22 +143,35 @@ class FormProcessor {
 		$payment->source    = $source;
 		$payment->source_id = $source_id;
 
-		// Customer.
-		$customer = array(
-			'name'  => (object) array(
-				'first_name' => $first_name,
-				'last_name'  => $last_name,
-			),
-			'email' => $email,
-		);
+		// Name.
+		$name = null;
 
-		$customer = array_filter( $customer );
+		if ( ! empty( $first_name ) || ! empty(  $last_name ) ) {
+			$name = new ContactName();
 
-		if ( ! empty( $customer ) ) {
-			$customer = Customer::from_json( (object) $customer );
+			if ( ! empty( $first_name ) ) {
+				$name->set_first_name( $first_name );
+			}
 
-			$payment->set_customer( $customer );
+			if ( ! empty( $last_name ) ) {
+				$name->set_last_name( $last_name );
+			}
 		}
+
+		// Customer.
+		$customer = null;
+
+		if ( null !== $name || ! empty( $email ) ) {
+			$customer = new Customer();
+
+			$customer->set_name( $name );
+
+			if ( ! empty( $email ) ) {
+				$customer->set_email( $email );
+			}
+		}
+		
+		$payment->set_customer( $customer );
 
 		// Amount.
 		$payment->set_total_amount( $this->get_amount() );
