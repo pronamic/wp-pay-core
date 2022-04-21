@@ -7,18 +7,13 @@
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  * @var \Pronamic\WordPress\Pay\Plugin $plugin Plugin.
+ * @var \Pronamic\WordPress\Pay\Subscriptions\Subscription $subscription Subscription.
  */
 
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
 
-if ( ! isset( $periods ) ) {
-	return;
-}
-
-if ( ! isset( $subscription ) ) {
-	return;
-}
+$periods = $subscription->get_payments_by_period();
 
 ?>
 

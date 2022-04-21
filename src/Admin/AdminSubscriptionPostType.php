@@ -679,8 +679,6 @@ class AdminSubscriptionPostType {
 
 		$plugin = $this->plugin;
 
-		$periods = $subscription->get_payments_by_period();
-
 		include __DIR__ . '/../../views/meta-box-subscription-payments.php';
 	}
 
