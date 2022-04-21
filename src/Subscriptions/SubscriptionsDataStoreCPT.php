@@ -297,6 +297,12 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$customer = $subscription->get_customer();
 
 		$result = wp_insert_post(
+			/**
+			 * PHPStan doesn't like our custom `pronamic_subscription` argument.
+			 *
+			 * @todo Eliminate use of custom `pronamic_subscription` argument.
+			 * @phpstan-ignore-next-line
+			 */
 			[
 				'post_type'             => 'pronamic_pay_subscr',
 				'post_date_gmt'         => $this->get_mysql_utc_date( $subscription->date ),

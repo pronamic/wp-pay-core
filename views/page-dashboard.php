@@ -57,7 +57,14 @@ $container_index = 1;
 									]
 								);
 
-								if ( $query->have_posts() ) :
+								$payment_posts = \array_filter(
+									$query->posts,
+									function( $post ) {
+										return ( $post instanceof WP_Post );
+									}
+								);
+
+								if ( count( $payment_posts ) > 0 ) :
 
 									$columns = [
 										'status',
@@ -103,15 +110,12 @@ $container_index = 1;
 
 											</tr>
 
-											<?php
-											while ( $query->have_posts() ) :
-												$query->the_post();
-												?>
+											<?php foreach ( $payment_posts as $payment_post ) : ?>
 
 												<tr class="type-<?php echo esc_attr( $payments_post_type ); ?>">
 													<?php
 
-													$payment_id = get_the_ID();
+													$payment_id = $payment_post->ID;
 
 													// Loop columns.
 													foreach ( $columns as $column ) :
@@ -158,7 +162,7 @@ $container_index = 1;
 
 												</tr>
 
-											<?php endwhile; ?>
+											<?php endforeach; ?>
 
 										</table>
 									</div>
@@ -186,7 +190,14 @@ $container_index = 1;
 						]
 					);
 
-					if ( $query->have_posts() ) :
+					$subscriptions_posts = \array_filter(
+						$query->posts,
+						function( $post ) {
+							return ( $post instanceof WP_Post );
+						}
+					);
+
+					if ( count( $subscriptions_posts ) > 0 ) :
 						?>
 
 						<div id="normal-sortables" class="meta-box-sortables ui-sortable">
@@ -242,15 +253,12 @@ $container_index = 1;
 
 												</tr>
 
-												<?php
-												while ( $query->have_posts() ) :
-													$query->the_post();
-													?>
+												<?php foreach ( $subscriptions_posts as $subscription_post ) : ?>
 
 													<tr class="type-<?php echo esc_attr( $subscriptions_post_type ); ?>">
 														<?php
 
-														$payment_id = get_the_ID();
+														$subscription_id = $subscription_post->ID;
 
 														// Loop columns.
 														foreach ( $columns as $column ) :
@@ -277,7 +285,7 @@ $container_index = 1;
 															do_action(
 																'manage_' . $subscriptions_post_type . '_posts_custom_column',
 																$custom_column,
-																$payment_id
+																$subscription_id
 															);
 
 															if ( 'pronamic_subscription_title' === $custom_column ) :
@@ -297,7 +305,7 @@ $container_index = 1;
 
 													</tr>
 
-												<?php endwhile; ?>
+												<?php endforeach; ?>
 
 											</table>
 										</div>
