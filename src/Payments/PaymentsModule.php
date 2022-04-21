@@ -57,16 +57,16 @@ class PaymentsModule {
 		$this->privacy = new PaymentsPrivacy();
 
 		// Exclude payment notes.
-		add_filter( 'comments_clauses', array( $this, 'exclude_payment_comment_notes' ), 10, 2 );
+		add_filter( 'comments_clauses', [ $this, 'exclude_payment_comment_notes' ], 10, 2 );
 
 		// Payment redirect URL.
-		add_filter( 'pronamic_payment_redirect_url', array( $this, 'payment_redirect_url' ), 5, 2 );
+		add_filter( 'pronamic_payment_redirect_url', [ $this, 'payment_redirect_url' ], 5, 2 );
 
 		// Listen to payment status changes so we can log these in a note.
-		add_action( 'pronamic_payment_status_update', array( $this, 'log_payment_status_update' ), 10, 4 );
+		add_action( 'pronamic_payment_status_update', [ $this, 'log_payment_status_update' ], 10, 4 );
 
 		// REST API.
-		add_action( 'rest_api_init', array( $this, 'rest_api_init' ) );
+		add_action( 'rest_api_init', [ $this, 'rest_api_init' ] );
 
 		// Payment Status Checker.
 		$this->status_checker = new StatusChecker();
@@ -236,19 +236,19 @@ class PaymentsModule {
 		\register_rest_route(
 			'pronamic-pay/v1',
 			'/payments/(?P<payment_id>\d+)',
-			array(
+			[
 				'methods'             => 'GET',
-				'callback'            => array( $this, 'rest_api_payment' ),
+				'callback'            => [ $this, 'rest_api_payment' ],
 				'permission_callback' => function() {
 					return \current_user_can( 'edit_payments' );
 				},
-				'args'                => array(
-					'payment_id' => array(
+				'args'                => [
+					'payment_id' => [
 						'description' => __( 'Payment ID.', 'pronamic_ideal' ),
 						'type'        => 'integer',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 	}
 

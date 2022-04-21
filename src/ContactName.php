@@ -226,7 +226,7 @@ class ContactName {
 	 * @return object|null
 	 */
 	public function get_json() {
-		$data = array(
+		$data = [
 			'full_name'   => $this->get_full_name(),
 			'prefix'      => $this->get_prefix(),
 			'initials'    => $this->get_initials(),
@@ -234,7 +234,7 @@ class ContactName {
 			'middle_name' => $this->get_middle_name(),
 			'last_name'   => $this->get_last_name(),
 			'suffix'      => $this->get_suffix(),
-		);
+		];
 
 		$data = array_filter( $data );
 
@@ -296,13 +296,13 @@ class ContactName {
 	 * @return string
 	 */
 	public function __toString() {
-		$pieces = array(
+		$pieces = [
 			$this->get_prefix(),
 			$this->get_first_name(),
 			$this->get_middle_name(),
 			$this->get_last_name(),
 			$this->get_suffix(),
-		);
+		];
 
 		$pieces = array_filter( $pieces );
 		$pieces = array_map( 'trim', $pieces );

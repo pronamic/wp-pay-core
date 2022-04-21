@@ -71,11 +71,11 @@ class SubscriptionInterval extends \DateInterval implements \JsonSerializable {
 
 		// Date.
 		$date = \array_filter(
-			array(
+			[
 				'Y' => $this->y * $times,
 				'M' => $this->m * $times,
 				'D' => $this->d * $times,
-			)
+			]
 		);
 
 		foreach ( $date as $unit => $value ) {
@@ -84,11 +84,11 @@ class SubscriptionInterval extends \DateInterval implements \JsonSerializable {
 
 		// Time.
 		$time = \array_filter(
-			array(
+			[
 				'H' => $this->h * $times,
 				'M' => $this->i * $times,
 				'S' => $this->s * $times,
-			)
+			]
 		);
 
 		if ( count( $time ) > 0 ) {

@@ -199,7 +199,7 @@ abstract class PaymentInfo {
 	public function __construct( $post_id = null ) {
 		$this->id   = $post_id;
 		$this->date = new DateTime();
-		$this->meta = array();
+		$this->meta = [];
 
 		$this->touch();
 	}

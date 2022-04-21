@@ -37,7 +37,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 	 * Constructs and initialize a payment lines object.
 	 */
 	public function __construct() {
-		$this->lines = array();
+		$this->lines = [];
 	}
 
 	/**

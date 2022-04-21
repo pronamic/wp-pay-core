@@ -78,7 +78,7 @@ class Plugin {
 	 *
 	 * @return Plugin
 	 */
-	public static function instance( $args = array() ) {
+	public static function instance( $args = [] ) {
 		if ( is_null( self::$instance ) ) {
 			self::$instance = new self( $args );
 		}
@@ -238,18 +238,18 @@ class Plugin {
 	 *
 	 * @param string|array|object $args The plugin arguments.
 	 */
-	public function __construct( $args = array() ) {
+	public function __construct( $args = [] ) {
 		$args = wp_parse_args(
 			$args,
-			array(
+			[
 				'file'    => null,
-				'options' => array(),
-			)
+				'options' => [],
+			]
 		);
 
 		// Version from plugin file header.
 		if ( null !== $args['file'] ) {
-			$file_data = get_file_data( $args['file'], array( 'Version' => 'Version' ) );
+			$file_data = get_file_data( $args['file'], [ 'Version' => 'Version' ] );
 
 			if ( \array_key_exists( 'Version', $file_data ) ) {
 				$this->version = $file_data['Version'];
@@ -264,7 +264,7 @@ class Plugin {
 		$this->options = $args['options'];
 
 		// Integrations.
-		$this->integrations = array();
+		$this->integrations = [];
 
 		/*
 		 * Plugins loaded.
@@ -281,20 +281,20 @@ class Plugin {
 		 * @link https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L54
 		 * @link https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L296-L297
 		 */
-		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ), 0 );
+		add_action( 'plugins_loaded', [ $this, 'plugins_loaded' ], 0 );
 
 		// Plugin locale.
-		add_filter( 'plugin_locale', array( $this, 'plugin_locale' ), 10, 2 );
+		add_filter( 'plugin_locale', [ $this, 'plugin_locale' ], 10, 2 );
 
 		// Register styles.
-		add_action( 'init', array( $this, 'register_styles' ), 9 );
+		add_action( 'init', [ $this, 'register_styles' ], 9 );
 
 		// If WordPress is loaded check on returns and maybe redirect requests.
-		add_action( 'wp_loaded', array( $this, 'handle_returns' ), 10 );
-		add_action( 'wp_loaded', array( $this, 'maybe_redirect' ), 10 );
+		add_action( 'wp_loaded', [ $this, 'handle_returns' ], 10 );
+		add_action( 'wp_loaded', [ $this, 'maybe_redirect' ], 10 );
 
 		// Default date time format.
-		add_filter( 'pronamic_datetime_default_format', array( $this, 'datetime_format' ), 10, 1 );
+		add_filter( 'pronamic_datetime_default_format', [ $this, 'datetime_format' ], 10, 1 );
 
 		/**
 		 * Action scheduler.
@@ -617,7 +617,7 @@ class Plugin {
 			$this->admin = new Admin\AdminModule( $this );
 		}
 
-		$gateways = array();
+		$gateways = [];
 
 		/**
 		 * Filters the gateway integrations.
@@ -632,7 +632,7 @@ class Plugin {
 			$integration->setup();
 		}
 
-		$plugin_integrations = array();
+		$plugin_integrations = [];
 
 		/**
 		 * Filters the plugin integrations.
@@ -654,10 +654,10 @@ class Plugin {
 		PaymentMethods::maybe_update_active_payment_methods();
 
 		// Filters.
-		\add_filter( 'pronamic_payment_redirect_url', array( $this, 'payment_redirect_url' ), 10, 2 );
+		\add_filter( 'pronamic_payment_redirect_url', [ $this, 'payment_redirect_url' ], 10, 2 );
 
 		// Actions.
-		\add_action( 'pronamic_pay_pre_create_payment', array( __CLASS__, 'complement_payment' ), 10, 1 );
+		\add_action( 'pronamic_pay_pre_create_payment', [ __CLASS__, 'complement_payment' ], 10, 1 );
 	}
 
 	/**
@@ -731,7 +731,7 @@ class Plugin {
 		\wp_register_style(
 			'pronamic-pay-redirect',
 			\plugins_url( 'css/redirect' . $min . '.css', \dirname( __FILE__ ) ),
-			array(),
+			[],
 			$this->get_version()
 		);
 	}
@@ -744,22 +744,22 @@ class Plugin {
 	 * @return array
 	 */
 	public static function get_config_select_options( $payment_method = null ) {
-		$args = array(
+		$args = [
 			'post_type' => 'pronamic_gateway',
 			'orderby'   => 'post_title',
 			'order'     => 'ASC',
 			'nopaging'  => true,
-		);
+		];
 
 		if ( null !== $payment_method ) {
 			$config_ids = PaymentMethods::get_config_ids( $payment_method );
 
-			$args['post__in'] = empty( $config_ids ) ? array( 0 ) : $config_ids;
+			$args['post__in'] = empty( $config_ids ) ? [ 0 ] : $config_ids;
 		}
 
 		$query = new WP_Query( $args );
 
-		$options = array( __( '— Select Configuration —', 'pronamic_ideal' ) );
+		$options = [ __( '— Select Configuration —', 'pronamic_ideal' ) ];
 
 		foreach ( $query->posts as $post ) {
 			if ( ! \is_object( $post ) ) {
@@ -780,9 +780,9 @@ class Plugin {
 	 * @param array|WP_Error $errors An array with errors to render.
 	 * @return void
 	 */
-	public static function render_errors( $errors = array() ) {
+	public static function render_errors( $errors = [] ) {
 		if ( ! is_array( $errors ) ) {
-			$errors = array( $errors );
+			$errors = [ $errors ];
 		}
 
 		foreach ( $errors as $pay_error ) {
@@ -810,7 +810,7 @@ class Plugin {
 	 *
 	 * @return null|Gateway
 	 */
-	public static function get_gateway( $config_id, $args = array() ) {
+	public static function get_gateway( $config_id, $args = [] ) {
 		// Get gateway from data store.
 		$gateway = \pronamic_pay_plugin()->gateways_data_store->get_gateway( $config_id );
 
@@ -819,9 +819,9 @@ class Plugin {
 			// Get integration.
 			$args = wp_parse_args(
 				$args,
-				array(
+				[
 					'gateway_id' => \get_post_meta( $config_id, '_pronamic_gateway_id', true ),
-				)
+				]
 			);
 
 			$integration = pronamic_pay_plugin()->gateway_integrations->get_integration( $args['gateway_id'] );
@@ -924,7 +924,7 @@ class Plugin {
 			}
 
 			// iDEAL.
-			$ideal_methods = array( PaymentMethods::IDEAL, PaymentMethods::DIRECT_DEBIT_IDEAL );
+			$ideal_methods = [ PaymentMethods::IDEAL, PaymentMethods::DIRECT_DEBIT_IDEAL ];
 
 			if ( \in_array( $payment->get_payment_method(), $ideal_methods, true ) && \filter_has_var( INPUT_POST, 'pronamic_ideal_issuer_id' ) ) {
 				$issuer = \filter_input( INPUT_POST, 'pronamic_ideal_issuer_id', FILTER_SANITIZE_STRING );
@@ -1171,15 +1171,15 @@ class Plugin {
 	 * @return array
 	 */
 	public function get_pages() {
-		$return = array();
+		$return = [];
 
-		$pages = array(
+		$pages = [
 			'completed' => __( 'Completed', 'pronamic_ideal' ),
 			'cancel'    => __( 'Canceled', 'pronamic_ideal' ),
 			'expired'   => __( 'Expired', 'pronamic_ideal' ),
 			'error'     => __( 'Error', 'pronamic_ideal' ),
 			'unknown'   => __( 'Unknown', 'pronamic_ideal' ),
-		);
+		];
 
 		foreach ( $pages as $key => $label ) {
 			$id = sprintf( 'pronamic_pay_%s_page_id', $key );

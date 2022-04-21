@@ -410,7 +410,7 @@ class PaymentMethods {
 	 * @return array
 	 */
 	public static function get_payment_methods() {
-		$payment_methods = array(
+		$payment_methods = [
 			self::AFTERPAY_NL             => _x( 'AfterPay', 'afterpay.nl', 'pronamic_ideal' ),
 			self::AFTERPAY_COM            => _x( 'Afterpay', 'afterpay.com', 'pronamic_ideal' ),
 			self::ALIPAY                  => __( 'Alipay', 'pronamic_ideal' ),
@@ -467,7 +467,7 @@ class PaymentMethods {
 			self::V_PAY                   => __( 'V PAY', 'pronamic_ideal' ),
 			self::VIPPS                   => __( 'Vipps', 'pronamic_ideal' ),
 			self::VISA                    => __( 'Visa', 'pronamic_ideal' ),
-		);
+		];
 
 		return $payment_methods;
 	}
@@ -528,11 +528,11 @@ class PaymentMethods {
 	 * @return array
 	 */
 	public static function get_direct_debit_methods() {
-		$payment_methods = array(
+		$payment_methods = [
 			self::DIRECT_DEBIT_BANCONTACT => self::BANCONTACT,
 			self::DIRECT_DEBIT_IDEAL      => self::IDEAL,
 			self::DIRECT_DEBIT_SOFORT     => self::SOFORT,
-		);
+		];
 
 		return $payment_methods;
 	}
@@ -623,14 +623,14 @@ class PaymentMethods {
 	 * @return void
 	 */
 	public static function update_active_payment_methods() {
-		$active_payment_methods = array();
+		$active_payment_methods = [];
 
 		$query = new WP_Query(
-			array(
+			[
 				'post_type' => 'pronamic_gateway',
 				'nopaging'  => true,
 				'fields'    => 'ids',
-			)
+			]
 		);
 
 		foreach ( $query->posts as $config_id ) {
@@ -661,7 +661,7 @@ class PaymentMethods {
 
 			foreach ( $payment_methods as $payment_method ) {
 				if ( ! isset( $active_payment_methods[ $payment_method ] ) ) {
-					$active_payment_methods[ $payment_method ] = array();
+					$active_payment_methods[ $payment_method ] = [];
 				}
 
 				// Check if payment method is supported.
@@ -684,7 +684,7 @@ class PaymentMethods {
 	public static function get_active_payment_methods() {
 		self::maybe_update_active_payment_methods();
 
-		$payment_methods = array();
+		$payment_methods = [];
 
 		$active_methods = get_option( 'pronamic_pay_active_payment_methods' );
 
@@ -705,7 +705,7 @@ class PaymentMethods {
 	public static function get_config_ids( $payment_method = null ) {
 		self::maybe_update_active_payment_methods();
 
-		$config_ids = array();
+		$config_ids = [];
 
 		$active_methods = get_option( 'pronamic_pay_active_payment_methods' );
 

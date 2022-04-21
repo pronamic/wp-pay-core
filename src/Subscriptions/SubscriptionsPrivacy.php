@@ -25,10 +25,10 @@ class SubscriptionsPrivacy {
 	 */
 	public function __construct() {
 		// Register exporters.
-		add_action( 'pronamic_pay_privacy_register_exporters', array( $this, 'register_exporters' ) );
+		add_action( 'pronamic_pay_privacy_register_exporters', [ $this, 'register_exporters' ] );
 
 		// Register erasers.
-		add_action( 'pronamic_pay_privacy_register_erasers', array( $this, 'register_erasers' ) );
+		add_action( 'pronamic_pay_privacy_register_erasers', [ $this, 'register_erasers' ] );
 	}
 
 	/**
@@ -43,7 +43,7 @@ class SubscriptionsPrivacy {
 		$privacy_manager->add_exporter(
 			'subscriptions',
 			__( 'Subscriptions', 'pronamic_ideal' ),
-			array( $this, 'subscriptions_export' )
+			[ $this, 'subscriptions_export' ]
 		);
 	}
 
@@ -59,7 +59,7 @@ class SubscriptionsPrivacy {
 		$privacy_manager->add_eraser(
 			'subscriptions',
 			__( 'Subscriptions', 'pronamic_ideal' ),
-			array( $this, 'subscriptions_anonymizer' )
+			[ $this, 'subscriptions_anonymizer' ]
 		);
 	}
 
@@ -88,16 +88,16 @@ class SubscriptionsPrivacy {
 		// Get registered meta keys for export.
 		$meta_keys = wp_list_filter(
 			$data_store->get_registered_meta(),
-			array(
+			[
 				'privacy_export' => true,
-			)
+			]
 		);
 
-		$items = array();
+		$items = [];
 
 		// Loop subscriptions.
 		foreach ( $subscriptions as $subscription ) {
-			$export_data = array();
+			$export_data = [];
 
 			$id = $subscription->get_id();
 
@@ -121,22 +121,22 @@ class SubscriptionsPrivacy {
 
 			// Add item to export data.
 			if ( ! empty( $export_data ) ) {
-				$items[] = array(
+				$items[] = [
 					'group_id'    => 'pronamic-pay-subscriptions',
 					'group_label' => __( 'Subscriptions', 'pronamic_ideal' ),
 					'item_id'     => 'pronamic-pay-subscription-' . $id,
 					'data'        => $export_data,
-				);
+				];
 			}
 		}
 
 		$done = true;
 
 		// Return export data.
-		return array(
+		return [
 			'data' => $items,
 			'done' => $done,
-		);
+		];
 	}
 
 	/**
@@ -157,7 +157,7 @@ class SubscriptionsPrivacy {
 		// Return values.
 		$items_removed  = false;
 		$items_retained = false;
-		$messages       = array();
+		$messages       = [];
 		$done           = false;
 
 		// Get subscriptions.
@@ -170,9 +170,9 @@ class SubscriptionsPrivacy {
 		// Get registered meta keys for erasure.
 		$meta_keys = wp_list_filter(
 			$data_store->get_registered_meta(),
-			array(
+			[
 				'privacy_erasure' => null,
-			),
+			],
 			'NOT'
 		);
 
@@ -198,7 +198,7 @@ class SubscriptionsPrivacy {
 			$message = __( 'Subscription ID %s anonymized.', 'pronamic_ideal' );
 
 			// Anonymize completed and cancelled subscriptions.
-			if ( isset( $subscription_status ) && in_array( $subscription_status, array( SubscriptionStatus::COMPLETED, SubscriptionStatus::CANCELLED ), true ) ) {
+			if ( isset( $subscription_status ) && in_array( $subscription_status, [ SubscriptionStatus::COMPLETED, SubscriptionStatus::CANCELLED ], true ) ) {
 				// Erase subscription meta.
 				foreach ( $meta_keys as $meta_key => $meta_options ) {
 					$meta_key = $data_store->meta_key_prefix . $meta_key;
@@ -236,11 +236,11 @@ class SubscriptionsPrivacy {
 		$done = true;
 
 		// Return results.
-		return array(
+		return [
 			'items_removed'  => $items_removed,
 			'items_retained' => $items_retained,
 			'messages'       => $messages,
 			'done'           => $done,
-		);
+		];
 	}
 }

@@ -87,17 +87,17 @@ abstract class AbstractIntegration {
 	 *
 	 * @param array $args Arguments.
 	 */
-	public function __construct( $args = array() ) {
+	public function __construct( $args = [] ) {
 		$args = wp_parse_args(
 			$args,
-			array(
+			[
 				'id'                     => null,
 				'name'                   => null,
 				'version'                => null,
 				'version_option_name'    => null,
 				'db_version_option_name' => null,
 				'deprecated'             => false,
-			)
+			]
 		);
 
 		// ID.

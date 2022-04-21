@@ -45,7 +45,7 @@ class ContactNameHelper {
 		// Initials.
 		if ( null === $name->get_initials() ) {
 			// First and middle name could contain multiple names.
-			$names = array();
+			$names = [];
 
 			$first_name = $name->get_first_name();
 

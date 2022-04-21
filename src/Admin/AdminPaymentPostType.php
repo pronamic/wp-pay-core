@@ -43,7 +43,7 @@ class AdminPaymentPostType {
 	 *
 	 * @var array
 	 */
-	private $admin_notices = array();
+	private $admin_notices = [];
 
 	/**
 	 * Constructs and initializes an admin payment post type object.
@@ -53,26 +53,26 @@ class AdminPaymentPostType {
 	public function __construct( $plugin ) {
 		$this->plugin = $plugin;
 
-		add_filter( 'request', array( $this, 'request' ) );
+		add_filter( 'request', [ $this, 'request' ] );
 
-		add_filter( 'manage_edit-' . self::POST_TYPE . '_columns', array( $this, 'columns' ) );
-		add_filter( 'manage_edit-' . self::POST_TYPE . '_sortable_columns', array( $this, 'sortable_columns' ) );
-		add_filter( 'list_table_primary_column', array( $this, 'primary_column' ), 10, 2 );
+		add_filter( 'manage_edit-' . self::POST_TYPE . '_columns', [ $this, 'columns' ] );
+		add_filter( 'manage_edit-' . self::POST_TYPE . '_sortable_columns', [ $this, 'sortable_columns' ] );
+		add_filter( 'list_table_primary_column', [ $this, 'primary_column' ], 10, 2 );
 
-		add_action( 'manage_' . self::POST_TYPE . '_posts_custom_column', array( $this, 'custom_columns' ), 10, 2 );
+		add_action( 'manage_' . self::POST_TYPE . '_posts_custom_column', [ $this, 'custom_columns' ], 10, 2 );
 
-		add_action( 'load-post.php', array( $this, 'maybe_process_payment_action' ) );
-		add_action( 'load-post.php', array( $this, 'maybe_display_anonymized_notice' ) );
+		add_action( 'load-post.php', [ $this, 'maybe_process_payment_action' ] );
+		add_action( 'load-post.php', [ $this, 'maybe_display_anonymized_notice' ] );
 
-		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
+		add_action( 'admin_notices', [ $this, 'admin_notices' ] );
 
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
+		add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ] );
 
-		add_filter( 'post_row_actions', array( $this, 'post_row_actions' ), 10, 2 );
+		add_filter( 'post_row_actions', [ $this, 'post_row_actions' ], 10, 2 );
 
-		add_filter( 'default_hidden_columns', array( $this, 'default_hidden_columns' ) );
+		add_filter( 'default_hidden_columns', [ $this, 'default_hidden_columns' ] );
 
-		add_filter( 'post_updated_messages', array( $this, 'post_updated_messages' ) );
+		add_filter( 'post_updated_messages', [ $this, 'post_updated_messages' ] );
 
 		// Bulk Actions.
 		new AdminPaymentBulkActions();
@@ -150,10 +150,10 @@ class AdminPaymentPostType {
 				exit;
 			}
 
-			$this->admin_notices[] = array(
+			$this->admin_notices[] = [
 				'type'    => 'info',
 				'message' => __( 'Payment status updated.', 'pronamic_ideal' ),
-			);
+			];
 		}
 
 		// Create invoice action.
@@ -161,16 +161,16 @@ class AdminPaymentPostType {
 			$gateway = $payment->get_gateway();
 
 			// Admin notice.
-			if ( null !== $gateway && is_callable( array( $gateway, 'create_invoice' ) ) && $gateway->create_invoice( $payment ) ) {
-				$this->admin_notices[] = array(
+			if ( null !== $gateway && is_callable( [ $gateway, 'create_invoice' ] ) && $gateway->create_invoice( $payment ) ) {
+				$this->admin_notices[] = [
 					'type'    => 'info',
 					'message' => __( 'Invoice created.', 'pronamic_ideal' ),
-				);
+				];
 			} else {
-				$this->admin_notices[] = array(
+				$this->admin_notices[] = [
 					'type'    => 'error',
 					'message' => __( 'Invoice could not be created.', 'pronamic_ideal' ),
-				);
+				];
 			}
 		}
 
@@ -179,16 +179,16 @@ class AdminPaymentPostType {
 			$gateway = $payment->get_gateway();
 
 			// Admin notice.
-			if ( null !== $gateway && is_callable( array( $gateway, 'cancel_reservation' ) ) && $gateway->cancel_reservation( $payment ) ) {
-				$this->admin_notices[] = array(
+			if ( null !== $gateway && is_callable( [ $gateway, 'cancel_reservation' ] ) && $gateway->cancel_reservation( $payment ) ) {
+				$this->admin_notices[] = [
 					'type'    => 'info',
 					'message' => __( 'Reservation cancelled.', 'pronamic_ideal' ),
-				);
+				];
 			} else {
-				$this->admin_notices[] = array(
+				$this->admin_notices[] = [
 					'type'    => 'error',
 					'message' => __( 'Reservation could not be cancelled.', 'pronamic_ideal' ),
-				);
+				];
 			}
 		}
 
@@ -197,23 +197,23 @@ class AdminPaymentPostType {
 			$ga_ecommerce = pronamic_pay_plugin()->google_analytics_ecommerce;
 
 			if ( ! $ga_ecommerce->valid_payment( $payment ) ) {
-				$notice = array(
+				$notice = [
 					'type'    => 'error',
 					'message' => __( 'Payment details or an invalid tracking ID prevent payment from being tracked by Google Analytics.', 'pronamic_ideal' ),
-				);
+				];
 			} else {
 				pronamic_pay_plugin()->google_analytics_ecommerce->send_transaction( $payment );
 
 				if ( true === $payment->get_meta( 'google_analytics_tracked' ) ) {
-					$notice = array(
+					$notice = [
 						'type'    => 'info',
 						'message' => __( 'Payment sent to Google Analytics.', 'pronamic_ideal' ),
-					);
+					];
 				} else {
-					$notice = array(
+					$notice = [
 						'type'    => 'error',
 						'message' => __( 'Payment could not be sent to Google Analytics.', 'pronamic_ideal' ),
-					);
+					];
 				}
 			}
 
@@ -248,10 +248,10 @@ class AdminPaymentPostType {
 			return;
 		}
 
-		$this->admin_notices[] = array(
+		$this->admin_notices[] = [
 			'type'    => 'info',
 			'message' => __( 'This payment has been anonymized. Personal details are not available anymore.', 'pronamic_ideal' ),
-		);
+		];
 	}
 
 	/**
@@ -276,7 +276,7 @@ class AdminPaymentPostType {
 	 * @return array
 	 */
 	public function columns( $columns ) {
-		$columns = array(
+		$columns = [
 			'cb'                            => '<input type="checkbox" />',
 			'pronamic_payment_status'       => sprintf(
 				'<span class="pronamic-pay-tip pronamic-pay-icon" title="%s">%s</span>',
@@ -296,7 +296,7 @@ class AdminPaymentPostType {
 			'pronamic_payment_customer'     => __( 'Customer', 'pronamic_ideal' ),
 			'pronamic_payment_amount'       => __( 'Amount', 'pronamic_ideal' ),
 			'pronamic_payment_date'         => __( 'Date', 'pronamic_ideal' ),
-		);
+		];
 
 		return $columns;
 	}
@@ -475,13 +475,13 @@ class AdminPaymentPostType {
 						$source_description,
 						$source_id_text
 					),
-					array(
-						'a'      => array(
+					[
+						'a'      => [
 							'href'  => true,
 							'class' => true,
-						),
-						'strong' => array(),
-					)
+						],
+						'strong' => [],
+					]
 				);
 
 				break;
@@ -589,7 +589,7 @@ class AdminPaymentPostType {
 		add_meta_box(
 			'pronamic_payment',
 			__( 'Payment', 'pronamic_ideal' ),
-			array( $this, 'meta_box_info' ),
+			[ $this, 'meta_box_info' ],
 			$post_type,
 			'normal',
 			'high'
@@ -598,7 +598,7 @@ class AdminPaymentPostType {
 		add_meta_box(
 			'pronamic_payment_lines',
 			__( 'Payment Lines', 'pronamic_ideal' ),
-			array( $this, 'meta_box_lines' ),
+			[ $this, 'meta_box_lines' ],
 			$post_type,
 			'normal',
 			'high'
@@ -607,7 +607,7 @@ class AdminPaymentPostType {
 		add_meta_box(
 			'pronamic_payment_subscription',
 			__( 'Subscription', 'pronamic_ideal' ),
-			array( $this, 'meta_box_subscription' ),
+			[ $this, 'meta_box_subscription' ],
 			$post_type,
 			'normal',
 			'high'
@@ -616,7 +616,7 @@ class AdminPaymentPostType {
 		add_meta_box(
 			'pronamic_payment_notes',
 			__( 'Notes', 'pronamic_ideal' ),
-			array( $this, 'meta_box_notes' ),
+			[ $this, 'meta_box_notes' ],
 			$post_type,
 			'normal',
 			'high'
@@ -625,7 +625,7 @@ class AdminPaymentPostType {
 		add_meta_box(
 			'pronamic_payment_update',
 			__( 'Update', 'pronamic_ideal' ),
-			array( $this, 'meta_box_update' ),
+			[ $this, 'meta_box_update' ],
 			$post_type,
 			'side',
 			'high'
@@ -678,11 +678,11 @@ class AdminPaymentPostType {
 	 */
 	public function meta_box_notes( $post ) {
 		$notes = get_comments(
-			array(
+			[
 				'post_id' => $post->ID,
 				'type'    => 'payment_note',
-				'orderby' => array( 'comment_date_gmt', 'comment_ID' ),
-			)
+				'orderby' => [ 'comment_date_gmt', 'comment_ID' ],
+			]
 		);
 
 		include __DIR__ . '/../../views/meta-box-notes.php';
@@ -725,7 +725,7 @@ class AdminPaymentPostType {
 	 */
 	public function post_row_actions( $actions, $post ) {
 		if ( self::POST_TYPE === $post->post_type ) {
-			return array( '' );
+			return [ '' ];
 		}
 
 		return $actions;
@@ -746,7 +746,7 @@ class AdminPaymentPostType {
 		// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352797&filters[translation_id]=37948900
 		$scheduled_date = date_i18n( __( 'M j, Y @ H:i', 'pronamic_ideal' ), strtotime( $post->post_date ) );
 
-		$messages[ self::POST_TYPE ] = array(
+		$messages[ self::POST_TYPE ] = [
 			0  => '', // Unused. Messages start at index 1.
 			1  => __( 'Payment updated.', 'pronamic_ideal' ),
 			// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352799&filters[translation_id]=37947229.
@@ -771,7 +771,7 @@ class AdminPaymentPostType {
 			9  => sprintf( __( 'Payment scheduled for: %s.', 'pronamic_ideal' ), '<strong>' . $scheduled_date . '</strong>' ),
 			// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352806&filters[translation_id]=37949301.
 			10 => __( 'Payment draft updated.', 'pronamic_ideal' ),
-		);
+		];
 
 		return $messages;
 	}

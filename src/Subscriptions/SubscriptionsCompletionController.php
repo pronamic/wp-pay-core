@@ -24,13 +24,13 @@ class SubscriptionsCompletionController {
 	 * @return void
 	 */
 	public function setup() {
-		\add_action( 'init', array( $this, 'maybe_schedule_actions' ) );
+		\add_action( 'init', [ $this, 'maybe_schedule_actions' ] );
 
-		\add_action( 'pronamic_pay_schedule_subscriptions_completion', array( $this, 'schedule_all' ) );
+		\add_action( 'pronamic_pay_schedule_subscriptions_completion', [ $this, 'schedule_all' ] );
 
-		\add_action( 'pronamic_pay_schedule_paged_subscriptions_completion', array( $this, 'schedule_paged' ) );
+		\add_action( 'pronamic_pay_schedule_paged_subscriptions_completion', [ $this, 'schedule_paged' ] );
 
-		\add_action( 'pronamic_pay_complete_subscription', array( $this, 'action_complete_subscription' ) );
+		\add_action( 'pronamic_pay_complete_subscription', [ $this, 'action_complete_subscription' ] );
 	}
 
 	/**
@@ -40,8 +40,8 @@ class SubscriptionsCompletionController {
 	 * @return void
 	 */
 	public function maybe_schedule_actions() {
-		if ( false === \as_next_scheduled_action( 'pronamic_pay_schedule_subscriptions_completion', array(), 'pronamic-pay' ) ) {
-			\as_schedule_cron_action( \time(), '0 * * * *', 'pronamic_pay_schedule_subscriptions_completion', array(), 'pronamic-pay' );
+		if ( false === \as_next_scheduled_action( 'pronamic_pay_schedule_subscriptions_completion', [], 'pronamic-pay' ) ) {
+			\as_schedule_cron_action( \time(), '0 * * * *', 'pronamic_pay_schedule_subscriptions_completion', [], 'pronamic-pay' );
 		}
 	}
 
@@ -77,9 +77,9 @@ class SubscriptionsCompletionController {
 	private function schedule_page( $page ) {
 		return \as_enqueue_async_action(
 			'pronamic_pay_schedule_paged_subscriptions_completion',
-			array(
+			[
 				'page' => $page,
-			),
+			],
 			'pronamic-pay'
 		);
 	}
@@ -92,9 +92,9 @@ class SubscriptionsCompletionController {
 	 */
 	public function schedule_paged( $page ) {
 		$query = $this->get_subscriptions_wp_query_that_require_completion(
-			array(
+			[
 				'paged' => $page,
-			)
+			]
 		);
 
 		$posts = \array_filter(
@@ -104,7 +104,7 @@ class SubscriptionsCompletionController {
 			}
 		);
 
-		$subscriptions = array();
+		$subscriptions = [];
 
 		foreach ( $posts as $post ) {
 			$subscription = \get_pronamic_subscription( $post->ID );
@@ -165,9 +165,9 @@ class SubscriptionsCompletionController {
 			return $action_id;
 		}
 
-		$actions_args = array(
+		$actions_args = [
 			'subscription_id' => $subscription->get_id(),
-		);
+		];
 
 		if ( false !== \as_next_scheduled_action( 'pronamic_pay_complete_subscription', $actions_args, 'pronamic-pay' ) ) {
 			return null;
@@ -233,10 +233,10 @@ class SubscriptionsCompletionController {
 	 * @param array $args Arguments.
 	 * @return WP_Query
 	 */
-	private function get_subscriptions_wp_query_that_require_completion( $args = array() ) {
+	private function get_subscriptions_wp_query_that_require_completion( $args = [] ) {
 		$date = new \DateTimeImmutable( 'now', new \DateTimeZone( 'GMT' ) );
 
-		$query_args = array(
+		$query_args = [
 			'post_type'      => 'pronamic_pay_subscr',
 			/**
 			 * Posts per page is set to 100, higher could result in performance issues.
@@ -245,17 +245,17 @@ class SubscriptionsCompletionController {
 			 */
 			'posts_per_page' => 100,
 			'post_status'    => 'subscr_active',
-			'meta_query'     => array(
-				array(
+			'meta_query'     => [
+				[
 					'key'     => '_pronamic_subscription_end_date',
 					'compare' => '<=',
 					'value'   => $date->format( 'Y-m-d H:i:s' ),
 					'type'    => 'DATETIME',
-				),
-			),
+				],
+			],
 			'order'          => 'DESC',
 			'orderby'        => 'ID',
-		);
+		];
 
 		if ( \array_key_exists( 'paged', $args ) ) {
 			$query_args['paged']         = $args['paged'];

@@ -70,24 +70,24 @@ class PaymentTest extends TestCase {
 	public function get_and_set_provider() {
 		$now = new DateTime();
 
-		return array(
-			array( 'set_date', 'get_date', $now ),
-			array( 'set_id', 'get_id', uniqid() ),
-			array( 'set_config_id', 'get_config_id', 2 ),
-			array( 'set_mode', 'get_mode', Gateway::MODE_LIVE ),
-			array( 'set_transaction_id', 'get_transaction_id', uniqid() ),
-			array( 'set_source', 'get_source', 'test' ),
-			array( 'set_source_id', 'get_source_id', 5 ),
-			array( 'set_status', 'get_status', 'completed' ),
-			array( 'set_version', 'get_version', '5.4.2' ),
-			array( 'set_lines', 'get_lines', new PaymentLines() ),
-			array( 'set_total_amount', 'get_total_amount', new TaxedMoney( 89.95, 'EUR' ) ),
-			array( 'set_shipping_address', 'get_shipping_address', new Address() ),
-			array( 'set_shipping_amount', 'get_shipping_amount', new Money( 10, 'EUR' ) ),
-			array( 'set_consumer_bank_details', 'get_consumer_bank_details', new BankAccountDetails() ),
-			array( 'set_bank_transfer_recipient_details', 'get_bank_transfer_recipient_details', new BankTransferDetails() ),
-			array( 'set_failure_reason', 'get_failure_reason', new FailureReason() ),
-		);
+		return [
+			[ 'set_date', 'get_date', $now ],
+			[ 'set_id', 'get_id', uniqid() ],
+			[ 'set_config_id', 'get_config_id', 2 ],
+			[ 'set_mode', 'get_mode', Gateway::MODE_LIVE ],
+			[ 'set_transaction_id', 'get_transaction_id', uniqid() ],
+			[ 'set_source', 'get_source', 'test' ],
+			[ 'set_source_id', 'get_source_id', 5 ],
+			[ 'set_status', 'get_status', 'completed' ],
+			[ 'set_version', 'get_version', '5.4.2' ],
+			[ 'set_lines', 'get_lines', new PaymentLines() ],
+			[ 'set_total_amount', 'get_total_amount', new TaxedMoney( 89.95, 'EUR' ) ],
+			[ 'set_shipping_address', 'get_shipping_address', new Address() ],
+			[ 'set_shipping_amount', 'get_shipping_amount', new Money( 10, 'EUR' ) ],
+			[ 'set_consumer_bank_details', 'get_consumer_bank_details', new BankAccountDetails() ],
+			[ 'set_bank_transfer_recipient_details', 'get_bank_transfer_recipient_details', new BankTransferDetails() ],
+			[ 'set_failure_reason', 'get_failure_reason', new FailureReason() ],
+		];
 	}
 
 	/**
@@ -118,7 +118,7 @@ class PaymentTest extends TestCase {
 			$payment->$property = $value;
 		}
 
-		$this->assertEquals( $value, call_user_func( array( $payment, $get_function ) ) );
+		$this->assertEquals( $value, call_user_func( [ $payment, $get_function ] ) );
 	}
 
 	/**
@@ -127,10 +127,10 @@ class PaymentTest extends TestCase {
 	 * @return array
 	 */
 	public function get_provider() {
-		return array(
-			array( 'order_id', 'get_order_id', 1234 ),
-			array( 'email', 'get_email', 'john.doe@example.com' ),
-		);
+		return [
+			[ 'order_id', 'get_order_id', 1234 ],
+			[ 'email', 'get_email', 'john.doe@example.com' ],
+		];
 	}
 
 	/**

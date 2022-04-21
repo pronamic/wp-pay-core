@@ -29,7 +29,7 @@ wp_nonce_field( 'test_pay_gateway', 'pronamic_pay_test_nonce' );
 // Payment method selector.
 $payment_methods = $gateway->get_payment_method_field_options( true );
 
-$inputs = array();
+$inputs = [];
 
 try {
 	foreach ( $payment_methods as $payment_method => $method_name ) {
@@ -43,10 +43,10 @@ try {
 		$html = $gateway->get_input_html();
 
 		if ( ! empty( $html ) ) {
-			$inputs[ $payment_method ] = array(
+			$inputs[ $payment_method ] = [
 				'label' => $method_name,
 				'html'  => $html,
-			);
+			];
 		}
 	}
 } catch ( \Exception $exception ) {
@@ -137,20 +137,20 @@ $currency = Currency::get_instance( 'EUR' );
 
 		<?php
 
-		$options = array(
+		$options = [
 			''  => __( '— Select Repeat —', 'pronamic_ideal' ),
 			'D' => __( 'Daily', 'pronamic_ideal' ),
 			'W' => __( 'Weekly', 'pronamic_ideal' ),
 			'M' => __( 'Monthly', 'pronamic_ideal' ),
 			'Y' => __( 'Annually', 'pronamic_ideal' ),
-		);
+		];
 
-		$options_interval_suffix = array(
+		$options_interval_suffix = [
 			'D' => __( 'days', 'pronamic_ideal' ),
 			'W' => __( 'weeks', 'pronamic_ideal' ),
 			'M' => __( 'months', 'pronamic_ideal' ),
 			'Y' => __( 'year', 'pronamic_ideal' ),
-		);
+		];
 
 		?>
 		<tr>
@@ -245,16 +245,16 @@ $currency = Currency::get_instance( 'EUR' );
 					<label for="pronamic_pay_ends_count">
 						<?php
 
-						$allowed_html = array(
-							'input' => array(
+						$allowed_html = [
+							'input' => [
 								'id'    => true,
 								'name'  => true,
 								'type'  => true,
 								'value' => true,
 								'size'  => true,
 								'class' => true,
-							),
-						);
+							],
+						];
 
 						echo wp_kses(
 							sprintf(

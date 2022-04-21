@@ -352,10 +352,10 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 
 				echo wp_kses(
 					wpautop( $bank_transfer_recipient ),
-					array(
-						'p'  => array(),
-						'br' => array(),
-					)
+					[
+						'p'  => [],
+						'br' => [],
+					]
 				);
 
 				?>
@@ -483,9 +483,9 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 
 									echo \wp_kses(
 										\nl2br( (string) $vat_number_validity->get_address() ),
-										array(
-											'br' => array(),
-										)
+										[
+											'br' => [],
+										]
 									);
 
 									?>

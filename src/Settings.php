@@ -33,7 +33,7 @@ class Settings {
 		$this->plugin = $plugin;
 
 		// Actions.
-		add_action( 'init', array( $this, 'init' ) );
+		add_action( 'init', [ $this, 'init' ] );
 	}
 
 	/**
@@ -50,57 +50,57 @@ class Settings {
 		register_setting(
 			'pronamic_pay',
 			'pronamic_pay_license_key',
-			array(
+			[
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
-			)
+			]
 		);
 
 		register_setting(
 			'pronamic_pay',
 			'pronamic_pay_config_id',
-			array(
+			[
 				'type'              => 'integer',
-				'sanitize_callback' => array( $this, 'sanitize_published_post_id' ),
-			)
+				'sanitize_callback' => [ $this, 'sanitize_published_post_id' ],
+			]
 		);
 
 		register_setting(
 			'pronamic_pay',
 			'pronamic_pay_uninstall_clear_data',
-			array(
+			[
 				'type'    => 'boolean',
 				'default' => false,
-			)
+			]
 		);
 
 		register_setting(
 			'pronamic_pay',
 			'pronamic_pay_google_analytics_property',
-			array(
+			[
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
-			)
+			]
 		);
 
 		\register_setting(
 			'pronamic_pay',
 			'pronamic_pay_debug_mode',
-			array(
+			[
 				'type'        => 'boolean',
 				'description' => 'Setting that can be used to trigger the “debug” mode throughout Pronamic Pay.',
 				'default'     => false,
-			)
+			]
 		);
 
 		\register_setting(
 			'pronamic_pay',
 			'pronamic_pay_subscriptions_processing_disabled',
-			array(
+			[
 				'type'        => 'boolean',
 				'description' => 'Setting that can be used to disable processing of recurring payments.',
 				'default'     => false,
-			)
+			]
 		);
 
 		// Pages.
@@ -112,10 +112,10 @@ class Settings {
 			register_setting(
 				'pronamic_pay',
 				$id,
-				array(
+				[
 					'type'              => 'integer',
-					'sanitize_callback' => array( $this, 'sanitize_published_post_id' ),
-				)
+					'sanitize_callback' => [ $this, 'sanitize_published_post_id' ],
+				]
 			);
 		}
 	}

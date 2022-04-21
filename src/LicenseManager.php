@@ -27,11 +27,11 @@ class LicenseManager {
 	 */
 	public function __construct() {
 		// Actions.
-		add_action( 'pronamic_pay_license_check', array( $this, 'license_check_event' ) );
-		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
+		add_action( 'pronamic_pay_license_check', [ $this, 'license_check_event' ] );
+		add_action( 'admin_notices', [ $this, 'admin_notices' ] );
 
 		// Filters.
-		add_filter( sprintf( 'pre_update_option_%s', 'pronamic_pay_license_key' ), array( $this, 'pre_update_option_license_key' ), 10, 2 );
+		add_filter( sprintf( 'pre_update_option_%s', 'pronamic_pay_license_key' ), [ $this, 'pre_update_option_license_key' ], 10, 2 );
 	}
 
 	/**
@@ -123,19 +123,19 @@ class LicenseManager {
 		}
 
 		// Request.
-		$args = array(
+		$args = [
 			'license' => $license,
 			'name'    => 'Pronamic Pay',
 			'url'     => home_url(),
-		);
+		];
 
 		$args = urlencode_deep( $args );
 
 		$response = wp_remote_get(
 			add_query_arg( $args, 'https://api.pronamic.eu/licenses/check/1.0/' ),
-			array(
+			[
 				'timeout' => 20,
-			)
+			]
 		);
 
 		// On errors we give benefit of the doubt.
@@ -171,19 +171,19 @@ class LicenseManager {
 	 * @return void
 	 */
 	public function deactivate_license( $license ) {
-		$args = array(
+		$args = [
 			'license' => $license,
 			'name'    => 'Pronamic Pay',
 			'url'     => home_url(),
-		);
+		];
 
 		$args = urlencode_deep( $args );
 
 		$response = wp_remote_get(
 			add_query_arg( $args, 'https://api.pronamic.eu/licenses/deactivate/1.0/' ),
-			array(
+			[
 				'timeout' => 20,
-			)
+			]
 		);
 	}
 
@@ -195,19 +195,19 @@ class LicenseManager {
 	 */
 	public function activate_license( $license ) {
 		// Request.
-		$args = array(
+		$args = [
 			'license' => $license,
 			'name'    => 'Pronamic Pay',
 			'url'     => home_url(),
-		);
+		];
 
 		$args = urlencode_deep( $args );
 
 		$response = wp_remote_get(
 			add_query_arg( $args, 'https://api.pronamic.eu/licenses/activate/1.0/' ),
-			array(
+			[
 				'timeout' => 20,
-			)
+			]
 		);
 
 		if ( $response instanceof WP_Error ) {

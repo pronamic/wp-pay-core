@@ -24,13 +24,13 @@ class SubscriptionsNotificationsController {
 	 * @return void
 	 */
 	public function setup() {
-		\add_action( 'init', array( $this, 'maybe_schedule_actions' ) );
+		\add_action( 'init', [ $this, 'maybe_schedule_actions' ] );
 
-		\add_action( 'pronamic_pay_schedule_subscriptions_notification', array( $this, 'schedule_all' ) );
+		\add_action( 'pronamic_pay_schedule_subscriptions_notification', [ $this, 'schedule_all' ] );
 
-		\add_action( 'pronamic_pay_schedule_paged_subscriptions_notification', array( $this, 'schedule_paged' ) );
+		\add_action( 'pronamic_pay_schedule_paged_subscriptions_notification', [ $this, 'schedule_paged' ] );
 
-		\add_action( 'pronamic_pay_send_subscription_renewal_notification', array( $this, 'action_send_subscription_renewal_notification' ) );
+		\add_action( 'pronamic_pay_send_subscription_renewal_notification', [ $this, 'action_send_subscription_renewal_notification' ] );
 	}
 
 	/**
@@ -40,8 +40,8 @@ class SubscriptionsNotificationsController {
 	 * @return void
 	 */
 	public function maybe_schedule_actions() {
-		if ( false === \as_next_scheduled_action( 'pronamic_pay_schedule_subscriptions_notification', array(), 'pronamic-pay' ) ) {
-			\as_schedule_cron_action( \time(), '0 0 * * *', 'pronamic_pay_schedule_subscriptions_notification', array(), 'pronamic-pay' );
+		if ( false === \as_next_scheduled_action( 'pronamic_pay_schedule_subscriptions_notification', [], 'pronamic-pay' ) ) {
+			\as_schedule_cron_action( \time(), '0 0 * * *', 'pronamic_pay_schedule_subscriptions_notification', [], 'pronamic-pay' );
 		}
 	}
 
@@ -77,9 +77,9 @@ class SubscriptionsNotificationsController {
 	private function schedule_page( $page ) {
 		return \as_enqueue_async_action(
 			'pronamic_pay_schedule_paged_subscriptions_notification',
-			array(
+			[
 				'page' => $page,
-			),
+			],
 			'pronamic-pay'
 		);
 	}
@@ -92,9 +92,9 @@ class SubscriptionsNotificationsController {
 	 */
 	public function schedule_paged( $page ) {
 		$query = $this->get_subscriptions_wp_query_that_require_notification(
-			array(
+			[
 				'paged' => $page,
-			)
+			]
 		);
 
 		$posts = \array_filter(
@@ -104,7 +104,7 @@ class SubscriptionsNotificationsController {
 			}
 		);
 
-		$subscriptions = array();
+		$subscriptions = [];
 
 		foreach ( $posts as $post ) {
 			$subscription = \get_pronamic_subscription( $post->ID );
@@ -182,9 +182,9 @@ class SubscriptionsNotificationsController {
 			return $action_id;
 		}
 
-		$actions_args = array(
+		$actions_args = [
 			'subscription_id' => $subscription->get_id(),
-		);
+		];
 
 		if ( false !== \as_next_scheduled_action( 'pronamic_pay_send_subscription_renewal_notification', $actions_args, 'pronamic-pay' ) ) {
 			return null;
@@ -262,11 +262,11 @@ class SubscriptionsNotificationsController {
 	 * @param array $args Arguments.
 	 * @return WP_Query
 	 */
-	private function get_subscriptions_wp_query_that_require_notification( $args = array() ) {
+	private function get_subscriptions_wp_query_that_require_notification( $args = [] ) {
 		$start_date = new \DateTimeImmutable( 'midnight +1 week', new \DateTimeZone( 'GMT' ) );
 		$end_date   = new \DateTimeImmutable( 'tomorrow +1 week', new \DateTimeZone( 'GMT' ) );
 
-		$query_args = array(
+		$query_args = [
 			'post_type'      => 'pronamic_pay_subscr',
 			/**
 			 * Posts per page is set to 100, higher could result in performance issues.
@@ -274,25 +274,25 @@ class SubscriptionsNotificationsController {
 			 * @link https://github.com/WordPress/WordPress-Coding-Standards/wiki/Customizable-sniff-properties#wp-postsperpage-post-limit
 			 */
 			'posts_per_page' => 100,
-			'post_status'    => array(
+			'post_status'    => [
 				'subscr_active',
-			),
-			'meta_query'     => array(
-				array(
-					array(
+			],
+			'meta_query'     => [
+				[
+					[
 						'key'     => '_pronamic_subscription_next_payment',
 						'compare' => 'BETWEEN',
-						'value'   => array(
+						'value'   => [
 							$start_date->format( 'Y-m-d H:i:s' ),
 							$end_date->format( 'Y-m-d H:i:s' ),
-						),
+						],
 						'type'    => 'DATETIME',
-					),
-				),
-			),
+					],
+				],
+			],
 			'order'          => 'DESC',
 			'orderby'        => 'ID',
-		);
+		];
 
 		if ( \array_key_exists( 'paged', $args ) ) {
 			$query_args['paged']         = $args['paged'];

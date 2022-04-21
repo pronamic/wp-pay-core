@@ -26,10 +26,10 @@ class PaymentsPrivacy {
 	 */
 	public function __construct() {
 		// Register exporters.
-		add_action( 'pronamic_pay_privacy_register_exporters', array( $this, 'register_exporters' ) );
+		add_action( 'pronamic_pay_privacy_register_exporters', [ $this, 'register_exporters' ] );
 
 		// Register erasers.
-		add_action( 'pronamic_pay_privacy_register_erasers', array( $this, 'register_erasers' ) );
+		add_action( 'pronamic_pay_privacy_register_erasers', [ $this, 'register_erasers' ] );
 	}
 
 	/**
@@ -44,7 +44,7 @@ class PaymentsPrivacy {
 		$privacy_manager->add_exporter(
 			'payments',
 			__( 'Payments', 'pronamic_ideal' ),
-			array( $this, 'payments_export' )
+			[ $this, 'payments_export' ]
 		);
 	}
 
@@ -60,7 +60,7 @@ class PaymentsPrivacy {
 		$privacy_manager->add_eraser(
 			'payments',
 			__( 'Payments', 'pronamic_ideal' ),
-			array( $this, 'payments_anonymizer' )
+			[ $this, 'payments_anonymizer' ]
 		);
 	}
 
@@ -89,16 +89,16 @@ class PaymentsPrivacy {
 		// Get registered meta keys for export.
 		$meta_keys = wp_list_filter(
 			$data_store->get_registered_meta(),
-			array(
+			[
 				'privacy_export' => true,
-			)
+			]
 		);
 
-		$items = array();
+		$items = [];
 
 		// Loop payments.
 		foreach ( $payments as $payment ) {
-			$export_data = array();
+			$export_data = [];
 
 			$id = $payment->get_id();
 
@@ -122,20 +122,20 @@ class PaymentsPrivacy {
 
 			// Add item to export data.
 			if ( ! empty( $export_data ) ) {
-				$items[] = array(
+				$items[] = [
 					'group_id'    => 'pronamic-pay-payments',
 					'group_label' => __( 'Payments', 'pronamic_ideal' ),
 					'item_id'     => 'pronamic-pay-payment-' . $id,
 					'data'        => $export_data,
-				);
+				];
 			}
 		}
 
 		// Return export data.
-		return array(
+		return [
 			'data' => $items,
 			'done' => true,
-		);
+		];
 	}
 
 	/**
@@ -156,7 +156,7 @@ class PaymentsPrivacy {
 		// Return values.
 		$items_removed  = false;
 		$items_retained = false;
-		$messages       = array();
+		$messages       = [];
 
 		// Get payments.
 		// @todo use paging.
@@ -168,9 +168,9 @@ class PaymentsPrivacy {
 		// Get registered meta keys for erasure.
 		$meta_keys = wp_list_filter(
 			$data_store->get_registered_meta(),
-			array(
+			[
 				'privacy_erasure' => null,
-			),
+			],
 			'NOT'
 		);
 
@@ -235,12 +235,12 @@ class PaymentsPrivacy {
 		}
 
 		// Return results.
-		return array(
+		return [
 			'items_removed'  => $items_removed,
 			'items_retained' => $items_retained,
 			'messages'       => $messages,
 			'done'           => true,
-		);
+		];
 	}
 
 }

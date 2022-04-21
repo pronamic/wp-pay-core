@@ -24,26 +24,26 @@ class CustomerHelperTest extends TestCase {
 	 * Test customer from array.
 	 */
 	public function test_customer_from_array() {
-		$customer = CustomerHelper::from_array( array() );
+		$customer = CustomerHelper::from_array( [] );
 
 		$this->assertNull( $customer );
 
 		$customer = CustomerHelper::from_array(
-			array(
+			[
 				'email'   => '',
 				'phone'   => '',
 				'user_id' => '',
-			)
+			]
 		);
 
 		$this->assertNull( $customer );
 
 		$customer = CustomerHelper::from_array(
-			array(
+			[
 				'email'   => 'john@example.com',
 				'phone'   => '',
 				'user_id' => '',
-			)
+			]
 		);
 
 		$this->assertEquals( 'john@example.com', $customer->get_email() );

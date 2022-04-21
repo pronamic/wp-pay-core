@@ -49,8 +49,8 @@ class AdminAboutPage {
 		$this->file   = $file;
 
 		// Actions.
-		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
-		add_action( 'admin_head', array( $this, 'admin_head' ) );
+		add_action( 'admin_menu', [ $this, 'admin_menu' ] );
+		add_action( 'admin_head', [ $this, 'admin_head' ] );
 	}
 
 	/**
@@ -70,14 +70,14 @@ class AdminAboutPage {
 			__( 'Welcome to Pronamic Pay', 'pronamic_ideal' ),
 			'manage_options',
 			$page,
-			array( $this, 'render_page' )
+			[ $this, 'render_page' ]
 		);
 
 		if ( false === $hook_suffix ) {
 			return;
 		}
 
-		add_action( 'admin_print_styles-' . $hook_suffix, array( $this, 'admin_css' ) );
+		add_action( 'admin_print_styles-' . $hook_suffix, [ $this, 'admin_css' ] );
 	}
 
 	/**
@@ -101,7 +101,7 @@ class AdminAboutPage {
 		wp_enqueue_style(
 			'pronamic-pay-admin-about',
 			plugins_url( '../../css/admin-about' . $min . '.css', __FILE__ ),
-			array(),
+			[],
 			$this->plugin->get_version()
 		);
 	}

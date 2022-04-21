@@ -35,10 +35,10 @@ class VatNumberViesValidator {
 		$client = new \SoapClient( self::API_URL );
 
 		// Parameters.
-		$parameters = array(
+		$parameters = [
 			'countryCode' => $vat_number->get_2_digit_prefix(),
 			'vatNumber'   => $vat_number->normalized_without_prefix(),
-		);
+		];
 
 		// Response.
 		$response = $client->checkVat( $parameters );

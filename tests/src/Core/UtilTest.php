@@ -44,13 +44,13 @@ class UtilTest extends TestCase {
 	 * @return array
 	 */
 	public function status_matrix_provider() {
-		return array(
-			array( __NAMESPACE__ . '\Util', 'class_method_exists', true ),
-			array( __NAMESPACE__ . '\Server', 'get', true ),
-			array( 'ClassDoesNotExist', 'method_does_not_exist', false ),
-			array( '', '', false ),
-			array( null, null, false ),
-		);
+		return [
+			[ __NAMESPACE__ . '\Util', 'class_method_exists', true ],
+			[ __NAMESPACE__ . '\Server', 'get', true ],
+			[ 'ClassDoesNotExist', 'method_does_not_exist', false ],
+			[ '', '', false ],
+			[ null, null, false ],
+		];
 	}
 
 	/**
@@ -80,34 +80,34 @@ class UtilTest extends TestCase {
 	 * @return array
 	 */
 	public function server_ip_matrix_provider() {
-		return array(
-			array(
-				array(
+		return [
+			[
+				[
 					'HTTP_X_FORWARDED_FOR' => '2001:db8:85a3:8d3:1319:8a2e:370:7348',
-				),
+				],
 				'2001:db8:85a3:8d3:1319:8a2e:370:7348',
-			),
-			array(
-				array(
+			],
+			[
+				[
 					'HTTP_X_FORWARDED_FOR' => '203.0.113.195',
-				),
+				],
 				'203.0.113.195',
-			),
-			array(
-				array(
+			],
+			[
+				[
 					'HTTP_X_FORWARDED_FOR' => '203.0.113.195, 70.41.3.18, 150.172.238.178',
-				),
+				],
 				'203.0.113.195',
-			),
-			array(
-				array(
+			],
+			[
+				[
 					'HTTP_CLIENT_IP'       => '203.0.113.194',
 					'HTTP_X_FORWARDED_FOR' => '203.0.113.195, 70.41.3.18, 150.172.238.178',
-				),
+				],
 				'203.0.113.194',
-			),
-			array(
-				array(
+			],
+			[
+				[
 					'HTTP_CLIENT_IP'           => 'invalid ip',
 					'HTTP_X_FORWARDED_FOR'     => 'invalid ip',
 					'HTTP_X_FORWARDED'         => 'invalid ip',
@@ -115,11 +115,11 @@ class UtilTest extends TestCase {
 					'HTTP_FORWARDED_FOR'       => 'invalid ip',
 					'HTTP_FORWARDED'           => 'invalid ip',
 					'REMOTE_ADDR'              => '203.0.113.195',
-				),
+				],
 				'203.0.113.195',
-			),
-			array(
-				array(
+			],
+			[
+				[
 					'HTTP_CLIENT_IP'           => 'invalid ip',
 					'HTTP_X_FORWARDED_FOR'     => 'invalid ip',
 					'HTTP_X_FORWARDED'         => 'invalid ip',
@@ -127,9 +127,9 @@ class UtilTest extends TestCase {
 					'HTTP_FORWARDED_FOR'       => 'invalid ip',
 					'HTTP_FORWARDED'           => 'invalid ip',
 					'REMOTE_ADDR'              => 'invalid ip',
-				),
+				],
 				null,
-			),
-		);
+			],
+		];
 	}
 }

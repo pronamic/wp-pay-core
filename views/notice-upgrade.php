@@ -12,10 +12,10 @@
 
 $upgrade_link = wp_nonce_url(
 	add_query_arg(
-		array(
+		[
 			'page'                 => 'pronamic_ideal',
 			'pronamic_pay_upgrade' => true,
-		),
+		],
 		admin_url( 'admin.php' )
 	),
 	'pronamic_pay_upgrade',

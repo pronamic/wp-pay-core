@@ -28,7 +28,7 @@ class GatewayIntegrations implements IteratorAggregate {
 	 *
 	 * @var AbstractGatewayIntegration[]
 	 */
-	private $integrations = array();
+	private $integrations = [];
 
 	/**
 	 * Construct gateway integrations.

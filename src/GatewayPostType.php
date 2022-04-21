@@ -37,12 +37,12 @@ class GatewayPostType {
 		 *
 		 * @link https://github.com/WordPress/WordPress/blob/4.0/wp-includes/post.php#L167
 		 */
-		add_action( 'init', array( $this, 'register_gateway_post_type' ), 0 ); // Highest priority.
+		add_action( 'init', [ $this, 'register_gateway_post_type' ], 0 ); // Highest priority.
 
-		add_action( 'save_post_' . self::POST_TYPE, array( $this, 'maybe_set_default_gateway' ) );
+		add_action( 'save_post_' . self::POST_TYPE, [ $this, 'maybe_set_default_gateway' ] );
 
 		// REST API.
-		add_action( 'rest_api_init', array( $this, 'rest_api_init' ) );
+		add_action( 'rest_api_init', [ $this, 'rest_api_init' ] );
 	}
 
 	/**
@@ -54,9 +54,9 @@ class GatewayPostType {
 	public function register_gateway_post_type() {
 		register_post_type(
 			'pronamic_gateway',
-			array(
+			[
 				'label'              => __( 'Payment Gateway Configurations', 'pronamic_ideal' ),
-				'labels'             => array(
+				'labels'             => [
 					'name'                     => __( 'Payment Gateway Configurations', 'pronamic_ideal' ),
 					'singular_name'            => __( 'Payment Gateway Configuration', 'pronamic_ideal' ),
 					'add_new'                  => __( 'Add New', 'pronamic_ideal' ),
@@ -82,7 +82,7 @@ class GatewayPostType {
 					'item_reverted_to_draft'   => __( 'Payment gateway configuration reverted to draft.', 'pronamic_ideal' ),
 					'item_scheduled'           => __( 'Payment gateway configuration scheduled.', 'pronamic_ideal' ),
 					'item_updated'             => __( 'Payment gateway configuration updated.', 'pronamic_ideal' ),
-				),
+				],
 				'public'             => false,
 				'publicly_queryable' => false,
 				'show_ui'            => true,
@@ -90,16 +90,16 @@ class GatewayPostType {
 				'show_in_menu'       => false,
 				'show_in_admin_bar'  => false,
 				'hierarchical'       => true,
-				'supports'           => array(
+				'supports'           => [
 					'title',
 					'revisions',
-				),
+				],
 				'rewrite'            => false,
 				'query_var'          => false,
 				'capabilities'       => self::get_capabilities(),
 				// Don't map meta capabilities since we only use the `manage_options` capability for this post type.
 				'map_meta_cap'       => false,
-			)
+			]
 		);
 	}
 
@@ -132,7 +132,7 @@ class GatewayPostType {
 	 * @return array
 	 */
 	public static function get_capabilities() {
-		return array(
+		return [
 			'edit_post'              => 'manage_options',
 			'read_post'              => 'manage_options',
 			'delete_post'            => 'manage_options',
@@ -148,7 +148,7 @@ class GatewayPostType {
 			'edit_private_posts'     => 'manage_options',
 			'edit_published_posts'   => 'manage_options',
 			'create_posts'           => 'manage_options',
-		);
+		];
 	}
 
 	/**
@@ -163,45 +163,45 @@ class GatewayPostType {
 		\register_rest_route(
 			'pronamic-pay/v1',
 			'/gateways/(?P<config_id>\d+)',
-			array(
+			[
 				'methods'             => 'GET',
-				'callback'            => array( $this, 'rest_api_gateway' ),
+				'callback'            => [ $this, 'rest_api_gateway' ],
 				'permission_callback' => function() {
 					return \current_user_can( 'manage_options' );
 				},
-				'args'                => array(
-					'config_id' => array(
+				'args'                => [
+					'config_id' => [
 						'description' => __( 'Gateway configuration ID.', 'pronamic_ideal' ),
 						'type'        => 'integer',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 
 		register_rest_route(
 			'pronamic-pay/v1',
 			'/gateways/(?P<config_id>\d+)/admin',
-			array(
+			[
 				'methods'             => 'GET',
-				'callback'            => array( $this, 'rest_api_gateway_admin' ),
+				'callback'            => [ $this, 'rest_api_gateway_admin' ],
 				'permission_callback' => function() {
 					return current_user_can( 'manage_options' );
 				},
-				'args'                => array(
-					'config_id'    => array(
+				'args'                => [
+					'config_id'    => [
 						'description' => __( 'Gateway configuration ID.', 'pronamic_ideal' ),
 						'type'        => 'integer',
-					),
-					'gateway_id'   => array(
+					],
+					'gateway_id'   => [
 						'description' => __( 'Gateway ID.', 'pronamic_ideal' ),
 						'type'        => 'string',
-					),
-					'gateway_mode' => array(
+					],
+					'gateway_mode' => [
 						'description' => __( 'Gateway mode.', 'pronamic_ideal' ),
 						'type'        => 'string',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 	}
 
@@ -244,9 +244,9 @@ class GatewayPostType {
 		$gateway_mode = $request->get_param( 'gateway_mode' );
 
 		// Gateway.
-		$args = array(
+		$args = [
 			'gateway_id' => $gateway_id,
-		);
+		];
 
 		$gateway = Plugin::get_gateway( $config_id, $args );
 
@@ -272,13 +272,13 @@ class GatewayPostType {
 		$meta_box_settings = ob_get_clean();
 
 		// Object.
-		return (object) array(
+		return (object) [
 			'config_id'    => $config_id,
 			'gateway_id'   => $gateway_id,
 			'gateway_mode' => $gateway_mode,
-			'meta_boxes'   => (object) array(
+			'meta_boxes'   => (object) [
 				'settings' => $meta_box_settings,
-			),
-		);
+			],
+		];
 	}
 }

@@ -101,24 +101,24 @@ class ContactNameHelperTest extends TestCase {
 	 * Test name from array.
 	 */
 	public function test_name_from_array() {
-		$name = ContactNameHelper::from_array( array() );
+		$name = ContactNameHelper::from_array( [] );
 
 		$this->assertNull( $name );
 
 		$name = ContactNameHelper::from_array(
-			array(
+			[
 				'first_name' => '',
 				'last_name'  => '',
-			)
+			]
 		);
 
 		$this->assertNull( $name );
 
 		$name = ContactNameHelper::from_array(
-			array(
+			[
 				'first_name' => 'John',
 				'last_name'  => '',
-			)
+			]
 		);
 
 		$this->assertEquals( 'John', $name->get_first_name() );

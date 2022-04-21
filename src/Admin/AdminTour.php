@@ -40,7 +40,7 @@ class AdminTour {
 		$this->plugin = $plugin;
 
 		// Actions.
-		add_action( 'admin_init', array( $this, 'admin_init' ) );
+		add_action( 'admin_init', [ $this, 'admin_init' ] );
 	}
 
 	/**
@@ -56,7 +56,7 @@ class AdminTour {
 		}
 
 		if ( ! get_user_meta( get_current_user_id(), 'pronamic_pay_ignore_tour', true ) ) {
-			add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+			add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ] );
 		}
 	}
 
@@ -72,19 +72,19 @@ class AdminTour {
 		wp_register_style(
 			'pronamic-pay-admin-tour',
 			plugins_url( '../../css/admin-tour' . $min . '.css', __FILE__ ),
-			array(
+			[
 				'wp-pointer',
-			),
+			],
 			$this->plugin->get_version()
 		);
 
 		wp_register_script(
 			'pronamic-pay-admin-tour',
 			plugins_url( '../../js/dist/admin-tour' . $min . '.js', __FILE__ ),
-			array(
+			[
 				'jquery',
 				'wp-pointer',
-			),
+			],
 			$this->plugin->get_version(),
 			true
 		);
@@ -92,9 +92,9 @@ class AdminTour {
 		wp_localize_script(
 			'pronamic-pay-admin-tour',
 			'pronamicPayAdminTour',
-			array(
+			[
 				'pointers' => $this->get_pointers(),
-			)
+			]
 		);
 
 		// Enqueue.
@@ -137,7 +137,7 @@ class AdminTour {
 	 * @return array
 	 */
 	private function get_pointers() {
-		$pointers = array();
+		$pointers = [];
 
 		$page   = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
 		$screen = get_current_screen();
@@ -146,82 +146,82 @@ class AdminTour {
 			switch ( $screen->id ) {
 				case 'toplevel_page_pronamic_ideal':
 					try {
-						$pointers = array(
-							array(
+						$pointers = [
+							[
 								// @link https://github.com/WordPress/WordPress/blob/4.7/wp-admin/edit.php#L321
 								'selector' => '.wrap h1',
-								'options'  => (object) array(
+								'options'  => (object) [
 									'content'      => $this->get_content( 'pointer-dashboard' ),
-									'position'     => (object) array(
+									'position'     => (object) [
 										'edge'  => 'top',
 										'align' => ( is_rtl() ) ? 'left' : 'right',
-									),
+									],
 									'pointerWidth' => 450,
-								),
-							),
-						);
+								],
+							],
+						];
 					} catch ( \Exception $e ) {
-						$pointers = array();
+						$pointers = [];
 					}
 
 					break;
 				case 'edit-pronamic_payment':
 					try {
-						$pointers = array(
-							array(
+						$pointers = [
+							[
 								'selector' => '.wrap .wp-header-end',
-								'options'  => (object) array(
+								'options'  => (object) [
 									'content'      => $this->get_content( 'pointer-payments' ),
-									'position'     => (object) array(
+									'position'     => (object) [
 										'edge'  => 'top',
 										'align' => ( is_rtl() ) ? 'left' : 'right',
-									),
+									],
 									'pointerWidth' => 450,
-								),
-							),
-						);
+								],
+							],
+						];
 					} catch ( \Exception $e ) {
-						$pointers = array();
+						$pointers = [];
 					}
 
 					break;
 				case 'edit-pronamic_gateway':
 					try {
-						$pointers = array(
-							array(
+						$pointers = [
+							[
 								'selector' => '.wrap .wp-header-end',
-								'options'  => (object) array(
+								'options'  => (object) [
 									'content'      => $this->get_content( 'pointer-gateways' ),
-									'position'     => (object) array(
+									'position'     => (object) [
 										'edge'  => 'top',
 										'align' => ( is_rtl() ) ? 'left' : 'right',
-									),
+									],
 									'pointerWidth' => 450,
-								),
-							),
-						);
+								],
+							],
+						];
 					} catch ( \Exception $e ) {
-						$pointers = array();
+						$pointers = [];
 					}
 
 					break;
 				case 'edit-pronamic_pay_form':
 					try {
-						$pointers = array(
-							array(
+						$pointers = [
+							[
 								'selector' => '.wrap .wp-header-end',
-								'options'  => (object) array(
+								'options'  => (object) [
 									'content'      => $this->get_content( 'pointer-forms' ),
-									'position'     => (object) array(
+									'position'     => (object) [
 										'edge'  => 'top',
 										'align' => ( is_rtl() ) ? 'left' : 'right',
-									),
+									],
 									'pointerWidth' => 450,
-								),
-							),
-						);
+								],
+							],
+						];
 					} catch ( \Exception $e ) {
-						$pointers = array();
+						$pointers = [];
 					}
 
 					break;
@@ -231,41 +231,41 @@ class AdminTour {
 		switch ( $page ) {
 			case 'pronamic_pay_settings':
 				try {
-					$pointers = array(
-						array(
+					$pointers = [
+						[
 							'selector' => '.wrap .wp-header-end',
-							'options'  => (object) array(
+							'options'  => (object) [
 								'content'      => $this->get_content( 'pointer-settings' ),
-								'position'     => (object) array(
+								'position'     => (object) [
 									'edge'  => 'top',
 									'align' => ( is_rtl() ) ? 'left' : 'right',
-								),
+								],
 								'pointerWidth' => 450,
-							),
-						),
-					);
+							],
+						],
+					];
 				} catch ( \Exception $e ) {
-					$pointers = array();
+					$pointers = [];
 				}
 
 				break;
 			case 'pronamic_pay_reports':
 				try {
-					$pointers = array(
-						array(
+					$pointers = [
+						[
 							'selector' => '.wrap .wp-header-end',
-							'options'  => (object) array(
+							'options'  => (object) [
 								'content'      => $this->get_content( 'pointer-reports' ),
-								'position'     => (object) array(
+								'position'     => (object) [
 									'edge'  => 'top',
 									'align' => ( is_rtl() ) ? 'left' : 'right',
-								),
+								],
 								'pointerWidth' => 450,
-							),
-						),
-					);
+							],
+						],
+					];
 				} catch ( \Exception $e ) {
-					$pointers = array();
+					$pointers = [];
 				}
 
 				break;
@@ -273,20 +273,20 @@ class AdminTour {
 
 		if ( empty( $pointers ) ) {
 			try {
-				$pointers = array(
-					array(
+				$pointers = [
+					[
 						'selector' => 'li.toplevel_page_pronamic_ideal',
-						'options'  => (object) array(
+						'options'  => (object) [
 							'content'  => $this->get_content( 'pointer-start' ),
-							'position' => (object) array(
+							'position' => (object) [
 								'edge'  => 'left',
 								'align' => 'center',
-							),
-						),
-					),
-				);
+							],
+						],
+					],
+				];
 			} catch ( \Exception $e ) {
-				$pointers = array();
+				$pointers = [];
 			}
 		}
 
@@ -301,9 +301,9 @@ class AdminTour {
 	public function get_close_url() {
 		return wp_nonce_url(
 			add_query_arg(
-				array(
+				[
 					'pronamic_pay_ignore_tour' => true,
-				)
+				]
 			),
 			'pronamic_pay_ignore_tour',
 			'pronamic_pay_nonce'

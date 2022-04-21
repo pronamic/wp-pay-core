@@ -205,7 +205,7 @@ class BankAccountDetails {
 	 * @return object|null
 	 */
 	public function get_json() {
-		$data = array(
+		$data = [
 			'name'           => $this->get_name(),
 			'account_number' => $this->get_account_number(),
 			'iban'           => $this->get_iban(),
@@ -213,7 +213,7 @@ class BankAccountDetails {
 			'bank_name'      => $this->get_bank_name(),
 			'city'           => $this->get_city(),
 			'country'        => $this->get_country(),
-		);
+		];
 
 		$data = array_filter( $data );
 
@@ -280,7 +280,7 @@ class BankAccountDetails {
 	 * @return string
 	 */
 	public function __toString() {
-		$pieces = array(
+		$pieces = [
 			\trim( (string) $this->get_name() ),
 			\trim( (string) $this->get_bank_name() ),
 			\trim( (string) $this->get_iban() ),
@@ -288,7 +288,7 @@ class BankAccountDetails {
 			\trim( (string) $this->get_account_number() ),
 			\trim( (string) $this->get_city() ),
 			\trim( (string) $this->get_country() ),
-		);
+		];
 
 		$pieces = \array_filter( $pieces );
 

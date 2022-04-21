@@ -35,7 +35,7 @@ class FormProcessor {
 	 */
 	public function __construct() {
 		// Actions.
-		add_action( 'init', array( $this, 'init' ) );
+		add_action( 'init', [ $this, 'init' ] );
 	}
 
 	/**
@@ -66,7 +66,7 @@ class FormProcessor {
 	public function init() {
 		global $pronamic_pay_errors;
 
-		$pronamic_pay_errors = array();
+		$pronamic_pay_errors = [];
 
 		// Nonce.
 		if ( ! filter_has_var( INPUT_POST, 'pronamic_pay_nonce' ) ) {
@@ -146,7 +146,7 @@ class FormProcessor {
 		// Name.
 		$name = null;
 
-		if ( ! empty( $first_name ) || ! empty(  $last_name ) ) {
+		if ( ! empty( $first_name ) || ! empty( $last_name ) ) {
 			$name = new ContactName();
 
 			if ( ! empty( $first_name ) ) {
@@ -219,14 +219,14 @@ class FormProcessor {
 
 			// Make a user with the username as the email.
 			$result = wp_insert_user(
-				array(
+				[
 					'user_login' => $email,
 					'user_pass'  => $password,
 					'user_email' => $email,
 					'role'       => 'payer',
 					'first_name' => $first_name,
 					'last_name'  => $last_name,
-				)
+				]
 			);
 
 			if ( $result instanceof WP_Error ) {
@@ -239,10 +239,10 @@ class FormProcessor {
 
 		if ( is_object( $user ) ) {
 			wp_update_post(
-				array(
+				[
 					'ID'          => $payment->get_id(),
 					'post_author' => $user->ID,
-				)
+				]
 			);
 		}
 

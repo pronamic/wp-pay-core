@@ -94,7 +94,7 @@ abstract class Gateway {
 		 *  - recurring_credit_card       Recurring payments through credit card.
 		 *  - recurring_direct_debit      Recurring payments through direct debit.
 		 */
-		$this->supports = array();
+		$this->supports = [];
 	}
 
 	/**
@@ -142,7 +142,7 @@ abstract class Gateway {
 	 * @return array
 	 */
 	public function get_issuers() {
-		return array();
+		return [];
 	}
 
 	/**
@@ -230,7 +230,7 @@ abstract class Gateway {
 	 * @return array
 	 */
 	public function get_supported_payment_methods() {
-		return array();
+		return [];
 	}
 
 	/**
@@ -293,9 +293,9 @@ abstract class Gateway {
 	 * @return array
 	 */
 	public function get_payment_method_field_options( $other_first = false ) {
-		$options = array();
+		$options = [];
 
-		$payment_methods = array();
+		$payment_methods = [];
 
 		try {
 			$available_methods = $this->get_transient_available_payment_methods();
@@ -304,7 +304,7 @@ abstract class Gateway {
 				$payment_methods = \array_intersect( $available_methods, $this->get_supported_payment_methods() );
 			}
 		} catch ( \Exception $e ) {
-			$payment_methods = array();
+			$payment_methods = [];
 		}
 
 		// Use all supported payment methods as fallback.
@@ -323,7 +323,7 @@ abstract class Gateway {
 		// Add option to use all available payment methods.
 		if ( ! $this->payment_method_is_required() ) {
 			if ( $other_first ) {
-				$options = array( _x( 'All available methods', 'Payment method field', 'pronamic_ideal' ) ) + $options;
+				$options = [ _x( 'All available methods', 'Payment method field', 'pronamic_ideal' ) ] + $options;
 			} else {
 				$options[] = _x( 'Other', 'Payment method field', 'pronamic_ideal' );
 			}
@@ -457,13 +457,13 @@ abstract class Gateway {
 				$issuers = $this->get_transient_issuers();
 
 				if ( ! empty( $issuers ) ) {
-					$field = array(
+					$field = [
 						'id'      => 'pronamic_ideal_issuer_id',
 						'name'    => 'pronamic_ideal_issuer_id',
 						'label'   => __( 'Choose your bank', 'pronamic_ideal' ),
 						'type'    => 'select',
 						'choices' => $issuers,
-					);
+					];
 				}
 
 				break;
@@ -471,13 +471,13 @@ abstract class Gateway {
 				$issuers = $this->get_credit_card_issuers();
 
 				if ( ! empty( $issuers ) ) {
-					$field = array(
+					$field = [
 						'id'      => 'pronamic_credit_card_issuer_id',
 						'name'    => 'pronamic_credit_card_issuer_id',
 						'label'   => __( 'Choose your credit card issuer', 'pronamic_ideal' ),
 						'type'    => 'select',
 						'choices' => $issuers,
-					);
+					];
 				}
 
 				break;
@@ -492,13 +492,13 @@ abstract class Gateway {
 	 * @return array|null
 	 */
 	public function get_gender_field() {
-		$payment_methods = array(
+		$payment_methods = [
 			PaymentMethods::AFTERPAY_NL,
 			PaymentMethods::FOCUM,
 			PaymentMethods::IN3,
 			PaymentMethods::KLARNA_PAY_LATER,
 			PaymentMethods::SPRAYPAY,
-		);
+		];
 
 		$payment_method = $this->get_payment_method();
 
@@ -508,21 +508,21 @@ abstract class Gateway {
 		}
 
 		// Return field.
-		return array(
+		return [
 			'id'      => 'pronamic_pay_gender',
 			'name'    => 'pronamic_pay_gender',
 			'label'   => __( 'Gender', 'pronamic_ideal' ),
 			'type'    => 'select',
-			'choices' => array(
-				array(
-					'options' => array(
+			'choices' => [
+				[
+					'options' => [
 						''  => __( '— Select gender —', 'pronamic_ideal' ),
 						'F' => __( 'Female', 'pronamic_ideal' ),
 						'M' => __( 'Male', 'pronamic_ideal' ),
-					),
-				),
-			),
-		);
+					],
+				],
+			],
+		];
 	}
 
 	/**
@@ -531,13 +531,13 @@ abstract class Gateway {
 	 * @return array|null
 	 */
 	public function get_birth_date_field() {
-		$payment_methods = array(
+		$payment_methods = [
 			PaymentMethods::AFTERPAY_NL,
 			PaymentMethods::FOCUM,
 			PaymentMethods::IN3,
 			PaymentMethods::KLARNA_PAY_LATER,
 			PaymentMethods::SPRAYPAY,
-		);
+		];
 
 		$payment_method = $this->get_payment_method();
 
@@ -547,13 +547,13 @@ abstract class Gateway {
 		}
 
 		// Return field.
-		return array(
+		return [
 			'id'    => 'pronamic_pay_birth_date',
 			'name'  => 'pronamic_pay_birth_date',
 			'label' => __( 'Date of birth', 'pronamic_ideal' ),
 			'type'  => 'date',
 			'max'   => gmdate( 'Y-m-d' ),
-		);
+		];
 	}
 
 	/**
@@ -562,9 +562,9 @@ abstract class Gateway {
 	 * @return array|null
 	 */
 	public function get_consumer_bank_details_name_field() {
-		$payment_methods = array(
+		$payment_methods = [
 			PaymentMethods::DIRECT_DEBIT,
-		);
+		];
 
 		$payment_method = $this->get_payment_method();
 
@@ -574,12 +574,12 @@ abstract class Gateway {
 		}
 
 		// Return field.
-		return array(
+		return [
 			'id'    => 'pronamic_pay_consumer_bank_details_name',
 			'name'  => 'pronamic_pay_consumer_bank_details_name',
 			'label' => __( 'Account holder name', 'pronamic_ideal' ),
 			'type'  => 'text',
-		);
+		];
 	}
 
 	/**
@@ -588,9 +588,9 @@ abstract class Gateway {
 	 * @return array|null
 	 */
 	public function get_consumer_bank_details_iban_field() {
-		$payment_methods = array(
+		$payment_methods = [
 			PaymentMethods::DIRECT_DEBIT,
-		);
+		];
 
 		$payment_method = $this->get_payment_method();
 
@@ -600,12 +600,12 @@ abstract class Gateway {
 		}
 
 		// Return field.
-		return array(
+		return [
 			'id'    => 'pronamic_pay_consumer_bank_details_iban',
 			'name'  => 'pronamic_pay_consumer_bank_details_iban',
 			'label' => __( 'IBAN', 'pronamic_ideal' ),
 			'type'  => 'text',
-		);
+		];
 	}
 
 	/**
@@ -649,7 +649,7 @@ abstract class Gateway {
 		/*
 		 * Fields.
 		 */
-		$fields = array();
+		$fields = [];
 
 		// Issuer field.
 		$fields[] = $this->get_issuer_field();
@@ -732,7 +732,7 @@ abstract class Gateway {
 	 * @since 1.2.0
 	 */
 	public function get_output_fields( Payment $payment ) {
-		return array();
+		return [];
 	}
 
 	/**

@@ -106,11 +106,11 @@ class WebhookRequestInfo implements JsonSerializable {
 	 * @return object
 	 */
 	public function get_json() {
-		$properties = array(
+		$properties = [
 			'request_date' => $this->request_date->format( DATE_ATOM ),
 			'request_url'  => $this->request_url,
 			'post_data'    => $this->post_data,
-		);
+		];
 
 		if ( null !== $this->payment ) {
 			$properties['payment_id'] = $this->payment->get_id();

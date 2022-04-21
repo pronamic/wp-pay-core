@@ -46,9 +46,9 @@ class FormScripts {
 		 * @link https://github.com/WordPress/WordPress/blob/5.1/wp-includes/script-loader.php#L2645-L2680
 		 * @link https://github.com/WordPress/WordPress/blob/5.1/wp-includes/functions.wp-scripts.php#L28-L52
 		 */
-		add_action( 'init', array( $this, 'register' ) );
+		add_action( 'init', [ $this, 'register' ] );
 
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue' ) );
+		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue' ] );
 	}
 
 	/**
@@ -62,7 +62,7 @@ class FormScripts {
 		wp_register_style(
 			'pronamic-pay-forms',
 			plugins_url( 'css/forms' . $min . '.css', dirname( dirname( __FILE__ ) ) ),
-			array(),
+			[],
 			$this->plugin->get_version()
 		);
 	}

@@ -91,11 +91,11 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 			// Only show button if gateway exists and status check is supported.
 			$action_url = wp_nonce_url(
 				add_query_arg(
-					array(
+					[
 						'post'                      => $post->ID,
 						'action'                    => 'edit',
 						'pronamic_pay_check_status' => true,
-					),
+					],
 					admin_url( 'post.php' )
 				),
 				'pronamic_payment_check_status_' . $post->ID
@@ -115,11 +115,11 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 			// Only show button if gateway exists and reservation payments are supported.
 			$action_url = wp_nonce_url(
 				add_query_arg(
-					array(
+					[
 						'post'                        => $post->ID,
 						'action'                      => 'edit',
 						'pronamic_pay_create_invoice' => true,
-					),
+					],
 					admin_url( 'post.php' )
 				),
 				'pronamic_payment_create_invoice_' . $post->ID
@@ -145,11 +145,11 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 			// Only show button if gateway exists and reservation payments are supported.
 			$action_url = wp_nonce_url(
 				add_query_arg(
-					array(
+					[
 						'post'                            => $post->ID,
 						'action'                          => 'edit',
 						'pronamic_pay_cancel_reservation' => true,
-					),
+					],
 					admin_url( 'post.php' )
 				),
 				'pronamic_payment_cancel_reservation_' . $post->ID
@@ -177,11 +177,11 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 			// Only show button for payments that can be tracked.
 			$action_url = wp_nonce_url(
 				add_query_arg(
-					array(
+					[
 						'post'                  => $post->ID,
 						'action'                => 'edit',
 						'pronamic_pay_ga_track' => true,
-					),
+					],
 					admin_url( 'post.php' )
 				),
 				'pronamic_payment_ga_track_' . $post->ID

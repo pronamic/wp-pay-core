@@ -26,7 +26,7 @@ class AdminPaymentBulkActions {
 	 * Constructs and initializes an admin payment bulk actions object.
 	 */
 	public function __construct() {
-		add_action( 'load-edit.php', array( $this, 'load' ) );
+		add_action( 'load-edit.php', [ $this, 'load' ] );
 	}
 
 	/**
@@ -52,12 +52,12 @@ class AdminPaymentBulkActions {
 		}
 
 		// Bulk actions.
-		add_filter( 'bulk_actions-' . $screen->id, array( $this, 'bulk_actions' ) );
+		add_filter( 'bulk_actions-' . $screen->id, [ $this, 'bulk_actions' ] );
 
-		add_filter( 'handle_bulk_actions-' . $screen->id, array( $this, 'handle_bulk_action' ), 10, 3 );
+		add_filter( 'handle_bulk_actions-' . $screen->id, [ $this, 'handle_bulk_action' ], 10, 3 );
 
 		// Admin notices.
-		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
+		add_action( 'admin_notices', [ $this, 'admin_notices' ] );
 	}
 
 	/**
@@ -95,7 +95,7 @@ class AdminPaymentBulkActions {
 
 		$status_updated       = 0;
 		$skipped_check        = 0;
-		$unsupported_gateways = array();
+		$unsupported_gateways = [];
 
 		foreach ( $post_ids as $post_id ) {
 			$payment = get_pronamic_payment( $post_id );
@@ -136,11 +136,11 @@ class AdminPaymentBulkActions {
 		}
 
 		$sendback = add_query_arg(
-			array(
+			[
 				'status_updated'       => $status_updated,
 				'skipped_check'        => $skipped_check,
 				'unsupported_gateways' => implode( ',', $unsupported_gateways ),
-			),
+			],
 			$sendback
 		);
 
@@ -197,7 +197,7 @@ class AdminPaymentBulkActions {
 				}
 
 				$query = new WP_Query(
-					array(
+					[
 						'post_type'              => 'pronamic_gateway',
 						'post__in'               => $gateways,
 						'nopaging'               => true,
@@ -205,7 +205,7 @@ class AdminPaymentBulkActions {
 						'no_found_rows'          => true,
 						'update_post_meta_cache' => false,
 						'update_post_term_cache' => false,
-					)
+					]
 				);
 
 				$titles = wp_list_pluck( $query->posts, 'post_title' );

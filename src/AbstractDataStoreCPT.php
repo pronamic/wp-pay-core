@@ -29,7 +29,7 @@ abstract class AbstractDataStoreCPT {
 	 *
 	 * @var array
 	 */
-	protected $meta = array();
+	protected $meta = [];
 
 	/**
 	 * Meta key prefix.

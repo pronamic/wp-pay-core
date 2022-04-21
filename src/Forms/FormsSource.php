@@ -40,10 +40,10 @@ class FormsSource {
 	 * @return bool
 	 */
 	public static function is_valid( $source ) {
-		$sources = array(
+		$sources = [
 			self::BLOCK_PAYMENT_FORM,
 			self::PAYMENT_FORM,
-		);
+		];
 
 		return in_array( $source, $sources, true );
 	}

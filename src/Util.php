@@ -33,9 +33,9 @@ class Util {
 	 */
 	public static function format_date_interval( DateInterval $date_interval ) {
 		// Periods.
-		$periods = array();
+		$periods = [];
 
-		foreach ( array( 'y', 'm', 'd', 'h', 'i', 's' ) as $period ) {
+		foreach ( [ 'y', 'm', 'd', 'h', 'i', 's' ] as $period ) {
 			$value = $date_interval->$period;
 
 			// Check value.

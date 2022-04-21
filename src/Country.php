@@ -90,10 +90,10 @@ class Country {
 	 * @return object|null
 	 */
 	public function get_json() {
-		$data = array(
+		$data = [
 			'code' => $this->code,
 			'name' => $this->name,
-		);
+		];
 
 		$data = array_filter( $data );
 
@@ -135,10 +135,10 @@ class Country {
 	 * @return string
 	 */
 	public function __toString() {
-		$values = array(
+		$values = [
 			$this->code,
 			$this->name,
-		);
+		];
 
 		$values = array_filter( $values );
 

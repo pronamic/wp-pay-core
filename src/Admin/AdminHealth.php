@@ -38,8 +38,8 @@ class AdminHealth {
 		$this->plugin = $plugin;
 
 		// Filters.
-		add_filter( 'debug_information', array( $this, 'debug_information' ) );
-		add_filter( 'site_status_tests', array( $this, 'status_tests' ) );
+		add_filter( 'debug_information', [ $this, 'debug_information' ] );
+		add_filter( 'site_status_tests', [ $this, 'status_tests' ] );
 	}
 
 	/**
@@ -50,32 +50,32 @@ class AdminHealth {
 	 * @return array
 	 */
 	public function debug_information( $debug_information ) {
-		$fields = array();
+		$fields = [];
 
 		// License key.
-		$fields['license_key'] = array(
+		$fields['license_key'] = [
 			'label'   => __( 'Support license key', 'pronamic_ideal' ),
 			'value'   => esc_html( get_option( 'pronamic_pay_license_key', __( 'No license key found', 'pronamic_ideal' ) ) ),
 			'private' => true,
-		);
+		];
 
 		// License status.
-		$fields['license_status'] = array(
+		$fields['license_status'] = [
 			'label' => __( 'License status', 'pronamic_ideal' ),
 			'value' => esc_html( $this->plugin->license_manager->get_formatted_license_status() ),
-		);
+		];
 
 		// Next scheduled license check.
-		$fields['next_license_check'] = array(
+		$fields['next_license_check'] = [
 			'label' => __( 'Next scheduled license check', 'pronamic_ideal' ),
 			'value' => esc_html( $this->plugin->license_manager->get_formatted_next_license_check() ),
-		);
+		];
 
 		// Time.
-		$fields['time'] = array(
+		$fields['time'] = [
 			'label' => __( 'Time (UTC)', 'pronamic_ideal' ),
 			'value' => esc_html( gmdate( __( 'Y/m/d g:i:s A', 'pronamic_ideal' ) ) ),
-		);
+		];
 
 		// OpenSSL version.
 		$openssl_version = __( 'Not available', 'pronamic_ideal' );
@@ -84,28 +84,28 @@ class AdminHealth {
 			$openssl_version = OPENSSL_VERSION_TEXT;
 		}
 
-		$fields['openssl_version'] = array(
+		$fields['openssl_version'] = [
 			'label' => __( 'OpenSSL version', 'pronamic_ideal' ),
 			'value' => esc_html( $openssl_version ),
-		);
+		];
 
 		// Active plugin integrations.
-		$fields['active_plugin_integrations'] = array(
+		$fields['active_plugin_integrations'] = [
 			'label' => __( 'Active plugin integrations', 'pronamic_ideal' ),
 			'value' => $this->get_active_plugin_integrations_debug(),
-		);
+		];
 
 		// Active gateway integrations.
-		$fields['active_gateway_integrations'] = array(
+		$fields['active_gateway_integrations'] = [
 			'label' => __( 'Active gateway integrations', 'pronamic_ideal' ),
 			'value' => $this->get_active_gateway_integrations_debug(),
-		);
+		];
 
 		// Add debug information section.
-		$debug_information['pronamic-pay'] = array(
+		$debug_information['pronamic-pay'] = [
 			'label'  => __( 'Pronamic Pay', 'pronamic_ideal' ),
 			'fields' => $fields,
-		);
+		];
 
 		return $debug_information;
 	}
@@ -116,7 +116,7 @@ class AdminHealth {
 	 * @return string
 	 */
 	private function get_active_plugin_integrations_debug() {
-		$active = array();
+		$active = [];
 
 		// Check integrations.
 		foreach ( $this->plugin->plugin_integrations as $integration ) {
@@ -143,12 +143,12 @@ class AdminHealth {
 	 * @return string
 	 */
 	private function get_active_gateway_integrations_debug() {
-		$active = array();
+		$active = [];
 
-		$args = array(
+		$args = [
 			'post_type' => 'pronamic_gateway',
 			'nopaging'  => true,
-		);
+		];
 
 		$query = new \WP_Query( $args );
 
@@ -187,40 +187,40 @@ class AdminHealth {
 	 */
 	public function status_tests( $status_tests ) {
 		// Test valid license.
-		$status_tests['direct']['pronamic_pay_valid_license'] = array(
+		$status_tests['direct']['pronamic_pay_valid_license'] = [
 			'label' => __( 'Pronamic Pay support license key test' ),
-			'test'  => array( $this, 'test_valid_license' ),
-		);
+			'test'  => [ $this, 'test_valid_license' ],
+		];
 
 		// Test minimum required WordPress version.
-		$status_tests['direct']['pronamic_pay_wordpress_version'] = array(
+		$status_tests['direct']['pronamic_pay_wordpress_version'] = [
 			'label' => __( 'Pronamic Pay WordPress version test' ),
-			'test'  => array( $this, 'test_wordpress_version' ),
-		);
+			'test'  => [ $this, 'test_wordpress_version' ],
+		];
 
 		// Test memory limit.
-		$status_tests['direct']['pronamic_pay_memory_limit'] = array(
+		$status_tests['direct']['pronamic_pay_memory_limit'] = [
 			'label' => __( 'Pronamic Pay memory limit test' ),
-			'test'  => array( $this, 'test_memory_limit' ),
-		);
+			'test'  => [ $this, 'test_memory_limit' ],
+		];
 
 		// Test character set.
-		$status_tests['direct']['pronamic_pay_character_set'] = array(
+		$status_tests['direct']['pronamic_pay_character_set'] = [
 			'label' => __( 'Pronamic Pay UTF-8 character set test' ),
-			'test'  => array( $this, 'test_character_set' ),
-		);
+			'test'  => [ $this, 'test_character_set' ],
+		];
 
 		// Test hashing algorithms.
-		$status_tests['direct']['pronamic_pay_hashing_algorithms'] = array(
+		$status_tests['direct']['pronamic_pay_hashing_algorithms'] = [
 			'label' => __( 'Pronamic Pay hashing algorithms test' ),
-			'test'  => array( $this, 'test_hashing_algorithms' ),
-		);
+			'test'  => [ $this, 'test_hashing_algorithms' ],
+		];
 
 		// Test supported extensions.
-		$status_tests['direct']['pronamic_pay_extensions_support'] = array(
+		$status_tests['direct']['pronamic_pay_extensions_support'] = [
 			'label' => __( 'Pronamic Pay extensions support test' ),
-			'test'  => array( $this, 'test_extensions_support' ),
-		);
+			'test'  => [ $this, 'test_extensions_support' ],
+		];
 
 		return $status_tests;
 	}
@@ -232,20 +232,20 @@ class AdminHealth {
 	 */
 	public function test_valid_license() {
 		// Good.
-		$result = array(
+		$result = [
 			'test'        => 'pronamic_pay_valid_license',
 			'label'       => __( 'Pronamic Pay license key is valid', 'pronamic_ideal' ),
 			'description' => sprintf(
 				'<p>%s</p>',
 				__( 'A valid license is required for technical support and continued plugin updates.', 'pronamic_ideal' )
 			),
-			'badge'       => array(
+			'badge'       => [
 				'label' => __( 'Security' ),
 				'color' => 'blue',
-			),
+			],
 			'status'      => 'good',
 			'actions'     => '',
-		);
+		];
 
 		// Recommendation.
 		if ( 'valid' !== get_option( 'pronamic_pay_license_status' ) ) {
@@ -287,7 +287,7 @@ class AdminHealth {
 	 */
 	public function test_wordpress_version() {
 		// Good.
-		$result = array(
+		$result = [
 			'test'        => 'pronamic_pay_wordpress_version',
 			'label'       => sprintf(
 				/* translators: %s: WordPress version number */
@@ -295,13 +295,13 @@ class AdminHealth {
 				get_bloginfo( 'version' )
 			),
 			'description' => sprintf( '<p>%s</p>', __( 'Pronamic Pay requires at least WordPress 4.7.', 'pronamic_ideal' ) ),
-			'badge'       => array(
+			'badge'       => [
 				'label' => __( 'Payments', 'pronamic_ideal' ),
 				'color' => 'blue',
-			),
+			],
 			'status'      => 'good',
 			'actions'     => '',
-		);
+		];
 
 		// Recommendation.
 		if ( version_compare( get_bloginfo( 'version' ), '4.7', '<' ) ) {
@@ -323,7 +323,7 @@ class AdminHealth {
 		$memory = pronamic_pay_let_to_num( strval( $memory_limit ) );
 
 		// Good.
-		$result = array(
+		$result = [
 			'test'        => 'pronamic_pay_memory_limit',
 			'label'       => sprintf(
 				/* translators: %s: WordPress memory limit */
@@ -331,13 +331,13 @@ class AdminHealth {
 				size_format( $memory )
 			),
 			'description' => sprintf( '<p>%s</p>', __( 'Pronamic Pay recommends setting the WordPress memory limit to at least 64 MB.', 'pronamic_ideal' ) ),
-			'badge'       => array(
+			'badge'       => [
 				'label' => __( 'Payments', 'pronamic_ideal' ),
 				'color' => 'blue',
-			),
+			],
 			'status'      => 'good',
 			'actions'     => '',
-		);
+		];
 
 		// Recommendation.
 		if ( $memory < 67108864 ) {
@@ -360,17 +360,17 @@ class AdminHealth {
 	 */
 	public function test_character_set() {
 		// Good.
-		$result = array(
+		$result = [
 			'test'        => 'pronamic_pay_character_set',
 			'label'       => __( 'Character encoding is set to UTF-8', 'pronamic_ideal' ),
 			'description' => sprintf( '<p>%s</p>', __( 'Pronamic Pay recommends to use the UTF-8 character encoding for payments.', 'pronamic_ideal' ) ),
-			'badge'       => array(
+			'badge'       => [
 				'label' => __( 'Payments', 'pronamic_ideal' ),
 				'color' => 'blue',
-			),
+			],
 			'status'      => 'good',
 			'actions'     => '',
-		);
+		];
 
 		// Recommendation.
 		if ( 0 !== strcasecmp( get_bloginfo( 'charset' ), 'UTF-8' ) ) {
@@ -389,17 +389,17 @@ class AdminHealth {
 	 */
 	public function test_hashing_algorithms() {
 		// Good.
-		$result = array(
+		$result = [
 			'test'        => 'pronamic_pay_hashing_algorithms',
 			'label'       => __( 'SHA1 hashing algorithm is available', 'pronamic_ideal' ),
 			'description' => sprintf( '<p>%s</p>', __( 'Payment gateways often use the SHA1 hashing algorithm, therefore Pronamic Pay advises to enable this hashing algorithm.', 'pronamic_ideal' ) ),
-			'badge'       => array(
+			'badge'       => [
 				'label' => __( 'Payments', 'pronamic_ideal' ),
 				'color' => 'blue',
-			),
+			],
 			'status'      => 'good',
 			'actions'     => '',
-		);
+		];
 
 		// Recommendation.
 		$algorithms = hash_algos();
@@ -422,21 +422,21 @@ class AdminHealth {
 		$extensions_json_path = \dirname( $this->plugin->get_file() ) . '/other/extensions.json';
 
 		if ( ! \is_readable( $extensions_json_path ) ) {
-			return array();
+			return [];
 		}
 
 		$data = \file_get_contents( $extensions_json_path, true );
 
 		if ( false === $data ) {
-			return array();
+			return [];
 		}
 
 		// Check supported extensions.
 		$extensions = \json_decode( $data );
 
-		$supported_extensions     = array();
-		$untested_plugin_versions = array();
-		$outdated_plugin_versions = array();
+		$supported_extensions     = [];
+		$untested_plugin_versions = [];
+		$outdated_plugin_versions = [];
 
 		$active_plugins = \get_option( 'active_plugins' );
 		$plugins        = \get_plugins();
@@ -586,17 +586,17 @@ class AdminHealth {
 			$description_text = __( 'Pronamic Pay uses extensions to integrate with form, booking and other e-commerce plugins. We have found that not all extensions are tested with or support the version of the currently activated plugins. Usually you can still accept payments, however if you experience payment issues it is advised to check the \'Plugins\' page for available updates.', 'pronamic_ideal' );
 		}
 
-		$result = array(
+		$result = [
 			'test'        => 'pronamic_pay_extensions_support',
 			'label'       => $label,
 			'description' => sprintf( '<p>%s</p><p>%s</p>', \esc_html( $description_text ), $extensions_list_text ),
-			'badge'       => array(
+			'badge'       => [
 				'label' => __( 'Payments', 'pronamic_ideal' ),
 				'color' => 'blue',
-			),
+			],
 			'status'      => $status,
 			'actions'     => '',
-		);
+		];
 
 		return $result;
 	}

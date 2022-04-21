@@ -42,7 +42,7 @@ class Upgrades implements Countable, IteratorAggregate {
 	 * Construct.
 	 */
 	public function __construct() {
-		$this->upgrades   = array();
+		$this->upgrades   = [];
 		$this->executable = true;
 	}
 

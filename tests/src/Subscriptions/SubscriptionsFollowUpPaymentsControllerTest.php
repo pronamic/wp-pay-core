@@ -28,9 +28,9 @@ class TestGatewayIntegration extends AbstractGatewayIntegration {
 	 */
 	public function __construct() {
 		parent::__construct(
-			array(
+			[
 				'id' => 'test',
-			)
+			]
 		);
 	}
 
@@ -85,22 +85,22 @@ class SubscriptionsFollowUpPaymentsControllerTest extends TestCase {
 		 * Integration.
 		 */
 		$plugin->gateway_integrations = new GatewayIntegrations(
-			array(
+			[
 				new TestGatewayIntegration(),
-			)
+			]
 		);
 
 		/**
 		 * Gateway.
 		 */
 		$config_id = wp_insert_post(
-			array(
+			[
 				'post_type'  => 'pronamic_gateway',
-				'meta_input' => array(
+				'meta_input' => [
 					'_pronamic_gateway_id'   => 'test',
 					'_pronamic_gateway_mode' => 'test',
-				),
-			)
+				],
+			]
 		);
 
 		/**

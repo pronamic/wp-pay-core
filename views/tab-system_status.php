@@ -208,12 +208,12 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 							__( 'We recommend setting memory to at least 64MB. See: <a href="%s" target="_blank">Increasing memory allocated to PHP</a>', 'pronamic_ideal' ),
 							esc_attr( 'http://codex.wordpress.org/Editing_wp-config.php#Increasing_memory_allocated_to_PHP' )
 						),
-						array(
-							'a' => array(
+						[
+							'a' => [
 								'href'   => true,
 								'target' => true,
-							),
-						)
+							],
+						]
 					);
 				}
 

@@ -343,7 +343,7 @@ class Customer {
 	 * @return object|null
 	 */
 	public function get_json() {
-		$data = array(
+		$data = [
 			'name'         => ( null === $this->name ) ? null : $this->name->get_json(),
 			'gender'       => $this->get_gender(),
 			'birth_date'   => ( null === $this->birth_date ) ? null : $this->birth_date->format( DATE_RFC3339 ),
@@ -356,7 +356,7 @@ class Customer {
 			'user_id'      => $this->get_user_id(),
 			'company_name' => $this->get_company_name(),
 			'vat_number'   => ( null === $this->vat_number ) ? null : $this->vat_number->get_json(),
-		);
+		];
 
 		$data = array_filter( $data );
 
@@ -386,7 +386,7 @@ class Customer {
 		foreach ( $properties as $key => $value ) {
 			$method = sprintf( 'set_%s', $key );
 
-			$callable = array( $customer, $method );
+			$callable = [ $customer, $method ];
 
 			if ( is_callable( $callable ) ) {
 				if ( 'name' === $key ) {
@@ -414,7 +414,7 @@ class Customer {
 	 * @return string
 	 */
 	public function __toString() {
-		$pieces = array(
+		$pieces = [
 			$this->get_name(),
 			$this->get_email(),
 			$this->get_phone(),
@@ -424,7 +424,7 @@ class Customer {
 			$this->get_ip_address(),
 			$this->get_language(),
 			$this->get_locale(),
-		);
+		];
 
 		$pieces = array_map( 'strval', $pieces );
 

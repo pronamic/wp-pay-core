@@ -35,21 +35,21 @@ class BlocksModule {
 		global $wp_version;
 
 		// Initialize.
-		add_action( 'init', array( $this, 'register_scripts' ) );
-		add_action( 'init', array( $this, 'register_block_types' ) );
+		add_action( 'init', [ $this, 'register_scripts' ] );
+		add_action( 'init', [ $this, 'register_block_types' ] );
 
-		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_styles' ) );
+		add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_styles' ] );
 
-		add_filter( 'block_categories_all', array( $this, 'block_categories' ), 10, 2 );
+		add_filter( 'block_categories_all', [ $this, 'block_categories' ], 10, 2 );
 
 		if ( \version_compare( $wp_version, '5.8', '<' ) ) {
-			add_filter( 'block_categories', array( $this, 'block_categories' ), 10, 2 );
+			add_filter( 'block_categories', [ $this, 'block_categories' ], 10, 2 );
 		}
 
 		// Source text and description.
-		add_filter( 'pronamic_payment_source_url_' . FormsSource::BLOCK_PAYMENT_FORM, array( $this, 'source_url' ), 10, 2 );
-		add_filter( 'pronamic_payment_source_text_' . FormsSource::BLOCK_PAYMENT_FORM, array( $this, 'source_text' ), 10, 2 );
-		add_filter( 'pronamic_payment_source_description_' . FormsSource::BLOCK_PAYMENT_FORM, array( $this, 'source_description' ), 10, 2 );
+		add_filter( 'pronamic_payment_source_url_' . FormsSource::BLOCK_PAYMENT_FORM, [ $this, 'source_url' ], 10, 2 );
+		add_filter( 'pronamic_payment_source_text_' . FormsSource::BLOCK_PAYMENT_FORM, [ $this, 'source_text' ], 10, 2 );
+		add_filter( 'pronamic_payment_source_description_' . FormsSource::BLOCK_PAYMENT_FORM, [ $this, 'source_description' ], 10, 2 );
 	}
 
 	/**
@@ -61,11 +61,11 @@ class BlocksModule {
 	 * @return array
 	 */
 	public function block_categories( $categories, $post ) {
-		$categories[] = array(
+		$categories[] = [
 			'slug'  => 'pronamic-pay',
 			'title' => __( 'Pronamic Pay', 'pronamic-ideal' ),
 			'icon'  => null,
-		);
+		];
 
 		return $categories;
 	}
@@ -82,7 +82,7 @@ class BlocksModule {
 		wp_register_script(
 			'pronamic-payment-form-editor',
 			plugins_url( '/js/dist/block-payment-form' . $min . '.js', dirname( dirname( __FILE__ ) ) ),
-			array( 'wp-blocks', 'wp-components', 'wp-editor', 'wp-element' ),
+			[ 'wp-blocks', 'wp-components', 'wp-editor', 'wp-element' ],
 			pronamic_pay_plugin()->get_version(),
 			false
 		);
@@ -91,11 +91,11 @@ class BlocksModule {
 		wp_localize_script(
 			'pronamic-payment-form-editor',
 			'pronamic_payment_form',
-			array(
+			[
 				'title'          => _x( 'Payment Form', 'Block', 'pronamic_ideal' ),
 				'label_add_form' => __( 'Add form', 'pronamic_ideal' ),
 				'label_amount'   => __( 'Amount', 'pronamic_ideal' ),
-			)
+			]
 		);
 	}
 
@@ -107,17 +107,17 @@ class BlocksModule {
 	public function register_block_types() {
 		register_block_type(
 			'pronamic-pay/payment-form',
-			array(
+			[
 				'title'           => __( 'Payment Form', 'pronamic_ideal' ),
-				'render_callback' => array( $this, 'render_payment_form_block' ),
+				'render_callback' => [ $this, 'render_payment_form_block' ],
 				'editor_script'   => 'pronamic-payment-form-editor',
-				'attributes'      => array(
-					'amount' => array(
+				'attributes'      => [
+					'amount' => [
 						'type'    => 'string',
 						'default' => '0',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 	}
 
@@ -139,9 +139,9 @@ class BlocksModule {
 	 *
 	 * @throws \Exception When output buffering is not working as expected.
 	 */
-	public function render_payment_form_block( $attributes = array() ) {
+	public function render_payment_form_block( $attributes = [] ) {
 		// Amount.
-		$amounts = array();
+		$amounts = [];
 
 		if ( ! empty( $attributes['amount'] ) ) {
 			try {
@@ -161,12 +161,12 @@ class BlocksModule {
 		}
 
 		// Form settings.
-		$args = array(
+		$args = [
 			'amounts'   => $amounts,
 			'html_id'   => sprintf( 'pronamic-pay-payment-form-%s', get_the_ID() ),
 			'source'    => FormsSource::BLOCK_PAYMENT_FORM,
 			'source_id' => get_the_ID(),
-		);
+		];
 
 		// Check valid gateway.
 		$config_id = get_option( 'pronamic_pay_config_id' );
