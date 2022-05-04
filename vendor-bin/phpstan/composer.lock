@@ -56,16 +56,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.5.4",
+            "version": "1.6.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "bbf68cae24f6dc023c607ea0f87da55dd9d55c2b"
+                "reference": "e4cd0c2dd97809fcfdcd1f367ccf0be86c235168"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/bbf68cae24f6dc023c607ea0f87da55dd9d55c2b",
-                "reference": "bbf68cae24f6dc023c607ea0f87da55dd9d55c2b",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e4cd0c2dd97809fcfdcd1f367ccf0be86c235168",
+                "reference": "e4cd0c2dd97809fcfdcd1f367ccf0be86c235168",
                 "shasum": ""
             },
             "require": {
@@ -91,7 +91,7 @@
             "description": "PHPStan - PHP Static Analysis Tool",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/1.5.4"
+                "source": "https://github.com/phpstan/phpstan/tree/1.6.4"
             },
             "funding": [
                 {
@@ -111,7 +111,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-04-03T12:39:00+00:00"
+            "time": "2022-05-02T16:02:21+00:00"
         },
         {
             "name": "symfony/polyfill-php73",
@@ -194,30 +194,30 @@
         },
         {
             "name": "szepeviktor/phpstan-wordpress",
-            "version": "v1.0.5",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/szepeviktor/phpstan-wordpress.git",
-                "reference": "d4dbd21fc057702be14d221e9ecb6e5697e39fed"
+                "reference": "37eaf7eecafd97917c427589736080ac77734b1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/szepeviktor/phpstan-wordpress/zipball/d4dbd21fc057702be14d221e9ecb6e5697e39fed",
-                "reference": "d4dbd21fc057702be14d221e9ecb6e5697e39fed",
+                "url": "https://api.github.com/repos/szepeviktor/phpstan-wordpress/zipball/37eaf7eecafd97917c427589736080ac77734b1f",
+                "reference": "37eaf7eecafd97917c427589736080ac77734b1f",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1 || ^8.0",
+                "php": "^7.2 || ^8.0",
                 "php-stubs/wordpress-stubs": "^4.7 || ^5.0",
-                "phpstan/phpstan": "^1.0",
+                "phpstan/phpstan": "^1.6",
                 "symfony/polyfill-php73": "^1.12.0"
             },
             "require-dev": {
-                "composer/composer": "^2.1.12",
+                "composer/composer": "^2.1.14",
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
                 "php-parallel-lint/php-parallel-lint": "^1.1",
-                "phpstan/phpstan-strict-rules": "^1.0",
-                "phpunit/phpunit": "^7 || ^9",
+                "phpstan/phpstan-strict-rules": "^1.2",
+                "phpunit/phpunit": "^8 || ^9",
                 "szepeviktor/phpcs-psr-12-neutron-hybrid-ruleset": "^0.6"
             },
             "type": "phpstan-extension",
@@ -247,7 +247,7 @@
             ],
             "support": {
                 "issues": "https://github.com/szepeviktor/phpstan-wordpress/issues",
-                "source": "https://github.com/szepeviktor/phpstan-wordpress/tree/v1.0.5"
+                "source": "https://github.com/szepeviktor/phpstan-wordpress/tree/v1.1.0"
             },
             "funding": [
                 {
@@ -255,7 +255,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2022-04-05T03:13:59+00:00"
+            "time": "2022-05-02T20:14:26+00:00"
         }
     ],
     "aliases": [],
@@ -265,5 +265,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }
