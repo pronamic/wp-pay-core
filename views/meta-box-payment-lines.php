@@ -171,7 +171,7 @@ if ( empty( $lines ) ) : ?>
 								// Product URL with or without description.
 								$line_title = $line->get_name();
 
-								$classes = array();
+								$classes = [];
 
 								if ( ! empty( $description ) ) {
 									$line_title = $line->get_description();
@@ -205,12 +205,12 @@ if ( empty( $lines ) ) : ?>
 							$unit_price = $line->get_unit_price();
 
 							if ( null !== $unit_price ) {
-								$tips = array(
+								$tips = [
 									\__( 'No tax information.', 'pronamic_ideal' ),
-								);
+								];
 
 								if ( $unit_price instanceof TaxedMoney ) {
-									$tips = array(
+									$tips = [
 										\sprintf(
 											/* translators: %s: price excluding tax */
 											\__( 'Exclusive tax: %s', 'pronamic_ideal' ),
@@ -221,7 +221,7 @@ if ( empty( $lines ) ) : ?>
 											\__( 'Inclusive tax: %s', 'pronamic_ideal' ),
 											$unit_price->get_including_tax()
 										),
-									);
+									];
 								}
 
 								\printf(
@@ -251,12 +251,12 @@ if ( empty( $lines ) ) : ?>
 
 							$line_total = $line->get_total_amount();
 
-							$tips = array(
+							$tips = [
 								\__( 'No tax information.', 'pronamic_ideal' ),
-							);
+							];
 
 							if ( $line_total instanceof TaxedMoney ) {
-								$tips = array(
+								$tips = [
 									\sprintf(
 										/* translators: %s: price excluding tax */
 										\__( 'Exclusive tax: %s', 'pronamic_ideal' ),
@@ -267,7 +267,7 @@ if ( empty( $lines ) ) : ?>
 										\__( 'Inclusive tax: %s', 'pronamic_ideal' ),
 										$line->get_total_amount()->get_including_tax()
 									),
-								);
+								];
 							}
 
 							\printf(

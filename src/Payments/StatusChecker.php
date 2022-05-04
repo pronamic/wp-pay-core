@@ -26,12 +26,12 @@ class StatusChecker {
 	 */
 	public function __construct() {
 		// Payment status check events are scheduled when payments are started.
-		add_action( 'pronamic_pay_payment_status_check', array( $this, 'check_status' ), 10, 2 );
+		add_action( 'pronamic_pay_payment_status_check', [ $this, 'check_status' ], 10, 2 );
 
 		// Clear scheduled status checks.
-		add_action( 'pronamic_payment_status_update', array( $this, 'maybe_clear_scheduled_status_check' ), 10, 1 );
-		add_action( 'trashed_post', array( $this, 'clear_scheduled_status_check' ), 10, 1 );
-		add_action( 'delete_post', array( $this, 'clear_scheduled_status_check' ), 10, 1 );
+		add_action( 'pronamic_payment_status_update', [ $this, 'maybe_clear_scheduled_status_check' ], 10, 1 );
+		add_action( 'trashed_post', [ $this, 'clear_scheduled_status_check' ], 10, 1 );
+		add_action( 'delete_post', [ $this, 'clear_scheduled_status_check' ], 10, 1 );
 	}
 
 	/**
@@ -67,10 +67,10 @@ class StatusChecker {
 		\as_schedule_single_action(
 			time() + $delay,
 			'pronamic_pay_payment_status_check',
-			array(
+			[
 				'payment_id' => $payment->get_id(),
 				'try'        => 1,
-			),
+			],
 			'pronamic-pay'
 		);
 	}
@@ -86,12 +86,12 @@ class StatusChecker {
 	private static function get_delay_seconds( $try, $payment ) {
 		if ( \in_array(
 			$payment->get_payment_method(),
-			array(
+			[
 				PaymentMethods::AFTERPAY_NL,
 				PaymentMethods::BANK_TRANSFER,
 				PaymentMethods::DIRECT_DEBIT,
 				PaymentMethods::KLARNA_PAY_LATER,
-			),
+			],
 			true
 		) ) {
 			switch ( $try ) {
@@ -178,10 +178,10 @@ class StatusChecker {
 			\as_schedule_single_action(
 				time() + $delay,
 				'pronamic_pay_payment_status_check',
-				array(
+				[
 					'payment_id' => $payment->get_id(),
 					'try'        => $next_try,
-				),
+				],
 				'pronamic-pay'
 			);
 		}
@@ -226,9 +226,9 @@ class StatusChecker {
 		}
 
 		// Unschedule action for all 4 tries.
-		$args = array(
+		$args = [
 			'payment_id' => $post_id,
-		);
+		];
 
 		foreach ( range( 1, 4 ) as $try ) {
 			$args['try'] = $try;

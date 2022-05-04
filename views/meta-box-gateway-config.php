@@ -17,7 +17,7 @@ $integrations = iterator_to_array( $plugin->gateway_integrations );
 usort(
 	$integrations,
 	function( $integration_a, $integration_b ) {
-		return strcasecmp( $integration_a->get_name(), $integration_b->get_name() );
+		return strcasecmp( (string) $integration_a->get_name(), (string) $integration_b->get_name() );
 	}
 );
 
@@ -44,11 +44,11 @@ $gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 					foreach ( $integrations as $integration ) {
 						$integration_id = $integration->get_id();
 						$name           = $integration->get_name();
-						$classes        = array();
+						$classes        = [];
 						$description    = '';
-						$links          = array();
+						$links          = [];
 
-						if ( isset( $integration->deprecated ) && $integration->deprecated ) {
+						if ( $integration->deprecated ) {
 							$classes[] = 'deprecated';
 
 							/* translators: %s: Integration name */

@@ -14,6 +14,7 @@ use Exception;
 use Pronamic\WordPress\Number\Number;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
+use Pronamic\WordPress\Pay\ContactName;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentLines;
@@ -30,22 +31,11 @@ use WP_User;
  */
 class FormProcessor {
 	/**
-	 * Plugin.
-	 *
-	 * @var Plugin
+	 * Construct form processor object.
 	 */
-	private $plugin;
-
-	/**
-	 * Constructs and initialize an form processor object.
-	 *
-	 * @param Plugin $plugin Plugin.
-	 */
-	public function __construct( $plugin ) {
-		$this->plugin = $plugin;
-
+	public function __construct() {
 		// Actions.
-		add_action( 'init', array( $this, 'init' ) );
+		add_action( 'init', [ $this, 'init' ] );
 	}
 
 	/**
@@ -76,7 +66,7 @@ class FormProcessor {
 	public function init() {
 		global $pronamic_pay_errors;
 
-		$pronamic_pay_errors = array();
+		$pronamic_pay_errors = [];
 
 		// Nonce.
 		if ( ! filter_has_var( INPUT_POST, 'pronamic_pay_nonce' ) ) {
@@ -153,22 +143,35 @@ class FormProcessor {
 		$payment->source    = $source;
 		$payment->source_id = $source_id;
 
-		// Customer.
-		$customer = array(
-			'name'  => (object) array(
-				'first_name' => $first_name,
-				'last_name'  => $last_name,
-			),
-			'email' => $email,
-		);
+		// Name.
+		$name = null;
 
-		$customer = array_filter( $customer );
+		if ( ! empty( $first_name ) || ! empty( $last_name ) ) {
+			$name = new ContactName();
 
-		if ( ! empty( $customer ) ) {
-			$customer = Customer::from_json( (object) $customer );
+			if ( ! empty( $first_name ) ) {
+				$name->set_first_name( $first_name );
+			}
 
-			$payment->set_customer( $customer );
+			if ( ! empty( $last_name ) ) {
+				$name->set_last_name( $last_name );
+			}
 		}
+
+		// Customer.
+		$customer = null;
+
+		if ( null !== $name || ! empty( $email ) ) {
+			$customer = new Customer();
+
+			$customer->set_name( $name );
+
+			if ( ! empty( $email ) ) {
+				$customer->set_email( $email );
+			}
+		}
+		
+		$payment->set_customer( $customer );
 
 		// Amount.
 		$payment->set_total_amount( $this->get_amount() );
@@ -216,14 +219,14 @@ class FormProcessor {
 
 			// Make a user with the username as the email.
 			$result = wp_insert_user(
-				array(
+				[
 					'user_login' => $email,
 					'user_pass'  => $password,
 					'user_email' => $email,
 					'role'       => 'payer',
 					'first_name' => $first_name,
 					'last_name'  => $last_name,
-				)
+				]
 			);
 
 			if ( $result instanceof WP_Error ) {
@@ -236,10 +239,10 @@ class FormProcessor {
 
 		if ( is_object( $user ) ) {
 			wp_update_post(
-				array(
+				[
 					'ID'          => $payment->get_id(),
 					'post_author' => $user->ID,
-				)
+				]
 			);
 		}
 

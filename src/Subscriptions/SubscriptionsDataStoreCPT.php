@@ -58,9 +58,9 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		$this->register_meta();
 
-		$this->subscriptions = array();
+		$this->subscriptions = [];
 
-		$this->status_map = array(
+		$this->status_map = [
 			SubscriptionStatus::CANCELLED => 'subscr_cancelled',
 			SubscriptionStatus::EXPIRED   => 'subscr_expired',
 			SubscriptionStatus::FAILURE   => 'subscr_failed',
@@ -70,7 +70,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			SubscriptionStatus::COMPLETED => 'subscr_completed',
 			// Map payment status `Success` for backwards compatibility.
 			PaymentStatus::SUCCESS        => 'subscr_active',
-		);
+		];
 	}
 
 	/**
@@ -79,9 +79,9 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @return void
 	 */
 	public function setup() {
-		add_filter( 'wp_insert_post_data', array( $this, 'insert_subscription_post_data' ), 10, 2 );
+		add_filter( 'wp_insert_post_data', [ $this, 'insert_subscription_post_data' ], 10, 2 );
 
-		add_action( 'save_post_pronamic_pay_subscr', array( $this, 'save_post_meta' ), 100, 3 );
+		add_action( 'save_post_pronamic_pay_subscr', [ $this, 'save_post_meta' ], 100, 3 );
 	}
 
 	/**
@@ -297,7 +297,13 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$customer = $subscription->get_customer();
 
 		$result = wp_insert_post(
-			array(
+			/**
+			 * PHPStan doesn't like our custom `pronamic_subscription` argument.
+			 *
+			 * @todo Eliminate use of custom `pronamic_subscription` argument.
+			 * @phpstan-ignore-next-line
+			 */
+			[
 				'post_type'             => 'pronamic_pay_subscr',
 				'post_date_gmt'         => $this->get_mysql_utc_date( $subscription->date ),
 				'post_title'            => \sprintf(
@@ -306,7 +312,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 				),
 				'post_author'           => null === $customer ? null : $customer->get_user_id(),
 				'pronamic_subscription' => $subscription,
-			),
+			],
 			true
 		);
 
@@ -343,10 +349,10 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			return false;
 		}
 
-		$data = array(
+		$data = [
 			'ID'                    => $id,
 			'pronamic_subscription' => $subscription,
-		);
+		];
 
 		$result = wp_update_post( $data, true );
 
@@ -484,110 +490,110 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	private function register_meta() {
 		$this->register_meta_key(
 			'config_id',
-			array(
+			[
 				'label' => __( 'Config ID', 'pronamic_ideal' ),
-			)
+			]
 		);
 
 		$this->register_meta_key(
 			'source',
-			array(
+			[
 				'label' => __( 'Source', 'pronamic_ideal' ),
-			)
+			]
 		);
 
 		$this->register_meta_key(
 			'source_id',
-			array(
+			[
 				'label' => __( 'Source ID', 'pronamic_ideal' ),
-			)
+			]
 		);
 
 		$this->register_meta_key(
 			'currency',
-			array(
+			[
 				'label' => __( 'Currency', 'pronamic_ideal' ),
-			)
+			]
 		);
 
 		$this->register_meta_key(
 			'amount',
-			array(
+			[
 				'label' => __( 'Amount', 'pronamic_ideal' ),
-			)
+			]
 		);
 
 		$this->register_meta_key(
 			'frequency',
-			array(
+			[
 				'label' => __( 'Frequency', 'pronamic_ideal' ),
-			)
+			]
 		);
 
 		$this->register_meta_key(
 			'interval',
-			array(
+			[
 				'label' => __( 'Interval', 'pronamic_ideal' ),
-			)
+			]
 		);
 
 		$this->register_meta_key(
 			'interval_period',
-			array(
+			[
 				'label' => __( 'Interval Period', 'pronamic_ideal' ),
-			)
+			]
 		);
 
 		$this->register_meta_key(
 			'transaction_id',
-			array(
+			[
 				'label'           => __( 'Transaction ID', 'pronamic_ideal' ),
 				'privacy_export'  => true,
 				'privacy_erasure' => 'erase',
-			)
+			]
 		);
 
 		$this->register_meta_key(
 			'status',
-			array(
+			[
 				'label' => __( 'Status', 'pronamic_ideal' ),
-			)
+			]
 		);
 
 		$this->register_meta_key(
 			'description',
-			array(
+			[
 				'label'           => __( 'Description', 'pronamic_ideal' ),
 				'privacy_export'  => true,
 				'privacy_erasure' => 'erase',
-			)
+			]
 		);
 
 		$this->register_meta_key(
 			'email',
-			array(
+			[
 				'label'           => __( 'Email', 'pronamic_ideal' ),
 				'privacy_export'  => true,
 				'privacy_erasure' => 'anonymize',
-			)
+			]
 		);
 
 		$this->register_meta_key(
 			'customer_name',
-			array(
+			[
 				'label'           => __( 'Customer Name', 'pronamic_ideal' ),
 				'privacy_export'  => true,
 				'privacy_erasure' => 'erase',
-			)
+			]
 		);
 
 		$this->register_meta_key(
 			'payment_method',
-			array(
+			[
 				'label'           => __( 'Payment Method', 'pronamic_ideal' ),
 				'privacy_export'  => true,
 				'privacy_erasure' => 'erase',
-			)
+			]
 		);
 	}
 
@@ -662,11 +668,11 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$payments = get_pronamic_payments_by_meta(
 			'_pronamic_payment_subscription_id',
 			$id,
-			array(
+			[
 				'posts_per_page' => 1,
 				'orderby'        => 'post_date',
 				'order'          => 'ASC',
-			)
+			]
 		);
 
 		$payment = \reset( $payments );
@@ -760,7 +766,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			 * @param Subscription $subscription    Subscription.
 			 * @param bool         $can_redirect    Flag to indicate if redirect is allowed after the subscription update.
 			 * @param null|string  $previous_status Previous [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
-			 * @param string       $updated_status  Updated [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
+			 * @param null|string  $updated_status  Updated [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
 			 */
 			do_action( 'pronamic_subscription_status_update_' . $source . '_' . $old_status . '_to_' . $new_status, $subscription, $can_redirect, $previous_status, $updated_status );
 
@@ -772,7 +778,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			 * @param Subscription $subscription    Subscription.
 			 * @param bool         $can_redirect    Flag to indicate if redirect is allowed after the subscription update.
 			 * @param null|string  $previous_status Previous [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
-			 * @param string       $updated_status  Updated [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
+			 * @param null|string  $updated_status  Updated [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
 			 */
 			do_action( 'pronamic_subscription_status_update_' . $source, $subscription, $can_redirect, $previous_status, $updated_status );
 
@@ -782,7 +788,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			 * @param Subscription $subscription    Subscription.
 			 * @param bool         $can_redirect    Flag to indicate if redirect is allowed after the subscription update.
 			 * @param null|string  $previous_status Previous [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
-			 * @param string       $updated_status  Updated [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
+			 * @param null|string  $updated_status  Updated [subscription status](https://github.com/pronamic/wp-pronamic-pay/wiki#subscription-status).
 			 */
 			do_action( 'pronamic_subscription_status_update', $subscription, $can_redirect, $previous_status, $updated_status );
 		}

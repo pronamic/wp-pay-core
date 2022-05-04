@@ -22,12 +22,12 @@ if ( ! isset( $subscription ) ) {
 /*
  * Subscription details.
  */
-$details = array(
-	array(
+$details = [
+	[
 		'term'        => __( 'Description', 'pronamic_ideal' ),
 		'description' => $subscription->get_description(),
-	),
-);
+	],
+];
 
 // Current phase.
 $phase = $subscription->get_current_phase();
@@ -36,10 +36,10 @@ $recurrence = '—';
 
 if ( null !== $phase ) {
 	// Amount.
-	$details[] = array(
+	$details[] = [
 		'term'        => __( 'Amount', 'pronamic_ideal' ),
 		'description' => $phase->get_amount()->format_i18n(),
-	);
+	];
 
 	// Recurrence.
 	if ( $phase->is_infinite() ) :
@@ -61,17 +61,17 @@ if ( null !== $phase ) {
 $payment_method = $subscription->get_payment_method();
 
 if ( ! empty( $payment_method ) ) {
-	$details[] = array(
+	$details[] = [
 		'term'        => __( 'Payment method', 'pronamic_ideal' ),
 		'description' => PaymentMethods::get_name( $payment_method ),
-	);
+	];
 }
 
 // Recurrence.
-$details[] = array(
+$details[] = [
 	'term'        => __( 'Recurrence', 'pronamic_ideal' ),
 	'description' => $recurrence,
-);
+];
 
 ?>
 

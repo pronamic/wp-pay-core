@@ -38,7 +38,7 @@ trait ModeTrait {
 			throw new \InvalidArgumentException( 'Mode must be a string.' );
 		}
 
-		if ( ! in_array( $mode, array( Gateway::MODE_TEST, Gateway::MODE_LIVE ), true ) ) {
+		if ( ! in_array( $mode, [ Gateway::MODE_TEST, Gateway::MODE_LIVE ], true ) ) {
 			throw new \InvalidArgumentException( 'Invalid mode.' );
 		}
 

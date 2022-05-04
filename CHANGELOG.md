@@ -7,6 +7,16 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [4.1.3] - 2022-05-04
+### Changed
+- Solved some PHPStan and Psalm errors.
+- Improved PHP 8.1 support.
+
+### Removed
+- Removed `plugins_api` filter, callback does not exist.
+- Removed specific s2Member code, we no longer support s2Member.
+- Removed specific WP e-Commerce code, we no longer support WP e-Commerce.
+
 ## [4.1.2] - 2022-04-19
 ### Fixed
 - Fixed plugin updater.
@@ -477,7 +487,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.1.2...HEAD
+[unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.1.3...HEAD
+[4.1.3]: https://github.com/pronamic/wp-pay-core/compare/4.1.2...4.1.3
 [4.1.2]: https://github.com/pronamic/wp-pay-core/compare/4.1.1...4.1.2
 [4.1.1]: https://github.com/pronamic/wp-pay-core/compare/4.1.0...4.1.1
 [4.1.0]: https://github.com/pronamic/wp-pay-core/compare/4.0.2...4.1.0

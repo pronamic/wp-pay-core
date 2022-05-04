@@ -38,126 +38,126 @@ class Cards {
 	 * @return void
 	 */
 	private function register_cards() {
-		$this->cards = array(
+		$this->cards = [
 			// Cards.
-			array(
+			[
 				'bic'   => null,
 				'brand' => 'american-express',
 				'title' => __( 'American Express', 'pronamic_ideal' ),
-			),
-			array(
+			],
+			[
 				'bic'   => null,
 				'brand' => 'carta-si',
 				'title' => __( 'Carta Si', 'pronamic_ideal' ),
-			),
-			array(
+			],
+			[
 				'bic'   => null,
 				'brand' => 'carte-bleue',
 				'title' => __( 'Carte Bleue', 'pronamic_ideal' ),
-			),
-			array(
+			],
+			[
 				'bic'   => null,
 				'brand' => 'dankort',
 				'title' => __( 'Dankort', 'pronamic_ideal' ),
-			),
-			array(
+			],
+			[
 				'bic'   => null,
 				'brand' => 'diners-club',
 				'title' => __( 'Diners Club', 'pronamic_ideal' ),
-			),
-			array(
+			],
+			[
 				'bic'   => null,
 				'brand' => 'discover',
 				'title' => __( 'Discover', 'pronamic_ideal' ),
-			),
-			array(
+			],
+			[
 				'bic'   => null,
 				'brand' => 'jcb',
 				'title' => __( 'JCB', 'pronamic_ideal' ),
-			),
-			array(
+			],
+			[
 				'bic'   => null,
 				'brand' => 'maestro',
 				'title' => __( 'Maestro', 'pronamic_ideal' ),
-			),
-			array(
+			],
+			[
 				'bic'   => null,
 				'brand' => 'mastercard',
 				'title' => __( 'Mastercard', 'pronamic_ideal' ),
-			),
-			array(
+			],
+			[
 				'bic'   => null,
 				'brand' => 'unionpay',
 				'title' => __( 'UnionPay', 'pronamic_ideal' ),
-			),
-			array(
+			],
+			[
 				'bic'   => null,
 				'brand' => 'visa',
 				'title' => __( 'Visa', 'pronamic_ideal' ),
-			),
+			],
 
 			// Banks.
-			array(
+			[
 				'bic'   => 'abna',
 				'brand' => 'abn-amro',
 				'title' => __( 'ABN Amro', 'pronamic_ideal' ),
-			),
-			array(
+			],
+			[
 				'bic'   => 'asnb',
 				'brand' => 'asn-bank',
 				'title' => __( 'ASN Bank', 'pronamic_ideal' ),
-			),
-			array(
+			],
+			[
 				'bic'   => 'bunq',
 				'brand' => 'bunq',
 				'title' => __( 'bunq', 'pronamic_ideal' ),
-			),
-			array(
+			],
+			[
 				'bic'   => 'hand',
 				'brand' => 'handelsbanken',
 				'title' => __( 'Handelsbanken', 'pronamic_ideal' ),
-			),
-			array(
+			],
+			[
 				'bic'   => 'ingb',
 				'brand' => 'ing',
 				'title' => __( 'ING Bank', 'pronamic_ideal' ),
-			),
-			array(
+			],
+			[
 				'bic'   => 'knab',
 				'brand' => 'knab',
 				'title' => __( 'Knab', 'pronamic_ideal' ),
-			),
-			array(
+			],
+			[
 				'bic'   => 'moyo',
 				'brand' => 'moneyou',
 				'title' => __( 'Moneyou', 'pronamic_ideal' ),
-			),
-			array(
+			],
+			[
 				'bic'   => 'rabo',
 				'brand' => 'rabobank',
 				'title' => __( 'Rabobank', 'pronamic_ideal' ),
-			),
-			array(
+			],
+			[
 				'bic'   => 'rbrb',
 				'brand' => 'regiobank',
 				'title' => __( 'RegioBank', 'pronamic_ideal' ),
-			),
-			array(
+			],
+			[
 				'bic'   => 'snsb',
 				'brand' => 'sns',
 				'title' => __( 'SNS Bank', 'pronamic_ideal' ),
-			),
-			array(
+			],
+			[
 				'bic'   => 'trio',
 				'brand' => 'triodos-bank',
 				'title' => __( 'Triodos Bank', 'pronamic_ideal' ),
-			),
-			array(
+			],
+			[
 				'bic'   => 'fvlb',
 				'brand' => 'van-lanschot',
 				'title' => __( 'Van Lanschot', 'pronamic_ideal' ),
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -175,10 +175,10 @@ class Cards {
 		// Try to find card.
 		$cards = \wp_list_filter(
 			$this->cards,
-			array(
+			[
 				'bic'   => $bic_or_brand,
 				'brand' => $bic_or_brand,
-			),
+			],
 			'OR'
 		);
 

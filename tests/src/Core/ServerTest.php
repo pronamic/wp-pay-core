@@ -29,6 +29,6 @@ class ServerTest extends TestCase {
 	public function test_server_get() {
 		$value = Server::get( 'REQUEST_METHOD', FILTER_SANITIZE_STRING );
 
-		$this->assertTrue( in_array( $value, array( null, 'GET' ), true ) );
+		$this->assertTrue( in_array( $value, [ null, 'GET' ], true ) );
 	}
 }

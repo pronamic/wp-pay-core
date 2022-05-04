@@ -31,10 +31,10 @@ wp_nonce_field( 'pronamic_pay_save_form_options', 'pronamic_pay_nonce' );
 			$config_id = get_post_meta( $post->ID, '_pronamic_payment_form_config_id', true );
 
 			\Pronamic\WordPress\Pay\Admin\AdminModule::dropdown_configs(
-				array(
+				[
 					'name'     => '_pronamic_payment_form_config_id',
 					'selected' => $config_id,
-				)
+				]
 			);
 
 			?>
@@ -64,11 +64,11 @@ wp_nonce_field( 'pronamic_pay_save_form_options', 'pronamic_pay_nonce' );
 
 				$amount_method = get_post_meta( $post->ID, '_pronamic_payment_form_amount_method', true );
 
-				$options = array(
+				$options = [
 					\Pronamic\WordPress\Pay\Forms\FormPostType::AMOUNT_METHOD_INPUT_ONLY        => __( 'Show as input field', 'pronamic_ideal' ),
 					\Pronamic\WordPress\Pay\Forms\FormPostType::AMOUNT_METHOD_CHOICES_ONLY      => __( 'Show as choices', 'pronamic_ideal' ),
 					\Pronamic\WordPress\Pay\Forms\FormPostType::AMOUNT_METHOD_CHOICES_AND_INPUT => __( 'Show as choices with input field', 'pronamic_ideal' ),
-				);
+				];
 
 				foreach ( $options as $value => $name ) {
 					printf(
@@ -89,7 +89,7 @@ wp_nonce_field( 'pronamic_pay_save_form_options', 'pronamic_pay_nonce' );
 
 			$choices = get_post_meta( $post->ID, '_pronamic_payment_form_amount_choices', true );
 
-			$items = array();
+			$items = [];
 
 			if ( \is_array( $choices ) ) {
 				foreach ( $choices as $value ) {

@@ -117,10 +117,10 @@ class VatNumber {
 			return $this->value;
 		}
 
-		$data = array(
+		$data = [
 			'value'    => $this->value,
 			'validity' => $this->validity->get_json(),
-		);
+		];
 
 		return (object) $data;
 	}
@@ -198,10 +198,10 @@ class VatNumber {
 		 * Replace white spaces and dots.
 		 */
 		$value = \str_replace(
-			array(
+			[
 				' ',
 				'.',
-			),
+			],
 			'',
 			$value
 		);

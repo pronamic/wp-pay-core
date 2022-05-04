@@ -29,7 +29,7 @@ class Dependencies {
 	 * Construct.
 	 */
 	public function __construct() {
-		$this->dependencies = array();
+		$this->dependencies = [];
 	}
 
 	/**

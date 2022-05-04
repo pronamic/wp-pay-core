@@ -67,7 +67,7 @@ use Pronamic\WordPress\Pay\Core\PaymentMethods;
 						'<td>%s</td>',
 						wp_kses(
 							$value,
-							array( 'span' => array( 'class' => array() ) )
+							[ 'span' => [ 'class' => [] ] ]
 						)
 					);
 

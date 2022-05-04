@@ -22,7 +22,7 @@ if ( ! is_array( $config_ids ) ) {
 }
 
 // Build gateways list.
-$gateways = array();
+$gateways = [];
 
 foreach ( $config_ids as $config_id ) :
 	if ( AdminGatewayPostType::POST_TYPE !== get_post_type( $config_id ) ) {
@@ -64,12 +64,12 @@ if ( empty( $gateways ) ) {
 
 		echo wp_kses(
 			$message,
-			array(
-				'a' => array(
+			[
+				'a' => [
 					'href'  => true,
 					'title' => true,
-				),
-			)
+				],
+			]
 		);
 
 		?>

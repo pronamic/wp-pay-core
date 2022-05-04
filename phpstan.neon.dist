@@ -1,7 +1,7 @@
 includes:
 	- vendor-bin/phpstan/vendor/szepeviktor/phpstan-wordpress/extension.neon
 parameters:
-	level: max
+	level: 8
 	checkMissingIterableValueType: false
 	dynamicConstantNames:
 		- DOING_AUTOSAVE
@@ -21,6 +21,3 @@ parameters:
 	ignoreErrors:
 		# Uses func_get_args()
 		- '#^Function apply_filters(_ref_array)? invoked with [34567] parameters, 2 required\.$#'
-		-
-			message: '#Function pll_home_url not found\.#'
-			path: src/Payments/Payment.php

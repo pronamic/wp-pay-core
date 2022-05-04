@@ -205,7 +205,7 @@ class BankAccountDetails {
 	 * @return object|null
 	 */
 	public function get_json() {
-		$data = array(
+		$data = [
 			'name'           => $this->get_name(),
 			'account_number' => $this->get_account_number(),
 			'iban'           => $this->get_iban(),
@@ -213,7 +213,7 @@ class BankAccountDetails {
 			'bank_name'      => $this->get_bank_name(),
 			'city'           => $this->get_city(),
 			'country'        => $this->get_country(),
-		);
+		];
 
 		$data = array_filter( $data );
 
@@ -280,21 +280,19 @@ class BankAccountDetails {
 	 * @return string
 	 */
 	public function __toString() {
-		$pieces = array(
-			$this->get_name(),
-			$this->get_bank_name(),
-			$this->get_iban(),
-			$this->get_bic(),
-			$this->get_account_number(),
-			$this->get_city(),
-			$this->get_country(),
-		);
+		$pieces = [
+			\trim( (string) $this->get_name() ),
+			\trim( (string) $this->get_bank_name() ),
+			\trim( (string) $this->get_iban() ),
+			\trim( (string) $this->get_bic() ),
+			\trim( (string) $this->get_account_number() ),
+			\trim( (string) $this->get_city() ),
+			\trim( (string) $this->get_country() ),
+		];
 
-		$pieces = array_map( 'trim', $pieces );
+		$pieces = \array_filter( $pieces );
 
-		$pieces = array_filter( $pieces );
-
-		$string = implode( PHP_EOL, $pieces );
+		$string = \implode( PHP_EOL, $pieces );
 
 		return $string;
 	}

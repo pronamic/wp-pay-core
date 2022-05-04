@@ -33,7 +33,7 @@ class PaymentInfoHelper {
 	 * @return object
 	 */
 	public static function to_json( PaymentInfo $payment_info ) {
-		$object = (object) array();
+		$object = (object) [];
 
 		$id = $payment_info->get_id();
 
@@ -139,16 +139,16 @@ class PaymentInfoHelper {
 		$source_value = $payment_info->get_source_id();
 
 		if ( null !== $source_key || null !== $source_value ) {
-			$object->source = (object) array(
+			$object->source = (object) [
 				'key'   => $source_key,
 				'value' => $source_value,
-			);
+			];
 		}
 
 		$config_id = $payment_info->get_config_id();
 
 		if ( null !== $config_id ) {
-			$object->gateway = (object) array(
+			$object->gateway = (object) [
 				'$ref'    => \rest_url(
 					\sprintf(
 						'/%s/%s/%d',
@@ -158,7 +158,7 @@ class PaymentInfoHelper {
 					)
 				),
 				'post_id' => $config_id,
-			);
+			];
 		}
 
 		return $object;

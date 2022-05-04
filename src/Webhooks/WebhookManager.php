@@ -23,31 +23,11 @@ use WP_Query;
  */
 class WebhookManager {
 	/**
-	 * Plugin.
-	 *
-	 * @var Plugin
+	 * Construct webhook manager.
 	 */
-	private $plugin;
-
-	/**
-	 * Admin.
-	 *
-	 * @var AdminModule
-	 */
-	private $admin;
-
-	/**
-	 * Webhook manager.
-	 *
-	 * @param Plugin      $plugin Plugin.
-	 * @param AdminModule $admin  Admin.
-	 */
-	public function __construct( Plugin $plugin, AdminModule $admin ) {
-		$this->plugin = $plugin;
-		$this->admin  = $admin;
-
+	public function __construct() {
 		// Admin notices.
-		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
+		add_action( 'admin_notices', [ $this, 'admin_notices' ] );
 	}
 
 	/**
@@ -63,21 +43,21 @@ class WebhookManager {
 		$outdated_urls = get_transient( 'pronamic_outdated_webhook_urls' );
 
 		if ( false === $outdated_urls ) {
-			$outdated_urls = array();
+			$outdated_urls = [];
 
 			// Get gateways for which a webhook log exists.
 			$query = new WP_Query(
-				array(
+				[
 					'post_type'  => 'pronamic_gateway',
 					'orderby'    => 'post_title',
 					'order'      => 'ASC',
 					'nopaging'   => true,
-					'meta_query' => array(
-						array(
+					'meta_query' => [
+						[
 							'key' => '_pronamic_gateway_webhook_log',
-						),
-					),
-				)
+						],
+					],
+				]
 			);
 
 			$posts = \array_filter(

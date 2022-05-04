@@ -50,11 +50,11 @@ class Gender {
 	public static function is_valid( $gender ) {
 		return in_array(
 			$gender,
-			array(
+			[
 				self::FEMALE,
 				self::MALE,
 				self::OTHER,
-			),
+			],
 			true
 		);
 	}

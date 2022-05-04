@@ -54,10 +54,10 @@ class SubscriptionTest extends TestCase {
 	 * @return array
 	 */
 	public function get_and_set_provider() {
-		return array(
-			array( 'set_id', 'get_id', uniqid() ),
-			array( 'set_status', 'get_status', 'completed' ),
-		);
+		return [
+			[ 'set_id', 'get_id', uniqid() ],
+			[ 'set_status', 'get_status', 'completed' ],
+		];
 	}
 
 	/**
@@ -83,11 +83,11 @@ class SubscriptionTest extends TestCase {
 	 * @return array
 	 */
 	public function get_provider() {
-		return array(
-			array( 'key', 'get_key', uniqid() ),
-			array( 'source', 'get_source', 'woocommerce' ),
-			array( 'source_id', 'get_source_id', '1234' ),
-		);
+		return [
+			[ 'key', 'get_key', uniqid() ],
+			[ 'source', 'get_source', 'woocommerce' ],
+			[ 'source_id', 'get_source_id', '1234' ],
+		];
 	}
 
 	/**

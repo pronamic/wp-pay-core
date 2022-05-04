@@ -23,10 +23,10 @@ if ( ! isset( $settings ) ) {
 	return;
 }
 
-$methods_with_choices = array(
+$methods_with_choices = [
 	\Pronamic\WordPress\Pay\Forms\FormPostType::AMOUNT_METHOD_CHOICES_ONLY,
 	\Pronamic\WordPress\Pay\Forms\FormPostType::AMOUNT_METHOD_CHOICES_AND_INPUT,
-);
+];
 
 $gateway = Plugin::get_gateway( $settings['config_id'] );
 
@@ -206,10 +206,10 @@ $currency = Currency::get_instance( 'EUR' );
 
 			<?php
 
-			$fields = array(
+			$fields = [
 				'pronamic_pay_source'    => $settings['source'],
 				'pronamic_pay_source_id' => $settings['source_id'],
-			);
+			];
 
 			// Add config ID when needed.
 			if ( FormsSource::PAYMENT_FORM !== $settings['source'] ) {

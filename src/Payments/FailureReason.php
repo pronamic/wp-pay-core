@@ -76,10 +76,10 @@ class FailureReason {
 	 * @return object|null
 	 */
 	public function get_json() {
-		$data = array(
+		$data = [
 			'code'    => $this->get_code(),
 			'message' => $this->get_message(),
-		);
+		];
 
 		$data = array_filter( $data );
 

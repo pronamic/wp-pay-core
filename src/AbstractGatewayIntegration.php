@@ -29,14 +29,14 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	/**
 	 * URL.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $url;
 
 	/**
 	 * Product URL.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $product_url;
 
@@ -66,7 +66,7 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	 *
 	 * @var array
 	 */
-	protected $supports = array();
+	protected $supports = [];
 
 	use ModeTrait;
 
@@ -75,18 +75,18 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	 *
 	 * @param array $args Arguments.
 	 */
-	public function __construct( $args = array() ) {
+	public function __construct( $args = [] ) {
 		$args = wp_parse_args(
 			$args,
-			array(
+			[
 				'mode'          => 'live',
 				'provider'      => null,
 				'url'           => null,
 				'product_url'   => null,
 				'dashboard_url' => null,
 				'manual_url'    => null,
-				'supports'      => array(),
-			)
+				'supports'      => [],
+			]
 		);
 
 		parent::__construct( $args );
@@ -123,7 +123,7 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	 * @return array
 	 */
 	public function get_settings() {
-		return array();
+		return [];
 	}
 
 	/**
@@ -132,7 +132,7 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	 * @return array
 	 */
 	public function get_settings_fields() {
-		return array();
+		return [];
 	}
 
 	/**
@@ -183,7 +183,7 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	/**
 	 * Get provider URL.
 	 *
-	 * @return string|false
+	 * @return string|null
 	 */
 	public function get_url() {
 		return $this->url;

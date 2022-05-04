@@ -37,7 +37,7 @@ class GatewaysDataStoreCPT extends AbstractDataStoreCPT {
 	public function __construct() {
 		$this->meta_key_prefix = '_pronamic_gateway_';
 
-		$this->gateways = array();
+		$this->gateways = [];
 	}
 
 	/**

@@ -19,6 +19,13 @@ require_once __DIR__ . '/../vendor/autoload.php';
 \WorDBless\Load::load();
 
 /**
+ * Psalm.
+ */
+if ( defined( 'PSALM_VERSION' ) ) {
+    return;
+}
+
+/**
  * Plugin.
  */
 $plugin = \Pronamic\WordPress\Pay\Plugin::instance(

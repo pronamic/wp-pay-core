@@ -25,13 +25,13 @@ class SubscriptionsFollowUpPaymentsController {
 	 * @return void
 	 */
 	public function setup() {
-		\add_action( 'init', array( $this, 'maybe_schedule_actions' ) );
+		\add_action( 'init', [ $this, 'maybe_schedule_actions' ] );
 
-		\add_action( 'pronamic_pay_schedule_follow_up_payments', array( $this, 'schedule_all' ) );
+		\add_action( 'pronamic_pay_schedule_follow_up_payments', [ $this, 'schedule_all' ] );
 
-		\add_action( 'pronamic_pay_schedule_subscriptions_follow_up_payment', array( $this, 'schedule_paged' ) );
+		\add_action( 'pronamic_pay_schedule_subscriptions_follow_up_payment', [ $this, 'schedule_paged' ] );
 
-		\add_action( 'pronamic_pay_create_subscription_follow_up_payment', array( $this, 'action_create_subscription_follow_up_payment' ) );
+		\add_action( 'pronamic_pay_create_subscription_follow_up_payment', [ $this, 'action_create_subscription_follow_up_payment' ] );
 
 		$this->cli();
 	}
@@ -61,10 +61,10 @@ class SubscriptionsFollowUpPaymentsController {
 				WP_CLI\Utils\format_items(
 					'table',
 					$query->posts,
-					array(
+					[
 						'ID',
 						'post_title',
-					)
+					]
 				);
 			}
 		);
@@ -133,8 +133,8 @@ class SubscriptionsFollowUpPaymentsController {
 	 * @return void
 	 */
 	public function maybe_schedule_actions() {
-		if ( false === \as_next_scheduled_action( 'pronamic_pay_schedule_follow_up_payments', array(), 'pronamic-pay' ) ) {
-			\as_schedule_cron_action( \time(), '0 * * * *', 'pronamic_pay_schedule_follow_up_payments', array(), 'pronamic-pay' );
+		if ( false === \as_next_scheduled_action( 'pronamic_pay_schedule_follow_up_payments', [], 'pronamic-pay' ) ) {
+			\as_schedule_cron_action( \time(), '0 * * * *', 'pronamic_pay_schedule_follow_up_payments', [], 'pronamic-pay' );
 		}
 	}
 
@@ -170,9 +170,9 @@ class SubscriptionsFollowUpPaymentsController {
 	private function schedule_page( $page ) {
 		return \as_enqueue_async_action(
 			'pronamic_pay_schedule_subscriptions_follow_up_payment',
-			array(
+			[
 				'page' => $page,
-			),
+			],
 			'pronamic-pay'
 		);
 	}
@@ -185,9 +185,9 @@ class SubscriptionsFollowUpPaymentsController {
 	 */
 	public function schedule_paged( $page ) {
 		$query = $this->get_subscriptions_wp_query_that_require_follow_up_payment(
-			array(
+			[
 				'paged' => $page,
-			)
+			]
 		);
 
 		$posts = \array_filter(
@@ -197,7 +197,7 @@ class SubscriptionsFollowUpPaymentsController {
 			}
 		);
 
-		$subscriptions = array();
+		$subscriptions = [];
 
 		foreach ( $posts as $post ) {
 			$subscription = \get_pronamic_subscription( $post->ID );
@@ -267,9 +267,9 @@ class SubscriptionsFollowUpPaymentsController {
 			return $action_id;
 		}
 
-		$actions_args = array(
+		$actions_args = [
 			'subscription_id' => $subscription->get_id(),
-		);
+		];
 
 		if ( false !== \as_next_scheduled_action( 'pronamic_pay_create_subscription_follow_up_payment', $actions_args, 'pronamic-pay' ) ) {
 			return null;
@@ -375,11 +375,11 @@ class SubscriptionsFollowUpPaymentsController {
 	 * @param array $args Arguments.
 	 * @return WP_Query
 	 */
-	private function get_subscriptions_wp_query_that_require_follow_up_payment( $args = array() ) {
+	private function get_subscriptions_wp_query_that_require_follow_up_payment( $args = [] ) {
 		$start_date = $this->get_follow_up_payment_query_start_date();
 		$end_date   = $this->get_follow_up_payment_query_end_date();
 
-		$query_args = array(
+		$query_args = [
 			'post_type'      => 'pronamic_pay_subscr',
 			/**
 			 * Posts per page is set to 100, higher could result in performance issues.
@@ -387,35 +387,35 @@ class SubscriptionsFollowUpPaymentsController {
 			 * @link https://github.com/WordPress/WordPress-Coding-Standards/wiki/Customizable-sniff-properties#wp-postsperpage-post-limit
 			 */
 			'posts_per_page' => 100,
-			'post_status'    => array(
+			'post_status'    => [
 				'subscr_active',
-			),
-			'meta_query'     => array(
-				array(
+			],
+			'meta_query'     => [
+				[
 					'relation' => 'OR',
-					array(
+					[
 						'key'     => '_pronamic_subscription_next_payment',
 						'compare' => 'BETWEEN',
-						'value'   => array(
+						'value'   => [
 							$start_date->format( 'Y-m-d H:i:s' ),
 							$end_date->format( 'Y-m-d H:i:s' ),
-						),
+						],
 						'type'    => 'DATETIME',
-					),
-					array(
+					],
+					[
 						'key'     => '_pronamic_subscription_next_payment_delivery_date',
 						'compare' => 'BETWEEN',
-						'value'   => array(
+						'value'   => [
 							$start_date->format( 'Y-m-d H:i:s' ),
 							$end_date->format( 'Y-m-d H:i:s' ),
-						),
+						],
 						'type'    => 'DATETIME',
-					),
-				),
-			),
+					],
+				],
+			],
 			'order'          => 'DESC',
 			'orderby'        => 'ID',
-		);
+		];
 
 		if ( \array_key_exists( 'paged', $args ) ) {
 			$query_args['paged']         = $args['paged'];

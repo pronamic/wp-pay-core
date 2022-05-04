@@ -128,7 +128,7 @@ class Payment extends PaymentInfo {
 		parent::__construct( $post_id );
 
 		$this->meta_key_prefix = '_pronamic_payment_';
-		$this->subscriptions   = array();
+		$this->subscriptions   = [];
 
 		$this->set_status( PaymentStatus::OPEN );
 
@@ -157,15 +157,23 @@ class Payment extends PaymentInfo {
 	 * @throws \Exception Throws exception when adding note fails.
 	 */
 	public function add_note( $note ) {
-		$commentdata = array(
-			'comment_post_ID'  => $this->id,
-			'comment_content'  => $note,
-			'comment_type'     => 'payment_note',
-			'user_id'          => get_current_user_id(),
-			'comment_approved' => true,
-		);
+		if ( null === $this->id ) {
+			throw new \Exception(
+				\sprintf(
+					'Could not add note "%s" to payment without ID.',
+					$note
+				)
+			);
+		}
 
-		$result = wp_insert_comment( $commentdata );
+		$commentdata = [
+			'comment_post_ID' => $this->id,
+			'comment_content' => $note,
+			'comment_type'    => 'payment_note',
+			'user_id'         => \get_current_user_id(),
+		];
+
+		$result = \wp_insert_comment( $commentdata );
 
 		if ( false === $result ) {
 			throw new \Exception(
@@ -292,10 +300,10 @@ class Payment extends PaymentInfo {
 	 */
 	public function get_pay_redirect_url() {
 		$url = add_query_arg(
-			array(
+			[
 				'payment_redirect' => $this->id,
 				'key'              => $this->key,
-			),
+			],
 			home_url( '/' )
 		);
 
@@ -321,10 +329,10 @@ class Payment extends PaymentInfo {
 		}
 
 		$url = add_query_arg(
-			array(
+			[
 				'payment' => $this->id,
 				'key'     => $this->key,
-			),
+			],
 			$home_url
 		);
 
@@ -401,10 +409,10 @@ class Payment extends PaymentInfo {
 	 */
 	public function get_edit_payment_url() {
 		$url = add_query_arg(
-			array(
+			[
 				'action' => 'edit',
 				'post'   => $this->get_id(),
-			),
+			],
 			admin_url( 'post.php' )
 		);
 
@@ -417,10 +425,10 @@ class Payment extends PaymentInfo {
 	 * @return string
 	 */
 	public function get_source_text() {
-		$pieces = array(
+		$pieces = [
 			\ucfirst( (string) $this->get_source() ),
 			$this->get_source_id(),
-		);
+		];
 
 		$pieces = array_filter( $pieces );
 
@@ -454,14 +462,14 @@ class Payment extends PaymentInfo {
 	/**
 	 * Get source description.
 	 *
-	 * @return string|null
+	 * @return string
 	 */
 	public function get_source_description() {
 		$payment = $this;
 
 		$source = $payment->get_source();
 
-		$description = $source;
+		$description = (string) $source;
 
 		/**
 		 * Filters the payment source description.
@@ -520,7 +528,7 @@ class Payment extends PaymentInfo {
 	/**
 	 * Get provider link for this payment.
 	 *
-	 * @return string
+	 * @return null|string
 	 */
 	public function get_provider_link() {
 		$url = null;
@@ -611,10 +619,10 @@ class Payment extends PaymentInfo {
 		$id = $this->get_id();
 
 		// Replacements definition.
-		$replacements = array(
+		$replacements = [
 			'{order_id}'   => $this->get_order_id(),
 			'{payment_id}' => $id,
-		);
+		];
 
 		// Find and replace.
 		$count = 0;
@@ -663,7 +671,7 @@ class Payment extends PaymentInfo {
 	 */
 	public function add_period( SubscriptionPeriod $period ) {
 		if ( null === $this->periods ) {
-			$this->periods = array();
+			$this->periods = [];
 		}
 
 		$this->add_subscription( $period->get_phase()->get_subscription() );
@@ -788,10 +796,10 @@ class Payment extends PaymentInfo {
 		$subscriptions = $this->get_subscriptions();
 
 		if ( \count( $subscriptions ) > 0 ) {
-			$properties['subscriptions'] = array();
+			$properties['subscriptions'] = [];
 
 			foreach ( $subscriptions as $subscription ) {
-				$properties['subscriptions'][] = (object) array(
+				$properties['subscriptions'][] = (object) [
 					'$ref' => \rest_url(
 						\sprintf(
 							'/%s/%s/%d',
@@ -801,7 +809,7 @@ class Payment extends PaymentInfo {
 						)
 					),
 					'id'   => $subscription->get_id(),
-				);
+				];
 			}
 		}
 

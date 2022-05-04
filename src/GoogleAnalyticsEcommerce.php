@@ -36,7 +36,7 @@ class GoogleAnalyticsEcommerce {
 	/**
 	 * Measurement Protocol API version.
 	 *
-	 * @var int
+	 * @var string
 	 */
 	const API_VERSION = '1';
 
@@ -52,10 +52,10 @@ class GoogleAnalyticsEcommerce {
 	 */
 	public function __construct() {
 		// Actions.
-		add_action( 'pronamic_payment_status_update', array( $this, 'maybe_send_transaction' ), 10 );
+		add_action( 'pronamic_payment_status_update', [ $this, 'maybe_send_transaction' ], 10 );
 
 		// Filters.
-		add_filter( 'pronamic_payment_redirect_url', array( $this, 'payment_redirect_url' ), 15, 2 );
+		add_filter( 'pronamic_payment_redirect_url', [ $this, 'payment_redirect_url' ], 15, 2 );
 	}
 
 	/**
@@ -127,22 +127,22 @@ class GoogleAnalyticsEcommerce {
 			return;
 		}
 
-		$defaults = array(
+		$defaults = [
 			'v'   => self::API_VERSION,
 			'tid' => get_option( 'pronamic_pay_google_analytics_property' ),
 			'cid' => $this->get_client_id( $payment ),
 			'ti'  => strval( $payment->get_id() ),
 			'ni'  => 1,
-		);
+		];
 
 		$total_amount = $payment->get_total_amount();
 
 		// Transaction Hit.
 		$transaction = wp_parse_args(
-			array(
+			[
 				't'  => 'transaction',
 				'tr' => $total_amount->number_format( null, '.', '' ),
-			),
+			],
 			$defaults
 		);
 
@@ -180,11 +180,11 @@ class GoogleAnalyticsEcommerce {
 
 		wp_remote_post(
 			self::API_URL,
-			array(
+			[
 				'user-agent' => Server::get( 'HTTP_USER_AGENT' ),
 				'body'       => $transaction,
 				'blocking'   => false,
-			)
+			]
 		);
 
 		// Mark payment as tracked.
@@ -210,7 +210,7 @@ class GoogleAnalyticsEcommerce {
 				 *
 				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#in
 				 */
-				$name = $line->get_name();
+				$name = (string) $line->get_name();
 
 				/**
 				 * Filters the item name for Google Analytics e-commerce tracking.
@@ -262,7 +262,7 @@ class GoogleAnalyticsEcommerce {
 				/**
 				 * Filters the product category for Google Analytics e-commerce tracking.
 				 *
-				 * @param string      $product_category Product category.
+				 * @param string|null $product_category Product category.
 				 * @param PaymentLine $line             Payment line.
 				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#iv
 				 */
@@ -274,11 +274,11 @@ class GoogleAnalyticsEcommerce {
 
 				wp_remote_post(
 					self::API_URL,
-					array(
+					[
 						'user-agent' => Server::get( 'HTTP_USER_AGENT' ),
 						'body'       => $item,
 						'blocking'   => false,
-					)
+					]
 				);
 			}
 		}

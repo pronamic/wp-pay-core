@@ -114,11 +114,11 @@ class Region {
 	 * @return object|null
 	 */
 	public function get_json() {
-		$data = array(
+		$data = [
 			'value' => $this->value,
 			'code'  => $this->code,
 			'name'  => $this->name,
-		);
+		];
 
 		$data = array_filter( $data );
 
@@ -172,10 +172,10 @@ class Region {
 			return $this->value;
 		}
 
-		$values = array(
+		$values = [
 			$this->code,
 			$this->name,
-		);
+		];
 
 		$values = array_filter( $values );
 

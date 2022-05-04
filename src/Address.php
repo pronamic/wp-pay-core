@@ -498,7 +498,7 @@ class Address {
 	 * @return object|null
 	 */
 	public function get_json() {
-		$data = array(
+		$data = [
 			'name'         => ( null === $this->name ) ? null : $this->name->get_json(),
 			'email'        => $this->get_email(),
 			'company_name' => $this->get_company_name(),
@@ -512,7 +512,7 @@ class Address {
 			'region'       => ( null === $this->region ) ? null : $this->region->get_json(),
 			'country'      => ( null === $this->country ) ? null : $this->country->get_json(),
 			'phone'        => $this->get_phone(),
-		);
+		];
 
 		$data = array_filter( $data );
 
@@ -622,7 +622,7 @@ class Address {
 	 * @return string
 	 */
 	public function __toString() {
-		$parts = array(
+		$parts = [
 			$this->get_company_name(),
 			$this->get_name(),
 			$this->get_line_1(),
@@ -631,7 +631,7 @@ class Address {
 			$this->get_country_code(),
 			$this->get_phone(),
 			$this->get_email(),
-		);
+		];
 
 		$parts = array_map( 'strval', $parts );
 

@@ -21,25 +21,14 @@ use Pronamic\WordPress\Pay\Plugin;
  */
 class AdminNotices {
 	/**
-	 * Plugin.
-	 *
-	 * @var Plugin
-	 */
-	private $plugin;
-
-	/**
-	 * Constructs and initializes an notices object.
+	 * Construct admin notices.
 	 *
 	 * @link https://github.com/woothemes/woocommerce/blob/2.4.3/includes/admin/class-wc-admin-notices.php
-	 *
-	 * @param Plugin $plugin Plugin.
 	 */
-	public function __construct( Plugin $plugin ) {
-		$this->plugin = $plugin;
-
+	public function __construct() {
 		// Actions.
-		add_action( 'admin_init', array( $this, 'admin_init' ) );
-		add_action( 'admin_notices', array( $this, 'admin_notices' ), 11 );
+		add_action( 'admin_init', [ $this, 'admin_init' ] );
+		add_action( 'admin_notices', [ $this, 'admin_notices' ], 11 );
 	}
 
 	/**
@@ -101,7 +90,7 @@ class AdminNotices {
 	 * @return void
 	 */
 	private function removed_support_notices() {
-		$notifications = array();
+		$notifications = [];
 
 		/**
 		 * Filters the removed extensions notifications.
@@ -181,11 +170,11 @@ class AdminNotices {
 
 		// Redirect.
 		$url = \add_query_arg(
-			array(
+			[
 				'pronamic_pay_dismiss_notification'       => false,
 				'pronamic_pay_dismiss_notification_nonce' => false,
 				'pronamic_pay_dismissed_notification'     => $id,
-			),
+			],
 			\wp_get_referer()
 		);
 

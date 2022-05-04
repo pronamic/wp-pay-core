@@ -26,44 +26,44 @@ if ( null === $integration ) {
 
 $fields = $integration->get_settings_fields();
 
-$sections = array(
-	'general'         => (object) array(
+$sections = [
+	'general'         => (object) [
 		'title'  => __( 'General', 'pronamic_ideal' ),
-		'fields' => array(),
-	),
-	'advanced'        => (object) array(
+		'fields' => [],
+	],
+	'advanced'        => (object) [
 		'title'  => __( 'Advanced', 'pronamic_ideal' ),
-		'fields' => array(),
-	),
-	'feedback'        => (object) array(
+		'fields' => [],
+	],
+	'feedback'        => (object) [
 		'title'  => __( 'Feedback', 'pronamic_ideal' ),
-		'fields' => array(),
-	),
-	'payment_methods' => (object) array(
+		'fields' => [],
+	],
+	'payment_methods' => (object) [
 		'title'  => __( 'Payment Methods', 'pronamic_ideal' ),
-		'fields' => array(
-			array(
+		'fields' => [
+			[
 				'section'  => 'payment_methods',
 				'title'    => __( 'Supported Payment Methods', 'pronamic_ideal' ),
 				'type'     => 'html',
 				'callback' => function() use ( $gateway, $gateway_id ) {
 					AdminGatewayPostType::settings_payment_methods( $gateway, $gateway_id );
 				},
-			),
-		),
-	),
-);
+			],
+		],
+	],
+];
 
 // Feedback.
 if ( $integration->supports( 'webhook' ) ) {
-	$fields[] = array(
+	$fields[] = [
 		'section'  => 'feedback',
 		'title'    => __( 'Webhook Status', 'pronamic_ideal' ),
 		'type'     => 'description',
 		'callback' => function() use ( $gateway, $gateway_id, $config_id ) {
 			AdminGatewayPostType::settings_webhook_log( $gateway, $gateway_id, $config_id );
 		},
-	);
+	];
 }
 
 // Check if webhook configuration is needed.
@@ -89,7 +89,7 @@ if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_n
 			$sections['feedback']->title
 		);
 
-		$fields[] = array(
+		$fields[] = [
 			'section' => 'general',
 			'title'   => __( 'Transaction feedback', 'pronamic_ideal' ),
 			'type'    => 'description',
@@ -100,7 +100,7 @@ if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_n
 					'pronamic_ideal'
 				)
 			),
-		);
+		];
 	}
 }
 
@@ -180,7 +180,7 @@ $sections = array_filter(
 
 				foreach ( $section->fields as $field ) :
 
-					$classes = array();
+					$classes = [];
 
 					if ( isset( $field['methods'] ) ) {
 						foreach ( $field['methods'] as $method ) {
@@ -233,11 +233,11 @@ $sections = array_filter(
 
 							$field = (array) $field;
 
-							$attributes         = array();
+							$attributes         = [];
 							$attributes['id']   = $field_id;
 							$attributes['name'] = $field_id;
 
-							$classes = array();
+							$classes = [];
 							if ( isset( $field['classes'] ) ) {
 								$classes = $field['classes'];
 							}
@@ -252,11 +252,11 @@ $sections = array_filter(
 								$attributes['size'] = $field['size'];
 							}
 
-							if ( in_array( $field['type'], array( 'text', 'password', 'textarea', 'select' ), true ) ) {
+							if ( in_array( $field['type'], [ 'text', 'password', 'textarea', 'select' ], true ) ) {
 								$classes[] = 'pronamic-pay-form-control';
 							}
 
-							if ( in_array( $field['type'], array( 'textarea' ), true ) ) {
+							if ( in_array( $field['type'], [ 'textarea' ], true ) ) {
 								$classes[] = 'pronamic-pay-form-control-lg';
 							}
 

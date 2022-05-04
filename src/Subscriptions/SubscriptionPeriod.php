@@ -222,8 +222,8 @@ class SubscriptionPeriod {
 	 * @return object
 	 */
 	public function to_json() {
-		$json = (object) array(
-			'phase'      => (object) array(
+		$json = (object) [
+			'phase'      => (object) [
 				'$ref'            => \rest_url(
 					\sprintf(
 						'/%s/%s/%d/phases/%d',
@@ -233,7 +233,7 @@ class SubscriptionPeriod {
 						$this->phase->get_sequence_number()
 					)
 				),
-				'subscription'    => (object) array(
+				'subscription'    => (object) [
 					'$ref' => \rest_url(
 						\sprintf(
 							'/%s/%s/%d',
@@ -243,13 +243,13 @@ class SubscriptionPeriod {
 						)
 					),
 					'id'   => $this->phase->get_subscription()->get_id(),
-				),
+				],
 				'sequence_number' => $this->phase->get_sequence_number(),
-			),
+			],
 			'start_date' => $this->start_date->format( \DATE_ATOM ),
 			'end_date'   => $this->end_date->format( \DATE_ATOM ),
 			'amount'     => $this->amount->jsonSerialize(),
-		);
+		];
 
 		return $json;
 	}

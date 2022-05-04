@@ -91,13 +91,13 @@ bind_providers_and_gateways();
 						esc_html( $name ),
 						wp_kses(
 							$site,
-							array(
-								'a' => array(
+							[
+								'a' => [
 									'href'   => true,
 									'target' => true,
 									'title'  => true,
-								),
-							)
+								],
+							]
 						)
 					);
 

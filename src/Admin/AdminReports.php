@@ -29,24 +29,15 @@ class AdminReports {
 	private $plugin;
 
 	/**
-	 * Admin.
-	 *
-	 * @var AdminModule
-	 */
-	private $admin;
-
-	/**
 	 * AdminReports constructor.
 	 *
-	 * @param Plugin      $plugin Plugin.
-	 * @param AdminModule $admin  Admin.
+	 * @param Plugin $plugin Plugin.
 	 */
-	public function __construct( Plugin $plugin, AdminModule $admin ) {
+	public function __construct( Plugin $plugin ) {
 		$this->plugin = $plugin;
-		$this->admin  = $admin;
 
 		// Actions.
-		add_action( 'admin_print_styles', array( $this, 'admin_css' ) );
+		add_action( 'admin_print_styles', [ $this, 'admin_css' ] );
 	}
 
 	/**
@@ -81,7 +72,7 @@ class AdminReports {
 		wp_register_script(
 			'flot',
 			plugins_url( '../../assets/flot/jquery.flot' . $min . '.js', __FILE__ ),
-			array( 'jquery' ),
+			[ 'jquery' ],
 			$flot_version,
 			true
 		);
@@ -89,7 +80,7 @@ class AdminReports {
 		wp_register_script(
 			'flot-time',
 			plugins_url( '../../assets/flot/jquery.flot.time' . $min . '.js', __FILE__ ),
-			array( 'flot' ),
+			[ 'flot' ],
 			$flot_version,
 			true
 		);
@@ -97,7 +88,7 @@ class AdminReports {
 		wp_register_script(
 			'flot-resize',
 			plugins_url( '../../assets/flot/jquery.flot.resize' . $min . '.js', __FILE__ ),
-			array( 'flot' ),
+			[ 'flot' ],
 			$flot_version,
 			true
 		);
@@ -106,7 +97,7 @@ class AdminReports {
 		wp_register_script(
 			'accounting',
 			plugins_url( '../../assets/accounting/accounting' . $min . '.js', __FILE__ ),
-			array( 'jquery' ),
+			[ 'jquery' ],
 			'0.4.1',
 			true
 		);
@@ -115,13 +106,13 @@ class AdminReports {
 		wp_register_script(
 			'pronamic-pay-admin-reports',
 			plugins_url( '../../js/dist/admin-reports' . $min . '.js', __FILE__ ),
-			array(
+			[
 				'jquery',
 				'flot',
 				'flot-time',
 				'flot-resize',
 				'accounting',
-			),
+			],
 			$this->plugin->get_version(),
 			true
 		);
@@ -131,10 +122,10 @@ class AdminReports {
 		wp_localize_script(
 			'pronamic-pay-admin-reports',
 			'pronamicPayAdminReports',
-			array(
+			[
 				'data'       => $this->get_reports(),
 				'monthNames' => array_values( $wp_locale->month_abbrev ),
-			)
+			]
 		);
 
 		// Enqueue.
@@ -147,140 +138,136 @@ class AdminReports {
 	 * @return array
 	 */
 	public function get_reports() {
-		try {
-			$start = new \DateTime( 'First day of January' );
-			$end   = new \DateTime( 'Last day of December' );
-		} catch ( \Exception $e ) {
-			return array();
-		}
+		$start = new \DateTime( 'First day of January' );
+		$end   = new \DateTime( 'Last day of December' );
 
-		$data = array(
-			(object) array(
+		$data = [
+			(object) [
 				'label'      => __( 'Number successful payments', 'pronamic_ideal' ),
 				'data'       => $this->get_report( 'payment_completed', 'COUNT', $start, $end ),
 				'color'      => '#dbe1e3',
-				'bars'       => (object) array(
+				'bars'       => (object) [
 					'fillColor' => '#dbe1e3',
 					'fill'      => true,
 					'show'      => true,
 					'lineWidth' => 0,
 					'barWidth'  => 2419200000 * 0.5,
 					'align'     => 'center',
-				),
+				],
 				'shadowSize' => 0,
 				'hoverable'  => false,
 				'class'      => 'completed-count',
-			),
-			(object) array(
+			],
+			(object) [
 				'label'            => __( 'Open payments', 'pronamic_ideal' ),
 				'data'             => $this->get_report( 'payment_pending', 'SUM', $start, $end ),
 				'yaxis'            => 2,
 				'color'            => '#b1d4ea',
-				'points'           => (object) array(
+				'points'           => (object) [
 					'show'      => true,
 					'radius'    => 5,
 					'lineWidth' => 2,
 					'fillColor' => '#FFF',
 					'fill'      => true,
-				),
-				'lines'            => (object) array(
+				],
+				'lines'            => (object) [
 					'show'      => true,
 					'lineWidth' => 2,
 					'fill'      => false,
-				),
+				],
 				'shadowSize'       => 0,
 				'tooltipFormatter' => 'money',
 				'class'            => 'pending-sum',
-			),
-			(object) array(
+			],
+			(object) [
 				'label'            => __( 'Successful payments', 'pronamic_ideal' ),
 				'data'             => $this->get_report( 'payment_completed', 'SUM', $start, $end ),
 				'yaxis'            => 2,
 				'color'            => '#3498db',
-				'points'           => (object) array(
+				'points'           => (object) [
 					'show'      => true,
 					'radius'    => 6,
 					'lineWidth' => 4,
 					'fillColor' => '#FFF',
 					'fill'      => true,
-				),
-				'lines'            => (object) array(
+				],
+				'lines'            => (object) [
 					'show'      => true,
 					'lineWidth' => 5,
 					'fill'      => false,
-				),
+				],
 				'shadowSize'       => 0,
 				'prepend_tooltip'  => '&euro;&nbsp;',
 				'tooltipFormatter' => 'money',
 				'class'            => 'completed-sum',
-			),
-			(object) array(
+			],
+			(object) [
 				'label'            => __( 'Cancelled payments', 'pronamic_ideal' ),
 				'data'             => $this->get_report( 'payment_cancelled', 'SUM', $start, $end ),
 				'yaxis'            => 2,
 				'color'            => '#F1C40F',
-				'points'           => (object) array(
+				'points'           => (object) [
 					'show'      => true,
 					'radius'    => 5,
 					'lineWidth' => 2,
 					'fillColor' => '#FFF',
 					'fill'      => true,
-				),
-				'lines'            => (object) array(
+				],
+				'lines'            => (object) [
 					'show'      => true,
 					'lineWidth' => 2,
 					'fill'      => false,
-				),
+				],
 				'shadowSize'       => 0,
 				'prepend_tooltip'  => '&euro;&nbsp;',
 				'tooltipFormatter' => 'money',
 				'class'            => 'cancelled-sum',
-			),
-			(object) array(
+			],
+			(object) [
 				'label'            => __( 'Expired payments', 'pronamic_ideal' ),
 				'data'             => $this->get_report( 'payment_expired', 'SUM', $start, $end ),
 				'yaxis'            => 2,
 				'color'            => '#DBE1E3',
-				'points'           => (object) array(
+				'points'           => (object) [
 					'show'      => true,
 					'radius'    => 5,
 					'lineWidth' => 2,
 					'fillColor' => '#FFF',
 					'fill'      => true,
-				),
-				'lines'            => (object) array(
+				],
+				'lines'            => (object) [
 					'show'      => true,
 					'lineWidth' => 2,
 					'fill'      => false,
-				),
+				],
 				'shadowSize'       => 0,
 				'prepend_tooltip'  => '&euro;&nbsp;',
 				'tooltipFormatter' => 'money',
 				'class'            => 'expired-sum',
-			),
-			(object) array(
+			],
+			(object) [
 				'label'            => __( 'Failed payments', 'pronamic_ideal' ),
 				'data'             => $this->get_report( 'payment_failed', 'SUM', $start, $end ),
 				'yaxis'            => 2,
 				'color'            => '#E74C3C',
-				'points'           => (object) array(
+				'points'           => (object) [
 					'show'      => true,
 					'radius'    => 5,
 					'lineWidth' => 2,
 					'fillColor' => '#FFF',
 					'fill'      => true,
-				),
-				'lines'            => (object) array(
+				],
+				'lines'            => (object) [
 					'show'      => true,
 					'lineWidth' => 2,
 					'fill'      => false,
-				),
+				],
 				'shadowSize'       => 0,
 				'prepend_tooltip'  => '&euro;&nbsp;',
 				'tooltipFormatter' => 'money',
 				'class'            => 'failed-sum',
-			),
-		);
+			],
+		];
 
 		foreach ( $data as $serie ) {
 			// @codingStandardsIgnoreStart
@@ -362,7 +349,7 @@ class AdminReports {
 				break;
 		}
 
-		$report = array();
+		$report = [];
 
 		foreach ( $period as $date ) {
 			$key = $date->format( 'Y-m' );
@@ -373,11 +360,11 @@ class AdminReports {
 				$value = (float) $data[ $key ];
 			}
 
-			$report[] = array(
+			$report[] = [
 				// Flot requires milliseconds so multiply with 1000.
 				$date->getTimestamp() * 1000,
 				$value,
-			);
+			];
 		}
 
 		return $report;

@@ -248,27 +248,6 @@ $phase = $subscription->get_display_phase();
 		</td>
 	</tr>
 
-	<?php if ( 's2member' === $subscription->get_source() ) : ?>
-
-		<tr>
-			<th scope="row">
-				<?php esc_html_e( 'Period', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php echo esc_html( (string) $subscription->get_meta( 's2member_period' ) ); ?>
-			</td>
-		</tr>
-		<tr>
-			<th scope="row">
-				<?php esc_html_e( 'Level', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php echo esc_html( (string) $subscription->get_meta( 's2member_level' ) ); ?>
-			</td>
-		</tr>
-
-	<?php endif; ?>
-
 	<tr>
 		<th scope="row">
 			<?php esc_html_e( 'Cancel URL', 'pronamic_ideal' ); ?>

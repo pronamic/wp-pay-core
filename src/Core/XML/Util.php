@@ -55,7 +55,7 @@ class Util {
 	 * @param array       $elements The elements (name => value pairs) to add.
 	 * @return void
 	 */
-	public static function add_elements( DOMDocument $document, DOMNode $parent, array $elements = array() ) {
+	public static function add_elements( DOMDocument $document, DOMNode $parent, array $elements = [] ) {
 		foreach ( $elements as $name => $value ) {
 			$element = $document->createElement( $name );
 

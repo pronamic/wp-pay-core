@@ -76,7 +76,7 @@ class BankTransferDetails {
 	 * @return object|null
 	 */
 	public function get_json() {
-		$data = array();
+		$data = [];
 
 		// Bank account.
 		$bank_account = $this->get_bank_account();
@@ -133,10 +133,10 @@ class BankTransferDetails {
 	 * @return string
 	 */
 	public function __toString() {
-		$pieces = array(
+		$pieces = [
 			$this->get_bank_account(),
 			$this->get_reference(),
-		);
+		];
 
 		$pieces = array_map( 'strval', $pieces );
 

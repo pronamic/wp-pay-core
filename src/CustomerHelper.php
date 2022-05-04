@@ -34,10 +34,10 @@ class CustomerHelper {
 		if ( null === $customer->get_name() && is_user_logged_in() ) {
 			$user = wp_get_current_user();
 
-			$data = array(
+			$data = [
 				'first_name' => $user->user_firstname,
 				'last_name'  => $user->user_lastname,
-			);
+			];
 
 			$data = array_map( 'trim', $data );
 			$data = array_filter( $data );
@@ -81,7 +81,7 @@ class CustomerHelper {
 
 		// Locale.
 		if ( null === $customer->get_locale() ) {
-			$locales = array();
+			$locales = [];
 
 			// User locale.
 			if ( is_user_logged_in() ) {

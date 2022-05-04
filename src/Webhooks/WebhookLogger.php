@@ -29,7 +29,7 @@ class WebhookLogger {
 	 * @return void
 	 */
 	public function setup() {
-		add_action( 'pronamic_pay_webhook_log_payment', array( $this, 'log_payment' ) );
+		add_action( 'pronamic_pay_webhook_log_payment', [ $this, 'log_payment' ] );
 	}
 
 	/**

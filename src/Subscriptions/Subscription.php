@@ -52,7 +52,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 *
 	 * @var SubscriptionPhase[]
 	 */
-	private $phases = array();
+	private $phases = [];
 
 	/**
 	 * Next payment date.
@@ -124,13 +124,21 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * @throws \Exception Throws exception when adding note fails.
 	 */
 	public function add_note( $note ) {
-		$commentdata = array(
-			'comment_post_ID'  => $this->id,
-			'comment_content'  => $note,
-			'comment_type'     => 'subscription_note',
-			'user_id'          => get_current_user_id(),
-			'comment_approved' => true,
-		);
+		if ( null === $this->id ) {
+			throw new \Exception(
+				\sprintf(
+					'Could not add note "%s" to subscription without ID.',
+					$note
+				)
+			);
+		}
+
+		$commentdata = [
+			'comment_post_ID' => $this->id,
+			'comment_content' => $note,
+			'comment_type'    => 'subscription_note',
+			'user_id'         => get_current_user_id(),
+		];
 
 		$result = wp_insert_comment( $commentdata );
 
@@ -153,10 +161,10 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * @return string
 	 */
 	public function get_source_text() {
-		$pieces = array(
+		$pieces = [
 			\ucfirst( (string) $this->get_source() ),
 			$this->get_source_id(),
-		);
+		];
 
 		$pieces = array_filter( $pieces );
 
@@ -197,7 +205,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 
 		$source = $subscription->get_source();
 
-		$description = $source;
+		$description = (string) $source;
 
 		if ( null !== $source ) {
 			/**
@@ -260,11 +268,11 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 */
 	public function get_cancel_url() {
 		$cancel_url = add_query_arg(
-			array(
+			[
 				'subscription' => $this->get_id(),
 				'key'          => $this->get_key(),
 				'action'       => 'cancel',
-			),
+			],
 			home_url( '/' )
 		);
 
@@ -278,11 +286,11 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 */
 	public function get_renewal_url() {
 		$renewal_url = add_query_arg(
-			array(
+			[
 				'subscription' => $this->get_id(),
 				'key'          => $this->get_key(),
 				'action'       => 'renew',
-			),
+			],
 			home_url( '/' )
 		);
 
@@ -296,11 +304,11 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 */
 	public function get_mandate_selection_url() {
 		$url = add_query_arg(
-			array(
+			[
 				'subscription' => $this->get_id(),
 				'key'          => $this->get_key(),
 				'action'       => 'mandate',
-			),
+			],
 			home_url( '/' )
 		);
 
@@ -314,7 +322,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 */
 	public function get_payments() {
 		if ( null === $this->id ) {
-			return array();
+			return [];
 		}
 
 		$payments = get_pronamic_payments_by_meta( '_pronamic_payment_subscription_id', $this->id );
@@ -330,7 +338,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	public function get_payments_by_period() {
 		$payments = $this->get_payments();
 
-		$periods = array();
+		$periods = [];
 
 		foreach ( $payments as $payment ) {
 			// Get period for this subscription.
@@ -356,17 +364,17 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 			$start = $period->get_start_date()->getTimestamp();
 
 			if ( ! \array_key_exists( $start, $periods ) ) {
-				$periods[ $start ] = array(
+				$periods[ $start ] = [
 					'period'    => $period,
-					'payments'  => array(),
+					'payments'  => [],
 					'can_retry' => true,
-				);
+				];
 			}
 
 			// Add payment to result.
 			$periods[ $start ]['payments'][ $payment->get_date()->getTimestamp() ] = $payment;
 
-			if ( \in_array( $payment->get_status(), array( PaymentStatus::OPEN, PaymentStatus::SUCCESS ), true ) ) {
+			if ( \in_array( $payment->get_status(), [ PaymentStatus::OPEN, PaymentStatus::SUCCESS ], true ) ) {
 				$periods[ $start ]['can_retry'] = false;
 			}
 		}
@@ -432,7 +440,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	/**
 	 * Set the next payment date of this subscription.
 	 *
-	 * @param DateTimeInterface $date Date.
+	 * @param \DateTimeInterface|null $date Date.
 	 * @return void
 	 */
 	public function set_next_payment_date( $date ) {

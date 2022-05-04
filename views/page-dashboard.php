@@ -50,25 +50,32 @@ $container_index = 1;
 								$payments_post_type = \Pronamic\WordPress\Pay\Admin\AdminPaymentPostType::POST_TYPE;
 
 								$query = new WP_Query(
-									array(
+									[
 										'post_type'      => $payments_post_type,
 										'post_status'    => \array_keys( \Pronamic\WordPress\Pay\Payments\PaymentPostType::get_payment_states() ),
 										'posts_per_page' => 5,
-									)
+									]
 								);
 
-								if ( $query->have_posts() ) :
+								$payment_posts = \array_filter(
+									$query->posts,
+									function( $post ) {
+										return ( $post instanceof WP_Post );
+									}
+								);
 
-									$columns = array(
+								if ( count( $payment_posts ) > 0 ) :
+
+									$columns = [
 										'status',
 										'subscription',
 										'title',
 										'amount',
 										'date',
-									);
+									];
 
 									// phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
-									$column_titles = apply_filters( 'manage_edit-' . $payments_post_type . '_columns', array() );
+									$column_titles = apply_filters( 'manage_edit-' . $payments_post_type . '_columns', [] );
 
 									?>
 
@@ -83,9 +90,9 @@ $container_index = 1;
 													$custom_column = sprintf( '%1$s_%2$s', $payments_post_type, $column );
 
 													// Column classes.
-													$classes = array(
+													$classes = [
 														sprintf( 'column-%s', $custom_column ),
-													);
+													];
 
 													if ( 'pronamic_payment_title' === $custom_column ) :
 														$classes[] = 'column-primary';
@@ -103,15 +110,12 @@ $container_index = 1;
 
 											</tr>
 
-											<?php
-											while ( $query->have_posts() ) :
-												$query->the_post();
-												?>
+											<?php foreach ( $payment_posts as $payment_post ) : ?>
 
 												<tr class="type-<?php echo esc_attr( $payments_post_type ); ?>">
 													<?php
 
-													$payment_id = get_the_ID();
+													$payment_id = $payment_post->ID;
 
 													// Loop columns.
 													foreach ( $columns as $column ) :
@@ -119,10 +123,10 @@ $container_index = 1;
 														$custom_column = sprintf( '%1$s_%2$s', $payments_post_type, $column );
 
 														// Column classes.
-														$classes = array(
+														$classes = [
 															$custom_column,
 															'column-' . $custom_column,
-														);
+														];
 
 														if ( 'pronamic_payment_title' === $custom_column ) {
 															$classes[] = 'column-primary';
@@ -158,7 +162,7 @@ $container_index = 1;
 
 												</tr>
 
-											<?php endwhile; ?>
+											<?php endforeach; ?>
 
 										</table>
 									</div>
@@ -179,14 +183,21 @@ $container_index = 1;
 					$subscriptions_post_type = \Pronamic\WordPress\Pay\Admin\AdminSubscriptionPostType::POST_TYPE;
 
 					$query = new WP_Query(
-						array(
+						[
 							'post_type'      => $subscriptions_post_type,
 							'post_status'    => \array_keys( \Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType::get_states() ),
 							'posts_per_page' => 5,
-						)
+						]
 					);
 
-					if ( $query->have_posts() ) :
+					$subscriptions_posts = \array_filter(
+						$query->posts,
+						function( $post ) {
+							return ( $post instanceof WP_Post );
+						}
+					);
+
+					if ( count( $subscriptions_posts ) > 0 ) :
 						?>
 
 						<div id="normal-sortables" class="meta-box-sortables ui-sortable">
@@ -199,15 +210,15 @@ $container_index = 1;
 								<div class="inside">
 									<?php
 
-										$columns = array(
+										$columns = [
 											'status',
 											'title',
 											'amount',
 											'date',
-										);
+										];
 
 										// phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
-										$column_titles = apply_filters( 'manage_edit-' . $subscriptions_post_type . '_columns', array() );
+										$column_titles = apply_filters( 'manage_edit-' . $subscriptions_post_type . '_columns', [] );
 
 										?>
 
@@ -222,9 +233,9 @@ $container_index = 1;
 														$custom_column = sprintf( '%1$s_%2$s', 'pronamic_subscription', $column );
 
 														// Column classes.
-														$classes = array(
+														$classes = [
 															sprintf( 'column-%s', $custom_column ),
-														);
+														];
 
 														if ( 'pronamic_subscription_title' === $custom_column ) :
 															$classes[] = 'column-primary';
@@ -242,15 +253,12 @@ $container_index = 1;
 
 												</tr>
 
-												<?php
-												while ( $query->have_posts() ) :
-													$query->the_post();
-													?>
+												<?php foreach ( $subscriptions_posts as $subscription_post ) : ?>
 
 													<tr class="type-<?php echo esc_attr( $subscriptions_post_type ); ?>">
 														<?php
 
-														$payment_id = get_the_ID();
+														$subscription_id = $subscription_post->ID;
 
 														// Loop columns.
 														foreach ( $columns as $column ) :
@@ -258,10 +266,10 @@ $container_index = 1;
 															$custom_column = sprintf( '%1$s_%2$s', 'pronamic_subscription', $column );
 
 															// Column classes.
-															$classes = array(
+															$classes = [
 																$custom_column,
 																'column-' . $custom_column,
-															);
+															];
 
 															if ( 'pronamic_subscription_title' === $custom_column ) {
 																$classes[] = 'column-primary';
@@ -277,7 +285,7 @@ $container_index = 1;
 															do_action(
 																'manage_' . $subscriptions_post_type . '_posts_custom_column',
 																$custom_column,
-																$payment_id
+																$subscription_id
 															);
 
 															if ( 'pronamic_subscription_title' === $custom_column ) :
@@ -297,7 +305,7 @@ $container_index = 1;
 
 													</tr>
 
-												<?php endwhile; ?>
+												<?php endforeach; ?>
 
 											</table>
 										</div>
@@ -335,10 +343,10 @@ $container_index = 1;
 									esc_attr(
 										wp_nonce_url(
 											add_query_arg(
-												array(
+												[
 													'page' => 'pronamic_ideal',
 													'pronamic_pay_ignore_tour' => '0',
-												)
+												]
 											),
 											'pronamic_pay_ignore_tour',
 											'pronamic_pay_nonce'
@@ -353,10 +361,10 @@ $container_index = 1;
 									'<a href="%s" class="button-secondary">%s</a>',
 									esc_attr(
 										add_query_arg(
-											array(
+											[
 												'page' => 'pronamic-pay-about',
 												'tab'  => 'new',
-											)
+											]
 										)
 									),
 									esc_html__( 'What is new', 'pronamic_ideal' )
@@ -368,10 +376,10 @@ $container_index = 1;
 									'<a href="%s" class="button-secondary">%s</a>',
 									esc_attr(
 										add_query_arg(
-											array(
+											[
 												'page' => 'pronamic-pay-about',
 												'tab'  => 'getting-started',
-											)
+											]
 										)
 									),
 									esc_html__( 'Getting started', 'pronamic_ideal' )
@@ -398,9 +406,9 @@ $container_index = 1;
 										'<a href="%s" class="button-secondary">%s</a>',
 										esc_attr(
 											add_query_arg(
-												array(
+												[
 													'page' => 'pronamic_pay_tools',
-												)
+												]
 											)
 										),
 										esc_html__( 'System Status', 'pronamic_ideal' )
@@ -424,12 +432,12 @@ $container_index = 1;
 
 							wp_widget_rss_output(
 								'https://feeds.feedburner.com/pronamic',
-								array(
+								[
 									'link'  => __( 'http://www.pronamic.eu/', 'pronamic_ideal' ),
 									'url'   => 'http://feeds.feedburner.com/pronamic',
 									'title' => __( 'Pronamic News', 'pronamic_ideal' ),
 									'items' => 5,
-								)
+								]
 							);
 
 							?>

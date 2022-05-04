@@ -463,7 +463,7 @@ class PaymentLine {
 	 * @return object
 	 */
 	public function get_json() {
-		$properties = array(
+		$properties = [
 			'id'               => $this->get_id(),
 			'type'             => $this->get_type(),
 			'sku'              => $this->get_sku(),
@@ -476,7 +476,7 @@ class PaymentLine {
 			'product_url'      => $this->get_product_url(),
 			'image_url'        => $this->get_image_url(),
 			'product_category' => $this->get_product_category(),
-		);
+		];
 
 		$properties = array_filter( $properties );
 
@@ -489,11 +489,11 @@ class PaymentLine {
 	 * @return string
 	 */
 	public function __toString() {
-		$parts = array(
+		$parts = [
 			$this->get_id(),
 			$this->get_description(),
 			$this->get_quantity(),
-		);
+		];
 
 		$parts = array_map( 'strval', $parts );
 

@@ -27,12 +27,12 @@ if ( ! isset( $admin_tour ) ) {
 			esc_attr( 'https://www.pronamic.nl/go/gravity-forms/' ),
 			esc_attr( '_blank' )
 		),
-		array(
-			'a' => array(
+		[
+			'a' => [
 				'href'   => true,
 				'target' => true,
-			),
-		)
+			],
+		]
 	);
 
 	?>

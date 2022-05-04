@@ -41,7 +41,7 @@ function get_pronamic_payment( $post_id ) {
  * @param array      $args       Query arguments.
  * @return Payment|null
  */
-function get_pronamic_payment_by_meta( $meta_key, $meta_value, $args = array() ) {
+function get_pronamic_payment_by_meta( $meta_key, $meta_value, $args = [] ) {
 	$args['posts_per_page'] = 1;
 
 	$payments = get_pronamic_payments_by_meta( $meta_key, $meta_value, $args );
@@ -68,29 +68,29 @@ function get_pronamic_payment_by_meta( $meta_key, $meta_value, $args = array() )
  * @param array      $args       Query arguments.
  * @return Payment[]
  */
-function get_pronamic_payments_by_meta( $meta_key, $meta_value, $args = array() ) {
-	$payments = array();
+function get_pronamic_payments_by_meta( $meta_key, $meta_value, $args = [] ) {
+	$payments = [];
 
-	$defaults = array(
+	$defaults = [
 		'post_type'      => 'pronamic_payment',
 		'post_status'    => 'any',
 		'posts_per_page' => -1,
 		'no_found_rows'  => true,
-		'meta_query'     => array(),
-	);
+		'meta_query'     => [],
+	];
 
 	$args = wp_parse_args( $args, $defaults );
 
 	// Add meta query for given meta key and value.
 	if ( ! empty( $meta_key ) ) {
 		if ( ! is_array( $args['meta_query'] ) ) {
-			$args['meta_query'] = array();
+			$args['meta_query'] = [];
 		}
 
-		$args['meta_query'][] = array(
+		$args['meta_query'][] = [
 			'key'   => $meta_key,
 			'value' => $meta_value,
-		);
+		];
 	}
 
 	$query = new WP_Query( $args );
@@ -139,7 +139,7 @@ function get_pronamic_payments_by_user_id( $user_id = null ) {
 		$user_id = \get_current_user_id();
 	}
 
-	return get_pronamic_payments_by_meta( null, null, array( 'author' => $user_id ) );
+	return get_pronamic_payments_by_meta( null, null, [ 'author' => $user_id ] );
 }
 
 /**
@@ -151,27 +151,27 @@ function get_pronamic_payments_by_user_id( $user_id = null ) {
  */
 function get_pronamic_payments_by_source( $source, $source_id = null ) {
 	// Meta query.
-	$meta_query = array(
-		array(
+	$meta_query = [
+		[
 			'key'   => '_pronamic_payment_source',
 			'value' => $source,
-		),
-	);
+		],
+	];
 
 	// Add source ID meta query condition.
 	if ( ! empty( $source_id ) ) {
-		$meta_query[] = array(
+		$meta_query[] = [
 			'key'   => '_pronamic_payment_source_id',
 			'value' => $source_id,
-		);
+		];
 	}
 
 	// Return.
-	$args = array(
+	$args = [
 		'meta_query' => $meta_query,
 		'order'      => 'DESC',
 		'orderby'    => 'ID',
-	);
+	];
 
 	return get_pronamic_payments_by_meta( null, null, $args );
 }
@@ -194,7 +194,7 @@ function get_pronamic_subscription( $post_id ) {
  * @param array  $args       Query arguments.
  * @return Subscription|null
  */
-function get_pronamic_subscription_by_meta( $meta_key, $meta_value, $args = array() ) {
+function get_pronamic_subscription_by_meta( $meta_key, $meta_value, $args = [] ) {
 	$args['posts_per_page'] = 1;
 
 	$subscriptions = get_pronamic_subscriptions_by_meta( $meta_key, $meta_value, $args );
@@ -218,28 +218,28 @@ function get_pronamic_subscription_by_meta( $meta_key, $meta_value, $args = arra
  * @param array  $args       Query arguments.
  * @return Subscription[]
  */
-function get_pronamic_subscriptions_by_meta( $meta_key, $meta_value, $args = array() ) {
-	$subscriptions = array();
+function get_pronamic_subscriptions_by_meta( $meta_key, $meta_value, $args = [] ) {
+	$subscriptions = [];
 
-	$defaults = array(
+	$defaults = [
 		'post_type'      => 'pronamic_pay_subscr',
 		'post_status'    => 'any',
 		'posts_per_page' => -1,
 		'no_found_rows'  => true,
-		'meta_query'     => array(),
-	);
+		'meta_query'     => [],
+	];
 
 	$args = wp_parse_args( $args, $defaults );
 
 	// Add meta query for given meta key and value.
 	if ( ! is_array( $args['meta_query'] ) ) {
-		$args['meta_query'] = array();
+		$args['meta_query'] = [];
 	}
 
-	$args['meta_query'][] = array(
+	$args['meta_query'][] = [
 		'key'   => $meta_key,
 		'value' => $meta_value,
-	);
+	];
 
 	$query = new WP_Query( $args );
 
@@ -266,7 +266,7 @@ function get_pronamic_subscriptions_by_user_id( $user_id = null ) {
 		$user_id = \get_current_user_id();
 	}
 
-	return get_pronamic_subscriptions_by_meta( null, null, array( 'author' => $user_id ) );
+	return get_pronamic_subscriptions_by_meta( null, null, [ 'author' => $user_id ] );
 }
 
 /**
@@ -278,27 +278,27 @@ function get_pronamic_subscriptions_by_user_id( $user_id = null ) {
  */
 function get_pronamic_subscriptions_by_source( $source, $source_id = null ) {
 	// Meta query.
-	$meta_query = array(
-		array(
+	$meta_query = [
+		[
 			'key'   => '_pronamic_subscription_source',
 			'value' => $source,
-		),
-	);
+		],
+	];
 
 	// Add source ID meta query condition.
 	if ( ! empty( $source_id ) ) {
-		$meta_query[] = array(
+		$meta_query[] = [
 			'key'   => '_pronamic_subscription_source_id',
 			'value' => $source_id,
-		);
+		];
 	}
 
 	// Return.
-	$args = array(
+	$args = [
 		'meta_query' => $meta_query,
 		'order'      => 'DESC',
 		'orderby'    => 'ID',
-	);
+	];
 
 	return get_pronamic_subscriptions_by_meta( null, null, $args );
 }
@@ -315,9 +315,9 @@ function bind_providers_and_gateways() {
 		$provider = $integration->provider;
 
 		if ( ! isset( $pronamic_pay_providers[ $provider ] ) ) {
-			$pronamic_pay_providers[ $provider ] = array(
-				'integrations' => array(),
-			);
+			$pronamic_pay_providers[ $provider ] = [
+				'integrations' => [],
+			];
 		}
 
 		$pronamic_pay_providers[ $provider ]['integrations'][] = $integration;

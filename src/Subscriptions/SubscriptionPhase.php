@@ -511,8 +511,8 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return object
 	 */
 	public function jsonSerialize() {
-		return (object) array(
-			'subscription'      => (object) array(
+		return (object) [
+			'subscription'      => (object) [
 				'$ref' => \rest_url(
 					\sprintf(
 						'/%s/%s/%d',
@@ -521,7 +521,7 @@ class SubscriptionPhase implements \JsonSerializable {
 						$this->subscription->get_id()
 					)
 				),
-			),
+			],
 			'sequence_number'   => $this->get_sequence_number(),
 			'start_date'        => $this->start_date->format( \DATE_ATOM ),
 			'end_date'          => ( null === $this->end_date ) ? null : $this->end_date->format( \DATE_ATOM ),
@@ -541,7 +541,7 @@ class SubscriptionPhase implements \JsonSerializable {
 			// Readonly.
 			'is_infinite'       => $this->is_infinite(),
 			'is_canceled'       => $this->is_canceled(),
-		);
+		];
 	}
 
 	/**

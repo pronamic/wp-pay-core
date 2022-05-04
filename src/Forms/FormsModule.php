@@ -23,66 +23,29 @@ use Pronamic\WordPress\Pay\Plugin;
  */
 class FormsModule {
 	/**
-	 * Plugin.
-	 *
-	 * @var Plugin
-	 */
-	private $plugin;
-
-	/**
-	 * Form post type.
-	 *
-	 * @var FormPostType
-	 */
-	private $form_post_type;
-
-	/**
-	 * Form processor.
-	 *
-	 * @var FormProcessor
-	 */
-	private $processor;
-
-	/**
-	 * Form scripts.
-	 *
-	 * @var FormScripts
-	 */
-	private $scripts;
-
-	/**
-	 * Form shortcode.
-	 *
-	 * @var FormShortcode
-	 */
-	private $shortcode;
-
-	/**
 	 * Construct and initialize a forms module object.
 	 *
 	 * @param Plugin $plugin Plugin.
 	 */
 	public function __construct( $plugin ) {
-		$this->plugin = $plugin;
-
 		// Form Post Type.
-		$this->form_post_type = new FormPostType( $plugin );
+		new FormPostType();
 
 		// Processor.
-		$this->processor = new FormProcessor( $plugin );
+		new FormProcessor();
 
 		// Scripts.
-		$this->scripts = new FormScripts( $plugin );
+		new FormScripts( $plugin );
 
 		// Shortcode.
-		$this->shortcode = new FormShortcode( $this );
+		new FormShortcode( $this );
 
 		// Actions.
-		add_filter( 'the_content', array( $this, 'maybe_add_form_to_content' ) );
+		add_filter( 'the_content', [ $this, 'maybe_add_form_to_content' ] );
 
-		add_filter( 'pronamic_payment_source_url_' . FormsSource::PAYMENT_FORM, array( $this, 'source_url' ), 10, 2 );
-		add_filter( 'pronamic_payment_source_text_' . FormsSource::PAYMENT_FORM, array( $this, 'source_text' ), 10, 2 );
-		add_filter( 'pronamic_payment_source_description_' . FormsSource::PAYMENT_FORM, array( $this, 'source_description' ), 10, 2 );
+		add_filter( 'pronamic_payment_source_url_' . FormsSource::PAYMENT_FORM, [ $this, 'source_url' ], 10, 2 );
+		add_filter( 'pronamic_payment_source_text_' . FormsSource::PAYMENT_FORM, [ $this, 'source_text' ], 10, 2 );
+		add_filter( 'pronamic_payment_source_description_' . FormsSource::PAYMENT_FORM, [ $this, 'source_description' ], 10, 2 );
 	}
 
 	/**
@@ -115,7 +78,7 @@ class FormsModule {
 	 */
 	public function get_form_output_by_id( $id ) {
 		$choices = \get_post_meta( $id, '_pronamic_payment_form_amount_choices', true );
-		$amounts = array();
+		$amounts = [];
 
 		if ( \is_array( $choices ) ) {
 			foreach ( $choices as $value ) {
@@ -123,7 +86,7 @@ class FormsModule {
 			}
 		}
 
-		$args = array(
+		$args = [
 			'amount_method' => get_post_meta( $id, '_pronamic_payment_form_amount_method', true ),
 			'amounts'       => $amounts,
 			'config_id'     => get_post_meta( $id, '_pronamic_payment_form_config_id', true ),
@@ -131,7 +94,7 @@ class FormsModule {
 			'source'        => FormsSource::PAYMENT_FORM,
 			'source_id'     => $id,
 			'title'         => ( is_singular( 'pronamic_pay_form' ) ? null : get_the_title( $id ) ),
-		);
+		];
 
 		// Button text.
 		$button_text = get_post_meta( $id, '_pronamic_payment_form_button_text', true );
@@ -158,9 +121,9 @@ class FormsModule {
 		}
 
 		// Form settings.
-		$defaults = array(
+		$defaults = [
 			'amount_method' => FormPostType::AMOUNT_METHOD_INPUT_FIXED,
-			'amounts'       => array( 0 ),
+			'amounts'       => [ 0 ],
 			'button_text'   => __( 'Pay Now', 'pronamic_ideal' ),
 			'config_id'     => get_option( 'pronamic_pay_config_id' ),
 			'form_id'       => null,
@@ -168,7 +131,7 @@ class FormsModule {
 			'source'        => null,
 			'source_id'     => null,
 			'title'         => null,
-		);
+		];
 
 		$settings = wp_parse_args( $args, $defaults );
 

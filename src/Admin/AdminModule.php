@@ -103,13 +103,6 @@ class AdminModule {
 	public $install;
 
 	/**
-	 * Webhook manager.
-	 *
-	 * @var WebhookManager
-	 */
-	private $webhook_manager;
-
-	/**
 	 * Construct and initialize an admin object.
 	 *
 	 * @param Plugin $plugin Plugin.
@@ -120,21 +113,21 @@ class AdminModule {
 		$this->install = new Install( $plugin, $this );
 
 		// Actions.
-		add_action( 'admin_init', array( $this, 'admin_init' ) );
-		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+		add_action( 'admin_init', [ $this, 'admin_init' ] );
+		add_action( 'admin_menu', [ $this, 'admin_menu' ] );
 
-		add_action( 'load-post.php', array( $this, 'maybe_test_payment' ) );
+		add_action( 'load-post.php', [ $this, 'maybe_test_payment' ] );
 
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 
-		add_filter( 'parent_file', array( $this, 'admin_menu_parent_file' ) );
+		add_filter( 'parent_file', [ $this, 'admin_menu_parent_file' ] );
 
 		// Modules.
 		$this->settings  = new AdminSettings( $plugin );
-		$this->dashboard = new AdminDashboard( $plugin );
+		$this->dashboard = new AdminDashboard();
 		$this->health    = new AdminHealth( $plugin );
-		$this->notices   = new AdminNotices( $plugin );
-		$this->reports   = new AdminReports( $plugin, $this );
+		$this->notices   = new AdminNotices();
+		$this->reports   = new AdminReports( $plugin );
 		$this->tour      = new AdminTour( $plugin );
 
 		// About page.
@@ -145,7 +138,7 @@ class AdminModule {
 		}
 
 		// Webhook Manager.
-		$this->webhook_manager = new WebhookManager( $plugin, $this );
+		new WebhookManager();
 	}
 
 	/**
@@ -156,14 +149,14 @@ class AdminModule {
 	public function admin_init() {
 		global $pronamic_ideal_errors;
 
-		$pronamic_ideal_errors = array();
+		$pronamic_ideal_errors = [];
 
 		// Maybe.
 		$this->maybe_create_pages();
 		$this->maybe_redirect();
 
 		// Post types.
-		new AdminGatewayPostType( $this->plugin, $this );
+		new AdminGatewayPostType( $this->plugin );
 		new AdminPaymentPostType( $this->plugin );
 		new AdminSubscriptionPostType( $this->plugin );
 
@@ -233,11 +226,11 @@ class AdminModule {
 	 * @return void
 	 */
 	public static function input_checkbox( $args ) {
-		$defaults = array(
+		$defaults = [
 			'label_for' => '',
 			'type'      => 'text',
 			'label'     => '',
-		);
+		];
 
 		$args = wp_parse_args( $args, $defaults );
 
@@ -291,12 +284,12 @@ class AdminModule {
 	 * @return string|null
 	 */
 	public static function dropdown_configs( $args ) {
-		$defaults = array(
+		$defaults = [
 			'name'           => 'pronamic_pay_config_id',
 			'echo'           => true,
 			'selected'       => false,
 			'payment_method' => null,
-		);
+		];
 
 		$args = wp_parse_args( $args, $defaults );
 
@@ -335,16 +328,16 @@ class AdminModule {
 		if ( $args['echo'] ) {
 			echo wp_kses(
 				$output,
-				array(
-					'select' => array(
-						'id'   => array(),
-						'name' => array(),
-					),
-					'option' => array(
-						'value'    => array(),
-						'selected' => array(),
-					),
-				)
+				[
+					'select' => [
+						'id'   => [],
+						'name' => [],
+					],
+					'option' => [
+						'value'    => [],
+						'selected' => [],
+					],
+				]
 			);
 
 			return null;
@@ -363,14 +356,14 @@ class AdminModule {
 	 */
 	private function create_pages( $pages, $parent = null ) {
 		foreach ( $pages as $page ) {
-			$post = array(
+			$post = [
 				'post_title'     => $page['post_title'],
 				'post_name'      => $page['post_title'],
 				'post_content'   => $page['post_content'],
 				'post_status'    => 'publish',
 				'post_type'      => 'page',
 				'comment_status' => 'closed',
-			);
+			];
 
 			if ( isset( $parent ) ) {
 				$post['post_parent'] = $parent;
@@ -412,103 +405,103 @@ class AdminModule {
 			return;
 		}
 
-		$pages = array(
-			array(
+		$pages = [
+			[
 				'post_title'   => __( 'Payment Status', 'pronamic_ideal' ),
 				'post_name'    => __( 'payment', 'pronamic_ideal' ),
 				'post_content' => '',
-				'post_meta'    => array(
+				'post_meta'    => [
 					'_yoast_wpseo_meta-robots-noindex' => true,
-				),
-				'children'     => array(
-					'completed' => array(
+				],
+				'children'     => [
+					'completed' => [
 						'post_title'   => __( 'Payment completed', 'pronamic_ideal' ),
 						'post_name'    => __( 'completed', 'pronamic_ideal' ),
 						'post_content' => sprintf(
 							'<p>%s</p>',
 							__( 'The payment has been successfully completed.', 'pronamic_ideal' )
 						),
-						'post_meta'    => array(
+						'post_meta'    => [
 							'_yoast_wpseo_meta-robots-noindex' => true,
-						),
+						],
 						'option_name'  => 'pronamic_pay_completed_page_id',
-					),
-					'cancel'    => array(
+					],
+					'cancel'    => [
 						'post_title'   => __( 'Payment cancelled', 'pronamic_ideal' ),
 						'post_name'    => __( 'cancelled', 'pronamic_ideal' ),
 						'post_content' => sprintf(
 							'<p>%s</p>',
 							__( 'You have cancelled the payment.', 'pronamic_ideal' )
 						),
-						'post_meta'    => array(
+						'post_meta'    => [
 							'_yoast_wpseo_meta-robots-noindex' => true,
-						),
+						],
 						'option_name'  => 'pronamic_pay_cancel_page_id',
-					),
-					'expired'   => array(
+					],
+					'expired'   => [
 						'post_title'   => __( 'Payment expired', 'pronamic_ideal' ),
 						'post_name'    => __( 'expired', 'pronamic_ideal' ),
 						'post_content' => sprintf(
 							'<p>%s</p>',
 							__( 'Your payment session has expired.', 'pronamic_ideal' )
 						),
-						'post_meta'    => array(
+						'post_meta'    => [
 							'_yoast_wpseo_meta-robots-noindex' => true,
-						),
+						],
 						'option_name'  => 'pronamic_pay_expired_page_id',
-					),
-					'error'     => array(
+					],
+					'error'     => [
 						'post_title'   => __( 'Payment error', 'pronamic_ideal' ),
 						'post_name'    => __( 'error', 'pronamic_ideal' ),
 						'post_content' => sprintf(
 							'<p>%s</p>',
 							__( 'An error has occurred during payment.', 'pronamic_ideal' )
 						),
-						'post_meta'    => array(
+						'post_meta'    => [
 							'_yoast_wpseo_meta-robots-noindex' => true,
-						),
+						],
 						'option_name'  => 'pronamic_pay_error_page_id',
-					),
-					'unknown'   => array(
+					],
+					'unknown'   => [
 						'post_title'   => __( 'Payment status unknown', 'pronamic_ideal' ),
 						'post_name'    => __( 'unknown', 'pronamic_ideal' ),
 						'post_content' => sprintf(
 							'<p>%s</p>',
 							__( 'The payment status is unknown.', 'pronamic_ideal' )
 						),
-						'post_meta'    => array(
+						'post_meta'    => [
 							'_yoast_wpseo_meta-robots-noindex' => true,
-						),
+						],
 						'option_name'  => 'pronamic_pay_unknown_page_id',
-					),
-				),
-			),
-			array(
+					],
+				],
+			],
+			[
 				'post_title'   => __( 'Subscription Canceled', 'pronamic_ideal' ),
 				'post_name'    => __( 'subscription', 'pronamic_ideal' ),
 				'post_content' => sprintf(
 					'<p>%s</p>',
 					__( 'The subscription has been canceled.', 'pronamic_ideal' )
 				),
-				'post_meta'    => array(
+				'post_meta'    => [
 					'_yoast_wpseo_meta-robots-noindex' => true,
-				),
+				],
 				'option_name'  => 'pronamic_pay_subscription_canceled_page_id',
-			),
-		);
+			],
+		];
 
-		$url_args = array(
+		$url_args = [
 			'page'    => 'pronamic_pay_settings',
 			'message' => 'pages-generated',
-		);
+		];
 
 		try {
 			$this->create_pages( $pages );
 		} catch ( \Exception $e ) {
-			$url_args = array(
+			$url_args = [
 				'page'    => 'pronamic_pay_settings',
 				'message' => 'pages-not-generated',
-			);
+			];
 		}
 
 		$url = add_query_arg(
@@ -561,13 +554,13 @@ class AdminModule {
 		// CHeck if current screen post type is related to Pronamic Pay.
 		if ( in_array(
 			$screen->post_type,
-			array(
+			[
 				'pronamic_gateway',
 				'pronamic_payment',
 				'pronamic_pay_form',
 				'pronamic_pay_gf',
 				'pronamic_pay_subscr',
-			),
+			],
 			true
 		) ) {
 			return true;
@@ -594,7 +587,7 @@ class AdminModule {
 		wp_register_script(
 			'tippy.js',
 			plugins_url( '../../assets/tippy.js/tippy.all' . $min . '.js', __FILE__ ),
-			array(),
+			[],
 			'3.4.1',
 			true
 		);
@@ -603,21 +596,21 @@ class AdminModule {
 		wp_register_style(
 			'pronamic-pay-icons',
 			plugins_url( '../../fonts/dist/pronamic-pay-icons.css', __FILE__ ),
-			array(),
+			[],
 			$this->plugin->get_version()
 		);
 
 		wp_register_style(
 			'pronamic-pay-admin',
 			plugins_url( '../../css/admin' . $min . '.css', __FILE__ ),
-			array( 'pronamic-pay-icons' ),
+			[ 'pronamic-pay-icons' ],
 			$this->plugin->get_version()
 		);
 
 		wp_register_script(
 			'pronamic-pay-admin',
 			plugins_url( '../../js/dist/admin' . $min . '.js', __FILE__ ),
-			array( 'jquery', 'tippy.js' ),
+			[ 'jquery', 'tippy.js' ],
 			$this->plugin->get_version(),
 			true
 		);
@@ -701,31 +694,31 @@ class AdminModule {
 
 		// Name.
 		$name = ContactNameHelper::from_array(
-			array(
+			[
 				'first_name' => $user->first_name,
 				'last_name'  => $user->last_name,
-			)
+			]
 		);
 
 		// Customer.
 		$customer = CustomerHelper::from_array(
-			array(
+			[
 				'name'    => $name,
 				'email'   => $user->user_email,
 				'phone'   => $phone,
 				'user_id' => $user->ID,
-			)
+			]
 		);
 
 		$payment->set_customer( $customer );
 
 		// Billing address.
 		$address = AddressHelper::from_array(
-			array(
+			[
 				'name'  => $name,
 				'email' => $user->user_email,
 				'phone' => $phone,
-			)
+			]
 		);
 
 		$payment->set_billing_address( $address );
@@ -920,13 +913,13 @@ class AdminModule {
 
 		$subscriptions_on_hold_count = \property_exists( $counts, 'subscr_on_hold' ) ? $counts->subscr_on_hold : 0;
 
-		$badges = array(
-			'pay'           => array(
-				'title' => array(),
+		$badges = [
+			'pay'           => [
+				'title' => [],
 				'count' => 0,
 				'html'  => '',
-			),
-			'payments'      => array(
+			],
+			'payments'      => [
 				'title' => \sprintf(
 					/* translators: %d: payments pending count */
 					\_n( '%d payment pending', '%d payments pending', $payments_pending_count, 'pronamic_ideal' ),
@@ -934,8 +927,8 @@ class AdminModule {
 				),
 				'count' => $payments_pending_count,
 				'html'  => '',
-			),
-			'subscriptions' => array(
+			],
+			'subscriptions' => [
 				'title' => \sprintf(
 					/* translators: %d: subscriptions on hold count */
 					\_n( '%d subscription on hold', '%d subscriptions on hold', $subscriptions_on_hold_count, 'pronamic_ideal' ),
@@ -943,8 +936,8 @@ class AdminModule {
 				),
 				'count' => $subscriptions_on_hold_count,
 				'html'  => '',
-			),
-		);
+			],
+		];
 
 		foreach ( $badges as &$badge ) {
 			$count = $badge['count'];
@@ -972,20 +965,20 @@ class AdminModule {
 		/**
 		 * Submenu pages.
 		 */
-		$submenu_pages = array(
-			array(
+		$submenu_pages = [
+			[
 				'page_title' => __( 'Payments', 'pronamic_ideal' ),
 				'menu_title' => __( 'Payments', 'pronamic_ideal' ) . $badges['payments']['html'],
 				'capability' => 'edit_payments',
 				'menu_slug'  => 'edit.php?post_type=pronamic_payment',
-			),
-			array(
+			],
+			[
 				'page_title' => __( 'Subscriptions', 'pronamic_ideal' ),
 				'menu_title' => __( 'Subscriptions', 'pronamic_ideal' ) . $badges['subscriptions']['html'],
 				'capability' => 'edit_payments',
 				'menu_slug'  => 'edit.php?post_type=pronamic_pay_subscr',
-			),
-			array(
+			],
+			[
 				'page_title' => __( 'Reports', 'pronamic_ideal' ),
 				'menu_title' => __( 'Reports', 'pronamic_ideal' ),
 				'capability' => 'edit_payments',
@@ -993,20 +986,20 @@ class AdminModule {
 				'function'   => function() {
 					$this->reports->page_reports();
 				},
-			),
-			array(
+			],
+			[
 				'page_title' => __( 'Payment Forms', 'pronamic_ideal' ),
 				'menu_title' => __( 'Forms', 'pronamic_ideal' ),
 				'capability' => 'edit_forms',
 				'menu_slug'  => 'edit.php?post_type=pronamic_pay_form',
-			),
-			array(
+			],
+			[
 				'page_title' => __( 'Configurations', 'pronamic_ideal' ),
 				'menu_title' => __( 'Configurations', 'pronamic_ideal' ),
 				'capability' => 'manage_options',
 				'menu_slug'  => 'edit.php?post_type=pronamic_gateway',
-			),
-			array(
+			],
+			[
 				'page_title' => __( 'Settings', 'pronamic_ideal' ),
 				'menu_title' => __( 'Settings', 'pronamic_ideal' ),
 				'capability' => 'manage_options',
@@ -1014,11 +1007,11 @@ class AdminModule {
 				'function'   => function() {
 					$this->render_page( 'settings' );
 				},
-			),
-		);
+			],
+		];
 
 		if ( version_compare( get_bloginfo( 'version' ), '5.2', '<' ) ) {
-			$submenu_pages[] = array(
+			$submenu_pages[] = [
 				'page_title' => __( 'Tools', 'pronamic_ideal' ),
 				'menu_title' => __( 'Tools', 'pronamic_ideal' ),
 				'capability' => 'manage_options',
@@ -1026,7 +1019,7 @@ class AdminModule {
 				'function'   => function() {
 					$this->render_page( 'tools' );
 				},
-			);
+			];
 		}
 
 		$minimum_capability = $this->get_minimum_capability( $submenu_pages );

@@ -10,11 +10,11 @@
 
 use Pronamic\WordPress\Pay\Plugin;
 
-$nav_tabs = array(
+$nav_tabs = [
 	'system_status' => __( 'System Status', 'pronamic_ideal' ),
 	'gateways'      => __( 'Payment Gateways', 'pronamic_ideal' ),
 	'extensions'    => __( 'Extensions', 'pronamic_ideal' ),
-);
+];
 
 $current_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
 $current_tab = empty( $current_tab ) ? key( $nav_tabs ) : $current_tab;
@@ -26,17 +26,17 @@ $current_tab = empty( $current_tab ) ? key( $nav_tabs ) : $current_tab;
 		<?php
 
 		foreach ( $nav_tabs as $tab_id => $tab_title ) {
-			$classes = array( 'nav-tab' );
+			$classes = [ 'nav-tab' ];
 
 			if ( $current_tab === $tab_id ) {
 				$classes[] = 'nav-tab-active';
 			}
 
 			$url = add_query_arg(
-				array(
+				[
 					'page' => 'pronamic_pay_tools',
 					'tab'  => $tab_id,
-				),
+				],
 				admin_url( 'admin.php' )
 			);
 

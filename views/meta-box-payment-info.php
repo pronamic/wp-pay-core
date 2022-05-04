@@ -352,10 +352,10 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 
 				echo wp_kses(
 					wpautop( $bank_transfer_recipient ),
-					array(
-						'p'  => array(),
-						'br' => array(),
-					)
+					[
+						'p'  => [],
+						'br' => [],
+					]
 				);
 
 				?>
@@ -483,9 +483,9 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 
 									echo \wp_kses(
 										\nl2br( (string) $vat_number_validity->get_address() ),
-										array(
-											'br' => array(),
-										)
+										[
+											'br' => [],
+										]
 									);
 
 									?>
@@ -729,48 +729,6 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 
 	<?php endif; ?>
 
-	<?php if ( 's2member' === $payment->get_source() ) : ?>
-
-		<tr>
-			<th scope="row">
-				<?php esc_html_e( 'Period', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php echo esc_html( (string) $payment->get_meta( 's2member_period' ) ); ?>
-			</td>
-		</tr>
-		<tr>
-			<th scope="row">
-				<?php esc_html_e( 'Level', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php echo esc_html( (string) $payment->get_meta( 's2member_level' ) ); ?>
-			</td>
-		</tr>
-
-	<?php endif; ?>
-
-	<?php if ( 'wp-e-commerce' === $payment->get_source() ) : ?>
-
-		<tr>
-			<th scope="row">
-				<?php esc_html_e( 'Purchase ID', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php echo esc_html( (string) $payment->get_meta( 'wpsc_purchase_id' ) ); ?>
-			</td>
-		</tr>
-		<tr>
-			<th scope="row">
-				<?php esc_html_e( 'Session ID', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php echo esc_html( (string) $payment->get_meta( 'wpsc_session_id' ) ); ?>
-			</td>
-		</tr>
-
-	<?php endif; ?>
-
 	<?php if ( 'membership' === $payment->get_source() ) : ?>
 
 		<tr>
@@ -798,7 +756,7 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 
 	?>
 
-	<?php if ( ! empty( $ogone_alias ) ) : ?>
+	<?php if ( ! empty( $ogone_alias ) && \is_string( $ogone_alias ) ) : ?>
 
 		<tr>
 			<th scope="row">

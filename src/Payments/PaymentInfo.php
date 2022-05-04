@@ -78,13 +78,6 @@ abstract class PaymentInfo {
 	public $config_id;
 
 	/**
-	 * Gateway.
-	 *
-	 * @var Gateway|null
-	 */
-	private $gateway;
-
-	/**
 	 * The key of this payment info, used in URL's for security.
 	 *
 	 * @var string|null
@@ -206,7 +199,7 @@ abstract class PaymentInfo {
 	public function __construct( $post_id = null ) {
 		$this->id   = $post_id;
 		$this->date = new DateTime();
-		$this->meta = array();
+		$this->meta = [];
 
 		$this->touch();
 	}
@@ -300,16 +293,6 @@ abstract class PaymentInfo {
 		}
 
 		return \pronamic_pay_plugin()->gateways_data_store->get_gateway( $config_id );
-	}
-
-	/**
-	 * Set gateway.
-	 *
-	 * @param Gateway|null $gateway Gateway.
-	 * @return void
-	 */
-	public function set_gateway( $gateway ) {
-		$this->gateway = $gateway;
 	}
 
 	/**

@@ -33,8 +33,8 @@ class PaymentPostType {
 		 *
 		 * @link https://github.com/WordPress/WordPress/blob/4.0/wp-includes/post.php#L167
 		 */
-		add_action( 'init', array( $this, 'register_payment_post_type' ), 0 ); // Highest priority.
-		add_action( 'init', array( $this, 'register_post_status' ), 9 );
+		add_action( 'init', [ $this, 'register_payment_post_type' ], 0 ); // Highest priority.
+		add_action( 'init', [ $this, 'register_post_status' ], 9 );
 	}
 
 	/**
@@ -46,9 +46,9 @@ class PaymentPostType {
 	public function register_payment_post_type() {
 		register_post_type(
 			'pronamic_payment',
-			array(
+			[
 				'label'              => __( 'Payments', 'pronamic_ideal' ),
-				'labels'             => array(
+				'labels'             => [
 					'name'                     => __( 'Payments', 'pronamic_ideal' ),
 					'singular_name'            => __( 'Payment', 'pronamic_ideal' ),
 					'add_new'                  => __( 'Add New', 'pronamic_ideal' ),
@@ -74,7 +74,7 @@ class PaymentPostType {
 					'item_reverted_to_draft'   => __( 'Payment reverted to draft.', 'pronamic_ideal' ),
 					'item_scheduled'           => __( 'Payment scheduled.', 'pronamic_ideal' ),
 					'item_updated'             => __( 'Payment updated.', 'pronamic_ideal' ),
-				),
+				],
 				'public'             => false,
 				'publicly_queryable' => false,
 				'show_ui'            => true,
@@ -83,12 +83,14 @@ class PaymentPostType {
 				'show_in_admin_bar'  => false,
 				'show_in_rest'       => true,
 				'rest_base'          => 'pronamic-payments',
-				'supports'           => false,
+				'supports'           => [
+					'pronamic_pay_payment',
+				],
 				'rewrite'            => false,
 				'query_var'          => false,
 				'capabilities'       => self::get_capabilities(),
 				'map_meta_cap'       => true,
-			)
+			]
 		);
 	}
 
@@ -98,7 +100,7 @@ class PaymentPostType {
 	 * @return array
 	 */
 	public static function get_payment_states() {
-		return array(
+		return [
 			'payment_pending'   => _x( 'Pending', 'Payment status', 'pronamic_ideal' ),
 			'payment_reserved'  => _x( 'Reserved', 'Payment status', 'pronamic_ideal' ),
 			'payment_on_hold'   => _x( 'On Hold', 'Payment status', 'pronamic_ideal' ),
@@ -107,7 +109,7 @@ class PaymentPostType {
 			'payment_refunded'  => _x( 'Refunded', 'Payment status', 'pronamic_ideal' ),
 			'payment_failed'    => _x( 'Failed', 'Payment status', 'pronamic_ideal' ),
 			'payment_expired'   => _x( 'Expired', 'Payment status', 'pronamic_ideal' ),
-		);
+		];
 	}
 
 	/**
@@ -121,7 +123,7 @@ class PaymentPostType {
 		 */
 		register_post_status(
 			'payment_pending',
-			array(
+			[
 				'label'                     => _x( 'Pending', 'Payment status', 'pronamic_ideal' ),
 				'public'                    => false,
 				'exclude_from_search'       => false,
@@ -129,12 +131,12 @@ class PaymentPostType {
 				'show_in_admin_status_list' => true,
 				/* translators: %s: count value */
 				'label_count'               => _n_noop( 'Pending <span class="count">(%s)</span>', 'Pending <span class="count">(%s)</span>', 'pronamic_ideal' ),
-			)
+			]
 		);
 
 		register_post_status(
 			'payment_reserved',
-			array(
+			[
 				'label'                     => _x( 'Reserved', 'Payment status', 'pronamic_ideal' ),
 				'public'                    => false,
 				'exclude_from_search'       => false,
@@ -142,12 +144,12 @@ class PaymentPostType {
 				'show_in_admin_status_list' => true,
 				/* translators: %s: count value */
 				'label_count'               => _n_noop( 'Reserved <span class="count">(%s)</span>', 'Reserved <span class="count">(%s)</span>', 'pronamic_ideal' ),
-			)
+			]
 		);
 
 		register_post_status(
 			'payment_on_hold',
-			array(
+			[
 				'label'                     => _x( 'On Hold', 'Payment status', 'pronamic_ideal' ),
 				'public'                    => false,
 				'exclude_from_search'       => false,
@@ -155,12 +157,12 @@ class PaymentPostType {
 				'show_in_admin_status_list' => true,
 				/* translators: %s: count value */
 				'label_count'               => _n_noop( 'On Hold <span class="count">(%s)</span>', 'On Hold <span class="count">(%s)</span>', 'pronamic_ideal' ),
-			)
+			]
 		);
 
 		register_post_status(
 			'payment_completed',
-			array(
+			[
 				'label'                     => _x( 'Completed', 'Payment status', 'pronamic_ideal' ),
 				'public'                    => false,
 				'exclude_from_search'       => false,
@@ -168,12 +170,12 @@ class PaymentPostType {
 				'show_in_admin_status_list' => true,
 				/* translators: %s: count value */
 				'label_count'               => _n_noop( 'Completed <span class="count">(%s)</span>', 'Completed <span class="count">(%s)</span>', 'pronamic_ideal' ),
-			)
+			]
 		);
 
 		register_post_status(
 			'payment_cancelled',
-			array(
+			[
 				'label'                     => _x( 'Cancelled', 'Payment status', 'pronamic_ideal' ),
 				'public'                    => false,
 				'exclude_from_search'       => false,
@@ -181,12 +183,12 @@ class PaymentPostType {
 				'show_in_admin_status_list' => true,
 				/* translators: %s: count value */
 				'label_count'               => _n_noop( 'Cancelled <span class="count">(%s)</span>', 'Cancelled <span class="count">(%s)</span>', 'pronamic_ideal' ),
-			)
+			]
 		);
 
 		register_post_status(
 			'payment_refunded',
-			array(
+			[
 				'label'                     => _x( 'Refunded', 'Payment status', 'pronamic_ideal' ),
 				'public'                    => false,
 				'exclude_from_search'       => false,
@@ -194,12 +196,12 @@ class PaymentPostType {
 				'show_in_admin_status_list' => true,
 				/* translators: %s: count value */
 				'label_count'               => _n_noop( 'Refunded <span class="count">(%s)</span>', 'Refunded <span class="count">(%s)</span>', 'pronamic_ideal' ),
-			)
+			]
 		);
 
 		register_post_status(
 			'payment_failed',
-			array(
+			[
 				'label'                     => _x( 'Failed', 'Payment status', 'pronamic_ideal' ),
 				'public'                    => false,
 				'exclude_from_search'       => false,
@@ -207,12 +209,12 @@ class PaymentPostType {
 				'show_in_admin_status_list' => true,
 				/* translators: %s: count value */
 				'label_count'               => _n_noop( 'Failed <span class="count">(%s)</span>', 'Failed <span class="count">(%s)</span>', 'pronamic_ideal' ),
-			)
+			]
 		);
 
 		register_post_status(
 			'payment_expired',
-			array(
+			[
 				'label'                     => _x( 'Expired', 'Payment status', 'pronamic_ideal' ),
 				'public'                    => false,
 				'exclude_from_search'       => false,
@@ -220,7 +222,7 @@ class PaymentPostType {
 				'show_in_admin_status_list' => true,
 				/* translators: %s: count value */
 				'label_count'               => _n_noop( 'Expired <span class="count">(%s)</span>', 'Expired <span class="count">(%s)</span>', 'pronamic_ideal' ),
-			)
+			]
 		);
 	}
 
@@ -230,7 +232,7 @@ class PaymentPostType {
 	 * @return array
 	 */
 	public static function get_capabilities() {
-		return array(
+		return [
 			'edit_post'              => 'edit_payment',
 			'read_post'              => 'read_payment',
 			'delete_post'            => 'delete_payment',
@@ -246,6 +248,6 @@ class PaymentPostType {
 			'edit_private_posts'     => 'edit_private_payments',
 			'edit_published_posts'   => 'edit_published_payments',
 			'create_posts'           => 'create_payments',
-		);
+		];
 	}
 }

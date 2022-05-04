@@ -33,7 +33,7 @@ class FormShortcode {
 	public function __construct( $forms_module ) {
 		$this->forms_module = $forms_module;
 
-		add_shortcode( 'pronamic_payment_form', array( $this, 'shortcode_form' ) );
+		add_shortcode( 'pronamic_payment_form', [ $this, 'shortcode_form' ] );
 	}
 
 	/**
@@ -50,9 +50,9 @@ class FormShortcode {
 	 */
 	public function shortcode_form( $atts ) {
 		$atts = shortcode_atts(
-			array(
+			[
 				'id' => null,
-			),
+			],
 			$atts,
 			'pronamic_payment_form'
 		);

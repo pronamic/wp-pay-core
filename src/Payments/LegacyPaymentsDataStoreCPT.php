@@ -45,11 +45,11 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			return null;
 		}
 
-		$data = array(
+		$data = [
 			'full_name'  => $this->get_meta_string( $id, 'customer_name' ),
 			'first_name' => $this->get_meta_string( $id, 'first_name' ),
 			'last_name'  => $this->get_meta_string( $id, 'last_name' ),
-		);
+		];
 
 		$data = array_filter( $data );
 		$data = array_map( 'trim', $data );
@@ -90,7 +90,7 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			return;
 		}
 
-		$data = array(
+		$data = [
 			'full_name'  => $this->get_meta_string( $id, 'customer_name' ),
 			'first_name' => $this->get_meta_string( $id, 'first_name' ),
 			'last_name'  => $this->get_meta_string( $id, 'last_name' ),
@@ -100,7 +100,7 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			'user_agent' => $this->get_meta_string( $id, 'user_agent' ),
 			'language'   => $this->get_meta_string( $id, 'language' ),
 			'locale'     => $this->get_meta_string( $id, 'locale' ),
-		);
+		];
 
 		$data = array_filter( $data );
 		$data = array_map( 'trim', $data );
@@ -168,14 +168,14 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			return;
 		}
 
-		$data = array(
+		$data = [
 			'line_1'      => $this->get_meta_string( $id, 'address' ),
 			'postal_code' => $this->get_meta_string( $id, 'zip' ),
 			'city'        => $this->get_meta_string( $id, 'city' ),
 			'country'     => $this->get_meta_string( $id, 'country' ),
 			'email'       => $this->get_meta_string( $id, 'email' ),
 			'phone'       => $this->get_meta_string( $id, 'telephone_number' ),
-		);
+		];
 
 		$data = array_filter( $data );
 		$data = array_map( 'trim', $data );
@@ -239,13 +239,13 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 			return;
 		}
 
-		$data = array(
+		$data = [
 			'consumer_name'           => $this->get_meta_string( $id, 'consumer_name' ),
 			'consumer_account_number' => $this->get_meta_string( $id, 'consumer_account_number' ),
 			'consumer_iban'           => $this->get_meta_string( $id, 'consumer_iban' ),
 			'consumer_bic'            => $this->get_meta_string( $id, 'consumer_bic' ),
 			'consumer_city'           => $this->get_meta_string( $id, 'consumer_city' ),
-		);
+		];
 
 		$data = array_filter( $data );
 		$data = array_map( 'trim', $data );

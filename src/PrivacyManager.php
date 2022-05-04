@@ -23,23 +23,23 @@ class PrivacyManager {
 	 *
 	 * @var array
 	 */
-	private $exporters = array();
+	private $exporters = [];
 
 	/**
 	 * Erasers.
 	 *
 	 * @var array
 	 */
-	private $erasers = array();
+	private $erasers = [];
 
 	/**
 	 * Privacy manager constructor.
 	 */
 	public function __construct() {
 		// Filters.
-		add_filter( 'wp_privacy_personal_data_exporters', array( $this, 'register_exporters' ), 10 );
-		add_filter( 'wp_privacy_personal_data_erasers', array( $this, 'register_erasers' ), 10 );
-		add_filter( 'wp_privacy_anonymize_data', array( $this, 'anonymize_custom_data_types' ), 10, 3 );
+		add_filter( 'wp_privacy_personal_data_exporters', [ $this, 'register_exporters' ], 10 );
+		add_filter( 'wp_privacy_personal_data_erasers', [ $this, 'register_erasers' ], 10 );
+		add_filter( 'wp_privacy_anonymize_data', [ $this, 'anonymize_custom_data_types' ], 10, 3 );
 	}
 
 	/**
@@ -99,10 +99,10 @@ class PrivacyManager {
 	public function add_exporter( $id, $name, $callback ) {
 		$id = 'pronamic-pay-' . $id;
 
-		$this->exporters[ $id ] = array(
+		$this->exporters[ $id ] = [
 			'exporter_friendly_name' => $name,
 			'callback'               => $callback,
-		);
+		];
 	}
 
 	/**
@@ -116,10 +116,10 @@ class PrivacyManager {
 	public function add_eraser( $id, $name, $callback ) {
 		$id = 'pronamic-pay-' . $id;
 
-		$this->erasers[ $id ] = array(
+		$this->erasers[ $id ] = [
 			'eraser_friendly_name' => $name,
 			'callback'             => $callback,
-		);
+		];
 	}
 
 	/**
@@ -149,10 +149,10 @@ class PrivacyManager {
 		}
 
 		// Return export data.
-		return array(
+		return [
 			'name'  => $label,
 			'value' => $meta_value,
-		);
+		];
 	}
 
 	/**
@@ -212,7 +212,7 @@ class PrivacyManager {
 		// Domain part.
 		$domain_parts = explode( '.', $parts[1] );
 
-		$domain = array();
+		$domain = [];
 
 		foreach ( $domain_parts as $part ) {
 			if ( strlen( $part ) <= 2 ) {

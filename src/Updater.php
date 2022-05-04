@@ -43,7 +43,7 @@ class Updater {
 	private function __construct( $plugins_filter_callback ) {
 		$this->plugins_filter_callback = $plugins_filter_callback;
 
-		\add_filter( 'http_response', array( $this, 'http_response' ), 10, 3 );
+		\add_filter( 'http_response', [ $this, 'http_response' ], 10, 3 );
 	}
 
 	/**
@@ -93,7 +93,7 @@ class Updater {
 		}
 
 		if ( ! array_key_exists( $type, $data ) ) {
-			$data[ $type ] = array();
+			$data[ $type ] = [];
 		}
 
 		if ( \is_array( $pronamic_data[ $type ] ) ) {
@@ -114,11 +114,11 @@ class Updater {
 	 * @return array|WP_Error
 	 */
 	private function remote_post( $url, $args, $parsed_args ) {
-		$keys = array(
+		$keys = [
 			'timeout',
 			'user-agent',
 			'headers',
-		);
+		];
 
 		foreach ( $keys as $key ) {
 			if ( \array_key_exists( $key, $parsed_args ) ) {
@@ -144,11 +144,11 @@ class Updater {
 
 		$raw_response = $this->remote_post(
 			'https://api.pronamic.eu/plugins/update-check/1.2/',
-			array(
-				'body' => array(
+			[
+				'body' => [
 					'plugins' => \wp_json_encode( $plugins ),
-				),
-			),
+				],
+			],
 			$parsed_args
 		);
 
@@ -174,7 +174,7 @@ class Updater {
 	 */
 	private function get_plugins() {
 		if ( ! function_exists( '\get_plugins' ) ) {
-			return array();
+			return [];
 		}
 
 		$plugins = \get_plugins();

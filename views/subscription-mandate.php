@@ -40,7 +40,7 @@ $client = new \Pronamic\WordPress\Pay\Gateways\Mollie\Client( $api_key );
  *
  * @link https://docs.mollie.com/reference/v2/mandates-api/list-mandates
  */
-$mollie_customer_mandates = array();
+$mollie_customer_mandates = [];
 
 try {
 	$response = $client->get_mandates( $mollie_customer_id );
@@ -65,7 +65,7 @@ try {
 $subscription_mandate_id = $subscription->get_meta( 'mollie_mandate_id' );
 
 // Set current subscription mandate as first item.
-$current_mandate = wp_list_filter( $mollie_customer_mandates, array( 'id' => $subscription_mandate_id ) );
+$current_mandate = wp_list_filter( $mollie_customer_mandates, [ 'id' => $subscription_mandate_id ] );
 
 if ( is_array( $current_mandate ) ) {
 	unset( $mollie_customer_mandates[ key( $current_mandate ) ] );
@@ -116,7 +116,7 @@ if ( is_array( $current_mandate ) ) {
 											continue;
 										}
 
-										$card_name      = null;
+										$card_name      = '';
 										$account_number = null;
 										$account_label  = null;
 										$bic_or_brand   = null;
@@ -148,7 +148,7 @@ if ( is_array( $current_mandate ) ) {
 
 										$card_title = '';
 
-										$classes = array( 'pp-card' );
+										$classes = [ 'pp-card' ];
 
 										$bg_color = 'purple';
 

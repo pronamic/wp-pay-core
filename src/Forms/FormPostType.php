@@ -59,20 +59,9 @@ class FormPostType {
 	const AMOUNT_METHOD_CHOICES_AND_INPUT = 'choices_and_input';
 
 	/**
-	 * Plugin.
-	 *
-	 * @var Plugin
+	 * Construct form post type object.
 	 */
-	private $plugin;
-
-	/**
-	 * Constructs and initializes an admin form post type object.
-	 *
-	 * @param Plugin $plugin Plugin.
-	 */
-	public function __construct( $plugin ) {
-		$this->plugin = $plugin;
-
+	public function __construct() {
 		/**
 		 * Priority of the initial post types function should be set to < 10.
 		 *
@@ -81,21 +70,21 @@ class FormPostType {
 		 *
 		 * @link https://github.com/WordPress/WordPress/blob/4.0/wp-includes/post.php#L167.
 		 */
-		add_action( 'init', array( $this, 'register_post_type' ), 0 ); // Highest priority.
+		add_action( 'init', [ $this, 'register_post_type' ], 0 ); // Highest priority.
 
-		add_filter( 'manage_edit-' . self::POST_TYPE . '_columns', array( $this, 'edit_columns' ) );
+		add_filter( 'manage_edit-' . self::POST_TYPE . '_columns', [ $this, 'edit_columns' ] );
 
-		add_action( 'manage_' . self::POST_TYPE . '_posts_custom_column', array( $this, 'custom_columns' ), 10, 2 );
+		add_action( 'manage_' . self::POST_TYPE . '_posts_custom_column', [ $this, 'custom_columns' ], 10, 2 );
 
 		/*
 		 * Add meta box, we use priority 9 to make sure it loads before Yoast SEO meta box.
 		 * @link https://github.com/Yoast/wordpress-seo/blob/2.3.4/admin/class-metabox.php#L20.
 		 */
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 9 );
+		add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ], 9 );
 
-		add_action( 'save_post_' . self::POST_TYPE, array( $this, 'save_post' ) );
+		add_action( 'save_post_' . self::POST_TYPE, [ $this, 'save_post' ] );
 
-		add_action( 'post_submitbox_misc_actions', array( $this, 'post_submitbox_misc_actions' ) );
+		add_action( 'post_submitbox_misc_actions', [ $this, 'post_submitbox_misc_actions' ] );
 	}
 
 	/**
@@ -106,9 +95,9 @@ class FormPostType {
 	public function register_post_type() {
 		register_post_type(
 			self::POST_TYPE,
-			array(
+			[
 				'label'              => __( 'Payment Forms', 'pronamic_ideal' ),
-				'labels'             => array(
+				'labels'             => [
 					'name'                     => __( 'Payment Forms', 'pronamic_ideal' ),
 					'singular_name'            => __( 'Payment Form', 'pronamic_ideal' ),
 					'add_new'                  => __( 'Add New', 'pronamic_ideal' ),
@@ -134,24 +123,24 @@ class FormPostType {
 					'item_reverted_to_draft'   => __( 'Payment form reverted to draft.', 'pronamic_ideal' ),
 					'item_scheduled'           => __( 'Payment form scheduled.', 'pronamic_ideal' ),
 					'item_updated'             => __( 'Payment form updated.', 'pronamic_ideal' ),
-				),
+				],
 				'public'             => true,
 				'publicly_queryable' => true,
 				'show_ui'            => true,
 				'show_in_nav_menus'  => true,
 				'show_in_menu'       => false,
 				'show_in_admin_bar'  => false,
-				'supports'           => array(
+				'supports'           => [
 					'title',
 					'revisions',
-				),
-				'rewrite'            => array(
+				],
+				'rewrite'            => [
 					'slug' => _x( 'payment-forms', 'slug', 'pronamic_ideal' ),
-				),
+				],
 				'query_var'          => false,
 				'capabilities'       => self::get_capabilities(),
 				'map_meta_cap'       => true,
-			)
+			]
 		);
 	}
 
@@ -162,7 +151,7 @@ class FormPostType {
 	 * @return array
 	 */
 	public function edit_columns( $columns ) {
-		$columns = array(
+		$columns = [
 			'cb'                              => '<input type="checkbox" />',
 			'title'                           => __( 'Title', 'pronamic_ideal' ),
 			'pronamic_payment_form_gateway'   => __( 'Gateway', 'pronamic_ideal' ),
@@ -170,7 +159,7 @@ class FormPostType {
 			'pronamic_payment_form_earnings'  => __( 'Earnings', 'pronamic_ideal' ),
 			'pronamic_payment_form_shortcode' => __( 'Shortcode', 'pronamic_ideal' ),
 			'date'                            => __( 'Date', 'pronamic_ideal' ),
-		);
+		];
 
 		return $columns;
 	}
@@ -298,7 +287,7 @@ class FormPostType {
 			add_meta_box(
 				'pronamic_payment_form_options',
 				__( 'Form Options', 'pronamic_ideal' ),
-				array( $this, 'meta_box_form_options' ),
+				[ $this, 'meta_box_form_options' ],
 				$post_type,
 				'normal',
 				'high'
@@ -342,16 +331,16 @@ class FormPostType {
 		}
 
 		// OK, its safe for us to save the data now.
-		$definition = array(
+		$definition = [
 			// General.
 			'_pronamic_payment_form_config_id'      => FILTER_SANITIZE_NUMBER_INT,
 			'_pronamic_payment_form_button_text'    => FILTER_SANITIZE_STRING,
 			'_pronamic_payment_form_description'    => FILTER_SANITIZE_STRING,
 			'_pronamic_payment_form_amount_method'  => FILTER_SANITIZE_STRING,
-			'_pronamic_payment_form_amount_choices' => array(
+			'_pronamic_payment_form_amount_choices' => [
 				'flags' => FILTER_REQUIRE_ARRAY,
-			),
-		);
+			],
+		];
 
 		$data = \filter_input_array( INPUT_POST, $definition );
 
@@ -425,7 +414,7 @@ class FormPostType {
 	 * @return array
 	 */
 	public static function get_capabilities() {
-		return array(
+		return [
 			'edit_post'              => 'edit_form',
 			'read_post'              => 'read_form',
 			'delete_post'            => 'delete_form',
@@ -441,6 +430,6 @@ class FormPostType {
 			'edit_private_posts'     => 'edit_private_forms',
 			'edit_published_posts'   => 'edit_published_forms',
 			'create_posts'           => 'create_forms',
-		);
+		];
 	}
 }

@@ -21,26 +21,15 @@ use Pronamic\WordPress\Pay\Plugin;
  */
 class AdminDashboard {
 	/**
-	 * Plugin.
-	 *
-	 * @var Plugin
-	 */
-	private $plugin;
-
-	/**
-	 * Constructs and initializes admin dashboard object.
+	 * Construct admin dashboard.
 	 *
 	 * @link https://github.com/WordImpress/Give/blob/1.1/includes/admin/dashboard-widgets.php
 	 * @link https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin.php
 	 * @link https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin-dashboard.php
-	 *
-	 * @param Plugin $plugin Plugin.
 	 */
-	public function __construct( Plugin $plugin ) {
-		$this->plugin = $plugin;
-
+	public function __construct() {
 		// Actions.
-		add_action( 'wp_dashboard_setup', array( $this, 'setup' ) );
+		add_action( 'wp_dashboard_setup', [ $this, 'setup' ] );
 	}
 
 	/**
@@ -73,7 +62,7 @@ class AdminDashboard {
 		wp_add_dashboard_widget(
 			'pronamic_pay_dashboard_status',
 			__( 'Pronamic Pay Status', 'pronamic_ideal' ),
-			array( $this, 'status_widget' )
+			[ $this, 'status_widget' ]
 		);
 	}
 

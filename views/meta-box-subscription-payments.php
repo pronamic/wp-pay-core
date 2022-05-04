@@ -7,18 +7,13 @@
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  * @var \Pronamic\WordPress\Pay\Plugin $plugin Plugin.
+ * @var \Pronamic\WordPress\Pay\Subscriptions\Subscription $subscription Subscription.
  */
 
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
 
-if ( ! isset( $periods ) ) {
-	return;
-}
-
-if ( ! isset( $subscription ) ) {
-	return;
-}
+$periods = $subscription->get_payments_by_period();
 
 ?>
 
@@ -54,7 +49,7 @@ if ( ! isset( $subscription ) ) {
 
 			$gateway = Plugin::get_gateway( $subscription->get_config_id() );
 
-			$allow_next_period_statuses = array( SubscriptionStatus::OPEN, SubscriptionStatus::ACTIVE, SubscriptionStatus::FAILURE );
+			$allow_next_period_statuses = [ SubscriptionStatus::OPEN, SubscriptionStatus::ACTIVE, SubscriptionStatus::FAILURE ];
 
 			if ( null !== $next_period && \in_array( $subscription->get_status(), $allow_next_period_statuses, true ) && null !== $gateway && $gateway->supports( 'recurring' ) ) :
 
@@ -69,20 +64,20 @@ if ( ! isset( $subscription ) ) {
 						$create_next_payment_url = \wp_nonce_url(
 							\add_query_arg(
 								\urlencode_deep(
-									array(
+									[
 										'period_payment'  => true,
 										'subscription_id' => $subscription->get_id(),
 										'sequence_number' => $next_period->get_phase()->get_sequence_number(),
 										'start_date'      => $next_period->get_start_date()->format( DATE_ATOM ),
 										'end_date'        => $next_period->get_end_date()->format( DATE_ATOM ),
-									)
+									]
 								),
 								\get_edit_post_link( $subscription->get_id() )
 							),
 							'pronamic_period_payment_' . $subscription->get_id()
 						);
 
-						if ( in_array( $subscription->get_source(), array( 'woocommerce' ), true ) && null !== $next_payment_date ) :
+						if ( in_array( $subscription->get_source(), [ 'woocommerce' ], true ) && null !== $next_payment_date ) :
 
 							echo wp_kses_post(
 								sprintf(
@@ -181,13 +176,13 @@ if ( ! isset( $subscription ) ) {
 								$action_url = \wp_nonce_url(
 									\add_query_arg(
 										\urlencode_deep(
-											array(
+											[
 												'period_payment' => true,
 												'subscription_id' => $subscription->get_id(),
 												'sequence_number' => $period->get_phase()->get_sequence_number(),
 												'start_date' => $period->get_start_date()->format( DATE_ATOM ),
 												'end_date' => $period->get_end_date()->format( DATE_ATOM ),
-											)
+											]
 										),
 										\get_edit_post_link( $subscription->get_id() )
 									),

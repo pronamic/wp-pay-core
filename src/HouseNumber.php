@@ -114,11 +114,11 @@ class HouseNumber {
 	 * @return object|null
 	 */
 	public function get_json() {
-		$data = array(
+		$data = [
 			'value'    => $this->value,
 			'base'     => $this->base,
 			'addition' => $this->addition,
-		);
+		];
 
 		$data = array_filter( $data );
 

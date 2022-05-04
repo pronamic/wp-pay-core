@@ -10,6 +10,10 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
+use ArrayIterator;
+use Countable;
+use IteratorAggregate;
+use Traversable;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
 
@@ -21,7 +25,7 @@ use Pronamic\WordPress\Money\TaxedMoney;
  * @since      2.1.0
  * @implements \IteratorAggregate<int, PaymentLine>
  */
-class PaymentLines implements \Countable, \IteratorAggregate {
+class PaymentLines implements Countable, IteratorAggregate {
 	/**
 	 * The lines.
 	 *
@@ -33,16 +37,16 @@ class PaymentLines implements \Countable, \IteratorAggregate {
 	 * Constructs and initialize a payment lines object.
 	 */
 	public function __construct() {
-		$this->lines = array();
+		$this->lines = [];
 	}
 
 	/**
 	 * Get iterator.
 	 *
-	 * @return \ArrayIterator<int, PaymentLine>
+	 * @return ArrayIterator<int, PaymentLine>
 	 */
-	public function getIterator() {
-		return new \ArrayIterator( $this->lines );
+	public function getIterator() : Traversable {
+		return new ArrayIterator( $this->lines );
 	}
 
 	/**
@@ -82,7 +86,7 @@ class PaymentLines implements \Countable, \IteratorAggregate {
 	 *
 	 * @return int
 	 */
-	public function count() {
+	public function count() : int {
 		return count( $this->lines );
 	}
 

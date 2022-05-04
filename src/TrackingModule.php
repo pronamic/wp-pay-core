@@ -46,20 +46,20 @@ class TrackingModule {
 	 */
 	private function build_parameters() {
 		// General parameters.
-		$params = array(
+		$params = [
 			'locale' => \get_locale(),
 			'php'    => \str_replace( PHP_EXTRA_VERSION, '', \strval( \phpversion() ) ),
-		);
+		];
 
 		// Add extensions parameters.
 		$plugins = \get_plugins();
 
 		$extensions = \array_merge(
-			array(
+			[
 				'pronamic-ideal',
 				'contact-form-7',
 				'wpforms',
-			),
+			],
 			$this->get_supported_extensions()
 		);
 
@@ -86,7 +86,7 @@ class TrackingModule {
 	 * @return array
 	 */
 	public function get_supported_extensions() {
-		$extensions = array();
+		$extensions = [];
 
 		$extensions_json_path = \dirname( \pronamic_pay_plugin()->get_file() ) . '/other/extensions.json';
 

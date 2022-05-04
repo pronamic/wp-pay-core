@@ -174,11 +174,11 @@ class VatNumberValidity {
 	 * @return object|null
 	 */
 	public function get_json() {
-		$data = array(
+		$data = [
 			'vat_number'   => $this->vat_number->get_value(),
 			'request_date' => $this->request_date->format( 'Y-m-d' ),
 			'valid'        => $this->valid,
-		);
+		];
 
 		if ( null !== $this->name ) {
 			$data['name'] = $this->name;
@@ -190,10 +190,6 @@ class VatNumberValidity {
 
 		if ( null !== $this->service ) {
 			$data['service'] = $this->service;
-		}
-
-		if ( empty( $data ) ) {
-			return null;
 		}
 
 		return (object) $data;

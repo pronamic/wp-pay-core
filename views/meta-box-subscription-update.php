@@ -59,11 +59,11 @@ $subscription = \get_pronamic_subscription( (int) get_the_ID() );
 					<select id="pronamic-pay-post-status" name="pronamic_subscription_post_status">
 						<?php
 
-						$states_options = array(
+						$states_options = [
 							'subscr_active',
 							'subscr_cancelled',
 							'subscr_on_hold',
-						);
+						];
 
 						foreach ( $states as $subscription_status => $label ) {
 							if ( ! in_array( $subscription_status, $states_options, true ) && $subscription_status !== $post->post_status ) {
@@ -85,7 +85,7 @@ $subscription = \get_pronamic_subscription( (int) get_the_ID() );
 					<a href="#pronamic-pay-post-status" class="cancel-pronamic-pay-post-status hide-if-no-js button-cancel"><?php _e( 'Cancel' ); ?></a>
 				</div>
 
-				<?php if ( null !== $subscription && in_array( $subscription->get_status(), array( SubscriptionStatus::FAILURE, SubscriptionStatus::ON_HOLD ), true ) ) : ?>
+				<?php if ( null !== $subscription && in_array( $subscription->get_status(), [ SubscriptionStatus::FAILURE, SubscriptionStatus::ON_HOLD ], true ) ) : ?>
 
 					<div id="pronamic-pay-post-status-notice" class="notice inline">
 						<p>
@@ -138,13 +138,13 @@ $subscription = \get_pronamic_subscription( (int) get_the_ID() );
 
 					<?php
 
-					$atts = array(
+					$atts = [
 						'id'       => 'pronamic-pay-next-payment-date',
 						'name'     => 'pronamic_subscription_next_payment_date',
 						'type'     => 'date',
 						'value'    => null === $next_payment_date ? '' : $next_payment_date->format( 'Y-m-d' ),
 						'data-min' => ( new DateTimeImmutable( 'tomorrow' ) )->format( 'Y-m-d' ),
-					);
+					];
 
 					\printf(
 						'<input %s>',
@@ -184,7 +184,7 @@ $subscription = \get_pronamic_subscription( (int) get_the_ID() );
 							\esc_html( \__( 'Editing the next payment date does not affect the current status or validity of %s.', 'pronamic_ideal' ) ),
 							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							\str_replace(
-								array( '<br>', '<br/>', '<br />' ),
+								[ '<br>', '<br/>', '<br />' ],
 								' ',
 								$subscription->get_source_text()
 							)
