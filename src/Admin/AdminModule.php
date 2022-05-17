@@ -635,13 +635,21 @@ class AdminModule {
 		}
 
 		// Amount.
-		$string = \filter_input( INPUT_POST, 'test_amount', \FILTER_SANITIZE_STRING );
+		$currency_code = 'EUR';
+
+		if ( \array_key_exists( 'test_currency_code', $_POST ) ) {
+			$currency_code = \sanitize_text_field( \wp_unslash( $_POST['test_currency_code'] ) );
+		}
+
+		$value = \filter_input( INPUT_POST, 'test_amount', \FILTER_SANITIZE_STRING );
 
 		try {
-			$amount = Number::from_string( $string );
+			$amount = Number::from_string( $value );
 		} catch ( \Exception $e ) {
 			\wp_die( \esc_html( $e->getMessage() ) );
 		}
+
+		$price = new Money( $amount, $currency_code );
 
 		/*
 		 * Payment.
@@ -727,8 +735,6 @@ class AdminModule {
 		$payment->lines = new PaymentLines();
 
 		$line = $payment->lines->new_line();
-
-		$price = new Money( $amount, 'EUR' );
 
 		$line->set_name( __( 'Test', 'pronamic_ideal' ) );
 		$line->set_unit_price( $price );
