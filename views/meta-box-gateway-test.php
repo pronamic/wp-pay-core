@@ -10,6 +10,7 @@
  */
 
 use Pronamic\WordPress\Money\Currency;
+use Pronamic\WordPress\Money\Currencies;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Plugin;
 
@@ -67,7 +68,7 @@ try {
 	<?php
 }
 
-$currency = Currency::get_instance( 'EUR' );
+$currency_default = Currency::get_instance( 'EUR' );
 
 ?>
 <table class="form-table">
@@ -118,7 +119,28 @@ $currency = Currency::get_instance( 'EUR' );
 			<?php esc_html_e( 'Amount', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
-			<label for="test_amount"><?php echo \esc_html( (string) $currency->get_symbol() ); ?></label>
+			<select name="test_currency_code">
+				<?php
+
+				foreach ( Currencies::get_currencies() as $currency ) {
+					$label = $currency->get_alphabetic_code();
+
+					$symbol = $currency->get_symbol();
+
+					if ( null !== $symbol ) {
+						$label = sprintf( '%s (%s)', $label, $symbol );
+					}
+
+					printf(
+						'<option value="%s" %s>%s</option>',
+						esc_attr( $currency->get_alphabetic_code() ),
+						selected( $currency->get_alphabetic_code(), $currency_default->get_alphabetic_code(), false ),
+						esc_html( $label )
+					);
+				}
+
+				?>
+			</select>
 
 			<input name="test_amount" id="test_amount" class="regular-text code pronamic-pay-form-control" value="" type="number" step="any" size="6" autocomplete="off" />
 		</td>
