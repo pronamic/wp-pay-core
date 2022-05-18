@@ -248,6 +248,10 @@ $sections = array_filter(
 								$classes[] = 'readonly';
 							}
 
+							if ( isset( $field['required'] ) && $field['required'] ) {
+								$attributes['required'] = 'required';
+							}
+
 							if ( isset( $field['size'] ) ) {
 								$attributes['size'] = $field['size'];
 							}
