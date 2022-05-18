@@ -652,7 +652,7 @@ class PaymentMethods {
 				$payment_methods = $gateway->get_transient_available_payment_methods( false );
 			} catch ( \Exception $e ) {
 				// Do not update active payment methods on error.
-				return;
+				continue;
 			}
 
 			if ( null === $payment_methods ) {
