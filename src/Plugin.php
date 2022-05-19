@@ -1053,6 +1053,13 @@ class Plugin {
 		$gateway = $payment->get_gateway();
 
 		if ( null === $gateway ) {
+			$payment->add_note(
+				\sprintf(
+					__( 'Payment failed because gateway configuration with ID `%d` does not exist.' ),
+					$config_id
+				)
+			);
+
 			$payment->set_status( PaymentStatus::FAILURE );
 
 			$payment->save();
