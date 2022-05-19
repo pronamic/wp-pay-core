@@ -270,12 +270,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$customer = $payment->get_customer();
 
 		$result = wp_insert_post(
-			/**
-			 * PHPStan doesn't like our custom `pronamic_payment` argument.
-			 *
-			 * @todo Eliminate use of custom `pronamic_payment` argument.
-			 * @phpstan-ignore-next-line
-			 */
 			[
 				'post_type'        => 'pronamic_payment',
 				'post_date_gmt'    => $this->get_mysql_utc_date( $payment->date ),

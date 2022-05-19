@@ -325,6 +325,12 @@ class Payment extends PaymentInfo {
 		 * @link https://github.com/polylang/polylang/blob/2.6.8/include/api.php#L97-L111
 		 */
 		if ( \function_exists( '\pll_home_url' ) ) {
+			/**
+			 * PHPStan is unable to find the function `pll_home_url()`,
+			 * as the Polylang plugin is not in our dependencies.
+			 *
+			 * @phpstan-ignore-next-line
+			 */
 			$home_url = \pll_home_url();
 		}
 

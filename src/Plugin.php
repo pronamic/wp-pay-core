@@ -1055,6 +1055,7 @@ class Plugin {
 		if ( null === $gateway ) {
 			$payment->add_note(
 				\sprintf(
+					/* translators: %d: Gateway configuration ID */
 					__( 'Payment failed because gateway configuration with ID `%d` does not exist.' ),
 					$config_id
 				)
