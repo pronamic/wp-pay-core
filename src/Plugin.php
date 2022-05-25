@@ -235,6 +235,13 @@ class Plugin {
 	public $plugin_integrations;
 
 	/**
+	 * Pronamic API URL.
+	 * 
+	 * @var string|null
+	 */
+	private static $pronamic_api_url;
+
+	/**
 	 * Construct and initialize an Pronamic Pay plugin object.
 	 *
 	 * @param string|array|object $args The plugin arguments.
@@ -301,24 +308,7 @@ class Plugin {
 		 * Pronamic API URL.
 		 */
 		if ( \array_key_exists( 'pronamic_api_url', $args ) ) {
-			$url = $args['pronamic_api_url'];
-
-			\add_action(
-				'pronamic_pay_start_payment',
-				function( $payment ) use ( $url ) {
-					Http::post( $url, [
-						'blocking' => false,
-						'body'     => [
-							'payment' => \wp_json_encode( $payment->get_json() ),
-							'query'   => \wp_unslash( $_GET ),
-							'body'    => \wp_unslash( $_POST ),
-							'server'  => \wp_unslash( $_SERVER ),
-						]
-					] );
-				},
-				10,
-				2
-			);
+			self::$pronamic_api_url = $args['pronamic_api_url'];
 		}
 
 		/**
@@ -1105,7 +1095,7 @@ class Plugin {
 
 		// Start payment at the gateway.
 		try {
-			\do_action( 'pronamic_pay_start_payment', $payment );
+			self::risk_analyse( $payment );
 
 			$gateway->start( $payment );
 		} catch ( \Exception $exception ) {
@@ -1133,6 +1123,44 @@ class Plugin {
 		}
 
 		return $payment;
+	}
+
+	/**
+	 * Risk analyse.
+	 * 
+	 * @param Payment $payment Payment.
+	 * @return void
+	 */
+	private static function risk_analyse( Payment $payment ) {
+		if ( null === self::$pronamic_api_url ) {
+			return;
+		}
+
+		try {
+			$response = Http::post( self::$pronamic_api_url, [
+				'body'     => [
+					'license' => \get_option( 'pronamic_pay_license_key' ),
+					'payment' => \wp_json_encode( $payment->get_json() ),
+					'query'   => \wp_unslash( $_GET ),
+					'body'    => \wp_unslash( $_POST ),
+					'server'  => \wp_unslash( $_SERVER ),
+				]
+			] );
+
+			$data = $response->json();
+
+			if ( ! is_object( $data ) ) {
+				return;
+			}
+
+			if ( ! property_exists( $data, 'risk_score' ) ) {
+				return;
+			}
+
+			$payment->set_meta( 'pronamic_pay_risk_score', $data->risk_score );
+		} catch ( Exception $e ) {
+			return;
+		}
 	}
 
 	/**
