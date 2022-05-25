@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use Pronamic\WordPress\Http\Facades\Http;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Admin\AdminModule;
 use Pronamic\WordPress\Pay\Banks\BankAccountDetails;
@@ -295,6 +296,30 @@ class Plugin {
 
 		// Default date time format.
 		add_filter( 'pronamic_datetime_default_format', [ $this, 'datetime_format' ], 10, 1 );
+
+		/**
+		 * Pronamic API URL.
+		 */
+		if ( \array_key_exists( 'pronamic_api_url', $args ) ) {
+			$url = $args['pronamic_api_url'];
+
+			\add_action(
+				'pronamic_pay_start_payment',
+				function( $payment ) use ( $url ) {
+					Http::post( $url, [
+						'blocking' => false,
+						'body'     => [
+							'payment' => \wp_json_encode( $payment->get_json() ),
+							'query'   => \wp_unslash( $_GET ),
+							'body'    => \wp_unslash( $_POST ),
+							'server'  => \wp_unslash( $_SERVER ),
+						]
+					] );
+				},
+				10,
+				2
+			);
+		}
 
 		/**
 		 * Action scheduler.
@@ -1072,6 +1097,8 @@ class Plugin {
 
 		// Start payment at the gateway.
 		try {
+			\do_action( 'pronamic_pay_start_payment', $payment );
+
 			$gateway->start( $payment );
 		} catch ( \Exception $exception ) {
 			$message = $exception->getMessage();

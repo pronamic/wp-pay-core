@@ -149,7 +149,7 @@ class PaymentInfoHelper {
 
 		if ( null !== $config_id ) {
 			$object->gateway = (object) [
-				'$ref'    => \rest_url(
+				'$ref'       => \rest_url(
 					\sprintf(
 						'/%s/%s/%d',
 						'pronamic-pay/v1',
@@ -157,7 +157,8 @@ class PaymentInfoHelper {
 						$config_id
 					)
 				),
-				'post_id' => $config_id,
+				'post_id'    => $config_id,
+				'gateway_id' => \get_post_meta( $config_id, '_pronamic_gateway_id', true ),
 			];
 		}
 
