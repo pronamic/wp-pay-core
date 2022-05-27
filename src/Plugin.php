@@ -16,12 +16,12 @@ use Pronamic\WordPress\Pay\Admin\AdminModule;
 use Pronamic\WordPress\Pay\Banks\BankAccountDetails;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
-use Pronamic\WordPress\Pay\Gateways\GatewaysDataStoreCPT;
-use Pronamic\WordPress\Pay\Payments\PaymentsDataStoreCPT;
-use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
+use Pronamic\WordPress\Pay\Gateways\GatewaysDataStoreCPT;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
+use Pronamic\WordPress\Pay\Payments\PaymentsDataStoreCPT;
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Payments\StatusChecker;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionsDataStoreCPT;
@@ -236,7 +236,7 @@ class Plugin {
 
 	/**
 	 * Pronamic API URL.
-	 * 
+	 *
 	 * @var string|null
 	 */
 	private static $pronamic_api_url;
@@ -1127,7 +1127,7 @@ class Plugin {
 
 	/**
 	 * Risk analyse.
-	 * 
+	 *
 	 * @param Payment $payment Payment.
 	 * @return void
 	 */
@@ -1137,15 +1137,18 @@ class Plugin {
 		}
 
 		try {
-			$response = Http::post( self::$pronamic_api_url, [
-				'body'     => [
-					'license' => \get_option( 'pronamic_pay_license_key' ),
-					'payment' => \wp_json_encode( $payment->get_json() ),
-					'query'   => \wp_unslash( $_GET ),
-					'body'    => \wp_unslash( $_POST ),
-					'server'  => \wp_unslash( $_SERVER ),
+			$response = Http::post(
+				self::$pronamic_api_url,
+				[
+					'body' => [
+						'license' => \get_option( 'pronamic_pay_license_key' ),
+						'payment' => \wp_json_encode( $payment->get_json() ),
+						'query'   => \wp_unslash( $_GET ),
+						'body'    => \wp_unslash( $_POST ),
+						'server'  => \wp_unslash( $_SERVER ),
+					],
 				]
-			] );
+			);
 
 			$data = $response->json();
 

@@ -83,11 +83,11 @@ $periods = $subscription->get_payments_by_period();
 								\add_query_arg(
 									\urlencode_deep(
 										[
-											'period_payment'  => true,
+											'period_payment' => true,
 											'subscription_id' => $subscription->get_id(),
 											'sequence_number' => $next_period->get_phase()->get_sequence_number(),
-											'start_date'      => $next_period->get_start_date()->format( DATE_ATOM ),
-											'end_date'        => $next_period->get_end_date()->format( DATE_ATOM ),
+											'start_date' => $next_period->get_start_date()->format( DATE_ATOM ),
+											'end_date'   => $next_period->get_end_date()->format( DATE_ATOM ),
 										]
 									),
 									\get_edit_post_link( $subscription_id )
