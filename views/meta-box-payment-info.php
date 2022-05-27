@@ -112,6 +112,25 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 
 	<?php endif; ?>
 
+	<?php
+
+	$charged_back_amount = $payment->get_charged_back_amount();
+
+	if ( null !== $charged_back_amount && $charged_back_amount->get_value() > 0 ) :
+
+		?>
+
+		<tr>
+			<th scope="row">
+				<?php esc_html_e( 'Charged Back Amount', 'pronamic_ideal' ); ?>
+			</th>
+			<td>
+				<?php echo esc_html( $charged_back_amount->format_i18n() ); ?>
+			</td>
+		</tr>
+
+	<?php endif; ?>
+
 	<tr>
 		<th scope="row">
 			<?php esc_html_e( 'Transaction ID', 'pronamic_ideal' ); ?>
