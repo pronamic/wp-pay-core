@@ -270,6 +270,13 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$customer = $payment->get_customer();
 
 		$result = wp_insert_post(
+			/**
+			 * The 'pronamic_payment' key is not an official argument for the
+			 * WordPress `wp_insert_post` function.
+			 *
+			 * @todo Simplify storing payments.
+			 * @phpstan-ignore-next-line
+			 */
 			[
 				'post_type'        => 'pronamic_payment',
 				'post_date_gmt'    => $this->get_mysql_utc_date( $payment->date ),

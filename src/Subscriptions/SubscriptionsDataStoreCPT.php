@@ -297,6 +297,13 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$customer = $subscription->get_customer();
 
 		$result = wp_insert_post(
+			/**
+			 * The 'pronamic_subscription' key is not an official argument for the
+			 * WordPress `wp_insert_post` function.
+			 *
+			 * @todo Simplify storing subscriptions.
+			 * @phpstan-ignore-next-line
+			 */
 			[
 				'post_type'             => 'pronamic_pay_subscr',
 				'post_date_gmt'         => $this->get_mysql_utc_date( $subscription->date ),
