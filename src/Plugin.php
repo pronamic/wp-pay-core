@@ -1176,7 +1176,7 @@ class Plugin {
 			if ( \property_exists( $data, 'risk_score' ) ) {
 				$payment->set_meta( 'pronamic_pay_risk_score', $data->risk_score );
 			}
-		} catch ( Exception $e ) {
+		} catch ( \Exception $e ) {
 			return;
 		}
 	}
