@@ -298,9 +298,10 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		$result = wp_insert_post(
 			/**
-			 * PHPStan doesn't like our custom `pronamic_subscription` argument.
+			 * The 'pronamic_subscription' key is not an official argument for the
+			 * WordPress `wp_insert_post` function.
 			 *
-			 * @todo Eliminate use of custom `pronamic_subscription` argument.
+			 * @todo Simplify storing subscriptions.
 			 * @phpstan-ignore-next-line
 			 */
 			[

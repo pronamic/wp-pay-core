@@ -10,17 +10,18 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use Pronamic\WordPress\Http\Facades\Http;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Admin\AdminModule;
 use Pronamic\WordPress\Pay\Banks\BankAccountDetails;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
-use Pronamic\WordPress\Pay\Gateways\GatewaysDataStoreCPT;
-use Pronamic\WordPress\Pay\Payments\PaymentsDataStoreCPT;
-use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
+use Pronamic\WordPress\Pay\Gateways\GatewaysDataStoreCPT;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
+use Pronamic\WordPress\Pay\Payments\PaymentsDataStoreCPT;
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Payments\StatusChecker;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionsDataStoreCPT;
@@ -234,6 +235,13 @@ class Plugin {
 	public $plugin_integrations;
 
 	/**
+	 * Pronamic service URL.
+	 *
+	 * @var string|null
+	 */
+	private static $pronamic_service_url;
+
+	/**
 	 * Construct and initialize an Pronamic Pay plugin object.
 	 *
 	 * @param string|array|object $args The plugin arguments.
@@ -295,6 +303,13 @@ class Plugin {
 
 		// Default date time format.
 		add_filter( 'pronamic_datetime_default_format', [ $this, 'datetime_format' ], 10, 1 );
+
+		/**
+		 * Pronamic service URL.
+		 */
+		if ( \array_key_exists( 'pronamic_service_url', $args ) ) {
+			self::$pronamic_service_url = $args['pronamic_service_url'];
+		}
 
 		/**
 		 * Action scheduler.
@@ -1053,6 +1068,14 @@ class Plugin {
 		$gateway = $payment->get_gateway();
 
 		if ( null === $gateway ) {
+			$payment->add_note(
+				\sprintf(
+					/* translators: %d: Gateway configuration ID */
+					__( 'Payment failed because gateway configuration with ID `%d` does not exist.' ),
+					$config_id
+				)
+			);
+
 			$payment->set_status( PaymentStatus::FAILURE );
 
 			$payment->save();
@@ -1072,6 +1095,8 @@ class Plugin {
 
 		// Start payment at the gateway.
 		try {
+			self::pronamic_service( $payment );
+
 			$gateway->start( $payment );
 		} catch ( \Exception $exception ) {
 			$message = $exception->getMessage();
@@ -1098,6 +1123,62 @@ class Plugin {
 		}
 
 		return $payment;
+	}
+
+	/**
+	 * The Pronamic Pay service forms an abstraction layer for the various supported
+	 * WordPress plugins and Payment Service Providers (PSP. Optionally, a risk analysis
+	 * can be performed before payment.
+	 *
+	 * @param Payment $payment Payment.
+	 * @return void
+	 */
+	private static function pronamic_service( Payment $payment ) {
+		if ( null === self::$pronamic_service_url ) {
+			return;
+		}
+
+		try {
+			$body = [
+				'license' => \get_option( 'pronamic_pay_license_key' ),
+				'payment' => \wp_json_encode( $payment->get_json() ),
+			];
+
+			$map = [
+				'query'  => 'GET',
+				'body'   => 'POST',
+				'server' => 'SERVER',
+			];
+
+			foreach ( $map as $parameter => $key ) {
+				$name = '_' . $key;
+
+				$map[ $parameter ] = $GLOBALS[ $name ];
+			}
+
+			$response = Http::post(
+				self::$pronamic_service_url,
+				[
+					'body' => $body,
+				]
+			);
+
+			$data = $response->json();
+
+			if ( ! \is_object( $data ) ) {
+				return;
+			}
+
+			if ( \property_exists( $data, 'id' ) ) {
+				$payment->set_meta( 'pronamic_pay_service_id', $data->id );
+			}
+
+			if ( \property_exists( $data, 'risk_score' ) ) {
+				$payment->set_meta( 'pronamic_pay_risk_score', $data->risk_score );
+			}
+		} catch ( \Exception $e ) {
+			return;
+		}
 	}
 
 	/**

@@ -13,6 +13,12 @@
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
 
+$subscription_id = $subscription->get_id();
+
+if ( null === $subscription_id ) {
+	return;
+}
+
 $periods = $subscription->get_payments_by_period();
 
 ?>
@@ -47,7 +53,7 @@ $periods = $subscription->get_payments_by_period();
 
 			$next_period = $subscription->get_next_period();
 
-			$gateway = Plugin::get_gateway( $subscription->get_config_id() );
+			$gateway = Plugin::get_gateway( (int) $subscription->get_config_id() );
 
 			$allow_next_period_statuses = [ SubscriptionStatus::OPEN, SubscriptionStatus::ACTIVE, SubscriptionStatus::FAILURE ];
 
@@ -61,22 +67,6 @@ $periods = $subscription->get_payments_by_period();
 					<td colspan="2">
 						<?php
 
-						$create_next_payment_url = \wp_nonce_url(
-							\add_query_arg(
-								\urlencode_deep(
-									[
-										'period_payment'  => true,
-										'subscription_id' => $subscription->get_id(),
-										'sequence_number' => $next_period->get_phase()->get_sequence_number(),
-										'start_date'      => $next_period->get_start_date()->format( DATE_ATOM ),
-										'end_date'        => $next_period->get_end_date()->format( DATE_ATOM ),
-									]
-								),
-								\get_edit_post_link( $subscription->get_id() )
-							),
-							'pronamic_period_payment_' . $subscription->get_id()
-						);
-
 						if ( in_array( $subscription->get_source(), [ 'woocommerce' ], true ) && null !== $next_payment_date ) :
 
 							echo wp_kses_post(
@@ -88,6 +78,22 @@ $periods = $subscription->get_payments_by_period();
 							);
 
 						elseif ( null !== $next_payment_delivery_date ) :
+
+							$create_next_payment_url = \wp_nonce_url(
+								\add_query_arg(
+									\urlencode_deep(
+										[
+											'period_payment' => true,
+											'subscription_id' => $subscription->get_id(),
+											'sequence_number' => $next_period->get_phase()->get_sequence_number(),
+											'start_date' => $next_period->get_start_date()->format( DATE_ATOM ),
+											'end_date'   => $next_period->get_end_date()->format( DATE_ATOM ),
+										]
+									),
+									\get_edit_post_link( $subscription_id )
+								),
+								'pronamic_period_payment_' . $subscription->get_id()
+							);
 
 							echo wp_kses_post(
 								sprintf(
@@ -184,7 +190,7 @@ $periods = $subscription->get_payments_by_period();
 												'end_date' => $period->get_end_date()->format( DATE_ATOM ),
 											]
 										),
-										\get_edit_post_link( $subscription->get_id() )
+										\get_edit_post_link( $subscription_id )
 									),
 									'pronamic_period_payment_' . $subscription->get_id()
 								);

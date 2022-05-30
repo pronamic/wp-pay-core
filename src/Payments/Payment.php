@@ -42,6 +42,13 @@ class Payment extends PaymentInfo {
 	private $refunded_amount;
 
 	/**
+	 * Charged back amount.
+	 *
+	 * @var Money|null
+	 */
+	private $charged_back_amount;
+
+	/**
 	 * The status of this payment.
 	 *
 	 * @var string|null
@@ -243,6 +250,25 @@ class Payment extends PaymentInfo {
 	 */
 	public function set_refunded_amount( $refunded_amount ) {
 		$this->refunded_amount = $refunded_amount;
+	}
+
+	/**
+	 * Get charged back amount.
+	 *
+	 * @return Money|null
+	 */
+	public function get_charged_back_amount(): ?Money {
+		return $this->charged_back_amount;
+	}
+
+	/**
+	 * Set charged back amount.
+	 *
+	 * @param Money|null $charged_back_amount Charged back amount.
+	 * @return void
+	 */
+	public function set_charged_back_amount( ?Money $charged_back_amount ) {
+		$this->charged_back_amount = $charged_back_amount;
 	}
 
 	/**
@@ -710,6 +736,10 @@ class Payment extends PaymentInfo {
 			$payment->set_refunded_amount( MoneyJsonTransformer::from_json( $json->refunded_amount ) );
 		}
 
+		if ( isset( $json->charged_back_amount ) ) {
+			$payment->set_charged_back_amount( MoneyJsonTransformer::from_json( $json->charged_back_amount ) );
+		}
+
 		if ( isset( $json->expiry_date ) ) {
 			$payment->set_expiry_date( new DateTime( $json->expiry_date ) );
 		}
@@ -790,6 +820,13 @@ class Payment extends PaymentInfo {
 
 		if ( null !== $refunded_amount ) {
 			$properties['refunded_amount'] = $refunded_amount->jsonSerialize();
+		}
+
+		// Charged back amount.
+		$charged_back_amount = $this->get_charged_back_amount();
+
+		if ( null !== $charged_back_amount ) {
+			$properties['charged_back_amount'] = $charged_back_amount->jsonSerialize();
 		}
 
 		// Subscriptions.

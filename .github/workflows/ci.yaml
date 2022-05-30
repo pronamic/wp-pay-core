@@ -12,9 +12,6 @@ jobs:
   phpstan:
     uses: pronamic/actions/.github/workflows/phpstan.yml@main
 
-  psalm:
-    uses: pronamic/actions/.github/workflows/psalm.yml@main
-
   phpunit:
     uses: pronamic/actions/.github/workflows/phpunit.yml@main
 

@@ -529,29 +529,48 @@ class AdminPaymentPostType {
 			case 'pronamic_payment_amount':
 				$total_amount = $payment->get_total_amount();
 
-				$refunded_value = null;
+				$remaining_amount = $total_amount;
+
+				$tip = [];
 
 				$refunded_amount = $payment->get_refunded_amount();
 
 				if ( null !== $refunded_amount ) {
-					$refunded_value = $refunded_amount->get_value();
+					$remaining_amount = $remaining_amount->subtract( $refunded_amount );
+
+					$tip[] = \sprintf(
+						/* translators: %s: formatted amount */
+						__( '%s refunded', 'pronamic_ideal' ),
+						$refunded_amount->format_i18n()
+					);
+				}
+
+				$charged_back_amount = $payment->get_charged_back_amount();
+
+				if ( null !== $charged_back_amount ) {
+					$remaining_amount = $remaining_amount->subtract( $charged_back_amount );
+
+					$tip[] = \sprintf(
+						/* translators: %s: formatted amount */
+						__( '%s charged back', 'pronamic_ideal' ),
+						$charged_back_amount->format_i18n()
+					);
 				}
 
 				// Check refunded amount.
-				if ( empty( $refunded_value ) ) {
+				if ( $total_amount->get_value() === $remaining_amount->get_value() ) {
 					echo esc_html( $total_amount->format_i18n() );
 
 					break;
 				}
 
-				// Show original amount and refunded amount.
-				if ( null !== $refunded_amount ) {
-					echo \sprintf(
-						'<del>%1$s</del> %2$s',
-						esc_html( $total_amount->format_i18n() ),
-						\esc_html( $total_amount->subtract( $refunded_amount )->format_i18n() )
-					);
-				}
+				// Show original amount and remaining amount.
+				echo \sprintf(
+					'<del class="pronamic-pay-tip" data-toggle="tooltip" data-placement="top" title="%3$s">%1$s</del> %2$s',
+					esc_html( $total_amount->format_i18n() ),
+					\esc_html( $remaining_amount->format_i18n() ),
+					\esc_html( implode( ', ', $tip ) )
+				);
 
 				break;
 			case 'pronamic_payment_date':

@@ -271,9 +271,10 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		$result = wp_insert_post(
 			/**
-			 * PHPStan doesn't like our custom `pronamic_payment` argument.
+			 * The 'pronamic_payment' key is not an official argument for the
+			 * WordPress `wp_insert_post` function.
 			 *
-			 * @todo Eliminate use of custom `pronamic_payment` argument.
+			 * @todo Simplify storing payments.
 			 * @phpstan-ignore-next-line
 			 */
 			[
