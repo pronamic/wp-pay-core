@@ -7,6 +7,20 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [4.2.0] - 2022-05-30
+### Added
+- Added support for other currencies in WordPress admin test meta box.
+- Added support for required field in payment gateway settings API.
+- Added payment charged back amount ([pronamic/wp-pronamic-pay#165](https://github.com/pronamic/wp-pronamic-pay/issues/165), [pronamic/wp-pronamic-pay#170](https://github.com/pronamic/wp-pronamic-pay/issues/170)).
+
+### Changed
+- Updated logos library to version `1.8.2`.
+- Add payment note on invalid gateway configuration ID ([#pronamic/wp-pronamic-pay#195](https://github.com/pronamic/wp-pronamic-pay/issues/195)).
+- Add gateway ID to payment gateway JSON for convenience.
+
+### Fixed
+- Continue processing other gateways on error when updating active payment methods.
+
 ## [4.1.3] - 2022-05-04
 ### Changed
 - Solved some PHPStan and Psalm errors.
@@ -487,7 +501,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.1.3...HEAD
+[unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.2.0...HEAD
+[4.2.0]: https://github.com/pronamic/wp-pay-core/compare/4.1.3...4.2.0
 [4.1.3]: https://github.com/pronamic/wp-pay-core/compare/4.1.2...4.1.3
 [4.1.2]: https://github.com/pronamic/wp-pay-core/compare/4.1.1...4.1.2
 [4.1.1]: https://github.com/pronamic/wp-pay-core/compare/4.1.0...4.1.1
