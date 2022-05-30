@@ -11,11 +11,11 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ### Added
 - Added support for other currencies in WordPress admin test meta box.
 - Added support for required field in payment gateway settings API.
-- Added payment charged back amount ([pronamic/wp-pronamic-pay#165](https://github.com/pronamic/wp-pronamic-pay/issues/165), [pronamic/wp-pronamic-pay#170](https://github.com/pronamic/wp-pronamic-pay/issues/170)).
+- Added payment charged back amount support. ([pronamic/wp-pronamic-pay#165](https://github.com/pronamic/wp-pronamic-pay/issues/165), [pronamic/wp-pronamic-pay#170](https://github.com/pronamic/wp-pronamic-pay/issues/170))
 
 ### Changed
 - Updated logos library to version `1.8.2`.
-- Add payment note on invalid gateway configuration ID ([#pronamic/wp-pronamic-pay#195](https://github.com/pronamic/wp-pronamic-pay/issues/195)).
+- Add payment note on invalid gateway configuration ID. ([#pronamic/wp-pronamic-pay#195](https://github.com/pronamic/wp-pronamic-pay/issues/195))
 - Add gateway ID to payment gateway JSON for convenience.
 
 ### Fixed
