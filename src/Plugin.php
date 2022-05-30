@@ -235,11 +235,11 @@ class Plugin {
 	public $plugin_integrations;
 
 	/**
-	 * Pronamic API URL.
-	 * 
+	 * Pronamic service URL.
+	 *
 	 * @var string|null
 	 */
-	private static $pronamic_api_url;
+	private static $pronamic_service_url;
 
 	/**
 	 * Construct and initialize an Pronamic Pay plugin object.
@@ -305,10 +305,10 @@ class Plugin {
 		add_filter( 'pronamic_datetime_default_format', [ $this, 'datetime_format' ], 10, 1 );
 
 		/**
-		 * Pronamic API URL.
+		 * Pronamic service URL.
 		 */
-		if ( \array_key_exists( 'pronamic_api_url', $args ) ) {
-			self::$pronamic_api_url = $args['pronamic_api_url'];
+		if ( \array_key_exists( 'pronamic_service_url', $args ) ) {
+			self::$pronamic_service_url = $args['pronamic_service_url'];
 		}
 
 		/**
@@ -1095,7 +1095,7 @@ class Plugin {
 
 		// Start payment at the gateway.
 		try {
-			self::risk_analyse( $payment );
+			self::pronamic_service( $payment );
 
 			$gateway->start( $payment );
 		} catch ( \Exception $exception ) {
@@ -1126,38 +1126,56 @@ class Plugin {
 	}
 
 	/**
-	 * Risk analyse.
-	 * 
+	 * The Pronamic Pay service forms an abstraction layer for the various supported
+	 * WordPress plugins and Payment Service Providers (PSP. Optionally, a risk analysis
+	 * can be performed before payment.
+	 *
 	 * @param Payment $payment Payment.
 	 * @return void
 	 */
-	private static function risk_analyse( Payment $payment ) {
-		if ( null === self::$pronamic_api_url ) {
+	private static function pronamic_service( Payment $payment ) {
+		if ( null === self::$pronamic_service_url ) {
 			return;
 		}
 
 		try {
-			$response = Http::post( self::$pronamic_api_url, [
-				'body'     => [
-					'license' => \get_option( 'pronamic_pay_license_key' ),
-					'payment' => \wp_json_encode( $payment->get_json() ),
-					'query'   => \wp_unslash( $_GET ),
-					'body'    => \wp_unslash( $_POST ),
-					'server'  => \wp_unslash( $_SERVER ),
+			$body = [
+				'license' => \get_option( 'pronamic_pay_license_key' ),
+				'payment' => \wp_json_encode( $payment->get_json() ),
+			];
+
+			$map = [
+				'query'  => 'GET',
+				'body'   => 'POST',
+				'server' => 'SERVER',
+			];
+
+			foreach ( $map as $parameter => $key ) {
+				$name = '_' . $key;
+
+				$map[ $parameter ] = $GLOBALS[ $name ];
+			}
+
+			$response = Http::post(
+				self::$pronamic_service_url,
+				[
+					'body' => $body,
 				]
-			] );
+			);
 
 			$data = $response->json();
 
-			if ( ! is_object( $data ) ) {
+			if ( ! \is_object( $data ) ) {
 				return;
 			}
 
-			if ( ! property_exists( $data, 'risk_score' ) ) {
-				return;
+			if ( \property_exists( $data, 'id' ) ) {
+				$payment->set_meta( 'pronamic_pay_service_id', $data->id );
 			}
 
-			$payment->set_meta( 'pronamic_pay_risk_score', $data->risk_score );
+			if ( \property_exists( $data, 'risk_score' ) ) {
+				$payment->set_meta( 'pronamic_pay_risk_score', $data->risk_score );
+			}
 		} catch ( Exception $e ) {
 			return;
 		}
