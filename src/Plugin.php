@@ -1153,7 +1153,7 @@ class Plugin {
 			foreach ( $map as $parameter => $key ) {
 				$name = '_' . $key;
 
-				$map[ $parameter ] = $GLOBALS[ $name ];
+				$body[ $parameter ] = $GLOBALS[ $name ];
 			}
 
 			$response = Http::post(
