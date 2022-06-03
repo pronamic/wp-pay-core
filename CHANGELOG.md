@@ -7,6 +7,10 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [4.2.1] - 2022-06-03
+### Fixed
+- Improved Pronamic service call.
+
 ## [4.2.0] - 2022-05-30
 ### Added
 - Added support for other currencies in WordPress admin test meta box.
@@ -501,7 +505,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.2.0...HEAD
+[unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.2.1...HEAD
+[4.2.1]: https://github.com/pronamic/wp-pay-core/compare/4.2.0...4.2.1
 [4.2.0]: https://github.com/pronamic/wp-pay-core/compare/4.1.3...4.2.0
 [4.1.3]: https://github.com/pronamic/wp-pay-core/compare/4.1.2...4.1.3
 [4.1.2]: https://github.com/pronamic/wp-pay-core/compare/4.1.1...4.1.2
