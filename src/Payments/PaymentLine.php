@@ -298,6 +298,23 @@ class PaymentLine {
 	}
 
 	/**
+	 * Get tax percentage.
+	 */
+	public function get_tax_percentage() : ?string {
+		if ( ! $this->total_amount instanceof TaxedMoney ) {
+			return null;
+		}
+
+		$tax_percentage = $this->total_amount->get_tax_percentage();
+
+		if ( null === $tax_percentage ) {
+			return null;
+		}
+
+		return $tax_percentage;
+	}
+
+	/**
 	 * Get total amount.
 	 *
 	 * @return Money
