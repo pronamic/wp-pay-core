@@ -269,13 +269,14 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		$customer = $payment->get_customer();
 
+		$customer_user_id = null === $customer ? 0 : $customer->get_user_id();
+
 		$result = wp_insert_post(
 			/**
 			 * The 'pronamic_payment' key is not an official argument for the
 			 * WordPress `wp_insert_post` function.
 			 *
 			 * @todo Simplify storing payments.
-			 * @phpstan-ignore-next-line
 			 */
 			[
 				'post_type'        => 'pronamic_payment',
@@ -284,7 +285,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 					'Payment %s',
 					$payment->get_key()
 				),
-				'post_author'      => null === $customer ? null : $customer->get_user_id(),
+				'post_author'      => null === $customer_user_id ? 0 : $customer_user_id,
 				'pronamic_payment' => $payment,
 			],
 			true

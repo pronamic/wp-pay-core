@@ -14,10 +14,10 @@ use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeImmutable;
 use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Money\Money;
-use Pronamic\WordPress\Pay\Payments\LegacyPaymentsDataStoreCPT;
-use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
+use Pronamic\WordPress\Pay\Payments\LegacyPaymentsDataStoreCPT;
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 
 /**
  * Title: Subscriptions data store CPT
@@ -296,13 +296,14 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		$customer = $subscription->get_customer();
 
+		$customer_user_id = null === $customer ? 0 : $customer->get_user_id();
+
 		$result = wp_insert_post(
 			/**
 			 * The 'pronamic_subscription' key is not an official argument for the
 			 * WordPress `wp_insert_post` function.
 			 *
 			 * @todo Simplify storing subscriptions.
-			 * @phpstan-ignore-next-line
 			 */
 			[
 				'post_type'             => 'pronamic_pay_subscr',
@@ -311,7 +312,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 					'Subscription %s',
 					$subscription->get_key()
 				),
-				'post_author'           => null === $customer ? null : $customer->get_user_id(),
+				'post_author'           => null === $customer_user_id ? 0 : $customer_user_id,
 				'pronamic_subscription' => $subscription,
 			],
 			true
