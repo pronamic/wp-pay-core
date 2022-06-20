@@ -650,7 +650,7 @@ class AdminModule {
 			\wp_die( \esc_html( $e->getMessage() ) );
 		}
 
-		$price = new TaxedMoney( $amount, $currency_code, 0,0 );
+		$price = new TaxedMoney( $amount, $currency_code, 0, 0 );
 
 		/*
 		 * Payment.
@@ -727,14 +727,27 @@ class AdminModule {
 				'name'         => $name,
 				'email'        => $user->user_email,
 				'phone'        => $phone,
-				'line_1'       => 'Line 1',
+				'line_1'       => 'Billing Line 1',
 				'postal_code'  => '1234 AB',
-				'city'         => 'City',
+				'city'         => 'Billing City',
 				'country_code' => 'NL',
 			]
 		);
 
 		$payment->set_billing_address( $address );
+
+		$address = AddressHelper::from_array(
+			[
+				'name'         => $name,
+				'email'        => $user->user_email,
+				'phone'        => $phone,
+				'line_1'       => 'Shipping Line 1',
+				'postal_code'  => '5678 XY',
+				'city'         => 'Shipping City',
+				'country_code' => 'NL',
+			]
+		);
+
 		$payment->set_shipping_address( $address );
 
 		// Lines.
