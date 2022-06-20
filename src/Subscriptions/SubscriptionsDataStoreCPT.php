@@ -302,7 +302,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			 * WordPress `wp_insert_post` function.
 			 *
 			 * @todo Simplify storing subscriptions.
-			 * @phpstan-ignore-next-line
 			 */
 			[
 				'post_type'             => 'pronamic_pay_subscr',

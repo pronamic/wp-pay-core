@@ -275,7 +275,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			 * WordPress `wp_insert_post` function.
 			 *
 			 * @todo Simplify storing payments.
-			 * @phpstan-ignore-next-line
 			 */
 			[
 				'post_type'        => 'pronamic_payment',
