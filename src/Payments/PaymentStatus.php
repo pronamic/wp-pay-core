@@ -83,4 +83,11 @@ class PaymentStatus {
 	 * @var string
 	 */
 	const COMPLETED = 'Completed';
+
+	/**
+	 * Status indicator for authorized
+	 *
+	 * @var string
+	 */
+	const AUTHORIZED = 'Authorized';
 }

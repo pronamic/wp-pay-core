@@ -101,14 +101,15 @@ class PaymentPostType {
 	 */
 	public static function get_payment_states() {
 		return [
-			'payment_pending'   => _x( 'Pending', 'Payment status', 'pronamic_ideal' ),
-			'payment_reserved'  => _x( 'Reserved', 'Payment status', 'pronamic_ideal' ),
-			'payment_on_hold'   => _x( 'On Hold', 'Payment status', 'pronamic_ideal' ),
-			'payment_completed' => _x( 'Completed', 'Payment status', 'pronamic_ideal' ),
-			'payment_cancelled' => _x( 'Cancelled', 'Payment status', 'pronamic_ideal' ),
-			'payment_refunded'  => _x( 'Refunded', 'Payment status', 'pronamic_ideal' ),
-			'payment_failed'    => _x( 'Failed', 'Payment status', 'pronamic_ideal' ),
-			'payment_expired'   => _x( 'Expired', 'Payment status', 'pronamic_ideal' ),
+			'payment_pending'    => _x( 'Pending', 'Payment status', 'pronamic_ideal' ),
+			'payment_reserved'   => _x( 'Reserved', 'Payment status', 'pronamic_ideal' ),
+			'payment_on_hold'    => _x( 'On Hold', 'Payment status', 'pronamic_ideal' ),
+			'payment_completed'  => _x( 'Completed', 'Payment status', 'pronamic_ideal' ),
+			'payment_cancelled'  => _x( 'Cancelled', 'Payment status', 'pronamic_ideal' ),
+			'payment_refunded'   => _x( 'Refunded', 'Payment status', 'pronamic_ideal' ),
+			'payment_failed'     => _x( 'Failed', 'Payment status', 'pronamic_ideal' ),
+			'payment_expired'    => _x( 'Expired', 'Payment status', 'pronamic_ideal' ),
+			'payment_authorized' => _x( 'Authorized', 'Payment status', 'pronamic_ideal' ),
 		];
 	}
 
@@ -222,6 +223,19 @@ class PaymentPostType {
 				'show_in_admin_status_list' => true,
 				/* translators: %s: count value */
 				'label_count'               => _n_noop( 'Expired <span class="count">(%s)</span>', 'Expired <span class="count">(%s)</span>', 'pronamic_ideal' ),
+			]
+		);
+
+		register_post_status(
+			'payment_authorized',
+			[
+				'label'                     => _x( 'Authorized', 'Payment status', 'pronamic_ideal' ),
+				'public'                    => false,
+				'exclude_from_search'       => false,
+				'show_in_admin_all_list'    => true,
+				'show_in_admin_status_list' => true,
+				/* translators: %s: count value */
+				'label_count'               => _n_noop( 'Authorized <span class="count">(%s)</span>', 'Authorized <span class="count">(%s)</span>', 'pronamic_ideal' ),
 			]
 		);
 	}

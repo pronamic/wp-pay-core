@@ -62,14 +62,15 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$this->payments = [];
 
 		$this->status_map = [
-			PaymentStatus::CANCELLED => 'payment_cancelled',
-			PaymentStatus::EXPIRED   => 'payment_expired',
-			PaymentStatus::FAILURE   => 'payment_failed',
-			PaymentStatus::REFUNDED  => 'payment_refunded',
-			PaymentStatus::RESERVED  => 'payment_reserved',
-			PaymentStatus::SUCCESS   => 'payment_completed',
-			PaymentStatus::OPEN      => 'payment_pending',
-			PaymentStatus::ON_HOLD   => 'payment_on_hold',
+			PaymentStatus::CANCELLED  => 'payment_cancelled',
+			PaymentStatus::EXPIRED    => 'payment_expired',
+			PaymentStatus::FAILURE    => 'payment_failed',
+			PaymentStatus::REFUNDED   => 'payment_refunded',
+			PaymentStatus::RESERVED   => 'payment_reserved',
+			PaymentStatus::SUCCESS    => 'payment_completed',
+			PaymentStatus::OPEN       => 'payment_pending',
+			PaymentStatus::ON_HOLD    => 'payment_on_hold',
+			PaymentStatus::AUTHORIZED => 'payment_authorized',
 		];
 	}
 
