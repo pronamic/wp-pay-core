@@ -1183,6 +1183,7 @@ class AdminModule {
 			case 'subscr_on_hold':
 				return 'pronamic-pay-icon-on-hold';
 
+			case 'payment_authorized':
 			case 'payment_reserved':
 			case 'subscr_active':
 			default:
