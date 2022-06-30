@@ -74,6 +74,9 @@ class PaymentStatus {
 	 * Status indicator for reserved
 	 *
 	 * @var string
+	 * @todo Eliminate the use of `RESERVED`.
+	 * @link https://github.com/pronamic/wp-pay-core/issues/66
+	 * @deprecated Use `AUTHORIZED` instead.
 	 */
 	const RESERVED = 'Reserved';
 
