@@ -515,7 +515,7 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 - First release.
 
 [unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.3.0...HEAD
-[4.2.2]: https://github.com/pronamic/wp-pay-core/compare/4.2.1...4.3.0
+[4.3.0]: https://github.com/pronamic/wp-pay-core/compare/4.2.1...4.3.0
 [4.2.1]: https://github.com/pronamic/wp-pay-core/compare/4.2.0...4.2.1
 [4.2.0]: https://github.com/pronamic/wp-pay-core/compare/4.1.3...4.2.0
 [4.1.3]: https://github.com/pronamic/wp-pay-core/compare/4.1.2...4.1.3
