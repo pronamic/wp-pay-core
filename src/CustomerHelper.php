@@ -99,10 +99,14 @@ class CustomerHelper {
 				 * @link https://www.php.net/manual/en/locale.acceptfromhttp.php
 				 * @link https://github.com/php/php-src/blob/php-7.3.5/ext/intl/locale/locale_methods.c#L1578-L1631
 				 */
-				$http_locale = locale_accept_from_http( Server::get( 'HTTP_ACCEPT_LANGUAGE' ) );
+				$accept_language = Server::get( 'HTTP_ACCEPT_LANGUAGE' );
 
-				if ( false !== $http_locale ) {
-					$locales[] = $http_locale;
+				if ( ! empty( $accept_language ) ) {
+					$http_locale = locale_accept_from_http( $accept_language );
+
+					if ( false !== $http_locale ) {
+						$locales[] = $http_locale;
+					}
 				}
 			}
 

@@ -7,6 +7,15 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [4.3.0] - 2022-06-30
+### Added
+- Added billing and shipping address details to test payments.
+- Added tax details to test payments.
+- Added `Authorized` payment status. ([#pronamic/wp-pay-core#66](https://github.com/pronamic/wp-pay-core/issues/66))
+
+### Fixed
+- Fixed "PHP Deprecated: locale_accept_from_http(): Passing null to parameter #1 ($header) of type string is deprecated".
+
 ## [4.2.1] - 2022-06-03
 ### Fixed
 - Improved Pronamic service call.
@@ -505,7 +514,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.2.1...HEAD
+[unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.3.0...HEAD
+[4.3.0]: https://github.com/pronamic/wp-pay-core/compare/4.2.1...4.3.0
 [4.2.1]: https://github.com/pronamic/wp-pay-core/compare/4.2.0...4.2.1
 [4.2.0]: https://github.com/pronamic/wp-pay-core/compare/4.1.3...4.2.0
 [4.1.3]: https://github.com/pronamic/wp-pay-core/compare/4.1.2...4.1.3
