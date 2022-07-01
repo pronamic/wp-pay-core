@@ -318,8 +318,8 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			true
 		);
 
-		if ( is_wp_error( $result ) ) {
-			throw new \Exception( 'Could not craete subscription' );
+		if ( \is_wp_error( $result ) ) {
+			throw new \Exception( \sprintf( 'Could not create subscription: "%s".', $result->get_error_message() ) );
 		}
 
 		$this->update_post_meta( $subscription );
@@ -358,8 +358,8 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		$result = wp_update_post( $data, true );
 
-		if ( is_wp_error( $result ) ) {
-			throw new \Exception( 'Could not update subscription' );
+		if ( \is_wp_error( $result ) ) {
+			throw new \Exception( \sprintf( 'Could not update subscription: "%s".', $result->get_error_message() ) );
 		}
 
 		return true;
