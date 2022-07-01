@@ -7,6 +7,10 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [4.3.1] - 2022-07-01
+### Changed
+- Updated logos library to version `1.8.3`.
+
 ## [4.3.0] - 2022-06-30
 ### Added
 - Added billing and shipping address details to test payments.
@@ -514,7 +518,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.3.0...HEAD
+[unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.3.1...HEAD
+[4.3.1]: https://github.com/pronamic/wp-pay-core/compare/4.3.0...4.3.1
 [4.3.0]: https://github.com/pronamic/wp-pay-core/compare/4.2.1...4.3.0
 [4.2.1]: https://github.com/pronamic/wp-pay-core/compare/4.2.0...4.2.1
 [4.2.0]: https://github.com/pronamic/wp-pay-core/compare/4.1.3...4.2.0
