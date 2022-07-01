@@ -1089,12 +1089,12 @@ class Plugin {
 		// Subscriptions.
 		$subscriptions = $payment->get_subscriptions();
 
-		if ( \count( $subscriptions ) > 0 && ! $gateway->supports( 'recurring' ) ) {
-			throw new \Exception( 'Gateway does not support recurring payments.' );
-		}
-
 		// Start payment at the gateway.
 		try {
+			if ( \count( $subscriptions ) > 0 && ! $gateway->supports( 'recurring' ) ) {
+				throw new \Exception( 'Gateway does not support recurring payments.' );
+			}
+
 			self::pronamic_service( $payment );
 
 			$gateway->start( $payment );
