@@ -15,7 +15,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 242](../src/Payments/PaymentsDataStoreCPT.php#L242-L247)
+Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 243](../src/Payments/PaymentsDataStoreCPT.php#L243-L248)
 
 ### `pronamic_pay_pre_create_payment`
 
@@ -27,7 +27,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 263](../src/Payments/PaymentsDataStoreCPT.php#L263-L268)
+Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 264](../src/Payments/PaymentsDataStoreCPT.php#L264-L269)
 
 ### `pronamic_pay_new_payment`
 
@@ -39,7 +39,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 298](../src/Payments/PaymentsDataStoreCPT.php#L298-L303)
+Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 299](../src/Payments/PaymentsDataStoreCPT.php#L299-L304)
 
 ### `pronamic_payment_status_update_{$source}_{$old_status}_to_{$new_status}`
 
@@ -58,7 +58,7 @@ Argument | Type | Description
 `$previous_status` | `null\|string` | Previous [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
 `$updated_status` | `null\|string` | Updated [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
 
-Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 919](../src/Payments/PaymentsDataStoreCPT.php#L919-L931)
+Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 920](../src/Payments/PaymentsDataStoreCPT.php#L920-L932)
 
 ### `pronamic_payment_status_update_{$source}`
 
@@ -75,7 +75,7 @@ Argument | Type | Description
 `$previous_status` | `null\|string` | Previous [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
 `$updated_status` | `null\|string` | Updated [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status)).
 
-Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 933](../src/Payments/PaymentsDataStoreCPT.php#L933-L943)
+Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 934](../src/Payments/PaymentsDataStoreCPT.php#L934-L944)
 
 ### `pronamic_payment_status_update`
 
@@ -90,7 +90,7 @@ Argument | Type | Description
 `$previous_status` | `null\|string` | Previous [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
 `$updated_status` | `null\|string` | Updated [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
 
-Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 945](../src/Payments/PaymentsDataStoreCPT.php#L945-L953)
+Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 946](../src/Payments/PaymentsDataStoreCPT.php#L946-L954)
 
 ### `pronamic_pay_privacy_register_exporters`
 
@@ -418,7 +418,7 @@ Argument | Type | Description
 `$url` | `string` | Redirect URL.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 1285](../src/Plugin.php#L1285-L1291)
+Source: [src/Plugin.php](../src/Plugin.php), [line 1284](../src/Plugin.php#L1284-L1290)
 
 ### `pronamic_gateway_configuration_display_value`
 
