@@ -82,6 +82,13 @@ abstract class Gateway {
 	use ModeTrait;
 
 	/**
+	 * Payment methods.
+	 *
+	 * @var PaymentMethod[]
+	 */
+	private $payment_methods = [];
+
+	/**
 	 * Construct gateway.
 	 */
 	public function __construct() {
@@ -95,6 +102,27 @@ abstract class Gateway {
 		 *  - recurring_direct_debit      Recurring payments through direct debit.
 		 */
 		$this->supports = [];
+	}
+
+	/**
+	 * Register payment method.
+	 *
+	 * @param PaymentMethod $payment_method Payment method.
+	 * @return void
+	 */
+	protected function register_payment_method( PaymentMethod $payment_method ) {
+		$id = $payment_method->get_id();
+
+		$this->payment_methods[ $id ] = $payment_method;
+	}
+
+	/**
+	 * Get payment methods.
+	 *
+	 * @return PaymentMethod[]
+	 */
+	public function get_payment_methods() {
+		return $this->payment_methods;
 	}
 
 	/**

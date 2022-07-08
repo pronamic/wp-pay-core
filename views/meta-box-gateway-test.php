@@ -79,6 +79,34 @@ $currency_default = Currency::get_instance( 'EUR' );
 			</label>
 		</th>
 		<td>
+			<?php
+
+			$payment_method_objects = $gateway->get_payment_methods();
+
+			foreach ( $payment_method_objects as $payment_method ) {
+				$fields = $payment_method->get_fields();
+
+				foreach ( $fields as $field ) {
+					switch ( get_class( $field ) ) {
+						case \Pronamic\WordPress\Pay\Core\SelectField::class:
+							var_dump( $field->get_options() );
+
+							break;
+					}
+				}
+			}
+
+			?>
+		</td>
+	</tr>
+
+	<tr>
+		<th scope="row">
+			<label for="pronamic-pay-test-payment-methods">
+				<?php esc_html_e( 'Payment Method', 'pronamic_ideal' ); ?>
+			</label>
+		</th>
+		<td>
 			<select id="pronamic-pay-test-payment-methods" name="pronamic_pay_test_payment_method">
 				<?php
 
