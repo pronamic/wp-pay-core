@@ -561,32 +561,6 @@ abstract class Gateway {
 	}
 
 	/**
-	 * Get a consumer bank details IBAN field.
-	 *
-	 * @return array|null
-	 */
-	public function get_consumer_bank_details_iban_field() {
-		$payment_methods = [
-			PaymentMethods::DIRECT_DEBIT,
-		];
-
-		$payment_method = $this->get_payment_method();
-
-		// Only add field for specified payment methods.
-		if ( ! in_array( $payment_method, $payment_methods, true ) ) {
-			return null;
-		}
-
-		// Return field.
-		return [
-			'id'    => 'pronamic_pay_consumer_bank_details_iban',
-			'name'  => 'pronamic_pay_consumer_bank_details_iban',
-			'label' => __( 'IBAN', 'pronamic_ideal' ),
-			'type'  => 'text',
-		];
-	}
-
-	/**
 	 * Get the payment method to use on this gateway.
 	 *
 	 * @since 1.2.3
@@ -640,9 +614,6 @@ abstract class Gateway {
 
 		// Consumer bank details name field.
 		$fields[] = $this->get_consumer_bank_details_name_field();
-
-		// Consumer bank details IBAN field.
-		$fields[] = $this->get_consumer_bank_details_iban_field();
 
 		// Remove empty input fields.
 		$fields = array_filter( $fields );
