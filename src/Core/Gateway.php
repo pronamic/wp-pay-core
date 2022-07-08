@@ -168,6 +168,7 @@ abstract class Gateway {
 	 * Get iDEAL issuers.
 	 *
 	 * @return array
+	 * @deprecated
 	 */
 	public function get_issuers() {
 		return [];
@@ -177,6 +178,7 @@ abstract class Gateway {
 	 * Get the iDEAL issuers transient.
 	 *
 	 * @return array|null
+	 * @deprecated
 	 */
 	public function get_transient_issuers() {
 		$issuers = null;
@@ -220,6 +222,7 @@ abstract class Gateway {
 	 * Intended to be overridden by gateway.
 	 *
 	 * @return array
+	 * @deprecated
 	 */
 	public function get_supported_payment_methods() {
 		return [];
@@ -231,6 +234,7 @@ abstract class Gateway {
 	 *
 	 * @since 1.3.0
 	 * @return array|null
+	 * @deprecated
 	 */
 	public function get_available_payment_methods() {
 		return null;
@@ -242,6 +246,7 @@ abstract class Gateway {
 	 * @since 1.3.0
 	 * @param bool $update_active_methods Whether active payment methods option should be updated.
 	 * @return array|null
+	 * @deprecated
 	 */
 	public function get_transient_available_payment_methods( $update_active_methods = true ) {
 		// Transient name.
@@ -273,6 +278,7 @@ abstract class Gateway {
 	 *
 	 * @since 1.3.0
 	 * @return boolean True if payment method is required, false otherwise.
+	 * @deprecated
 	 */
 	public function payment_method_is_required() {
 		return false;
@@ -283,6 +289,7 @@ abstract class Gateway {
 	 *
 	 * @param bool $other_first Flag to prepend the 'Other' / 'All available methods' option.
 	 * @return array
+	 * @deprecated
 	 */
 	public function get_payment_method_field_options( $other_first = false ) {
 		$options = [];
@@ -428,6 +435,7 @@ abstract class Gateway {
 	 *
 	 * @since 1.2.3
 	 * @return string|null One of the PaymentMethods constants.
+	 * @deprecated
 	 */
 	public function get_payment_method() {
 		return $this->payment_method;
@@ -440,6 +448,7 @@ abstract class Gateway {
 	 *
 	 * @param string|null $payment_method One of the PaymentMethods constants.
 	 * @return void
+	 * @deprecated
 	 */
 	public function set_payment_method( $payment_method ) {
 		$this->payment_method = $payment_method;
@@ -452,27 +461,10 @@ abstract class Gateway {
 	 * input fields array of it's not empty
 	 *
 	 * @return array
+	 * @deprecated
 	 */
 	public function get_input_fields() {
-		// Make sure to use input for first payment method.
-		$payment_method = $this->get_payment_method();
-
-		$first_payment_method = PaymentMethods::get_first_payment_method( $payment_method );
-
-		$this->set_payment_method( $first_payment_method );
-
-		/*
-		 * Fields.
-		 */
-		$fields = [];
-
-		// Remove empty input fields.
-		$fields = array_filter( $fields );
-
-		// Restore payment method to original value.
-		$this->set_payment_method( $payment_method );
-
-		return $fields;
+		return [];
 	}
 
 	/**
