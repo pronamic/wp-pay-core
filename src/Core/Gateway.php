@@ -424,47 +424,6 @@ abstract class Gateway {
 	}
 
 	/**
-	 * Get an issuer field
-	 *
-	 * @return array|null
-	 */
-	public function get_issuer_field() {
-		$field = null;
-
-		$payment_method = $this->get_payment_method();
-
-		// Set default payment method if needed.
-		if ( null === $payment_method && $this->payment_method_is_required() ) {
-			$payment_method = PaymentMethods::IDEAL;
-		}
-
-		// No issuers without payment method.
-		if ( empty( $payment_method ) ) {
-			return $field;
-		}
-
-		// Set issuer field for payment method.
-		switch ( $payment_method ) {
-			case PaymentMethods::IDEAL:
-				$issuers = $this->get_transient_issuers();
-
-				if ( ! empty( $issuers ) ) {
-					$field = [
-						'id'      => 'pronamic_ideal_issuer_id',
-						'name'    => 'pronamic_ideal_issuer_id',
-						'label'   => __( 'Choose your bank', 'pronamic_ideal' ),
-						'type'    => 'select',
-						'choices' => $issuers,
-					];
-				}
-
-				break;
-		}
-
-		return $field;
-	}
-
-	/**
 	 * Get the payment method to use on this gateway.
 	 *
 	 * @since 1.2.3
@@ -506,9 +465,6 @@ abstract class Gateway {
 		 * Fields.
 		 */
 		$fields = [];
-
-		// Issuer field.
-		$fields[] = $this->get_issuer_field();
 
 		// Remove empty input fields.
 		$fields = array_filter( $fields );
