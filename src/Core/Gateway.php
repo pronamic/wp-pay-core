@@ -535,32 +535,6 @@ abstract class Gateway {
 	}
 
 	/**
-	 * Get a consumer bank details name field.
-	 *
-	 * @return array|null
-	 */
-	public function get_consumer_bank_details_name_field() {
-		$payment_methods = [
-			PaymentMethods::DIRECT_DEBIT,
-		];
-
-		$payment_method = $this->get_payment_method();
-
-		// Only add field for specified payment methods.
-		if ( ! in_array( $payment_method, $payment_methods, true ) ) {
-			return null;
-		}
-
-		// Return field.
-		return [
-			'id'    => 'pronamic_pay_consumer_bank_details_name',
-			'name'  => 'pronamic_pay_consumer_bank_details_name',
-			'label' => __( 'Account holder name', 'pronamic_ideal' ),
-			'type'  => 'text',
-		];
-	}
-
-	/**
 	 * Get the payment method to use on this gateway.
 	 *
 	 * @since 1.2.3
