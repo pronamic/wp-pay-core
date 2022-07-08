@@ -174,15 +174,6 @@ abstract class Gateway {
 	}
 
 	/**
-	 * Get credit card issuers.
-	 *
-	 * @return array|null
-	 */
-	public function get_credit_card_issuers() {
-		return null;
-	}
-
-	/**
 	 * Get the iDEAL issuers transient.
 	 *
 	 * @return array|null
@@ -203,33 +194,6 @@ abstract class Gateway {
 			}
 
 			if ( ! empty( $issuers ) ) {
-				// 60 * 60 * 24 = 24 hours = 1 day
-				set_transient( $transient, $issuers, 60 * 60 * 24 );
-			}
-		} elseif ( is_array( $result ) ) {
-			$issuers = $result;
-		}
-
-		return $issuers;
-	}
-
-	/**
-	 * Get the credit card issuers transient.
-	 *
-	 * @return array|null
-	 */
-	public function get_transient_credit_card_issuers() {
-		$issuers = null;
-
-		// Transient name.
-		$transient = 'pronamic_pay_credit_card_issuers_' . md5( serialize( $this ) );
-
-		$result = get_transient( $transient );
-
-		if ( is_wp_error( $result ) || false === $result ) {
-			$issuers = $this->get_credit_card_issuers();
-
-			if ( $issuers ) {
 				// 60 * 60 * 24 = 24 hours = 1 day
 				set_transient( $transient, $issuers, 60 * 60 * 24 );
 			}
@@ -489,20 +453,6 @@ abstract class Gateway {
 						'id'      => 'pronamic_ideal_issuer_id',
 						'name'    => 'pronamic_ideal_issuer_id',
 						'label'   => __( 'Choose your bank', 'pronamic_ideal' ),
-						'type'    => 'select',
-						'choices' => $issuers,
-					];
-				}
-
-				break;
-			case PaymentMethods::CREDIT_CARD:
-				$issuers = $this->get_credit_card_issuers();
-
-				if ( ! empty( $issuers ) ) {
-					$field = [
-						'id'      => 'pronamic_credit_card_issuer_id',
-						'name'    => 'pronamic_credit_card_issuer_id',
-						'label'   => __( 'Choose your credit card issuer', 'pronamic_ideal' ),
 						'type'    => 'select',
 						'choices' => $issuers,
 					];
