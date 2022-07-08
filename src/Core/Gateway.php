@@ -465,45 +465,6 @@ abstract class Gateway {
 	}
 
 	/**
-	 * Get a gender field.
-	 *
-	 * @return array|null
-	 */
-	public function get_gender_field() {
-		$payment_methods = [
-			PaymentMethods::AFTERPAY_NL,
-			PaymentMethods::FOCUM,
-			PaymentMethods::IN3,
-			PaymentMethods::KLARNA_PAY_LATER,
-			PaymentMethods::SPRAYPAY,
-		];
-
-		$payment_method = $this->get_payment_method();
-
-		// Only add field for specified payment methods.
-		if ( ! in_array( $payment_method, $payment_methods, true ) ) {
-			return null;
-		}
-
-		// Return field.
-		return [
-			'id'      => 'pronamic_pay_gender',
-			'name'    => 'pronamic_pay_gender',
-			'label'   => __( 'Gender', 'pronamic_ideal' ),
-			'type'    => 'select',
-			'choices' => [
-				[
-					'options' => [
-						''  => __( '— Select gender —', 'pronamic_ideal' ),
-						'F' => __( 'Female', 'pronamic_ideal' ),
-						'M' => __( 'Male', 'pronamic_ideal' ),
-					],
-				],
-			],
-		];
-	}
-
-	/**
 	 * Get a date of birth field.
 	 *
 	 * @return array|null
@@ -579,9 +540,6 @@ abstract class Gateway {
 
 		// Issuer field.
 		$fields[] = $this->get_issuer_field();
-
-		// Gender field.
-		$fields[] = $this->get_gender_field();
 
 		// Birth date field.
 		$fields[] = $this->get_birth_date_field();
