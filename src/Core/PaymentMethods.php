@@ -526,6 +526,7 @@ class PaymentMethods {
 	 *
 	 * @since 1.3.14
 	 * @return array
+	 * @deprecated
 	 */
 	public static function get_direct_debit_methods() {
 		$payment_methods = [
@@ -545,6 +546,7 @@ class PaymentMethods {
 	 * @param string $payment_method Payment method to check for direct debit.
 	 *
 	 * @return bool True if the specified payment method is direct debit, false otherwise.
+	 * @deprecated
 	 */
 	public static function is_direct_debit_method( $payment_method ) {
 		return array_key_exists( $payment_method, self::get_direct_debit_methods() );
