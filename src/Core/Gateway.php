@@ -465,37 +465,6 @@ abstract class Gateway {
 	}
 
 	/**
-	 * Get a date of birth field.
-	 *
-	 * @return array|null
-	 */
-	public function get_birth_date_field() {
-		$payment_methods = [
-			PaymentMethods::AFTERPAY_NL,
-			PaymentMethods::FOCUM,
-			PaymentMethods::IN3,
-			PaymentMethods::KLARNA_PAY_LATER,
-			PaymentMethods::SPRAYPAY,
-		];
-
-		$payment_method = $this->get_payment_method();
-
-		// Only add field for specified payment methods.
-		if ( ! in_array( $payment_method, $payment_methods, true ) ) {
-			return null;
-		}
-
-		// Return field.
-		return [
-			'id'    => 'pronamic_pay_birth_date',
-			'name'  => 'pronamic_pay_birth_date',
-			'label' => __( 'Date of birth', 'pronamic_ideal' ),
-			'type'  => 'date',
-			'max'   => gmdate( 'Y-m-d' ),
-		];
-	}
-
-	/**
 	 * Get the payment method to use on this gateway.
 	 *
 	 * @since 1.2.3
@@ -540,9 +509,6 @@ abstract class Gateway {
 
 		// Issuer field.
 		$fields[] = $this->get_issuer_field();
-
-		// Birth date field.
-		$fields[] = $this->get_birth_date_field();
 
 		// Remove empty input fields.
 		$fields = array_filter( $fields );
