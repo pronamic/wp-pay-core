@@ -22,6 +22,13 @@ class Field {
 	private $id;
 
 	/**
+	 * Required.
+	 *
+	 * @var bool
+	 */
+	private $required = false;
+
+	/**
 	 * Construct field
 	 *
 	 * @param string $id ID.
@@ -37,5 +44,14 @@ class Field {
 	 */
 	public function get_id() {
 		return $this->id;
+	}
+
+	/**
+	 * Set required.
+	 *
+	 * @param bool $required Required.
+	 */
+	public function set_required( $required ) {
+		$this->required = $required;
 	}
 }
