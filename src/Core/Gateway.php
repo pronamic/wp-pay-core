@@ -586,9 +586,6 @@ abstract class Gateway {
 		// Birth date field.
 		$fields[] = $this->get_birth_date_field();
 
-		// Consumer bank details name field.
-		$fields[] = $this->get_consumer_bank_details_name_field();
-
 		// Remove empty input fields.
 		$fields = array_filter( $fields );
 
