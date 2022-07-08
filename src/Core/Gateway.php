@@ -117,6 +117,20 @@ abstract class Gateway {
 	}
 
 	/**
+	 * Get payment method by ID.
+	 *
+	 * @param string $id ID
+	 * @return PaymentMethod|null
+	 */
+	public function get_payment_method( $id ) {
+		if ( array_key_exists( $id, $this->payment_methods ) ) {
+			return $this->payment_methods[ $id ];
+		}
+
+		return null;
+	}
+
+	/**
 	 * Get payment methods.
 	 *
 	 * @return PaymentMethod[]
