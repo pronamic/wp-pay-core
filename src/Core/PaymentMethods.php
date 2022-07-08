@@ -582,27 +582,6 @@ class PaymentMethods {
 	}
 
 	/**
-	 * Get first method for payment method.
-	 *
-	 * @param string|null $payment_method The payment method to get the first payment method for.
-	 *
-	 * @return string|null
-	 */
-	public static function get_first_payment_method( $payment_method ) {
-		if ( empty( $payment_method ) ) {
-			return null;
-		}
-
-		if ( self::is_direct_debit_method( $payment_method ) ) {
-			$direct_debit_methods = self::get_direct_debit_methods();
-
-			return $direct_debit_methods[ $payment_method ];
-		}
-
-		return $payment_method;
-	}
-
-	/**
 	 * Maybe update active payment methods.
 	 *
 	 * @return void
