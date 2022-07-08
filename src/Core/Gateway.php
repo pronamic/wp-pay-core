@@ -431,56 +431,6 @@ abstract class Gateway {
 	}
 
 	/**
-	 * Get the payment method to use on this gateway.
-	 *
-	 * @since 1.2.3
-	 * @return string|null One of the PaymentMethods constants.
-	 * @deprecated
-	 */
-	public function get_payment_method() {
-		return $this->payment_method;
-	}
-
-	/**
-	 * Set the payment method to use on this gateway.
-	 *
-	 * @since 1.2.3
-	 *
-	 * @param string|null $payment_method One of the PaymentMethods constants.
-	 * @return void
-	 * @deprecated
-	 */
-	public function set_payment_method( $payment_method ) {
-		$this->payment_method = $payment_method;
-	}
-
-	/**
-	 * Get the input fields for this gateway
-	 *
-	 * This function will automatically add the issuer field to the
-	 * input fields array of it's not empty
-	 *
-	 * @return array
-	 * @deprecated
-	 */
-	public function get_input_fields() {
-		return [];
-	}
-
-	/**
-	 * Get the input HTML
-	 *
-	 * This function will convert all input fields to an HTML notation
-	 *
-	 * @return string
-	 */
-	public function get_input_html() {
-		$fields = $this->get_input_fields();
-
-		return Util::input_fields_html( $fields );
-	}
-
-	/**
 	 * Get form HTML.
 	 *
 	 * @param Payment $payment     Payment to get form HTML for.
