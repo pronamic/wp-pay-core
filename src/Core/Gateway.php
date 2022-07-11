@@ -292,12 +292,10 @@ abstract class Gateway {
 		natcasesort( $options );
 
 		// Add option to use all available payment methods.
-		if ( ! $this->payment_method_is_required() ) {
-			if ( $other_first ) {
-				$options = [ _x( 'All available methods', 'Payment method field', 'pronamic_ideal' ) ] + $options;
-			} else {
-				$options[] = _x( 'Other', 'Payment method field', 'pronamic_ideal' );
-			}
+		if ( $other_first ) {
+			$options = [ _x( 'All available methods', 'Payment method field', 'pronamic_ideal' ) ] + $options;
+		} else {
+			$options[] = _x( 'Other', 'Payment method field', 'pronamic_ideal' );
 		}
 
 		return $options;
