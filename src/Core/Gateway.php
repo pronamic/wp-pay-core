@@ -179,38 +179,6 @@ abstract class Gateway {
 	}
 
 	/**
-	 * Get the iDEAL issuers transient.
-	 *
-	 * @return array|null
-	 * @deprecated
-	 */
-	public function get_transient_issuers() {
-		$issuers = null;
-
-		// Transient name.
-		$transient = 'pronamic_pay_issuers_' . md5( serialize( $this ) );
-
-		$result = get_transient( $transient );
-
-		if ( is_wp_error( $result ) || false === $result ) {
-			try {
-				$issuers = $this->get_issuers();
-			} catch ( \Exception $e ) {
-				$issuers = null;
-			}
-
-			if ( ! empty( $issuers ) ) {
-				// 60 * 60 * 24 = 24 hours = 1 day
-				set_transient( $transient, $issuers, 60 * 60 * 24 );
-			}
-		} elseif ( is_array( $result ) ) {
-			$issuers = $result;
-		}
-
-		return $issuers;
-	}
-
-	/**
 	 * Custom payment redirect.
 	 * Intended to be overridden by gateway.
 	 *
