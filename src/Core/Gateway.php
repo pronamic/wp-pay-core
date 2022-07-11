@@ -179,16 +179,6 @@ abstract class Gateway {
 	}
 
 	/**
-	 * Get iDEAL issuers.
-	 *
-	 * @return array
-	 * @deprecated
-	 */
-	public function get_issuers() {
-		return [];
-	}
-
-	/**
 	 * Get the iDEAL issuers transient.
 	 *
 	 * @return array|null
