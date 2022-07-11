@@ -86,13 +86,49 @@ $currency_default = Currency::get_instance( 'EUR' );
 		<?php foreach ( $payment_method->get_fields() as $field ) : ?>
 
 			<tr class="pronamic-pay-cloack pronamic-pay-test-payment-method <?php echo esc_attr( $payment_method->get_id() ); ?>">
+				<?php
+
+				$label = __( 'Field', 'pronamic_ideal' );
+
+				$attributes = [];
+
+				switch ( $field->get_id() ) {
+					case 'ideal-issuer':
+						$label = __( 'Bank', 'pronamic_ideal' );
+
+						$attributes['id']   = 'pronamic_ideal_issuer_id';
+						$attributes['name'] = 'pronamic_ideal_issuer_id';
+
+						break;
+				}
+
+				?>
 				<th scope="row">
-					Field
+					<?php echo esc_html( $label ); ?>
 				</th>
 				<td>
 					<?php
 
-					var_dump( $field );
+					switch ( get_class( $field ) ) {
+						case \Pronamic\WordPress\Pay\Core\SelectField::class:
+
+							printf(
+								'<select %s>%s</select>',
+								// @codingStandardsIgnoreStart
+								\Pronamic\WordPress\Pay\Util::array_to_html_attributes( $attributes ),
+								\Pronamic\WordPress\Pay\Util::select_options_grouped( $field->get_options() )
+								// @codingStandardsIgnoreEnd
+							);
+
+							break;
+						default:
+							printf(
+								__( 'Unsupported field: `%s`', 'pronamic_ideal' ),
+								get_class( $field )
+							);
+
+							break;
+					}
 
 					?>
 				</td>
