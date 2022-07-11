@@ -142,12 +142,6 @@ $currency = Currency::get_instance( 'EUR' );
 
 		<?php
 
-		if ( $gateway->payment_method_is_required() ) {
-
-			$gateway->set_payment_method( PaymentMethods::IDEAL );
-
-		}
-
 		$fields = $gateway->get_input_fields();
 
 		?>
