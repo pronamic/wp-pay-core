@@ -173,17 +173,6 @@ abstract class Gateway {
 	}
 
 	/**
-	 * Get supported payment providers for gateway.
-	 * Intended to be overridden by gateway.
-	 *
-	 * @return array
-	 * @deprecated
-	 */
-	public function get_supported_payment_methods() {
-		return [];
-	}
-
-	/**
 	 * Get available payment methods.
 	 * Intended to be overridden by gateway if active payment methods for account can be determined.
 	 *
