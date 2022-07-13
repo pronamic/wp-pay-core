@@ -539,20 +539,6 @@ class PaymentMethods {
 	}
 
 	/**
-	 * Is direct debit method.
-	 *
-	 * @since 1.3.14
-	 *
-	 * @param string $payment_method Payment method to check for direct debit.
-	 *
-	 * @return bool True if the specified payment method is direct debit, false otherwise.
-	 * @deprecated
-	 */
-	public static function is_direct_debit_method( $payment_method ) {
-		return array_key_exists( $payment_method, self::get_direct_debit_methods() );
-	}
-
-	/**
 	 * Get recurring methods.
 	 *
 	 * @since 1.3.14
