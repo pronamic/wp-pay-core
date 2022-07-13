@@ -621,36 +621,25 @@ class PaymentMethods {
 
 			$gateway = Plugin::get_gateway( $config_id );
 
-			if ( ! $gateway ) {
+			if ( null === $gateway ) {
 				continue;
 			}
 
-			if ( ! method_exists( $gateway, 'get_supported_payment_methods' ) ) {
-				continue;
-			}
-
-			try {
-				$payment_methods = $gateway->get_transient_available_payment_methods( false );
-			} catch ( \Exception $e ) {
-				// Do not update active payment methods on error.
-				continue;
-			}
-
-			if ( null === $payment_methods ) {
-				$payment_methods = $gateway->get_supported_payment_methods();
-			}
+			$payment_methods = array_filter(
+				$gateway->get_payment_methods(),
+				function ( $payment_method ) {
+					return \in_array( $payment_method->get_status(), [ '', 'active' ], true );
+				}
+			);
 
 			foreach ( $payment_methods as $payment_method ) {
-				if ( ! isset( $active_payment_methods[ $payment_method ] ) ) {
-					$active_payment_methods[ $payment_method ] = [];
+				$id = $payment_method->get_id();
+
+				if ( ! array_key_exists( $id, $active_payment_methods ) ) {
+					$active_payment_methods[ $id ] = [];
 				}
 
-				// Check if payment method is supported.
-				if ( ! \in_array( $payment_method, $gateway->get_supported_payment_methods(), true ) ) {
-					continue;
-				}
-
-				$active_payment_methods[ $payment_method ][] = $config_id;
+				$active_payment_methods[ $id ][] = $config_id;
 			}
 		}
 
