@@ -44,7 +44,7 @@ foreach ( $payment_methods as $payment_method ) {
 
 			<tr>
 				<td>
-					<?php echo esc_html( PaymentMethods::get_name( $payment_method->get_id() ) ); ?>
+					<?php echo esc_html( $payment_method->get_name() ); ?>
 				</td>
 				<td>
 					<?php
