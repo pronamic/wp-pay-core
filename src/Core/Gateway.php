@@ -71,15 +71,18 @@ abstract class Gateway {
 	 */
 	private $payment_method;
 
-	/**
-	 * Supported features on this gateway.
-	 *
-	 * @since 1.3.9
-	 * @var array
-	 */
-	protected $supports;
-
 	use ModeTrait;
+
+	/**
+	 * Supported features.
+	 *
+	 * Possible values:
+	 *  - payment_status_request      Gateway can request current payment status.
+	 *  - recurring_apple_pay         Recurring payments through Apple Pay.
+	 *  - recurring_credit_card       Recurring payments through credit card.
+	 *  - recurring_direct_debit      Recurring payments through direct debit.
+	 */
+	use SupportsTrait;
 
 	/**
 	 * Payment methods.
@@ -92,16 +95,7 @@ abstract class Gateway {
 	 * Construct gateway.
 	 */
 	public function __construct() {
-		/**
-		 * Supported features.
-		 *
-		 * Possible values:
-		 *  - payment_status_request      Gateway can request current payment status.
-		 *  - recurring_apple_pay         Recurring payments through Apple Pay.
-		 *  - recurring_credit_card       Recurring payments through credit card.
-		 *  - recurring_direct_debit      Recurring payments through direct debit.
-		 */
-		$this->supports = [];
+
 	}
 
 	/**
@@ -137,17 +131,6 @@ abstract class Gateway {
 	 */
 	public function get_payment_methods() {
 		return $this->payment_methods;
-	}
-
-	/**
-	 * Check if a gateway supports a given feature.
-	 *
-	 * @since 1.3.11
-	 * @param string $feature The feature to check.
-	 * @return bool True if supported, false otherwise.
-	 */
-	public function supports( $feature ) {
-		return in_array( $feature, $this->supports, true );
 	}
 
 	/**

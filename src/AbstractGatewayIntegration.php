@@ -13,6 +13,7 @@ namespace Pronamic\WordPress\Pay;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\GatewayConfig;
 use Pronamic\WordPress\Pay\Core\ModeTrait;
+use Pronamic\WordPress\Pay\Core\SupportsTrait;
 
 /**
  * Title: Abstract gateway integration
@@ -61,14 +62,9 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	 */
 	public $provider;
 
-	/**
-	 * Supported features.
-	 *
-	 * @var array
-	 */
-	protected $supports = [];
-
 	use ModeTrait;
+
+	use SupportsTrait;
 
 	/**
 	 * Construct.
@@ -187,16 +183,6 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	 */
 	public function get_url() {
 		return $this->url;
-	}
-
-	/**
-	 * Check if this integration supports a given feature.
-	 *
-	 * @param string $feature The feature to check.
-	 * @return bool True if supported, false otherwise.
-	 */
-	public function supports( $feature ) {
-		return in_array( $feature, $this->supports, true );
 	}
 
 	/**
