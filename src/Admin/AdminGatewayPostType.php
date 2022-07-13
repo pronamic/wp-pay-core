@@ -293,7 +293,7 @@ class AdminGatewayPostType {
 		usort(
 			$payment_methods,
 			function( $a, $b ) {
-				return strnatcasecmp( PaymentMethods::get_name( $a->get_id() ), PaymentMethods::get_name( $b->get_id() ) );
+				return strnatcasecmp( $a->get_name(), $b->get_name() );
 			}
 		);
 
