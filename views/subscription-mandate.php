@@ -243,8 +243,8 @@ if ( is_array( $current_mandate ) ) {
 									foreach ( $payment_methods as $payment_method ) {
 										$id = $payment_method->get_id();
 
-										$name = PaymentMethods::get_name( $id );
-										$name = ( null === $name ) ? $id : $name;
+										$name = $payment_method->get_name();
+										$name = ( '' === $name ) ? $id : $name;
 
 										printf(
 											'<option value="%s">%s</option>',
