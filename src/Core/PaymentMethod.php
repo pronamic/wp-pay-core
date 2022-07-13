@@ -22,6 +22,13 @@ class PaymentMethod {
 	private $id;
 
 	/**
+	 * Status.
+	 *
+	 * @var string
+	 */
+	private $status;
+
+	/**
 	 * Fields.
 	 *
 	 * @var Field[]
@@ -39,7 +46,8 @@ class PaymentMethod {
 	 * @param string $id ID.
 	 */
 	public function __construct( $id ) {
-		$this->id = $id;
+		$this->id     = $id;
+		$this->status = '';
 	}
 
 	/**
@@ -49,6 +57,15 @@ class PaymentMethod {
 	 */
 	public function get_id() {
 		return $this->id;
+	}
+
+	/**
+	 * Get status.
+	 *
+	 * @return string
+	 */
+	public function get_status() {
+		return $this->status;
 	}
 
 	/**
