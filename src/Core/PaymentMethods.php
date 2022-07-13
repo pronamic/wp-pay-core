@@ -522,23 +522,6 @@ class PaymentMethods {
 	}
 
 	/**
-	 * Get direct debit methods.
-	 *
-	 * @since 1.3.14
-	 * @return array
-	 * @deprecated
-	 */
-	public static function get_direct_debit_methods() {
-		$payment_methods = [
-			self::DIRECT_DEBIT_BANCONTACT => self::BANCONTACT,
-			self::DIRECT_DEBIT_IDEAL      => self::IDEAL,
-			self::DIRECT_DEBIT_SOFORT     => self::SOFORT,
-		];
-
-		return $payment_methods;
-	}
-
-	/**
 	 * Get recurring methods.
 	 *
 	 * @since 1.3.14
