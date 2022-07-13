@@ -29,6 +29,11 @@ class PaymentMethod {
 	private $fields = [];
 
 	/**
+	 * Supports.
+	 */
+	use SupportsTrait;
+
+	/**
 	 * Construct payment method.
 	 *
 	 * @param string $id ID.
