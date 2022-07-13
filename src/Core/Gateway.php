@@ -229,51 +229,6 @@ abstract class Gateway {
 	}
 
 	/**
-	 * Get payment method field options.
-	 *
-	 * @param bool $other_first Flag to prepend the 'Other' / 'All available methods' option.
-	 * @return array
-	 * @deprecated
-	 */
-	public function get_payment_method_field_options( $other_first = false ) {
-		$options = [];
-
-		$payment_methods = [];
-
-		try {
-			$available_methods = $this->get_transient_available_payment_methods();
-
-			if ( null !== $available_methods ) {
-				$payment_methods = \array_intersect( $available_methods, $this->get_supported_payment_methods() );
-			}
-		} catch ( \Exception $e ) {
-			$payment_methods = [];
-		}
-
-		// Use all supported payment methods as fallback.
-		if ( empty( $payment_methods ) ) {
-			$payment_methods = $this->get_supported_payment_methods();
-		}
-
-		// Set payment methods as options with name.
-		foreach ( $payment_methods as $payment_method ) {
-			$options[ $payment_method ] = PaymentMethods::get_name( $payment_method );
-		}
-
-		// Sort options by name.
-		natcasesort( $options );
-
-		// Add option to use all available payment methods.
-		if ( $other_first ) {
-			$options = [ _x( 'All available methods', 'Payment method field', 'pronamic_ideal' ) ] + $options;
-		} else {
-			$options[] = _x( 'Other', 'Payment method field', 'pronamic_ideal' );
-		}
-
-		return $options;
-	}
-
-	/**
 	 * Start transaction/payment
 	 *
 	 * @param Payment $payment The payment to start up at this gateway.
