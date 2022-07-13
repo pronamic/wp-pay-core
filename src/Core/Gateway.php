@@ -170,6 +170,7 @@ abstract class Gateway {
 	 * @return void
 	 */
 	public function payment_redirect( Payment $payment ) {
+		
 	}
 
 	/**
