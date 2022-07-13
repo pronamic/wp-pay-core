@@ -22,6 +22,16 @@ trait SupportsTrait {
 	protected $supports = [];
 
 	/**
+	 * Add support.
+	 *
+	 * @param string $feature Feature.
+	 * @retrun void
+	 */
+	public function add_support( $feature ) {
+		$this->supports[] = $feature;
+	}
+
+	/**
 	 * Check if supports a given feature.
 	 *
 	 * @param string $feature The feature to check.
