@@ -522,28 +522,6 @@ class PaymentMethods {
 	}
 
 	/**
-	 * Get recurring methods.
-	 *
-	 * @since 1.3.14
-	 * @return array
-	 */
-	public static function get_recurring_methods() {
-		// Get the direct debit methods.
-		$payment_methods = [
-			self::DIRECT_DEBIT_BANCONTACT => self::BANCONTACT,
-			self::DIRECT_DEBIT_IDEAL      => self::IDEAL,
-			self::DIRECT_DEBIT_SOFORT     => self::SOFORT,
-		];
-
-		// Add additional methods suitable for recurring payments.
-		$payment_methods[ self::APPLE_PAY ]   = self::APPLE_PAY;
-		$payment_methods[ self::CREDIT_CARD ] = self::CREDIT_CARD;
-		$payment_methods[ self::PAYPAL ]      = self::PAYPAL;
-
-		return $payment_methods;
-	}
-
-	/**
 	 * Is recurring method.
 	 *
 	 * @since 1.3.14
