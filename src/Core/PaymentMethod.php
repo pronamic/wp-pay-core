@@ -54,7 +54,7 @@ class PaymentMethod {
 	 */
 	public function __construct( $id ) {
 		$this->id     = $id;
-		$this->name   = PaymentMethods::get_name( $id );
+		$this->name   = (string) PaymentMethods::get_name( $id );
 		$this->status = '';
 	}
 
