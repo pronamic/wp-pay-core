@@ -246,17 +246,6 @@ abstract class Gateway {
 	}
 
 	/**
-	 * Is payment method required to start transaction?
-	 *
-	 * @since 1.3.0
-	 * @return boolean True if payment method is required, false otherwise.
-	 * @deprecated
-	 */
-	public function payment_method_is_required() {
-		return false;
-	}
-
-	/**
 	 * Get payment method field options.
 	 *
 	 * @param bool $other_first Flag to prepend the 'Other' / 'All available methods' option.
