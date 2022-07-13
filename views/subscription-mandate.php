@@ -229,25 +229,28 @@ if ( is_array( $current_mandate ) ) {
 								<select name="pronamic_pay_subscription_payment_method">
 									<?php
 
-									$recurring_methods = array_keys( PaymentMethods::get_recurring_methods() );
-
-									$active_methods = $gateway->get_transient_available_payment_methods();
-
-									if ( null !== $active_methods ) {
-										foreach ( $active_methods as $method ) {
-											if ( ! in_array( $method, $recurring_methods, true ) ) :
-												continue;
-											endif;
-
-											$name = PaymentMethods::get_name( $method );
-											$name = ( null === $name ) ? $method : $name;
-
-											printf(
-												'<option value="%s">%s</option>',
-												esc_attr( $method ),
-												esc_html( $name )
+									$payment_methods = array_filter(
+										$gateway->gat_payment_methods(),
+										function( $payment_method ) {
+											return (
+												in_array( $payment_method->get_status(), [ '', 'active' ], true )
+													&&
+												$payment_method->supports( 'recurring' )
 											);
 										}
+									);
+
+									foreach ( $payment_methods as $payment_method ) {
+										$id = $payment_method->get_id();
+
+										$name = PaymentMethods::get_name( $id );
+										$name = ( null === $name ) ? $id : $name;
+
+										printf(
+											'<option value="%s">%s</option>',
+											esc_attr( $id ),
+											esc_html( $name )
+										);
 									}
 
 									?>
