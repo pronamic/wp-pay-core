@@ -553,7 +553,14 @@ class PaymentMethods {
 	 * @return bool True if the specified payment method supports recurring, false otherwise.
 	 */
 	public static function is_recurring_method( $payment_method ) {
-		return array_key_exists( $payment_method, self::get_recurring_methods() );
+		return array_key_exists( $payment_method, [
+			self::DIRECT_DEBIT_BANCONTACT => self::BANCONTACT,
+			self::DIRECT_DEBIT_IDEAL      => self::IDEAL,
+			self::DIRECT_DEBIT_SOFORT     => self::SOFORT,
+			self::APPLE_PAY               => self::APPLE_PAY,
+			self::CREDIT_CARD             => self::CREDIT_CARD,
+			self::PAYPAL                  => self::PAYPAL,
+		] );
 	}
 
 	/**
