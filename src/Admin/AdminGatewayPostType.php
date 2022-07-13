@@ -288,56 +288,14 @@ class AdminGatewayPostType {
 			return;
 		}
 
-		// Supported and available payment methods.
-		$supported = $gateway->get_supported_payment_methods();
-
-		try {
-			$available = $gateway->get_transient_available_payment_methods();
-		} catch ( \Exception $e ) {
-			$available = [];
-		}
-
-		// Handle methods request support.
-		$supports_methods_request = false;
-
-		if ( null === $available ) {
-			$available = [];
-		} else {
-			// Set method request support variable for use in HTML.
-			$supports_methods_request = true;
-		}
-
-		$payment_methods = [];
-
-		foreach ( $supported as $payment_method ) {
-			$name = PaymentMethods::get_name( $payment_method );
-
-			$payment_methods[ $payment_method ] = (object) [
-				'id'        => $payment_method,
-				'name'      => $name,
-				'available' => in_array( $payment_method, $available, true ),
-			];
-		}
+		$payment_methods = $gateway->get_payment_methods();
 
 		usort(
 			$payment_methods,
 			function( $a, $b ) {
-				return strnatcasecmp( $a->name, $b->name );
+				return strnatcasecmp( PaymentMethods::get_name( $a->get_id() ), PaymentMethods::get_name( $b->get_id() ) );
 			}
 		);
-
-		$columns = [
-			'payment_method' => __( 'Payment method', 'pronamic_ideal' ),
-			'active'         => __( 'Active', 'pronamic_ideal' ),
-		];
-
-		if ( null !== $gateway_id ) {
-			$integration = pronamic_pay_plugin()->gateway_integrations->get_integration( $gateway_id );
-
-			if ( null !== $integration && $integration->supports( 'recurring' ) ) {
-				$columns['recurring'] = __( 'Recurring', 'pronamic_ideal' );
-			}
-		}
 
 		require __DIR__ . '/../../views/meta-box-gateway-payment-methods.php';
 	}

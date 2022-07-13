@@ -13,67 +13,75 @@
 
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 
+$show_recurring_column = false;
+
+foreach ( $payment_methods as $payment_method ) {
+	if ( $payment_method->supports( 'recurring' ) ) {
+		$show_recurring_column = true;
+
+		break;
+	}
+}
+
 ?>
 <table class="form-table widefat pronamic-pay-payment-methods">
 	<thead>
 		<tr>
-			<?php foreach ( $columns as $column ) : ?>
+			<th scope="col"><?php esc_html_e( 'Payment Method', 'pronamic_ideal' ); ?></th>
+			<th scope="col"><?php esc_html_e( 'Status', 'pronamic_ideal' ); ?></th>
 
-				<th><?php echo esc_html( $column ); ?></th>
+			<?php if ( $show_recurring_column ) : ?>
 
-			<?php endforeach; ?>
+				<th scope="col"><?php esc_html_e( 'Recurring', 'pronamic_ideal' ); ?></th>
+
+			<?php endif; ?>
 		</tr>
 	</thead>
 
 	<tbody>
 
-		<?php foreach ( $payment_methods as $method ) : ?>
+		<?php foreach ( $payment_methods as $payment_method ) : ?>
 
 			<tr>
+				<td>
+					<?php echo esc_html( PaymentMethods::get_name( $payment_method->get_id() ) ); ?>
+				</td>
+				<td>
+					<?php
 
-				<?php
+					$icon = 'question-mark';
 
-				foreach ( $columns as $key => $column ) :
-					$value = '';
-
-					switch ( $key ) :
-						case 'payment_method':
-							$value = $method->name;
-
-							break;
+					switch ( $payment_method->get_status() ) {
 						case 'active':
-							$icon = 'question-mark';
-
-							if ( $supports_methods_request ) {
-								$icon = ( $method->available ? 'completed' : 'cancelled' );
-							}
-
-							$value = sprintf( '<span class="pronamic-pay-icon pronamic-pay-icon-%s"></span>', esc_attr( $icon ) );
-
+							$icon = 'completed';
 							break;
-						case 'recurring':
+						case 'inactive':
 							$icon = 'cancelled';
-
-							if ( PaymentMethods::is_recurring_method( $method->id ) ) :
-								$icon = 'completed';
-							endif;
-
-							$value = sprintf( '<span class="pronamic-pay-icon pronamic-pay-icon-%s"></span>', esc_attr( $icon ) );
-
 							break;
-					endswitch;
+					}
 
-					printf(
-						'<td>%s</td>',
-						wp_kses(
-							$value,
-							[ 'span' => [ 'class' => [] ] ]
-						)
-					);
+					printf( '<span class="pronamic-pay-icon pronamic-pay-icon-%s"></span>', esc_attr( $icon ) );
 
-				endforeach;
+					?>
+				</td>
 
-				?>
+				<?php if ( $show_recurring_column ) : ?>
+
+					<td>
+						<?php
+
+						$icon = 'cancelled';
+
+						if ( $payment_method->supports( 'recurring' ) ) {
+							$icon = 'completed';
+						}
+
+						printf( '<span class="pronamic-pay-icon pronamic-pay-icon-%s"></span>', esc_attr( $icon ) );
+
+						?>
+					</td>
+
+				<?php endif; ?>
 
 			</tr>
 
