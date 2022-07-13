@@ -69,6 +69,16 @@ class PaymentMethod {
 	}
 
 	/**
+	 * Set status.
+	 *
+	 * @param string $status Status.
+	 * @return void
+	 */
+	public function set_status( $status ) {
+		$this->status = $status;
+	}
+
+	/**
 	 * Add field.
 	 *
 	 * @param Field $field Field.
