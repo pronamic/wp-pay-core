@@ -71,7 +71,7 @@ $currency_default = Currency::get_instance( 'EUR' );
 					printf(
 						'<option value="%s" data-is-recurring="%d">%s</option>',
 						esc_attr( $payment_method->get_id() ),
-						esc_attr( PaymentMethods::is_recurring_method( $payment_method->get_id() ) ? '1' : ' 0' ),
+						esc_attr( $payment_method->supports( 'recurring' ) ? '1' : ' 0' ),
 						esc_html( PaymentMethods::get_name( $payment_method->get_id() ) )
 					);
 				}
