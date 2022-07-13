@@ -22,6 +22,13 @@ class PaymentMethod {
 	private $id;
 
 	/**
+	 * Name.
+	 *
+	 * @var string
+	 */
+	private $name;
+
+	/**
 	 * Status.
 	 *
 	 * @var string
@@ -47,6 +54,7 @@ class PaymentMethod {
 	 */
 	public function __construct( $id ) {
 		$this->id     = $id;
+		$this->name   = PaymentMethods::get_name( $id );
 		$this->status = '';
 	}
 
@@ -57,6 +65,15 @@ class PaymentMethod {
 	 */
 	public function get_id() {
 		return $this->id;
+	}
+
+	/**
+	 * Get name.
+	 *
+	 * @return string
+	 */
+	public function get_name() {
+		return $this->name;
 	}
 
 	/**
