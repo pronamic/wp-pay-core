@@ -522,26 +522,6 @@ class PaymentMethods {
 	}
 
 	/**
-	 * Is recurring method.
-	 *
-	 * @since 1.3.14
-	 *
-	 * @param string $payment_method The payment method to check for recurring.
-	 *
-	 * @return bool True if the specified payment method supports recurring, false otherwise.
-	 */
-	public static function is_recurring_method( $payment_method ) {
-		return array_key_exists( $payment_method, [
-			self::DIRECT_DEBIT_BANCONTACT => self::BANCONTACT,
-			self::DIRECT_DEBIT_IDEAL      => self::IDEAL,
-			self::DIRECT_DEBIT_SOFORT     => self::SOFORT,
-			self::APPLE_PAY               => self::APPLE_PAY,
-			self::CREDIT_CARD             => self::CREDIT_CARD,
-			self::PAYPAL                  => self::PAYPAL,
-		] );
-	}
-
-	/**
 	 * Maybe update active payment methods.
 	 *
 	 * @return void
