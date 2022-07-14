@@ -170,15 +170,6 @@ $currency_default = Currency::get_instance( 'EUR' );
 		</td>
 	</tr>
 
-	<tr>
-		<th scope="row">
-			<?php esc_html_e( 'Phone Number', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<input name="test_phone" id="test_phone" class="regular-text code pronamic-pay-form-control" value="" type="tel" />
-		</td>
-	</tr>
-
 	<?php if ( $gateway->supports( 'recurring' ) ) : ?>
 
 		<?php
