@@ -76,7 +76,16 @@ class Field {
 	 *
 	 * @param bool $required Required.
 	 */
-	public function set_required( $required ) {
+	public function set_required( bool $required ) : void {
 		$this->required = $required;
+	}
+
+	/**
+	 * Is required.
+	 *
+	 * @return bool
+	 */
+	public function is_required() : bool {
+		return $this->required;
 	}
 }
