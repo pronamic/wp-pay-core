@@ -113,4 +113,27 @@ class PaymentMethod {
 	public function get_fields() {
 		return $this->fields;
 	}
+
+	/**
+	 * Get field by identifier.
+	 *
+	 * @param string $id Field identifier.
+	 * @return Field|null
+	 */
+	public function get_field( $id ) : ?Field {
+		$fields = array_filter(
+			$this->get_fields(),
+			function( $field ) use ( $id ) {
+				return $field->get_id() === $id;
+			}
+		);
+
+		$field = reset( $fields );
+
+		if ( false !== $field ) {
+			return $field;
+		}
+
+		return null;
+	}
 }
