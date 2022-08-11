@@ -22,6 +22,13 @@ class Field {
 	private $id;
 
 	/**
+	 * Label.
+	 *
+	 * @var string|null
+	 */
+	private $label;
+
+	/**
 	 * Required.
 	 *
 	 * @var bool
@@ -44,6 +51,24 @@ class Field {
 	 */
 	public function get_id() {
 		return $this->id;
+	}
+
+	/**
+	 * Get label.
+	 *
+	 * @return string|null
+	 */
+	public function get_label() : ?string {
+		return $this->label;
+	}
+
+	/**
+	 * Set label.
+	 *
+	 * @param string|null $label Label.
+	 */
+	public function set_label( ?string $label ) : void {
+		$this->label = $label;
 	}
 
 	/**
