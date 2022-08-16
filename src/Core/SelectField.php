@@ -19,9 +19,9 @@ class SelectField extends Field {
 	}
 
 	/**
-	 * Get optoins.
+	 * Get options.
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function get_options() {
 		return call_user_func( $this->options_callback );
