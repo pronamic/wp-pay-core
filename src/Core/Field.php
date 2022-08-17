@@ -44,6 +44,12 @@ class Field {
 	 */
 	public function __construct( $id ) {
 		$this->id = $id;
+
+		$this->setup();
+	}
+
+	protected function setup() {
+
 	}
 
 	/**

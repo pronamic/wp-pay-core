@@ -14,6 +14,12 @@ namespace Pronamic\WordPress\Pay\Core;
  * Select field iDEAL issuer class
  */
 class IDealIssuerSelectField extends SelectField {
+	protected function setup() {
+		parent::setup();
+
+		$this->label = \__( 'Bank', 'pronamic_ideal' );
+	}
+
 	protected function get_html_attributes() {
 		$attributes = parent::get_html_attributes();
 
