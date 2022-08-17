@@ -34,12 +34,14 @@ class SelectField extends Field {
 
 		foreach ( $this->get_options() as $child ) {
 			if ( $child instanceof SelectFieldOption ) {
-				$options[ $child->value ] = $child->content;
+				$options[] = $child;
 			}
 
 			if ( $child instanceof SelectFieldOptionGroup ) {
+				$options[] = new SelectFieldOption( '', $child->label );
+
 				foreach ( $child->options as $option ) {
-					$options[ $option->value ] = $option->content;
+					$options[] = new SelectFieldOption( $option->value, "\t" . $option->content );
 				}
 			}
 		}
