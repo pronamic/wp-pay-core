@@ -125,6 +125,31 @@ abstract class Gateway {
 	}
 
 	/**
+	 * First payment method field.
+	 *
+	 * @param string       $payment_method_id Payment method ID.
+	 * @param class-string $field_class       Field class.
+	 * @return Field|null
+	 */
+	public function first_payment_method_field( $payment_method_id, $field_class ) {
+		$payment_method = $this->get_payment_method( $payment_method_id );
+
+		if ( null === $payment_method ) {
+			return null;
+		}
+
+		$fields = $payment_method->get_fields();
+
+		foreach ( $fields as $field ) {
+			if ( $field instanceof $field_class ) {
+				return $field;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Get payment methods.
 	 *
 	 * @return PaymentMethod[]
