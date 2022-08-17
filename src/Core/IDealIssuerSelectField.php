@@ -17,7 +17,7 @@ class IDealIssuerSelectField extends SelectField {
 	protected function setup() {
 		parent::setup();
 
-		$this->label = \__( 'Bank', 'pronamic_ideal' );
+		$this->set_label( \__( 'Bank', 'pronamic_ideal' ) );
 	}
 
 	protected function get_html_attributes() {
