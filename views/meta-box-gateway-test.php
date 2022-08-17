@@ -27,30 +27,6 @@ if ( null === $gateway ) {
 
 wp_nonce_field( 'test_pay_gateway', 'pronamic_pay_test_nonce' );
 
-try {
-	foreach ( $gateway->get_payment_methods() as $payment_method ) {
-		foreach ( $payment_method->get_fields() as $field ) {
-
-		}
-	}
-} catch ( \Exception $exception ) {
-	?>
-	<div class="error">
-		<dl>
-			<dt><?php esc_html_e( 'Message', 'pronamic_ideal' ); ?></dt>
-			<dd><?php echo esc_html( $exception->getMessage() ); ?></dd>
-
-			<?php if ( 0 !== $exception->getCode() ) : ?>
-
-				<dt><?php esc_html_e( 'Code', 'pronamic_ideal' ); ?></dt>
-				<dd><?php echo esc_html( $exception->getCode() ); ?></dd>
-
-			<?php endif; ?>
-		</dl>
-	</div>
-	<?php
-}
-
 $currency_default = Currency::get_instance( 'EUR' );
 
 ?>
@@ -107,7 +83,38 @@ $currency_default = Currency::get_instance( 'EUR' );
 					<?php echo esc_html( $label ); ?>
 				</th>
 				<td>
-					<?php $field->output(); ?>
+					<?php
+
+					try {
+						$field->output();
+					} catch ( \Exception $exception ) {
+						echo '<em>';
+
+						printf(
+							__( 'This field could not be displayed due to the following error message: "%s".', 'pronamic_ideal' ),
+							\esc_html( $exception->getMessage() )
+						);
+
+						echo '</em>';
+
+						?>
+						<div class="error">
+							<dl>
+								<dt><?php esc_html_e( 'Message', 'pronamic_ideal' ); ?></dt>
+								<dd><?php echo esc_html( $exception->getMessage() ); ?></dd>
+
+								<?php if ( 0 !== $exception->getCode() ) : ?>
+
+									<dt><?php esc_html_e( 'Code', 'pronamic_ideal' ); ?></dt>
+									<dd><?php echo esc_html( $exception->getCode() ); ?></dd>
+
+								<?php endif; ?>
+							</dl>
+						</div>
+						<?php
+					}
+
+					?>
 				</td>
 			</tr>
 
