@@ -14,6 +14,17 @@ namespace Pronamic\WordPress\Pay\Core;
  * Select field iDEAL issuer class
  */
 class IDealIssuerSelectField extends SelectField {
+	/**
+	 * Cache key.
+	 *
+	 * @var string
+	 */
+	private $cache_key = '';
+
+	public function set_cache_key( $cache_key ) {
+		$this->cache_key = $cache_key;
+	}
+
 	protected function setup() {
 		parent::setup();
 
@@ -29,20 +40,46 @@ class IDealIssuerSelectField extends SelectField {
 		return $attributes;
 	}
 
+	public function set_options_callback( $options_callback ) {
+		$this->options_callback = $options_callback;
+	}
+
+	private function get_callback_options() {
+		return \call_user_func( $this->options_callback );
+	}
+
+	private function get_transient_options() {
+		if ( '' === $this->cache_key ) {
+			return $this->get_callback_options();
+		}
+
+		$options = \get_transient( $this->cache_key );
+
+		if ( false === $options ) {
+			$options = $this->get_callback_options();
+
+			set_transient( $this->cache_key, $options, \DAY_IN_SECONDS );
+		}
+
+		return $options;
+	}
+
 	/**
 	 * Get options.
 	 *
 	 * @return array<SelectFieldOption|SelectFieldOptionGroup>
 	 */
 	public function get_options() {
-		$options = parent::get_options();
+		$options = $this->get_transient_options();
 
-		/**
-		 * The list should be accompanied by the instruction phrase "Kies uw bank" (UK: "Choose your bank"). In
-		 * case of an HTML <SELECT>, the first element in the list states this instruction phrase and is selected by default (to prevent accidental Issuer selection).
-		 */
-		array_unshift( $options, new SelectFieldOption( '', __( '— Choose your bank —', 'pronamic_ideal' ) ) );
+		return [
+			/**
+			 * The list should be accompanied by the instruction phrase "Kies uw bank" (UK: "Choose your bank"). In
+			 * case of an HTML <SELECT>, the first element in the list states this instruction phrase and is selected by default (to prevent accidental Issuer selection).
+			 */
+			new SelectFieldOption( '', __( '— Choose your bank —', 'pronamic_ideal' ) ),
 
-		return $options;
+			...$options,
+		];
 	}
 }

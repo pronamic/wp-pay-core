@@ -16,9 +16,12 @@ use Pronamic\WordPress\Html\Element;
  * Select field class
  */
 class SelectField extends Field {
-	public function set_options_callback( $options_callback ) {
-		$this->options_callback = $options_callback;
-	}
+	/**
+	 * Options.
+	 *
+	 * @var array<SelectFieldOption|SelectFieldOptionGroup>
+	 */
+	private $options = [];
 
 	/**
 	 * Get options.
@@ -26,7 +29,7 @@ class SelectField extends Field {
 	 * @return array<SelectFieldOption|SelectFieldOptionGroup>
 	 */
 	public function get_options() {
-		return call_user_func( $this->options_callback );
+		return $this->options;
 	}
 
 	/**
