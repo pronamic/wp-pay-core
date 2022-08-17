@@ -29,64 +29,10 @@ class SelectField extends Field {
 		return call_user_func( $this->options_callback );
 	}
 
-	private function ensure_option( $key, $value ) {
-		if ( $value instanceof SelectFieldOption ) {
-			return $value;
-		}
-
-		if ( $value instanceof SelectFieldOptionGroup ) {
-			return $value;
-		}
-
-		return new SelectFieldOption( $key, $value );
-	}
-
-	private function ensure_option_group( $item ) {
-		if ( ! \array_key_exists( 'name', $item ) ) {
-			throw new \Exception( 'Unexpected option.' );
-		}
-
-		if ( ! \array_key_exists( 'options', $item ) ) {
-			throw new \Exception( 'Unexpected option.' );
-		}
-
-		$group = new SelectFieldOptionGroup( $item['name'] );
-
-		foreach ( $item['options'] as $key => $value ) {
-			$group->options[] = new SelectFieldOption( $key, $value );
-		}
-
-		return $group;
-	}
-
-	private function ensure_children( $options ) {
-		$children = [];
-
-		foreach ( $options as $key => $value ) {
-			if ( is_array( $value ) ) {
-				foreach ( $value as $item ) {
-					$children[] = $this->ensure_option_group( $item );
-				}
-			}
-
-			if ( ! is_array( $value ) ) {
-				$children[] = $this->ensure_option( $key, $value );
-			}
-		}
-	}
-
-	public function get_children() {
-		$options = $this->get_options();
-
-		$children = $this->ensure_children( $options );
-
-		return $children;
-	}
-
 	public function get_flat_options() {
 		$options = [];
 
-		foreach ( $this->get_children() as $child ) {
+		foreach ( $this->get_options() as $child ) {
 			if ( $child instanceof SelectFieldOption ) {
 				$options[ $child->value ] = $child->content;
 			}
@@ -102,9 +48,9 @@ class SelectField extends Field {
 	}
 
 	public function render() {
-		$element = new Element( 'select', [] );
+		$element = new Element( 'select', $this->get_html_attributes() );
 
-		foreach ( $this->get_children() as $child ) {
+		foreach ( $this->get_options() as $child ) {
 			$element->children[] = $child->render();
 		}
 

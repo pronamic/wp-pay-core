@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay\Core;
 
+use Pronamic\WordPress\Html\Element;
+
 /**
  * Field class
  */
@@ -87,5 +89,29 @@ class Field {
 	 */
 	public function is_required() : bool {
 		return $this->required;
+	}
+
+	protected function get_html_attributes() {
+		return [
+			'required' => $this->is_required(),
+		];
+	}
+
+	/**
+	 * Render.
+	 *
+	 * @return string
+	 */
+	public function render() {
+		return '';
+	}
+
+	/**
+	 * Print output.
+	 *
+	 * @return int
+	 */
+	public function output() {
+		return print $this->render();
 	}
 }

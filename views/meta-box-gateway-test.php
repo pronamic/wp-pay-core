@@ -107,30 +107,7 @@ $currency_default = Currency::get_instance( 'EUR' );
 					<?php echo esc_html( $label ); ?>
 				</th>
 				<td>
-					<?php
-
-					switch ( get_class( $field ) ) {
-						case \Pronamic\WordPress\Pay\Core\SelectField::class:
-
-							printf(
-								'<select %s>%s</select>',
-								// @codingStandardsIgnoreStart
-								\Pronamic\WordPress\Pay\Util::array_to_html_attributes( $attributes ),
-								\Pronamic\WordPress\Pay\Util::select_options_grouped( $field->get_options() )
-								// @codingStandardsIgnoreEnd
-							);
-
-							break;
-						default:
-							printf(
-								__( 'Unsupported field: `%s`', 'pronamic_ideal' ),
-								get_class( $field )
-							);
-
-							break;
-					}
-
-					?>
+					<?php $field->output(); ?>
 				</td>
 			</tr>
 
