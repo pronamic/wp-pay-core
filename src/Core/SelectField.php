@@ -29,6 +29,11 @@ class SelectField extends Field {
 		return call_user_func( $this->options_callback );
 	}
 
+	/**
+	 * Get flat options.
+	 *
+	 * @return SelectFieldOption[]
+	 */
 	public function get_flat_options() {
 		$options = [];
 
