@@ -404,6 +404,19 @@ class PaymentMethods {
 	const VISA = 'visa';
 
 	/**
+	 * Constant for void payment method.
+	 *
+	 * Payment providers do not always require a specific payment method to guide a
+	 * customer through the payment process. Payment providers then let the customer
+	 * choose the desired payment method on an intermediate page. The void payment
+	 * method can be used to distinguish this feature.
+	 *
+	 * @link https://docs.mollie.com/payments/hosted-checkout
+	 * @var string
+	 */
+	const VOID = 'void';
+
+	/**
 	 * Get payment methods
 	 *
 	 * @since 1.3.0
@@ -467,6 +480,7 @@ class PaymentMethods {
 			self::V_PAY                   => __( 'V PAY', 'pronamic_ideal' ),
 			self::VIPPS                   => __( 'Vipps', 'pronamic_ideal' ),
 			self::VISA                    => __( 'Visa', 'pronamic_ideal' ),
+			self::VOID                    => '',
 		];
 
 		return $payment_methods;
