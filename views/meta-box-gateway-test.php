@@ -62,25 +62,8 @@ $currency_default = Currency::get_instance( 'EUR' );
 		<?php foreach ( $payment_method->get_fields() as $field ) : ?>
 
 			<tr class="pronamic-pay-cloack pronamic-pay-test-payment-method <?php echo esc_attr( $payment_method->get_id() ); ?>">
-				<?php
-
-				$label = __( 'Field', 'pronamic_ideal' );
-
-				$attributes = [];
-
-				switch ( $field->get_id() ) {
-					case 'ideal-issuer':
-						$label = __( 'Bank', 'pronamic_ideal' );
-
-						$attributes['id']   = 'pronamic_ideal_issuer_id';
-						$attributes['name'] = 'pronamic_ideal_issuer_id';
-
-						break;
-				}
-
-				?>
 				<th scope="row">
-					<?php echo esc_html( $label ); ?>
+					<?php echo esc_html( $field->get_label() ); ?>
 				</th>
 				<td>
 					<?php
