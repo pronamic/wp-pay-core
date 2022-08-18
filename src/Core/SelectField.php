@@ -46,10 +46,8 @@ class SelectField extends Field {
 			}
 
 			if ( $child instanceof SelectFieldOptionGroup ) {
-				$options[] = new SelectFieldOption( '', $child->label );
-
 				foreach ( $child->options as $option ) {
-					$options[] = new SelectFieldOption( $option->value, "\t" . $option->content );
+					$options[] = $option;
 				}
 			}
 		}
