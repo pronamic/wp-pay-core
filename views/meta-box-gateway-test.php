@@ -38,8 +38,8 @@ $currency_default = Currency::get_instance( 'EUR' );
 			</label>
 		</th>
 		<td>
-			<select id="pronamic-pay-test-payment-methods" name="pronamic_pay_test_payment_method">
-				<option value=""></option>
+			<select id="pronamic-pay-test-payment-methods" name="pronamic_pay_test_payment_method" required>
+				<option value=""><?php esc_html_e( '— Choose payment method —', 'pronamic_ideal' ); ?></option>
 
 				<?php
 
