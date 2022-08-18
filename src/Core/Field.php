@@ -98,9 +98,7 @@ class Field {
 	}
 
 	protected function get_html_attributes() {
-		return [
-			'required' => $this->is_required(),
-		];
+		return [];
 	}
 
 	/**
