@@ -77,6 +77,16 @@ class PaymentMethod {
 	}
 
 	/**
+	 * Set name.
+	 *
+	 * @param string $name Name.
+	 * @return void
+	 */
+	public function set_name( $name ) {
+		$this->name = $name;
+	}
+
+	/**
 	 * Get status.
 	 *
 	 * @return string
