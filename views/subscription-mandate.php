@@ -241,14 +241,14 @@ if ( is_array( $current_mandate ) ) {
 									);
 
 									foreach ( $payment_methods as $payment_method ) {
-										$id = $payment_method->get_id();
+										$payment_method_id = $payment_method->get_id();
 
 										$name = $payment_method->get_name();
-										$name = ( '' === $name ) ? $id : $name;
+										$name = ( '' === $name ) ? $payment_method_id : $name;
 
 										printf(
 											'<option value="%s">%s</option>',
-											esc_attr( $id ),
+											esc_attr( $payment_method_id ),
 											esc_html( $name )
 										);
 									}
