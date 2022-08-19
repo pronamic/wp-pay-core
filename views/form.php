@@ -142,20 +142,20 @@ $currency = Currency::get_instance( 'EUR' );
 
 		<?php
 
-			$fields = [];
+		$fields = [];
 
-			foreach ( $gateway->get_payment_methods() as $payment_method ) {
-				foreach ( $payment_method->get_fields() as $field ) {
-					if ( $field->is_required() ) {
-						$fields[] = $field;
-					}
+		foreach ( $gateway->get_payment_methods() as $payment_method ) {
+			foreach ( $payment_method->get_fields() as $field ) {
+				if ( $field->is_required() ) {
+					$fields[] = $field;
 				}
 			}
+		}
 
-			?>
+		?>
 
 		<?php if ( ! empty( $fields ) ) : ?>
-	
+
 			<fieldset>
 				<legend><?php esc_html_e( 'Payment Info', 'pronamic_ideal' ); ?></legend>
 
