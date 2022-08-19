@@ -48,6 +48,11 @@ class Field {
 		$this->setup();
 	}
 
+	/**
+	 * Setup field.
+	 *
+	 * @return void
+	 */
 	protected function setup() {
 
 	}
@@ -97,6 +102,11 @@ class Field {
 		return $this->required;
 	}
 
+	/**
+	 * Get HTML attributes.
+	 *
+	 * @return array<string, string>
+	 */
 	protected function get_html_attributes() {
 		return [];
 	}
@@ -116,6 +126,7 @@ class Field {
 	 * @return int
 	 */
 	public function output() {
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		return print $this->render();
 	}
 }

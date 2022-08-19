@@ -16,18 +16,33 @@ use Pronamic\WordPress\Html\Element;
  * Select field option group class
  */
 class SelectFieldOptionGroup {
+	/**
+	 * Options.
+	 *
+	 * @var SelectFieldOption[]
+	 */
 	public $options = [];
 
+	/**
+	 * Construct select field option group.
+	 *
+	 * @param string $label Label.
+	 */
 	public function __construct( $label ) {
 		$this->label = $label;
 	}
 
+	/**
+	 * Render.
+	 *
+	 * @return string
+	 */
 	public function render() {
 		$element = new Element(
 			'optgroup',
 			[
 				'label' => $this->label,
-			] 
+			]
 		);
 
 		foreach ( $this->options as $option ) {

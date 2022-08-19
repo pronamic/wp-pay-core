@@ -113,7 +113,7 @@ abstract class Gateway {
 	/**
 	 * Get payment method by ID.
 	 *
-	 * @param string $id ID
+	 * @param string $id ID.
 	 * @return PaymentMethod|null
 	 */
 	public function get_payment_method( $id ) {

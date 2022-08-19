@@ -55,6 +55,11 @@ class SelectField extends Field {
 		return $options;
 	}
 
+	/**
+	 * Render field.
+	 *
+	 * @return string
+	 */
 	public function render() {
 		$element = new Element( 'select', $this->get_html_attributes() );
 
