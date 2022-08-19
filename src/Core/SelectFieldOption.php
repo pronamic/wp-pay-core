@@ -22,9 +22,12 @@ class SelectFieldOption {
 	}
 
 	public function render() {
-		$element = new Element( 'option', [
-			'value' => $this->value,
-		] );
+		$element = new Element(
+			'option',
+			[
+				'value' => $this->value,
+			] 
+		);
 
 		$element->children[] = $this->content;
 

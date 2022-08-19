@@ -23,9 +23,12 @@ class SelectFieldOptionGroup {
 	}
 
 	public function render() {
-		$element = new Element( 'optgroup', [
-			'label' => $this->label,
-		] );
+		$element = new Element(
+			'optgroup',
+			[
+				'label' => $this->label,
+			] 
+		);
 
 		foreach ( $this->options as $option ) {
 			$element->children[] = $option->render();

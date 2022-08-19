@@ -57,7 +57,7 @@ $currency_default = Currency::get_instance( 'EUR' );
 		</td>
 	</tr>
 
-	<?php foreach( $gateway->get_payment_methods() as $payment_method ) : ?>
+	<?php foreach ( $gateway->get_payment_methods() as $payment_method ) : ?>
 
 		<?php foreach ( $payment_method->get_fields() as $field ) : ?>
 
