@@ -74,8 +74,9 @@ $currency_default = Currency::get_instance( 'EUR' );
 						echo '<em>';
 
 						printf(
-							__( 'This field could not be displayed due to the following error message: "%s".', 'pronamic_ideal' ),
-							\esc_html( $exception->getMessage() )
+							/* translators: %s: Exception message. */
+							esc_html__( 'This field could not be displayed due to the following error message: "%s".', 'pronamic_ideal' ),
+							esc_html( $exception->getMessage() )
 						);
 
 						echo '</em>';
