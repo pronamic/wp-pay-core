@@ -14,6 +14,9 @@ use Pronamic\WordPress\Html\Element;
 
 /**
  * Select field class
+ *
+ * @link https://developer.wordpress.org/block-editor/reference-guides/components/select-control/
+ * @link https://github.com/WordPress/gutenberg/tree/trunk/packages/components/src/select-control
  */
 class SelectField extends Field {
 	/**
