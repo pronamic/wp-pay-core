@@ -10,12 +10,12 @@
 
 namespace Pronamic\WordPress\Pay\Core;
 
-use Pronamic\WordPress\Html\Element;
+use JsonSerializable;
 
 /**
  * Field class
  */
-class Field {
+class Field implements JsonSerializable {
 	/**
 	 * ID.
 	 *
@@ -128,5 +128,19 @@ class Field {
 	public function output() {
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		return print $this->render();
+	}
+
+	/**
+	 * Serialize to JSON.
+	 *
+	 * @return array
+	 */
+	public function jsonSerialize() {
+		return [
+			'type'     => '',
+			'id'       => $this->id,
+			'label'    => $this->label,
+			'required' => $this->required,
+		];
 	}
 }

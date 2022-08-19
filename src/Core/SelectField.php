@@ -69,4 +69,18 @@ class SelectField extends Field {
 
 		return $element->render();
 	}
+
+	/**
+	 * Serialize to JSON.
+	 *
+	 * @return array
+	 */
+	public function jsonSerialize() {
+		$data = parent::jsonSerialize();
+
+		$data['type']    = 'select';
+		$data['options'] = $this->get_flat_options();
+
+		return $data;
+	}
 }

@@ -10,21 +10,38 @@
 
 namespace Pronamic\WordPress\Pay\Core;
 
+use JsonSerializable;
 use Pronamic\WordPress\Html\Element;
 
 /**
  * Select field option class
+ *
+ * @link https://developer.wordpress.org/block-editor/reference-guides/components/select-control/#options
  */
-class SelectFieldOption {
+class SelectFieldOption implements JsonSerializable {
+	/**
+	 * Value.
+	 *
+	 * @var string
+	 */
+	public $value;
+
+	/**
+	 * Label.
+	 *
+	 * @var string
+	 */
+	public $label;
+
 	/**
 	 * Construct select field option.
 	 *
-	 * @param string $value   Value.
-	 * @param string $content Content.
+	 * @param string $value Value.
+	 * @param string $label Label.
 	 */
-	public function __construct( $value, $content ) {
-		$this->value   = $value;
-		$this->content = $content;
+	public function __construct( string $value, string $label ) {
+		$this->value = $value;
+		$this->label = $label;
 	}
 
 	/**
@@ -32,7 +49,7 @@ class SelectFieldOption {
 	 *
 	 * @return string
 	 */
-	public function render() {
+	public function render() : string {
 		$element = new Element(
 			'option',
 			[
@@ -40,8 +57,21 @@ class SelectFieldOption {
 			]
 		);
 
-		$element->children[] = $this->content;
+		$element->children[] = $this->label;
 
 		return $element->render();
+	}
+
+	/**
+	 * Serialize to JSON.
+	 *
+	 * @link https://developer.wordpress.org/block-editor/reference-guides/components/select-control/
+	 * @return array
+	 */
+	public function jsonSerialize() : array {
+		return [
+			'value' => $this->value,
+			'label' => $this->label,
+		];
 	}
 }
