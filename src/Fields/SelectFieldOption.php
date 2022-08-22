@@ -8,7 +8,7 @@
  * @package   Pronamic\WordPress\Pay\Core
  */
 
-namespace Pronamic\WordPress\Pay\Core;
+namespace Pronamic\WordPress\Pay\Fields;
 
 use JsonSerializable;
 use Pronamic\WordPress\Html\Element;
