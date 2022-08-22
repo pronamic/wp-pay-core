@@ -10,6 +10,8 @@
 
 namespace Pronamic\WordPress\Pay\Core;
 
+use Pronamic\WordPress\Pay\Fields\Field;
+
 /**
  * Payment method class
  */
