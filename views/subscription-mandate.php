@@ -257,13 +257,6 @@ if ( is_array( $current_mandate ) ) {
 								</select>
 							</label>
 
-							<?php
-
-							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Complex input HTML.
-							echo $gateway->get_input_html();
-
-							?>
-
 							<p>
 								<?php wp_nonce_field( 'pronamic_pay_update_subscription_mandate', 'pronamic_pay_nonce' ); ?>
 
