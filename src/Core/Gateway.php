@@ -152,10 +152,35 @@ abstract class Gateway {
 	/**
 	 * Get payment methods.
 	 *
+	 * @param array $args Query arguments.
 	 * @return PaymentMethod[]
 	 */
-	public function get_payment_methods() {
-		return $this->payment_methods;
+	public function get_payment_methods( $args = [] ) {
+		$payment_methods = $this->payment_methods;
+
+		if ( \array_key_exists( 'status', $args ) ) {
+			$status_list = \wp_parse_list( $args['status'] );
+
+			$payment_methods = array_filter(
+				$payment_methods,
+				function( $payment_method ) use ( $status_list ) {
+					return \in_array( $payment_method->get_status(), $status_list, true );
+				}
+			);
+		}
+
+		if ( \array_key_exists( 'supports', $args ) ) {
+			$feature = $args['supports'];
+
+			$payment_methods = array_filter(
+				$payment_methods,
+				function( $payment_method ) use ( $feature ) {
+					return $payment_method->supports( $feature );
+				}
+			);
+		}
+
+		return $payment_methods;
 	}
 
 	/**
