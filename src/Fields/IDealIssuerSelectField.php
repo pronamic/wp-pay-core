@@ -15,29 +15,6 @@ namespace Pronamic\WordPress\Pay\Fields;
  */
 class IDealIssuerSelectField extends SelectField {
 	/**
-	 * Cache key.
-	 *
-	 * @var string
-	 */
-	private $cache_key = '';
-
-	/**
-	 * Options callback.
-	 *
-	 * @var callable:array<SelectFieldOption|SelectFieldOptionGroup>
-	 */
-	private $options_callback;
-
-	/**
-	 * Set cache key.
-	 *
-	 * @param string $cache_key Cache key.
-	 */
-	public function set_cache_key( $cache_key ) {
-		$this->cache_key = $cache_key;
-	}
-
-	/**
 	 * Setup.
 	 *
 	 * @return void
@@ -63,52 +40,12 @@ class IDealIssuerSelectField extends SelectField {
 	}
 
 	/**
-	 * Set options callback.
-	 *
-	 * @param callable:array<SelectFieldOption|SelectFieldOptionGroup> $options_callback Options callback.
-	 * @return void
-	 */
-	public function set_options_callback( $options_callback ) {
-		$this->options_callback = $options_callback;
-	}
-
-	/**
-	 * Get callback options.
-	 *
-	 * @return array<SelectFieldOption|SelectFieldOptionGroup>
-	 */
-	private function get_callback_options() {
-		return \call_user_func( $this->options_callback );
-	}
-
-	/**
-	 * Get transient options.
-	 *
-	 * @return array<SelectFieldOption|SelectFieldOptionGroup>
-	 */
-	private function get_transient_options() {
-		if ( '' === $this->cache_key ) {
-			return $this->get_callback_options();
-		}
-
-		$options = \get_transient( $this->cache_key );
-
-		if ( false === $options ) {
-			$options = $this->get_callback_options();
-
-			set_transient( $this->cache_key, $options, \DAY_IN_SECONDS );
-		}
-
-		return $options;
-	}
-
-	/**
 	 * Get options.
 	 *
 	 * @return array<SelectFieldOption|SelectFieldOptionGroup>
 	 */
 	public function get_options() {
-		$options = $this->get_transient_options();
+		$options = parent::get_options();
 
 		return [
 			/**

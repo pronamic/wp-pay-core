@@ -22,23 +22,32 @@ class SelectField extends Field {
 	/**
 	 * Options.
 	 *
-	 * @var array<SelectFieldOption|SelectFieldOptionGroup>
+	 * @var iterable<SelectFieldOption|SelectFieldOptionGroup>
 	 */
 	private $options = [];
 
 	/**
 	 * Get options.
 	 *
-	 * @return array<SelectFieldOption|SelectFieldOptionGroup>
+	 * @return iterable<SelectFieldOption|SelectFieldOptionGroup>
 	 */
 	public function get_options() {
 		return $this->options;
 	}
 
 	/**
+	 * Set options.
+	 *
+	 * @param iterable<SelectFieldOption|SelectFieldOptionGroup> $options Options.
+	 */
+	public function set_options( $options ) {
+		$this->options = $options;
+	}
+
+	/**
 	 * Get flat options.
 	 *
-	 * @return SelectFieldOption[]
+	 * @return iterable<SelectFieldOption>
 	 */
 	public function get_flat_options() {
 		$options = [];
