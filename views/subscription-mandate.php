@@ -229,15 +229,11 @@ if ( is_array( $current_mandate ) ) {
 								<select name="pronamic_pay_subscription_payment_method">
 									<?php
 
-									$payment_methods = array_filter(
-										$gateway->gat_payment_methods(),
-										function( $payment_method ) {
-											return (
-												in_array( $payment_method->get_status(), [ '', 'active' ], true )
-													&&
-												$payment_method->supports( 'recurring' )
-											);
-										}
+									$payment_methods = $gateway->gat_payment_methods(
+										[
+											'status'   => [ '', 'active' ],
+											'supports' => 'recurring',
+										]
 									);
 
 									foreach ( $payment_methods as $payment_method ) {
