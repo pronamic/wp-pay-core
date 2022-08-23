@@ -26,9 +26,9 @@ class Field implements JsonSerializable {
 	/**
 	 * Label.
 	 *
-	 * @var string|null
+	 * @var string
 	 */
-	private $label;
+	private $label = '';
 
 	/**
 	 * Required.
@@ -38,7 +38,7 @@ class Field implements JsonSerializable {
 	private $required = false;
 
 	/**
-	 * Construct field
+	 * Construct field.
 	 *
 	 * @param string $id ID.
 	 */
@@ -69,18 +69,18 @@ class Field implements JsonSerializable {
 	/**
 	 * Get label.
 	 *
-	 * @return string|null
+	 * @return string
 	 */
-	public function get_label() : ?string {
+	public function get_label() : string {
 		return $this->label;
 	}
 
 	/**
 	 * Set label.
 	 *
-	 * @param string|null $label Label.
+	 * @param string $label Label.
 	 */
-	public function set_label( ?string $label ) : void {
+	public function set_label( string $label ) : void {
 		$this->label = $label;
 	}
 

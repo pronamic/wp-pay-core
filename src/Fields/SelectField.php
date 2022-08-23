@@ -39,6 +39,7 @@ class SelectField extends Field {
 	 * Set options.
 	 *
 	 * @param iterable<SelectFieldOption|SelectFieldOptionGroup> $options Options.
+	 * @return void
 	 */
 	public function set_options( $options ) {
 		$this->options = $options;

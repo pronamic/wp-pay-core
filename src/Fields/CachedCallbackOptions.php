@@ -15,25 +15,27 @@ use IteratorAggregate;
 
 /**
  * Cached callback options class
+ *
+ * @phpstan-implements IteratorAggregate<SelectFieldOption|SelectFieldOptionGroup>
  */
 class CachedCallbackOptions implements IteratorAggregate {
 	/**
 	 * Cache key.
-	 * 
+	 *
 	 * @var string
 	 */
 	private $cache_key;
 
 	/**
 	 * Callback.
-	 * 
+	 *
 	 * @var callable: array<SelectFieldOption|SelectFieldOptionGroup>
 	 */
 	private $callback;
 
 	/**
 	 * Construct cached callback options.
-	 * 
+	 *
 	 * @param callable $callback Callback.
 	 * @param string   $cache_key Cache key.
 	 */
@@ -44,8 +46,8 @@ class CachedCallbackOptions implements IteratorAggregate {
 
 	/**
 	 * Get itreator.
-	 * 
-	 * @return ArrayIterator
+	 *
+	 * @return ArrayIterator<int, SelectFieldOption|SelectFieldOptionGroup>
 	 */
 	public function getIterator() {
 		$options = $this->get_transient_options();
