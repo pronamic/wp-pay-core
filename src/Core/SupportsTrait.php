@@ -25,7 +25,7 @@ trait SupportsTrait {
 	 * Add support.
 	 *
 	 * @param string $feature Feature.
-	 * @retrun void
+	 * @return void
 	 */
 	public function add_support( $feature ) {
 		$this->supports[] = $feature;
