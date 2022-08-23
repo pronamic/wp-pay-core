@@ -89,7 +89,7 @@ abstract class Gateway {
 	 *
 	 * @var PaymentMethod[]
 	 */
-	private $payment_methods = [];
+	protected $payment_methods = [];
 
 	/**
 	 * Construct gateway.
