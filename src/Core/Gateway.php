@@ -63,14 +63,6 @@ abstract class Gateway {
 	 */
 	private $method;
 
-	/**
-	 * Payment method to use on this gateway.
-	 *
-	 * @since 1.2.3
-	 * @var string|null
-	 */
-	private $payment_method;
-
 	use ModeTrait;
 
 	/**
