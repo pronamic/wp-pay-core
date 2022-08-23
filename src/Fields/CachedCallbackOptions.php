@@ -17,15 +17,36 @@ use IteratorAggregate;
  * Cached callback options class
  */
 class CachedCallbackOptions implements IteratorAggregate {
+	/**
+	 * Cache key.
+	 * 
+	 * @var string
+	 */
 	private $cache_key;
 
+	/**
+	 * Callback.
+	 * 
+	 * @var callable: array<SelectFieldOption|SelectFieldOptionGroup>
+	 */
 	private $callback;
 
+	/**
+	 * Construct cached callback options.
+	 * 
+	 * @param callable $callback Callback.
+	 * @param string   $cache_key Cache key.
+	 */
 	public function __construct( $callback, $cache_key ) {
 		$this->callback  = $callback;
 		$this->cache_key = $cache_key;
 	}
 
+	/**
+	 * Get itreator.
+	 * 
+	 * @return ArrayIterator
+	 */
 	public function getIterator() {
 		$options = $this->get_transient_options();
 
@@ -56,7 +77,7 @@ class CachedCallbackOptions implements IteratorAggregate {
 		if ( false === $options ) {
 			$options = $this->get_callback_options();
 
-			set_transient( $this->cache_key, $options, \DAY_IN_SECONDS );
+			\set_transient( $this->cache_key, $options, \DAY_IN_SECONDS );
 		}
 
 		return $options;
