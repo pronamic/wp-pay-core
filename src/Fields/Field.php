@@ -38,6 +38,13 @@ class Field implements JsonSerializable {
 	private $required = false;
 
 	/**
+	 * Meta key.
+	 *
+	 * @var string
+	 */
+	public $meta_key = '';
+
+	/**
 	 * Construct field.
 	 *
 	 * @param string $id ID.

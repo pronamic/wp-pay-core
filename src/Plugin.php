@@ -1002,7 +1002,11 @@ class Plugin {
 			$id = $field->get_id();
 
 			if ( \array_key_exists( $id, $data ) ) {
-				$payment->set_meta( $id, $field->sanitize( $data[ $id ] ) );
+				$value = $field->sanitize( $data[ $id ] );
+
+				if ( '' !== $field->meta_key ) {
+					$payment->set_meta( $field->meta_key, $value );
+				}
 			}
 		}
 	}
