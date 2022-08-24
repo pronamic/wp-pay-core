@@ -1023,7 +1023,7 @@ class Plugin {
 			$id = $field->get_id();
 
 			if ( \array_key_exists( $id, $data ) ) {
-				$payment->field_values[ $id ] = $field->sanitize( $data[ $id ] );
+				$payment->set_meta( $id, $field->sanitize( $data[ $id ] ) );
 			}
 		}
 	}
