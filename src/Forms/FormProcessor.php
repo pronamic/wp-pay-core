@@ -170,7 +170,7 @@ class FormProcessor {
 				$customer->set_email( $email );
 			}
 		}
-		
+
 		$payment->set_customer( $customer );
 
 		// Amount.
@@ -193,11 +193,6 @@ class FormProcessor {
 
 		if ( null === $gateway ) {
 			return;
-		}
-
-		// Set default payment method if required.
-		if ( $gateway->payment_method_is_required() ) {
-			$payment->set_payment_method( PaymentMethods::IDEAL );
 		}
 
 		// Start payment.

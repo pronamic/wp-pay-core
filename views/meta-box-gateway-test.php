@@ -27,47 +27,6 @@ if ( null === $gateway ) {
 
 wp_nonce_field( 'test_pay_gateway', 'pronamic_pay_test_nonce' );
 
-// Payment method selector.
-$payment_methods = $gateway->get_payment_method_field_options( true );
-
-$inputs = [];
-
-try {
-	foreach ( $payment_methods as $payment_method => $method_name ) {
-		if ( ! \is_string( $payment_method ) ) {
-			$payment_method = null;
-		}
-
-		$gateway->set_payment_method( $payment_method );
-
-		// Payment method input HTML.
-		$html = $gateway->get_input_html();
-
-		if ( ! empty( $html ) ) {
-			$inputs[ $payment_method ] = [
-				'label' => $method_name,
-				'html'  => $html,
-			];
-		}
-	}
-} catch ( \Exception $exception ) {
-	?>
-	<div class="error">
-		<dl>
-			<dt><?php esc_html_e( 'Message', 'pronamic_ideal' ); ?></dt>
-			<dd><?php echo esc_html( $exception->getMessage() ); ?></dd>
-
-			<?php if ( 0 !== $exception->getCode() ) : ?>
-
-				<dt><?php esc_html_e( 'Code', 'pronamic_ideal' ); ?></dt>
-				<dd><?php echo esc_html( $exception->getCode() ); ?></dd>
-
-			<?php endif; ?>
-		</dl>
-	</div>
-	<?php
-}
-
 $currency_default = Currency::get_instance( 'EUR' );
 
 ?>
@@ -79,15 +38,17 @@ $currency_default = Currency::get_instance( 'EUR' );
 			</label>
 		</th>
 		<td>
-			<select id="pronamic-pay-test-payment-methods" name="pronamic_pay_test_payment_method">
+			<select id="pronamic-pay-test-payment-methods" name="pronamic_pay_test_payment_method" required>
+				<option value=""><?php esc_html_e( '— Choose payment method —', 'pronamic_ideal' ); ?></option>
+
 				<?php
 
-				foreach ( $payment_methods as $payment_method => $method_name ) {
+				foreach ( $gateway->get_payment_methods() as $payment_method ) {
 					printf(
 						'<option value="%s" data-is-recurring="%d">%s</option>',
-						esc_attr( $payment_method ),
-						esc_attr( PaymentMethods::is_recurring_method( $payment_method ) ? '1' : ' 0' ),
-						esc_html( $method_name )
+						esc_attr( $payment_method->get_id() ),
+						esc_attr( $payment_method->supports( 'recurring' ) ? '1' : ' 0' ),
+						esc_html( $payment_method->get_name() )
 					);
 				}
 
@@ -96,21 +57,52 @@ $currency_default = Currency::get_instance( 'EUR' );
 		</td>
 	</tr>
 
-	<?php foreach ( $inputs as $method => $input ) : ?>
+	<?php foreach ( $gateway->get_payment_methods() as $payment_method ) : ?>
 
-		<tr class="pronamic-pay-cloack pronamic-pay-test-payment-method <?php echo esc_attr( $method ); ?>">
-			<th scope="row">
-				<?php echo esc_html( $input['label'] ); ?>
-			</th>
-			<td>
-				<?php
+		<?php foreach ( $payment_method->get_fields() as $field ) : ?>
 
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				echo $input['html'];
+			<tr class="pronamic-pay-cloack pronamic-pay-test-payment-method <?php echo esc_attr( $payment_method->get_id() ); ?>">
+				<th scope="row">
+					<?php echo esc_html( $field->get_label() ); ?>
+				</th>
+				<td>
+					<?php
 
-				?>
-			</td>
-		</tr>
+					try {
+						$field->output();
+					} catch ( \Exception $exception ) {
+						echo '<em>';
+
+						printf(
+							/* translators: %s: Exception message. */
+							esc_html__( 'This field could not be displayed due to the following error message: "%s".', 'pronamic_ideal' ),
+							esc_html( $exception->getMessage() )
+						);
+
+						echo '</em>';
+
+						?>
+						<div class="error">
+							<dl>
+								<dt><?php esc_html_e( 'Message', 'pronamic_ideal' ); ?></dt>
+								<dd><?php echo esc_html( $exception->getMessage() ); ?></dd>
+
+								<?php if ( 0 !== $exception->getCode() ) : ?>
+
+									<dt><?php esc_html_e( 'Code', 'pronamic_ideal' ); ?></dt>
+									<dd><?php echo esc_html( $exception->getCode() ); ?></dd>
+
+								<?php endif; ?>
+							</dl>
+						</div>
+						<?php
+					}
+
+					?>
+				</td>
+			</tr>
+
+		<?php endforeach; ?>
 
 	<?php endforeach; ?>
 
@@ -143,15 +135,6 @@ $currency_default = Currency::get_instance( 'EUR' );
 			</select>
 
 			<input name="test_amount" id="test_amount" class="regular-text code pronamic-pay-form-control" value="" type="number" step="any" size="6" autocomplete="off" />
-		</td>
-	</tr>
-
-	<tr>
-		<th scope="row">
-			<?php esc_html_e( 'Phone Number', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<input name="test_phone" id="test_phone" class="regular-text code pronamic-pay-form-control" value="" type="tel" />
 		</td>
 	</tr>
 

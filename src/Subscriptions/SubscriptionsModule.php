@@ -405,9 +405,6 @@ class SubscriptionsModule {
 			return;
 		}
 
-		// Payment method input HTML.
-		$gateway->set_payment_method( $subscription->get_payment_method() );
-
 		require __DIR__ . '/../../views/subscription-renew.php';
 
 		exit;

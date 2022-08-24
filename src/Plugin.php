@@ -929,26 +929,8 @@ class Plugin {
 			$payment->set_version( pronamic_pay_plugin()->get_version() );
 		}
 
-		// Issuer.
-		$issuer = $payment->get_meta( 'issuer' );
-
-		if ( null === $issuer ) {
-			// Credit card.
-			if ( PaymentMethods::CREDIT_CARD === $payment->get_payment_method() && \filter_has_var( INPUT_POST, 'pronamic_credit_card_issuer_id' ) ) {
-				$issuer = \filter_input( INPUT_POST, 'pronamic_credit_card_issuer_id', FILTER_SANITIZE_STRING );
-			}
-
-			// iDEAL.
-			$ideal_methods = [ PaymentMethods::IDEAL, PaymentMethods::DIRECT_DEBIT_IDEAL ];
-
-			if ( \in_array( $payment->get_payment_method(), $ideal_methods, true ) && \filter_has_var( INPUT_POST, 'pronamic_ideal_issuer_id' ) ) {
-				$issuer = \filter_input( INPUT_POST, 'pronamic_ideal_issuer_id', FILTER_SANITIZE_STRING );
-			}
-
-			if ( ! empty( $issuer ) ) {
-				$payment->set_meta( 'issuer', $issuer );
-			}
-		}
+		// Post data.
+		self::process_payment_input_data( $payment, $_POST );
 
 		/**
 		 * If an issuer has been specified and the payment
@@ -993,6 +975,38 @@ class Plugin {
 		if ( null !== $lines ) {
 			foreach ( $lines as $line ) {
 				$line->set_payment( $payment );
+			}
+		}
+	}
+
+	/**
+	 * Process payment input data.
+	 *
+	 * @param Payment $payment Payment.
+	 * @return void
+	 */
+	private static function process_payment_input_data( Payment $payment, $data ) {
+		$gateway = $payment->get_gateway();
+
+		if ( null === $gateway ) {
+			return;
+		}
+
+		$payment_method = $gateway->get_payment_method( $payment->get_payment_method() );
+
+		if ( null === $payment_method ) {
+			return;
+		}
+
+		foreach ( $payment_method->get_fields() as $field ) {
+			$id = $field->get_id();
+
+			if ( \array_key_exists( $id, $data ) ) {
+				$value = $field->sanitize( $data[ $id ] );
+
+				if ( '' !== $field->meta_key ) {
+					$payment->set_meta( $field->meta_key, $value );
+				}
 			}
 		}
 	}
