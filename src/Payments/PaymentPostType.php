@@ -102,7 +102,6 @@ class PaymentPostType {
 	public static function get_payment_states() {
 		return [
 			'payment_pending'    => _x( 'Pending', 'Payment status', 'pronamic_ideal' ),
-			'payment_reserved'   => _x( 'Reserved', 'Payment status', 'pronamic_ideal' ),
 			'payment_on_hold'    => _x( 'On Hold', 'Payment status', 'pronamic_ideal' ),
 			'payment_completed'  => _x( 'Completed', 'Payment status', 'pronamic_ideal' ),
 			'payment_cancelled'  => _x( 'Cancelled', 'Payment status', 'pronamic_ideal' ),
