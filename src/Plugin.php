@@ -930,6 +930,7 @@ class Plugin {
 		}
 
 		// Post data.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		self::process_payment_input_data( $payment, $_POST );
 
 		/**
@@ -983,6 +984,7 @@ class Plugin {
 	 * Process payment input data.
 	 *
 	 * @param Payment $payment Payment.
+	 * @param array   $data    Data.
 	 * @return void
 	 */
 	private static function process_payment_input_data( Payment $payment, $data ) {
