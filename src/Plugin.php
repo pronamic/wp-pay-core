@@ -932,26 +932,6 @@ class Plugin {
 		// Post data.
 		self::process_payment_input_data( $payment, $_POST );
 
-		/**
-		 * If an issuer has been specified and the payment
-		 * method is unknown, we set the payment method to
-		 * iDEAL. This may not be correct in all cases,
-		 * but for now Pronamic Pay works this way.
-		 *
-		 * @link https://github.com/wp-pay-extensions/gravityforms/blob/2.4.0/src/Processor.php#L251-L256
-		 * @link https://github.com/wp-pay-extensions/contact-form-7/blob/1.0.0/src/Pronamic.php#L181-L187
-		 * @link https://github.com/wp-pay-extensions/formidable-forms/blob/2.1.0/src/Extension.php#L318-L329
-		 * @link https://github.com/wp-pay-extensions/ninjaforms/blob/1.2.0/src/PaymentGateway.php#L80-L83
-		 * @link https://github.com/wp-pay/core/blob/2.4.0/src/Forms/FormProcessor.php#L131-L134
-		 */
-		$issuer = $payment->get_meta( 'issuer' );
-
-		$payment_method = $payment->get_payment_method();
-
-		if ( null !== $issuer && null === $payment_method ) {
-			$payment->set_payment_method( PaymentMethods::IDEAL );
-		}
-
 		// Consumer bank details.
 		$consumer_bank_details = $payment->get_consumer_bank_details();
 
