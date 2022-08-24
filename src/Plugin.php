@@ -932,27 +932,6 @@ class Plugin {
 		// Post data.
 		self::process_payment_input_data( $payment, $_POST );
 
-		// Issuer.
-		$issuer = $payment->get_meta( 'issuer' );
-
-		if ( null === $issuer ) {
-			// Credit card.
-			if ( PaymentMethods::CREDIT_CARD === $payment->get_payment_method() && \filter_has_var( INPUT_POST, 'pronamic_credit_card_issuer_id' ) ) {
-				$issuer = \filter_input( INPUT_POST, 'pronamic_credit_card_issuer_id', FILTER_SANITIZE_STRING );
-			}
-
-			// iDEAL.
-			$ideal_methods = [ PaymentMethods::IDEAL, PaymentMethods::DIRECT_DEBIT_IDEAL ];
-
-			if ( \in_array( $payment->get_payment_method(), $ideal_methods, true ) && \filter_has_var( INPUT_POST, 'pronamic_ideal_issuer_id' ) ) {
-				$issuer = \filter_input( INPUT_POST, 'pronamic_ideal_issuer_id', FILTER_SANITIZE_STRING );
-			}
-
-			if ( ! empty( $issuer ) ) {
-				$payment->set_meta( 'issuer', $issuer );
-			}
-		}
-
 		/**
 		 * If an issuer has been specified and the payment
 		 * method is unknown, we set the payment method to
