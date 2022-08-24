@@ -429,14 +429,4 @@ abstract class Gateway {
 	public function update_status( Payment $payment ) {
 
 	}
-
-	/**
-	 * Cancel reservation.
-	 *
-	 * @param Payment $payment Payment.
-	 * @return bool
-	 */
-	public function cancel_reservation( $payment ) {
-		return false;
-	}
 }
