@@ -431,16 +431,6 @@ abstract class Gateway {
 	}
 
 	/**
-	 * Create invoice.
-	 *
-	 * @param Payment $payment Payment.
-	 * @return bool
-	 */
-	public function create_invoice( $payment ) {
-		return false;
-	}
-
-	/**
 	 * Cancel reservation.
 	 *
 	 * @param Payment $payment Payment.
