@@ -109,66 +109,6 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 		}
 
 		/**
-		 * Create invoice for reserved payment.
-		 */
-		if ( $gateway && $gateway->supports( 'reservation_payments' ) && 'payment_reserved' === get_post_status( $post->ID ) ) {
-			// Only show button if gateway exists and reservation payments are supported.
-			$action_url = wp_nonce_url(
-				add_query_arg(
-					[
-						'post'                        => $post->ID,
-						'action'                      => 'edit',
-						'pronamic_pay_create_invoice' => true,
-					],
-					admin_url( 'post.php' )
-				),
-				'pronamic_payment_create_invoice_' . $post->ID
-			);
-
-			$link_text = sprintf(
-				/* translators: %s: payment method name */
-				__( 'Create %1$s invoice', 'pronamic_ideal' ),
-				PaymentMethods::get_name( $payment->get_payment_method() )
-			);
-
-			printf(
-				'<div class="misc-pub-section"><a class="button" href="%s">%s</a></div>',
-				esc_url( $action_url ),
-				esc_html( $link_text )
-			);
-		}
-
-		/**
-		 * Cancel payment reservations.
-		 */
-		if ( $gateway && $gateway->supports( 'reservation_payments' ) && 'payment_reserved' === get_post_status( $post->ID ) ) {
-			// Only show button if gateway exists and reservation payments are supported.
-			$action_url = wp_nonce_url(
-				add_query_arg(
-					[
-						'post'                            => $post->ID,
-						'action'                          => 'edit',
-						'pronamic_pay_cancel_reservation' => true,
-					],
-					admin_url( 'post.php' )
-				),
-				'pronamic_payment_cancel_reservation_' . $post->ID
-			);
-
-			$link_text = sprintf(
-				/* translators: %s: payment method name */
-				__( 'Cancel %1$s reservation', 'pronamic_ideal' ),
-				PaymentMethods::get_name( $payment->get_payment_method() )
-			);
-
-			printf(
-				'<div class="misc-pub-section"><a class="button" href="%s">%s</a></div>',
-				esc_url( $action_url ),
-				esc_html( $link_text )
-			);
-		}
-
-		/**
 		 * Send to Google Analytics button.
 		 */
 		$can_track = pronamic_pay_plugin()->google_analytics_ecommerce->valid_payment( $payment );
