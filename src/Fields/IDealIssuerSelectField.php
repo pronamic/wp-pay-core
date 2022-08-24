@@ -33,8 +33,8 @@ class IDealIssuerSelectField extends SelectField {
 	protected function get_html_attributes() {
 		$attributes = parent::get_html_attributes();
 
-		$attributes['id']   = 'pronamic_ideal_issuer_id';
-		$attributes['name'] = 'pronamic_ideal_issuer_id';
+		$attributes['id']   = $this->get_id();
+		$attributes['name'] = $this->get_id();
 
 		return $attributes;
 	}

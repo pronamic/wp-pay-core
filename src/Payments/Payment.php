@@ -127,6 +127,13 @@ class Payment extends PaymentInfo {
 	public $lines;
 
 	/**
+	 * Field values.
+	 *
+	 * @var array
+	 */
+	public $field_values = [];
+
+	/**
 	 * Construct and initialize payment object.
 	 *
 	 * @param integer $post_id A payment post ID or null.
