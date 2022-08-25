@@ -80,15 +80,15 @@ abstract class Gateway {
 	/**
 	 * Payment methods.
 	 *
-	 * @var PaymentMethod[]
+	 * @var PaymentMethodsCollection
 	 */
-	protected $payment_methods = [];
+	protected $payment_methods;
 
 	/**
 	 * Construct gateway.
 	 */
 	public function __construct() {
-
+		$this->payment_methods = new PaymentMethodsCollection();
 	}
 
 	/**
@@ -98,9 +98,7 @@ abstract class Gateway {
 	 * @return void
 	 */
 	protected function register_payment_method( PaymentMethod $payment_method ) {
-		$id = $payment_method->get_id();
-
-		$this->payment_methods[ $id ] = $payment_method;
+		$this->payment_methods->add( $payment_method );;
 	}
 
 	/**
@@ -110,11 +108,7 @@ abstract class Gateway {
 	 * @return PaymentMethod|null
 	 */
 	public function get_payment_method( $id ) {
-		if ( array_key_exists( $id, $this->payment_methods ) ) {
-			return $this->payment_methods[ $id ];
-		}
-
-		return null;
+		return $this->payment_methods->get( $id );
 	}
 
 	/**
@@ -149,31 +143,7 @@ abstract class Gateway {
 	 * @return PaymentMethod[]
 	 */
 	public function get_payment_methods( $args = [] ) {
-		$payment_methods = $this->payment_methods;
-
-		if ( \array_key_exists( 'status', $args ) ) {
-			$status_list = \wp_parse_list( $args['status'] );
-
-			$payment_methods = array_filter(
-				$payment_methods,
-				function( $payment_method ) use ( $status_list ) {
-					return \in_array( $payment_method->get_status(), $status_list, true );
-				}
-			);
-		}
-
-		if ( \array_key_exists( 'supports', $args ) ) {
-			$feature = $args['supports'];
-
-			$payment_methods = array_filter(
-				$payment_methods,
-				function( $payment_method ) use ( $feature ) {
-					return $payment_method->supports( $feature );
-				}
-			);
-		}
-
-		return $payment_methods;
+		return $this->payment_methods->query( $args );
 	}
 
 	/**

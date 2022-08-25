@@ -577,11 +577,10 @@ class PaymentMethods {
 				continue;
 			}
 
-			$payment_methods = array_filter(
-				$gateway->get_payment_methods(),
-				function ( $payment_method ) {
-					return \in_array( $payment_method->get_status(), [ '', 'active' ], true );
-				}
+			$payment_methods = $gateway->get_payment_methods(
+				[
+					'status' => [ '', 'active' ],
+				]
 			);
 
 			foreach ( $payment_methods as $payment_method ) {

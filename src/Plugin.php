@@ -15,7 +15,9 @@ use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Admin\AdminModule;
 use Pronamic\WordPress\Pay\Banks\BankAccountDetails;
 use Pronamic\WordPress\Pay\Core\Gateway;
+use Pronamic\WordPress\Pay\Core\PaymentMethod;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
+use Pronamic\WordPress\Pay\Core\PaymentMethodsCollection;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
 use Pronamic\WordPress\Pay\Gateways\GatewaysDataStoreCPT;
 use Pronamic\WordPress\Pay\Payments\Payment;
@@ -242,6 +244,13 @@ class Plugin {
 	private static $pronamic_service_url;
 
 	/**
+	 * Payment methods.
+	 *
+	 * @var PaymentMethodsCollection
+	 */
+	private $payment_methods;
+
+	/**
 	 * Construct and initialize an Pronamic Pay plugin object.
 	 *
 	 * @param string|array|object $args The plugin arguments.
@@ -321,6 +330,67 @@ class Plugin {
 		}
 
 		require_once $args['action_scheduler'];
+
+		/**
+		 * Payment methods.
+		 */
+		$this->payment_methods = new PaymentMethodsCollection();
+
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::AFTERPAY_NL ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::AFTERPAY_COM ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::ALIPAY ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::AMERICAN_EXPRESS ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::APPLE_PAY ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BANCONTACT ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BANK_TRANSFER ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BELFIUS ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BILLINK ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BITCOIN ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BLIK ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BUNQ ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::IN3 ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::CAPAYABLE ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::CREDIT_CARD ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::DIRECT_DEBIT ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::DIRECT_DEBIT_BANCONTACT ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::DIRECT_DEBIT_IDEAL ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::DIRECT_DEBIT_SOFORT ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::EPS ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::FOCUM ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::IDEAL ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::IDEALQR ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::GIROPAY ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::GOOGLE_PAY ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::GULDEN ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::KBC ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::KLARNA_PAY_LATER ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::KLARNA_PAY_NOW ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::KLARNA_PAY_OVER_TIME ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::MAESTRO ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::MASTERCARD ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::MB_WAY ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::PAYCONIQ ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::PAYPAL ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::PRZELEWY24 ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::SANTANDER ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::SOFORT ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::SPRAYPAY ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::SWISH ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::TWINT ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::V_PAY ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::VIPPS ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::VISA ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::VOID ) );
+	}
+
+	/**
+	 * Get payment methods.
+	 *
+	 * @param array $args Query arguments.
+	 * @return PaymentMethodsCollection
+	 */
+	public function get_payment_methods( $args = [] ) {
+		return $this->payment_methods->query( $args );
 	}
 
 	/**

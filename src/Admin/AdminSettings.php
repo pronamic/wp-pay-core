@@ -172,6 +172,31 @@ class AdminSettings {
 				]
 			);
 		}
+
+		if ( version_compare( $this->plugin->get_version(), '10', '>=' ) ) {
+			// Settings - Payment Methods.
+			\add_settings_section(
+				'pronamic_pay_payment_methods',
+				\__( 'Payment Methods', 'pronamic_ideal' ),
+				[ $this, 'settings_section' ],
+				'pronamic_pay'
+			);
+
+			foreach ( $this->plugin->get_payment_methods() as $payment_method ) {
+				$id = 'pronamic_pay_payment_method_' . $payment_method->get_id() . '_status';
+
+				add_settings_field(
+					$id,
+					$payment_method->get_name(),
+					[ $this, 'select_payment_method_status' ],
+					'pronamic_pay',
+					'pronamic_pay_payment_methods',
+					[
+						'label_for' => $id,
+					]
+				);
+			}
+		}
 	}
 
 	/**
@@ -337,5 +362,34 @@ class AdminSettings {
 			'show_option_none' => esc_attr( isset( $args['show_option_none'] ) ? $args['show_option_none'] : __( '— Select a page —', 'pronamic_ideal' ) ),
 			'class'            => 'regular-text',
 		) );
+	}
+
+	public function select_payment_method_status( $args ) {
+		$name = $args['label_for'];
+
+		$selected = get_option( $name, '' );
+
+		$statuses = [
+			''         => '',
+			'active'   => \__( 'Active', 'pronamic_ideal' ),
+			'inactive' => \__( 'Inactive', 'pronamic_ideal' ),
+		];
+
+		\printf(
+			'<select id="%s" name="%s">',
+			\esc_attr( $name ),
+			\esc_attr( $name )
+		);
+
+		foreach ( $statuses as $status => $label ) {
+			\printf(
+				'<option value="%s" %s>%s</option>',
+				\esc_attr( $status ),
+				\selected( $status, $selected, false ),
+				\esc_html( $label )
+			);
+		}
+
+		echo '</select>';
 	}
 }
