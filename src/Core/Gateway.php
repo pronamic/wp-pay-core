@@ -98,7 +98,7 @@ abstract class Gateway {
 	 * @return void
 	 */
 	protected function register_payment_method( PaymentMethod $payment_method ) {
-		$this->payment_methods->add( $payment_method );;
+		$this->payment_methods->add( $payment_method );
 	}
 
 	/**
