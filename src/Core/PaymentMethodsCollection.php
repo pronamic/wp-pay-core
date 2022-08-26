@@ -17,8 +17,19 @@ use IteratorAggregate;
  * Payment methods collection class
  */
 class PaymentMethodsCollection implements IteratorAggregate {
+	/**
+	 * Items.
+	 * 
+	 * @var PaymentMethod[]
+	 */
 	private $items = [];
 
+	/**
+	 * Add paymen tmethod.
+	 * 
+	 * @param PaymentMethod $payment_method Payment method.
+	 * @return void
+	 */
 	public function add( PaymentMethod $payment_method ) {
 		$id = $payment_method->get_id();
 
@@ -39,6 +50,12 @@ class PaymentMethodsCollection implements IteratorAggregate {
 		return null;
 	}
 
+	/**
+	 * Query items.
+	 * 
+	 * @param array $args Arguments.
+	 * @return self
+	 */
 	public function query( $args ) {
 		$items = $this->items;
 
