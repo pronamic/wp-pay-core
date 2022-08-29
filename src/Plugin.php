@@ -361,7 +361,6 @@ class Plugin {
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::IDEALQR ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::GIROPAY ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::GOOGLE_PAY ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::GULDEN ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::KBC ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::KLARNA_PAY_LATER ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::KLARNA_PAY_NOW ) );

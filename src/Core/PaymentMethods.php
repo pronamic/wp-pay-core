@@ -231,13 +231,6 @@ class PaymentMethods {
 	const GOOGLE_PAY = 'google_pay';
 
 	/**
-	 * Constant for the Gulden payment method.
-	 *
-	 * @var string
-	 */
-	const GULDEN = 'gulden';
-
-	/**
 	 * Constant for the KBC/CBC Payment Button method.
 	 *
 	 * @since 1.3.11
@@ -459,7 +452,6 @@ class PaymentMethods {
 			self::FOCUM                   => __( 'Focum', 'pronamic_ideal' ),
 			self::GIROPAY                 => __( 'Giropay', 'pronamic_ideal' ),
 			self::GOOGLE_PAY              => __( 'Google Pay', 'pronamic_ideal' ),
-			self::GULDEN                  => __( 'Gulden', 'pronamic_ideal' ),
 			self::IDEAL                   => __( 'iDEAL', 'pronamic_ideal' ),
 			self::IDEALQR                 => __( 'iDEAL QR', 'pronamic_ideal' ),
 			self::KBC                     => __( 'KBC/CBC Payment Button', 'pronamic_ideal' ),
