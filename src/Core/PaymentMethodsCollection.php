@@ -19,14 +19,14 @@ use IteratorAggregate;
 class PaymentMethodsCollection implements IteratorAggregate {
 	/**
 	 * Items.
-	 * 
+	 *
 	 * @var PaymentMethod[]
 	 */
 	private $items = [];
 
 	/**
-	 * Add paymen tmethod.
-	 * 
+	 * Add payment method.
+	 *
 	 * @param PaymentMethod $payment_method Payment method.
 	 * @return void
 	 */
@@ -52,7 +52,7 @@ class PaymentMethodsCollection implements IteratorAggregate {
 
 	/**
 	 * Query items.
-	 * 
+	 *
 	 * @param array $args Arguments.
 	 * @return self
 	 */
