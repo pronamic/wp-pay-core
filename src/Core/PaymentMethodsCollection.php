@@ -11,12 +11,13 @@
 namespace Pronamic\WordPress\Pay\Core;
 
 use ArrayIterator;
+use Countable;
 use IteratorAggregate;
 
 /**
  * Payment methods collection class
  */
-class PaymentMethodsCollection implements IteratorAggregate {
+class PaymentMethodsCollection implements IteratorAggregate, Countable {
 	/**
 	 * Items.
 	 *
@@ -95,6 +96,15 @@ class PaymentMethodsCollection implements IteratorAggregate {
 	 */
 	public function getIterator() {
 		return new ArrayIterator( $this->items );
+	}
+
+	/**
+	 * Count items.
+	 *
+	 * @return int
+	 */
+	public function count() {
+		return count( $this->items );
 	}
 
 	/**

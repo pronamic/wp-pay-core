@@ -28,9 +28,14 @@ wp_nonce_field( 'test_pay_gateway', 'pronamic_pay_test_nonce' );
 
 $currency_default = Currency::get_instance( 'EUR' );
 
-$payment_methods_args = [
-	'status' => [ '', 'active', ],
-];
+$payment_methods = $gateway->get_payment_methods(
+	[
+		'status' => [
+			'',
+			'active',
+		],
+	]
+);
 
 ?>
 <table class="form-table">
@@ -42,11 +47,15 @@ $payment_methods_args = [
 		</th>
 		<td>
 			<select id="pronamic-pay-test-payment-methods" name="pronamic_pay_test_payment_method">
-				<option value=""><?php esc_html_e( '— Choose payment method —', 'pronamic_ideal' ); ?></option>
+				<?php if ( count( $payment_methods ) > 1 ) : ?>
+
+					<option value=""><?php esc_html_e( '— Choose payment method —', 'pronamic_ideal' ); ?></option>
+
+				<?php endif; ?>
 
 				<?php
 
-				foreach ( $gateway->get_payment_methods( $payment_methods_args ) as $payment_method ) {
+				foreach ( $payment_methods as $payment_method ) {
 					printf(
 						'<option value="%s" data-is-recurring="%d">%s</option>',
 						esc_attr( $payment_method->get_id() ),
@@ -60,7 +69,7 @@ $payment_methods_args = [
 		</td>
 	</tr>
 
-	<?php foreach ( $gateway->get_payment_methods( $payment_methods_args ) as $payment_method ) : ?>
+	<?php foreach ( $payment_methods as $payment_method ) : ?>
 
 		<?php foreach ( $payment_method->get_fields() as $field ) : ?>
 
