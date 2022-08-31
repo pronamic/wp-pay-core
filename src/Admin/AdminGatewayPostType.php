@@ -56,6 +56,8 @@ class AdminGatewayPostType {
 
 		add_action( 'save_post_' . self::POST_TYPE, [ $this, 'save_post' ] );
 
+		add_action( 'after_delete_post', [ $this, 'after_delete_post' ] );
+
 		add_action( 'display_post_states', [ $this, 'display_post_states' ], 10, 2 );
 
 		add_filter( 'post_updated_messages', [ $this, 'post_updated_messages' ] );
@@ -417,6 +419,21 @@ class AdminGatewayPostType {
 		$integration->save_post( $post_id );
 
 		// Update active payment methods.
+		PaymentMethods::update_active_payment_methods();
+	}
+
+	/**
+	 * Update active payment methods on gateway post deletion.
+	 *
+	 * @param int     $post_id Post ID.
+	 * @param WP_Post $post    Post.
+	 * @return void
+	 */
+	public function after_delete_post( $post_id, $post ) : void {
+		if ( self::POST_TYPE !== $post->post_type ) {
+			return;
+		}
+
 		PaymentMethods::update_active_payment_methods();
 	}
 
