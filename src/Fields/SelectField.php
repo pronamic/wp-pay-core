@@ -20,6 +20,20 @@ use Pronamic\WordPress\Html\Element;
  */
 class SelectField extends Field {
 	/**
+	 * Get HTML attributes.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function get_html_attributes() {
+		$attributes = parent::get_html_attributes();
+
+		$attributes['id']   = $this->get_id();
+		$attributes['name'] = $this->get_id();
+
+		return $attributes;
+	}
+
+	/**
 	 * Options.
 	 *
 	 * @var iterable<SelectFieldOption|SelectFieldOptionGroup>
