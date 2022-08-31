@@ -9,9 +9,8 @@
  * @var \WP_Post $post WordPress post.
  */
 
-use Pronamic\WordPress\Money\Currency;
 use Pronamic\WordPress\Money\Currencies;
-use Pronamic\WordPress\Pay\Core\PaymentMethods;
+use Pronamic\WordPress\Money\Currency;
 use Pronamic\WordPress\Pay\Plugin;
 
 $gateway = Plugin::get_gateway( $post->ID );
@@ -29,6 +28,10 @@ wp_nonce_field( 'test_pay_gateway', 'pronamic_pay_test_nonce' );
 
 $currency_default = Currency::get_instance( 'EUR' );
 
+$payment_methods_args = [
+	'status' => [ '', 'active', ],
+];
+
 ?>
 <table class="form-table">
 	<tr>
@@ -43,7 +46,7 @@ $currency_default = Currency::get_instance( 'EUR' );
 
 				<?php
 
-				foreach ( $gateway->get_payment_methods() as $payment_method ) {
+				foreach ( $gateway->get_payment_methods( $payment_methods_args ) as $payment_method ) {
 					printf(
 						'<option value="%s" data-is-recurring="%d">%s</option>',
 						esc_attr( $payment_method->get_id() ),
@@ -57,7 +60,7 @@ $currency_default = Currency::get_instance( 'EUR' );
 		</td>
 	</tr>
 
-	<?php foreach ( $gateway->get_payment_methods() as $payment_method ) : ?>
+	<?php foreach ( $gateway->get_payment_methods( $payment_methods_args ) as $payment_method ) : ?>
 
 		<?php foreach ( $payment_method->get_fields() as $field ) : ?>
 
