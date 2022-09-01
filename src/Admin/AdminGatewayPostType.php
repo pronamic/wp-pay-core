@@ -56,7 +56,7 @@ class AdminGatewayPostType {
 
 		add_action( 'save_post_' . self::POST_TYPE, [ $this, 'save_post' ] );
 
-		add_action( 'after_delete_post', [ $this, 'after_delete_post' ] );
+		add_action( 'after_delete_post', [ $this, 'after_delete_post' ], 10, 2 );
 
 		add_action( 'display_post_states', [ $this, 'display_post_states' ], 10, 2 );
 
