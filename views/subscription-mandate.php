@@ -229,7 +229,7 @@ if ( is_array( $current_mandate ) ) {
 								<select name="pronamic_pay_subscription_payment_method">
 									<?php
 
-									$payment_methods = $gateway->gat_payment_methods(
+									$payment_methods = $gateway->get_payment_methods(
 										[
 											'status'   => [ '', 'active' ],
 											'supports' => 'recurring',
