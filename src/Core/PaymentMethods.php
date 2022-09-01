@@ -472,7 +472,6 @@ class PaymentMethods {
 			self::V_PAY                   => __( 'V PAY', 'pronamic_ideal' ),
 			self::VIPPS                   => __( 'Vipps', 'pronamic_ideal' ),
 			self::VISA                    => __( 'Visa', 'pronamic_ideal' ),
-			self::VOID                    => '',
 		];
 
 		return $payment_methods;

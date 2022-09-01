@@ -379,7 +379,6 @@ class Plugin {
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::V_PAY ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::VIPPS ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::VISA ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::VOID ) );
 	}
 
 	/**
