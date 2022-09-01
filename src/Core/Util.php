@@ -58,7 +58,7 @@ class Util {
 			'wrong_response_code',
 			sprintf(
 				/* translators: 1: received response code, 2: required response code */
-				__( 'The response code (<code>%1$s<code>) was incorrect, required response code <code>%2$s</code>.', 'pronamic_ideal' ),
+				__( 'The response code (<code>%1$s</code>) was incorrect, required response code <code>%2$s</code>.', 'pronamic_ideal' ),
 				wp_remote_retrieve_response_code( $result ),
 				$required_response_code
 			)
