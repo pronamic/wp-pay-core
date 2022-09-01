@@ -511,7 +511,7 @@ class PaymentMethods {
 	 */
 	public static function get_icon_url( $method = null, $size = null ) {
 		// Check method.
-		if ( empty( $method ) ) {
+		if ( empty( $method ) || 'void' === $method ) {
 			return null;
 		}
 
