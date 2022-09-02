@@ -95,6 +95,24 @@ $payment_methods = $gateway->get_payment_methods(
 
 						?>
 						<div class="error">
+							<p>
+								<?php
+
+								echo wp_kses(
+									sprintf(
+										/* translators: 1: Field label, 2: Payment method name */
+										__( '<strong>Pronamic Pay</strong> — An error occurred within the "%1$s" field of the "%2$s" payment method.', 'pronamic_ideal' ),
+										esc_html( $field->get_label() ),
+										esc_html( $payment_method->get_name() )
+									),
+									[
+										'strong' => [],
+									]
+								);
+
+								?>
+							</p>
+
 							<dl>
 								<dt><?php esc_html_e( 'Message', 'pronamic_ideal' ); ?></dt>
 								<dd><?php echo esc_html( $exception->getMessage() ); ?></dd>
