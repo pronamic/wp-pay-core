@@ -1072,7 +1072,9 @@ class Plugin {
 			$id = $field->get_id();
 
 			if ( \array_key_exists( $id, $data ) ) {
-				$value = $field->sanitize( $data[ $id ] );
+				$value = $data[ $id ];
+
+				$value = \sanitize_text_field( \wp_unslash( $value ) );
 
 				if ( '' !== $field->meta_key ) {
 					$payment->set_meta( $field->meta_key, $value );

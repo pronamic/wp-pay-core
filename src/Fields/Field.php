@@ -119,16 +119,6 @@ class Field implements JsonSerializable {
 	}
 
 	/**
-	 * Sanitize.
-	 *
-	 * @param string $value Value.
-	 * @return string
-	 */
-	public function sanitize( $value ) {
-		return \sanitize_text_field( \wp_unslash( $value ) );
-	}
-
-	/**
 	 * Render.
 	 *
 	 * @return string
