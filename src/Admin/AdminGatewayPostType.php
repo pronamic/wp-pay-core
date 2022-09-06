@@ -377,6 +377,9 @@ class AdminGatewayPostType {
 		\delete_transient( 'pronamic_pay_issuers_' . md5( serialize( $config ) ) );
 		\delete_transient( 'pronamic_gateway_payment_methods_' . md5( serialize( $config ) ) );
 
+		// Remove legacy gateway mode meta, to allow updating the gateway integration setting.
+		\delete_post_meta( $post_id, '_pronamic_gateway_mode' );
+
 		// Save settings.
 		$fields = $integration->get_settings_fields();
 
