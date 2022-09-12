@@ -126,7 +126,7 @@ class AddressHelper {
 	 * @param array $data Data.
 	 * @return Address|null
 	 */
-	public static function from_array( $data ) {
+	public static function from_array( array $data ) : ?Address {
 		$data = \array_filter(
 			$data,
 			function( $value ) {

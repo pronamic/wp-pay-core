@@ -21,9 +21,16 @@ class TrackingModule {
 	/**
 	 * URL parameters.
 	 *
-	 * @var null|array
+	 * @var array
 	 */
-	private $parameters;
+	private array $parameters;
+
+	/**
+	 * Construct and initialize tracking module.
+	 */
+	public function __construct() {
+		$this->build_parameters();
+	}
 
 	/**
 	 * Get tracking URL.
@@ -31,11 +38,7 @@ class TrackingModule {
 	 * @param string $url URL to add tracking parameters to.
 	 * @return string
 	 */
-	public function get_tracking_url( $url ) {
-		if ( null === $this->parameters ) {
-			$this->build_parameters();
-		}
-
+	public function get_tracking_url( string $url ) : string {
 		return \add_query_arg( $this->parameters, $url );
 	}
 
@@ -44,7 +47,7 @@ class TrackingModule {
 	 *
 	 * @return void
 	 */
-	private function build_parameters() {
+	private function build_parameters() : void {
 		// General parameters.
 		$params = [
 			'locale' => \get_locale(),
@@ -85,7 +88,7 @@ class TrackingModule {
 	 *
 	 * @return array
 	 */
-	public function get_supported_extensions() {
+	public function get_supported_extensions() : array {
 		$extensions = [];
 
 		$extensions_json_path = \dirname( \pronamic_pay_plugin()->get_file() ) . '/other/extensions.json';

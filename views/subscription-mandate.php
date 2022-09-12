@@ -119,7 +119,7 @@ if ( is_array( $current_mandate ) ) {
 										$card_name      = '';
 										$account_number = null;
 										$account_label  = null;
-										$bic_or_brand   = null;
+										$bic_or_brand   = '';
 										$logo_url       = null;
 
 										switch ( $mandate->method ) {

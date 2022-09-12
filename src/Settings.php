@@ -22,14 +22,14 @@ class Settings {
 	 *
 	 * @var Plugin
 	 */
-	private $plugin;
+	private Plugin $plugin;
 
 	/**
 	 * Construct and initialize settings object.
 	 *
 	 * @param Plugin $plugin The plugin.
 	 */
-	public function __construct( $plugin ) {
+	public function __construct( Plugin $plugin ) {
 		$this->plugin = $plugin;
 
 		// Actions.
@@ -143,7 +143,7 @@ class Settings {
 	 * @param integer $value Check if the value is published post ID.
 	 * @return int|null Post ID if value is published post ID, null otherwise.
 	 */
-	public function sanitize_published_post_id( $value ) {
+	public function sanitize_published_post_id( int $value ) : ?int {
 		if ( 'publish' === get_post_status( $value ) ) {
 			return $value;
 		}

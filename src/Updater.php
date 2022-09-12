@@ -72,7 +72,7 @@ class Updater {
 	}
 
 	/**
-	 * Extends WordPress.org API repsonse with Pronamic API response.
+	 * Extends WordPress.org API response with Pronamic API response.
 	 *
 	 * @param array  $response    HTTP response.
 	 * @param array  $parsed_args HTTP request arguments.

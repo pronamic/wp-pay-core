@@ -14,7 +14,6 @@ use Pronamic\WordPress\Pay\AbstractIntegration;
 use Pronamic\WordPress\Pay\Forms\FormPostType;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Plugin;
-use Pronamic\WordPress\Pay\Upgrades\Upgrade620;
 
 /**
  * WordPress admin install
@@ -29,21 +28,21 @@ class Install {
 	 *
 	 * @var Plugin
 	 */
-	private $plugin;
+	private Plugin $plugin;
 
 	/**
 	 * Admin.
 	 *
 	 * @var AdminModule
 	 */
-	private $admin;
+	private AdminModule $admin;
 
 	/**
 	 * Database updates.
 	 *
 	 * @var array
 	 */
-	private $db_updates = [
+	private array $db_updates = [
 		'2.0.0',
 		'2.0.1',
 		'3.3.0',
@@ -126,7 +125,7 @@ class Install {
 	 * @param array $args Arguments.
 	 * @return array
 	 */
-	public function removable_query_args( $args ) {
+	public function removable_query_args( array $args ) : array {
 		$args[] = 'pronamic_pay_upgraded';
 
 		return $args;
@@ -165,7 +164,7 @@ class Install {
 				// No version? This is a new install :).
 				$tab = 'getting-started';
 			} elseif ( version_compare( $about_page_version_viewed, $about_page_version, '<' ) ) {
-				// Show about page only if viewed version is lower then current version.
+				// Show about page only if viewed version is lower than current version.
 				$tab = 'new';
 			}
 
@@ -269,7 +268,7 @@ class Install {
 	 *
 	 * @return array<AbstractIntegration>
 	 */
-	private function get_upgradeable_integrations() {
+	private function get_upgradeable_integrations() : array {
 		$integrations = $this->plugin->integrations;
 
 		$integrations = array_filter(
@@ -280,7 +279,7 @@ class Install {
 			 * @param AbstractIntegration $integration Integration object.
 			 * @return bool True if integration has version option name, false otherwise.
 			 */
-			function( $integration ) {
+			function( AbstractIntegration $integration ) {
 				if ( ! $integration->is_active() ) {
 					return false;
 				}
@@ -305,7 +304,7 @@ class Install {
 	 *
 	 * @return bool True if database update is required, false otherwise.
 	 */
-	public function requires_upgrade() {
+	public function requires_upgrade() : bool {
 		$current_db_version = get_option( 'pronamic_pay_db_version' );
 
 		if (

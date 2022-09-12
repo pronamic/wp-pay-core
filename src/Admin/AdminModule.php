@@ -244,11 +244,9 @@ class AdminModule {
 		);
 
 		$input = sprintf(
-			'<input name="%s" id="%s" type="%s" value="%s" %s />',
+			'<input name="%s" id="%s" type="checkbox" value="1" %s />',
 			esc_attr( $id ),
 			esc_attr( $id ),
-			esc_attr( 'checkbox' ),
-			esc_attr( '1' ),
 			checked( $value, true, false )
 		);
 

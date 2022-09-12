@@ -40,7 +40,7 @@ class TestGatewayIntegration extends AbstractGatewayIntegration {
 	 * @param int $post_id Post ID.
 	 * @return TestGateway
 	 */
-	public function get_gateway( $post_id ) {
+	public function get_gateway( int $post_id ) {
 		return new TestGateway( new TestGatewayConfig() );
 	}
 }

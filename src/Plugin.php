@@ -44,21 +44,21 @@ class Plugin {
 	 *
 	 * @var string
 	 */
-	private $version = '';
+	private string $version = '';
 
 	/**
 	 * The root file of this WordPress plugin
 	 *
 	 * @var string
 	 */
-	public static $file;
+	public static string $file;
 
 	/**
 	 * The plugin dirname
 	 *
 	 * @var string
 	 */
-	public static $dirname;
+	public static string $dirname;
 
 	/**
 	 * The timezone
@@ -72,7 +72,7 @@ class Plugin {
 	 *
 	 * @var Plugin|null
 	 */
-	protected static $instance;
+	protected static ?Plugin $instance;
 
 	/**
 	 * Instance.
@@ -81,8 +81,8 @@ class Plugin {
 	 *
 	 * @return Plugin
 	 */
-	public static function instance( $args = [] ) {
-		if ( is_null( self::$instance ) ) {
+	public static function instance( $args = [] ) : Plugin {
+		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self( $args );
 		}
 
@@ -94,147 +94,147 @@ class Plugin {
 	 *
 	 * @var Settings
 	 */
-	public $settings;
+	public Settings $settings;
 
 	/**
 	 * Gateway data storing.
 	 *
 	 * @var GatewaysDataStoreCPT
 	 */
-	public $gateways_data_store;
+	public GatewaysDataStoreCPT $gateways_data_store;
 
 	/**
 	 * Payment data storing.
 	 *
 	 * @var PaymentsDataStoreCPT
 	 */
-	public $payments_data_store;
+	public PaymentsDataStoreCPT $payments_data_store;
 
 	/**
 	 * Subscription data storing.
 	 *
 	 * @var SubscriptionsDataStoreCPT
 	 */
-	public $subscriptions_data_store;
+	public SubscriptionsDataStoreCPT $subscriptions_data_store;
 
 	/**
 	 * Gateway post type.
 	 *
 	 * @var GatewayPostType
 	 */
-	public $gateway_post_type;
+	public GatewayPostType $gateway_post_type;
 
 	/**
 	 * Payment post type.
 	 *
 	 * @var PaymentPostType
 	 */
-	public $payment_post_type;
+	public PaymentPostType $payment_post_type;
 
 	/**
 	 * Subscription post type.
 	 *
 	 * @var SubscriptionPostType
 	 */
-	public $subscription_post_type;
+	public SubscriptionPostType $subscription_post_type;
 
 	/**
 	 * Licence manager.
 	 *
 	 * @var LicenseManager
 	 */
-	public $license_manager;
+	public LicenseManager $license_manager;
 
 	/**
 	 * Privacy manager.
 	 *
 	 * @var PrivacyManager
 	 */
-	public $privacy_manager;
+	public PrivacyManager $privacy_manager;
 
 	/**
 	 * Admin module.
 	 *
 	 * @var AdminModule
 	 */
-	public $admin;
+	public AdminModule $admin;
 
 	/**
 	 * Blocks module.
 	 *
 	 * @var Blocks\BlocksModule
 	 */
-	public $blocks_module;
+	public Blocks\BlocksModule $blocks_module;
 
 	/**
 	 * Forms module.
 	 *
 	 * @var Forms\FormsModule
 	 */
-	public $forms_module;
+	public Forms\FormsModule $forms_module;
 
 	/**
 	 * Tracking module.
 	 *
 	 * @var TrackingModule
 	 */
-	public $tracking_module;
+	public TrackingModule $tracking_module;
 
 	/**
 	 * Payments module.
 	 *
 	 * @var Payments\PaymentsModule
 	 */
-	public $payments_module;
+	public Payments\PaymentsModule $payments_module;
 
 	/**
 	 * Subscriptions module.
 	 *
 	 * @var Subscriptions\SubscriptionsModule
 	 */
-	public $subscriptions_module;
+	public Subscriptions\SubscriptionsModule $subscriptions_module;
 
 	/**
-	 * Google analytics ecommerce.
+	 * Google Analytics ecommerce.
 	 *
 	 * @var GoogleAnalyticsEcommerce
 	 */
-	public $google_analytics_ecommerce;
+	public GoogleAnalyticsEcommerce $google_analytics_ecommerce;
 
 	/**
 	 * Gateway integrations.
 	 *
 	 * @var GatewayIntegrations
 	 */
-	public $gateway_integrations;
+	public GatewayIntegrations $gateway_integrations;
 
 	/**
 	 * Integrations
 	 *
 	 * @var AbstractIntegration[]
 	 */
-	public $integrations;
+	public array $integrations;
 
 	/**
 	 * Webhook logger.
 	 *
 	 * @var WebhookLogger
 	 */
-	private $webhook_logger;
+	private WebhookLogger $webhook_logger;
 
 	/**
 	 * Options.
 	 *
 	 * @var array
 	 */
-	private $options;
+	private array $options;
 
 	/**
 	 * Plugin integrations.
 	 *
 	 * @var array
 	 */
-	public $plugin_integrations;
+	public array $plugin_integrations;
 
 	/**
 	 * Pronamic service URL.
@@ -248,10 +248,10 @@ class Plugin {
 	 *
 	 * @var PaymentMethodsCollection
 	 */
-	private $payment_methods;
+	private PaymentMethodsCollection $payment_methods;
 
 	/**
-	 * Construct and initialize an Pronamic Pay plugin object.
+	 * Construct and initialize a plugin object.
 	 *
 	 * @param string|array|object $args The plugin arguments.
 	 */
@@ -283,21 +283,7 @@ class Plugin {
 		// Integrations.
 		$this->integrations = [];
 
-		/*
-		 * Plugins loaded.
-		 *
-		 * Priority should be at least lower then 8 to support the "WP eCommerce" plugin.
-		 *
-		 * new WP_eCommerce()
-		 * add_action( 'plugins_loaded' , array( $this, 'init' ), 8 );
-		 * $this->load();
-		 * wpsc_core_load_gateways();
-		 *
-		 * @link https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L342-L343
-		 * @link https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L26-L35
-		 * @link https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L54
-		 * @link https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L296-L297
-		 */
+		// Plugins loaded.
 		add_action( 'plugins_loaded', [ $this, 'plugins_loaded' ], 0 );
 
 		// Plugin locale.
@@ -387,7 +373,7 @@ class Plugin {
 	 * @param array $args Query arguments.
 	 * @return PaymentMethodsCollection
 	 */
-	public function get_payment_methods( $args = [] ) {
+	public function get_payment_methods( array $args = [] ) : PaymentMethodsCollection {
 		return $this->payment_methods->query( $args );
 	}
 
@@ -396,7 +382,7 @@ class Plugin {
 	 *
 	 * @return string The version number of this plugin.
 	 */
-	public function get_version() {
+	public function get_version() : string {
 		return $this->version;
 	}
 
@@ -405,7 +391,7 @@ class Plugin {
 	 *
 	 * @return string
 	 */
-	public function get_file() {
+	public function get_file() : string {
 		return self::$file;
 	}
 
@@ -415,7 +401,7 @@ class Plugin {
 	 * @param string $option Name of option to retrieve.
 	 * @return string|null
 	 */
-	public function get_option( $option ) {
+	public function get_option( string $option ) : ?string {
 		if ( array_key_exists( $option, $this->options ) ) {
 			return $this->options[ $option ];
 		}
@@ -428,18 +414,18 @@ class Plugin {
 	 *
 	 * @return string
 	 */
-	public function get_plugin_dir_path() {
+	public function get_plugin_dir_path() : string {
 		return plugin_dir_path( $this->get_file() );
 	}
 
 	/**
 	 * Update payment.
 	 *
-	 * @param Payment $payment      The payment to update.
-	 * @param bool    $can_redirect Flag to indicate if redirect is allowed after the payment update.
+	 * @param Payment|null $payment      The payment to update.
+	 * @param bool         $can_redirect Flag to indicate if redirect is allowed after the payment update.
 	 * @return void
 	 */
-	public static function update_payment( $payment = null, $can_redirect = true ) {
+	public static function update_payment( Payment $payment = null, bool $can_redirect = true ) {
 		if ( empty( $payment ) ) {
 			return;
 		}
@@ -543,7 +529,7 @@ class Plugin {
 		$should_redirect = true;
 
 		/**
-		 * Filter whether or not to allow redirects on payment return.
+		 * Filter whether to allow redirects on payment return.
 		 *
 		 * @param bool    $should_redirect Flag to indicate if redirect is allowed on handling payment return.
 		 * @param Payment $payment         Payment.
@@ -761,10 +747,9 @@ class Plugin {
 	 *
 	 * @param string $locale A WordPress locale identifier.
 	 * @param string $domain A WordPress text domain identifier.
-	 *
 	 * @return string
 	 */
-	public function plugin_locale( $locale, $domain ) {
+	public function plugin_locale( string $locale, string $domain ) : string {
 		if ( 'pronamic_ideal' !== $domain ) {
 			return $locale;
 		}
@@ -784,10 +769,9 @@ class Plugin {
 	 * Default date time format.
 	 *
 	 * @param string $format Format.
-	 *
 	 * @return string
 	 */
-	public function datetime_format( $format ) {
+	public function datetime_format( string $format ) : string {
 		$format = _x( 'D j M Y \a\t H:i', 'default datetime format', 'pronamic_ideal' );
 
 		return $format;
@@ -798,7 +782,7 @@ class Plugin {
 	 *
 	 * @return string
 	 */
-	public static function get_default_error_message() {
+	public static function get_default_error_message() : string {
 		return __( 'Something went wrong with the payment. Please try again or pay another way.', 'pronamic_ideal' );
 	}
 
@@ -822,11 +806,10 @@ class Plugin {
 	/**
 	 * Get config select options.
 	 *
-	 * @param null|string $payment_method The gateway configuration options for the specified payment method.
-	 *
+	 * @param string|null $payment_method The gateway configuration options for the specified payment method.
 	 * @return array
 	 */
-	public static function get_config_select_options( $payment_method = null ) {
+	public static function get_config_select_options( ?string $payment_method = null ) : array {
 		$args = [
 			'post_type' => 'pronamic_gateway',
 			'orderby'   => 'post_title',
@@ -887,13 +870,11 @@ class Plugin {
 	 * Get gateway.
 	 *
 	 * @link https://wordpress.org/support/article/post-status/#default-statuses
-	 *
 	 * @param int   $config_id A gateway configuration ID.
 	 * @param array $args      Extra arguments.
-	 *
 	 * @return null|Gateway
 	 */
-	public static function get_gateway( $config_id, $args = [] ) {
+	public static function get_gateway( int $config_id, array $args = [] ) : ?Gateway {
 		// Get gateway from data store.
 		$gateway = \pronamic_pay_plugin()->gateways_data_store->get_gateway( $config_id );
 
@@ -1070,7 +1051,7 @@ class Plugin {
 	 * @param array   $data    Data.
 	 * @return void
 	 */
-	private static function process_payment_input_data( Payment $payment, $data ) {
+	private static function process_payment_input_data( Payment $payment, array $data ) {
 		$gateway = $payment->get_gateway();
 
 		if ( null === $gateway ) {
@@ -1103,7 +1084,7 @@ class Plugin {
 	 *
 	 * @return int|null
 	 */
-	private static function get_default_config_id() {
+	private static function get_default_config_id() : ?int {
 		$value = (int) \get_option( 'pronamic_pay_config_id' );
 
 		if ( 0 === $value ) {
@@ -1124,7 +1105,7 @@ class Plugin {
 	 * @return Payment
 	 * @throws \Exception Throws exception if gateway payment start fails.
 	 */
-	public static function start_payment( Payment $payment ) {
+	public static function start_payment( Payment $payment ) : Payment {
 		// Set default or filtered config ID.
 		$config_id = $payment->get_config_id();
 
@@ -1224,7 +1205,7 @@ class Plugin {
 
 	/**
 	 * The Pronamic Pay service forms an abstraction layer for the various supported
-	 * WordPress plugins and Payment Service Providers (PSP. Optionally, a risk analysis
+	 * WordPress plugins and Payment Service Providers (PSP). Optionally, a risk analysis
 	 * can be performed before payment.
 	 *
 	 * @param Payment $payment Payment.
@@ -1288,7 +1269,7 @@ class Plugin {
 	 * @return string|null
 	 * @throws \Exception Throws exception on error.
 	 */
-	public static function create_refund( $transaction_id, $gateway, Money $amount, $description = null ) {
+	public static function create_refund( string $transaction_id, Gateway $gateway, Money $amount, ?string $description = null ) : ?string {
 		// Check if gateway supports refunds.
 		if ( ! $gateway->supports( 'refunds' ) || ! \method_exists( $gateway, 'create_refund' ) ) {
 			throw new \Exception( __( 'Unable to process refund as gateway does not support refunds.', 'pronamic_ideal' ) );
@@ -1348,7 +1329,7 @@ class Plugin {
 	 *
 	 * @return array
 	 */
-	public function get_pages() {
+	public function get_pages() : array {
 		$return = [];
 
 		$pages = [
@@ -1375,7 +1356,7 @@ class Plugin {
 	 * @param Payment $payment Payment.
 	 * @return string
 	 */
-	public function payment_redirect_url( $url, Payment $payment ) {
+	public function payment_redirect_url( string $url, Payment $payment ) : string {
 		$source = $payment->get_source();
 
 		/**
@@ -1395,7 +1376,7 @@ class Plugin {
 	 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/blob/2.9.26/includes/misc-functions.php#L26-L38
 	 * @return bool True if debug mode is enabled, false otherwise.
 	 */
-	public function is_debug_mode() {
+	public function is_debug_mode() : bool {
 		$value = \get_option( 'pronamic_pay_debug_mode', false );
 
 		if ( PRONAMIC_PAY_DEBUG ) {

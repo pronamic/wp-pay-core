@@ -23,7 +23,7 @@ class Cards {
 	 *
 	 * @var array
 	 */
-	private $cards;
+	private array $cards = [];
 
 	/**
 	 * Cards constructor.
@@ -166,7 +166,7 @@ class Cards {
 	 * @param string $bic_or_brand 4-letter ISO 9362 Bank Identifier Code (BIC) or brand name.
 	 * @return array|null
 	 */
-	public function get_card( $bic_or_brand ) {
+	public function get_card( string $bic_or_brand ) : ?array {
 		// Use lowercase BIC or brand without spaces.
 		$bic_or_brand = \strtolower( $bic_or_brand );
 
@@ -197,10 +197,9 @@ class Cards {
 	 * Get card logo URL.
 	 *
 	 * @param string $brand Brand.
-	 *
-	 * @return string|null
+	 * @return string
 	 */
-	public function get_card_logo_url( $brand ) {
+	public function get_card_logo_url( string $brand ) : string {
 		return sprintf(
 			'https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.8.3/dist/cards/%1$s/card-%1$s-logo-_x80.svg',
 			$brand

@@ -13,7 +13,6 @@ namespace Pronamic\WordPress\Pay\Admin;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Plugin;
-use Pronamic\WordPress\Pay\WebhookManager;
 use WP_Post;
 
 /**
@@ -36,7 +35,7 @@ class AdminGatewayPostType {
 	 *
 	 * @var Plugin
 	 */
-	private $plugin;
+	private Plugin $plugin;
 
 	/**
 	 * Construct admin gateway post type.

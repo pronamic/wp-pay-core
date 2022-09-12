@@ -29,24 +29,23 @@ abstract class AbstractDataStoreCPT {
 	 *
 	 * @var array
 	 */
-	protected $meta = [];
+	protected array $meta = [];
 
 	/**
 	 * Meta key prefix.
 	 *
 	 * @var string
 	 */
-	public $meta_key_prefix = '';
+	public string $meta_key_prefix = '';
 
 	/**
 	 * Register meta keys.
 	 *
 	 * @param string $meta_key Meta key to register.
 	 * @param array  $args     Settings for meta key.
-	 *
 	 * @return void
 	 */
-	protected function register_meta_key( $meta_key, $args ) {
+	protected function register_meta_key( string $meta_key, array $args ) {
 		$this->meta[ $meta_key ] = $args;
 	}
 
@@ -55,7 +54,7 @@ abstract class AbstractDataStoreCPT {
 	 *
 	 * @return array
 	 */
-	public function get_registered_meta() {
+	public function get_registered_meta() : array {
 		return $this->meta;
 	}
 
@@ -65,7 +64,7 @@ abstract class AbstractDataStoreCPT {
 	 * @param string $key A key.
 	 * @return string
 	 */
-	protected function get_meta_key( $key ) {
+	protected function get_meta_key( string $key ) : string {
 		return $this->meta_key_prefix . $key;
 	}
 
@@ -75,7 +74,7 @@ abstract class AbstractDataStoreCPT {
 	 * @param \DateTimeInterface $date The date.
 	 * @return string
 	 */
-	protected function get_mysql_utc_date( \DateTimeInterface $date ) {
+	protected function get_mysql_utc_date( \DateTimeInterface $date ) : string {
 		$date = clone $date;
 
 		if ( \method_exists( $date, 'setTimezone' ) ) {
@@ -92,7 +91,7 @@ abstract class AbstractDataStoreCPT {
 	 * @param string $key Key.
 	 * @return string|null|false
 	 */
-	public function get_meta( $id, $key ) {
+	public function get_meta( int $id, string $key ) {
 		$meta_key = $this->get_meta_key( $key );
 
 		$value = get_post_meta( $id, $meta_key, true );
@@ -109,10 +108,9 @@ abstract class AbstractDataStoreCPT {
 	 *
 	 * @param int    $id  Post ID.
 	 * @param string $key Key.
-	 *
 	 * @return DateTime|null
 	 */
-	public function get_meta_date( $id, $key ) {
+	public function get_meta_date( int $id, string $key ) : ?DateTime {
 		$value = $this->get_meta( $id, $key );
 
 		if ( empty( $value ) ) {
@@ -133,10 +131,9 @@ abstract class AbstractDataStoreCPT {
 	 *
 	 * @param int    $id  Post ID.
 	 * @param string $key Key.
-	 *
 	 * @return string|null
 	 */
-	public function get_meta_string( $id, $key ) {
+	public function get_meta_string( int $id, string $key ) : ?string {
 		$value = $this->get_meta( $id, $key );
 
 		if ( empty( $value ) ) {
@@ -151,10 +148,9 @@ abstract class AbstractDataStoreCPT {
 	 *
 	 * @param int    $id  Post ID.
 	 * @param string $key Key.
-	 *
 	 * @return int|null
 	 */
-	public function get_meta_int( $id, $key ) {
+	public function get_meta_int( int $id, string $key ) : ?int {
 		$value = $this->get_meta( $id, $key );
 
 		if ( empty( $value ) ) {
@@ -166,30 +162,25 @@ abstract class AbstractDataStoreCPT {
 
 	/**
 	 * Get bool from meta.
-	 *
 	 * Please note:
-	 *
 	 * ```
 	 * update_post_meta( 1, '_test_bool', false );
 	 * $test = get_post_meta( 1, 'test_bool', true );
 	 * var_dump( $test );
 	 * // string(0) ""
 	 * ```
-	 *
 	 * ```
 	 * delete_post_meta( 1, '_test_bool' );
 	 * $test = get_post_meta( 1, 'test_bool', true );
 	 * var_dump( $test );
 	 * // string(0) ""
 	 * ```
-	 *
 	 * ```
 	 * delete_post_meta( 1, '_test_bool' );
 	 * $test = get_post_meta( 1, 'test_bool' );
 	 * var_dump( $test );
 	 * // array(0) { }
 	 * ```
-	 *
 	 * ```
 	 * update_post_meta( 1, '_test_bool', true );
 	 * $test = get_post_meta( 1, 'test_bool' );
@@ -199,10 +190,9 @@ abstract class AbstractDataStoreCPT {
 	 *
 	 * @param int    $id  Post ID.
 	 * @param string $key Key.
-	 *
 	 * @return bool|null
 	 */
-	public function get_meta_bool( $id, $key ) {
+	public function get_meta_bool( int $id, string $key ) : ?bool {
 		$meta_key = $this->get_meta_key( $key );
 
 		$value = get_post_meta( $id, $meta_key );
@@ -224,7 +214,7 @@ abstract class AbstractDataStoreCPT {
 	 * @param mixed  $value Value.
 	 * @return int|bool
 	 */
-	public function update_meta( $id, $key, $value ) {
+	public function update_meta( int $id, string $key, $value ) {
 		if ( empty( $value ) ) {
 			return false;
 		}

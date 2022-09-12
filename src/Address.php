@@ -11,7 +11,6 @@
 namespace Pronamic\WordPress\Pay;
 
 use InvalidArgumentException;
-use stdClass;
 
 /**
  * Address

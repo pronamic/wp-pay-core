@@ -36,21 +36,21 @@ class AdminPaymentPostType {
 	 *
 	 * @var Plugin
 	 */
-	private $plugin;
+	private Plugin $plugin;
 
 	/**
 	 * Admin notices.
 	 *
 	 * @var array
 	 */
-	private $admin_notices = [];
+	private array $admin_notices = [];
 
 	/**
 	 * Constructs and initializes an admin payment post type object.
 	 *
 	 * @param Plugin $plugin Plugin.
 	 */
-	public function __construct( $plugin ) {
+	public function __construct( Plugin $plugin ) {
 		$this->plugin = $plugin;
 
 		add_filter( 'request', [ $this, 'request' ] );
@@ -82,11 +82,10 @@ class AdminPaymentPostType {
 	 * Filters and sorting handler.
 	 *
 	 * @link https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin-post-types.php#L1585-L1596
-	 *
 	 * @param  array $vars Request variables.
 	 * @return array
 	 */
-	public function request( $vars ) {
+	public function request( array $vars ) : array {
 		$screen = get_current_screen();
 
 		if ( null === $screen ) {
@@ -239,7 +238,7 @@ class AdminPaymentPostType {
 	 * @param array $columns Columns.
 	 * @return array
 	 */
-	public function columns( $columns ) {
+	public function columns( array $columns ) : array {
 		$columns = [
 			'cb'                            => '<input type="checkbox" />',
 			'pronamic_payment_status'       => sprintf(
@@ -271,7 +270,7 @@ class AdminPaymentPostType {
 	 * @param array $hidden Default hidden columns.
 	 * @return array
 	 */
-	public function default_hidden_columns( $hidden ) {
+	public function default_hidden_columns( array $hidden ) : array {
 		$hidden[] = 'pronamic_payment_gateway';
 		$hidden[] = 'pronamic_payment_description';
 
@@ -284,7 +283,7 @@ class AdminPaymentPostType {
 	 * @param array $sortable_columns Sortable columns.
 	 * @return array
 	 */
-	public function sortable_columns( $sortable_columns ) {
+	public function sortable_columns( array $sortable_columns ) : array {
 		$sortable_columns['pronamic_payment_title'] = 'ID';
 		$sortable_columns['pronamic_payment_date']  = 'date';
 
@@ -296,10 +295,9 @@ class AdminPaymentPostType {
 	 *
 	 * @param string $column_name Primary column name.
 	 * @param string $screen_id   Screen ID.
-	 *
 	 * @return string
 	 */
-	public function primary_column( $column_name, $screen_id ) {
+	public function primary_column( string $column_name, string $screen_id ) : string {
 		if ( 'edit-pronamic_payment' !== $screen_id ) {
 			return $column_name;
 		}
@@ -313,12 +311,11 @@ class AdminPaymentPostType {
 	 * @link https://codex.wordpress.org/Plugin_API/Action_Reference/manage_$post_type_posts_custom_column
 	 * @link https://developer.wordpress.org/reference/functions/get_post_status/
 	 * @link https://developer.wordpress.org/reference/functions/get_post_status_object/
-	 *
 	 * @param string $column  Column.
 	 * @param int    $post_id Post ID.
 	 * @return void
 	 */
-	public function custom_columns( $column, $post_id ) {
+	public function custom_columns( string $column, int $post_id ) {
 		$payment = get_pronamic_payment( $post_id );
 
 		if ( null === $payment ) {
@@ -564,7 +561,7 @@ class AdminPaymentPostType {
 	 * @param string $post_type Post Type.
 	 * @return void
 	 */
-	public function add_meta_boxes( $post_type ) {
+	public function add_meta_boxes( string $post_type ) {
 		if ( self::POST_TYPE !== $post_type ) {
 			return;
 		}
@@ -624,13 +621,14 @@ class AdminPaymentPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 * @return void
 	 */
-	public function meta_box_info( $post ) {
-		$plugin  = $this->plugin;
+	public function meta_box_info( WP_Post $post ) {
 		$payment = get_pronamic_payment( $post->ID );
 
 		if ( null === $payment ) {
 			return;
 		}
+
+		$plugin = $this->plugin;
 
 		include __DIR__ . '/../../views/meta-box-payment-info.php';
 	}
@@ -641,7 +639,7 @@ class AdminPaymentPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 * @return void
 	 */
-	public function meta_box_lines( $post ) {
+	public function meta_box_lines( WP_Post $post ) {
 		$payment = get_pronamic_payment( $post->ID );
 
 		if ( null === $payment ) {
@@ -659,7 +657,7 @@ class AdminPaymentPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 * @return void
 	 */
-	public function meta_box_notes( $post ) {
+	public function meta_box_notes( WP_Post $post ) {
 		$notes = get_comments(
 			[
 				'post_id' => $post->ID,
@@ -677,7 +675,7 @@ class AdminPaymentPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 * @return void
 	 */
-	public function meta_box_subscription( $post ) {
+	public function meta_box_subscription( WP_Post $post ) {
 		$payment = get_pronamic_payment( $post->ID );
 
 		if ( null === $payment ) {
@@ -693,7 +691,7 @@ class AdminPaymentPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 * @return void
 	 */
-	public function meta_box_update( $post ) {
+	public function meta_box_update( WP_Post $post ) {
 		wp_nonce_field( 'pronamic_payment_update', 'pronamic_payment_update_nonce' );
 
 		include __DIR__ . '/../../views/meta-box-payment-update.php';
@@ -706,7 +704,7 @@ class AdminPaymentPostType {
 	 * @param WP_Post $post    WordPress post.
 	 * @return array
 	 */
-	public function post_row_actions( $actions, $post ) {
+	public function post_row_actions( array $actions, WP_Post $post ) : array {
 		if ( self::POST_TYPE === $post->post_type ) {
 			return [ '' ];
 		}
@@ -723,7 +721,7 @@ class AdminPaymentPostType {
 	 * @param array $messages Message.
 	 * @return array
 	 */
-	public function post_updated_messages( $messages ) {
+	public function post_updated_messages( array $messages ) : array {
 		global $post;
 
 		// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352797&filters[translation_id]=37948900

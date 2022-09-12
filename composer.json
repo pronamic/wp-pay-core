@@ -50,6 +50,7 @@
 	"require": {
 		"php": ">=7.4",
 		"ext-dom": "*",
+		"ext-json": "*",
 		"ext-libxml": "*",
 		"ext-simplexml": "*",
 		"pronamic/wp-datetime": "^2.0",
