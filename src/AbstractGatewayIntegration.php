@@ -191,7 +191,7 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	 * @param string|int $post_id Post ID.
 	 * @param string     $key     Shortened meta key.
 	 * @return string
-	 *@since 2.0.8
+	 * @since 2.0.8
 	 */
 	protected function get_meta( $post_id, string $key ) : string {
 		if ( empty( $post_id ) || empty( $key ) ) {

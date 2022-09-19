@@ -383,7 +383,7 @@ class AdminPaymentPostType {
 
 				if ( null !== $icon_url ) {
 					\printf(
-						'<span class="pronamic-pay-tip" title="%2$s"><img src="%1$s" alt="%2$s" title="%2$s" width="32" valign="bottom" /></span> ',
+						'<span class="pronamic-pay-tip" title="%2$s"><img src="%1$s" alt="%2$s" title="%2$s" width="32" /></span> ',
 						\esc_url( $icon_url ),
 						\esc_attr( (string) PaymentMethods::get_name( $payment_method ) )
 					);
