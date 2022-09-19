@@ -60,6 +60,17 @@ class PaymentMethodsCollection implements IteratorAggregate, Countable {
 	public function query( $args ) {
 		$items = $this->items;
 
+		if ( \array_key_exists( 'id', $args ) ) {
+			$id_list = \wp_parse_list( $args['id'] );
+
+			$items = \array_filter(
+				$items,
+				function( $payment_method ) use ( $id_list ) {
+					return \in_array( $payment_method->get_id(), $id_list, true );
+				}
+			);
+		}
+
 		if ( \array_key_exists( 'status', $args ) ) {
 			$status_list = \wp_parse_list( $args['status'] );
 
