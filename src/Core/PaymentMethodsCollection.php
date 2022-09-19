@@ -63,7 +63,7 @@ class PaymentMethodsCollection implements IteratorAggregate, Countable {
 		if ( \array_key_exists( 'status', $args ) ) {
 			$status_list = \wp_parse_list( $args['status'] );
 
-			$items = array_filter(
+			$items = \array_filter(
 				$items,
 				function( $payment_method ) use ( $status_list ) {
 					return \in_array( $payment_method->get_status(), $status_list, true );
@@ -74,7 +74,7 @@ class PaymentMethodsCollection implements IteratorAggregate, Countable {
 		if ( \array_key_exists( 'supports', $args ) ) {
 			$feature = $args['supports'];
 
-			$items = array_filter(
+			$items = \array_filter(
 				$items,
 				function( $payment_method ) use ( $feature ) {
 					return $payment_method->supports( $feature );
