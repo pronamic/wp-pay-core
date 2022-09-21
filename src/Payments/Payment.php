@@ -164,6 +164,8 @@ class Payment extends PaymentInfo {
 	 * @throws \Exception Throws exception when adding note fails.
 	 */
 	public function add_note( $note ) {
+		global $wpdb;
+
 		if ( null === $this->id ) {
 			throw new \Exception(
 				\sprintf(
@@ -183,11 +185,18 @@ class Payment extends PaymentInfo {
 		$result = \wp_insert_comment( $commentdata );
 
 		if ( false === $result ) {
+			/**
+			 * Should we throw an exception or handle this in some other way?
+			 * 
+			 * @link https://github.com/pronamic/wp-pronamic-pay/issues/337
+			 * @todo
+			 */
 			throw new \Exception(
 				\sprintf(
-					'Could not add note "%s" to payment with ID "%d".',
+					'Could not add note "%s" to payment with ID "%d", last database error: "%s".',
 					$note,
-					$this->id
+					$this->id,
+					$wpdb->last_error
 				)
 			);
 		}
