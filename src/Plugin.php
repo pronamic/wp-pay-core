@@ -1001,6 +1001,16 @@ class Plugin {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		self::process_payment_input_data( $payment, $_POST );
 
+		// Gender.
+		if ( null !== $customer->get_gender() ) {
+			$payment->delete_meta( 'gender' );
+		}
+
+		// Date of birth.
+		if ( null !== $customer->get_birth_date() ) {
+			$payment->delete_meta( 'birth_date' );
+		}
+
 		/**
 		 * If an issuer has been specified and the payment
 		 * method is unknown, we set the payment method to

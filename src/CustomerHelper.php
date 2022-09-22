@@ -156,18 +156,18 @@ class CustomerHelper {
 		}
 
 		// Gender.
-		if ( null === $customer->get_gender() && filter_has_var( INPUT_POST, 'pronamic_pay_gender' ) ) {
-			$gender = filter_input( INPUT_POST, 'pronamic_pay_gender', FILTER_SANITIZE_STRING );
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$gender = \array_key_exists( 'pronamic_pay_gender', $_POST ) ? \sanitize_text_field( \wp_unslash( $_POST['pronamic_pay_gender'] ) ) : null;
 
-			if ( Gender::is_valid( $gender ) ) {
-				$customer->set_gender( $gender );
-			}
+		if ( null === $customer->get_gender() && null !== $gender && Gender::is_valid( $gender ) ) {
+			$customer->set_gender( $gender );
 		}
 
 		// Birth date.
-		if ( null === $customer->get_birth_date() && filter_has_var( INPUT_POST, 'pronamic_pay_birth_date' ) ) {
-			$birth_date_string = filter_input( INPUT_POST, 'pronamic_pay_birth_date', FILTER_SANITIZE_STRING );
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$birth_date_string = \array_key_exists( 'pronamic_pay_birth_date', $_POST ) ? \sanitize_text_field( \wp_unslash( $_POST['pronamic_pay_birth_date'] ) ) : null;
 
+		if ( null === $customer->get_birth_date() && ! empty( $birth_date_string ) ) {
 			$birth_date = DateTime::create_from_format( 'Y-m-d', $birth_date_string );
 
 			if ( false !== $birth_date ) {
