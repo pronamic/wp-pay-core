@@ -50,7 +50,7 @@ class DateField extends Field {
 	public function jsonSerialize() : array {
 		$data = parent::jsonSerialize();
 
-		$data['type'] = 'input';
+		$data['type'] = 'date';
 
 		return $data;
 	}
