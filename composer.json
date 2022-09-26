@@ -86,7 +86,7 @@
 		"coverage-html": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html build/coverage-html",
 		"coverage-text": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-text",
 		"coveralls": "vendor/bin/php-coveralls -v",
-		"phpcbf": "vendor/bin/phpcbf",
+		"phpcbf": "XDEBUG_MODE=off vendor/bin/phpcbf",
 		"phpcs": "XDEBUG_MODE=off vendor/bin/phpcs -s -v",
 		"phplint": "vendor/bin/phplint",
 		"phpmd": "vendor/bin/phpmd src,tests text phpmd.ruleset.xml --suffixes php",
