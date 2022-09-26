@@ -156,42 +156,6 @@ class AdminPaymentPostType {
 			];
 		}
 
-		// Create invoice action.
-		if ( filter_has_var( INPUT_GET, 'pronamic_pay_create_invoice' ) && check_admin_referer( 'pronamic_payment_create_invoice_' . $post_id ) ) {
-			$gateway = $payment->get_gateway();
-
-			// Admin notice.
-			if ( null !== $gateway && is_callable( [ $gateway, 'create_invoice' ] ) && $gateway->create_invoice( $payment ) ) {
-				$this->admin_notices[] = [
-					'type'    => 'info',
-					'message' => __( 'Invoice created.', 'pronamic_ideal' ),
-				];
-			} else {
-				$this->admin_notices[] = [
-					'type'    => 'error',
-					'message' => __( 'Invoice could not be created.', 'pronamic_ideal' ),
-				];
-			}
-		}
-
-		// Cancel reservation action.
-		if ( filter_has_var( INPUT_GET, 'pronamic_pay_cancel_reservation' ) && check_admin_referer( 'pronamic_payment_cancel_reservation_' . $post_id ) ) {
-			$gateway = $payment->get_gateway();
-
-			// Admin notice.
-			if ( null !== $gateway && is_callable( [ $gateway, 'cancel_reservation' ] ) && $gateway->cancel_reservation( $payment ) ) {
-				$this->admin_notices[] = [
-					'type'    => 'info',
-					'message' => __( 'Reservation cancelled.', 'pronamic_ideal' ),
-				];
-			} else {
-				$this->admin_notices[] = [
-					'type'    => 'error',
-					'message' => __( 'Reservation could not be cancelled.', 'pronamic_ideal' ),
-				];
-			}
-		}
-
 		// Send to Google Analytics action.
 		if ( filter_has_var( INPUT_GET, 'pronamic_pay_ga_track' ) && check_admin_referer( 'pronamic_payment_ga_track_' . $post_id ) ) {
 			$ga_ecommerce = pronamic_pay_plugin()->google_analytics_ecommerce;

@@ -13,7 +13,7 @@ global $pronamic_pay_errors;
 use Pronamic\WordPress\Number\Number;
 use Pronamic\WordPress\Money\Currency;
 use Pronamic\WordPress\Money\Money;
-use Pronamic\WordPress\Pay\Core\PaymentMethods;
+use Pronamic\WordPress\Pay\Core\SelectField;
 use Pronamic\WordPress\Pay\Forms\FormPostType;
 use Pronamic\WordPress\Pay\Forms\FormsSource;
 use Pronamic\WordPress\Pay\Plugin;
@@ -142,13 +142,15 @@ $currency = Currency::get_instance( 'EUR' );
 
 		<?php
 
-		if ( $gateway->payment_method_is_required() ) {
+		$fields = [];
 
-			$gateway->set_payment_method( PaymentMethods::IDEAL );
-
+		foreach ( $gateway->get_payment_methods() as $payment_method ) {
+			foreach ( $payment_method->get_fields() as $field ) {
+				if ( $field->is_required() ) {
+					$fields[] = $field;
+				}
+			}
 		}
-
-		$fields = $gateway->get_input_fields();
 
 		?>
 
@@ -157,26 +159,15 @@ $currency = Currency::get_instance( 'EUR' );
 			<fieldset>
 				<legend><?php esc_html_e( 'Payment Info', 'pronamic_ideal' ); ?></legend>
 
-				<?php foreach ( $fields as $i => $field ) : ?>
+				<?php foreach ( $fields as $field ) : ?>
 
 					<p class="pronamic-pay-form-row pronamic-pay-form-row-wide">
-						<label class="pronamic-pay-label" for="<?php echo esc_attr( $field['id'] ); ?>">
-							<?php echo esc_html( $field['label'] ); ?>
+						<label class="pronamic-pay-label" for="<?php echo esc_attr( $field->get_id() ); ?>">
+							<?php echo esc_html( $field->get_label() ); ?>
 							<span class="pronamic-pay-required-indicator">*</span>
 						</label>
 
-						<?php if ( 'select' === $field['type'] ) : ?>
-
-							<select id="<?php echo esc_attr( $field['id'] ); ?>" name="<?php echo esc_attr( $field['name'] ); ?>">
-								<?php
-
-								// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-								echo Util::select_options_grouped( $field['choices'] );
-
-								?>
-							</select>
-
-						<?php endif; ?>
+						<?php $field->output(); ?>
 					</p>
 
 				<?php endforeach; ?>

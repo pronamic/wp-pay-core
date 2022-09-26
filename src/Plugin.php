@@ -15,7 +15,9 @@ use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Admin\AdminModule;
 use Pronamic\WordPress\Pay\Banks\BankAccountDetails;
 use Pronamic\WordPress\Pay\Core\Gateway;
+use Pronamic\WordPress\Pay\Core\PaymentMethod;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
+use Pronamic\WordPress\Pay\Core\PaymentMethodsCollection;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
 use Pronamic\WordPress\Pay\Gateways\GatewaysDataStoreCPT;
 use Pronamic\WordPress\Pay\Payments\Payment;
@@ -242,6 +244,13 @@ class Plugin {
 	private static $pronamic_service_url;
 
 	/**
+	 * Payment methods.
+	 *
+	 * @var PaymentMethodsCollection
+	 */
+	private $payment_methods;
+
+	/**
 	 * Construct and initialize an Pronamic Pay plugin object.
 	 *
 	 * @param string|array|object $args The plugin arguments.
@@ -321,6 +330,65 @@ class Plugin {
 		}
 
 		require_once $args['action_scheduler'];
+
+		/**
+		 * Payment methods.
+		 */
+		$this->payment_methods = new PaymentMethodsCollection();
+
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::AFTERPAY_NL ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::AFTERPAY_COM ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::ALIPAY ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::AMERICAN_EXPRESS ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::APPLE_PAY ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BANCONTACT ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BANK_TRANSFER ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BELFIUS ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BILLINK ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BITCOIN ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BLIK ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BUNQ ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::IN3 ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::CAPAYABLE ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::CREDIT_CARD ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::DIRECT_DEBIT ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::DIRECT_DEBIT_BANCONTACT ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::DIRECT_DEBIT_IDEAL ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::DIRECT_DEBIT_SOFORT ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::EPS ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::FOCUM ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::IDEAL ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::IDEALQR ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::GIROPAY ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::GOOGLE_PAY ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::KBC ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::KLARNA_PAY_LATER ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::KLARNA_PAY_NOW ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::KLARNA_PAY_OVER_TIME ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::MAESTRO ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::MASTERCARD ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::MB_WAY ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::PAYCONIQ ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::PAYPAL ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::PRZELEWY24 ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::SANTANDER ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::SOFORT ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::SPRAYPAY ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::SWISH ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::TWINT ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::V_PAY ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::VIPPS ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::VISA ) );
+	}
+
+	/**
+	 * Get payment methods.
+	 *
+	 * @param array $args Query arguments.
+	 * @return PaymentMethodsCollection
+	 */
+	public function get_payment_methods( $args = [] ) {
+		return $this->payment_methods->query( $args );
 	}
 
 	/**
@@ -929,25 +997,18 @@ class Plugin {
 			$payment->set_version( pronamic_pay_plugin()->get_version() );
 		}
 
-		// Issuer.
-		$issuer = $payment->get_meta( 'issuer' );
+		// Post data.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		self::process_payment_input_data( $payment, $_POST );
 
-		if ( null === $issuer ) {
-			// Credit card.
-			if ( PaymentMethods::CREDIT_CARD === $payment->get_payment_method() && \filter_has_var( INPUT_POST, 'pronamic_credit_card_issuer_id' ) ) {
-				$issuer = \filter_input( INPUT_POST, 'pronamic_credit_card_issuer_id', FILTER_SANITIZE_STRING );
-			}
+		// Gender.
+		if ( null !== $customer->get_gender() ) {
+			$payment->delete_meta( 'gender' );
+		}
 
-			// iDEAL.
-			$ideal_methods = [ PaymentMethods::IDEAL, PaymentMethods::DIRECT_DEBIT_IDEAL ];
-
-			if ( \in_array( $payment->get_payment_method(), $ideal_methods, true ) && \filter_has_var( INPUT_POST, 'pronamic_ideal_issuer_id' ) ) {
-				$issuer = \filter_input( INPUT_POST, 'pronamic_ideal_issuer_id', FILTER_SANITIZE_STRING );
-			}
-
-			if ( ! empty( $issuer ) ) {
-				$payment->set_meta( 'issuer', $issuer );
-			}
+		// Date of birth.
+		if ( null !== $customer->get_birth_date() ) {
+			$payment->delete_meta( 'birth_date' );
 		}
 
 		/**
@@ -977,12 +1038,16 @@ class Plugin {
 			$consumer_bank_details = new BankAccountDetails();
 		}
 
-		if ( null === $consumer_bank_details->get_name() && filter_has_var( INPUT_POST, 'pronamic_pay_consumer_bank_details_name' ) ) {
-			$consumer_bank_details->set_name( filter_input( INPUT_POST, 'pronamic_pay_consumer_bank_details_name', FILTER_SANITIZE_STRING ) );
+		$consumer_bank_details_name = $payment->get_meta( 'consumer_bank_details_name' );
+
+		if ( null === $consumer_bank_details->get_name() && null !== $consumer_bank_details_name ) {
+			$consumer_bank_details->set_name( $consumer_bank_details_name );
 		}
 
-		if ( null === $consumer_bank_details->get_iban() && filter_has_var( INPUT_POST, 'pronamic_pay_consumer_bank_details_iban' ) ) {
-			$consumer_bank_details->set_iban( filter_input( INPUT_POST, 'pronamic_pay_consumer_bank_details_iban', FILTER_SANITIZE_STRING ) );
+		$consumer_bank_details_iban = $payment->get_meta( 'consumer_bank_details_iban' );
+
+		if ( null === $consumer_bank_details->get_iban() && null !== $consumer_bank_details_iban ) {
+			$consumer_bank_details->set_iban( $consumer_bank_details_iban );
 		}
 
 		$payment->set_consumer_bank_details( $consumer_bank_details );
@@ -993,6 +1058,41 @@ class Plugin {
 		if ( null !== $lines ) {
 			foreach ( $lines as $line ) {
 				$line->set_payment( $payment );
+			}
+		}
+	}
+
+	/**
+	 * Process payment input data.
+	 *
+	 * @param Payment $payment Payment.
+	 * @param array   $data    Data.
+	 * @return void
+	 */
+	private static function process_payment_input_data( Payment $payment, $data ) {
+		$gateway = $payment->get_gateway();
+
+		if ( null === $gateway ) {
+			return;
+		}
+
+		$payment_method = $gateway->get_payment_method( $payment->get_payment_method() );
+
+		if ( null === $payment_method ) {
+			return;
+		}
+
+		foreach ( $payment_method->get_fields() as $field ) {
+			$id = $field->get_id();
+
+			if ( \array_key_exists( $id, $data ) ) {
+				$value = $data[ $id ];
+
+				$value = \sanitize_text_field( \wp_unslash( $value ) );
+
+				if ( '' !== $field->meta_key ) {
+					$payment->set_meta( $field->meta_key, $value );
+				}
 			}
 		}
 	}

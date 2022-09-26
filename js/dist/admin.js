@@ -454,8 +454,10 @@
 		this.updateInputVisibility = function() {
 			var method = elements.paymentMethods.val();
 
+			$element.find( '.pronamic-pay-test-payment-method' ).hide();
+
 			if ( '' !== method ) {
-				$element.find( '.pronamic-pay-test-payment-method' ).hide().filter( '.' + method ).show();
+				$element.find( '.pronamic-pay-test-payment-method' ).filter( '.' + method ).show();
 			}
 
 			// Hide subscription options for unsupported payment methods.

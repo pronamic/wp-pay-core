@@ -13,6 +13,7 @@
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Gender;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
+use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 
 ?>
@@ -186,6 +187,20 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 
 			$payment_method = $payment->get_payment_method();
 
+			// Name.
+			$name = PaymentMethods::get_name( $payment_method );
+			$name = ( null === $name ) ? $payment_method : $name;
+
+			$gateway = Plugin::get_gateway( $payment->get_config_id() );
+
+			if ( null !== $gateway ) {
+				$method = $gateway->get_payment_method( $payment_method );
+
+				if ( null !== $method ) {
+					$name = $method->get_name();
+				}
+			}
+
 			// Icon.
 			$icon_url = PaymentMethods::get_icon_url( $payment_method );
 
@@ -193,14 +208,11 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 				\printf(
 					'<span class="pronamic-pay-tip" title="%2$s"><img src="%1$s" alt="%2$s" title="%2$s" width="32" valign="bottom" /></span> ',
 					\esc_url( $icon_url ),
-					\esc_attr( (string) PaymentMethods::get_name( $payment_method ) )
+					\esc_attr( (string) $name )
 				);
 			}
 
 			// Name.
-			$name = PaymentMethods::get_name( $payment_method );
-			$name = ( null === $name ) ? $payment_method : $name;
-
 			echo esc_html( (string) $name );
 
 			// Issuer.

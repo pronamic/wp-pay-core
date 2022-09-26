@@ -15,7 +15,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 243](../src/Payments/PaymentsDataStoreCPT.php#L243-L248)
+Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 242](../src/Payments/PaymentsDataStoreCPT.php#L242-L247)
 
 ### `pronamic_pay_pre_create_payment`
 
@@ -27,7 +27,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 264](../src/Payments/PaymentsDataStoreCPT.php#L264-L269)
+Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 263](../src/Payments/PaymentsDataStoreCPT.php#L263-L268)
 
 ### `pronamic_pay_new_payment`
 
@@ -39,7 +39,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 299](../src/Payments/PaymentsDataStoreCPT.php#L299-L304)
+Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 298](../src/Payments/PaymentsDataStoreCPT.php#L298-L303)
 
 ### `pronamic_payment_status_update_{$source}_{$old_status}_to_{$new_status}`
 
@@ -58,7 +58,7 @@ Argument | Type | Description
 `$previous_status` | `null\|string` | Previous [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
 `$updated_status` | `null\|string` | Updated [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
 
-Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 920](../src/Payments/PaymentsDataStoreCPT.php#L920-L932)
+Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 919](../src/Payments/PaymentsDataStoreCPT.php#L919-L931)
 
 ### `pronamic_payment_status_update_{$source}`
 
@@ -75,7 +75,7 @@ Argument | Type | Description
 `$previous_status` | `null\|string` | Previous [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
 `$updated_status` | `null\|string` | Updated [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status)).
 
-Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 934](../src/Payments/PaymentsDataStoreCPT.php#L934-L944)
+Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 933](../src/Payments/PaymentsDataStoreCPT.php#L933-L943)
 
 ### `pronamic_payment_status_update`
 
@@ -90,7 +90,7 @@ Argument | Type | Description
 `$previous_status` | `null\|string` | Previous [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
 `$updated_status` | `null\|string` | Updated [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
 
-Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 946](../src/Payments/PaymentsDataStoreCPT.php#L946-L954)
+Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 945](../src/Payments/PaymentsDataStoreCPT.php#L945-L953)
 
 ### `pronamic_pay_privacy_register_exporters`
 
@@ -121,7 +121,7 @@ Source: [src/PrivacyManager.php](../src/PrivacyManager.php), [line 77](../src/Pr
 *Perform license check.*
 
 
-Source: [src/Admin/AdminSettings.php](../src/Admin/AdminSettings.php), [line 304](../src/Admin/AdminSettings.php#L304-L307)
+Source: [src/Admin/AdminSettings.php](../src/Admin/AdminSettings.php), [line 329](../src/Admin/AdminSettings.php#L329-L332)
 
 ### `pronamic_pay_pre_create_subscription`
 
@@ -225,7 +225,7 @@ Argument | Type | Description
 `$url` |  | 
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 418](../src/Payments/Payment.php#L418-L424)
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 427](../src/Payments/Payment.php#L427-L433)
 
 ### `pronamic_payment_source_text_{$source}`
 
@@ -238,7 +238,7 @@ Argument | Type | Description
 `$text` | `string` | Source text.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 468](../src/Payments/Payment.php#L468-L474)
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 477](../src/Payments/Payment.php#L477-L483)
 
 ### `pronamic_payment_source_text`
 
@@ -251,7 +251,7 @@ Argument | Type | Description
 `$text` | `string` | Source text.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 477](../src/Payments/Payment.php#L477-L483)
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 486](../src/Payments/Payment.php#L486-L492)
 
 ### `pronamic_payment_source_description`
 
@@ -264,7 +264,7 @@ Argument | Type | Description
 `$description` | `string` | Source description.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 500](../src/Payments/Payment.php#L500-L506)
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 509](../src/Payments/Payment.php#L509-L515)
 
 ### `pronamic_payment_source_description_{$source}`
 
@@ -277,7 +277,7 @@ Argument | Type | Description
 `$description` | `string` | Source description.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 509](../src/Payments/Payment.php#L509-L515)
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 518](../src/Payments/Payment.php#L518-L524)
 
 ### `pronamic_payment_source_url`
 
@@ -290,7 +290,7 @@ Argument | Type | Description
 `$url` | `null\|string` | Source URL.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 533](../src/Payments/Payment.php#L533-L539)
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 542](../src/Payments/Payment.php#L542-L548)
 
 ### `pronamic_payment_source_url_{$source}`
 
@@ -303,7 +303,7 @@ Argument | Type | Description
 `$url` | `null\|string` | Source URL.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 542](../src/Payments/Payment.php#L542-L548)
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 551](../src/Payments/Payment.php#L551-L557)
 
 ### `pronamic_payment_provider_url`
 
@@ -316,7 +316,7 @@ Argument | Type | Description
 `$url` | `null\|string` | Provider URL.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 564](../src/Payments/Payment.php#L564-L570)
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 573](../src/Payments/Payment.php#L573-L579)
 
 ### `pronamic_payment_provider_url_{$gateway_id}`
 
@@ -329,7 +329,7 @@ Argument | Type | Description
 `$url` | `null\|string` | Provider URL.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 585](../src/Payments/Payment.php#L585-L591)
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 594](../src/Payments/Payment.php#L594-L600)
 
 ### `pronamic_pay_google_analytics_ecommerce_item_name`
 
@@ -368,7 +368,7 @@ Argument | Type | Description
 `$should_redirect` | `bool` | Flag to indicate if redirect is allowed on handling payment return.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 477](../src/Plugin.php#L477-L483)
+Source: [src/Plugin.php](../src/Plugin.php), [line 545](../src/Plugin.php#L545-L551)
 
 ### `pronamic_pay_gateways`
 
@@ -380,7 +380,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$gateways` | `\Pronamic\WordPress\Pay\AbstractGatewayIntegration[]` | Gateway integrations.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 637](../src/Plugin.php#L637-L642)
+Source: [src/Plugin.php](../src/Plugin.php), [line 705](../src/Plugin.php#L705-L710)
 
 ### `pronamic_pay_plugin_integrations`
 
@@ -392,7 +392,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$plugin_integrations` | `\Pronamic\WordPress\Pay\AbstractPluginIntegration[]` | Plugin integrations.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 652](../src/Plugin.php#L652-L657)
+Source: [src/Plugin.php](../src/Plugin.php), [line 720](../src/Plugin.php#L720-L725)
 
 ### `pronamic_payment_gateway_configuration_id`
 
@@ -405,7 +405,7 @@ Argument | Type | Description
 `$config_id` | `null\|int` | Gateway configuration ID.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 1034](../src/Plugin.php#L1034-L1040)
+Source: [src/Plugin.php](../src/Plugin.php), [line 1134](../src/Plugin.php#L1134-L1140)
 
 ### `pronamic_payment_redirect_url_{$source}`
 
@@ -418,7 +418,7 @@ Argument | Type | Description
 `$url` | `string` | Redirect URL.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 1284](../src/Plugin.php#L1284-L1290)
+Source: [src/Plugin.php](../src/Plugin.php), [line 1384](../src/Plugin.php#L1384-L1390)
 
 ### `pronamic_gateway_configuration_display_value`
 
@@ -431,7 +431,7 @@ Argument | Type | Description
 `$display_value` | `string` | Display value.
 `$post_id` | `int` | Gateway configuration post ID.
 
-Source: [src/Admin/AdminGatewayPostType.php](../src/Admin/AdminGatewayPostType.php), [line 130](../src/Admin/AdminGatewayPostType.php#L130-L136)
+Source: [src/Admin/AdminGatewayPostType.php](../src/Admin/AdminGatewayPostType.php), [line 131](../src/Admin/AdminGatewayPostType.php#L131-L137)
 
 ### `pronamic_gateway_configuration_display_value_{$id}`
 
@@ -449,7 +449,7 @@ Argument | Type | Description
 `$display_value` | `string` | Display value.
 `$post_id` | `int` | Gateway configuration post ID.
 
-Source: [src/Admin/AdminGatewayPostType.php](../src/Admin/AdminGatewayPostType.php), [line 138](../src/Admin/AdminGatewayPostType.php#L138-L149)
+Source: [src/Admin/AdminGatewayPostType.php](../src/Admin/AdminGatewayPostType.php), [line 139](../src/Admin/AdminGatewayPostType.php#L139-L150)
 
 ### `pronamic_pay_removed_extension_notifications`
 

@@ -231,13 +231,6 @@ class PaymentMethods {
 	const GOOGLE_PAY = 'google_pay';
 
 	/**
-	 * Constant for the Gulden payment method.
-	 *
-	 * @var string
-	 */
-	const GULDEN = 'gulden';
-
-	/**
 	 * Constant for the KBC/CBC Payment Button method.
 	 *
 	 * @since 1.3.11
@@ -446,7 +439,6 @@ class PaymentMethods {
 			self::FOCUM                   => __( 'Focum', 'pronamic_ideal' ),
 			self::GIROPAY                 => __( 'Giropay', 'pronamic_ideal' ),
 			self::GOOGLE_PAY              => __( 'Google Pay', 'pronamic_ideal' ),
-			self::GULDEN                  => __( 'Gulden', 'pronamic_ideal' ),
 			self::IDEAL                   => __( 'iDEAL', 'pronamic_ideal' ),
 			self::IDEALQR                 => __( 'iDEAL QR', 'pronamic_ideal' ),
 			self::KBC                     => __( 'KBC/CBC Payment Button', 'pronamic_ideal' ),
@@ -505,7 +497,7 @@ class PaymentMethods {
 	 */
 	public static function get_icon_url( $method = null, $size = null ) {
 		// Check method.
-		if ( empty( $method ) ) {
+		if ( empty( $method ) || 'void' === $method ) {
 			return null;
 		}
 
@@ -519,87 +511,6 @@ class PaymentMethods {
 			\str_replace( '_', '-', $method ),
 			$size
 		);
-	}
-
-	/**
-	 * Get direct debit methods.
-	 *
-	 * @since 1.3.14
-	 * @return array
-	 */
-	public static function get_direct_debit_methods() {
-		$payment_methods = [
-			self::DIRECT_DEBIT_BANCONTACT => self::BANCONTACT,
-			self::DIRECT_DEBIT_IDEAL      => self::IDEAL,
-			self::DIRECT_DEBIT_SOFORT     => self::SOFORT,
-		];
-
-		return $payment_methods;
-	}
-
-	/**
-	 * Is direct debit method.
-	 *
-	 * @since 1.3.14
-	 *
-	 * @param string $payment_method Payment method to check for direct debit.
-	 *
-	 * @return bool True if the specified payment method is direct debit, false otherwise.
-	 */
-	public static function is_direct_debit_method( $payment_method ) {
-		return array_key_exists( $payment_method, self::get_direct_debit_methods() );
-	}
-
-	/**
-	 * Get recurring methods.
-	 *
-	 * @since 1.3.14
-	 * @return array
-	 */
-	public static function get_recurring_methods() {
-		// Get the direct debit methods.
-		$payment_methods = self::get_direct_debit_methods();
-
-		// Add additional methods suitable for recurring payments.
-		$payment_methods[ self::APPLE_PAY ]   = self::APPLE_PAY;
-		$payment_methods[ self::CREDIT_CARD ] = self::CREDIT_CARD;
-		$payment_methods[ self::PAYPAL ]      = self::PAYPAL;
-
-		return $payment_methods;
-	}
-
-	/**
-	 * Is recurring method.
-	 *
-	 * @since 1.3.14
-	 *
-	 * @param string $payment_method The payment method to check for recurring.
-	 *
-	 * @return bool True if the specified payment method supports recurring, false otherwise.
-	 */
-	public static function is_recurring_method( $payment_method ) {
-		return array_key_exists( $payment_method, self::get_recurring_methods() );
-	}
-
-	/**
-	 * Get first method for payment method.
-	 *
-	 * @param string|null $payment_method The payment method to get the first payment method for.
-	 *
-	 * @return string|null
-	 */
-	public static function get_first_payment_method( $payment_method ) {
-		if ( empty( $payment_method ) ) {
-			return null;
-		}
-
-		if ( self::is_direct_debit_method( $payment_method ) ) {
-			$direct_debit_methods = self::get_direct_debit_methods();
-
-			return $direct_debit_methods[ $payment_method ];
-		}
-
-		return $payment_method;
 	}
 
 	/**
@@ -640,36 +551,24 @@ class PaymentMethods {
 
 			$gateway = Plugin::get_gateway( $config_id );
 
-			if ( ! $gateway ) {
+			if ( null === $gateway ) {
 				continue;
 			}
 
-			if ( ! method_exists( $gateway, 'get_supported_payment_methods' ) ) {
-				continue;
-			}
-
-			try {
-				$payment_methods = $gateway->get_transient_available_payment_methods( false );
-			} catch ( \Exception $e ) {
-				// Do not update active payment methods on error.
-				continue;
-			}
-
-			if ( null === $payment_methods ) {
-				$payment_methods = $gateway->get_supported_payment_methods();
-			}
+			$payment_methods = $gateway->get_payment_methods(
+				[
+					'status' => [ '', 'active' ],
+				]
+			);
 
 			foreach ( $payment_methods as $payment_method ) {
-				if ( ! isset( $active_payment_methods[ $payment_method ] ) ) {
-					$active_payment_methods[ $payment_method ] = [];
+				$id = $payment_method->get_id();
+
+				if ( ! array_key_exists( $id, $active_payment_methods ) ) {
+					$active_payment_methods[ $id ] = [];
 				}
 
-				// Check if payment method is supported.
-				if ( ! \in_array( $payment_method, $gateway->get_supported_payment_methods(), true ) ) {
-					continue;
-				}
-
-				$active_payment_methods[ $payment_method ][] = $config_id;
+				$active_payment_methods[ $id ][] = $config_id;
 			}
 		}
 
@@ -726,17 +625,6 @@ class PaymentMethods {
 			}
 
 			$config_ids = array_unique( $config_ids );
-		}
-
-		// Make sure payment method is also supported.
-		if ( null !== $payment_method ) {
-			foreach ( $config_ids as $key => $config_id ) {
-				$gateway = Plugin::get_gateway( $config_id );
-
-				if ( null === $gateway || ! \in_array( $payment_method, $gateway->get_supported_payment_methods(), true ) ) {
-					unset( $config_ids[ $key ] );
-				}
-			}
 		}
 
 		return $config_ids;

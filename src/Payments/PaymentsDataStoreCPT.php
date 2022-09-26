@@ -66,7 +66,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			PaymentStatus::EXPIRED    => 'payment_expired',
 			PaymentStatus::FAILURE    => 'payment_failed',
 			PaymentStatus::REFUNDED   => 'payment_refunded',
-			PaymentStatus::RESERVED   => 'payment_reserved',
 			PaymentStatus::SUCCESS    => 'payment_completed',
 			PaymentStatus::OPEN       => 'payment_pending',
 			PaymentStatus::ON_HOLD    => 'payment_on_hold',

@@ -86,19 +86,6 @@ $phase = $subscription->get_current_phase();
 								?>
 							</p>
 
-							<?php
-
-							$html = $gateway->get_input_html();
-
-							if ( ! empty( $html ) ) :
-
-								// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Complex input HTML.
-								printf( '<p>%s</p>', $html );
-
-							endif;
-
-							?>
-
 							<form id="pronamic_ideal_form" name="pronamic_ideal_form" method="post">
 								<input type="submit" value="<?php esc_attr_e( 'Pay', 'pronamic_ideal' ); ?>"/>
 							</form>

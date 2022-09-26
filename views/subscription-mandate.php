@@ -229,37 +229,29 @@ if ( is_array( $current_mandate ) ) {
 								<select name="pronamic_pay_subscription_payment_method">
 									<?php
 
-									$recurring_methods = array_keys( PaymentMethods::get_recurring_methods() );
+									$payment_methods = $gateway->get_payment_methods(
+										[
+											'status'   => [ '', 'active' ],
+											'supports' => 'recurring',
+										]
+									);
 
-									$active_methods = $gateway->get_transient_available_payment_methods();
+									foreach ( $payment_methods as $payment_method ) {
+										$payment_method_id = $payment_method->get_id();
 
-									if ( null !== $active_methods ) {
-										foreach ( $active_methods as $method ) {
-											if ( ! in_array( $method, $recurring_methods, true ) ) :
-												continue;
-											endif;
+										$name = $payment_method->get_name();
+										$name = ( '' === $name ) ? $payment_method_id : $name;
 
-											$name = PaymentMethods::get_name( $method );
-											$name = ( null === $name ) ? $method : $name;
-
-											printf(
-												'<option value="%s">%s</option>',
-												esc_attr( $method ),
-												esc_html( $name )
-											);
-										}
+										printf(
+											'<option value="%s">%s</option>',
+											esc_attr( $payment_method_id ),
+											esc_html( $name )
+										);
 									}
 
 									?>
 								</select>
 							</label>
-
-							<?php
-
-							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Complex input HTML.
-							echo $gateway->get_input_html();
-
-							?>
 
 							<p>
 								<?php wp_nonce_field( 'pronamic_pay_update_subscription_mandate', 'pronamic_pay_nonce' ); ?>

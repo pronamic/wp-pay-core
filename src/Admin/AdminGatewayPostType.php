@@ -56,6 +56,8 @@ class AdminGatewayPostType {
 
 		add_action( 'save_post_' . self::POST_TYPE, [ $this, 'save_post' ] );
 
+		add_action( 'after_delete_post', [ $this, 'after_delete_post' ], 10, 2 );
+
 		add_action( 'display_post_states', [ $this, 'display_post_states' ], 10, 2 );
 
 		add_filter( 'post_updated_messages', [ $this, 'post_updated_messages' ] );
@@ -118,7 +120,6 @@ class AdminGatewayPostType {
 						get_post_meta( $post_id, '_pronamic_gateway_multisafepay_account_id', true ),
 						get_post_meta( $post_id, '_pronamic_gateway_pay_nl_service_id', true ),
 						get_post_meta( $post_id, '_pronamic_gateway_paydutch_username', true ),
-						get_post_meta( $post_id, '_pronamic_gateway_sisow_merchant_id', true ),
 						get_post_meta( $post_id, '_pronamic_gateway_targetpay_layoutcode', true ),
 						get_post_meta( $post_id, '_pronamic_gateway_ogone_psp_id', true ),
 						get_post_meta( $post_id, '_pronamic_gateway_ogone_user_id', true ),
@@ -158,7 +159,6 @@ class AdminGatewayPostType {
 						get_post_meta( $post_id, '_pronamic_gateway_omnikassa_secret_key', true ),
 						get_post_meta( $post_id, '_pronamic_gateway_buckaroo_secret_key', true ),
 						get_post_meta( $post_id, '_pronamic_gateway_icepay_secret_code', true ),
-						get_post_meta( $post_id, '_pronamic_gateway_sisow_merchant_key', true ),
 						get_post_meta( $post_id, '_pronamic_gateway_ogone_password', true ),
 					]
 				);
@@ -288,56 +288,13 @@ class AdminGatewayPostType {
 			return;
 		}
 
-		// Supported and available payment methods.
-		$supported = $gateway->get_supported_payment_methods();
+		$payment_methods = $gateway->get_payment_methods()->getIterator();
 
-		try {
-			$available = $gateway->get_transient_available_payment_methods();
-		} catch ( \Exception $e ) {
-			$available = [];
-		}
-
-		// Handle methods request support.
-		$supports_methods_request = false;
-
-		if ( null === $available ) {
-			$available = [];
-		} else {
-			// Set method request support variable for use in HTML.
-			$supports_methods_request = true;
-		}
-
-		$payment_methods = [];
-
-		foreach ( $supported as $payment_method ) {
-			$name = PaymentMethods::get_name( $payment_method );
-
-			$payment_methods[ $payment_method ] = (object) [
-				'id'        => $payment_method,
-				'name'      => $name,
-				'available' => in_array( $payment_method, $available, true ),
-			];
-		}
-
-		usort(
-			$payment_methods,
+		$payment_methods->uasort(
 			function( $a, $b ) {
-				return strnatcasecmp( $a->name, $b->name );
+				return strnatcasecmp( $a->get_name(), $b->get_name() );
 			}
 		);
-
-		$columns = [
-			'payment_method' => __( 'Payment method', 'pronamic_ideal' ),
-			'active'         => __( 'Active', 'pronamic_ideal' ),
-		];
-
-		if ( null !== $gateway_id ) {
-			$integration = pronamic_pay_plugin()->gateway_integrations->get_integration( $gateway_id );
-
-			if ( null !== $integration && $integration->supports( 'recurring' ) ) {
-				$columns['recurring'] = __( 'Recurring', 'pronamic_ideal' );
-			}
-		}
 
 		require __DIR__ . '/../../views/meta-box-gateway-payment-methods.php';
 	}
@@ -420,6 +377,9 @@ class AdminGatewayPostType {
 		\delete_transient( 'pronamic_pay_issuers_' . md5( serialize( $config ) ) );
 		\delete_transient( 'pronamic_gateway_payment_methods_' . md5( serialize( $config ) ) );
 
+		// Remove legacy gateway mode meta, to allow updating the gateway integration setting.
+		\delete_post_meta( $post_id, '_pronamic_gateway_mode' );
+
 		// Save settings.
 		$fields = $integration->get_settings_fields();
 
@@ -462,6 +422,21 @@ class AdminGatewayPostType {
 		$integration->save_post( $post_id );
 
 		// Update active payment methods.
+		PaymentMethods::update_active_payment_methods();
+	}
+
+	/**
+	 * Update active payment methods on gateway post deletion.
+	 *
+	 * @param int     $post_id Post ID.
+	 * @param WP_Post $post    Post.
+	 * @return void
+	 */
+	public function after_delete_post( $post_id, $post ) : void {
+		if ( self::POST_TYPE !== $post->post_type ) {
+			return;
+		}
+
 		PaymentMethods::update_active_payment_methods();
 	}
 

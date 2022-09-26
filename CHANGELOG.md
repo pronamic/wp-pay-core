@@ -7,6 +7,12 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [4.4.0] - 2022-09-26
+- Fixed list table styling on mobile (pronamic/wp-pay-core#72).
+- Refactored payments methods and fields support.
+- Removed phone number field from test meta box.
+- Removed Sisow reservation payments support.
+
 ## [4.3.1] - 2022-07-01
 ### Changed
 - Updated logos library to version `1.8.3`.
@@ -518,7 +524,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.3.1...HEAD
+[unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.4.0...HEAD
+[4.4.0]: https://github.com/pronamic/wp-pay-core/compare/4.3.1...4.4.0
 [4.3.1]: https://github.com/pronamic/wp-pay-core/compare/4.3.0...4.3.1
 [4.3.0]: https://github.com/pronamic/wp-pay-core/compare/4.2.1...4.3.0
 [4.2.1]: https://github.com/pronamic/wp-pay-core/compare/4.2.0...4.2.1

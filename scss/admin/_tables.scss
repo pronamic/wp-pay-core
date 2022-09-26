@@ -104,8 +104,10 @@
 			&.type-pronamic_payment:not(.inline-edit-row):not(.no-items),
 			&.type-pronamic_pay_subscr:not(.inline-edit-row):not(.no-items) {
 				td:not(.column-primary) {
+					&.column-pronamic_payment_method,
 					&.column-pronamic_payment_status,
 					&.column-pronamic_payment_subscription,
+					&.column-pronamic_subscription_method,
 					&.column-pronamic_subscription_status {
 						display: table-cell;
 
@@ -117,8 +119,10 @@
 
 				&.is-expanded {
 					td:not(.hidden) {
+						&.column-pronamic_payment_method,
 						&.column-pronamic_payment_status,
 						&.column-pronamic_payment_subscription,
+						&.column-pronamic_subscription_method,
 						&.column-pronamic_subscription_status {
 							display: table-cell !important; // sass-lint:disable-line no-important
 						}

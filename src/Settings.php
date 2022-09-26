@@ -118,6 +118,23 @@ class Settings {
 				]
 			);
 		}
+
+		// Payment Methods.
+		$payment_methods = $this->plugin->get_payment_methods();
+
+		foreach ( $payment_methods as $payment_method ) {
+			$id = 'pronamic_pay_payment_method_' . $payment_method->get_id() . '_status';
+
+			\register_setting(
+				'pronamic_pay',
+				$id,
+				[
+					'type' => 'string',
+				]
+			);
+
+			$payment_method->set_status( (string) \get_option( $id ) );
+		}
 	}
 
 	/**
