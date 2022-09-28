@@ -129,8 +129,21 @@ class WebhookManager {
 	 */
 	public static function validate_request_url( WebhookRequestInfo $request_info ) {
 		// Check if current home URL is the same as in the logged URL.
-		$home_url = home_url( '/' );
+		$urls = [ home_url( '/' ) ];
 
-		return substr( $request_info->get_request_url(), 0, strlen( $home_url ) ) === $home_url;
+		// WPML compatibility.
+		if ( defined( '\ICL_SITEPRESS_VERSION') ) {
+			$urls = \wp_list_pluck(apply_filters( 'wpml_active_languages', [] ), 'url' );
+
+			$urls[] = \get_option( 'home' );
+		}
+
+		foreach ( $urls as $home_url ) {
+			if ( substr( $request_info->get_request_url(), 0, strlen( $home_url ) ) === $home_url ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
