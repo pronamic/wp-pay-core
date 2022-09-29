@@ -7,6 +7,7 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 - Removed `Gateway->update_subscription( Payment $payment )` method, no longer used. ([pronamic/wp-pay-core#41](https://github.com/pronamic/wp-pay-core/issues/41))
 - Removed `Gateway->cancel_subscription( Subscription $subscription )` method, no longer used. ([pronamic/wp-pay-core#41](https://github.com/pronamic/wp-pay-core/issues/41)).
+- Added support for multi-dimensional array in `Util::html_hidden_fields( $data )` method. ([pronamic/wp-pay-core#73](https://github.com/pronamic/wp-pay-core/issues/73))
 
 ## [4.4.0] - 2022-09-26
 - Fixed list table styling on mobile (pronamic/wp-pay-core#72).

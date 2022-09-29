@@ -199,6 +199,30 @@ class Util {
 	}
 
 	/**
+	 * Flattens a multi-dimensional array into a single level array that uses "square bracket" notation to indicate depth.
+	 * 
+	 * @link https://github.com/pronamic/wp-pay-core/issues/73
+	 * @param iterable $data   Data.
+	 * @param string   $parent Parent.
+	 * @param array    $result Result.
+	 * @return array
+	 */
+	private static function array_square_bracket( $data, $parent = '', $result = [] ) {
+		foreach ( $data as $key => $item ) {
+			if ( '' !== $parent ) {
+				$key = $parent . '[' . $key . ']';
+			}
+
+			if ( is_array( $item ) ) {
+				$result = self::array_square_bracket( $item, $key, $result );
+			} else {
+				$result[ $key ] = $item;
+			}
+		}
+		
+		return $result;
+	}
+	/**
 	 * Get hidden inputs HTML for data.
 	 *
 	 * @param array $data Array with name and value pairs to convert to hidden HTML input elements.
@@ -207,6 +231,8 @@ class Util {
 	 */
 	public static function html_hidden_fields( $data ) {
 		$html = '';
+
+		$data = self::array_square_bracket( $data );
 
 		foreach ( $data as $name => $value ) {
 			$html .= sprintf( '<input type="hidden" name="%s" value="%s" />', esc_attr( $name ), esc_attr( $value ) );
