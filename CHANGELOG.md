@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
--
+- Added support for multi-dimensional array in `Util::html_hidden_fields( $data )` method. ([#pronamic/wp-pay-core#73](https://github.com/pronamic/wp-pay-core/issues/73))
 
 ## [4.4.0] - 2022-09-26
 - Fixed list table styling on mobile (pronamic/wp-pay-core#72).
