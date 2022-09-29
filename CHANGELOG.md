@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
--
+- Removed `Gateway->update_subscription( Payment $payment )` method, no longer used. ([#pronamic/wp-pay-core#41](https://github.com/pronamic/wp-pay-core/issues/41))
 
 ## [4.4.0] - 2022-09-26
 - Fixed list table styling on mobile (pronamic/wp-pay-core#72).

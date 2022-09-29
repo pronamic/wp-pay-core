@@ -242,16 +242,6 @@ abstract class Gateway {
 	}
 
 	/**
-	 * Handle subscription update.
-	 *
-	 * @param Payment $payment The payment to handle subscription update for.
-	 * @return void
-	 */
-	public function update_subscription( Payment $payment ) {
-
-	}
-
-	/**
 	 * Handle subscription cancellation.
 	 *
 	 * @param Subscription $subscription The subscription to handle cancellation for.
