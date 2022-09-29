@@ -242,16 +242,6 @@ abstract class Gateway {
 	}
 
 	/**
-	 * Handle subscription cancellation.
-	 *
-	 * @param Subscription $subscription The subscription to handle cancellation for.
-	 * @return void
-	 */
-	public function cancel_subscription( Subscription $subscription ) {
-
-	}
-
-	/**
 	 * Redirect to the gateway action URL.
 	 *
 	 * @param Payment $payment The payment to redirect for.
