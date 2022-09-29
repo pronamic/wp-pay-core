@@ -202,7 +202,7 @@ class Util {
 	 * Flattens a multi-dimensional array into a single level array that uses "square bracket" notation to indicate depth.
 	 * 
 	 * @link https://github.com/pronamic/wp-pay-core/issues/73
-	 * @param iterable $data   Data,
+	 * @param iterable $data   Data.
 	 * @param string   $parent Parent.
 	 * @param array    $result Result.
 	 * @return array
