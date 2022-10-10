@@ -1032,25 +1032,26 @@ class Plugin {
 		}
 
 		// Consumer bank details.
-		$consumer_bank_details = $payment->get_consumer_bank_details();
-
-		if ( null === $consumer_bank_details ) {
-			$consumer_bank_details = new BankAccountDetails();
-		}
-
 		$consumer_bank_details_name = $payment->get_meta( 'consumer_bank_details_name' );
-
-		if ( null === $consumer_bank_details->get_name() && null !== $consumer_bank_details_name ) {
-			$consumer_bank_details->set_name( $consumer_bank_details_name );
-		}
-
 		$consumer_bank_details_iban = $payment->get_meta( 'consumer_bank_details_iban' );
 
-		if ( null === $consumer_bank_details->get_iban() && null !== $consumer_bank_details_iban ) {
-			$consumer_bank_details->set_iban( $consumer_bank_details_iban );
-		}
+		if ( null !== $consumer_bank_details_name || null !== $consumer_bank_details_iban ) {
+			$consumer_bank_details = $payment->get_consumer_bank_details();
 
-		$payment->set_consumer_bank_details( $consumer_bank_details );
+			if ( null === $consumer_bank_details ) {
+				$consumer_bank_details = new BankAccountDetails();
+			}
+
+			if ( null === $consumer_bank_details->get_name() ) {
+				$consumer_bank_details->set_name( $consumer_bank_details_name );
+			}
+
+			if ( null === $consumer_bank_details->get_iban() ) {
+				$consumer_bank_details->set_iban( $consumer_bank_details_iban );
+			}
+
+			$payment->set_consumer_bank_details( $consumer_bank_details );
+		}
 
 		// Payment lines payment.
 		$lines = $payment->get_lines();
