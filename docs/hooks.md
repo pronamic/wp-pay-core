@@ -405,7 +405,7 @@ Argument | Type | Description
 `$config_id` | `null\|int` | Gateway configuration ID.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 1134](../src/Plugin.php#L1134-L1140)
+Source: [src/Plugin.php](../src/Plugin.php), [line 1135](../src/Plugin.php#L1135-L1141)
 
 ### `pronamic_payment_redirect_url_{$source}`
 
@@ -418,7 +418,7 @@ Argument | Type | Description
 `$url` | `string` | Redirect URL.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 1384](../src/Plugin.php#L1384-L1390)
+Source: [src/Plugin.php](../src/Plugin.php), [line 1385](../src/Plugin.php#L1385-L1391)
 
 ### `pronamic_gateway_configuration_display_value`
 
