@@ -9,6 +9,11 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 - Removed `Gateway->cancel_subscription( Subscription $subscription )` method, no longer used. ([pronamic/wp-pay-core#41](https://github.com/pronamic/wp-pay-core/issues/41)).
 - Added support for multi-dimensional array in `Util::html_hidden_fields( $data )` method. ([pronamic/wp-pay-core#73](https://github.com/pronamic/wp-pay-core/issues/73))
 
+## [4.4.1] - 2022-10-11
+- Added support for multi-dimensional array in `Util::html_hidden_fields()` method (pronamic/wp-pay-core#73).
+- Fixed setting empty consumer bank details object (pronamic/wp-pronamic-pay-mollie#11).
+- Removed unused gateway subscription methods.
+
 ## [4.4.0] - 2022-09-26
 - Fixed list table styling on mobile (pronamic/wp-pay-core#72).
 - Refactored payments methods and fields support.
@@ -526,7 +531,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.4.0...HEAD
+[unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.4.1...HEAD
+[4.4.1]: https://github.com/pronamic/wp-pay-core/compare/4.4.0...4.4.1
 [4.4.0]: https://github.com/pronamic/wp-pay-core/compare/4.3.1...4.4.0
 [4.3.1]: https://github.com/pronamic/wp-pay-core/compare/4.3.0...4.3.1
 [4.3.0]: https://github.com/pronamic/wp-pay-core/compare/4.2.1...4.3.0
