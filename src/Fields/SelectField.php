@@ -106,7 +106,13 @@ class SelectField extends Field {
 		$data = parent::jsonSerialize();
 
 		$data['type']    = 'select';
-		$data['options'] = $this->get_flat_options();
+		$data['options'] = [];
+
+		try {
+			$data['options'] = $this->get_flat_options();
+		} catch ( \Exception $e ) {
+			$data['error'] = $e->getMessage();
+		}
 
 		return $data;
 	}
