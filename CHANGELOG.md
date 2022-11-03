@@ -10,15 +10,13 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 - Catch exceptions while retrieving options from for example iDEAL issuer select fields. ([#78](https://github.com/pronamic/wp-pay-core/issues/78))
 - Allow subscription payments at gateways that don't have support for recurring payments. ([pronamic/wp-pronamic-pay-woocommerce#15](https://github.com/pronamic/wp-pronamic-pay-woocommerce/issues/15))
 - Added MobilePay payment method. ([pronamic/wp-pronamic-pay-adyen#16](https://github.com/pronamic/wp-pronamic-pay-adyen/issues/16))
-- Remove payment method specific support values `recurring_apple_pay`, `recurring_credit_card` and `recurring_direct_debit`.
-- Removed `Gateway->update_subscription( Payment $payment )` method, no longer used. ([pronamic/wp-pay-core#41](https://github.com/pronamic/wp-pay-core/issues/41))
-- Removed `Gateway->cancel_subscription( Subscription $subscription )` method, no longer used. ([pronamic/wp-pay-core#41](https://github.com/pronamic/wp-pay-core/issues/41)).
-- Added support for multi-dimensional array in `Util::html_hidden_fields( $data )` method. ([pronamic/wp-pay-core#73](https://github.com/pronamic/wp-pay-core/issues/73))
 
 ## [4.4.1] - 2022-10-11
 - Added support for multi-dimensional array in `Util::html_hidden_fields()` method (pronamic/wp-pay-core#73).
 - Fixed setting empty consumer bank details object (pronamic/wp-pronamic-pay-mollie#11).
-- Removed unused gateway subscription methods.
+- Removed payment method specific support values `recurring_apple_pay`, `recurring_credit_card` and `recurring_direct_debit`.
+- Removed `Gateway->update_subscription( Payment $payment )` method, no longer used. ([pronamic/wp-pay-core#41](https://github.com/pronamic/wp-pay-core/issues/41))
+- Removed `Gateway->cancel_subscription( Subscription $subscription )` method, no longer used. ([pronamic/wp-pay-core#41](https://github.com/pronamic/wp-pay-core/issues/41)).
 
 ## [4.4.0] - 2022-09-26
 - Fixed list table styling on mobile (pronamic/wp-pay-core#72).
