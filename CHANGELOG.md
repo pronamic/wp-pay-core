@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
+
+## [4.5.0] - 2022-11-03
+- Catch exceptions while retrieving options from for example iDEAL issuer select fields. ([#78](https://github.com/pronamic/wp-pay-core/issues/78))
+- Allow subscription payments at gateways that don't have support for recurring payments. ([pronamic/wp-pronamic-pay-woocommerce#15](https://github.com/pronamic/wp-pronamic-pay-woocommerce/issues/15))
+- Added MobilePay payment method. ([pronamic/wp-pronamic-pay-adyen#16](https://github.com/pronamic/wp-pronamic-pay-adyen/issues/16))
+- Remove payment method specific support values `recurring_apple_pay`, `recurring_credit_card` and `recurring_direct_debit`.
 - Removed `Gateway->update_subscription( Payment $payment )` method, no longer used. ([pronamic/wp-pay-core#41](https://github.com/pronamic/wp-pay-core/issues/41))
 - Removed `Gateway->cancel_subscription( Subscription $subscription )` method, no longer used. ([pronamic/wp-pay-core#41](https://github.com/pronamic/wp-pay-core/issues/41)).
 - Added support for multi-dimensional array in `Util::html_hidden_fields( $data )` method. ([pronamic/wp-pay-core#73](https://github.com/pronamic/wp-pay-core/issues/73))
@@ -531,7 +537,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.4.1...HEAD
+[unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.5.0...HEAD
+[4.5.0]: https://github.com/pronamic/wp-pay-core/compare/4.4.1...4.5.0
 [4.4.1]: https://github.com/pronamic/wp-pay-core/compare/4.4.0...4.4.1
 [4.4.0]: https://github.com/pronamic/wp-pay-core/compare/4.3.1...4.4.0
 [4.3.1]: https://github.com/pronamic/wp-pay-core/compare/4.3.0...4.3.1
