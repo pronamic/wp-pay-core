@@ -307,6 +307,14 @@ class PaymentMethods {
 	const MISTER_CASH = 'mister_cash';
 
 	/**
+	 * MobilePay
+	 *
+	 * @link https://www.mobilepay.dk/
+	 * @var string
+	 */
+	const MOBILEPAY = 'mobilepay';
+
+	/**
 	 * Constant for the Payconiq method.
 	 *
 	 * @since 2.0.0
@@ -448,6 +456,7 @@ class PaymentMethods {
 			self::MAESTRO                 => __( 'Maestro', 'pronamic_ideal' ),
 			self::MASTERCARD              => __( 'Mastercard', 'pronamic_ideal' ),
 			self::MB_WAY                  => __( 'MB WAY', 'pronamic_ideal' ),
+			self::MOBILEPAY               => __( 'MobilePay', 'pronamic_ideal' ),
 			self::PAYCONIQ                => __( 'Payconiq', 'pronamic_ideal' ),
 			self::PAYPAL                  => __( 'PayPal', 'pronamic_ideal' ),
 			self::PRZELEWY24              => __( 'Przelewy24', 'pronamic_ideal' ),
