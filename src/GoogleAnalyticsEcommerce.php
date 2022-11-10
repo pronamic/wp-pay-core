@@ -13,9 +13,9 @@ namespace Pronamic\WordPress\Pay;
 use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\Server;
+use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentLine;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
-use Pronamic\WordPress\Pay\Payments\Payment;
 
 /**
  * Pronamic Pay Google Analytics e-commerce

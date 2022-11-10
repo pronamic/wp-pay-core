@@ -10,7 +10,6 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
-use WP_CLI;
 use WP_Post;
 use WP_Query;
 

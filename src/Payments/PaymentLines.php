@@ -13,9 +13,9 @@ namespace Pronamic\WordPress\Pay\Payments;
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
-use Traversable;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
+use Traversable;
 
 /**
  * Payment lines

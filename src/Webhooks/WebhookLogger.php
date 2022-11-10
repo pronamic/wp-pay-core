@@ -13,7 +13,6 @@ namespace Pronamic\WordPress\Pay\Webhooks;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Pay\Core\Server;
 use Pronamic\WordPress\Pay\Payments\Payment;
-use Pronamic\WordPress\Pay\Plugin;
 
 /**
  * Webhook logger class

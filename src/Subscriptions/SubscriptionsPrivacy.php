@@ -11,7 +11,6 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use Pronamic\WordPress\Pay\PrivacyManager;
-use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 
 /**
  * Subscriptions Privacy class.

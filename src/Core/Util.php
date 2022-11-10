@@ -10,7 +10,6 @@
 
 namespace Pronamic\WordPress\Pay\Core;
 
-use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Util as Pay_Util;
 

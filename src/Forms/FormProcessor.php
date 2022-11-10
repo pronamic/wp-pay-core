@@ -11,9 +11,8 @@
 namespace Pronamic\WordPress\Pay\Forms;
 
 use Exception;
-use Pronamic\WordPress\Number\Number;
 use Pronamic\WordPress\Money\Money;
-use Pronamic\WordPress\Pay\Core\PaymentMethods;
+use Pronamic\WordPress\Number\Number;
 use Pronamic\WordPress\Pay\ContactName;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\Payments\Payment;

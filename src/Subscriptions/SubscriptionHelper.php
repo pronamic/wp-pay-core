@@ -10,7 +10,6 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
-use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;

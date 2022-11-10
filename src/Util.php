@@ -11,10 +11,6 @@
 namespace Pronamic\WordPress\Pay;
 
 use DateInterval;
-use Pronamic\WordPress\Pay\Core\Util as Core_Util;
-use Pronamic\WordPress\Money\Money;
-use SimpleXMLElement;
-use WP_Error;
 
 /**
  * WordPress utility class
@@ -200,7 +196,7 @@ class Util {
 
 	/**
 	 * Flattens a multi-dimensional array into a single level array that uses "square bracket" notation to indicate depth.
-	 * 
+	 *
 	 * @link https://github.com/pronamic/wp-pay-core/issues/73
 	 * @param iterable $data   Data.
 	 * @param string   $parent Parent.
@@ -219,7 +215,7 @@ class Util {
 				$result[ $key ] = $item;
 			}
 		}
-		
+
 		return $result;
 	}
 	/**

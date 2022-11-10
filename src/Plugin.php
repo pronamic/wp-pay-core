@@ -10,27 +10,27 @@
 
 namespace Pronamic\WordPress\Pay;
 
-use Pronamic\WordPress\Pay\Blocks\BlocksModule;
-use Pronamic\WordPress\Pay\Forms\FormsModule;
-use Pronamic\WordPress\Pay\Payments\PaymentsModule;
-use Pronamic\WordPress\Pay\Subscriptions\SubscriptionsModule;
 use Pronamic\WordPress\Http\Facades\Http;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Admin\AdminModule;
 use Pronamic\WordPress\Pay\Banks\BankAccountDetails;
+use Pronamic\WordPress\Pay\Blocks\BlocksModule;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\Core\PaymentMethod;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Core\PaymentMethodsCollection;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
+use Pronamic\WordPress\Pay\Forms\FormsModule;
 use Pronamic\WordPress\Pay\Gateways\GatewaysDataStoreCPT;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Payments\PaymentsDataStoreCPT;
+use Pronamic\WordPress\Pay\Payments\PaymentsModule;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Payments\StatusChecker;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionsDataStoreCPT;
+use Pronamic\WordPress\Pay\Subscriptions\SubscriptionsModule;
 use Pronamic\WordPress\Pay\Webhooks\WebhookLogger;
 use WP_Error;
 use WP_Query;

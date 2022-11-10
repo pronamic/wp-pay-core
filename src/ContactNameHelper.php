@@ -10,10 +10,6 @@
 
 namespace Pronamic\WordPress\Pay;
 
-use DateTime;
-use Pronamic\WordPress\Pay\Core\Server;
-use Pronamic\WordPress\Pay\Core\Util as Core_Util;
-
 /**
  * Contact name helper
  *

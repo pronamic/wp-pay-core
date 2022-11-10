@@ -10,8 +10,6 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
-use Pronamic\WordPress\Pay\Plugin;
-
 /**
  * WordPress admin dashboard
  *

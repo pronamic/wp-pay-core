@@ -10,7 +10,6 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
-use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeImmutable;
 use Pronamic\WordPress\DateTime\DateTimeZone;
@@ -18,6 +17,7 @@ use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 use Pronamic\WordPress\Pay\Payments\LegacyPaymentsDataStoreCPT;
+use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 
 /**

@@ -12,7 +12,6 @@ namespace Pronamic\WordPress\Pay\Forms;
 
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\Parser as MoneyParser;
-use Pronamic\WordPress\Pay\Plugin;
 use WP_Post;
 
 /**

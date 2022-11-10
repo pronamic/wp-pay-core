@@ -12,7 +12,6 @@ namespace Pronamic\WordPress\Pay\Blocks;
 
 use Pronamic\WordPress\Number\Number;
 use Pronamic\WordPress\Number\Parser as NumberParser;
-use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Forms\FormsSource;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;

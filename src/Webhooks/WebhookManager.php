@@ -10,8 +10,6 @@
 
 namespace Pronamic\WordPress\Pay\Webhooks;
 
-use Pronamic\WordPress\Pay\Plugin;
-use Pronamic\WordPress\Pay\Admin\AdminModule;
 use WP_Query;
 
 /**

@@ -10,15 +10,14 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
-use DateInterval;
 use Pronamic\WordPress\DateTime\DateTime;
-use Pronamic\WordPress\DateTime\DateTimeInterface;
 use Pronamic\WordPress\DateTime\DateTimeImmutable;
+use Pronamic\WordPress\DateTime\DateTimeInterface;
 use Pronamic\WordPress\Money\Money;
-use Pronamic\WordPress\Pay\Payments\PaymentInfo;
-use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Payments\Payment;
+use Pronamic\WordPress\Pay\Payments\PaymentInfo;
 use Pronamic\WordPress\Pay\Payments\PaymentInfoHelper;
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 
 /**
  * Subscription

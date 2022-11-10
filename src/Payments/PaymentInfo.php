@@ -10,20 +10,18 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
-use Pronamic\WordPress\Pay\Core\TimestampsTrait;
-use Pronamic\WordPress\Pay\Core\VersionTrait;
-use Pronamic\WordPress\Pay\Core\ModeTrait;
-use Pronamic\WordPress\Pay\Privacy\AnonymizedTrait;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Money\Money;
-use Pronamic\WordPress\Money\TaxedMoney;
+use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\Banks\BankAccountDetails;
 use Pronamic\WordPress\Pay\Banks\BankTransferDetails;
 use Pronamic\WordPress\Pay\Core\Gateway;
-use Pronamic\WordPress\Pay\Address;
+use Pronamic\WordPress\Pay\Core\ModeTrait;
+use Pronamic\WordPress\Pay\Core\TimestampsTrait;
+use Pronamic\WordPress\Pay\Core\VersionTrait;
 use Pronamic\WordPress\Pay\CreditCard;
 use Pronamic\WordPress\Pay\Customer;
-use Pronamic\WordPress\Pay\Plugin;
+use Pronamic\WordPress\Pay\Privacy\AnonymizedTrait;
 use WP_Post;
 
 /**
