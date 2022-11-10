@@ -23,14 +23,14 @@ class FormsSource {
 	 *
 	 * @var string
 	 */
-	const PAYMENT_FORM = 'payment_form';
+	public const PAYMENT_FORM = 'payment_form';
 
 	/**
 	 * Block payment form.
 	 *
 	 * @var string
 	 */
-	const BLOCK_PAYMENT_FORM = 'block_payment_form';
+	public const BLOCK_PAYMENT_FORM = 'block_payment_form';
 
 	/**
 	 * Is valid source?
@@ -39,7 +39,7 @@ class FormsSource {
 	 *
 	 * @return bool
 	 */
-	public static function is_valid( $source ) {
+	public static function is_valid( $source ): bool {
 		$sources = [
 			self::BLOCK_PAYMENT_FORM,
 			self::PAYMENT_FORM,

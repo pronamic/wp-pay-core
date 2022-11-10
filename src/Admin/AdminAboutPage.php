@@ -22,17 +22,13 @@ use Pronamic\WordPress\Pay\Plugin;
 class AdminAboutPage {
 	/**
 	 * Plugin.
-	 *
-	 * @var Plugin
 	 */
-	private $plugin;
+	private Plugin $plugin;
 
 	/**
 	 * File.
-	 *
-	 * @var string
 	 */
-	private $file;
+	private string $file;
 
 	/**
 	 * Constructs and initializes admin about page object.
@@ -58,7 +54,7 @@ class AdminAboutPage {
 	 *
 	 * @return void
 	 */
-	public function admin_menu() {
+	public function admin_menu(): void {
 		$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
 
 		if ( 'pronamic-pay-about' !== $page ) {
@@ -85,7 +81,7 @@ class AdminAboutPage {
 	 *
 	 * @return void
 	 */
-	public function admin_head() {
+	public function admin_head(): void {
 		remove_submenu_page( 'index.php', 'pronamic-pay-about' );
 	}
 
@@ -94,7 +90,7 @@ class AdminAboutPage {
 	 *
 	 * @return void
 	 */
-	public function admin_css() {
+	public function admin_css(): void {
 		// @link https://github.com/WordPress/WordPress/blob/4.7/wp-includes/default-constants.php#L83-L93.
 		$min = SCRIPT_DEBUG ? '' : '.min';
 
@@ -186,7 +182,7 @@ class AdminAboutPage {
 	 *
 	 * @return void
 	 */
-	public function render_page() {
+	public function render_page(): void {
 		include $this->get_file();
 	}
 }

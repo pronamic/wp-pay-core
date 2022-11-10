@@ -10,6 +10,10 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use Pronamic\WordPress\Pay\Blocks\BlocksModule;
+use Pronamic\WordPress\Pay\Forms\FormsModule;
+use Pronamic\WordPress\Pay\Payments\PaymentsModule;
+use Pronamic\WordPress\Pay\Subscriptions\SubscriptionsModule;
 use Pronamic\WordPress\Http\Facades\Http;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Admin\AdminModule;
@@ -65,14 +69,14 @@ class Plugin {
 	 *
 	 * @var string
 	 */
-	const TIMEZONE = 'UTC';
+	public const TIMEZONE = 'UTC';
 
 	/**
 	 * Instance.
 	 *
 	 * @var Plugin|null
 	 */
-	protected static ?Plugin $instance;
+	protected static ?Plugin $instance = null;
 
 	/**
 	 * Instance.
@@ -164,14 +168,14 @@ class Plugin {
 	 *
 	 * @var Blocks\BlocksModule
 	 */
-	public Blocks\BlocksModule $blocks_module;
+	public BlocksModule $blocks_module;
 
 	/**
 	 * Forms module.
 	 *
 	 * @var Forms\FormsModule
 	 */
-	public Forms\FormsModule $forms_module;
+	public FormsModule $forms_module;
 
 	/**
 	 * Tracking module.
@@ -185,14 +189,14 @@ class Plugin {
 	 *
 	 * @var Payments\PaymentsModule
 	 */
-	public Payments\PaymentsModule $payments_module;
+	public PaymentsModule $payments_module;
 
 	/**
 	 * Subscriptions module.
 	 *
 	 * @var Subscriptions\SubscriptionsModule
 	 */
-	public Subscriptions\SubscriptionsModule $subscriptions_module;
+	public SubscriptionsModule $subscriptions_module;
 
 	/**
 	 * Google Analytics ecommerce.
@@ -425,7 +429,7 @@ class Plugin {
 	 * @param bool         $can_redirect Flag to indicate if redirect is allowed after the payment update.
 	 * @return void
 	 */
-	public static function update_payment( Payment $payment = null, bool $can_redirect = true ) {
+	public static function update_payment( Payment $payment = null, bool $can_redirect = true ): void {
 		if ( empty( $payment ) ) {
 			return;
 		}
@@ -495,7 +499,7 @@ class Plugin {
 	 *
 	 * @return void
 	 */
-	public function handle_returns() {
+	public function handle_returns(): void {
 		if ( ! filter_has_var( INPUT_GET, 'payment' ) ) {
 			return;
 		}
@@ -550,7 +554,7 @@ class Plugin {
 	 *
 	 * @return void
 	 */
-	public function maybe_redirect() {
+	public function maybe_redirect(): void {
 		if ( ! filter_has_var( INPUT_GET, 'payment_redirect' ) || ! filter_has_var( INPUT_GET, 'key' ) ) {
 			return;
 		}
@@ -636,7 +640,7 @@ class Plugin {
 	 * @link https://developer.wordpress.org/reference/functions/load_plugin_textdomain/
 	 * @return void
 	 */
-	public function plugins_loaded() {
+	public function plugins_loaded(): void {
 		// Load plugin textdomain.
 		self::load_plugin_textdomain();
 
@@ -667,14 +671,14 @@ class Plugin {
 		$this->webhook_logger->setup();
 
 		// Modules.
-		$this->forms_module         = new Forms\FormsModule( $this );
-		$this->payments_module      = new Payments\PaymentsModule( $this );
-		$this->subscriptions_module = new Subscriptions\SubscriptionsModule( $this );
+		$this->forms_module         = new FormsModule( $this );
+		$this->payments_module      = new PaymentsModule( $this );
+		$this->subscriptions_module = new SubscriptionsModule( $this );
 		$this->tracking_module      = new TrackingModule();
 
 		// Blocks module.
 		if ( function_exists( 'register_block_type' ) ) {
-			$this->blocks_module = new Blocks\BlocksModule();
+			$this->blocks_module = new BlocksModule();
 			$this->blocks_module->setup();
 		}
 
@@ -683,7 +687,7 @@ class Plugin {
 
 		// Admin.
 		if ( is_admin() ) {
-			$this->admin = new Admin\AdminModule( $this );
+			$this->admin = new AdminModule( $this );
 		}
 
 		$gateways = [];
@@ -726,7 +730,7 @@ class Plugin {
 		\add_filter( 'pronamic_payment_redirect_url', [ $this, 'payment_redirect_url' ], 10, 2 );
 
 		// Actions.
-		\add_action( 'pronamic_pay_pre_create_payment', [ __CLASS__, 'complement_payment' ], 10, 1 );
+		\add_action( 'pronamic_pay_pre_create_payment', [ self::class, 'complement_payment' ], 10, 1 );
 	}
 
 	/**
@@ -734,7 +738,7 @@ class Plugin {
 	 *
 	 * @return void
 	 */
-	public static function load_plugin_textdomain() {
+	public static function load_plugin_textdomain(): void {
 		$rel_path = \dirname( \plugin_basename( self::$file ) );
 
 		\load_plugin_textdomain( 'pronamic_ideal', false, $rel_path . '/languages' );
@@ -792,12 +796,12 @@ class Plugin {
 	 * @since 2.1.6
 	 * @return void
 	 */
-	public function register_styles() {
+	public function register_styles(): void {
 		$min = \SCRIPT_DEBUG ? '' : '.min';
 
 		\wp_register_style(
 			'pronamic-pay-redirect',
-			\plugins_url( 'css/redirect' . $min . '.css', \dirname( __FILE__ ) ),
+			\plugins_url( 'css/redirect' . $min . '.css', __DIR__ ),
 			[],
 			$this->get_version()
 		);
@@ -846,7 +850,7 @@ class Plugin {
 	 * @param array|WP_Error $errors An array with errors to render.
 	 * @return void
 	 */
-	public static function render_errors( $errors = [] ) {
+	public static function render_errors( $errors = [] ): void {
 		if ( ! is_array( $errors ) ) {
 			$errors = [ $errors ];
 		}
@@ -862,7 +866,7 @@ class Plugin {
 	 * @param \Exception $exception An exception.
 	 * @return void
 	 */
-	public static function render_exception( \Exception $exception ) {
+	public static function render_exception( \Exception $exception ): void {
 		include self::$dirname . '/views/exception.php';
 	}
 
@@ -905,7 +909,7 @@ class Plugin {
 	 * @param Payment $payment Payment.
 	 * @return void
 	 */
-	public static function complement_payment( Payment $payment ) {
+	public static function complement_payment( Payment $payment ): void {
 		// Key.
 		if ( null === $payment->key ) {
 			$payment->key = uniqid( 'pay_' );
@@ -1051,7 +1055,7 @@ class Plugin {
 	 * @param array   $data    Data.
 	 * @return void
 	 */
-	private static function process_payment_input_data( Payment $payment, array $data ) {
+	private static function process_payment_input_data( Payment $payment, array $data ): void {
 		$gateway = $payment->get_gateway();
 
 		if ( null === $gateway ) {
@@ -1211,7 +1215,7 @@ class Plugin {
 	 * @param Payment $payment Payment.
 	 * @return void
 	 */
-	private static function pronamic_service( Payment $payment ) {
+	private static function pronamic_service( Payment $payment ): void {
 		if ( null === self::$pronamic_service_url ) {
 			return;
 		}

@@ -21,45 +21,33 @@ namespace Pronamic\WordPress\Pay\VatNumbers;
 class VatNumberValidity {
 	/**
 	 * VAT Number.
-	 *
-	 * @var VatNumber
 	 */
-	private $vat_number;
+	private VatNumber $vat_number;
 
 	/**
 	 * Request date.
-	 *
-	 * @var \DateTimeInterface
 	 */
-	private $request_date;
+	private \DateTimeInterface $request_date;
 
 	/**
 	 * Valid flag.
-	 *
-	 * @var bool
 	 */
-	private $valid;
+	private bool $valid;
 
 	/**
 	 * Name.
-	 *
-	 * @var string|null
 	 */
-	private $name;
+	private ?string $name = null;
 
 	/**
 	 * Address.
-	 *
-	 * @var string|null
 	 */
-	private $address;
+	private ?string $address = null;
 
 	/**
 	 * Validation service indicator.
-	 *
-	 * @var string|null
 	 */
-	private $service;
+	private ?string $service = null;
 
 	/**
 	 * Construct VAT number object.
@@ -107,7 +95,7 @@ class VatNumberValidity {
 	 * @param bool $valid Valid.
 	 * @return void
 	 */
-	public function set_valid( $valid ) {
+	public function set_valid( $valid ): void {
 		$this->valid = $valid;
 	}
 
@@ -126,7 +114,7 @@ class VatNumberValidity {
 	 * @param string|null $name Name.
 	 * @return void
 	 */
-	public function set_name( $name ) {
+	public function set_name( $name ): void {
 		$this->name = $name;
 	}
 
@@ -145,7 +133,7 @@ class VatNumberValidity {
 	 * @param string|null $address Address.
 	 * @return void
 	 */
-	public function set_address( $address ) {
+	public function set_address( $address ): void {
 		$this->address = $address;
 	}
 
@@ -164,7 +152,7 @@ class VatNumberValidity {
 	 * @param string|null $service Service.
 	 * @return void
 	 */
-	public function set_service( $service ) {
+	public function set_service( $service ): void {
 		$this->service = $service;
 	}
 

@@ -23,87 +23,63 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumber;
 class Customer {
 	/**
 	 * Contact name.
-	 *
-	 * @var ContactName|null
 	 */
-	private $name;
+	private ?ContactName $name = null;
 
 	/**
 	 * Gender.
-	 *
-	 * @var string|null
 	 */
-	private $gender;
+	private ?string $gender = null;
 
 	/**
 	 * Date of birth.
-	 *
-	 * @var DateTime|null
 	 */
-	private $birth_date;
+	private ?DateTime $birth_date = null;
 
 	/**
 	 * Email address.
-	 *
-	 * @var string|null
 	 */
-	private $email;
+	private ?string $email = null;
 
 	/**
 	 * Telephone number.
-	 *
-	 * @var string|null
 	 */
-	private $phone;
+	private ?string $phone = null;
 
 	/**
 	 * IP address.
-	 *
-	 * @var string|null
 	 */
-	private $ip_address;
+	private ?string $ip_address = null;
 
 	/**
 	 * User agent.
-	 *
-	 * @var string|null
 	 */
-	private $user_agent;
+	private ?string $user_agent = null;
 
 	/**
 	 * Language.
-	 *
-	 * @var string|null
 	 */
-	private $language;
+	private ?string $language = null;
 
 	/**
 	 * Locale.
-	 *
-	 * @var string|null
 	 */
-	private $locale;
+	private ?string $locale = null;
 
 	/**
 	 * WordPress user ID.
-	 *
-	 * @var integer|null
 	 */
-	private $user_id;
+	private ?int $user_id = null;
 
 	/**
 	 * Company name.
-	 *
-	 * @var string|null
 	 */
-	private $company_name;
+	private ?string $company_name = null;
 
 	/**
 	 * VAT Number.
-	 *
-	 * @var VatNumber|null
 	 */
-	private $vat_number;
+	private ?VatNumber $vat_number = null;
 
 	/**
 	 * Get contact name.
@@ -120,7 +96,7 @@ class Customer {
 	 * @param ContactName|null $name Contact name.
 	 * @return void
 	 */
-	public function set_name( ContactName $name = null ) {
+	public function set_name( ContactName $name = null ): void {
 		$this->name = $name;
 	}
 
@@ -139,7 +115,7 @@ class Customer {
 	 * @param string|null $gender Gender.
 	 * @return void
 	 */
-	public function set_gender( $gender ) {
+	public function set_gender( $gender ): void {
 		$this->gender = $gender;
 	}
 
@@ -158,7 +134,7 @@ class Customer {
 	 * @param DateTime|null $birth_date Date of birth.
 	 * @return void
 	 */
-	public function set_birth_date( $birth_date ) {
+	public function set_birth_date( $birth_date ): void {
 		$this->birth_date = $birth_date;
 	}
 
@@ -177,7 +153,7 @@ class Customer {
 	 * @param string|null $email Email address.
 	 * @return void
 	 */
-	public function set_email( $email ) {
+	public function set_email( $email ): void {
 		$this->email = $email;
 	}
 
@@ -196,7 +172,7 @@ class Customer {
 	 * @param string|null $phone Telephone number.
 	 * @return void
 	 */
-	public function set_phone( $phone ) {
+	public function set_phone( $phone ): void {
 		$this->phone = $phone;
 	}
 
@@ -215,7 +191,7 @@ class Customer {
 	 * @param string|null $ip_address IP address.
 	 * @return void
 	 */
-	public function set_ip_address( $ip_address ) {
+	public function set_ip_address( $ip_address ): void {
 		$this->ip_address = $ip_address;
 	}
 
@@ -234,7 +210,7 @@ class Customer {
 	 * @param string|null $user_agent User agent.
 	 * @return void
 	 */
-	public function set_user_agent( $user_agent ) {
+	public function set_user_agent( $user_agent ): void {
 		$this->user_agent = $user_agent;
 	}
 
@@ -253,7 +229,7 @@ class Customer {
 	 * @param string|null $language Language.
 	 * @return void
 	 */
-	public function set_language( $language ) {
+	public function set_language( $language ): void {
 		$this->language = $language;
 	}
 
@@ -272,7 +248,7 @@ class Customer {
 	 * @param string|null $locale Locale.
 	 * @return void
 	 */
-	public function set_locale( $locale ) {
+	public function set_locale( $locale ): void {
 		$this->locale = $locale;
 	}
 
@@ -291,7 +267,7 @@ class Customer {
 	 * @param int|null $user_id WordPress user ID.
 	 * @return void
 	 */
-	public function set_user_id( $user_id ) {
+	public function set_user_id( $user_id ): void {
 		$this->user_id = $user_id;
 	}
 
@@ -310,7 +286,7 @@ class Customer {
 	 * @param string|null $company_name Company name.
 	 * @return void
 	 */
-	public function set_company_name( $company_name = null ) {
+	public function set_company_name( $company_name = null ): void {
 		$this->company_name = $company_name;
 	}
 
@@ -329,7 +305,7 @@ class Customer {
 	 * @param VatNumber|string|null $vat_number VAT number.
 	 * @return void
 	 */
-	public function set_vat_number( $vat_number = null ) {
+	public function set_vat_number( $vat_number = null ): void {
 		if ( \is_string( $vat_number ) ) {
 			$vat_number = new VatNumber( $vat_number );
 		}

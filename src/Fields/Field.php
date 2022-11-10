@@ -18,24 +18,18 @@ use JsonSerializable;
 class Field implements JsonSerializable {
 	/**
 	 * ID.
-	 *
-	 * @var string
 	 */
-	private $id;
+	private string $id;
 
 	/**
 	 * Label.
-	 *
-	 * @var string
 	 */
-	private $label = '';
+	private string $label = '';
 
 	/**
 	 * Required.
-	 *
-	 * @var bool
 	 */
-	private $required = false;
+	private bool $required = false;
 
 	/**
 	 * Meta key.
@@ -123,7 +117,7 @@ class Field implements JsonSerializable {
 	 *
 	 * @return string
 	 */
-	public function render() {
+	public function render(): string {
 		return '';
 	}
 

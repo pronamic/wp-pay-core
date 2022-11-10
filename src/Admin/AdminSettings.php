@@ -23,10 +23,8 @@ use Pronamic\WordPress\Pay\Util;
 class AdminSettings {
 	/**
 	 * Plugin.
-	 *
-	 * @var Plugin
 	 */
-	private $plugin;
+	private Plugin $plugin;
 
 	/**
 	 * Constructs and initialize an admin object.
@@ -45,7 +43,7 @@ class AdminSettings {
 	 *
 	 * @return void
 	 */
-	public function admin_init() {
+	public function admin_init(): void {
 		// Settings - General.
 		add_settings_section(
 			'pronamic_pay_general',
@@ -205,7 +203,7 @@ class AdminSettings {
 	 * @param array $args Arguments.
 	 * @return void
 	 */
-	public function settings_section( $args ) {
+	public function settings_section( $args ): void {
 		switch ( $args['id'] ) {
 			case 'pronamic_pay_pages':
 				echo '<p>';
@@ -243,7 +241,7 @@ class AdminSettings {
 	 * @param array $args Arguments.
 	 * @return void
 	 */
-	public function input_element( $args ) {
+	public function input_element( $args ): void {
 		$defaults = [
 			'type'        => 'text',
 			'classes'     => 'regular-text',
@@ -286,7 +284,7 @@ class AdminSettings {
 	 * @param array $args Arguments.
 	 * @return void
 	 */
-	public function input_checkbox( $args ) {
+	public function input_checkbox( $args ): void {
 		$id     = $args['label_for'];
 		$name   = $args['label_for'];
 		$value  = \array_key_exists( 'value', $args ) ? $args['value'] : get_option( $name );
@@ -325,7 +323,7 @@ class AdminSettings {
 	 * @param array $args Arguments.
 	 * @return void
 	 */
-	public function input_license_key( $args ) {
+	public function input_license_key( $args ): void {
 		/**
 		 * Perform license check.
 		 */
@@ -346,7 +344,7 @@ class AdminSettings {
 	 * @param array $args Arguments.
 	 * @return void
 	 */
-	public function input_page( $args ) {
+	public function input_page( $args ): void {
 		$name = $args['label_for'];
 
 		$selected = get_option( $name, '' );
@@ -364,7 +362,7 @@ class AdminSettings {
 		) );
 	}
 
-	public function select_payment_method_status( $args ) {
+	public function select_payment_method_status( $args ): void {
 		$name = $args['label_for'];
 
 		$selected = get_option( $name, '' );

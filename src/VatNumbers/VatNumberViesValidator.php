@@ -21,7 +21,7 @@ class VatNumberViesValidator {
 	/**
 	 * API URL
 	 */
-	const API_URL = 'http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl';
+	public const API_URL = 'http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl';
 
 	/**
 	 * Validate VAT number.

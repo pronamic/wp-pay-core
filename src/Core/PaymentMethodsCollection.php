@@ -23,7 +23,7 @@ class PaymentMethodsCollection implements IteratorAggregate, Countable {
 	 *
 	 * @var PaymentMethod[]
 	 */
-	private $items = [];
+	private array $items = [];
 
 	/**
 	 * Add payment method.
@@ -31,7 +31,7 @@ class PaymentMethodsCollection implements IteratorAggregate, Countable {
 	 * @param PaymentMethod $payment_method Payment method.
 	 * @return void
 	 */
-	public function add( PaymentMethod $payment_method ) {
+	public function add( PaymentMethod $payment_method ): void {
 		$id = $payment_method->get_id();
 
 		$this->items[ $id ] = $payment_method;
@@ -65,7 +65,7 @@ class PaymentMethodsCollection implements IteratorAggregate, Countable {
 
 			$items = \array_filter(
 				$items,
-				function( $payment_method ) use ( $id_list ) {
+				function( $payment_method ) use ( $id_list ): bool {
 					return \in_array( $payment_method->get_id(), $id_list, true );
 				}
 			);
@@ -76,7 +76,7 @@ class PaymentMethodsCollection implements IteratorAggregate, Countable {
 
 			$items = \array_filter(
 				$items,
-				function( $payment_method ) use ( $status_list ) {
+				function( $payment_method ) use ( $status_list ): bool {
 					return \in_array( $payment_method->get_status(), $status_list, true );
 				}
 			);

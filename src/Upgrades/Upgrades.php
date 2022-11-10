@@ -29,14 +29,12 @@ class Upgrades implements Countable, IteratorAggregate {
 	 *
 	 * @var array<Upgrade>
 	 */
-	private $upgrades;
+	private array $upgrades;
 
 	/**
 	 * Executable.
-	 *
-	 * @var boolean
 	 */
-	private $executable;
+	private bool $executable;
 
 	/**
 	 * Construct.
@@ -61,7 +59,7 @@ class Upgrades implements Countable, IteratorAggregate {
 	 * @param boolean $executable True if upgrades are executable, false otherwise.
 	 * @return void
 	 */
-	public function set_executable( $executable ) {
+	public function set_executable( $executable ): void {
 		$this->executable = $executable;
 	}
 
@@ -71,7 +69,7 @@ class Upgrades implements Countable, IteratorAggregate {
 	 * @param Upgrade $upgrade The upgrade to add.
 	 * @return void
 	 */
-	public function add( Upgrade $upgrade ) {
+	public function add( Upgrade $upgrade ): void {
 		$this->upgrades[] = $upgrade;
 	}
 

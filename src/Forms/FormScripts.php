@@ -22,10 +22,8 @@ use Pronamic\WordPress\Pay\Plugin;
 class FormScripts {
 	/**
 	 * Plugin.
-	 *
-	 * @var Plugin
 	 */
-	private $plugin;
+	private Plugin $plugin;
 
 	/**
 	 * Constructs and initialize an form scripts object.
@@ -56,7 +54,7 @@ class FormScripts {
 	 *
 	 * @return void
 	 */
-	public function register() {
+	public function register(): void {
 		$min = SCRIPT_DEBUG ? '' : '.min';
 
 		wp_register_style(
@@ -74,7 +72,7 @@ class FormScripts {
 	 * @link http://wordpress.stackexchange.com/questions/165754/enqueue-scripts-styles-when-shortcode-is-present
 	 * @return void
 	 */
-	public function enqueue() {
+	public function enqueue(): void {
 		if (
 			has_shortcode( get_post_field( 'post_content' ), 'pronamic_payment_form' )
 				||

@@ -26,47 +26,47 @@ class SubscriptionStatus {
 	 *
 	 * @var string
 	 */
-	const ACTIVE = 'Active';
+	public const ACTIVE = 'Active';
 
 	/**
 	 * Status indicator for cancelled
 	 *
 	 * @var string
 	 */
-	const CANCELLED = 'Cancelled';
+	public const CANCELLED = 'Cancelled';
 
 	/**
 	 * Status indicator for completed
 	 *
 	 * @var string
 	 */
-	const COMPLETED = 'Completed';
+	public const COMPLETED = 'Completed';
 
 	/**
 	 * Status indicator for expired
 	 *
 	 * @var string
 	 */
-	const EXPIRED = 'Expired';
+	public const EXPIRED = 'Expired';
 
 	/**
 	 * Status indicator for failure
 	 *
 	 * @var string
 	 */
-	const FAILURE = 'Failure';
+	public const FAILURE = 'Failure';
 
 	/**
 	 * Status indicator for on hold
 	 *
 	 * @var string
 	 */
-	const ON_HOLD = 'On Hold';
+	public const ON_HOLD = 'On Hold';
 
 	/**
 	 * Status indicator for open
 	 *
 	 * @var string
 	 */
-	const OPEN = 'Open';
+	public const OPEN = 'Open';
 }

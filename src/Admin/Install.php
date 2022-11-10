@@ -73,7 +73,7 @@ class Install {
 	 *
 	 * @return void
 	 */
-	public function admin_init() {
+	public function admin_init(): void {
 		// Install.
 		if ( get_option( 'pronamic_pay_version' ) !== $this->plugin->get_version() ) {
 			$this->install();
@@ -136,7 +136,7 @@ class Install {
 	 *
 	 * @return void
 	 */
-	private function install() {
+	private function install(): void {
 		// Roles.
 		$this->create_roles();
 
@@ -200,7 +200,7 @@ class Install {
 	 * @link https://developer.wordpress.org/reference/hooks/admin_notices/
 	 * @return void
 	 */
-	public function admin_notice_upgrades_available() {
+	public function admin_notice_upgrades_available(): void {
 		if ( ! $this->requires_upgrade() ) {
 			return;
 		}
@@ -214,7 +214,7 @@ class Install {
 	 * @link https://developer.wordpress.org/reference/hooks/admin_notices/
 	 * @return void
 	 */
-	public function admin_notice_upgraded() {
+	public function admin_notice_upgraded(): void {
 		$upgraded = filter_input( INPUT_GET, 'pronamic_pay_upgraded', FILTER_VALIDATE_BOOLEAN );
 
 		if ( true !== $upgraded ) {
@@ -232,7 +232,7 @@ class Install {
 	 * @link https://github.com/woothemes/woocommerce/blob/v2.2.3/includes/class-wc-post-types.php#L245
 	 * @return void
 	 */
-	private function create_roles() {
+	private function create_roles(): void {
 		// Payer role.
 		add_role(
 			'payer',
@@ -279,7 +279,7 @@ class Install {
 			 * @param AbstractIntegration $integration Integration object.
 			 * @return bool True if integration has version option name, false otherwise.
 			 */
-			function( AbstractIntegration $integration ) {
+			function( AbstractIntegration $integration ): bool {
 				if ( ! $integration->is_active() ) {
 					return false;
 				}
@@ -343,7 +343,7 @@ class Install {
 	 *
 	 * @return void
 	 */
-	public function upgrade() {
+	public function upgrade(): void {
 		$current_db_version = get_option( 'pronamic_pay_db_version', null );
 
 		if ( $current_db_version ) {

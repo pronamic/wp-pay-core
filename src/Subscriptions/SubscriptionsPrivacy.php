@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
+use Pronamic\WordPress\Pay\PrivacyManager;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 
 /**
@@ -34,11 +35,11 @@ class SubscriptionsPrivacy {
 	/**
 	 * Register privacy exporters.
 	 *
-	 * @param \Pronamic\WordPress\Pay\PrivacyManager $privacy_manager Privacy manager.
+	 * @param PrivacyManager $privacy_manager Privacy manager.
 	 *
 	 * @return void
 	 */
-	public function register_exporters( $privacy_manager ) {
+	public function register_exporters( $privacy_manager ): void {
 		// Subscriptions export.
 		$privacy_manager->add_exporter(
 			'subscriptions',
@@ -50,11 +51,11 @@ class SubscriptionsPrivacy {
 	/**
 	 * Register privacy erasers.
 	 *
-	 * @param \Pronamic\WordPress\Pay\PrivacyManager $privacy_manager Privacy manager.
+	 * @param PrivacyManager $privacy_manager Privacy manager.
 	 *
 	 * @return void
 	 */
-	public function register_erasers( $privacy_manager ) {
+	public function register_erasers( $privacy_manager ): void {
 		// Subscriptions anonymizer.
 		$privacy_manager->add_eraser(
 			'subscriptions',
@@ -207,7 +208,7 @@ class SubscriptionsPrivacy {
 						continue;
 					}
 
-					$action = ( isset( $meta_options['privacy_erasure'] ) ? $meta_options['privacy_erasure'] : null );
+					$action = ( $meta_options['privacy_erasure'] ?? null );
 
 					$privacy_manager->erase_meta( $subscription_id, $meta_key, $action );
 				}

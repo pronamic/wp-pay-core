@@ -32,14 +32,12 @@ class AdminSubscriptionPostType {
 	 *
 	 * @var string
 	 */
-	const POST_TYPE = 'pronamic_pay_subscr';
+	public const POST_TYPE = 'pronamic_pay_subscr';
 
 	/**
 	 * Plugin.
-	 *
-	 * @var Plugin
 	 */
-	private $plugin;
+	private Plugin $plugin;
 
 	/**
 	 * Constructs and initializes an admin payment post type object.
@@ -139,7 +137,7 @@ class AdminSubscriptionPostType {
 	 *
 	 * @return void
 	 */
-	public function maybe_process_subscription_action() {
+	public function maybe_process_subscription_action(): void {
 		// Current user.
 		if ( ! \current_user_can( 'edit_payments' ) ) {
 			return;
@@ -211,7 +209,7 @@ class AdminSubscriptionPostType {
 	 *
 	 * @return void
 	 */
-	public function admin_notices() {
+	public function admin_notices(): void {
 		// Payment created for period.
 		$payment_ids = \wp_parse_id_list( \filter_input( \INPUT_GET, 'pronamic_payment_created', \FILTER_SANITIZE_STRING ) );
 
@@ -253,7 +251,7 @@ class AdminSubscriptionPostType {
 	 * @param WP_Query $query WordPress query.
 	 * @return void
 	 */
-	public function pre_get_posts( $query ) {
+	public function pre_get_posts( $query ): void {
 		/**
 		 * The `WP_Query::get` function can return different variable type.
 		 * For now this function can only handle one specific string orderby.
@@ -347,7 +345,7 @@ class AdminSubscriptionPostType {
 	 * @param int    $post_id Post ID.
 	 * @return void
 	 */
-	public function custom_columns( $column, $post_id ) {
+	public function custom_columns( $column, $post_id ): void {
 		$subscription = get_pronamic_subscription( $post_id );
 
 		if ( null === $subscription ) {
@@ -530,7 +528,7 @@ class AdminSubscriptionPostType {
 	 * @param string $post_type Post Type.
 	 * @return void
 	 */
-	public function add_meta_boxes( $post_type ) {
+	public function add_meta_boxes( $post_type ): void {
 		if ( self::POST_TYPE !== $post_type ) {
 			return;
 		}
@@ -599,7 +597,7 @@ class AdminSubscriptionPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 * @return void
 	 */
-	public function meta_box_info( $post ) {
+	public function meta_box_info( $post ): void {
 		$plugin       = $this->plugin;
 		$subscription = get_pronamic_subscription( $post->ID );
 
@@ -616,7 +614,7 @@ class AdminSubscriptionPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 * @return void
 	 */
-	public function meta_box_lines( $post ) {
+	public function meta_box_lines( $post ): void {
 		$subscription = get_pronamic_subscription( $post->ID );
 
 		if ( null === $subscription ) {
@@ -634,7 +632,7 @@ class AdminSubscriptionPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 * @return void
 	 */
-	public function meta_box_notes( $post ) {
+	public function meta_box_notes( $post ): void {
 		$notes = get_comments(
 			[
 				'post_id' => $post->ID,
@@ -652,7 +650,7 @@ class AdminSubscriptionPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 * @return void
 	 */
-	public function meta_box_phases( $post ) {
+	public function meta_box_phases( $post ): void {
 		$subscription = get_pronamic_subscription( $post->ID );
 
 		if ( null === $subscription ) {
@@ -670,7 +668,7 @@ class AdminSubscriptionPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 * @return void
 	 */
-	public function meta_box_payments( $post ) {
+	public function meta_box_payments( $post ): void {
 		$subscription = get_pronamic_subscription( $post->ID );
 
 		if ( null === $subscription ) {
@@ -688,7 +686,7 @@ class AdminSubscriptionPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 * @return void
 	 */
-	public function meta_box_update( $post ) {
+	public function meta_box_update( $post ): void {
 		wp_nonce_field( 'pronamic_subscription_update', 'pronamic_subscription_update_nonce' );
 
 		include __DIR__ . '/../../views/meta-box-subscription-update.php';

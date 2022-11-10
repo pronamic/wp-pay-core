@@ -22,10 +22,8 @@ namespace Pronamic\WordPress\Pay\Dependencies;
 class PhpExtensionDependency extends Dependency {
 	/**
 	 * Required PHP extension.
-	 *
-	 * @var string
 	 */
-	private $required_extension;
+	private string $required_extension;
 
 	/**
 	 * Construct PHP extension dependency.
@@ -41,7 +39,7 @@ class PhpExtensionDependency extends Dependency {
 	 *
 	 * @return bool True if dependency is met, false otherwise.
 	 */
-	public function is_met() {
+	public function is_met(): bool {
 		return \extension_loaded( $this->required_extension );
 	}
 }

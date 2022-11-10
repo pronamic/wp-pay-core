@@ -23,10 +23,8 @@ use Pronamic\WordPress\Pay\Plugin;
 class AdminReports {
 	/**
 	 * Plugin.
-	 *
-	 * @var Plugin
 	 */
-	private $plugin;
+	private Plugin $plugin;
 
 	/**
 	 * AdminReports constructor.
@@ -45,7 +43,7 @@ class AdminReports {
 	 *
 	 * @return void
 	 */
-	public function page_reports() {
+	public function page_reports(): void {
 		$admin_reports = $this;
 
 		include __DIR__ . '/../../views/page-reports.php';
@@ -56,7 +54,7 @@ class AdminReports {
 	 *
 	 * @return void
 	 */
-	public function admin_css() {
+	public function admin_css(): void {
 		// Check if this is the reports page.
 		$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
 

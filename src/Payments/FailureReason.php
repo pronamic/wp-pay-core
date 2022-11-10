@@ -20,17 +20,13 @@ namespace Pronamic\WordPress\Pay\Payments;
 class FailureReason {
 	/**
 	 * Code.
-	 *
-	 * @var string|null
 	 */
-	private $code;
+	private ?string $code = null;
 
 	/**
 	 * Message.
-	 *
-	 * @var string|null
 	 */
-	private $message;
+	private ?string $message = null;
 
 	/**
 	 * Get code.
@@ -47,7 +43,7 @@ class FailureReason {
 	 * @param string|null $code Code.
 	 * @return void
 	 */
-	public function set_code( $code ) {
+	public function set_code( $code ): void {
 		$this->code = $code;
 	}
 
@@ -66,7 +62,7 @@ class FailureReason {
 	 * @param string|null $message Message.
 	 * @return void
 	 */
-	public function set_message( $message ) {
+	public function set_message( $message ): void {
 		$this->message = $message;
 	}
 

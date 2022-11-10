@@ -122,7 +122,7 @@ class Util {
 	 *
 	 * @return void
 	 */
-	public static function no_cache() {
+	public static function no_cache(): void {
 		// @link https://github.com/woothemes/woocommerce/blob/2.3.11/includes/class-wc-cache-helper.php
 		// @link https://www.w3-edge.com/products/w3-total-cache/
 		$do_not_constants = [
@@ -346,7 +346,7 @@ class Util {
 	 *
 	 * @return bool
 	 */
-	public static function input_has_vars( $type, $variable_names ) {
+	public static function input_has_vars( $type, $variable_names ): bool {
 		foreach ( $variable_names as $variable_name ) {
 			if ( ! filter_has_var( $type, $variable_name ) ) {
 				return false;
@@ -361,7 +361,7 @@ class Util {
 	 *
 	 * @return void
 	 */
-	public static function switch_to_user_locale() {
+	public static function switch_to_user_locale(): void {
 		\switch_to_locale( \get_user_locale() );
 
 		\add_filter( 'determine_locale', 'get_user_locale' );

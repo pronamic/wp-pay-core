@@ -21,17 +21,13 @@ namespace Pronamic\WordPress\Pay\VatNumbers;
 class VatNumber {
 	/**
 	 * Value.
-	 *
-	 * @var string
 	 */
-	private $value;
+	private string $value;
 
 	/**
 	 * Validity.
-	 *
-	 * @var VatNumberValidity|null
 	 */
-	private $validity;
+	private ?VatNumberValidity $validity = null;
 
 	/**
 	 * Construct VAT number object.
@@ -103,7 +99,7 @@ class VatNumber {
 	 * @param VatNumberValidity|null $validity Validity.
 	 * @return void
 	 */
-	public function set_validity( VatNumberValidity $validity = null ) {
+	public function set_validity( VatNumberValidity $validity = null ): void {
 		$this->validity = $validity;
 	}
 

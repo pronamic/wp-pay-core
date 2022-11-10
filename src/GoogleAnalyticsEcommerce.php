@@ -31,21 +31,19 @@ class GoogleAnalyticsEcommerce {
 	 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
 	 * @var string
 	 */
-	const API_URL = 'https://www.google-analytics.com/collect';
+	public const API_URL = 'https://www.google-analytics.com/collect';
 
 	/**
 	 * Measurement Protocol API version.
 	 *
 	 * @var string
 	 */
-	const API_VERSION = '1';
+	public const API_VERSION = '1';
 
 	/**
 	 * Anonymous client ID.
-	 *
-	 * @var string|null
 	 */
-	private $client_id;
+	private ?string $client_id = null;
 
 	/**
 	 * Constructs an analytics e-commerce object.
@@ -64,7 +62,7 @@ class GoogleAnalyticsEcommerce {
 	 * @param Payment $payment Payment.
 	 * @return void
 	 */
-	public function maybe_send_transaction( $payment ) {
+	public function maybe_send_transaction( $payment ): void {
 		// Ignore test mode payments.
 		if ( Gateway::MODE_TEST === $payment->get_mode() ) {
 			return;
@@ -80,7 +78,7 @@ class GoogleAnalyticsEcommerce {
 	 *
 	 * @return bool
 	 */
-	public function valid_payment( $payment ) {
+	public function valid_payment( $payment ): bool {
 		// Is payment already tracked?
 		if ( true === $payment->get_meta( 'google_analytics_tracked' ) ) {
 			return false;
@@ -122,7 +120,7 @@ class GoogleAnalyticsEcommerce {
 	 * @param Payment $payment Payment.
 	 * @return void
 	 */
-	public function send_transaction( $payment ) {
+	public function send_transaction( $payment ): void {
 		if ( ! $this->valid_payment( $payment ) ) {
 			return;
 		}

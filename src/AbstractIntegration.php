@@ -41,10 +41,8 @@ abstract class AbstractIntegration {
 
 	/**
 	 * Version.
-	 *
-	 * @var string|null
 	 */
-	private $version;
+	private ?string $version;
 
 	/**
 	 * Deprecated boolean flag to mark an integration as deprecated.
@@ -55,32 +53,25 @@ abstract class AbstractIntegration {
 
 	/**
 	 * Dependencies.
-	 *
-	 * @var Dependencies
 	 */
-	private $dependencies;
+	private Dependencies $dependencies;
 
 	/**
 	 * Upgrades.
-	 *
-	 * @var Upgrades
 	 */
-	private $upgrades;
+	private Upgrades $upgrades;
 
 	/**
 	 * The name of the option we store the version of the integration in.
 	 *
 	 * @link https://github.com/WordPress/WordPress/search?q=option_name&unscoped_q=option_name
-	 * @var string|null
 	 */
-	private $version_option_name;
+	private ?string $version_option_name;
 
 	/**
 	 * Data version option name.
-	 *
-	 * @var string|null
 	 */
-	private $db_version_option_name;
+	private ?string $db_version_option_name;
 
 	/**
 	 * Construct.
@@ -140,7 +131,7 @@ abstract class AbstractIntegration {
 	 * @param string|null $id ID.
 	 * @return void
 	 */
-	public function set_id( $id ) {
+	public function set_id( $id ): void {
 		$this->id = $id;
 	}
 
@@ -159,7 +150,7 @@ abstract class AbstractIntegration {
 	 * @param string|null $name Name.
 	 * @return void
 	 */
-	public function set_name( $name ) {
+	public function set_name( $name ): void {
 		$this->name = $name;
 	}
 
@@ -178,7 +169,7 @@ abstract class AbstractIntegration {
 	 * @param string|null $version Version.
 	 * @return void
 	 */
-	public function set_version( $version ) {
+	public function set_version( $version ): void {
 		$this->version = $version;
 	}
 
@@ -207,7 +198,7 @@ abstract class AbstractIntegration {
 	 * @see Plugin::plugins_loaded()
 	 * @return void
 	 */
-	public function setup() {
+	public function setup(): void {
 	}
 
 	/**
@@ -225,7 +216,7 @@ abstract class AbstractIntegration {
 	 * @param string $option_name Option name.
 	 * @return void
 	 */
-	public function set_version_option_name( $option_name ) {
+	public function set_version_option_name( $option_name ): void {
 		$this->version_option_name = $option_name;
 	}
 
@@ -248,7 +239,7 @@ abstract class AbstractIntegration {
 	 * @link https://github.com/woocommerce/woocommerce/blob/4.0.0/includes/class-wc-install.php#L396-L402
 	 * @return void
 	 */
-	public function update_version_option() {
+	public function update_version_option(): void {
 		if ( null === $this->version_option_name ) {
 			return;
 		}
@@ -275,7 +266,7 @@ abstract class AbstractIntegration {
 	 * @param string $option_name Option name.
 	 * @return void
 	 */
-	public function set_db_version_option_name( $option_name ) {
+	public function set_db_version_option_name( $option_name ): void {
 		$this->db_version_option_name = $option_name;
 	}
 

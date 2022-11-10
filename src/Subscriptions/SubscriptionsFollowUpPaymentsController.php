@@ -24,7 +24,7 @@ class SubscriptionsFollowUpPaymentsController {
 	 *
 	 * @return void
 	 */
-	public function setup() {
+	public function setup(): void {
 		\add_action( 'init', [ $this, 'maybe_schedule_actions' ] );
 
 		\add_action( 'pronamic_pay_schedule_follow_up_payments', [ $this, 'schedule_all' ] );
@@ -44,14 +44,14 @@ class SubscriptionsFollowUpPaymentsController {
 	 * @link https://make.wordpress.org/cli/handbook/commands-cookbook/
 	 * @return void
 	 */
-	private function cli() {
+	private function cli(): void {
 		if ( ! ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			return;
 		}
 
 		WP_CLI::add_command(
 			'pay subscription list',
-			function( $args, $assoc_args ) {
+			function( $args, $assoc_args ): void {
 				WP_CLI::debug( 'Query subscriptions that require follow-up payment.' );
 
 				$query = $this->get_subscriptions_wp_query_that_require_follow_up_payment();
@@ -71,7 +71,7 @@ class SubscriptionsFollowUpPaymentsController {
 
 		WP_CLI::add_command(
 			'pay subscription schedule',
-			function( $args, $assoc_args ) {
+			function( $args, $assoc_args ): void {
 				if ( $this->is_processing_disabled() ) {
 					WP_CLI::error( 'Subscriptions processing is disabled.' );
 				}
@@ -132,7 +132,7 @@ class SubscriptionsFollowUpPaymentsController {
 	 * @link https://actionscheduler.org/
 	 * @return void
 	 */
-	public function maybe_schedule_actions() {
+	public function maybe_schedule_actions(): void {
 		if ( false === \as_next_scheduled_action( 'pronamic_pay_schedule_follow_up_payments', [], 'pronamic-pay' ) ) {
 			\as_schedule_cron_action( \time(), '0 * * * *', 'pronamic_pay_schedule_follow_up_payments', [], 'pronamic-pay' );
 		}
@@ -143,7 +143,7 @@ class SubscriptionsFollowUpPaymentsController {
 	 *
 	 * @return void
 	 */
-	public function schedule_all() {
+	public function schedule_all(): void {
 		if ( $this->is_processing_disabled() ) {
 			return;
 		}
@@ -183,7 +183,7 @@ class SubscriptionsFollowUpPaymentsController {
 	 * @param int $page Page.
 	 * @return void
 	 */
-	public function schedule_paged( $page ) {
+	public function schedule_paged( $page ): void {
 		$query = $this->get_subscriptions_wp_query_that_require_follow_up_payment(
 			[
 				'paged' => $page,
@@ -218,7 +218,7 @@ class SubscriptionsFollowUpPaymentsController {
 	 * @param Subscription $subscription Subscription.
 	 * @return bool True if meets requirements, false otherwise.
 	 */
-	private function meets_follow_up_payment_requirements( Subscription $subscription ) {
+	private function meets_follow_up_payment_requirements( Subscription $subscription ): bool {
 		if ( 'woocommerce' === $subscription->get_source() ) {
 			return false;
 		}
@@ -323,7 +323,7 @@ class SubscriptionsFollowUpPaymentsController {
 	 * @return void
 	 * @throws \Exception Throws exception when gateway not found.
 	 */
-	public function create_subscription_follow_up_payment( Subscription $subscription ) {
+	public function create_subscription_follow_up_payment( Subscription $subscription ): void {
 		if ( ! $this->meets_follow_up_payment_requirements( $subscription ) ) {
 			return;
 		}

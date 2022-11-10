@@ -25,96 +25,70 @@ use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 class PaymentLine {
 	/**
 	 * The ID.
-	 *
-	 * @var string|null
 	 */
-	private $id;
+	private ?string $id = null;
 
 	/**
 	 * The payment type.
 	 *
 	 * @see PaymentLineType
-	 *
-	 * @var string
 	 */
-	private $type;
+	private ?string $type = null;
 
 	/**
 	 * SKU.
-	 *
-	 * @var string|null
 	 */
-	private $sku;
+	private ?string $sku = null;
 
 	/**
 	 * Name.
-	 *
-	 * @var string|null
 	 */
-	private $name;
+	private ?string $name = null;
 
 	/**
 	 * The description.
-	 *
-	 * @var string|null
 	 */
-	private $description;
+	private ?string $description = null;
 
 	/**
 	 * The quantity.
-	 *
-	 * @var int|null
 	 */
-	private $quantity;
+	private ?int $quantity = null;
 
 	/**
 	 * The unit price of this payment line.
-	 *
-	 * @var Money|null
 	 */
-	private $unit_price;
+	private ?Money $unit_price = null;
 
 	/**
 	 * The discount amount of this payment line, no tax included.
-	 *
-	 * @var Money|null
 	 */
-	private $discount_amount;
+	private ?Money $discount_amount = null;
 
 	/**
 	 * Total amount of this payment line.
-	 *
-	 * @var Money
 	 */
-	private $total_amount;
+	private Money $total_amount;
 
 	/**
 	 * Product URL.
-	 *
-	 * @var string|null
 	 */
-	private $product_url;
+	private ?string $product_url = null;
 
 	/**
 	 * Image url.
-	 *
-	 * @var string|null
 	 */
-	private $image_url;
+	private ?string $image_url = null;
 
 	/**
 	 * Product category.
-	 *
-	 * @var string|null
 	 */
-	private $product_category;
+	private ?string $product_category = null;
 
 	/**
 	 * Payment
-	 *
-	 * @var Payment|null
 	 */
-	private $payment;
+	private ?Payment $payment = null;
 
 	/**
 	 * Payment line constructor.
@@ -138,7 +112,7 @@ class PaymentLine {
 	 * @param string|null $id Number.
 	 * @return void
 	 */
-	public function set_id( $id ) {
+	public function set_id( $id ): void {
 		$this->id = $id;
 	}
 
@@ -157,7 +131,7 @@ class PaymentLine {
 	 * @param string $type Type.
 	 * @return void
 	 */
-	public function set_type( $type ) {
+	public function set_type( $type ): void {
 		$this->type = $type;
 	}
 
@@ -176,7 +150,7 @@ class PaymentLine {
 	 * @param string|null $sku SKU.
 	 * @return void
 	 */
-	public function set_sku( $sku ) {
+	public function set_sku( $sku ): void {
 		$this->sku = $sku;
 	}
 
@@ -195,7 +169,7 @@ class PaymentLine {
 	 * @param string|null $name Name.
 	 * @return void
 	 */
-	public function set_name( $name ) {
+	public function set_name( $name ): void {
 		$this->name = $name;
 	}
 
@@ -214,7 +188,7 @@ class PaymentLine {
 	 * @param string|null $description Description.
 	 * @return void
 	 */
-	public function set_description( $description ) {
+	public function set_description( $description ): void {
 		$this->description = $description;
 	}
 
@@ -233,7 +207,7 @@ class PaymentLine {
 	 * @param int|null $quantity Quantity.
 	 * @return void
 	 */
-	public function set_quantity( $quantity ) {
+	public function set_quantity( $quantity ): void {
 		$this->quantity = $quantity;
 	}
 
@@ -252,8 +226,8 @@ class PaymentLine {
 	 * @param Money|null $price Unit price.
 	 * @return void
 	 */
-	public function set_unit_price( Money $price = null ) {
-		$this->unit_price = ( null === $price ? null : $price );
+	public function set_unit_price( Money $price = null ): void {
+		$this->unit_price = ( $price ?? null );
 	}
 
 	/**
@@ -271,7 +245,7 @@ class PaymentLine {
 	 * @param Money $discount_amount Discount amount.
 	 * @return void
 	 */
-	public function set_discount_amount( Money $discount_amount = null ) {
+	public function set_discount_amount( Money $discount_amount = null ): void {
 		$this->discount_amount = $discount_amount;
 	}
 
@@ -312,7 +286,7 @@ class PaymentLine {
 	 * @param Money $total_amount Total amount.
 	 * @return void
 	 */
-	public function set_total_amount( Money $total_amount ) {
+	public function set_total_amount( Money $total_amount ): void {
 		$this->total_amount = $total_amount;
 	}
 
@@ -331,7 +305,7 @@ class PaymentLine {
 	 * @param string|null $product_url Product URL.
 	 * @return void
 	 */
-	public function set_product_url( $product_url = null ) {
+	public function set_product_url( $product_url = null ): void {
 		$this->product_url = $product_url;
 	}
 
@@ -350,7 +324,7 @@ class PaymentLine {
 	 * @param null|string $image_url Image url.
 	 * @return void
 	 */
-	public function set_image_url( $image_url ) {
+	public function set_image_url( $image_url ): void {
 		$this->image_url = $image_url;
 	}
 
@@ -369,7 +343,7 @@ class PaymentLine {
 	 * @param null|string $product_category Product category.
 	 * @return void
 	 */
-	public function set_product_category( $product_category ) {
+	public function set_product_category( $product_category ): void {
 		$this->product_category = $product_category;
 	}
 
@@ -388,7 +362,7 @@ class PaymentLine {
 	 * @param Payment $payment Payment.
 	 * @return void
 	 */
-	public function set_payment( Payment $payment ) {
+	public function set_payment( Payment $payment ): void {
 		$this->payment = $payment;
 	}
 

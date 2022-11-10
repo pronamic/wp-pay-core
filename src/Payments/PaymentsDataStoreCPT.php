@@ -39,17 +39,13 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 	/**
 	 * Payments.
-	 *
-	 * @var array
 	 */
-	private $payments;
+	private array $payments;
 
 	/**
 	 * Status map.
-	 *
-	 * @var array
 	 */
-	private $status_map;
+	private array $status_map;
 
 	/**
 	 * Construct payments data store CPT object.
@@ -78,7 +74,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 *
 	 * @return void
 	 */
-	public function setup() {
+	public function setup(): void {
 		add_filter( 'wp_insert_post_data', [ $this, 'insert_payment_post_data' ], 10, 2 );
 
 		add_action( 'save_post_pronamic_payment', [ $this, 'save_post_meta' ], 100, 3 );
@@ -140,7 +136,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @param string $post_status Post status.
 	 * @return string|null
 	 */
-	private function get_meta_status_from_post_status( $post_status ) {
+	private function get_meta_status_from_post_status( $post_status ): ?string {
 		$key = array_search( $post_status, $this->status_map, true );
 
 		if ( false !== $key ) {
@@ -203,7 +199,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @param array   $postarr Post data array.
 	 * @return void
 	 */
-	private function update_payment_form_post_array( $payment, $postarr ) {
+	private function update_payment_form_post_array( $payment, $postarr ): void {
 		if ( ! isset( $postarr['pronamic_payment_post_status'] ) ) {
 			return;
 		}
@@ -228,7 +224,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @param bool     $update  Whether this is an existing post being updated or not.
 	 * @return void
 	 */
-	public function save_post_meta( $post_id, $post, $update ) {
+	public function save_post_meta( $post_id, $post, $update ): void {
 		if ( $this->payment instanceof Payment ) {
 			$payment = $this->payment;
 
@@ -259,7 +255,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @return bool
 	 * @throws \Exception Throws exception when create fails.
 	 */
-	public function create( Payment $payment ) {
+	public function create( Payment $payment ): bool {
 		/**
 		 * Pre-create payment.
 		 *
@@ -285,7 +281,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 					'Payment %s',
 					$payment->get_key()
 				),
-				'post_author'      => null === $customer_user_id ? 0 : $customer_user_id,
+				'post_author'      => $customer_user_id ?? 0,
 				'pronamic_payment' => $payment,
 			],
 			true
@@ -315,7 +311,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @return bool
 	 * @throws \Exception Throws exception when update fails.
 	 */
-	public function update( Payment $payment ) {
+	public function update( Payment $payment ): bool {
 		$id = $payment->get_id();
 
 		if ( empty( $id ) ) {
@@ -365,7 +361,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @return void
 	 * @throws \Exception Throws exception if payment date can not be set.
 	 */
-	public function read( Payment $payment ) {
+	public function read( Payment $payment ): void {
 		$id = $payment->get_id();
 
 		if ( empty( $id ) ) {
@@ -381,7 +377,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		$content = get_post_field( 'post_content', $id, 'raw' );
 
-		$json = json_decode( $content );
+		$json = json_decode( $content, null, 512, JSON_THROW_ON_ERROR );
 
 		if ( is_object( $json ) ) {
 			Payment::from_json( $json, $payment );
@@ -434,7 +430,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 *
 	 * @return void
 	 */
-	private function register_meta() {
+	private function register_meta(): void {
 		$this->register_meta_key(
 			'config_id',
 			[
@@ -848,7 +844,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @param Payment $payment The payment to update.
 	 * @return void
 	 */
-	private function update_post_meta( $payment ) {
+	private function update_post_meta( $payment ): void {
 		$id = $payment->get_id();
 
 		if ( empty( $id ) ) {
@@ -887,7 +883,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @param Payment $payment The payment to update the status for.
 	 * @return void
 	 */
-	public function update_meta_status( $payment ) {
+	public function update_meta_status( $payment ): void {
 		$id = $payment->get_id();
 
 		if ( empty( $id ) ) {

@@ -23,40 +23,40 @@ class PaymentLineType {
 	 *
 	 * @var string
 	 */
-	const DIGITAL = 'digital';
+	public const DIGITAL = 'digital';
 
 	/**
 	 * Constant for 'discount' type.
 	 *
 	 * @var string
 	 */
-	const DISCOUNT = 'discount';
+	public const DISCOUNT = 'discount';
 
 	/**
 	 * Constant for 'fee' type.
 	 *
 	 * @var string
 	 */
-	const FEE = 'fee';
+	public const FEE = 'fee';
 
 	/**
 	 * Constant for 'physical' type.
 	 *
 	 * @var string
 	 */
-	const PHYSICAL = 'physical';
+	public const PHYSICAL = 'physical';
 
 	/**
 	 * Constant for 'shipping' type.
 	 *
 	 * @var string
 	 */
-	const SHIPPING = 'shipping';
+	public const SHIPPING = 'shipping';
 
 	/**
 	 * Constant for 'tax' type.
 	 *
 	 * @var string
 	 */
-	const TAX = 'tax';
+	public const TAX = 'tax';
 }

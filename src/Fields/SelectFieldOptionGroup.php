@@ -18,10 +18,8 @@ use Pronamic\WordPress\Html\Element;
 class SelectFieldOptionGroup {
 	/**
 	 * Label.
-	 *
-	 * @var string
 	 */
-	private $label;
+	private string $label;
 
 	/**
 	 * Options.

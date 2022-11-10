@@ -41,7 +41,7 @@ class LicenseManager {
 	 * @link https://github.com/easydigitaldownloads/Easy-Digital-Downloads/blob/2.4.2/includes/class-edd-license-handler.php#L309-L369
 	 * @return void
 	 */
-	public function admin_notices() {
+	public function admin_notices(): void {
 		$data = get_transient( 'pronamic_pay_license_data' );
 
 		if ( $data ) {
@@ -104,7 +104,7 @@ class LicenseManager {
 	 *
 	 * @return void
 	 */
-	public function license_check_event() {
+	public function license_check_event(): void {
 		$license = get_option( 'pronamic_pay_license_key' );
 		$license = strval( $license );
 
@@ -143,7 +143,7 @@ class LicenseManager {
 			return 'valid';
 		}
 
-		$data = json_decode( wp_remote_retrieve_body( $response ) );
+		$data = json_decode( wp_remote_retrieve_body( $response ), null, 512, JSON_THROW_ON_ERROR );
 
 		if ( is_object( $data ) && isset( $data->license ) ) {
 			return $data->license;
@@ -158,7 +158,7 @@ class LicenseManager {
 	 * @param string $license License.
 	 * @return void
 	 */
-	public function check_license( $license ) {
+	public function check_license( $license ): void {
 		$status = $this->request_license_status( $license );
 
 		update_option( 'pronamic_pay_license_status', $status );
@@ -170,7 +170,7 @@ class LicenseManager {
 	 * @param string $license License to deactivate.
 	 * @return void
 	 */
-	public function deactivate_license( $license ) {
+	public function deactivate_license( $license ): void {
 		$args = [
 			'license' => $license,
 			'name'    => 'Pronamic Pay',
@@ -193,7 +193,7 @@ class LicenseManager {
 	 * @param string $license License to activate.
 	 * @return void
 	 */
-	public function activate_license( $license ) {
+	public function activate_license( $license ): void {
 		// Request.
 		$args = [
 			'license' => $license,
@@ -214,7 +214,7 @@ class LicenseManager {
 			return;
 		}
 
-		$data = json_decode( wp_remote_retrieve_body( $response ) );
+		$data = json_decode( wp_remote_retrieve_body( $response ), null, 512, JSON_THROW_ON_ERROR );
 
 		if ( $data ) {
 			set_transient( 'pronamic_pay_license_data', $data, 30 );

@@ -23,7 +23,7 @@ class Dependencies {
 	 *
 	 * @var array<Dependency>
 	 */
-	private $dependencies;
+	private array $dependencies;
 
 	/**
 	 * Construct.
@@ -38,7 +38,7 @@ class Dependencies {
 	 * @param Dependency $dependency The dependency to add.
 	 * @return void
 	 */
-	public function add( Dependency $dependency ) {
+	public function add( Dependency $dependency ): void {
 		$this->dependencies[] = $dependency;
 	}
 
@@ -47,7 +47,7 @@ class Dependencies {
 	 *
 	 * @return bool True if dependencies are met, false otherwise.
 	 */
-	public function are_met() {
+	public function are_met(): bool {
 		foreach ( $this->dependencies as $dependency ) {
 			if ( ! $dependency->is_met() ) {
 				return false;

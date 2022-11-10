@@ -22,10 +22,8 @@ namespace Pronamic\WordPress\Pay\Dependencies;
 class WordPressDependency extends Dependency {
 	/**
 	 * Minimum WordPress version.
-	 *
-	 * @var string
 	 */
-	private $minimum_version;
+	private string $minimum_version;
 
 	/**
 	 * Construct WordPress dependency.
@@ -42,7 +40,7 @@ class WordPressDependency extends Dependency {
 	 * @link https://codex.wordpress.org/Global_Variables
 	 * @return bool True if dependency is met, false otherwise.
 	 */
-	public function is_met() {
+	public function is_met(): bool {
 		global $wp_version;
 
 		return \version_compare(

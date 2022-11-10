@@ -110,7 +110,7 @@ class Util {
 	 *
 	 * @return string
 	 */
-	public static function format_recurrences( DateInterval $date_interval ) {
+	public static function format_recurrences( DateInterval $date_interval ): string {
 		$formatted_interval = self::format_date_interval( $date_interval );
 
 		// Check empty date interval.
@@ -133,7 +133,7 @@ class Util {
 	 *
 	 * @return string|null
 	 */
-	public static function format_interval( $interval, $period ) {
+	public static function format_interval( $interval, $period ): ?string {
 		switch ( $period ) {
 			case 'D':
 			case 'day':

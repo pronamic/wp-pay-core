@@ -121,7 +121,7 @@ class SubscriptionsModule {
 	 * @param Payment $payment Payment.
 	 * @return void
 	 */
-	public function complement_subscription_by_payment( $payment ) {
+	public function complement_subscription_by_payment( $payment ): void {
 		foreach ( $payment->get_subscriptions() as $subscription ) {
 			if ( ! $subscription->is_first_payment( $payment ) ) {
 				continue;
@@ -138,7 +138,7 @@ class SubscriptionsModule {
 	 * @param Payment $payment The status updated payment.
 	 * @return void
 	 */
-	public function payment_status_update( $payment ) {
+	public function payment_status_update( $payment ): void {
 		foreach ( $payment->get_subscriptions() as $subscription ) {
 			// Status.
 			$status_before = $subscription->get_status();
@@ -199,7 +199,7 @@ class SubscriptionsModule {
 	 * @param string      $new_status   New meta status.
 	 * @return string
 	 */
-	private function get_subscription_status_update_note( $old_status, $new_status ) {
+	private function get_subscription_status_update_note( $old_status, $new_status ): string {
 		$old_label = $this->plugin->subscriptions_data_store->get_meta_status_label( $old_status );
 		$new_label = $this->plugin->subscriptions_data_store->get_meta_status_label( $new_status );
 
@@ -229,7 +229,7 @@ class SubscriptionsModule {
 	 *
 	 * @return void
 	 */
-	public function log_subscription_status_update( $subscription, $can_redirect, $old_status, $new_status ) {
+	public function log_subscription_status_update( $subscription, $can_redirect, $old_status, $new_status ): void {
 		$note = $this->get_subscription_status_update_note( $old_status, $new_status );
 
 		try {
@@ -247,7 +247,7 @@ class SubscriptionsModule {
 	 *
 	 * @return void
 	 */
-	public function maybe_handle_subscription_action() {
+	public function maybe_handle_subscription_action(): void {
 		if ( ! Util::input_has_vars( INPUT_GET, [ 'subscription', 'action', 'key' ] ) ) {
 			return;
 		}
@@ -293,7 +293,7 @@ class SubscriptionsModule {
 	 * @param Subscription $subscription Subscription to cancel.
 	 * @return void
 	 */
-	private function handle_subscription_cancel( Subscription $subscription ) {
+	private function handle_subscription_cancel( Subscription $subscription ): void {
 		if (
 			'POST' === Server::get( 'REQUEST_METHOD' )
 				&&
@@ -332,7 +332,7 @@ class SubscriptionsModule {
 	 * @return void
 	 * @throws \Exception Throws exception if unable to redirect (empty payment action URL).
 	 */
-	private function handle_subscription_renew( Subscription $subscription ) {
+	private function handle_subscription_renew( Subscription $subscription ): void {
 		// Check gateway.
 		$gateway = $subscription->get_gateway();
 
@@ -535,7 +535,7 @@ class SubscriptionsModule {
 
 		\wp_register_style(
 			'pronamic-pay-subscription-mandate',
-			plugins_url( 'css/card-slider.css', dirname( dirname( __FILE__ ) ) ),
+			plugins_url( 'css/card-slider.css', dirname( __FILE__, 2 ) ),
 			[ 'pronamic-pay-redirect', 'pronamic-pay-card-slider-slick', 'pronamic-pay-card-slider-google-font' ],
 			$this->plugin->get_version()
 		);
@@ -551,7 +551,7 @@ class SubscriptionsModule {
 	 * @param Payment $payment Payment to retry.
 	 * @return bool
 	 */
-	public function can_retry_payment( Payment $payment ) {
+	public function can_retry_payment( Payment $payment ): bool {
 		// Check status.
 		if ( PaymentStatus::FAILURE !== $payment->get_status() ) {
 			return false;
@@ -581,7 +581,7 @@ class SubscriptionsModule {
 	 *
 	 * @return void
 	 */
-	public function maybe_schedule_subscription_events() {
+	public function maybe_schedule_subscription_events(): void {
 		// Unschedule legacy WordPress Cron hook.
 		\wp_clear_scheduled_hook( 'pronamic_pay_update_subscription_payments' );
 		\wp_clear_scheduled_hook( 'pronamic_pay_complete_subscriptions' );
@@ -604,7 +604,7 @@ class SubscriptionsModule {
 	 *
 	 * @return void
 	 */
-	public function rest_api_init() {
+	public function rest_api_init(): void {
 		\register_rest_route(
 			'pronamic-pay/v1',
 			'/subscriptions/(?P<subscription_id>\d+)',

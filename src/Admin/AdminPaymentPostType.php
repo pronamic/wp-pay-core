@@ -29,7 +29,7 @@ class AdminPaymentPostType {
 	 *
 	 * @var string
 	 */
-	const POST_TYPE = 'pronamic_payment';
+	public const POST_TYPE = 'pronamic_payment';
 
 	/**
 	 * Plugin.
@@ -114,7 +114,7 @@ class AdminPaymentPostType {
 	 *
 	 * @return void
 	 */
-	public function maybe_process_payment_action() {
+	public function maybe_process_payment_action(): void {
 		// Current user.
 		if ( ! current_user_can( 'edit_payments' ) ) {
 			return;
@@ -190,7 +190,7 @@ class AdminPaymentPostType {
 	 * @link https://developer.wordpress.org/reference/functions/get_current_screen/
 	 * @return void
 	 */
-	public function maybe_display_anonymized_notice() {
+	public function maybe_display_anonymized_notice(): void {
 		// Current user.
 		if ( ! current_user_can( 'edit_payments' ) ) {
 			return;
@@ -222,7 +222,7 @@ class AdminPaymentPostType {
 	 *
 	 * @return void
 	 */
-	public function admin_notices() {
+	public function admin_notices(): void {
 		foreach ( $this->admin_notices as $notice ) {
 			printf(
 				'<div class="notice notice-%1$s"><p>%2$s</p></div>',
@@ -315,7 +315,7 @@ class AdminPaymentPostType {
 	 * @param int    $post_id Post ID.
 	 * @return void
 	 */
-	public function custom_columns( string $column, int $post_id ) {
+	public function custom_columns( string $column, int $post_id ): void {
 		$payment = get_pronamic_payment( $post_id );
 
 		if ( null === $payment ) {
@@ -561,7 +561,7 @@ class AdminPaymentPostType {
 	 * @param string $post_type Post Type.
 	 * @return void
 	 */
-	public function add_meta_boxes( string $post_type ) {
+	public function add_meta_boxes( string $post_type ): void {
 		if ( self::POST_TYPE !== $post_type ) {
 			return;
 		}
@@ -621,7 +621,7 @@ class AdminPaymentPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 * @return void
 	 */
-	public function meta_box_info( WP_Post $post ) {
+	public function meta_box_info( WP_Post $post ): void {
 		$payment = get_pronamic_payment( $post->ID );
 
 		if ( null === $payment ) {
@@ -639,7 +639,7 @@ class AdminPaymentPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 * @return void
 	 */
-	public function meta_box_lines( WP_Post $post ) {
+	public function meta_box_lines( WP_Post $post ): void {
 		$payment = get_pronamic_payment( $post->ID );
 
 		if ( null === $payment ) {
@@ -657,7 +657,7 @@ class AdminPaymentPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 * @return void
 	 */
-	public function meta_box_notes( WP_Post $post ) {
+	public function meta_box_notes( WP_Post $post ): void {
 		$notes = get_comments(
 			[
 				'post_id' => $post->ID,
@@ -675,7 +675,7 @@ class AdminPaymentPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 * @return void
 	 */
-	public function meta_box_subscription( WP_Post $post ) {
+	public function meta_box_subscription( WP_Post $post ): void {
 		$payment = get_pronamic_payment( $post->ID );
 
 		if ( null === $payment ) {
@@ -691,7 +691,7 @@ class AdminPaymentPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 * @return void
 	 */
-	public function meta_box_update( WP_Post $post ) {
+	public function meta_box_update( WP_Post $post ): void {
 		wp_nonce_field( 'pronamic_payment_update', 'pronamic_payment_update_nonce' );
 
 		include __DIR__ . '/../../views/meta-box-payment-update.php';

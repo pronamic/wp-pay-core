@@ -29,7 +29,7 @@ class GatewaysDataStoreCPT extends AbstractDataStoreCPT {
 	 *
 	 * @var Gateway[]
 	 */
-	private $gateways;
+	private array $gateways;
 
 	/**
 	 * Construct gateways data store CPT object.

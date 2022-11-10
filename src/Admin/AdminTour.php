@@ -22,10 +22,8 @@ use Pronamic\WordPress\Pay\Plugin;
 class AdminTour {
 	/**
 	 * Plugin.
-	 *
-	 * @var Plugin
 	 */
-	private $plugin;
+	private Plugin $plugin;
 
 	/**
 	 * Constructs and initializes an pointers object.
@@ -48,7 +46,7 @@ class AdminTour {
 	 *
 	 * @return void
 	 */
-	public function admin_init() {
+	public function admin_init(): void {
 		if ( filter_has_var( INPUT_GET, 'pronamic_pay_ignore_tour' ) && wp_verify_nonce( filter_input( INPUT_GET, 'pronamic_pay_nonce', FILTER_SANITIZE_STRING ), 'pronamic_pay_ignore_tour' ) ) {
 			$ignore = filter_input( INPUT_GET, 'pronamic_pay_ignore_tour', FILTER_VALIDATE_BOOLEAN );
 
@@ -65,7 +63,7 @@ class AdminTour {
 	 *
 	 * @return void
 	 */
-	public function admin_enqueue_scripts() {
+	public function admin_enqueue_scripts(): void {
 		$min = \SCRIPT_DEBUG ? '' : '.min';
 
 		// Pointers.

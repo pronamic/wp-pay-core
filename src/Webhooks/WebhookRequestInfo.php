@@ -24,31 +24,23 @@ use Pronamic\WordPress\Pay\Payments\Payment;
 class WebhookRequestInfo implements JsonSerializable {
 	/**
 	 * Date.
-	 *
-	 * @var DateTime
 	 */
-	private $request_date;
+	private DateTime $request_date;
 
 	/**
 	 * Request URL.
-	 *
-	 * @var string
 	 */
-	private $request_url;
+	private string $request_url;
 
 	/**
 	 * Payment.
-	 *
-	 * @var Payment|null
 	 */
-	private $payment;
+	private ?Payment $payment = null;
 
 	/**
 	 * Post data.
-	 *
-	 * @var string|null
 	 */
-	private $post_data;
+	private ?string $post_data;
 
 	/**
 	 * Construct webhook request info object.
@@ -96,7 +88,7 @@ class WebhookRequestInfo implements JsonSerializable {
 	 * @param Payment $payment Payment.
 	 * @return void
 	 */
-	public function set_payment( Payment $payment ) {
+	public function set_payment( Payment $payment ): void {
 		$this->payment = $payment;
 	}
 

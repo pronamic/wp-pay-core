@@ -22,10 +22,8 @@ namespace Pronamic\WordPress\Pay\Dependencies;
 class PhpDependency extends Dependency {
 	/**
 	 * Minimum PHP version.
-	 *
-	 * @var string
 	 */
-	private $minimum_version;
+	private string $minimum_version;
 
 	/**
 	 * Construct PHP dependency.
@@ -42,7 +40,7 @@ class PhpDependency extends Dependency {
 	 * @link https://github.com/dsawardekar/wp-requirements/blob/0.3.0/lib/Requirements.php#L104-L118
 	 * @return bool True if dependency is met, false otherwise.
 	 */
-	public function is_met() {
+	public function is_met(): bool {
 		return \version_compare(
 			\strval( \phpversion() ),
 			$this->minimum_version,

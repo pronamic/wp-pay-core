@@ -28,7 +28,7 @@ class AdminGatewayPostType {
 	 *
 	 * @var string
 	 */
-	const POST_TYPE = 'pronamic_gateway';
+	public const POST_TYPE = 'pronamic_gateway';
 
 	/**
 	 * Plugin.
@@ -88,7 +88,7 @@ class AdminGatewayPostType {
 	 * @param int    $post_id Post ID.
 	 * @return void
 	 */
-	public function custom_columns( $column, $post_id ) {
+	public function custom_columns( $column, $post_id ): void {
 		$id = get_post_meta( $post_id, '_pronamic_gateway_id', true );
 
 		$integration = $this->plugin->gateway_integrations->get_integration( $id );
@@ -211,7 +211,7 @@ class AdminGatewayPostType {
 	 * @param WP_Post $post Post (only available @since 3.5.2).
 	 * @return void
 	 */
-	public function post_edit_form_tag( $post ) {
+	public function post_edit_form_tag( $post ): void {
 		if ( self::POST_TYPE !== get_post_type( $post ) ) {
 			return;
 		}
@@ -225,7 +225,7 @@ class AdminGatewayPostType {
 	 * @param string $post_type Post Type.
 	 * @return void
 	 */
-	public function add_meta_boxes( $post_type ) {
+	public function add_meta_boxes( $post_type ): void {
 		if ( self::POST_TYPE !== $post_type ) {
 			return;
 		}
@@ -255,7 +255,7 @@ class AdminGatewayPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 * @return void
 	 */
-	public function meta_box_config( $post ) {
+	public function meta_box_config( $post ): void {
 		wp_nonce_field( 'pronamic_pay_save_gateway', 'pronamic_pay_nonce' );
 
 		$plugin = $this->plugin;
@@ -282,7 +282,7 @@ class AdminGatewayPostType {
 	 *
 	 * @return void
 	 */
-	public static function settings_payment_methods( $gateway, $gateway_id ) {
+	public static function settings_payment_methods( $gateway, $gateway_id ): void {
 		if ( null === $gateway ) {
 			return;
 		}
@@ -290,7 +290,7 @@ class AdminGatewayPostType {
 		$payment_methods = $gateway->get_payment_methods()->getIterator();
 
 		$payment_methods->uasort(
-			function( $a, $b ) {
+			function( $a, $b ): int {
 				return strnatcasecmp( $a->get_name(), $b->get_name() );
 			}
 		);
@@ -307,7 +307,7 @@ class AdminGatewayPostType {
 	 *
 	 * @return void
 	 */
-	public static function settings_webhook_log( $gateway, $gateway_id, $config_id ) {
+	public static function settings_webhook_log( $gateway, $gateway_id, $config_id ): void {
 		if ( null === $gateway ) {
 			return;
 		}
@@ -321,7 +321,7 @@ class AdminGatewayPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 * @return void
 	 */
-	public function meta_box_test( $post ) {
+	public function meta_box_test( $post ): void {
 		include __DIR__ . '/../../views/meta-box-gateway-test.php';
 	}
 
@@ -333,7 +333,7 @@ class AdminGatewayPostType {
 	 * @param int $post_id The ID of the post being saved.
 	 * @return void
 	 */
-	public function save_post( $post_id ) {
+	public function save_post( $post_id ): void {
 		// Nonce.
 		if ( ! \filter_has_var( INPUT_POST, 'pronamic_pay_nonce' ) ) {
 			return;

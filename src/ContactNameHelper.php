@@ -28,7 +28,7 @@ class ContactNameHelper {
 	 * @param ContactName $name Contact name to complement.
 	 * @return void
 	 */
-	public static function complement_name( ContactName $name ) {
+	public static function complement_name( ContactName $name ): void {
 		// Name.
 		if ( \is_user_logged_in() ) {
 			$user = \wp_get_current_user();
@@ -91,7 +91,7 @@ class ContactNameHelper {
 	 * @param string $string String.
 	 * @return string
 	 */
-	private static function string_to_uppercase( $string ) {
+	private static function string_to_uppercase( $string ): string {
 		if ( \function_exists( 'mb_strtoupper' ) ) {
 			return \mb_strtoupper( $string );
 		}
@@ -105,7 +105,7 @@ class ContactNameHelper {
 	 * @param ContactName $name Contact name to anonymize.
 	 * @return void
 	 */
-	public static function anonymize_name( ContactName $name ) {
+	public static function anonymize_name( ContactName $name ): void {
 		$name->set_full_name( PrivacyManager::anonymize_data( 'text', $name->get_full_name() ) );
 		$name->set_first_name( PrivacyManager::anonymize_data( 'text', $name->get_first_name() ) );
 		$name->set_middle_name( PrivacyManager::anonymize_data( 'text', $name->get_middle_name() ) );

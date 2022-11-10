@@ -32,7 +32,7 @@ class PaymentMethods {
 	 * @var string
 	 * @since 2.1.0
 	 */
-	const AFTERPAY = 'afterpay';
+	public const AFTERPAY = 'afterpay';
 
 	/**
 	 * AfterPay (afterpay.nl).
@@ -40,7 +40,7 @@ class PaymentMethods {
 	 * @link https://www.afterpay.nl/
 	 * @var string
 	 */
-	const AFTERPAY_NL = 'afterpay_nl';
+	public const AFTERPAY_NL = 'afterpay_nl';
 
 	/**
 	 * Afterpay (afterpay.com).
@@ -48,7 +48,7 @@ class PaymentMethods {
 	 * @link https://www.afterpay.com/
 	 * @var string
 	 */
-	const AFTERPAY_COM = 'afterpay_com';
+	public const AFTERPAY_COM = 'afterpay_com';
 
 	/**
 	 * Alipay
@@ -56,7 +56,7 @@ class PaymentMethods {
 	 * @var string
 	 * @since 2.0.0
 	 */
-	const ALIPAY = 'alipay';
+	public const ALIPAY = 'alipay';
 
 	/**
 	 * American Express.
@@ -64,7 +64,7 @@ class PaymentMethods {
 	 * @var string
 	 * @since 3.0.1
 	 */
-	const AMERICAN_EXPRESS = 'american_express';
+	public const AMERICAN_EXPRESS = 'american_express';
 
 	/**
 	 * Apple Pay
@@ -72,7 +72,7 @@ class PaymentMethods {
 	 * @var string
 	 * @since 2.2.8
 	 */
-	const APPLE_PAY = 'apple_pay';
+	public const APPLE_PAY = 'apple_pay';
 
 	/**
 	 * Bancontact
@@ -80,14 +80,14 @@ class PaymentMethods {
 	 * @var string
 	 * @since 1.3.7
 	 */
-	const BANCONTACT = 'bancontact';
+	public const BANCONTACT = 'bancontact';
 
 	/**
 	 * Bank transfer
 	 *
 	 * @var string
 	 */
-	const BANK_TRANSFER = 'bank_transfer';
+	public const BANK_TRANSFER = 'bank_transfer';
 
 	/**
 	 * Constant for the Belfius Direct Net method.
@@ -95,7 +95,7 @@ class PaymentMethods {
 	 * @since 1.3.11
 	 * @var string
 	 */
-	const BELFIUS = 'belfius';
+	public const BELFIUS = 'belfius';
 
 	/**
 	 * Billink
@@ -103,7 +103,7 @@ class PaymentMethods {
 	 * @since 2.0.9
 	 * @var string
 	 */
-	const BILLINK = 'billink';
+	public const BILLINK = 'billink';
 
 	/**
 	 * Bitcoin
@@ -111,7 +111,7 @@ class PaymentMethods {
 	 * @since 1.3.9
 	 * @var string
 	 */
-	const BITCOIN = 'bitcoin';
+	public const BITCOIN = 'bitcoin';
 
 	/**
 	 * BLIK
@@ -120,7 +120,7 @@ class PaymentMethods {
 	 * @link  https://blik.com/
 	 * @var string
 	 */
-	const BLIK = 'blik';
+	public const BLIK = 'blik';
 
 	/**
 	 * Bunq
@@ -130,7 +130,7 @@ class PaymentMethods {
 	 * @since 1.3.13
 	 * @var string
 	 */
-	const BUNQ = 'bunq';
+	public const BUNQ = 'bunq';
 
 	/**
 	 * Constant for the In3 payment method.
@@ -138,7 +138,7 @@ class PaymentMethods {
 	 * @var string
 	 * @since 2.1.0
 	 */
-	const IN3 = 'in3';
+	public const IN3 = 'in3';
 
 	/**
 	 * Capayable.
@@ -146,21 +146,21 @@ class PaymentMethods {
 	 * @var string
 	 * @since 2.0.9
 	 */
-	const CAPAYABLE = 'capayable';
+	public const CAPAYABLE = 'capayable';
 
 	/**
 	 * Credit Card
 	 *
 	 * @var string
 	 */
-	const CREDIT_CARD = 'credit_card';
+	public const CREDIT_CARD = 'credit_card';
 
 	/**
 	 * Direct Debit
 	 *
 	 * @var string
 	 */
-	const DIRECT_DEBIT = 'direct_debit';
+	public const DIRECT_DEBIT = 'direct_debit';
 
 	/**
 	 * Constant for the Direct Debit mandate via Bancontact payment method.
@@ -168,7 +168,7 @@ class PaymentMethods {
 	 * @var string
 	 * @since 1.3.13
 	 */
-	const DIRECT_DEBIT_BANCONTACT = 'direct_debit_bancontact';
+	public const DIRECT_DEBIT_BANCONTACT = 'direct_debit_bancontact';
 
 	/**
 	 * Constant for the Direct Debit mandate via iDEAL payment method.
@@ -176,7 +176,7 @@ class PaymentMethods {
 	 * @var string
 	 * @since 1.3.9
 	 */
-	const DIRECT_DEBIT_IDEAL = 'direct_debit_ideal';
+	public const DIRECT_DEBIT_IDEAL = 'direct_debit_ideal';
 
 	/**
 	 * Constant for the Direct Debit mandate via SOFORT payment method.
@@ -184,7 +184,7 @@ class PaymentMethods {
 	 * @var string
 	 * @since 1.3.15
 	 */
-	const DIRECT_DEBIT_SOFORT = 'direct_debit_sofort';
+	public const DIRECT_DEBIT_SOFORT = 'direct_debit_sofort';
 
 	/**
 	 * Constant for the EPS payment method.
@@ -192,7 +192,7 @@ class PaymentMethods {
 	 * @var string
 	 * @since 2.1.7
 	 */
-	const EPS = 'eps';
+	public const EPS = 'eps';
 
 	/**
 	 * Constant for the Focum payment method.
@@ -200,35 +200,35 @@ class PaymentMethods {
 	 * @var string
 	 * @since 2.1.0
 	 */
-	const FOCUM = 'focum';
+	public const FOCUM = 'focum';
 
 	/**
 	 * Constant for the iDEAL payment method.
 	 *
 	 * @var string
 	 */
-	const IDEAL = 'ideal';
+	public const IDEAL = 'ideal';
 
 	/**
 	 * Constant for the iDEAL payment method.
 	 *
 	 * @var string
 	 */
-	const IDEALQR = 'idealqr';
+	public const IDEALQR = 'idealqr';
 
 	/**
 	 * Constant for the Giropay payment method.
 	 *
 	 * @var string
 	 */
-	const GIROPAY = 'giropay';
+	public const GIROPAY = 'giropay';
 
 	/**
 	 * Constant for the Google Pay payment method.
 	 *
 	 * @var string
 	 */
-	const GOOGLE_PAY = 'google_pay';
+	public const GOOGLE_PAY = 'google_pay';
 
 	/**
 	 * Constant for the KBC/CBC Payment Button method.
@@ -236,7 +236,7 @@ class PaymentMethods {
 	 * @since 1.3.11
 	 * @var string
 	 */
-	const KBC = 'kbc';
+	public const KBC = 'kbc';
 
 	/**
 	 * Constant for the Klarna Pay Later payment method.
@@ -247,7 +247,7 @@ class PaymentMethods {
 	 * @since 2.1.0
 	 * @var string
 	 */
-	const KLARNA_PAY_LATER = 'klarna_pay_later';
+	public const KLARNA_PAY_LATER = 'klarna_pay_later';
 
 	/**
 	 * Constant for the Klarna Pay Now payment method.
@@ -258,7 +258,7 @@ class PaymentMethods {
 	 * @since 4.1.0
 	 * @var string
 	 */
-	const KLARNA_PAY_NOW = 'klarna_pay_now';
+	public const KLARNA_PAY_NOW = 'klarna_pay_now';
 
 	/**
 	 * Constant for the Klarna Pay Over Time payment method.
@@ -270,7 +270,7 @@ class PaymentMethods {
 	 * @since 4.1.0
 	 * @var string
 	 */
-	const KLARNA_PAY_OVER_TIME = 'klarna_pay_over_time';
+	public const KLARNA_PAY_OVER_TIME = 'klarna_pay_over_time';
 
 	/**
 	 * Constant for the Maestro payment method.
@@ -278,7 +278,7 @@ class PaymentMethods {
 	 * @var string
 	 * @since 1.3.10
 	 */
-	const MAESTRO = 'maestro';
+	public const MAESTRO = 'maestro';
 
 	/**
 	 * Constant for the Mastercard payment method.
@@ -287,7 +287,7 @@ class PaymentMethods {
 	 * @var string
 	 * @since 3.0.1
 	 */
-	const MASTERCARD = 'mastercard';
+	public const MASTERCARD = 'mastercard';
 
 	/**
 	 * MB WAY
@@ -296,7 +296,7 @@ class PaymentMethods {
 	 * @link  https://www.mbway.pt/
 	 * @var string
 	 */
-	const MB_WAY = 'mb_way';
+	public const MB_WAY = 'mb_way';
 
 	/**
 	 * Bancontact/Mister Cash
@@ -304,7 +304,7 @@ class PaymentMethods {
 	 * @deprecated "Bancontact/Mister Cash" was renamed to just "Bancontact".
 	 * @var string
 	 */
-	const MISTER_CASH = 'mister_cash';
+	public const MISTER_CASH = 'mister_cash';
 
 	/**
 	 * MobilePay
@@ -312,7 +312,7 @@ class PaymentMethods {
 	 * @link https://www.mobilepay.dk/
 	 * @var string
 	 */
-	const MOBILEPAY = 'mobilepay';
+	public const MOBILEPAY = 'mobilepay';
 
 	/**
 	 * Constant for the Payconiq method.
@@ -320,7 +320,7 @@ class PaymentMethods {
 	 * @since 2.0.0
 	 * @var string
 	 */
-	const PAYCONIQ = 'payconiq';
+	public const PAYCONIQ = 'payconiq';
 
 	/**
 	 * PayPal
@@ -328,7 +328,7 @@ class PaymentMethods {
 	 * @var string
 	 * @since 1.3.7
 	 */
-	const PAYPAL = 'paypal';
+	public const PAYPAL = 'paypal';
 
 	/**
 	 * Przelewy24
@@ -336,7 +336,7 @@ class PaymentMethods {
 	 * @since 2.5.0
 	 * @var string
 	 */
-	const PRZELEWY24 = 'przelewy24';
+	public const PRZELEWY24 = 'przelewy24';
 
 	/**
 	 * Santander
@@ -344,7 +344,7 @@ class PaymentMethods {
 	 * @var string
 	 * @since 2.6.0
 	 */
-	const SANTANDER = 'santander';
+	public const SANTANDER = 'santander';
 
 	/**
 	 * SOFORT Banking
@@ -352,7 +352,7 @@ class PaymentMethods {
 	 * @var string
 	 * @since 1.0.1
 	 */
-	const SOFORT = 'sofort';
+	public const SOFORT = 'sofort';
 
 	/**
 	 * SprayPay
@@ -360,7 +360,7 @@ class PaymentMethods {
 	 * @var string
 	 * @since 2.8.0
 	 */
-	const SPRAYPAY = 'spraypay';
+	public const SPRAYPAY = 'spraypay';
 
 	/**
 	 * Swish
@@ -368,7 +368,7 @@ class PaymentMethods {
 	 * @var string
 	 * @since 2.6.3
 	 */
-	const SWISH = 'swish';
+	public const SWISH = 'swish';
 
 	/**
 	 * TWINT
@@ -376,7 +376,7 @@ class PaymentMethods {
 	 * @var string
 	 * @since unreleased
 	 */
-	const TWINT = 'twint';
+	public const TWINT = 'twint';
 
 	/**
 	 * Constant for the V PAY payment method.
@@ -385,7 +385,7 @@ class PaymentMethods {
 	 * @var string
 	 * @since 3.0.1
 	 */
-	const V_PAY = 'v_pay';
+	public const V_PAY = 'v_pay';
 
 	/**
 	 * Vipps
@@ -393,7 +393,7 @@ class PaymentMethods {
 	 * @var string
 	 * @since 2.6.3
 	 */
-	const VIPPS = 'vipps';
+	public const VIPPS = 'vipps';
 
 	/**
 	 * Constant for the Visa payment method.
@@ -402,7 +402,7 @@ class PaymentMethods {
 	 * @var string
 	 * @since 3.0.1
 	 */
-	const VISA = 'visa';
+	public const VISA = 'visa';
 
 	/**
 	 * Get payment methods
@@ -504,7 +504,7 @@ class PaymentMethods {
 	 * @param string|null $size   Icon size.
 	 * @return string|null
 	 */
-	public static function get_icon_url( $method = null, $size = null ) {
+	public static function get_icon_url( $method = null, $size = null ): ?string {
 		// Check method.
 		if ( empty( $method ) || 'void' === $method ) {
 			return null;
@@ -527,7 +527,7 @@ class PaymentMethods {
 	 *
 	 * @return void
 	 */
-	public static function maybe_update_active_payment_methods() {
+	public static function maybe_update_active_payment_methods(): void {
 		$payment_methods = get_option( 'pronamic_pay_active_payment_methods' );
 
 		// Update active payment methods option if necessary.
@@ -542,7 +542,7 @@ class PaymentMethods {
 	 * @since 2.0.0
 	 * @return void
 	 */
-	public static function update_active_payment_methods() {
+	public static function update_active_payment_methods(): void {
 		$active_payment_methods = [];
 
 		$query = new WP_Query(
@@ -648,7 +648,7 @@ class PaymentMethods {
 	 *
 	 * @return bool
 	 */
-	public static function is_active( $payment_method = null ) {
+	public static function is_active( $payment_method = null ): bool {
 		return in_array( $payment_method, self::get_active_payment_methods(), true );
 	}
 }

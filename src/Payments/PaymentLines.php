@@ -28,10 +28,8 @@ use Pronamic\WordPress\Money\TaxedMoney;
 class PaymentLines implements Countable, IteratorAggregate {
 	/**
 	 * The lines.
-	 *
-	 * @var array
 	 */
-	private $lines;
+	private array $lines;
 
 	/**
 	 * Constructs and initialize a payment lines object.
@@ -64,7 +62,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 	 * @param PaymentLine $line The line to add.
 	 * @return void
 	 */
-	public function add_line( PaymentLine $line ) {
+	public function add_line( PaymentLine $line ): void {
 		$this->lines[] = $line;
 	}
 

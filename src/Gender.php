@@ -23,14 +23,14 @@ class Gender {
 	 *
 	 * @var string
 	 */
-	const FEMALE = 'F';
+	public const FEMALE = 'F';
 
 	/**
 	 * Male.
 	 *
 	 * @var string
 	 */
-	const MALE = 'M';
+	public const MALE = 'M';
 
 	/**
 	 * Other.
@@ -39,7 +39,7 @@ class Gender {
 	 *
 	 * @var string
 	 */
-	const OTHER = 'X';
+	public const OTHER = 'X';
 
 	/**
 	 * Check if value is valid.
@@ -47,7 +47,7 @@ class Gender {
 	 * @param string $gender Gender.
 	 * @return boolean True if valid, false otherwise.
 	 */
-	public static function is_valid( $gender ) {
+	public static function is_valid( $gender ): bool {
 		return in_array(
 			$gender,
 			[

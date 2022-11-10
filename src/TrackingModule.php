@@ -68,7 +68,7 @@ class TrackingModule {
 
 		foreach ( $plugins as $slug => $plugin ) {
 			foreach ( $extensions as $extension ) {
-				if ( false === \stristr( $slug, $extension ) ) {
+				if ( false === \stristr( $slug, (string) $extension ) ) {
 					continue;
 				}
 
@@ -97,7 +97,7 @@ class TrackingModule {
 			$data = \file_get_contents( $extensions_json_path, true );
 
 			if ( false !== $data ) {
-				$data = \json_decode( $data );
+				$data = \json_decode( $data, null, 512, JSON_THROW_ON_ERROR );
 
 				if ( null !== $data ) {
 					$extensions = \wp_list_pluck( $data, 'slug' );

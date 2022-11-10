@@ -23,24 +23,18 @@ use stdClass;
 class Region {
 	/**
 	 * Value.
-	 *
-	 * @var string|null
 	 */
-	private $value;
+	private ?string $value;
 
 	/**
 	 * Code.
-	 *
-	 * @var string|null
 	 */
-	private $code;
+	private ?string $code = null;
 
 	/**
 	 * Name.
-	 *
-	 * @var string|null
 	 */
-	private $name;
+	private ?string $name = null;
 
 	/**
 	 * Construct region.
@@ -66,7 +60,7 @@ class Region {
 	 * @param string|null $value Value.
 	 * @return void
 	 */
-	public function set_value( $value ) {
+	public function set_value( $value ): void {
 		$this->value = $value;
 	}
 
@@ -85,7 +79,7 @@ class Region {
 	 * @param string|null $code Code.
 	 * @return void
 	 */
-	public function set_code( $code ) {
+	public function set_code( $code ): void {
 		$this->code = $code;
 	}
 
@@ -104,7 +98,7 @@ class Region {
 	 * @param string|null $name Name.
 	 * @return void
 	 */
-	public function set_name( $name ) {
+	public function set_name( $name ): void {
 		$this->name = $name;
 	}
 
@@ -187,7 +181,7 @@ class Region {
 	 *
 	 * @return void
 	 */
-	public function anonymize() {
+	public function anonymize(): void {
 		$this->set_value( PrivacyManager::anonymize_data( 'text', $this->get_value() ) );
 		$this->set_code( PrivacyManager::anonymize_data( 'text', $this->get_code() ) );
 		$this->set_name( PrivacyManager::anonymize_data( 'text', $this->get_name() ) );

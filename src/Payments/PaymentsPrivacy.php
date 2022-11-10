@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
+use Pronamic\WordPress\Pay\PrivacyManager;
 use Pronamic\WordPress\Pay\AddressHelper;
 use Pronamic\WordPress\Pay\CustomerHelper;
 
@@ -35,11 +36,11 @@ class PaymentsPrivacy {
 	/**
 	 * Register privacy exporters.
 	 *
-	 * @param \Pronamic\WordPress\Pay\PrivacyManager $privacy_manager Privacy manager.
+	 * @param PrivacyManager $privacy_manager Privacy manager.
 	 *
 	 * @return void
 	 */
-	public function register_exporters( $privacy_manager ) {
+	public function register_exporters( $privacy_manager ): void {
 		// Payments export.
 		$privacy_manager->add_exporter(
 			'payments',
@@ -51,11 +52,11 @@ class PaymentsPrivacy {
 	/**
 	 * Register privacy erasers.
 	 *
-	 * @param \Pronamic\WordPress\Pay\PrivacyManager $privacy_manager Privacy manager.
+	 * @param PrivacyManager $privacy_manager Privacy manager.
 	 *
 	 * @return void
 	 */
-	public function register_erasers( $privacy_manager ) {
+	public function register_erasers( $privacy_manager ): void {
 		// Payments anonymizer.
 		$privacy_manager->add_eraser(
 			'payments',
@@ -192,7 +193,7 @@ class PaymentsPrivacy {
 					continue;
 				}
 
-				$action = ( isset( $meta_options['privacy_erasure'] ) ? $meta_options['privacy_erasure'] : null );
+				$action = ( $meta_options['privacy_erasure'] ?? null );
 
 				$privacy_manager->erase_meta( $payment_id, $meta_key, $action );
 			}

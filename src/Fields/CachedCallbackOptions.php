@@ -21,10 +21,8 @@ use IteratorAggregate;
 class CachedCallbackOptions implements IteratorAggregate {
 	/**
 	 * Cache key.
-	 *
-	 * @var string
 	 */
-	private $cache_key;
+	private string $cache_key;
 
 	/**
 	 * Callback.

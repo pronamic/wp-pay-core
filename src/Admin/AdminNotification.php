@@ -22,31 +22,23 @@ use Pronamic\WordPress\Pay\Plugin;
 class AdminNotification {
 	/**
 	 * ID.
-	 *
-	 * @var string
 	 */
-	private $id;
+	private string $id;
 
 	/**
 	 * Name.
-	 *
-	 * @var string
 	 */
-	private $name;
+	private string $name;
 
 	/**
 	 * Condition.
-	 *
-	 * @var bool
 	 */
-	private $condition;
+	private bool $condition;
 
 	/**
 	 * Version.
-	 *
-	 * @var string
 	 */
-	private $version;
+	private string $version;
 
 	/**
 	 * Constructs and initializes an notices object.

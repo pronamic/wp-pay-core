@@ -25,7 +25,7 @@ class AlignmentRule {
 	 *
 	 * @var array<int, string>
 	 */
-	private static $weekdays = [
+	private static array $weekdays = [
 		0 => 'Sunday',
 		1 => 'Monday',
 		2 => 'Tuesday',
@@ -37,31 +37,23 @@ class AlignmentRule {
 
 	/**
 	 * Frequency.
-	 *
-	 * @var string
 	 */
-	private $frequency;
+	private string $frequency;
 
 	/**
 	 * Day of the week.
-	 *
-	 * @var string|null
 	 */
-	private $by_day_of_the_week;
+	private ?string $by_day_of_the_week = null;
 
 	/**
 	 * Day of the month.
-	 *
-	 * @var int|null
 	 */
-	private $by_day_of_the_month;
+	private ?int $by_day_of_the_month = null;
 
 	/**
 	 * Number of month.
-	 *
-	 * @var int|null
 	 */
-	private $by_month;
+	private ?int $by_month = null;
 
 	/**
 	 * Construct prorating rule.

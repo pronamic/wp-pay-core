@@ -80,7 +80,7 @@ class Updater {
 	 * @return array
 	 */
 	public function extend_response_with_pronamic( $response, $parsed_args, $type ) {
-		$data = \json_decode( \wp_remote_retrieve_body( $response ), true );
+		$data = \json_decode( \wp_remote_retrieve_body( $response ), true, 512, JSON_THROW_ON_ERROR );
 
 		if ( ! is_array( $data ) ) {
 			return $response;
@@ -157,7 +157,7 @@ class Updater {
 			return false;
 		}
 
-		$response = \json_decode( \wp_remote_retrieve_body( $raw_response ), true );
+		$response = \json_decode( \wp_remote_retrieve_body( $raw_response ), true, 512, JSON_THROW_ON_ERROR );
 
 		if ( ! \is_array( $response ) ) {
 			return false;

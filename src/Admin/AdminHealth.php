@@ -24,10 +24,8 @@ use Pronamic\WordPress\Pay\Plugin;
 class AdminHealth {
 	/**
 	 * Plugin.
-	 *
-	 * @var Plugin
 	 */
-	private $plugin;
+	private Plugin $plugin;
 
 	/**
 	 * Site health constructor.
@@ -432,7 +430,7 @@ class AdminHealth {
 		}
 
 		// Check supported extensions.
-		$extensions = \json_decode( $data );
+		$extensions = \json_decode( $data, null, 512, JSON_THROW_ON_ERROR );
 
 		$supported_extensions     = [];
 		$untested_plugin_versions = [];

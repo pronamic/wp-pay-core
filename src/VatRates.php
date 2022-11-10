@@ -25,26 +25,26 @@ class VatRates {
 	 *
 	 * @var string
 	 */
-	const STANDARD = 'standard';
+	public const STANDARD = 'standard';
 
 	/**
 	 * Reduced rate.
 	 *
 	 * @var string
 	 */
-	const REDUCED = 'reduced';
+	public const REDUCED = 'reduced';
 
 	/**
 	 * Super reduced rate.
 	 *
 	 * @var string
 	 */
-	const SUPER_REDUCED = 'super_reduced';
+	public const SUPER_REDUCED = 'super_reduced';
 
 	/**
 	 * Parking rate.
 	 *
 	 * @var string
 	 */
-	const PARKING = 'parking';
+	public const PARKING = 'parking';
 }

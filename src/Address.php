@@ -35,96 +35,70 @@ use InvalidArgumentException;
 class Address {
 	/**
 	 * Contact name.
-	 *
-	 * @var ContactName|null
 	 */
-	private $name;
+	private ?ContactName $name = null;
 
 	/**
 	 * Email address.
-	 *
-	 * @var string|null
 	 */
-	private $email;
+	private ?string $email = null;
 
 	/**
 	 * Company name.
-	 *
-	 * @var string|null
 	 */
-	private $company_name;
+	private ?string $company_name = null;
 
 	/**
 	 * Chamber of Commerce registration number.
-	 *
-	 * @var string|null
 	 */
-	private $coc_number;
+	private ?string $coc_number = null;
 
 	/**
 	 * Address line 1.
-	 *
-	 * @var string|null
 	 */
-	private $line_1;
+	private ?string $line_1 = null;
 
 	/**
 	 * Address line 2.
-	 *
-	 * @var string|null
 	 */
-	private $line_2;
+	private ?string $line_2 = null;
 
 	/**
 	 * Street name.
-	 *
-	 * @var string|null
 	 */
-	private $street_name;
+	private ?string $street_name = null;
 
 	/**
 	 * House number.
-	 *
-	 * @var HouseNumber|null
 	 */
-	private $house_number;
+	private ?HouseNumber $house_number = null;
 
 	/**
 	 * Postal Code.
-	 *
-	 * @var string|null
 	 */
-	private $postal_code;
+	private ?string $postal_code = null;
 
 	/**
 	 * City.
-	 *
-	 * @var string|null
 	 */
-	private $city;
+	private ?string $city = null;
 
 	/**
 	 * Region.
 	 *
 	 * Alias: `region`, `county`, `state`, `province`, `stateOrProvince`, `stateCode`.
-	 *
-	 * @var Region|null
 	 */
-	private $region;
+	private ?Region $region = null;
 
 	/**
 	 * Country.
-	 *
-	 * @var Country|null
 	 */
-	private $country;
+	private ?Country $country = null;
 
 	/**
 	 * Phone.
-	 *
-	 * @var string|null
 	 */
-	private $phone;
+	private ?string $phone = null;
 
 	/**
 	 * Get contact name.
@@ -141,7 +115,7 @@ class Address {
 	 * @param ContactName|null $name Contact name.
 	 * @return void
 	 */
-	public function set_name( ContactName $name = null ) {
+	public function set_name( ContactName $name = null ): void {
 		$this->name = $name;
 	}
 
@@ -160,7 +134,7 @@ class Address {
 	 * @param string|null $email Email.
 	 * @return void
 	 */
-	public function set_email( $email ) {
+	public function set_email( $email ): void {
 		$this->email = $email;
 	}
 
@@ -179,7 +153,7 @@ class Address {
 	 * @param string|null $company_name Company name.
 	 * @return void
 	 */
-	public function set_company_name( $company_name ) {
+	public function set_company_name( $company_name ): void {
 		$this->company_name = $company_name;
 	}
 
@@ -198,7 +172,7 @@ class Address {
 	 * @param string|null $coc_number Kamer van Koophandel number.
 	 * @return void
 	 */
-	public function set_coc_number( $coc_number ) {
+	public function set_coc_number( $coc_number ): void {
 		$this->coc_number = $coc_number;
 	}
 
@@ -217,7 +191,7 @@ class Address {
 	 * @param string|null $line_1 Address 1.
 	 * @return void
 	 */
-	public function set_line_1( $line_1 ) {
+	public function set_line_1( $line_1 ): void {
 		$this->line_1 = $line_1;
 	}
 
@@ -236,7 +210,7 @@ class Address {
 	 * @param string|null $line_2 Address 2.
 	 * @return void
 	 */
-	public function set_line_2( $line_2 ) {
+	public function set_line_2( $line_2 ): void {
 		$this->line_2 = $line_2;
 	}
 
@@ -255,7 +229,7 @@ class Address {
 	 * @param string|null $street_name Street name.
 	 * @return void
 	 */
-	public function set_street_name( $street_name ) {
+	public function set_street_name( $street_name ): void {
 		$this->street_name = $street_name;
 	}
 
@@ -274,7 +248,7 @@ class Address {
 	 * @param string|HouseNumber|null $house_number House number.
 	 * @return void
 	 */
-	public function set_house_number( $house_number ) {
+	public function set_house_number( $house_number ): void {
 		if ( is_string( $house_number ) ) {
 			$house_number = new HouseNumber( $house_number );
 		}
@@ -301,7 +275,7 @@ class Address {
 	 * @param string|null $house_number_base House number base.
 	 * @return void
 	 */
-	public function set_house_number_base( $house_number_base ) {
+	public function set_house_number_base( $house_number_base ): void {
 		if ( null === $this->house_number ) {
 			$this->house_number = new HouseNumber();
 		}
@@ -328,7 +302,7 @@ class Address {
 	 * @param string|null $house_number_addition House number addition.
 	 * @return void
 	 */
-	public function set_house_number_addition( $house_number_addition ) {
+	public function set_house_number_addition( $house_number_addition ): void {
 		if ( null === $this->house_number ) {
 			$this->house_number = new HouseNumber();
 		}
@@ -351,7 +325,7 @@ class Address {
 	 * @param string|null $postal_code Postal Code.
 	 * @return void
 	 */
-	public function set_postal_code( $postal_code ) {
+	public function set_postal_code( $postal_code ): void {
 		$this->postal_code = $postal_code;
 	}
 
@@ -370,7 +344,7 @@ class Address {
 	 * @param string|null $city City.
 	 * @return void
 	 */
-	public function set_city( $city ) {
+	public function set_city( $city ): void {
 		$this->city = $city;
 	}
 
@@ -389,7 +363,7 @@ class Address {
 	 * @param string|Region|null $region Region.
 	 * @return void
 	 */
-	public function set_region( $region ) {
+	public function set_region( $region ): void {
 		if ( is_string( $region ) ) {
 			$region = new Region( $region );
 		}
@@ -412,7 +386,7 @@ class Address {
 	 * @param Country|null $country Country.
 	 * @return void
 	 */
-	public function set_country( $country ) {
+	public function set_country( $country ): void {
 		$this->country = $country;
 	}
 
@@ -437,7 +411,7 @@ class Address {
 	 * @param null|string $country_code Country code.
 	 * @return void
 	 */
-	public function set_country_code( $country_code ) {
+	public function set_country_code( $country_code ): void {
 		if ( null === $this->country ) {
 			$this->country = new Country();
 		}
@@ -464,7 +438,7 @@ class Address {
 	 * @param string|null $country_name Country name.
 	 * @return void
 	 */
-	public function set_country_name( $country_name ) {
+	public function set_country_name( $country_name ): void {
 		if ( null === $this->country ) {
 			$this->country = new Country();
 		}
@@ -487,7 +461,7 @@ class Address {
 	 * @param string|null $phone Phone.
 	 * @return void
 	 */
-	public function set_phone( $phone ) {
+	public function set_phone( $phone ): void {
 		$this->phone = $phone;
 	}
 

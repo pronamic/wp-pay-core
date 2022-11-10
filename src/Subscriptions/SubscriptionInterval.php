@@ -23,10 +23,8 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 class SubscriptionInterval extends \DateInterval implements \JsonSerializable {
 	/**
 	 * Specification.
-	 *
-	 * @var string
 	 */
-	private $specification;
+	private string $specification;
 
 	/**
 	 * Construct interval.

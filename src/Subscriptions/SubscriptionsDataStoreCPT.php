@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
+use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeImmutable;
 use Pronamic\WordPress\DateTime\DateTimeZone;
@@ -38,17 +39,13 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 	/**
 	 * Subscriptions.
-	 *
-	 * @var array
 	 */
-	private $subscriptions;
+	private array $subscriptions;
 
 	/**
 	 * Status map.
-	 *
-	 * @var array
 	 */
-	private $status_map;
+	private array $status_map;
 
 	/**
 	 * Construct subscriptions data store CPT object.
@@ -78,7 +75,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 *
 	 * @return void
 	 */
-	public function setup() {
+	public function setup(): void {
 		add_filter( 'wp_insert_post_data', [ $this, 'insert_subscription_post_data' ], 10, 2 );
 
 		add_action( 'save_post_pronamic_pay_subscr', [ $this, 'save_post_meta' ], 100, 3 );
@@ -140,7 +137,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @param string $post_status Post status.
 	 * @return string|null
 	 */
-	private function get_meta_status_from_post_status( $post_status ) {
+	private function get_meta_status_from_post_status( $post_status ): ?string {
 		$key = array_search( $post_status, $this->status_map, true );
 
 		if ( false !== $key ) {
@@ -205,7 +202,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @return void
 	 * @throws \Exception Throws exception if amount could not be parsed to Money object.
 	 */
-	private function update_subscription_form_post_array( $subscription, $postarr ) {
+	private function update_subscription_form_post_array( $subscription, $postarr ): void {
 		if ( isset( $postarr['pronamic_subscription_post_status'] ) ) {
 			$post_status = sanitize_text_field( stripslashes( $postarr['pronamic_subscription_post_status'] ) );
 			$meta_status = $this->get_meta_status_from_post_status( $post_status );
@@ -264,7 +261,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @param bool     $update  Whether this is an existing post being updated or not.
 	 * @return void
 	 */
-	public function save_post_meta( $post_id, $post, $update ) {
+	public function save_post_meta( $post_id, $post, $update ): void {
 		if ( $this->subscription instanceof Subscription ) {
 			if ( ! $update && null === $this->subscription->get_id() ) {
 				$this->subscription->set_id( $post_id );
@@ -286,7 +283,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @return bool
 	 * @throws \Exception Throws exception when create fails.
 	 */
-	public function create( $subscription ) {
+	public function create( $subscription ): bool {
 		/**
 		 * Pre-create subscription.
 		 *
@@ -312,7 +309,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 					'Subscription %s',
 					$subscription->get_key()
 				),
-				'post_author'           => null === $customer_user_id ? 0 : $customer_user_id,
+				'post_author'           => $customer_user_id ?? 0,
 				'pronamic_subscription' => $subscription,
 			],
 			true
@@ -344,7 +341,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @return bool
 	 * @throws \Exception Throws exception when update fails.
 	 */
-	public function update( $subscription ) {
+	public function update( $subscription ): bool {
 		$id = $subscription->get_id();
 
 		if ( empty( $id ) ) {
@@ -393,7 +390,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @return void
 	 * @throws \Exception Throws exception on invalid post date.
 	 */
-	public function read( $subscription ) {
+	public function read( $subscription ): void {
 		$id = $subscription->get_id();
 
 		if ( empty( $id ) ) {
@@ -406,7 +403,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		$content = get_post_field( 'post_content', $id, 'raw' );
 
-		$json = json_decode( $content );
+		$json = json_decode( $content, null, 512, JSON_THROW_ON_ERROR );
 
 		if ( is_object( $json ) ) {
 			Subscription::from_json( $json, $subscription );
@@ -489,7 +486,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 *
 	 * @return void
 	 */
-	private function register_meta() {
+	private function register_meta(): void {
 		$this->register_meta_key(
 			'config_id',
 			[
@@ -658,7 +655,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * Get first payment for subscription.
 	 *
 	 * @param Subscription $subscription Subscription.
-	 * @return \Pronamic\WordPress\Pay\Payments\Payment|null
+	 * @return Payment|null
 	 */
 	private function get_first_payment( $subscription ) {
 		$id = $subscription->get_id();
@@ -693,7 +690,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @param Subscription $subscription The subscription to update the post meta for.
 	 * @return void
 	 */
-	private function update_post_meta( $subscription ) {
+	private function update_post_meta( $subscription ): void {
 		$id = $subscription->get_id();
 
 		if ( empty( $id ) ) {
@@ -730,7 +727,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @param Subscription $subscription The subscription to update the status for.
 	 * @return void
 	 */
-	public function update_meta_status( $subscription ) {
+	public function update_meta_status( $subscription ): void {
 		$id = $subscription->get_id();
 
 		if ( empty( $id ) ) {

@@ -26,73 +26,53 @@ use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Subscription.
-	 *
-	 * @var Subscription
 	 */
-	private $subscription;
+	private Subscription $subscription;
 
 	/**
 	 * The sequence number.
-	 *
-	 * @var int|null
 	 */
-	private $sequence_number;
+	private ?int $sequence_number = null;
 
 	/**
 	 * Canceled at.
-	 *
-	 * @var DateTimeImmutable|null
 	 */
-	private $canceled_at;
+	private ?DateTimeImmutable $canceled_at = null;
 
 	/**
 	 * Amount.
-	 *
-	 * @var Money
 	 */
-	private $amount;
+	private Money $amount;
 
 	/**
 	 * Interval.
-	 *
-	 * @var SubscriptionInterval
 	 */
-	private $interval;
+	private SubscriptionInterval $interval;
 
 	/**
 	 * The date this phase will start.
-	 *
-	 * @var DateTimeImmutable
 	 */
-	private $start_date;
+	private DateTimeImmutable $start_date;
 
 	/**
 	 * The date this phase will end.
-	 *
-	 * @var DateTimeImmutable|null
 	 */
-	private $end_date;
+	private ?DateTimeImmutable $end_date = null;
 
 	/**
 	 * Alignment rate.
-	 *
-	 * @var float|null
 	 */
-	private $alignment_rate;
+	private ?float $alignment_rate = null;
 
 	/**
 	 * Proration.
-	 *
-	 * @var bool
 	 */
-	private $is_prorated;
+	private bool $is_prorated;
 
 	/**
 	 * Boolean flag to indicate a trial subscription phase.
-	 *
-	 * @var bool
 	 */
-	private $is_trial;
+	private bool $is_trial;
 
 	/**
 	 * Construct subscription phase.
@@ -139,7 +119,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @param int $sequence_number Sequence number.
 	 * @return void
 	 */
-	public function set_sequence_number( $sequence_number ) {
+	public function set_sequence_number( $sequence_number ): void {
 		$this->sequence_number = $sequence_number;
 	}
 
@@ -158,7 +138,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @param \DateTimeInterface $start_date Start date.
 	 * @return void
 	 */
-	public function set_start_date( $start_date ) {
+	public function set_start_date( $start_date ): void {
 		$this->start_date = DateTimeImmutable::create_from_interface( $start_date );
 	}
 
@@ -177,7 +157,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @param \DateTimeInterface|null $end_date End date.
 	 * @return void
 	 */
-	public function set_end_date( $end_date ) {
+	public function set_end_date( $end_date ): void {
 		$this->end_date = ( null === $end_date ) ? null : DateTimeImmutable::create_from_interface( $end_date );
 	}
 
@@ -213,7 +193,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @param \DateTimeInterface|null $next_date Next date.
 	 * @return void
 	 */
-	public function set_next_date( $next_date ) {
+	public function set_next_date( $next_date ): void {
 		$this->subscription->set_next_payment_date( $next_date );
 	}
 
@@ -243,7 +223,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @param DateTimeImmutable|null $canceled_at Canceled date.
 	 * @return void
 	 */
-	public function set_canceled_at( DateTimeImmutable $canceled_at = null ) {
+	public function set_canceled_at( DateTimeImmutable $canceled_at = null ): void {
 		$this->canceled_at = $canceled_at;
 	}
 
@@ -262,7 +242,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @param Money $amount Amount.
 	 * @return void
 	 */
-	public function set_amount( $amount ) {
+	public function set_amount( $amount ): void {
 		$this->amount = $amount;
 	}
 
@@ -271,7 +251,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 *
 	 * @return int|null
 	 */
-	public function get_total_periods() {
+	public function get_total_periods(): ?int {
 		if ( null === $this->end_date ) {
 			return null;
 		}
@@ -287,7 +267,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @param int|null $total_periods Total periods to create.
 	 * @return void
 	 */
-	public function set_total_periods( $total_periods ) {
+	public function set_total_periods( $total_periods ): void {
 		$this->set_end_date( null === $total_periods ? null : $this->add_interval( $this->start_date, $total_periods ) );
 	}
 
@@ -318,7 +298,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @param int $periods_created The number of periods created.
 	 * @return void
 	 */
-	public function set_periods_created( $periods_created ) {
+	public function set_periods_created( $periods_created ): void {
 		$this->set_next_date( $this->add_interval( $this->start_date, $periods_created ) );
 	}
 
@@ -364,7 +344,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @param float|null $alignment_rate Alignment rate.
 	 * @return void
 	 */
-	public function set_alignment_rate( $alignment_rate ) {
+	public function set_alignment_rate( $alignment_rate ): void {
 		$this->alignment_rate = $alignment_rate;
 	}
 
@@ -383,7 +363,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @param bool $is_prorated Proration.
 	 * @return void
 	 */
-	public function set_prorated( $is_prorated ) {
+	public function set_prorated( $is_prorated ): void {
 		$this->is_prorated = $is_prorated;
 	}
 
@@ -402,7 +382,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @param bool $is_trial Trial.
 	 * @return void
 	 */
-	public function set_trial( $is_trial ) {
+	public function set_trial( $is_trial ): void {
 		$this->is_trial = $is_trial;
 	}
 

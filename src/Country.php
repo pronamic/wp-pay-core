@@ -23,17 +23,13 @@ use stdClass;
 class Country {
 	/**
 	 * Code.
-	 *
-	 * @var string|null
 	 */
-	private $code;
+	private ?string $code = null;
 
 	/**
 	 * Name.
-	 *
-	 * @var string|null
 	 */
-	private $name;
+	private ?string $name = null;
 
 	/**
 	 * Get code.
@@ -80,7 +76,7 @@ class Country {
 	 * @param string|null $name Name.
 	 * @return void
 	 */
-	public function set_name( $name ) {
+	public function set_name( $name ): void {
 		$this->name = $name;
 	}
 
@@ -134,7 +130,7 @@ class Country {
 	 *
 	 * @return string
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		$values = [
 			$this->code,
 			$this->name,
@@ -150,7 +146,7 @@ class Country {
 	 *
 	 * @return void
 	 */
-	public function anonymize() {
+	public function anonymize(): void {
 		$this->set_code( PrivacyManager::anonymize_data( 'text', $this->get_code() ) );
 		$this->set_name( PrivacyManager::anonymize_data( 'text', $this->get_name() ) );
 	}

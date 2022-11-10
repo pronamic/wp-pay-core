@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Plugin;
 use WP_Query;
 
@@ -34,7 +35,7 @@ class AdminPaymentBulkActions {
 	 *
 	 * @return void
 	 */
-	public function load() {
+	public function load(): void {
 		// Current user.
 		if ( ! current_user_can( 'edit_payments' ) ) {
 			return;
@@ -105,7 +106,7 @@ class AdminPaymentBulkActions {
 			}
 
 			// Only check status for pending payments.
-			if ( \Pronamic\WordPress\Pay\Payments\PaymentStatus::OPEN !== $payment->status && '' !== $payment->status ) {
+			if ( PaymentStatus::OPEN !== $payment->status && '' !== $payment->status ) {
 				$skipped_check++;
 
 				continue;
@@ -152,7 +153,7 @@ class AdminPaymentBulkActions {
 	 *
 	 * @return void
 	 */
-	public function admin_notices() {
+	public function admin_notices(): void {
 		if ( filter_has_var( INPUT_GET, 'status_updated' ) ) {
 			$updated = filter_input( INPUT_GET, 'status_updated', FILTER_VALIDATE_INT );
 

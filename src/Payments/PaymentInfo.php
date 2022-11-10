@@ -10,6 +10,10 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
+use Pronamic\WordPress\Pay\Core\TimestampsTrait;
+use Pronamic\WordPress\Pay\Core\VersionTrait;
+use Pronamic\WordPress\Pay\Core\ModeTrait;
+use Pronamic\WordPress\Pay\Privacy\AnonymizedTrait;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
@@ -30,17 +34,17 @@ use WP_Post;
  * @since   1.0.0
  */
 abstract class PaymentInfo {
-	use \Pronamic\WordPress\Pay\Core\TimestampsTrait;
+	use TimestampsTrait;
 
-	use \Pronamic\WordPress\Pay\Core\VersionTrait;
+	use VersionTrait;
 
-	use \Pronamic\WordPress\Pay\Core\ModeTrait;
+	use ModeTrait;
 
-	use \Pronamic\WordPress\Pay\Privacy\AnonymizedTrait;
+	use AnonymizedTrait;
 
-	use \Pronamic\WordPress\Pay\Payments\PaymentInfoTrait;
+	use PaymentInfoTrait;
 
-	use \Pronamic\WordPress\Pay\Payments\SourceTrait;
+	use SourceTrait;
 
 	/**
 	 * The post object.
@@ -86,10 +90,8 @@ abstract class PaymentInfo {
 
 	/**
 	 * Origin post ID.
-	 *
-	 * @var int|null
 	 */
-	private $origin_id;
+	private ?int $origin_id = null;
 
 	/**
 	 * The order ID of this payment.
@@ -108,38 +110,28 @@ abstract class PaymentInfo {
 
 	/**
 	 * The shipping amount of this payment.
-	 *
-	 * @var Money|null
 	 */
-	private $shipping_amount;
+	private ?Money $shipping_amount = null;
 
 	/**
 	 * The description of this payment.
-	 *
-	 * @var string|null
 	 */
-	private $description;
+	private ?string $description = null;
 
 	/**
 	 * Bank transfer recipient details.
-	 *
-	 * @var BankTransferDetails|null
 	 */
-	private $bank_transfer_recipient_details;
+	private ?BankTransferDetails $bank_transfer_recipient_details = null;
 
 	/**
 	 * Consumer bank details.
-	 *
-	 * @var BankAccountDetails|null
 	 */
-	private $consumer_bank_details;
+	private ?BankAccountDetails $consumer_bank_details = null;
 
 	/**
 	 * Payment method.
-	 *
-	 * @var string|null
 	 */
-	private $payment_method;
+	private ?string $payment_method = null;
 
 	/**
 	 * Customer.
@@ -173,9 +165,8 @@ abstract class PaymentInfo {
 	 * Credit card
 	 *
 	 * @deprecated
-	 * @var CreditCard|null
 	 */
-	private $credit_card;
+	private ?CreditCard $credit_card = null;
 
 	/**
 	 * Meta.
@@ -219,7 +210,7 @@ abstract class PaymentInfo {
 	 * @param int $id Unique ID.
 	 * @return void
 	 */
-	public function set_id( $id ) {
+	public function set_id( $id ): void {
 		$this->id = $id;
 	}
 
@@ -238,7 +229,7 @@ abstract class PaymentInfo {
 	 * @param DateTime $date Date.
 	 * @return void
 	 */
-	public function set_date( $date ) {
+	public function set_date( $date ): void {
 		$this->date = $date;
 	}
 
@@ -257,7 +248,7 @@ abstract class PaymentInfo {
 	 * @param int|null $origin_id Origin post ID.
 	 * @return void
 	 */
-	public function set_origin_id( $origin_id ) {
+	public function set_origin_id( $origin_id ): void {
 		$this->origin_id = $origin_id;
 	}
 
@@ -276,7 +267,7 @@ abstract class PaymentInfo {
 	 * @param int|null $config_id Config ID.
 	 * @return void
 	 */
-	public function set_config_id( $config_id ) {
+	public function set_config_id( $config_id ): void {
 		$this->config_id = $config_id;
 	}
 
@@ -310,7 +301,7 @@ abstract class PaymentInfo {
 	 * @param Customer|null $customer Contact.
 	 * @return void
 	 */
-	public function set_customer( $customer ) {
+	public function set_customer( $customer ): void {
 		$this->customer = $customer;
 	}
 
@@ -329,7 +320,7 @@ abstract class PaymentInfo {
 	 * @param Address|null $billing_address Billing address.
 	 * @return void
 	 */
-	public function set_billing_address( $billing_address ) {
+	public function set_billing_address( $billing_address ): void {
 		$this->billing_address = $billing_address;
 	}
 
@@ -348,7 +339,7 @@ abstract class PaymentInfo {
 	 * @param Address|null $shipping_address Shipping address.
 	 * @return void
 	 */
-	public function set_shipping_address( $shipping_address ) {
+	public function set_shipping_address( $shipping_address ): void {
 		$this->shipping_address = $shipping_address;
 	}
 
@@ -367,7 +358,7 @@ abstract class PaymentInfo {
 	 * @param PaymentLines|null $lines Payment lines.
 	 * @return void
 	 */
-	public function set_lines( PaymentLines $lines = null ) {
+	public function set_lines( PaymentLines $lines = null ): void {
 		$this->lines = $lines;
 	}
 
@@ -395,7 +386,7 @@ abstract class PaymentInfo {
 	 * @param Money|null $shipping_amount Money object.
 	 * @return void
 	 */
-	public function set_shipping_amount( Money $shipping_amount = null ) {
+	public function set_shipping_amount( Money $shipping_amount = null ): void {
 		$this->shipping_amount = $shipping_amount;
 	}
 
@@ -414,7 +405,7 @@ abstract class PaymentInfo {
 	 * @param string|null $description Description.
 	 * @return void
 	 */
-	public function set_description( $description ) {
+	public function set_description( $description ): void {
 		$this->description = $description;
 	}
 
@@ -433,7 +424,7 @@ abstract class PaymentInfo {
 	 * @param string|null $payment_method Payment method.
 	 * @return void
 	 */
-	public function set_payment_method( $payment_method ) {
+	public function set_payment_method( $payment_method ): void {
 		$this->payment_method = $payment_method;
 	}
 
@@ -464,7 +455,7 @@ abstract class PaymentInfo {
 	 * @param  mixed  $value A meta value.
 	 * @return void
 	 */
-	public function set_meta( $key, $value ) {
+	public function set_meta( $key, $value ): void {
 		$this->meta[ $key ] = $value;
 	}
 
@@ -474,7 +465,7 @@ abstract class PaymentInfo {
 	 * @param string $key Meta key.
 	 * @return void
 	 */
-	public function delete_meta( $key ) {
+	public function delete_meta( $key ): void {
 		unset( $this->meta[ $key ] );
 	}
 
@@ -493,7 +484,7 @@ abstract class PaymentInfo {
 	 * @param BankAccountDetails|null $bank_details Consumer bank details.
 	 * @return void
 	 */
-	public function set_consumer_bank_details( $bank_details ) {
+	public function set_consumer_bank_details( $bank_details ): void {
 		$this->consumer_bank_details = $bank_details;
 	}
 
@@ -512,7 +503,7 @@ abstract class PaymentInfo {
 	 * @param BankTransferDetails|null $bank_transfer Bank transfer details.
 	 * @return void
 	 */
-	public function set_bank_transfer_recipient_details( $bank_transfer ) {
+	public function set_bank_transfer_recipient_details( $bank_transfer ): void {
 		$this->bank_transfer_recipient_details = $bank_transfer;
 	}
 
@@ -522,7 +513,7 @@ abstract class PaymentInfo {
 	 * @param CreditCard|null $credit_card Credit Card.
 	 * @return void
 	 */
-	public function set_credit_card( $credit_card ) {
+	public function set_credit_card( $credit_card ): void {
 		$this->credit_card = $credit_card;
 	}
 

@@ -20,17 +20,13 @@ use Exception;
 class PrivacyManager {
 	/**
 	 * Exporters.
-	 *
-	 * @var array
 	 */
-	private $exporters = [];
+	private array $exporters = [];
 
 	/**
 	 * Erasers.
-	 *
-	 * @var array
 	 */
-	private $erasers = [];
+	private array $erasers = [];
 
 	/**
 	 * Privacy manager constructor.
@@ -96,7 +92,7 @@ class PrivacyManager {
 	 * @param array  $callback Exporter callback.
 	 * @return void
 	 */
-	public function add_exporter( $id, $name, $callback ) {
+	public function add_exporter( $id, $name, $callback ): void {
 		$id = 'pronamic-pay-' . $id;
 
 		$this->exporters[ $id ] = [
@@ -113,7 +109,7 @@ class PrivacyManager {
 	 * @param array  $callback Eraser callback.
 	 * @return void
 	 */
-	public function add_eraser( $id, $name, $callback ) {
+	public function add_eraser( $id, $name, $callback ): void {
 		$id = 'pronamic-pay-' . $id;
 
 		$this->erasers[ $id ] = [
@@ -142,7 +138,7 @@ class PrivacyManager {
 		// Meta value.
 		$meta_value = $meta_values[ $meta_key ];
 
-		if ( 1 === count( $meta_value ) ) {
+		if ( 1 === ( is_countable( $meta_value ) ? count( $meta_value ) : 0 ) ) {
 			$meta_value = array_shift( $meta_value );
 		} else {
 			$meta_value = wp_json_encode( $meta_value );
@@ -163,7 +159,7 @@ class PrivacyManager {
 	 * @param string $action   Action 'erase' or 'anonymize'.
 	 * @return void
 	 */
-	public function erase_meta( $post_id, $meta_key, $action = 'erase' ) {
+	public function erase_meta( $post_id, $meta_key, $action = 'erase' ): void {
 		switch ( $action ) {
 			case 'erase':
 				delete_post_meta( $post_id, $meta_key );

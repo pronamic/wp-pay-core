@@ -23,7 +23,7 @@ class SubscriptionsNotificationsController {
 	 *
 	 * @return void
 	 */
-	public function setup() {
+	public function setup(): void {
 		\add_action( 'init', [ $this, 'maybe_schedule_actions' ] );
 
 		\add_action( 'pronamic_pay_schedule_subscriptions_notification', [ $this, 'schedule_all' ] );
@@ -39,7 +39,7 @@ class SubscriptionsNotificationsController {
 	 * @link https://actionscheduler.org/
 	 * @return void
 	 */
-	public function maybe_schedule_actions() {
+	public function maybe_schedule_actions(): void {
 		if ( false === \as_next_scheduled_action( 'pronamic_pay_schedule_subscriptions_notification', [], 'pronamic-pay' ) ) {
 			\as_schedule_cron_action( \time(), '0 0 * * *', 'pronamic_pay_schedule_subscriptions_notification', [], 'pronamic-pay' );
 		}
@@ -50,7 +50,7 @@ class SubscriptionsNotificationsController {
 	 *
 	 * @return void
 	 */
-	public function schedule_all() {
+	public function schedule_all(): void {
 		if ( $this->is_processing_disabled() ) {
 			return;
 		}
@@ -90,7 +90,7 @@ class SubscriptionsNotificationsController {
 	 * @param int $page Page.
 	 * @return void
 	 */
-	public function schedule_paged( $page ) {
+	public function schedule_paged( $page ): void {
 		$query = $this->get_subscriptions_wp_query_that_require_notification(
 			[
 				'paged' => $page,
@@ -125,7 +125,7 @@ class SubscriptionsNotificationsController {
 	 * @param Subscription $subscription Subscription.
 	 * @return bool True if meets requirements, false otherwise.
 	 */
-	private function meets_notification_requirements( Subscription $subscription ) {
+	private function meets_notification_requirements( Subscription $subscription ): bool {
 		/**
 		 * If a subscription does not have a next payment date, it makes no sense to
 		 * send a notification.
@@ -237,7 +237,7 @@ class SubscriptionsNotificationsController {
 	 * @return void
 	 * @throws \Exception Throws exception when gateway not found.
 	 */
-	public function send_subscription_renewal_notification( Subscription $subscription ) {
+	public function send_subscription_renewal_notification( Subscription $subscription ): void {
 		if ( ! $this->meets_notification_requirements( $subscription ) ) {
 			return;
 		}

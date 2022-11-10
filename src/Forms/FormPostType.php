@@ -28,35 +28,35 @@ class FormPostType {
 	 *
 	 * @var string
 	 */
-	const POST_TYPE = 'pronamic_pay_form';
+	public const POST_TYPE = 'pronamic_pay_form';
 
 	/**
 	 * Amount method input fixed.
 	 *
 	 * @var string
 	 */
-	const AMOUNT_METHOD_INPUT_FIXED = 'fixed';
+	public const AMOUNT_METHOD_INPUT_FIXED = 'fixed';
 
 	/**
 	 * Amount method input only.
 	 *
 	 * @var string
 	 */
-	const AMOUNT_METHOD_INPUT_ONLY = 'input_only';
+	public const AMOUNT_METHOD_INPUT_ONLY = 'input_only';
 
 	/**
 	 * Amount method choices only.
 	 *
 	 * @var string
 	 */
-	const AMOUNT_METHOD_CHOICES_ONLY = 'choices_only';
+	public const AMOUNT_METHOD_CHOICES_ONLY = 'choices_only';
 
 	/**
 	 * Amount method choices and input.
 	 *
 	 * @var string
 	 */
-	const AMOUNT_METHOD_CHOICES_AND_INPUT = 'choices_and_input';
+	public const AMOUNT_METHOD_CHOICES_AND_INPUT = 'choices_and_input';
 
 	/**
 	 * Construct form post type object.
@@ -92,7 +92,7 @@ class FormPostType {
 	 *
 	 * @return void
 	 */
-	public function register_post_type() {
+	public function register_post_type(): void {
 		register_post_type(
 			self::POST_TYPE,
 			[
@@ -171,7 +171,7 @@ class FormPostType {
 	 * @param int    $post_id Post ID.
 	 * @return void
 	 */
-	public function custom_columns( $column, $post_id ) {
+	public function custom_columns( $column, $post_id ): void {
 		global $post;
 		global $wpdb;
 
@@ -282,7 +282,7 @@ class FormPostType {
 	 * @param string $post_type Post Type.
 	 * @return void
 	 */
-	public function add_meta_boxes( $post_type ) {
+	public function add_meta_boxes( $post_type ): void {
 		if ( self::POST_TYPE === $post_type ) {
 			add_meta_box(
 				'pronamic_payment_form_options',
@@ -301,7 +301,7 @@ class FormPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 * @return void
 	 */
-	public function meta_box_form_options( $post ) {
+	public function meta_box_form_options( $post ): void {
 		include __DIR__ . '/../../views/meta-box-form-options.php';
 	}
 
@@ -312,7 +312,7 @@ class FormPostType {
 	 * @param int $post_id The ID of the post being saved.
 	 * @return void
 	 */
-	public function save_post( $post_id ) {
+	public function save_post( $post_id ): void {
 		// Check if our nonce is set.
 		if ( ! filter_has_var( INPUT_POST, 'pronamic_pay_nonce' ) ) {
 			return;
@@ -381,7 +381,7 @@ class FormPostType {
 	 * @return string
 	 */
 	private function get_shortcode( $post_id = null ) {
-		$post_id = ( null === $post_id ) ? get_the_ID() : $post_id;
+		$post_id ??= get_the_ID();
 
 		$shortcode = sprintf( '[pronamic_payment_form id="%s"]', esc_attr( strval( $post_id ) ) );
 
@@ -394,7 +394,7 @@ class FormPostType {
 	 * @link https://github.com/WordPress/WordPress/blob/5.3/wp-admin/includes/meta-boxes.php#L283-L293
 	 * @return void
 	 */
-	public function post_submitbox_misc_actions() {
+	public function post_submitbox_misc_actions(): void {
 		if ( self::POST_TYPE !== get_post_type() ) {
 			return;
 		}

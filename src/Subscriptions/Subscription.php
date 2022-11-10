@@ -42,24 +42,20 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * Activated at.
 	 *
 	 * The datetime this subscription was activated or reactivated.
-	 *
-	 * @var DateTime
 	 */
-	private $activated_at;
+	private DateTime $activated_at;
 
 	/**
 	 * Phases.
 	 *
 	 * @var SubscriptionPhase[]
 	 */
-	private $phases = [];
+	private array $phases = [];
 
 	/**
 	 * Next payment date.
-	 *
-	 * @var DateTimeImmutable|null
 	 */
-	private $next_payment_date;
+	private ?DateTimeImmutable $next_payment_date = null;
 
 	/**
 	 * Construct and initialize subscription object.
@@ -107,7 +103,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * @param string|null $status A status string.
 	 * @return void
 	 */
-	public function set_status( $status ) {
+	public function set_status( $status ): void {
 		if ( SubscriptionStatus::ACTIVE === $status && $this->status !== $status ) {
 			$this->set_activated_at( new DateTime() );
 		}
@@ -395,7 +391,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * @param Payment $payment Payment.
 	 * @return bool True if payment is the first, false otherwise.
 	 */
-	public function is_first_payment( Payment $payment ) {
+	public function is_first_payment( Payment $payment ): bool {
 		$phases = $this->get_phases();
 
 		$phase = \reset( $phases );
@@ -443,7 +439,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * @param \DateTimeInterface|null $date Date.
 	 * @return void
 	 */
-	public function set_next_payment_date( $date ) {
+	public function set_next_payment_date( $date ): void {
 		$end_date = $this->get_end_date();
 
 		if ( null !== $end_date && $date >= $end_date ) {
@@ -579,7 +575,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 *
 	 * @return void
 	 */
-	public function save() {
+	public function save(): void {
 		pronamic_pay_plugin()->subscriptions_data_store->save( $this );
 	}
 
@@ -681,7 +677,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * @param DateTime $activated_at Activated at.
 	 * @return void
 	 */
-	public function set_activated_at( DateTime $activated_at ) {
+	public function set_activated_at( DateTime $activated_at ): void {
 		$this->activated_at = $activated_at;
 	}
 
@@ -700,7 +696,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * @param array<int, SubscriptionPhase> $phases Phases.
 	 * @return void
 	 */
-	public function set_phases( $phases ) {
+	public function set_phases( $phases ): void {
 		$this->phases = $phases;
 	}
 
@@ -710,7 +706,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * @param SubscriptionPhase $phase Phase.
 	 * @return void
 	 */
-	public function add_phase( SubscriptionPhase $phase ) {
+	public function add_phase( SubscriptionPhase $phase ): void {
 		$this->phases[] = $phase;
 
 		if ( null === $this->next_payment_date ) {
@@ -743,7 +739,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 *
 	 * @return bool True if all created, false otherwise.
 	 */
-	public function all_periods_created() {
+	public function all_periods_created(): bool {
 		foreach ( $this->phases as $phase ) {
 			if ( ! $phase->all_periods_created() ) {
 				return false;
@@ -758,7 +754,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 *
 	 * @return bool True if infinite, false otherwise.
 	 */
-	public function is_infinite() {
+	public function is_infinite(): bool {
 		foreach ( $this->phases as $phase ) {
 			if ( $phase->is_infinite() ) {
 				return true;

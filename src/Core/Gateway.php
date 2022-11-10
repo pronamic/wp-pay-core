@@ -34,35 +34,33 @@ abstract class Gateway {
 	 *
 	 * @var int
 	 */
-	const METHOD_HTML_FORM = 1;
+	public const METHOD_HTML_FORM = 1;
 
 	/**
 	 * Method indicator for an gateway which works through an HTTP redirect
 	 *
 	 * @var int
 	 */
-	const METHOD_HTTP_REDIRECT = 2;
+	public const METHOD_HTTP_REDIRECT = 2;
 
 	/**
 	 * Indicator for test mode
 	 *
 	 * @var string
 	 */
-	const MODE_TEST = 'test';
+	public const MODE_TEST = 'test';
 
 	/**
 	 * Indicator for live mode
 	 *
 	 * @var string
 	 */
-	const MODE_LIVE = 'live';
+	public const MODE_LIVE = 'live';
 
 	/**
 	 * The method of this gateway
-	 *
-	 * @var int
 	 */
-	private $method;
+	private ?int $method = null;
 
 	use ModeTrait;
 
@@ -149,7 +147,7 @@ abstract class Gateway {
 	 * @param int $method HTML form or HTTP redirect method.
 	 * @return void
 	 */
-	public function set_method( $method ) {
+	public function set_method( $method ): void {
 		$this->method = $method;
 	}
 
@@ -179,7 +177,7 @@ abstract class Gateway {
 	 *
 	 * @return void
 	 */
-	public function payment_redirect( Payment $payment ) {
+	public function payment_redirect( Payment $payment ): void {
 
 	}
 
@@ -234,7 +232,7 @@ abstract class Gateway {
 	 * @param Payment $payment The payment to start up at this gateway.
 	 * @return void
 	 */
-	public function start( Payment $payment ) {
+	public function start( Payment $payment ): void {
 
 	}
 
@@ -245,7 +243,7 @@ abstract class Gateway {
 	 * @return void
 	 * @throws \Exception Throws exception when action URL for HTTP redirect is empty.
 	 */
-	public function redirect( Payment $payment ) {
+	public function redirect( Payment $payment ): void {
 		// Switch to user locale.
 		Util::switch_to_user_locale();
 
@@ -294,7 +292,7 @@ abstract class Gateway {
 	 * @param Payment $payment The payment to redirect for.
 	 * @return void
 	 */
-	public function redirect_via_html( Payment $payment ) {
+	public function redirect_via_html( Payment $payment ): void {
 		if ( headers_sent() ) {
 			/* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */
 			echo $this->get_form_html( $payment, true );
@@ -373,7 +371,7 @@ abstract class Gateway {
 	 * @param Payment $payment Payment.
 	 * @return void
 	 */
-	public function update_status( Payment $payment ) {
+	public function update_status( Payment $payment ): void {
 
 	}
 }

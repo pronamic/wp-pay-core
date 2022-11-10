@@ -42,10 +42,8 @@ use Pronamic\WordPress\Pay\Webhooks\WebhookManager;
 class AdminModule {
 	/**
 	 * Plugin.
-	 *
-	 * @var Plugin
 	 */
-	private $plugin;
+	private Plugin $plugin;
 
 	/**
 	 * Admin settings page.
@@ -147,7 +145,7 @@ class AdminModule {
 	 *
 	 * @return void
 	 */
-	public function admin_init() {
+	public function admin_init(): void {
 		global $pronamic_ideal_errors;
 
 		$pronamic_ideal_errors = [];
@@ -175,7 +173,7 @@ class AdminModule {
 	 *
 	 * @return void
 	 */
-	public function maybe_redirect() {
+	public function maybe_redirect(): void {
 		$redirect = get_transient( 'pronamic_pay_admin_redirect' );
 
 		// Check.
@@ -226,7 +224,7 @@ class AdminModule {
 	 * @param array $args Arguments.
 	 * @return void
 	 */
-	public static function input_checkbox( $args ) {
+	public static function input_checkbox( $args ): void {
 		$defaults = [
 			'label_for' => '',
 			'type'      => 'text',
@@ -272,7 +270,7 @@ class AdminModule {
 	 * @param mixed $value Value.
 	 * @return boolean
 	 */
-	public static function sanitize_boolean( $value ) {
+	public static function sanitize_boolean( $value ): bool {
 		return filter_var( $value, FILTER_VALIDATE_BOOLEAN );
 	}
 
@@ -395,7 +393,7 @@ class AdminModule {
 	 *
 	 * @return void
 	 */
-	public function maybe_create_pages() {
+	public function maybe_create_pages(): void {
 		if ( ! filter_has_var( INPUT_POST, 'pronamic_pay_create_pages' ) ) {
 			return;
 		}
@@ -522,7 +520,7 @@ class AdminModule {
 	 * @param string $hook Hook.
 	 * @return bool True if scripts should be enqueued, false otherwise.
 	 */
-	private function should_enqueue_scripts( $hook ) {
+	private function should_enqueue_scripts( $hook ): bool {
 		// Check if the hook contains the value 'pronamic_pay'.
 		if ( false !== strpos( $hook, 'pronamic_pay' ) ) {
 			return true;
@@ -575,7 +573,7 @@ class AdminModule {
 	 * @param string $hook Hook.
 	 * @return void
 	 */
-	public function enqueue_scripts( $hook ) {
+	public function enqueue_scripts( $hook ): void {
 		if ( ! $this->should_enqueue_scripts( $hook ) ) {
 			return;
 		}
@@ -624,7 +622,7 @@ class AdminModule {
 	 *
 	 * @return void
 	 */
-	public function maybe_test_payment() {
+	public function maybe_test_payment(): void {
 		if ( ! \filter_has_var( \INPUT_POST, 'test_pay_gateway' ) ) {
 			return;
 		}
@@ -922,7 +920,7 @@ class AdminModule {
 	 *
 	 * @return void
 	 */
-	public function admin_menu() {
+	public function admin_menu(): void {
 		/**
 		 * Badges.
 		 *
@@ -1006,7 +1004,7 @@ class AdminModule {
 				'menu_title' => __( 'Reports', 'pronamic_ideal' ),
 				'capability' => 'edit_payments',
 				'menu_slug'  => 'pronamic_pay_reports',
-				'function'   => function() {
+				'function'   => function(): void {
 					$this->reports->page_reports();
 				},
 			],
@@ -1027,7 +1025,7 @@ class AdminModule {
 				'menu_title' => __( 'Settings', 'pronamic_ideal' ),
 				'capability' => 'manage_options',
 				'menu_slug'  => 'pronamic_pay_settings',
-				'function'   => function() {
+				'function'   => function(): void {
 					$this->render_page( 'settings' );
 				},
 			],
@@ -1039,7 +1037,7 @@ class AdminModule {
 				'menu_title' => __( 'Tools', 'pronamic_ideal' ),
 				'capability' => 'manage_options',
 				'menu_slug'  => 'pronamic_pay_tools',
-				'function'   => function() {
+				'function'   => function(): void {
 					$this->render_page( 'tools' );
 				},
 			];
@@ -1076,7 +1074,7 @@ class AdminModule {
 			__( 'Pay', 'pronamic_ideal' ) . $pay_badge,
 			$minimum_capability,
 			'pronamic_ideal',
-			function() {
+			function(): void {
 				$this->render_page( 'dashboard' );
 			},
 			$menu_icon_url
@@ -1144,7 +1142,7 @@ class AdminModule {
 	 * @param string $name Page identifier.
 	 * @return void
 	 */
-	public function render_page( $name ) {
+	public function render_page( $name ): void {
 		include __DIR__ . '/../../views/page-' . $name . '.php';
 	}
 

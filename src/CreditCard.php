@@ -20,38 +20,28 @@ namespace Pronamic\WordPress\Pay;
 class CreditCard {
 	/**
 	 * Credit card number.
-	 *
-	 * @var string
 	 */
-	private $number;
+	private ?string $number = null;
 
 	/**
 	 * Credit card expiration month.
-	 *
-	 * @var int
 	 */
-	private $expiration_month;
+	private ?int $expiration_month = null;
 
 	/**
 	 * Credit card expiration year.
-	 *
-	 * @var int
 	 */
-	private $expiration_year;
+	private ?int $expiration_year = null;
 
 	/**
 	 * Credit card security code.
-	 *
-	 * @var string
 	 */
-	private $security_code;
+	private ?string $security_code = null;
 
 	/**
 	 * Credit card holder name.
-	 *
-	 * @var string
 	 */
-	private $name;
+	private ?string $name = null;
 
 	/**
 	 * Constructs and initializes an credit card object.
@@ -75,7 +65,7 @@ class CreditCard {
 	 * @param string $number Number.
 	 * @return void
 	 */
-	public function set_number( $number ) {
+	public function set_number( $number ): void {
 		$this->number = $number;
 	}
 
@@ -94,7 +84,7 @@ class CreditCard {
 	 * @param int $month Month.
 	 * @return void
 	 */
-	public function set_expiration_month( $month ) {
+	public function set_expiration_month( $month ): void {
 		$this->expiration_month = $month;
 	}
 
@@ -113,7 +103,7 @@ class CreditCard {
 	 * @param int $year Year.
 	 * @return void
 	 */
-	public function set_expiration_year( $year ) {
+	public function set_expiration_year( $year ): void {
 		$this->expiration_year = $year;
 	}
 
@@ -152,7 +142,7 @@ class CreditCard {
 	 * @param string $security_code Security code.
 	 * @return void
 	 */
-	public function set_security_code( $security_code ) {
+	public function set_security_code( $security_code ): void {
 		$this->security_code = $security_code;
 	}
 
@@ -171,7 +161,7 @@ class CreditCard {
 	 * @param string $name Name.
 	 * @return void
 	 */
-	public function set_name( $name ) {
+	public function set_name( $name ): void {
 		$this->name = $name;
 	}
 }

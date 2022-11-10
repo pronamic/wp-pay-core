@@ -20,51 +20,37 @@ namespace Pronamic\WordPress\Pay\Banks;
 class BankAccountDetails {
 	/**
 	 * Bank name.
-	 *
-	 * @var string|null
 	 */
-	private $bank_name;
+	private ?string $bank_name = null;
 
 	/**
 	 * Name.
-	 *
-	 * @var string|null
 	 */
-	private $name;
+	private ?string $name = null;
 
 	/**
 	 * IBAN.
-	 *
-	 * @var string|null
 	 */
-	private $iban;
+	private ?string $iban = null;
 	/**
 	 * BIC.
-	 *
-	 * @var string|null
 	 */
-	private $bic;
+	private ?string $bic = null;
 
 	/**
 	 * Account number.
-	 *
-	 * @var string|null
 	 */
-	private $account_number;
+	private ?string $account_number = null;
 
 	/**
 	 * Account holder city.
-	 *
-	 * @var string|null
 	 */
-	private $city;
+	private ?string $city = null;
 
 	/**
 	 * Account holder country.
-	 *
-	 * @var string|null
 	 */
-	private $country;
+	private ?string $country = null;
 
 	/**
 	 * Get bank name.
@@ -81,7 +67,7 @@ class BankAccountDetails {
 	 * @param string|null $bank_name Bank name.
 	 * @return void
 	 */
-	public function set_bank_name( $bank_name ) {
+	public function set_bank_name( $bank_name ): void {
 		$this->bank_name = $bank_name;
 	}
 
@@ -100,7 +86,7 @@ class BankAccountDetails {
 	 * @param string|null $name Name.
 	 * @return void
 	 */
-	public function set_name( $name ) {
+	public function set_name( $name ): void {
 		$this->name = $name;
 	}
 
@@ -119,7 +105,7 @@ class BankAccountDetails {
 	 * @param string|null $iban IBAN.
 	 * @return void
 	 */
-	public function set_iban( $iban ) {
+	public function set_iban( $iban ): void {
 		$this->iban = $iban;
 	}
 
@@ -138,7 +124,7 @@ class BankAccountDetails {
 	 * @param string|null $bic Bic.
 	 * @return void
 	 */
-	public function set_bic( $bic ) {
+	public function set_bic( $bic ): void {
 		$this->bic = $bic;
 	}
 
@@ -157,7 +143,7 @@ class BankAccountDetails {
 	 * @param string|null $account_number Account number.
 	 * @return void
 	 */
-	public function set_account_number( $account_number ) {
+	public function set_account_number( $account_number ): void {
 		$this->account_number = $account_number;
 	}
 
@@ -176,7 +162,7 @@ class BankAccountDetails {
 	 * @param string|null $city City.
 	 * @return void
 	 */
-	public function set_city( $city ) {
+	public function set_city( $city ): void {
 		$this->city = $city;
 	}
 
@@ -195,7 +181,7 @@ class BankAccountDetails {
 	 * @param string|null $country Country.
 	 * @return void
 	 */
-	public function set_country( $country ) {
+	public function set_country( $country ): void {
 		$this->country = $country;
 	}
 

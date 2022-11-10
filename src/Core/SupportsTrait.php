@@ -27,7 +27,7 @@ trait SupportsTrait {
 	 * @param string $feature Feature.
 	 * @return void
 	 */
-	public function add_support( $feature ) {
+	public function add_support( $feature ): void {
 		$this->supports[] = $feature;
 	}
 
@@ -37,7 +37,7 @@ trait SupportsTrait {
 	 * @param string $feature The feature to check.
 	 * @return bool True if supported, false otherwise.
 	 */
-	public function supports( $feature ) {
+	public function supports( $feature ): bool {
 		return in_array( $feature, $this->supports, true );
 	}
 }

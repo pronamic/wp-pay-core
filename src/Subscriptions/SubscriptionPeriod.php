@@ -26,31 +26,23 @@ use Pronamic\WordPress\Pay\Payments\Payment;
 class SubscriptionPeriod {
 	/**
 	 * Phase.
-	 *
-	 * @var SubscriptionPhase
 	 */
-	private $phase;
+	private SubscriptionPhase $phase;
 
 	/**
 	 * The start date of this period.
-	 *
-	 * @var DateTime
 	 */
-	private $start_date;
+	private DateTime $start_date;
 
 	/**
 	 * The end date of this period.
-	 *
-	 * @var DateTime
 	 */
-	private $end_date;
+	private DateTime $end_date;
 
 	/**
 	 * The amount to pay for this period.
-	 *
-	 * @var Money
 	 */
-	private $amount;
+	private Money $amount;
 
 	/**
 	 * Construct and initialize subscription period object.
@@ -82,7 +74,7 @@ class SubscriptionPeriod {
 	 * @param SubscriptionPhase $phase Phase.
 	 * @return void
 	 */
-	public function set_phase( SubscriptionPhase $phase ) {
+	public function set_phase( SubscriptionPhase $phase ): void {
 		$this->phase = $phase;
 	}
 
@@ -261,7 +253,7 @@ class SubscriptionPeriod {
 	 * @param string      $separator Period separator.
 	 * @return string
 	 */
-	public function human_readable_range( $format = null, $separator = '–' ) {
+	public function human_readable_range( $format = null, $separator = '–' ): string {
 		$start = $this->get_start_date();
 		$end   = $this->get_end_date();
 

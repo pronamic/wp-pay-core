@@ -75,7 +75,7 @@ class PaymentsModule {
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			WP_CLI::add_command(
 				'pay payment status',
-				function ( $args, $assoc_args ) {
+				function ( $args, $assoc_args ): void {
 					foreach ( $args as $id ) {
 						$payment = get_pronamic_payment( $id );
 
@@ -188,7 +188,7 @@ class PaymentsModule {
 	 * @param string      $new_status   New meta status.
 	 * @return string
 	 */
-	private function get_payment_status_update_note( $old_status, $new_status ) {
+	private function get_payment_status_update_note( $old_status, $new_status ): string {
 		$old_label = $this->plugin->payments_data_store->get_meta_status_label( $old_status );
 		$new_label = $this->plugin->payments_data_store->get_meta_status_label( $new_status );
 
@@ -218,7 +218,7 @@ class PaymentsModule {
 	 *
 	 * @return void
 	 */
-	public function log_payment_status_update( $payment, $can_redirect, $old_status, $new_status ) {
+	public function log_payment_status_update( $payment, $can_redirect, $old_status, $new_status ): void {
 		$note = $this->get_payment_status_update_note( $old_status, $new_status );
 
 		$payment->add_note( $note );
@@ -232,7 +232,7 @@ class PaymentsModule {
 	 *
 	 * @return void
 	 */
-	public function rest_api_init() {
+	public function rest_api_init(): void {
 		\register_rest_route(
 			'pronamic-pay/v1',
 			'/payments/(?P<payment_id>\d+)',

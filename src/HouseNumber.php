@@ -23,24 +23,18 @@ use stdClass;
 class HouseNumber {
 	/**
 	 * Value.
-	 *
-	 * @var string|null
 	 */
-	private $value;
+	private ?string $value;
 
 	/**
 	 * Base.
-	 *
-	 * @var string|null
 	 */
-	private $base;
+	private ?string $base = null;
 
 	/**
 	 * Addition.
-	 *
-	 * @var string|null
 	 */
-	private $addition;
+	private ?string $addition = null;
 
 	/**
 	 * Construct house number.
@@ -66,7 +60,7 @@ class HouseNumber {
 	 * @param string|null $value Value.
 	 * @return void
 	 */
-	public function set_value( $value ) {
+	public function set_value( $value ): void {
 		$this->value = $value;
 	}
 
@@ -85,7 +79,7 @@ class HouseNumber {
 	 * @param string|null $base Base.
 	 * @return void
 	 */
-	public function set_base( $base ) {
+	public function set_base( $base ): void {
 		$this->base = $base;
 	}
 
@@ -104,7 +98,7 @@ class HouseNumber {
 	 * @param string|null $addition Addition.
 	 * @return void
 	 */
-	public function set_addition( $addition ) {
+	public function set_addition( $addition ): void {
 		$this->addition = $addition;
 	}
 
@@ -167,7 +161,7 @@ class HouseNumber {
 	 *
 	 * @return string
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		return strval( $this->value );
 	}
 
@@ -176,7 +170,7 @@ class HouseNumber {
 	 *
 	 * @return void
 	 */
-	public function anonymize() {
+	public function anonymize(): void {
 		$this->set_value( PrivacyManager::anonymize_data( 'text', $this->get_value() ) );
 		$this->set_base( PrivacyManager::anonymize_data( 'text', $this->get_base() ) );
 		$this->set_addition( PrivacyManager::anonymize_data( 'text', $this->get_addition() ) );

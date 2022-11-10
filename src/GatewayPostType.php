@@ -23,7 +23,7 @@ class GatewayPostType {
 	 *
 	 * @var string
 	 */
-	const POST_TYPE = 'pronamic_gateway';
+	public const POST_TYPE = 'pronamic_gateway';
 
 	/**
 	 * Constructs and initializes a gateway post type object.
@@ -51,7 +51,7 @@ class GatewayPostType {
 	 * @link https://github.com/WordPress/WordPress/blob/4.6.1/wp-includes/post.php#L1277-L1300
 	 * @return void
 	 */
-	public function register_gateway_post_type() {
+	public function register_gateway_post_type(): void {
 		register_post_type(
 			'pronamic_gateway',
 			[
@@ -109,7 +109,7 @@ class GatewayPostType {
 	 * @param int $post_id Post ID.
 	 * @return void
 	 */
-	public function maybe_set_default_gateway( $post_id ) {
+	public function maybe_set_default_gateway( $post_id ): void {
 		// Don't set the default gateway if the post is not published.
 		if ( 'publish' !== get_post_status( $post_id ) ) {
 			return;
@@ -159,7 +159,7 @@ class GatewayPostType {
 	 *
 	 * @return void
 	 */
-	public function rest_api_init() {
+	public function rest_api_init(): void {
 		\register_rest_route(
 			'pronamic-pay/v1',
 			'/gateways/(?P<config_id>\d+)',

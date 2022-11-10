@@ -29,24 +29,18 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPeriod;
 class Payment extends PaymentInfo {
 	/**
 	 * The total amount of this payment.
-	 *
-	 * @var Money
 	 */
-	private $total_amount;
+	private Money $total_amount;
 
 	/**
 	 * Refunded amount.
-	 *
-	 * @var Money|null
 	 */
-	private $refunded_amount;
+	private ?Money $refunded_amount = null;
 
 	/**
 	 * Charged back amount.
-	 *
-	 * @var Money|null
 	 */
-	private $charged_back_amount;
+	private ?Money $charged_back_amount = null;
 
 	/**
 	 * The status of this payment.
@@ -71,24 +65,20 @@ class Payment extends PaymentInfo {
 
 	/**
 	 * The action URL for this payment.
-	 *
-	 * @var string|null
 	 */
-	private $action_url;
+	private ?string $action_url = null;
 
 	/**
 	 * The date this payment expires.
-	 *
-	 * @var DateTime|null
 	 */
-	private $expiry_date;
+	private ?DateTime $expiry_date = null;
 
 	/**
 	 * Subscriptions.
 	 *
 	 * @var Subscription[]
 	 */
-	private $subscriptions;
+	private array $subscriptions;
 
 	/**
 	 * Subscription periods.
@@ -151,7 +141,7 @@ class Payment extends PaymentInfo {
 	 *
 	 * @return void
 	 */
-	public function save() {
+	public function save(): void {
 		pronamic_pay_plugin()->payments_data_store->save( $this );
 	}
 
@@ -210,7 +200,7 @@ class Payment extends PaymentInfo {
 	 * @param string|null $transaction_id Transaction ID.
 	 * @return void
 	 */
-	public function set_transaction_id( $transaction_id ) {
+	public function set_transaction_id( $transaction_id ): void {
 		$this->transaction_id = $transaction_id;
 	}
 
@@ -238,7 +228,7 @@ class Payment extends PaymentInfo {
 	 * @param Money $total_amount Total amount.
 	 * @return void
 	 */
-	public function set_total_amount( Money $total_amount ) {
+	public function set_total_amount( Money $total_amount ): void {
 		$this->total_amount = $total_amount;
 	}
 
@@ -257,7 +247,7 @@ class Payment extends PaymentInfo {
 	 * @param Money|null $refunded_amount Refunded amount.
 	 * @return void
 	 */
-	public function set_refunded_amount( $refunded_amount ) {
+	public function set_refunded_amount( $refunded_amount ): void {
 		$this->refunded_amount = $refunded_amount;
 	}
 
@@ -276,7 +266,7 @@ class Payment extends PaymentInfo {
 	 * @param Money|null $charged_back_amount Charged back amount.
 	 * @return void
 	 */
-	public function set_charged_back_amount( ?Money $charged_back_amount ) {
+	public function set_charged_back_amount( ?Money $charged_back_amount ): void {
 		$this->charged_back_amount = $charged_back_amount;
 	}
 
@@ -305,7 +295,7 @@ class Payment extends PaymentInfo {
 	 * @param string|null $status Status.
 	 * @return void
 	 */
-	public function set_status( $status ) {
+	public function set_status( $status ): void {
 		$this->status = $status;
 	}
 
@@ -324,7 +314,7 @@ class Payment extends PaymentInfo {
 	 * @param FailureReason|null $failure_reason Failure reason.
 	 * @return void
 	 */
-	public function set_failure_reason( FailureReason $failure_reason = null ) {
+	public function set_failure_reason( FailureReason $failure_reason = null ): void {
 		$this->failure_reason = $failure_reason;
 	}
 
@@ -389,7 +379,7 @@ class Payment extends PaymentInfo {
 	 * @param string|null $action_url Action URL.
 	 * @return void
 	 */
-	public function set_action_url( $action_url ) {
+	public function set_action_url( $action_url ): void {
 		$this->action_url = $action_url;
 	}
 
@@ -408,7 +398,7 @@ class Payment extends PaymentInfo {
 	 * @param DateTime|null $expiry_date Expiry date.
 	 * @return void
 	 */
-	public function set_expiry_date( $expiry_date ) {
+	public function set_expiry_date( $expiry_date ): void {
 		$this->expiry_date = $expiry_date;
 	}
 
@@ -634,7 +624,7 @@ class Payment extends PaymentInfo {
 	 * @param Subscription $subscription Subscription.
 	 * @return void
 	 */
-	public function add_subscription( Subscription $subscription ) {
+	public function add_subscription( Subscription $subscription ): void {
 		if ( \in_array( $subscription, $this->subscriptions, true ) ) {
 			return;
 		}
@@ -704,7 +694,7 @@ class Payment extends PaymentInfo {
 	 * @param SubscriptionPeriod $period Subscription period.
 	 * @return void
 	 */
-	public function add_period( SubscriptionPeriod $period ) {
+	public function add_period( SubscriptionPeriod $period ): void {
 		if ( null === $this->periods ) {
 			$this->periods = [];
 		}

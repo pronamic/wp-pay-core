@@ -24,5 +24,5 @@ class VatNumberValidationService {
 	 * @link https://ec.europa.eu/taxation_customs/vies/?locale=en
 	 * @var string
 	 */
-	const VIES = 'vies';
+	public const VIES = 'vies';
 }

@@ -18,31 +18,25 @@ use Pronamic\WordPress\Pay\Fields\Field;
 class PaymentMethod {
 	/**
 	 * ID.
-	 *
-	 * @var string
 	 */
-	private $id;
+	private string $id;
 
 	/**
 	 * Name.
-	 *
-	 * @var string
 	 */
-	private $name;
+	private string $name;
 
 	/**
 	 * Status.
-	 *
-	 * @var string
 	 */
-	private $status;
+	private string $status;
 
 	/**
 	 * Fields.
 	 *
 	 * @var Field[]
 	 */
-	private $fields = [];
+	private array $fields = [];
 
 	/**
 	 * Supports.
@@ -84,7 +78,7 @@ class PaymentMethod {
 	 * @param string $name Name.
 	 * @return void
 	 */
-	public function set_name( $name ) {
+	public function set_name( $name ): void {
 		$this->name = $name;
 	}
 
@@ -103,7 +97,7 @@ class PaymentMethod {
 	 * @param string $status Status.
 	 * @return void
 	 */
-	public function set_status( $status ) {
+	public function set_status( $status ): void {
 		$this->status = $status;
 	}
 
@@ -113,7 +107,7 @@ class PaymentMethod {
 	 * @param Field $field Field.
 	 * @return void
 	 */
-	public function add_field( Field $field ) {
+	public function add_field( Field $field ): void {
 		$this->fields[] = $field;
 	}
 

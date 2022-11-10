@@ -35,7 +35,7 @@ class WebhookManager {
 	 *
 	 * @return void
 	 */
-	public function admin_notices() {
+	public function admin_notices(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
@@ -72,7 +72,7 @@ class WebhookManager {
 				try {
 					$log = get_post_meta( $post->ID, '_pronamic_gateway_webhook_log', true );
 
-					$log = json_decode( $log );
+					$log = json_decode( $log, null, 512, JSON_THROW_ON_ERROR );
 
 					$request_info = WebhookRequestInfo::from_json( $log );
 				} catch ( \Exception $e ) {

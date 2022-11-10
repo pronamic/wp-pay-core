@@ -20,17 +20,13 @@ namespace Pronamic\WordPress\Pay\Banks;
 class BankTransferDetails {
 	/**
 	 * Bank account details.
-	 *
-	 * @var BankAccountDetails|null
 	 */
-	private $bank_account;
+	private ?BankAccountDetails $bank_account = null;
 
 	/**
 	 * Reference.
-	 *
-	 * @var string|null
 	 */
-	private $reference;
+	private ?string $reference = null;
 
 	/**
 	 * Get bank account.
@@ -47,7 +43,7 @@ class BankTransferDetails {
 	 * @param BankAccountDetails|null $bank_account Bank account.
 	 * @return void
 	 */
-	public function set_bank_account( $bank_account ) {
+	public function set_bank_account( $bank_account ): void {
 		$this->bank_account = $bank_account;
 	}
 
@@ -66,7 +62,7 @@ class BankTransferDetails {
 	 * @param string|null $reference Reference.
 	 * @return void
 	 */
-	public function set_reference( $reference ) {
+	public function set_reference( $reference ): void {
 		$this->reference = $reference;
 	}
 
