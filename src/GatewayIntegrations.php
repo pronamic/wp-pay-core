@@ -63,6 +63,7 @@ class GatewayIntegrations implements IteratorAggregate {
 	 * Get integration by ID.
 	 *
 	 * @param string $id Integration ID.
+	 *
 	 * @return AbstractGatewayIntegration|null
 	 */
 	public function get_integration( $id ) {
@@ -78,7 +79,7 @@ class GatewayIntegrations implements IteratorAggregate {
 	 *
 	 * @return \ArrayIterator<string, AbstractGatewayIntegration>
 	 */
-	public function getIterator() : Traversable {
+	public function getIterator(): Traversable {
 		return new ArrayIterator( $this->integrations );
 	}
 }

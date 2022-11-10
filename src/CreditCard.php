@@ -13,9 +13,9 @@ namespace Pronamic\WordPress\Pay;
 /**
  * Credit card class
  *
- * @author Remco Tolsma
+ * @author  Remco Tolsma
  * @version 2.2.6
- * @since 1.4.0
+ * @since   1.4.0
  */
 class CreditCard {
 	/**
@@ -47,7 +47,6 @@ class CreditCard {
 	 * Constructs and initializes an credit card object.
 	 */
 	public function __construct() {
-
 	}
 
 	/**
@@ -63,6 +62,7 @@ class CreditCard {
 	 * Set credit card number.
 	 *
 	 * @param string $number Number.
+	 *
 	 * @return void
 	 */
 	public function set_number( $number ): void {
@@ -82,6 +82,7 @@ class CreditCard {
 	 * Set expiration month
 	 *
 	 * @param int $month Month.
+	 *
 	 * @return void
 	 */
 	public function set_expiration_month( $month ): void {
@@ -101,6 +102,7 @@ class CreditCard {
 	 * Set expiration year
 	 *
 	 * @param int $year Year.
+	 *
 	 * @return void
 	 */
 	public function set_expiration_year( $year ): void {
@@ -140,6 +142,7 @@ class CreditCard {
 	 * Set security code.
 	 *
 	 * @param string $security_code Security code.
+	 *
 	 * @return void
 	 */
 	public function set_security_code( $security_code ): void {
@@ -159,6 +162,7 @@ class CreditCard {
 	 * Set credit card holder name.
 	 *
 	 * @param string $name Name.
+	 *
 	 * @return void
 	 */
 	public function set_name( $name ): void {

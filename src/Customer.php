@@ -94,6 +94,7 @@ class Customer {
 	 * Set contact name.
 	 *
 	 * @param ContactName|null $name Contact name.
+	 *
 	 * @return void
 	 */
 	public function set_name( ContactName $name = null ): void {
@@ -113,6 +114,7 @@ class Customer {
 	 * Set gender.
 	 *
 	 * @param string|null $gender Gender.
+	 *
 	 * @return void
 	 */
 	public function set_gender( $gender ): void {
@@ -132,6 +134,7 @@ class Customer {
 	 * Set birth date.
 	 *
 	 * @param DateTime|null $birth_date Date of birth.
+	 *
 	 * @return void
 	 */
 	public function set_birth_date( $birth_date ): void {
@@ -151,6 +154,7 @@ class Customer {
 	 * Set email address.
 	 *
 	 * @param string|null $email Email address.
+	 *
 	 * @return void
 	 */
 	public function set_email( $email ): void {
@@ -170,6 +174,7 @@ class Customer {
 	 * Set phone.
 	 *
 	 * @param string|null $phone Telephone number.
+	 *
 	 * @return void
 	 */
 	public function set_phone( $phone ): void {
@@ -189,6 +194,7 @@ class Customer {
 	 * Set ip address.
 	 *
 	 * @param string|null $ip_address IP address.
+	 *
 	 * @return void
 	 */
 	public function set_ip_address( $ip_address ): void {
@@ -208,6 +214,7 @@ class Customer {
 	 * Set user agent.
 	 *
 	 * @param string|null $user_agent User agent.
+	 *
 	 * @return void
 	 */
 	public function set_user_agent( $user_agent ): void {
@@ -227,6 +234,7 @@ class Customer {
 	 * Set language.
 	 *
 	 * @param string|null $language Language.
+	 *
 	 * @return void
 	 */
 	public function set_language( $language ): void {
@@ -246,6 +254,7 @@ class Customer {
 	 * Set locale.
 	 *
 	 * @param string|null $locale Locale.
+	 *
 	 * @return void
 	 */
 	public function set_locale( $locale ): void {
@@ -265,6 +274,7 @@ class Customer {
 	 * Set WordPress user ID.
 	 *
 	 * @param int|null $user_id WordPress user ID.
+	 *
 	 * @return void
 	 */
 	public function set_user_id( $user_id ): void {
@@ -284,6 +294,7 @@ class Customer {
 	 * Set company name.
 	 *
 	 * @param string|null $company_name Company name.
+	 *
 	 * @return void
 	 */
 	public function set_company_name( $company_name = null ): void {
@@ -303,6 +314,7 @@ class Customer {
 	 * Set VAT number.
 	 *
 	 * @param VatNumber|string|null $vat_number VAT number.
+	 *
 	 * @return void
 	 */
 	public function set_vat_number( $vat_number = null ): void {
@@ -347,6 +359,7 @@ class Customer {
 	 * Create address from object.
 	 *
 	 * @param mixed $json JSON.
+	 *
 	 * @return Customer
 	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */

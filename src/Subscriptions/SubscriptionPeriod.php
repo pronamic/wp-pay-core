@@ -46,10 +46,10 @@ class SubscriptionPeriod {
 	/**
 	 * Construct and initialize subscription period object.
 	 *
-	 * @param SubscriptionPhase  $phase        Subscription phase.
-	 * @param \DateTimeInterface $start_date   Start date.
-	 * @param \DateTimeInterface $end_date     End date.
-	 * @param Money              $amount       Taxed amount.
+	 * @param SubscriptionPhase  $phase      Subscription phase.
+	 * @param \DateTimeInterface $start_date Start date.
+	 * @param \DateTimeInterface $end_date   End date.
+	 * @param Money              $amount     Taxed amount.
 	 */
 	public function __construct( SubscriptionPhase $phase, \DateTimeInterface $start_date, \DateTimeInterface $end_date, Money $amount ) {
 		$this->phase      = $phase;
@@ -71,6 +71,7 @@ class SubscriptionPeriod {
 	 * Set phase.
 	 *
 	 * @param SubscriptionPhase $phase Phase.
+	 *
 	 * @return void
 	 */
 	public function set_phase( SubscriptionPhase $phase ): void {
@@ -134,6 +135,7 @@ class SubscriptionPeriod {
 	 * From JSON.
 	 *
 	 * @param object $json Subscription period JSON.
+	 *
 	 * @return SubscriptionPeriod
 	 * @throws \InvalidArgumentException Throws exception on invalid JSON.
 	 * @throws \Exception                Throws exception on problem.
@@ -250,6 +252,7 @@ class SubscriptionPeriod {
 	 *
 	 * @param null|string $format    Date format.
 	 * @param string      $separator Period separator.
+	 *
 	 * @return string
 	 */
 	public function human_readable_range( $format = null, $separator = '–' ): string {

@@ -34,6 +34,7 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	 * Get contact name from legacy meta.
 	 *
 	 * @param PaymentInfo $payment The payment info to read.
+	 *
 	 * @return ContactName|null
 	 */
 	private function get_contact_name_from_legacy_meta( $payment ) {
@@ -79,6 +80,7 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	 * Maybe create customer from legacy meta.
 	 *
 	 * @param PaymentInfo $payment The payment to read.
+	 *
 	 * @return void
 	 */
 	private function maybe_create_customer_from_legacy_meta( $payment ) {
@@ -152,6 +154,7 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	 * Maybe create billing address from legacy meta.
 	 *
 	 * @param PaymentInfo $payment The payment to read.
+	 *
 	 * @return void
 	 */
 	private function maybe_create_billing_address_from_legacy_meta( $payment ) {
@@ -223,6 +226,7 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	 * Maybe create consumer bank details from legacy meta.
 	 *
 	 * @param PaymentInfo $payment The payment to read.
+	 *
 	 * @return void
 	 */
 	private function maybe_create_consumer_bank_details_from_legacy_meta( $payment ) {
@@ -283,7 +287,9 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 	 * Read post meta.
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-data.php#L462-L507
+	 *
 	 * @param PaymentInfo $payment The payment to read.
+	 *
 	 * @return void
 	 */
 	protected function read_post_meta( $payment ) {

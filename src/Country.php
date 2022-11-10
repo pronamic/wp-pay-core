@@ -42,10 +42,10 @@ class Country {
 	/**
 	 * Set code.
 	 *
-	 * @throws InvalidArgumentException Thrown when country code length is not equal to 2.
-	 *
 	 * @param string|null $code Code.
+	 *
 	 * @return void
+	 * @throws InvalidArgumentException Thrown when country code length is not equal to 2.
 	 */
 	public function set_code( $code ) {
 		if ( null !== $code && 2 !== strlen( $code ) ) {
@@ -73,6 +73,7 @@ class Country {
 	 * Set name.
 	 *
 	 * @param string|null $name Name.
+	 *
 	 * @return void
 	 */
 	public function set_name( $name ): void {
@@ -103,6 +104,7 @@ class Country {
 	 * Create from object.
 	 *
 	 * @param mixed $json JSON.
+	 *
 	 * @return Country
 	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */

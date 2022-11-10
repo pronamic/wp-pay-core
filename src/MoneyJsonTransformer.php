@@ -25,6 +25,7 @@ class MoneyJsonTransformer {
 	 * Convert JSON to money object.
 	 *
 	 * @param mixed $json JSON.
+	 *
 	 * @return Money
 	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */

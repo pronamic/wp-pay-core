@@ -21,8 +21,8 @@ use WP_Error;
  * Blocks
  *
  * @author  Reüel van der Steege
- * @since   2.5.0
  * @version 2.1.7
+ * @since   2.5.0
  */
 class BlocksModule {
 	/**
@@ -135,7 +135,6 @@ class BlocksModule {
 	 * @param array $attributes Attributes.
 	 *
 	 * @return string
-	 *
 	 * @throws \Exception When output buffering is not working as expected.
 	 */
 	public function render_payment_form_block( $attributes = [] ) {

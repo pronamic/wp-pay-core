@@ -88,6 +88,7 @@ abstract class Gateway {
 	 * Register payment method.
 	 *
 	 * @param PaymentMethod $payment_method Payment method.
+	 *
 	 * @return void
 	 */
 	protected function register_payment_method( PaymentMethod $payment_method ) {
@@ -98,6 +99,7 @@ abstract class Gateway {
 	 * Get payment method by ID.
 	 *
 	 * @param string $id ID.
+	 *
 	 * @return PaymentMethod|null
 	 */
 	public function get_payment_method( $id ) {
@@ -109,6 +111,7 @@ abstract class Gateway {
 	 *
 	 * @param string       $payment_method_id Payment method ID.
 	 * @param class-string $field_class       Field class.
+	 *
 	 * @return Field|null
 	 */
 	public function first_payment_method_field( $payment_method_id, $field_class ) {
@@ -133,9 +136,10 @@ abstract class Gateway {
 	 * Get payment methods.
 	 *
 	 * @param array $args Query arguments.
+	 *
 	 * @return PaymentMethodsCollection
 	 */
-	public function get_payment_methods( array $args = [] ) : PaymentMethodsCollection {
+	public function get_payment_methods( array $args = [] ): PaymentMethodsCollection {
 		return $this->payment_methods->query( $args );
 	}
 
@@ -143,6 +147,7 @@ abstract class Gateway {
 	 * Set the method.
 	 *
 	 * @param int $method HTML form or HTTP redirect method.
+	 *
 	 * @return void
 	 */
 	public function set_method( $method ): void {
@@ -176,7 +181,6 @@ abstract class Gateway {
 	 * @return void
 	 */
 	public function payment_redirect( Payment $payment ): void {
-
 	}
 
 	/**
@@ -194,8 +198,9 @@ abstract class Gateway {
 	/**
 	 * Get the payment methods transient
 	 *
-	 * @since 1.3.0
 	 * @param bool $update_active_methods Whether active payment methods option should be updated.
+	 *
+	 * @since 1.3.0
 	 * @return array|null
 	 * @deprecated
 	 */
@@ -228,16 +233,17 @@ abstract class Gateway {
 	 * Start transaction/payment
 	 *
 	 * @param Payment $payment The payment to start up at this gateway.
+	 *
 	 * @return void
 	 */
 	public function start( Payment $payment ): void {
-
 	}
 
 	/**
 	 * Redirect to the gateway action URL.
 	 *
 	 * @param Payment $payment The payment to redirect for.
+	 *
 	 * @return void
 	 * @throws \Exception Throws exception when action URL for HTTP redirect is empty.
 	 */
@@ -263,6 +269,7 @@ abstract class Gateway {
 	 * Redirect via HTTP.
 	 *
 	 * @param Payment $payment The payment to redirect for.
+	 *
 	 * @return void
 	 * @throws \Exception When payment action URL is empty.
 	 */
@@ -288,6 +295,7 @@ abstract class Gateway {
 	 * Redirect via HTML.
 	 *
 	 * @param Payment $payment The payment to redirect for.
+	 *
 	 * @return void
 	 */
 	public function redirect_via_html( Payment $payment ): void {
@@ -308,6 +316,7 @@ abstract class Gateway {
 	 *
 	 * @param Payment $payment     Payment to get form HTML for.
 	 * @param bool    $auto_submit Flag to auto submit.
+	 *
 	 * @return string
 	 * @throws \Exception When payment action URL is empty.
 	 */
@@ -343,8 +352,8 @@ abstract class Gateway {
 	 *
 	 * @param Payment $payment Payment.
 	 *
-	 * @return array
 	 * @since 1.2.0
+	 * @return array
 	 */
 	public function get_output_fields( Payment $payment ) {
 		return [];
@@ -367,9 +376,9 @@ abstract class Gateway {
 	 * Update status of the specified payment
 	 *
 	 * @param Payment $payment Payment.
+	 *
 	 * @return void
 	 */
 	public function update_status( Payment $payment ): void {
-
 	}
 }

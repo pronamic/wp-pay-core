@@ -28,9 +28,9 @@ class PaymentMethods {
 	/**
 	 * AfterPay (afterpay.nl).
 	 *
+	 * @since      2.1.0
 	 * @deprecated Use `AFTERPAY_NL` or `AFTERPAY_COM` instead.
 	 * @var string
-	 * @since 2.1.0
 	 */
 	public const AFTERPAY = 'afterpay';
 
@@ -53,32 +53,32 @@ class PaymentMethods {
 	/**
 	 * Alipay
 	 *
-	 * @var string
 	 * @since 2.0.0
+	 * @var string
 	 */
 	public const ALIPAY = 'alipay';
 
 	/**
 	 * American Express.
 	 *
-	 * @var string
 	 * @since 3.0.1
+	 * @var string
 	 */
 	public const AMERICAN_EXPRESS = 'american_express';
 
 	/**
 	 * Apple Pay
 	 *
-	 * @var string
 	 * @since 2.2.8
+	 * @var string
 	 */
 	public const APPLE_PAY = 'apple_pay';
 
 	/**
 	 * Bancontact
 	 *
-	 * @var string
 	 * @since 1.3.7
+	 * @var string
 	 */
 	public const BANCONTACT = 'bancontact';
 
@@ -116,8 +116,8 @@ class PaymentMethods {
 	/**
 	 * BLIK
 	 *
-	 * @since unreleased
 	 * @link  https://blik.com/
+	 * @since unreleased
 	 * @var string
 	 */
 	public const BLIK = 'blik';
@@ -125,8 +125,8 @@ class PaymentMethods {
 	/**
 	 * Bunq
 	 *
-	 * @link https://www.sisow.nl/news/00009
-	 * @link https://plugins.trac.wordpress.org/browser/sisow-for-woocommerce/tags/4.7.2/includes/classes/Sisow/Gateway/Bunq.php
+	 * @link  https://www.sisow.nl/news/00009
+	 * @link  https://plugins.trac.wordpress.org/browser/sisow-for-woocommerce/tags/4.7.2/includes/classes/Sisow/Gateway/Bunq.php
 	 * @since 1.3.13
 	 * @var string
 	 */
@@ -135,16 +135,16 @@ class PaymentMethods {
 	/**
 	 * Constant for the In3 payment method.
 	 *
-	 * @var string
 	 * @since 2.1.0
+	 * @var string
 	 */
 	public const IN3 = 'in3';
 
 	/**
 	 * Capayable.
 	 *
-	 * @var string
 	 * @since 2.0.9
+	 * @var string
 	 */
 	public const CAPAYABLE = 'capayable';
 
@@ -165,40 +165,40 @@ class PaymentMethods {
 	/**
 	 * Constant for the Direct Debit mandate via Bancontact payment method.
 	 *
-	 * @var string
 	 * @since 1.3.13
+	 * @var string
 	 */
 	public const DIRECT_DEBIT_BANCONTACT = 'direct_debit_bancontact';
 
 	/**
 	 * Constant for the Direct Debit mandate via iDEAL payment method.
 	 *
-	 * @var string
 	 * @since 1.3.9
+	 * @var string
 	 */
 	public const DIRECT_DEBIT_IDEAL = 'direct_debit_ideal';
 
 	/**
 	 * Constant for the Direct Debit mandate via SOFORT payment method.
 	 *
-	 * @var string
 	 * @since 1.3.15
+	 * @var string
 	 */
 	public const DIRECT_DEBIT_SOFORT = 'direct_debit_sofort';
 
 	/**
 	 * Constant for the EPS payment method.
 	 *
-	 * @var string
 	 * @since 2.1.7
+	 * @var string
 	 */
 	public const EPS = 'eps';
 
 	/**
 	 * Constant for the Focum payment method.
 	 *
-	 * @var string
 	 * @since 2.1.0
+	 * @var string
 	 */
 	public const FOCUM = 'focum';
 
@@ -243,7 +243,7 @@ class PaymentMethods {
 	 *
 	 * Klarna Pay Later is not one specific payment method, but a category with a number of pay later payment methods.
 	 *
-	 * @link https://docs.klarna.com/klarna-payments/in-depth-knowledge/payment-method-grouping/
+	 * @link  https://docs.klarna.com/klarna-payments/in-depth-knowledge/payment-method-grouping/
 	 * @since 2.1.0
 	 * @var string
 	 */
@@ -254,7 +254,7 @@ class PaymentMethods {
 	 *
 	 * Klarna Pay Now is not one specific payment method, but a category with a number of pay later payment methods.
 	 *
-	 * @link https://docs.klarna.com/klarna-payments/in-depth-knowledge/payment-method-grouping/
+	 * @link  https://docs.klarna.com/klarna-payments/in-depth-knowledge/payment-method-grouping/
 	 * @since 4.1.0
 	 * @var string
 	 */
@@ -266,7 +266,7 @@ class PaymentMethods {
 	 * Klarna Pay Over Time is not one specific payment method, but a category with a number of pay over time payment methods.
 	 * Klarna Pay Over Time is also known as Klarna Slice It, some payment providers also use this naming convention.
 	 *
-	 * @link https://docs.klarna.com/klarna-payments/in-depth-knowledge/payment-method-grouping/
+	 * @link  https://docs.klarna.com/klarna-payments/in-depth-knowledge/payment-method-grouping/
 	 * @since 4.1.0
 	 * @var string
 	 */
@@ -275,15 +275,15 @@ class PaymentMethods {
 	/**
 	 * Constant for the Maestro payment method.
 	 *
-	 * @var string
 	 * @since 1.3.10
+	 * @var string
 	 */
 	public const MAESTRO = 'maestro';
 
 	/**
 	 * Constant for the Mastercard payment method.
 	 *
-	 * @link https://www.mastercard.nl/
+	 * @link  https://www.mastercard.nl/
 	 * @var string
 	 * @since 3.0.1
 	 */
@@ -292,8 +292,8 @@ class PaymentMethods {
 	/**
 	 * MB WAY
 	 *
-	 * @since unreleased
 	 * @link  https://www.mbway.pt/
+	 * @since unreleased
 	 * @var string
 	 */
 	public const MB_WAY = 'mb_way';
@@ -325,8 +325,8 @@ class PaymentMethods {
 	/**
 	 * PayPal
 	 *
-	 * @var string
 	 * @since 1.3.7
+	 * @var string
 	 */
 	public const PAYPAL = 'paypal';
 
@@ -341,47 +341,47 @@ class PaymentMethods {
 	/**
 	 * Santander
 	 *
-	 * @var string
 	 * @since 2.6.0
+	 * @var string
 	 */
 	public const SANTANDER = 'santander';
 
 	/**
 	 * SOFORT Banking
 	 *
-	 * @var string
 	 * @since 1.0.1
+	 * @var string
 	 */
 	public const SOFORT = 'sofort';
 
 	/**
 	 * SprayPay
 	 *
-	 * @var string
 	 * @since 2.8.0
+	 * @var string
 	 */
 	public const SPRAYPAY = 'spraypay';
 
 	/**
 	 * Swish
 	 *
-	 * @var string
 	 * @since 2.6.3
+	 * @var string
 	 */
 	public const SWISH = 'swish';
 
 	/**
 	 * TWINT
 	 *
-	 * @var string
 	 * @since unreleased
+	 * @var string
 	 */
 	public const TWINT = 'twint';
 
 	/**
 	 * Constant for the V PAY payment method.
 	 *
-	 * @link https://en.wikipedia.org/wiki/V_Pay
+	 * @link  https://en.wikipedia.org/wiki/V_Pay
 	 * @var string
 	 * @since 3.0.1
 	 */
@@ -390,15 +390,15 @@ class PaymentMethods {
 	/**
 	 * Vipps
 	 *
-	 * @var string
 	 * @since 2.6.3
+	 * @var string
 	 */
 	public const VIPPS = 'vipps';
 
 	/**
 	 * Constant for the Visa payment method.
 	 *
-	 * @link https://www.visa.nl/
+	 * @link  https://www.visa.nl/
 	 * @var string
 	 * @since 3.0.1
 	 */
@@ -476,11 +476,10 @@ class PaymentMethods {
 	/**
 	 * Get payment method name
 	 *
-	 * @since 1.3.0
-	 *
 	 * @param string|null $method  Method to get the name for.
 	 * @param string|null $default Default name to return if method was not found.
 	 *
+	 * @since 1.3.0
 	 * @return string|null
 	 */
 	public static function get_name( $method = null, $default = null ) {
@@ -502,6 +501,7 @@ class PaymentMethods {
 	 *
 	 * @param string|null $method Payment method.
 	 * @param string|null $size   Icon size.
+	 *
 	 * @return string|null
 	 */
 	public static function get_icon_url( $method = null, $size = null ): ?string {
@@ -645,7 +645,6 @@ class PaymentMethods {
 	 * @param string $payment_method Payment method.
 	 *
 	 * @since 2.0.0
-	 *
 	 * @return bool
 	 */
 	public static function is_active( $payment_method = null ): bool {

@@ -165,7 +165,6 @@ class AdminModule {
 	 *
 	 * @link https://github.com/woothemes/woocommerce/blob/2.4.4/includes/admin/class-wc-admin.php#L29
 	 * @link https://github.com/woothemes/woocommerce/blob/2.4.4/includes/admin/class-wc-admin.php#L96-L122
-	 *
 	 * @return void
 	 */
 	public function maybe_redirect(): void {
@@ -217,6 +216,7 @@ class AdminModule {
 	 * Input checkbox.
 	 *
 	 * @param array $args Arguments.
+	 *
 	 * @return void
 	 */
 	public static function input_checkbox( $args ): void {
@@ -263,6 +263,7 @@ class AdminModule {
 	 * Sanitize the specified value to a boolean.
 	 *
 	 * @param mixed $value Value.
+	 *
 	 * @return boolean
 	 */
 	public static function sanitize_boolean( $value ): bool {
@@ -273,6 +274,7 @@ class AdminModule {
 	 * Configurations dropdown.
 	 *
 	 * @param array $args Arguments.
+	 *
 	 * @return string|null
 	 */
 	public static function dropdown_configs( $args ) {
@@ -341,8 +343,9 @@ class AdminModule {
 	/**
 	 * Create pages.
 	 *
-	 * @param array    $pages   Page.
+	 * @param array    $pages  Page.
 	 * @param int|null $parent Parent post ID.
+	 *
 	 * @return void
 	 * @throws \Exception When creating page fails.
 	 */
@@ -513,6 +516,7 @@ class AdminModule {
 	 * @link https://developer.wordpress.org/reference/classes/wp_screen/
 	 *
 	 * @param string $hook Hook.
+	 *
 	 * @return bool True if scripts should be enqueued, false otherwise.
 	 */
 	private function should_enqueue_scripts( $hook ): bool {
@@ -566,6 +570,7 @@ class AdminModule {
 	 * Enqueue admin scripts.
 	 *
 	 * @param string $hook Hook.
+	 *
 	 * @return void
 	 */
 	public function enqueue_scripts( $hook ): void {
@@ -837,6 +842,7 @@ class AdminModule {
 	 * Admin menu parent file.
 	 *
 	 * @param string $parent_file Parent file for admin menu.
+	 *
 	 * @return string
 	 */
 	public function admin_menu_parent_file( $parent_file ) {
@@ -1135,6 +1141,7 @@ class AdminModule {
 	 * Render the specified page.
 	 *
 	 * @param string $name Page identifier.
+	 *
 	 * @return void
 	 */
 	public function render_page( $name ): void {
@@ -1145,6 +1152,7 @@ class AdminModule {
 	 * Get a CSS class for the specified post status.
 	 *
 	 * @param string $post_status Post status.
+	 *
 	 * @return string
 	 */
 	public static function get_post_status_icon_class( $post_status ) {

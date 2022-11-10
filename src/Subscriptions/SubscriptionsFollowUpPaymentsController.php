@@ -165,6 +165,7 @@ class SubscriptionsFollowUpPaymentsController {
 	 * Schedule page.
 	 *
 	 * @param int $page Page.
+	 *
 	 * @return int
 	 */
 	private function schedule_page( $page ) {
@@ -181,6 +182,7 @@ class SubscriptionsFollowUpPaymentsController {
 	 * Schedule subscriptions follow-up payment.
 	 *
 	 * @param int $page Page.
+	 *
 	 * @return void
 	 */
 	public function schedule_paged( $page ): void {
@@ -216,6 +218,7 @@ class SubscriptionsFollowUpPaymentsController {
 	 * Test if the subscription meets the follow-up requirements.
 	 *
 	 * @param Subscription $subscription Subscription.
+	 *
 	 * @return bool True if meets requirements, false otherwise.
 	 */
 	private function meets_follow_up_payment_requirements( Subscription $subscription ): bool {
@@ -254,6 +257,7 @@ class SubscriptionsFollowUpPaymentsController {
 	 * Schedule subscription follow-up payment.
 	 *
 	 * @param Subscription $subscription Subscription.
+	 *
 	 * @return int|null
 	 */
 	private function schedule_subscription_follow_up_payment( Subscription $subscription ) {
@@ -288,11 +292,11 @@ class SubscriptionsFollowUpPaymentsController {
 		return $action_id;
 	}
 
-
 	/**
 	 * Action create subscription follow-up payment.
 	 *
 	 * @param int $subscription_id Subscription ID.
+	 *
 	 * @return void
 	 * @throws \Exception Throws exception when unable to load subscription.
 	 */
@@ -320,6 +324,7 @@ class SubscriptionsFollowUpPaymentsController {
 	 * Create subscription follow-up payment.
 	 *
 	 * @param Subscription $subscription Subscription.
+	 *
 	 * @return void
 	 * @throws \Exception Throws exception when gateway not found.
 	 */
@@ -373,6 +378,7 @@ class SubscriptionsFollowUpPaymentsController {
 	 * Get WordPress query for subscriptions that require a follow-up payment.
 	 *
 	 * @param array $args Arguments.
+	 *
 	 * @return WP_Query
 	 */
 	private function get_subscriptions_wp_query_that_require_follow_up_payment( $args = [] ) {

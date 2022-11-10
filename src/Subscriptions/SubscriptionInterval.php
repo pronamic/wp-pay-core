@@ -13,12 +13,12 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 /**
  * Subscription Interval
  *
- * @author  Remco Tolsma
- * @version 2.5.0
- * @since   2.4.0
  * @link    https://github.com/briannesbitt/Carbon/blob/2.40.0/src/Carbon/CarbonInterval.php
  * @link    https://github.com/frak/s3bk/blob/master/src/S3Bk/Type/StringableInterval.php
  * @link    https://github.com/stylers-llc/laratask/blob/master/src/Support/DateInterval.php
+ * @since   2.4.0
+ * @version 2.5.0
+ * @author  Remco Tolsma
  */
 class SubscriptionInterval extends \DateInterval implements \JsonSerializable {
 	/**
@@ -32,6 +32,7 @@ class SubscriptionInterval extends \DateInterval implements \JsonSerializable {
 	 * @link https://en.wikipedia.org/wiki/ISO_8601#Durations
 	 * @link https://www.php.net/manual/en/dateinterval.construct.php
 	 * @link https://github.com/php/php-src/blob/php-7.4.10/ext/date/php_date.c#L414-L416
+	 *
 	 * @param string $specification An interval specification.
 	 */
 	public function __construct( $specification ) {
@@ -53,6 +54,7 @@ class SubscriptionInterval extends \DateInterval implements \JsonSerializable {
 	 * Multiply.
 	 *
 	 * @param int $times Number of times to multiply with.
+	 *
 	 * @return SubscriptionInterval
 	 * @throws \InvalidArgumentException Throws exception if times to multiply is zero.
 	 */

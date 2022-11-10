@@ -18,5 +18,4 @@ namespace Pronamic\WordPress\Pay\Payments;
  * @since   2.5.0
  */
 trait PaymentInfoTrait {
-
 }

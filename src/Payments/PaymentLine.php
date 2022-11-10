@@ -110,6 +110,7 @@ class PaymentLine {
 	 * Set the id / identifier of this payment line.
 	 *
 	 * @param string|null $id Number.
+	 *
 	 * @return void
 	 */
 	public function set_id( $id ): void {
@@ -129,6 +130,7 @@ class PaymentLine {
 	 * Set type.
 	 *
 	 * @param string $type Type.
+	 *
 	 * @return void
 	 */
 	public function set_type( $type ): void {
@@ -148,6 +150,7 @@ class PaymentLine {
 	 * Set the SKU of this payment line.
 	 *
 	 * @param string|null $sku SKU.
+	 *
 	 * @return void
 	 */
 	public function set_sku( $sku ): void {
@@ -167,6 +170,7 @@ class PaymentLine {
 	 * Set the name of this payment line.
 	 *
 	 * @param string|null $name Name.
+	 *
 	 * @return void
 	 */
 	public function set_name( $name ): void {
@@ -186,6 +190,7 @@ class PaymentLine {
 	 * Set the description of this payment line.
 	 *
 	 * @param string|null $description Description.
+	 *
 	 * @return void
 	 */
 	public function set_description( $description ): void {
@@ -205,6 +210,7 @@ class PaymentLine {
 	 * Set the quantity of this payment line.
 	 *
 	 * @param int|null $quantity Quantity.
+	 *
 	 * @return void
 	 */
 	public function set_quantity( $quantity ): void {
@@ -224,6 +230,7 @@ class PaymentLine {
 	 * Set unit price.
 	 *
 	 * @param Money|null $price Unit price.
+	 *
 	 * @return void
 	 */
 	public function set_unit_price( Money $price = null ): void {
@@ -243,6 +250,7 @@ class PaymentLine {
 	 * Set discount amount, should not contain any tax.
 	 *
 	 * @param Money $discount_amount Discount amount.
+	 *
 	 * @return void
 	 */
 	public function set_discount_amount( Money $discount_amount = null ): void {
@@ -284,6 +292,7 @@ class PaymentLine {
 	 * Set total amount.
 	 *
 	 * @param Money $total_amount Total amount.
+	 *
 	 * @return void
 	 */
 	public function set_total_amount( Money $total_amount ): void {
@@ -303,6 +312,7 @@ class PaymentLine {
 	 * Set product URL.
 	 *
 	 * @param string|null $product_url Product URL.
+	 *
 	 * @return void
 	 */
 	public function set_product_url( $product_url = null ): void {
@@ -322,6 +332,7 @@ class PaymentLine {
 	 * Set image URL.
 	 *
 	 * @param null|string $image_url Image url.
+	 *
 	 * @return void
 	 */
 	public function set_image_url( $image_url ): void {
@@ -341,6 +352,7 @@ class PaymentLine {
 	 * Set product category.
 	 *
 	 * @param null|string $product_category Product category.
+	 *
 	 * @return void
 	 */
 	public function set_product_category( $product_category ): void {
@@ -360,6 +372,7 @@ class PaymentLine {
 	 * Set payment.
 	 *
 	 * @param Payment $payment Payment.
+	 *
 	 * @return void
 	 */
 	public function set_payment( Payment $payment ): void {
@@ -370,6 +383,7 @@ class PaymentLine {
 	 * Create payment line from object.
 	 *
 	 * @param mixed $json JSON.
+	 *
 	 * @return PaymentLine
 	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */

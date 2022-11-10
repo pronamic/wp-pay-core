@@ -68,6 +68,7 @@ class AlignmentRule {
 	 * By numeric day of the week.
 	 *
 	 * @param int $number Number of day in the week (0 = Sunday).
+	 *
 	 * @return $this
 	 */
 	public function by_numeric_day_of_the_week( $number ) {
@@ -80,6 +81,7 @@ class AlignmentRule {
 	 * By numeric day of the month.
 	 *
 	 * @param int $number Day of the month.
+	 *
 	 * @return $this
 	 */
 	public function by_numeric_day_of_the_month( $number ) {
@@ -92,6 +94,7 @@ class AlignmentRule {
 	 * By numeric month.
 	 *
 	 * @param int $number Number of month.
+	 *
 	 * @return $this
 	 */
 	public function by_numeric_month( $number ) {
@@ -104,6 +107,7 @@ class AlignmentRule {
 	 * Get date.
 	 *
 	 * @param DateTimeImmutable|null $date Date.
+	 *
 	 * @return DateTimeImmutable
 	 * @throws \Exception Throws exception on date error.
 	 */
@@ -119,6 +123,7 @@ class AlignmentRule {
 	 * Apply properties.
 	 *
 	 * @param DateTimeImmutable $date Date.
+	 *
 	 * @return DateTimeImmutable
 	 */
 	private function apply_properties( DateTimeImmutable $date ) {

@@ -15,9 +15,9 @@ use Pronamic\WordPress\Pay\Plugin;
 /**
  * WordPress admin notices
  *
- * @author Remco Tolsma
+ * @author  Remco Tolsma
  * @version 2.2.6
- * @since 3.7.0
+ * @since   3.7.0
  */
 class AdminNotices {
 	/**
@@ -108,6 +108,7 @@ class AdminNotices {
 	 * Removed support notice.
 	 *
 	 * @param AdminNotification $notification Notification.
+	 *
 	 * @return void
 	 */
 	private function removed_support_notice( $notification ) {

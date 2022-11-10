@@ -288,7 +288,6 @@ class AdminReports {
 	 * @param \DateTime $end      End date.
 	 *
 	 * @return array
-	 *
 	 * @throws \Exception Throws exception on date interval error.
 	 */
 	private function get_report( $status, $function, $start, $end ) {

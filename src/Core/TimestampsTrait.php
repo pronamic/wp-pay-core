@@ -13,10 +13,10 @@ namespace Pronamic\WordPress\Pay\Core;
 /**
  * Timestamps Trait
  *
- * @author  Remco Tolsma
- * @version 2.5.0
- * @since   2.5.0
  * @link    https://github.com/laravel/framework/blob/v7.27.0/src/Illuminate/Database/Eloquent/Concerns/HasTimestamps.php
+ * @since   2.5.0
+ * @version 2.5.0
+ * @author  Remco Tolsma
  */
 trait TimestampsTrait {
 	/**
@@ -37,6 +37,7 @@ trait TimestampsTrait {
 	 * Set created at.
 	 *
 	 * @param \DateTime|null $created_at Created at.
+	 *
 	 * @return void
 	 */
 	public function set_created_at( $created_at ) {
@@ -56,6 +57,7 @@ trait TimestampsTrait {
 	 * Set updated at.
 	 *
 	 * @param \DateTime|null $updated_at Updated at.
+	 *
 	 * @return void
 	 */
 	public function set_updated_at( $updated_at ) {

@@ -22,6 +22,7 @@ class ContactNameHelper {
 	 * Complement name.
 	 *
 	 * @param ContactName $name Contact name to complement.
+	 *
 	 * @return void
 	 */
 	public static function complement_name( ContactName $name ): void {
@@ -61,7 +62,7 @@ class ContactNameHelper {
 
 			if ( \count( $names ) > 0 ) {
 				$initials = array_map(
-					function ( $name ) {
+					function( $name ) {
 						return self::string_to_uppercase( \mb_substr( $name, 0, 1 ) ) . '.';
 					},
 					$names
@@ -70,7 +71,6 @@ class ContactNameHelper {
 				$name->set_initials( implode( '', $initials ) );
 			}
 		}
-
 		/*
 		 * Parse full name.
 		 *
@@ -85,6 +85,7 @@ class ContactNameHelper {
 	 * Convert string to uppercase.
 	 *
 	 * @param string $string String.
+	 *
 	 * @return string
 	 */
 	private static function string_to_uppercase( $string ): string {
@@ -99,6 +100,7 @@ class ContactNameHelper {
 	 * Anonymize customer.
 	 *
 	 * @param ContactName $name Contact name to anonymize.
+	 *
 	 * @return void
 	 */
 	public static function anonymize_name( ContactName $name ): void {
@@ -112,6 +114,7 @@ class ContactNameHelper {
 	 * Create a contact name from an array.
 	 *
 	 * @param array $data Data.
+	 *
 	 * @return ContactName|null
 	 */
 	public static function from_array( $data ) {

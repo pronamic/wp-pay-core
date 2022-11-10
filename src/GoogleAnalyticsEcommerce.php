@@ -60,6 +60,7 @@ class GoogleAnalyticsEcommerce {
 	 * Maybe send transaction for the specified payment.
 	 *
 	 * @param Payment $payment Payment.
+	 *
 	 * @return void
 	 */
 	public function maybe_send_transaction( $payment ): void {
@@ -102,13 +103,10 @@ class GoogleAnalyticsEcommerce {
 	/**
 	 * Send transaction.
 	 *
-	 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide#ecom
-	 *
 	 * Parameters:
 	 * v=1              // Version.
 	 * &tid=UA-XXXX-Y   // Tracking ID / Property ID.
 	 * &cid=555         // Anonymous Client ID.
-	 *
 	 * &t=transaction   // Transaction hit type.
 	 * &ti=12345        // transaction ID. Required.
 	 * &ta=westernWear  // Transaction affiliation.
@@ -117,7 +115,10 @@ class GoogleAnalyticsEcommerce {
 	 * &tt=12.00        // Transaction tax.
 	 * &cu=EUR          // Currency code.
 	 *
+	 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide#ecom
+	 *
 	 * @param Payment $payment Payment.
+	 *
 	 * @return void
 	 */
 	public function send_transaction( $payment ): void {
@@ -213,9 +214,10 @@ class GoogleAnalyticsEcommerce {
 				/**
 				 * Filters the item name for Google Analytics e-commerce tracking.
 				 *
-				 * @param string      $name Item name.
-				 * @param PaymentLine $line Payment line.
 				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#in
+				 *
+				 * @param PaymentLine $line Payment line.
+				 * @param string      $name Item name.
 				 */
 				$name = \apply_filters( 'pronamic_pay_google_analytics_ecommerce_item_name', $name, $line );
 
@@ -260,9 +262,10 @@ class GoogleAnalyticsEcommerce {
 				/**
 				 * Filters the product category for Google Analytics e-commerce tracking.
 				 *
-				 * @param string|null $product_category Product category.
-				 * @param PaymentLine $line             Payment line.
 				 * @link https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#iv
+				 *
+				 * @param PaymentLine $line             Payment line.
+				 * @param string|null $product_category Product category.
 				 */
 				$product_category = \apply_filters( 'pronamic_pay_google_analytics_ecommerce_item_product_category', $product_category, $line );
 
@@ -286,6 +289,7 @@ class GoogleAnalyticsEcommerce {
 	 * Get the Client ID.
 	 *
 	 * @param Payment $payment Payment.
+	 *
 	 * @return string
 	 */
 	private function get_client_id( Payment $payment ) {
@@ -335,6 +339,7 @@ class GoogleAnalyticsEcommerce {
 	 * @link http://php.net/preg_match
 	 *
 	 * @param string $uuid String.
+	 *
 	 * @return boolean True if value is a valid UUID, false otherwise.
 	 */
 	public static function is_uuid( $uuid ) {
@@ -376,6 +381,7 @@ class GoogleAnalyticsEcommerce {
 	 *
 	 * @param string  $url     Redirect URL.
 	 * @param Payment $payment Payment.
+	 *
 	 * @return string
 	 */
 	public function payment_redirect_url( $url, Payment $payment ) {

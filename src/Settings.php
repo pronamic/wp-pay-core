@@ -43,7 +43,6 @@ class Settings {
 	 * @link https://github.com/WordPress/WordPress/blob/4.6/wp-admin/includes/plugin.php#L1767-L1795
 	 * @link https://github.com/WordPress/WordPress/blob/4.7/wp-includes/option.php#L1849-L1925
 	 * @link https://github.com/WordPress/WordPress/blob/4.7/wp-includes/option.php#L1715-L1847
-	 *
 	 * @return void
 	 */
 	public function init() {
@@ -141,9 +140,10 @@ class Settings {
 	 * Sanitize published post ID.
 	 *
 	 * @param integer $value Check if the value is published post ID.
+	 *
 	 * @return int|null Post ID if value is published post ID, null otherwise.
 	 */
-	public function sanitize_published_post_id( int $value ) : ?int {
+	public function sanitize_published_post_id( int $value ): ?int {
 		if ( 'publish' === get_post_status( $value ) ) {
 			return $value;
 		}

@@ -17,10 +17,10 @@ use WP_Query;
 /**
  * WordPress admin payment bulk actions
  *
- * @link https://www.skyverge.com/blog/add-custom-bulk-action/
- * @author Remco Tolsma
+ * @link    https://www.skyverge.com/blog/add-custom-bulk-action/
+ * @author  Remco Tolsma
  * @version 2.2.6
- * @since 4.1.0
+ * @since   4.1.0
  */
 class AdminPaymentBulkActions {
 	/**
@@ -66,7 +66,9 @@ class AdminPaymentBulkActions {
 	 *
 	 * @link https://make.wordpress.org/core/2016/10/04/custom-bulk-actions/
 	 * @link https://github.com/WordPress/WordPress/blob/4.7/wp-admin/includes/class-wp-list-table.php#L440-L452
+	 *
 	 * @param array $bulk_actions Bulk actions.
+	 *
 	 * @return array
 	 */
 	public function bulk_actions( $bulk_actions ) {
@@ -82,11 +84,13 @@ class AdminPaymentBulkActions {
 	/**
 	 * Handle bulk action.
 	 *
-	 * @see hhttps://make.wordpress.org/core/2016/10/04/custom-bulk-actions/
+	 * @link https://make.wordpress.org/core/2016/10/04/custom-bulk-actions/
 	 * @link https://github.com/WordPress/WordPress/blob/4.7/wp-admin/edit.php#L166-L167
+	 *
 	 * @param string $sendback Sendback URL.
 	 * @param string $doaction Action indicator.
-	 * @param array  $post_ids  Post ID's to bulk edit.
+	 * @param array  $post_ids Post ID's to bulk edit.
+	 *
 	 * @return string
 	 */
 	public function handle_bulk_action( $sendback, $doaction, $post_ids ) {

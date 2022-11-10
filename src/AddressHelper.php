@@ -25,6 +25,7 @@ class AddressHelper {
 	 * Complement address.
 	 *
 	 * @param Address $address Address to complement.
+	 *
 	 * @return void
 	 */
 	public static function complement_address( Address $address ) {
@@ -75,6 +76,7 @@ class AddressHelper {
 	 * Anonymize address.
 	 *
 	 * @param Address $address Address to complement.
+	 *
 	 * @return void
 	 */
 	public static function anonymize_address( Address $address ) {
@@ -124,9 +126,10 @@ class AddressHelper {
 	 * Create an address from an array.
 	 *
 	 * @param array $data Data.
+	 *
 	 * @return Address|null
 	 */
-	public static function from_array( array $data ) : ?Address {
+	public static function from_array( array $data ): ?Address {
 		$data = \array_filter(
 			$data,
 			function( $value ) {

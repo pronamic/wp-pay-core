@@ -18,9 +18,9 @@ use SimpleXMLElement;
  * Copyright: 2005-2022 Pronamic
  * Company: Pronamic
  *
- * @author Remco Tolsma
+ * @author  Remco Tolsma
  * @version 2.2.6
- * @since 1.0.0
+ * @since   1.0.0
  */
 class Security {
 	/**

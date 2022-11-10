@@ -14,8 +14,8 @@ namespace Pronamic\WordPress\Pay\Banks;
  * Bank details
  *
  * @author  Reüel van der Steege
- * @since   2.2.6
  * @version 2.2.6
+ * @since   2.2.6
  */
 class BankAccountDetails {
 	/**
@@ -32,6 +32,7 @@ class BankAccountDetails {
 	 * IBAN.
 	 */
 	private ?string $iban = null;
+
 	/**
 	 * BIC.
 	 */
@@ -65,6 +66,7 @@ class BankAccountDetails {
 	 * Set bank name.
 	 *
 	 * @param string|null $bank_name Bank name.
+	 *
 	 * @return void
 	 */
 	public function set_bank_name( $bank_name ): void {
@@ -84,6 +86,7 @@ class BankAccountDetails {
 	 * Set name.
 	 *
 	 * @param string|null $name Name.
+	 *
 	 * @return void
 	 */
 	public function set_name( $name ): void {
@@ -103,6 +106,7 @@ class BankAccountDetails {
 	 * Set IBAN.
 	 *
 	 * @param string|null $iban IBAN.
+	 *
 	 * @return void
 	 */
 	public function set_iban( $iban ): void {
@@ -122,6 +126,7 @@ class BankAccountDetails {
 	 * Set BIC.
 	 *
 	 * @param string|null $bic Bic.
+	 *
 	 * @return void
 	 */
 	public function set_bic( $bic ): void {
@@ -141,6 +146,7 @@ class BankAccountDetails {
 	 * Set account number.
 	 *
 	 * @param string|null $account_number Account number.
+	 *
 	 * @return void
 	 */
 	public function set_account_number( $account_number ): void {
@@ -160,6 +166,7 @@ class BankAccountDetails {
 	 * Set city.
 	 *
 	 * @param string|null $city City.
+	 *
 	 * @return void
 	 */
 	public function set_city( $city ): void {
@@ -179,6 +186,7 @@ class BankAccountDetails {
 	 * Set country.
 	 *
 	 * @param string|null $country Country.
+	 *
 	 * @return void
 	 */
 	public function set_country( $country ): void {
@@ -217,7 +225,6 @@ class BankAccountDetails {
 	 * @param BankAccountDetails|null $bank_account_details Bank account details.
 	 *
 	 * @return BankAccountDetails
-	 *
 	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
 	public static function from_json( $json, $bank_account_details = null ) {

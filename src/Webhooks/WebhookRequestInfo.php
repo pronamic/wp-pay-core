@@ -86,6 +86,7 @@ class WebhookRequestInfo implements JsonSerializable {
 	 * Set payment.
 	 *
 	 * @param Payment $payment Payment.
+	 *
 	 * @return void
 	 */
 	public function set_payment( Payment $payment ): void {
@@ -117,7 +118,6 @@ class WebhookRequestInfo implements JsonSerializable {
 	 * JSON serialize.
 	 *
 	 * @link https://www.php.net/manual/en/jsonserializable.jsonserialize.php
-	 *
 	 * @return object
 	 */
 	public function jsonSerialize() {
@@ -130,7 +130,6 @@ class WebhookRequestInfo implements JsonSerializable {
 	 * @param mixed $json JSON.
 	 *
 	 * @return WebhookRequestInfo
-	 *
 	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON does not contain `post_data` property.
 	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON does not contain `request_date` property.

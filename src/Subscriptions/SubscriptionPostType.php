@@ -29,7 +29,6 @@ class SubscriptionPostType {
 		 *
 		 * @link https://core.trac.wordpress.org/ticket/28488
 		 * @link https://core.trac.wordpress.org/changeset/29318
-		 *
 		 * @link https://github.com/WordPress/WordPress/blob/4.0/wp-includes/post.php#L167
 		 */
 		add_action( 'init', [ $this, 'register_subscription_post_type' ], 0 ); // Highest priority.

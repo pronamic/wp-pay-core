@@ -56,6 +56,7 @@ class LicenseManager {
 	 *
 	 * @param string $newvalue New value.
 	 * @param string $oldvalue Old value.
+	 *
 	 * @return string
 	 */
 	public function pre_update_option_license_key( $newvalue, $oldvalue ) {
@@ -115,6 +116,7 @@ class LicenseManager {
 	 * Request license status.
 	 *
 	 * @param string $license License.
+	 *
 	 * @return string
 	 */
 	private function request_license_status( $license ) {
@@ -156,6 +158,7 @@ class LicenseManager {
 	 * Check license.
 	 *
 	 * @param string $license License.
+	 *
 	 * @return void
 	 */
 	public function check_license( $license ): void {
@@ -168,6 +171,7 @@ class LicenseManager {
 	 * Deactivate license.
 	 *
 	 * @param string $license License to deactivate.
+	 *
 	 * @return void
 	 */
 	public function deactivate_license( $license ): void {
@@ -191,6 +195,7 @@ class LicenseManager {
 	 * Activate license.
 	 *
 	 * @param string $license License to activate.
+	 *
 	 * @return void
 	 */
 	public function activate_license( $license ): void {

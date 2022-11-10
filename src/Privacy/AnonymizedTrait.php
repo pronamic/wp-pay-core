@@ -38,6 +38,7 @@ trait AnonymizedTrait {
 	 * Set anonymized.
 	 *
 	 * @param bool|null $anonymized Anonymized.
+	 *
 	 * @return void
 	 */
 	public function set_anonymized( $anonymized ) {

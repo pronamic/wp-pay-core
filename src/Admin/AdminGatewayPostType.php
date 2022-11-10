@@ -66,6 +66,7 @@ class AdminGatewayPostType {
 	 * Edit columns.
 	 *
 	 * @param array $columns Columns.
+	 *
 	 * @return array
 	 */
 	public function edit_columns( $columns ) {
@@ -86,6 +87,7 @@ class AdminGatewayPostType {
 	 *
 	 * @param string $column  Column.
 	 * @param int    $post_id Post ID.
+	 *
 	 * @return void
 	 */
 	public function custom_columns( $column, $post_id ): void {
@@ -209,6 +211,7 @@ class AdminGatewayPostType {
 	 * @link https://github.com/WordPress/WordPress/blob/3.5.2/wp-admin/edit-form-advanced.php#L299
 	 *
 	 * @param WP_Post $post Post (only available @since 3.5.2).
+	 *
 	 * @return void
 	 */
 	public function post_edit_form_tag( $post ): void {
@@ -223,6 +226,7 @@ class AdminGatewayPostType {
 	 * Add meta boxes.
 	 *
 	 * @param string $post_type Post Type.
+	 *
 	 * @return void
 	 */
 	public function add_meta_boxes( $post_type ): void {
@@ -253,6 +257,7 @@ class AdminGatewayPostType {
 	 * Pronamic Pay gateway config meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 *
 	 * @return void
 	 */
 	public function meta_box_config( $post ): void {
@@ -319,6 +324,7 @@ class AdminGatewayPostType {
 	 * Pronamic Pay gateway test meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 *
 	 * @return void
 	 */
 	public function meta_box_test( $post ): void {
@@ -331,6 +337,7 @@ class AdminGatewayPostType {
 	 * @link https://github.com/WordPress/WordPress/blob/5.1/wp-includes/post.php#L3928-L3951
 	 *
 	 * @param int $post_id The ID of the post being saved.
+	 *
 	 * @return void
 	 */
 	public function save_post( $post_id ): void {
@@ -429,9 +436,10 @@ class AdminGatewayPostType {
 	 *
 	 * @param int     $post_id Post ID.
 	 * @param WP_Post $post    Post.
+	 *
 	 * @return void
 	 */
-	public function after_delete_post( $post_id, $post ) : void {
+	public function after_delete_post( $post_id, $post ): void {
 		if ( self::POST_TYPE !== $post->post_type ) {
 			return;
 		}
@@ -450,6 +458,7 @@ class AdminGatewayPostType {
 	 * @link https://developer.wordpress.org/reference/hooks/post_updated_messages/
 	 *
 	 * @param array $messages Messages.
+	 *
 	 * @return array
 	 */
 	public function post_updated_messages( $messages ) {

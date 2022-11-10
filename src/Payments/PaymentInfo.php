@@ -206,6 +206,7 @@ abstract class PaymentInfo {
 	 * Set the ID of this payment.
 	 *
 	 * @param int $id Unique ID.
+	 *
 	 * @return void
 	 */
 	public function set_id( $id ): void {
@@ -225,6 +226,7 @@ abstract class PaymentInfo {
 	 * Set payment date.
 	 *
 	 * @param DateTime $date Date.
+	 *
 	 * @return void
 	 */
 	public function set_date( $date ): void {
@@ -244,6 +246,7 @@ abstract class PaymentInfo {
 	 * Set origin post ID.
 	 *
 	 * @param int|null $origin_id Origin post ID.
+	 *
 	 * @return void
 	 */
 	public function set_origin_id( $origin_id ): void {
@@ -263,6 +266,7 @@ abstract class PaymentInfo {
 	 * Set the config ID of this payment.
 	 *
 	 * @param int|null $config_id Config ID.
+	 *
 	 * @return void
 	 */
 	public function set_config_id( $config_id ): void {
@@ -297,6 +301,7 @@ abstract class PaymentInfo {
 	 * Set customer.
 	 *
 	 * @param Customer|null $customer Contact.
+	 *
 	 * @return void
 	 */
 	public function set_customer( $customer ): void {
@@ -316,6 +321,7 @@ abstract class PaymentInfo {
 	 * Set billing address.
 	 *
 	 * @param Address|null $billing_address Billing address.
+	 *
 	 * @return void
 	 */
 	public function set_billing_address( $billing_address ): void {
@@ -335,6 +341,7 @@ abstract class PaymentInfo {
 	 * Set shipping address.
 	 *
 	 * @param Address|null $shipping_address Shipping address.
+	 *
 	 * @return void
 	 */
 	public function set_shipping_address( $shipping_address ): void {
@@ -354,6 +361,7 @@ abstract class PaymentInfo {
 	 * Set payment lines.
 	 *
 	 * @param PaymentLines|null $lines Payment lines.
+	 *
 	 * @return void
 	 */
 	public function set_lines( PaymentLines $lines = null ): void {
@@ -382,6 +390,7 @@ abstract class PaymentInfo {
 	 * Set the shipping amount.
 	 *
 	 * @param Money|null $shipping_amount Money object.
+	 *
 	 * @return void
 	 */
 	public function set_shipping_amount( Money $shipping_amount = null ): void {
@@ -401,6 +410,7 @@ abstract class PaymentInfo {
 	 * Set the payment description.
 	 *
 	 * @param string|null $description Description.
+	 *
 	 * @return void
 	 */
 	public function set_description( $description ): void {
@@ -420,6 +430,7 @@ abstract class PaymentInfo {
 	 * Set the payment method.
 	 *
 	 * @param string|null $payment_method Payment method.
+	 *
 	 * @return void
 	 */
 	public function set_payment_method( $payment_method ): void {
@@ -430,6 +441,7 @@ abstract class PaymentInfo {
 	 * Get the meta value of this specified meta key.
 	 *
 	 * @param string $key Meta key.
+	 *
 	 * @return mixed
 	 */
 	public function get_meta( $key ) {
@@ -449,8 +461,9 @@ abstract class PaymentInfo {
 	/**
 	 * Set meta data.
 	 *
-	 * @param  string $key   A meta key.
-	 * @param  mixed  $value A meta value.
+	 * @param string $key   A meta key.
+	 * @param mixed  $value A meta value.
+	 *
 	 * @return void
 	 */
 	public function set_meta( $key, $value ): void {
@@ -461,6 +474,7 @@ abstract class PaymentInfo {
 	 * Delete meta data.
 	 *
 	 * @param string $key Meta key.
+	 *
 	 * @return void
 	 */
 	public function delete_meta( $key ): void {
@@ -480,6 +494,7 @@ abstract class PaymentInfo {
 	 * Set consumer bank details.
 	 *
 	 * @param BankAccountDetails|null $bank_details Consumer bank details.
+	 *
 	 * @return void
 	 */
 	public function set_consumer_bank_details( $bank_details ): void {
@@ -499,6 +514,7 @@ abstract class PaymentInfo {
 	 * Set bank transfer details.
 	 *
 	 * @param BankTransferDetails|null $bank_transfer Bank transfer details.
+	 *
 	 * @return void
 	 */
 	public function set_bank_transfer_recipient_details( $bank_transfer ): void {
@@ -509,6 +525,7 @@ abstract class PaymentInfo {
 	 * Set the credit card to use for this payment.
 	 *
 	 * @param CreditCard|null $credit_card Credit Card.
+	 *
 	 * @return void
 	 */
 	public function set_credit_card( $credit_card ): void {

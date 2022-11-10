@@ -243,5 +243,4 @@ class PaymentsPrivacy {
 			'done'           => true,
 		];
 	}
-
 }

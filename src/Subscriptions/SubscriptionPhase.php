@@ -79,6 +79,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @param \DateTimeInterface   $start_date   Start date.
 	 * @param SubscriptionInterval $interval     Interval.
 	 * @param Money                $amount       Amount.
+	 *
 	 * @return void
 	 */
 	public function __construct( Subscription $subscription, \DateTimeInterface $start_date, SubscriptionInterval $interval, Money $amount ) {
@@ -115,6 +116,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * Set sequence number.
 	 *
 	 * @param int $sequence_number Sequence number.
+	 *
 	 * @return void
 	 */
 	public function set_sequence_number( $sequence_number ): void {
@@ -134,6 +136,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * Set start date.
 	 *
 	 * @param \DateTimeInterface $start_date Start date.
+	 *
 	 * @return void
 	 */
 	public function set_start_date( $start_date ): void {
@@ -153,6 +156,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * Set end date.
 	 *
 	 * @param \DateTimeInterface|null $end_date End date.
+	 *
 	 * @return void
 	 */
 	public function set_end_date( $end_date ): void {
@@ -189,6 +193,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * Set next date.
 	 *
 	 * @param \DateTimeInterface|null $next_date Next date.
+	 *
 	 * @return void
 	 */
 	public function set_next_date( $next_date ): void {
@@ -219,6 +224,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * Set canceled date.
 	 *
 	 * @param DateTimeImmutable|null $canceled_at Canceled date.
+	 *
 	 * @return void
 	 */
 	public function set_canceled_at( DateTimeImmutable $canceled_at = null ): void {
@@ -238,6 +244,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * Set amount.
 	 *
 	 * @param Money $amount Amount.
+	 *
 	 * @return void
 	 */
 	public function set_amount( $amount ): void {
@@ -263,6 +270,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * Set total periods.
 	 *
 	 * @param int|null $total_periods Total periods to create.
+	 *
 	 * @return void
 	 */
 	public function set_total_periods( $total_periods ): void {
@@ -294,6 +302,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * Set periods created.
 	 *
 	 * @param int $periods_created The number of periods created.
+	 *
 	 * @return void
 	 */
 	public function set_periods_created( $periods_created ): void {
@@ -340,6 +349,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * Set alignment rate.
 	 *
 	 * @param float|null $alignment_rate Alignment rate.
+	 *
 	 * @return void
 	 */
 	public function set_alignment_rate( $alignment_rate ): void {
@@ -359,6 +369,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * Set prorated.
 	 *
 	 * @param bool $is_prorated Proration.
+	 *
 	 * @return void
 	 */
 	public function set_prorated( $is_prorated ): void {
@@ -378,6 +389,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * Set trial.
 	 *
 	 * @param bool $is_trial Trial.
+	 *
 	 * @return void
 	 */
 	public function set_trial( $is_trial ): void {
@@ -428,6 +440,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 *
 	 * @param DateTimeImmutable $date  Date to add interval period to.
 	 * @param int               $times Number of times to add interval.
+	 *
 	 * @return DateTimeImmutable
 	 */
 	private function add_interval( $date, $times = 1 ) {
@@ -526,6 +539,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * Create subscription phase from object.
 	 *
 	 * @param mixed $json JSON.
+	 *
 	 * @return SubscriptionPhase
 	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
@@ -595,8 +609,9 @@ class SubscriptionPhase implements \JsonSerializable {
 	/**
 	 * Align the phase to align date.
 	 *
-	 * @param self               $phase          The phase to align.
-	 * @param \DateTimeInterface $align_date     The alignment date.
+	 * @param self               $phase      The phase to align.
+	 * @param \DateTimeInterface $align_date The alignment date.
+	 *
 	 * @return SubscriptionPhase
 	 * @throws \Exception Throws exception on invalid date interval.
 	 */

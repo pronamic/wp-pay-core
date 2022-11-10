@@ -19,10 +19,10 @@ use Pronamic\WordPress\Pay\Upgrades\Upgrades;
  * Copyright: 2005-2022 Pronamic
  * Company: Pronamic
  *
- * @author  Remco Tolsma
- * @version 2.2.6
- * @since   1.0.0
  * @link    https://github.com/thephpleague/omnipay-common/blob/master/src/Omnipay/Common/AbstractGateway.php
+ * @since   1.0.0
+ * @version 2.2.6
+ * @author  Remco Tolsma
  */
 abstract class AbstractIntegration {
 	/**
@@ -129,6 +129,7 @@ abstract class AbstractIntegration {
 	 * Set ID.
 	 *
 	 * @param string|null $id ID.
+	 *
 	 * @return void
 	 */
 	public function set_id( $id ): void {
@@ -148,6 +149,7 @@ abstract class AbstractIntegration {
 	 * Set name.
 	 *
 	 * @param string|null $name Name.
+	 *
 	 * @return void
 	 */
 	public function set_name( $name ): void {
@@ -167,6 +169,7 @@ abstract class AbstractIntegration {
 	 * Set version.
 	 *
 	 * @param string|null $version Version.
+	 *
 	 * @return void
 	 */
 	public function set_version( $version ): void {
@@ -195,8 +198,8 @@ abstract class AbstractIntegration {
 	 * Setup integration.
 	 * Called from `plugins_loaded` with priority `0`, intended to be overridden.
 	 *
-	 * @see Plugin::plugins_loaded()
 	 * @return void
+	 * @see Plugin::plugins_loaded()
 	 */
 	public function setup(): void {
 	}
@@ -214,6 +217,7 @@ abstract class AbstractIntegration {
 	 * Set version option name.
 	 *
 	 * @param string $option_name Option name.
+	 *
 	 * @return void
 	 */
 	public function set_version_option_name( $option_name ): void {
@@ -264,6 +268,7 @@ abstract class AbstractIntegration {
 	 * Set database version option name.
 	 *
 	 * @param string $option_name Option name.
+	 *
 	 * @return void
 	 */
 	public function set_db_version_option_name( $option_name ): void {

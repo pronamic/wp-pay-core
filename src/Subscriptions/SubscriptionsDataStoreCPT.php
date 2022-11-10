@@ -23,8 +23,8 @@ use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 /**
  * Title: Subscriptions data store CPT
  *
- * @link https://woocommerce.com/2017/04/woocommerce-3-0-release/
- * @link https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
+ * @link    https://woocommerce.com/2017/04/woocommerce-3-0-release/
+ * @link    https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
  * @author  Remco Tolsma
  * @version 2.5.0
  * @since   2.0.1
@@ -85,6 +85,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * Get subscription by ID.
 	 *
 	 * @param int $id Payment ID.
+	 *
 	 * @return Subscription|null
 	 */
 	public function get_subscription( $id ) {
@@ -117,6 +118,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * Get post status from meta status.
 	 *
 	 * @param string|null $meta_status Meta status.
+	 *
 	 * @return string|null
 	 */
 	private function get_post_status_from_meta_status( $meta_status ) {
@@ -135,6 +137,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * Get meta status from post status.
 	 *
 	 * @param string $post_status Post status.
+	 *
 	 * @return string|null
 	 */
 	private function get_meta_status_from_post_status( $post_status ): ?string {
@@ -154,6 +157,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 *
 	 * @param array $data    An array of slashed post data.
 	 * @param array $postarr An array of sanitized, but otherwise unmodified post data.
+	 *
 	 * @return array
 	 * @throws \Exception When inserting subscription post data JSON string fails.
 	 */
@@ -199,6 +203,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 *
 	 * @param Subscription $subscription Subscription.
 	 * @param array        $postarr      Post data array.
+	 *
 	 * @return void
 	 * @throws \Exception Throws exception if amount could not be parsed to Money object.
 	 */
@@ -259,6 +264,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @param int      $post_id Post ID.
 	 * @param \WP_Post $post    Post object.
 	 * @param bool     $update  Whether this is an existing post being updated or not.
+	 *
 	 * @return void
 	 */
 	public function save_post_meta( $post_id, $post, $update ): void {
@@ -280,6 +286,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L47-L76
 	 *
 	 * @param Subscription $subscription Create the specified subscription in this data store.
+	 *
 	 * @return bool
 	 * @throws \Exception Throws exception when create fails.
 	 */
@@ -338,6 +345,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
 	 *
 	 * @param Subscription $subscription The subscription to update in this data store.
+	 *
 	 * @return bool
 	 * @throws \Exception Throws exception when update fails.
 	 */
@@ -367,7 +375,9 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L113-L154
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
+	 *
 	 * @param Subscription $subscription The subscription to save in this data store.
+	 *
 	 * @return boolean True if saved, false otherwise.
 	 */
 	public function save( $subscription ) {
@@ -463,6 +473,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * Get meta status label.
 	 *
 	 * @param string|null $meta_status The subscription meta status to get the status label for.
+	 *
 	 * @return string|false
 	 */
 	public function get_meta_status_label( $meta_status ) {
@@ -602,6 +613,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-data.php#L462-L507
 	 *
 	 * @param Subscription $subscription The subscription to read the post meta for.
+	 *
 	 * @return void
 	 */
 	protected function read_post_meta( $subscription ) {
@@ -655,6 +667,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * Get first payment for subscription.
 	 *
 	 * @param Subscription $subscription Subscription.
+	 *
 	 * @return Payment|null
 	 */
 	private function get_first_payment( $subscription ) {
@@ -687,7 +700,9 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * Update payment post meta.
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
+	 *
 	 * @param Subscription $subscription The subscription to update the post meta for.
+	 *
 	 * @return void
 	 */
 	private function update_post_meta( $subscription ): void {
@@ -725,6 +740,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * Update meta status.
 	 *
 	 * @param Subscription $subscription The subscription to update the status for.
+	 *
 	 * @return void
 	 */
 	public function update_meta_status( $subscription ): void {

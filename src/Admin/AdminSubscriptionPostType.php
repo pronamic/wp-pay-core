@@ -76,7 +76,8 @@ class AdminSubscriptionPostType {
 	 *
 	 * @link https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin-post-types.php#L1585-L1596
 	 *
-	 * @param  array $vars Request variables.
+	 * @param array $vars Request variables.
+	 *
 	 * @return array
 	 */
 	public function request( $vars ) {
@@ -108,7 +109,9 @@ class AdminSubscriptionPostType {
 	 *
 	 * @link https://github.com/WordPress/WordPress/blob/5.3/wp-admin/includes/misc.php#L1204-L1230
 	 * @link https://developer.wordpress.org/reference/functions/wp_removable_query_args/
+	 *
 	 * @param array $args Arguments.
+	 *
 	 * @return array
 	 */
 	public function removable_query_args( $args ) {
@@ -122,7 +125,9 @@ class AdminSubscriptionPostType {
 	 *
 	 * @link https://make.wordpress.org/core/2016/10/04/custom-bulk-actions/
 	 * @link https://github.com/WordPress/WordPress/blob/4.7/wp-admin/includes/class-wp-list-table.php#L440-L452
+	 *
 	 * @param array $bulk_actions Bulk actions.
+	 *
 	 * @return array
 	 */
 	public function bulk_actions( $bulk_actions ) {
@@ -249,6 +254,7 @@ class AdminSubscriptionPostType {
 	 * Pre get posts.
 	 *
 	 * @param WP_Query $query WordPress query.
+	 *
 	 * @return void
 	 */
 	public function pre_get_posts( $query ): void {
@@ -284,6 +290,7 @@ class AdminSubscriptionPostType {
 	 * Columns.
 	 *
 	 * @param array $columns Columns.
+	 *
 	 * @return array
 	 */
 	public function columns( $columns ) {
@@ -310,6 +317,7 @@ class AdminSubscriptionPostType {
 	 * Sortable columns.
 	 *
 	 * @param array $sortable_columns Sortable columns.
+	 *
 	 * @return array
 	 */
 	public function sortable_columns( $sortable_columns ) {
@@ -343,6 +351,7 @@ class AdminSubscriptionPostType {
 	 *
 	 * @param string $column  Column.
 	 * @param int    $post_id Post ID.
+	 *
 	 * @return void
 	 */
 	public function custom_columns( $column, $post_id ): void {
@@ -526,6 +535,7 @@ class AdminSubscriptionPostType {
 	 * Add meta boxes.
 	 *
 	 * @param string $post_type Post Type.
+	 *
 	 * @return void
 	 */
 	public function add_meta_boxes( $post_type ): void {
@@ -595,6 +605,7 @@ class AdminSubscriptionPostType {
 	 * Pronamic Pay subscription info meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 *
 	 * @return void
 	 */
 	public function meta_box_info( $post ): void {
@@ -612,6 +623,7 @@ class AdminSubscriptionPostType {
 	 * Pronamic Pay payment lines meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 *
 	 * @return void
 	 */
 	public function meta_box_lines( $post ): void {
@@ -630,6 +642,7 @@ class AdminSubscriptionPostType {
 	 * Pronamic Pay subscription notes meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 *
 	 * @return void
 	 */
 	public function meta_box_notes( $post ): void {
@@ -648,6 +661,7 @@ class AdminSubscriptionPostType {
 	 * Pronamic Pay subscription phases meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 *
 	 * @return void
 	 */
 	public function meta_box_phases( $post ): void {
@@ -666,6 +680,7 @@ class AdminSubscriptionPostType {
 	 * Pronamic Pay subscription payments meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 *
 	 * @return void
 	 */
 	public function meta_box_payments( $post ): void {
@@ -684,6 +699,7 @@ class AdminSubscriptionPostType {
 	 * Pronamic Pay subscription update meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 *
 	 * @return void
 	 */
 	public function meta_box_update( $post ): void {
@@ -697,6 +713,7 @@ class AdminSubscriptionPostType {
 	 *
 	 * @param array   $actions Actions array.
 	 * @param WP_Post $post    WordPress post.
+	 *
 	 * @return array
 	 */
 	public function post_row_actions( $actions, $post ) {
@@ -713,7 +730,9 @@ class AdminSubscriptionPostType {
 	 * @link https://codex.wordpress.org/Function_Reference/register_post_type
 	 * @link https://github.com/WordPress/WordPress/blob/4.4.2/wp-admin/edit-form-advanced.php#L134-L173
 	 * @link https://github.com/woothemes/woocommerce/blob/2.5.5/includes/admin/class-wc-admin-post-types.php#L111-L168
+	 *
 	 * @param array $messages Message.
+	 *
 	 * @return array
 	 */
 	public function post_updated_messages( $messages ) {

@@ -76,6 +76,7 @@ class PaymentMethod {
 	 * Set name.
 	 *
 	 * @param string $name Name.
+	 *
 	 * @return void
 	 */
 	public function set_name( $name ): void {
@@ -95,6 +96,7 @@ class PaymentMethod {
 	 * Set status.
 	 *
 	 * @param string $status Status.
+	 *
 	 * @return void
 	 */
 	public function set_status( $status ): void {
@@ -105,6 +107,7 @@ class PaymentMethod {
 	 * Add field.
 	 *
 	 * @param Field $field Field.
+	 *
 	 * @return void
 	 */
 	public function add_field( Field $field ): void {

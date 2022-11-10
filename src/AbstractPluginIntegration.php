@@ -16,11 +16,10 @@ namespace Pronamic\WordPress\Pay;
  * Copyright: 2005-2022 Pronamic
  * Company: Pronamic
  *
- * @author  Remco Tolsma
- * @version 2.2.6
- * @since   1.0.0
  * @link    https://github.com/thephpleague/omnipay-common/blob/master/src/Omnipay/Common/AbstractGateway.php
+ * @since   1.0.0
+ * @version 2.2.6
+ * @author  Remco Tolsma
  */
 abstract class AbstractPluginIntegration extends AbstractIntegration {
-
 }

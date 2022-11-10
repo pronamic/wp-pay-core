@@ -82,10 +82,12 @@ class AdminPaymentPostType {
 	 * Filters and sorting handler.
 	 *
 	 * @link https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin-post-types.php#L1585-L1596
-	 * @param  array $vars Request variables.
+	 *
+	 * @param array $vars Request variables.
+	 *
 	 * @return array
 	 */
-	public function request( array $vars ) : array {
+	public function request( array $vars ): array {
 		$screen = get_current_screen();
 
 		if ( null === $screen ) {
@@ -236,9 +238,10 @@ class AdminPaymentPostType {
 	 * Columns.
 	 *
 	 * @param array $columns Columns.
+	 *
 	 * @return array
 	 */
-	public function columns( array $columns ) : array {
+	public function columns( array $columns ): array {
 		$columns = [
 			'cb'                            => '<input type="checkbox" />',
 			'pronamic_payment_status'       => sprintf(
@@ -268,9 +271,10 @@ class AdminPaymentPostType {
 	 * Default hidden columns.
 	 *
 	 * @param array $hidden Default hidden columns.
+	 *
 	 * @return array
 	 */
-	public function default_hidden_columns( array $hidden ) : array {
+	public function default_hidden_columns( array $hidden ): array {
 		$hidden[] = 'pronamic_payment_gateway';
 		$hidden[] = 'pronamic_payment_description';
 
@@ -281,9 +285,10 @@ class AdminPaymentPostType {
 	 * Sortable columns.
 	 *
 	 * @param array $sortable_columns Sortable columns.
+	 *
 	 * @return array
 	 */
-	public function sortable_columns( array $sortable_columns ) : array {
+	public function sortable_columns( array $sortable_columns ): array {
 		$sortable_columns['pronamic_payment_title'] = 'ID';
 		$sortable_columns['pronamic_payment_date']  = 'date';
 
@@ -295,9 +300,10 @@ class AdminPaymentPostType {
 	 *
 	 * @param string $column_name Primary column name.
 	 * @param string $screen_id   Screen ID.
+	 *
 	 * @return string
 	 */
-	public function primary_column( string $column_name, string $screen_id ) : string {
+	public function primary_column( string $column_name, string $screen_id ): string {
 		if ( 'edit-pronamic_payment' !== $screen_id ) {
 			return $column_name;
 		}
@@ -311,8 +317,10 @@ class AdminPaymentPostType {
 	 * @link https://codex.wordpress.org/Plugin_API/Action_Reference/manage_$post_type_posts_custom_column
 	 * @link https://developer.wordpress.org/reference/functions/get_post_status/
 	 * @link https://developer.wordpress.org/reference/functions/get_post_status_object/
+	 *
 	 * @param string $column  Column.
 	 * @param int    $post_id Post ID.
+	 *
 	 * @return void
 	 */
 	public function custom_columns( string $column, int $post_id ): void {
@@ -559,6 +567,7 @@ class AdminPaymentPostType {
 	 * Add meta boxes.
 	 *
 	 * @param string $post_type Post Type.
+	 *
 	 * @return void
 	 */
 	public function add_meta_boxes( string $post_type ): void {
@@ -619,6 +628,7 @@ class AdminPaymentPostType {
 	 * Pronamic Pay gateway config meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 *
 	 * @return void
 	 */
 	public function meta_box_info( WP_Post $post ): void {
@@ -637,6 +647,7 @@ class AdminPaymentPostType {
 	 * Pronamic Pay payment lines meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 *
 	 * @return void
 	 */
 	public function meta_box_lines( WP_Post $post ): void {
@@ -655,6 +666,7 @@ class AdminPaymentPostType {
 	 * Pronamic Pay gateway config meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 *
 	 * @return void
 	 */
 	public function meta_box_notes( WP_Post $post ): void {
@@ -673,6 +685,7 @@ class AdminPaymentPostType {
 	 * Pronamic Pay payment subscription meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 *
 	 * @return void
 	 */
 	public function meta_box_subscription( WP_Post $post ): void {
@@ -689,6 +702,7 @@ class AdminPaymentPostType {
 	 * Pronamic Pay gateway update meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 *
 	 * @return void
 	 */
 	public function meta_box_update( WP_Post $post ): void {
@@ -702,9 +716,10 @@ class AdminPaymentPostType {
 	 *
 	 * @param array   $actions Actions array.
 	 * @param WP_Post $post    WordPress post.
+	 *
 	 * @return array
 	 */
-	public function post_row_actions( array $actions, WP_Post $post ) : array {
+	public function post_row_actions( array $actions, WP_Post $post ): array {
 		if ( self::POST_TYPE === $post->post_type ) {
 			return [ '' ];
 		}
@@ -718,10 +733,12 @@ class AdminPaymentPostType {
 	 * @link https://codex.wordpress.org/Function_Reference/register_post_type
 	 * @link https://github.com/WordPress/WordPress/blob/4.4.2/wp-admin/edit-form-advanced.php#L134-L173
 	 * @link https://github.com/woothemes/woocommerce/blob/2.5.5/includes/admin/class-wc-admin-post-types.php#L111-L168
+	 *
 	 * @param array $messages Message.
+	 *
 	 * @return array
 	 */
-	public function post_updated_messages( array $messages ) : array {
+	public function post_updated_messages( array $messages ): array {
 		global $post;
 
 		// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352797&filters[translation_id]=37948900

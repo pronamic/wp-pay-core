@@ -42,6 +42,7 @@ class PrivacyManager {
 	 * Register exporters.
 	 *
 	 * @param array $exporters Privacy exporters.
+	 *
 	 * @return array
 	 */
 	public function register_exporters( $exporters ) {
@@ -65,6 +66,7 @@ class PrivacyManager {
 	 * Register erasers.
 	 *
 	 * @param array $erasers Privacy erasers.
+	 *
 	 * @return array
 	 */
 	public function register_erasers( $erasers ) {
@@ -90,6 +92,7 @@ class PrivacyManager {
 	 * @param string $id       ID of the exporter.
 	 * @param string $name     Exporter name.
 	 * @param array  $callback Exporter callback.
+	 *
 	 * @return void
 	 */
 	public function add_exporter( $id, $name, $callback ): void {
@@ -107,6 +110,7 @@ class PrivacyManager {
 	 * @param string $id       ID of the eraser.
 	 * @param string $name     Eraser name.
 	 * @param array  $callback Eraser callback.
+	 *
 	 * @return void
 	 */
 	public function add_eraser( $id, $name, $callback ): void {
@@ -157,6 +161,7 @@ class PrivacyManager {
 	 * @param int    $post_id  ID of the post.
 	 * @param string $meta_key Meta key to erase.
 	 * @param string $action   Action 'erase' or 'anonymize'.
+	 *
 	 * @return void
 	 */
 	public function erase_meta( $post_id, $meta_key, $action = 'erase' ): void {
@@ -183,6 +188,7 @@ class PrivacyManager {
 	 * Mask email address.
 	 *
 	 * @param string $email Email address.
+	 *
 	 * @return string
 	 */
 	public static function mask_email( $email ) {
@@ -240,8 +246,9 @@ class PrivacyManager {
 	 *
 	 * @link https://github.com/WordPress/WordPress/blob/4.9.8/wp-includes/functions.php#L5932-L5978
 	 *
-	 * @param  string      $type The type of data to be anonymized.
-	 * @param  string|null $data Optional The data to be anonymized.
+	 * @param string      $type The type of data to be anonymized.
+	 * @param string|null $data Optional The data to be anonymized.
+	 *
 	 * @return string|null The anonymous data for the requested type.
 	 */
 	public static function anonymize_data( $type, $data = null ) {
@@ -257,9 +264,10 @@ class PrivacyManager {
 	 *
 	 * @link https://github.com/WordPress/WordPress/blob/4.9.8/wp-includes/functions.php#L5862-L5930
 	 *
-	 * @param  string|null $ip_addr        The IPv4 or IPv6 address to be anonymized.
-	 * @param  bool        $ipv6_fallback  Optional. Whether to return the original IPv6 address if the needed functions
-	 *                                to anonymize it are not present. Default false, return `::` (unspecified address).
+	 * @param string|null $ip_addr       The IPv4 or IPv6 address to be anonymized.
+	 * @param bool        $ipv6_fallback Optional. Whether to return the original IPv6 address if the needed functions
+	 *                                   to anonymize it are not present. Default false, return `::` (unspecified address).
+	 *
 	 * @return string|null The anonymized IP address.
 	 */
 	public static function anonymize_ip( $ip_addr, $ipv6_fallback = false ) {
@@ -278,7 +286,6 @@ class PrivacyManager {
 	 * @param string $data      Original data.
 	 *
 	 * @return string Anonymized string.
-	 *
 	 * @throws Exception When error occurs anonymize phone.
 	 */
 	public static function anonymize_custom_data_types( $anonymous, $type, $data ) {

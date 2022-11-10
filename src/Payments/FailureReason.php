@@ -14,8 +14,8 @@ namespace Pronamic\WordPress\Pay\Payments;
  * Failure reason.
  *
  * @author  Reüel van der Steege
- * @since   2.2.8
  * @version 2.2.8
+ * @since   2.2.8
  */
 class FailureReason {
 	/**
@@ -41,6 +41,7 @@ class FailureReason {
 	 * Set code.
 	 *
 	 * @param string|null $code Code.
+	 *
 	 * @return void
 	 */
 	public function set_code( $code ): void {
@@ -60,6 +61,7 @@ class FailureReason {
 	 * Set message.
 	 *
 	 * @param string|null $message Message.
+	 *
 	 * @return void
 	 */
 	public function set_message( $message ): void {
@@ -90,6 +92,7 @@ class FailureReason {
 	 * Create failure reason from object.
 	 *
 	 * @param mixed $json JSON.
+	 *
 	 * @return FailureReason
 	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */

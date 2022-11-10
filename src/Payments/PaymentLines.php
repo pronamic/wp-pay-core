@@ -43,7 +43,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 	 *
 	 * @return ArrayIterator<int, PaymentLine>
 	 */
-	public function getIterator() : Traversable {
+	public function getIterator(): Traversable {
 		return new ArrayIterator( $this->lines );
 	}
 
@@ -60,6 +60,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 	 * Add line.
 	 *
 	 * @param PaymentLine $line The line to add.
+	 *
 	 * @return void
 	 */
 	public function add_line( PaymentLine $line ): void {
@@ -84,7 +85,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 	 *
 	 * @return int
 	 */
-	public function count() : int {
+	public function count(): int {
 		return count( $this->lines );
 	}
 
@@ -143,6 +144,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 			 * Get JSON for payment line.
 			 *
 			 * @param PaymentLine $line Payment line.
+			 *
 			 * @return object
 			 */
 			function( PaymentLine $line ) {
@@ -175,6 +177,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 			 * Get payment line from object.
 			 *
 			 * @param object $object Object.
+			 *
 			 * @return PaymentLine
 			 */
 			function( $object ) {

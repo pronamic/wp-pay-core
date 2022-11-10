@@ -28,6 +28,7 @@ class PaymentInfoHelper {
 	 * Convert payment info to JSON.
 	 *
 	 * @param PaymentInfo $payment_info Payment info.
+	 *
 	 * @return object
 	 */
 	public static function to_json( PaymentInfo $payment_info ) {
@@ -168,6 +169,7 @@ class PaymentInfoHelper {
 	 *
 	 * @param object      $json         JSON.
 	 * @param PaymentInfo $payment_info Payment info object.
+	 *
 	 * @return PaymentInfo
 	 */
 	public static function from_json( $json, PaymentInfo $payment_info ) {

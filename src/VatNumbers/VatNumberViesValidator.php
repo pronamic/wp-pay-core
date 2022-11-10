@@ -27,6 +27,7 @@ class VatNumberViesValidator {
 	 * Validate VAT number.
 	 *
 	 * @param VatNumber $vat_number VAT number.
+	 *
 	 * @return VatNumberValidity
 	 * @throws \Exception SOAP error.
 	 */

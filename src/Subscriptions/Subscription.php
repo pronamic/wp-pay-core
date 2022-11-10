@@ -32,7 +32,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 *
 	 * @todo How to reference to a class constant?
 	 * @see  PaymentStatus
-	 *
 	 * @var string|null
 	 */
 	public $status;
@@ -88,8 +87,8 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	/**
 	 * Get the status of this subscription.
 	 *
-	 * @todo Check constant?
 	 * @return string|null
+	 * @todo Check constant?
 	 */
 	public function get_status() {
 		return $this->status;
@@ -98,9 +97,10 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	/**
 	 * Set the status of this subscription.
 	 *
-	 * @todo Check constant?
 	 * @param string|null $status A status string.
+	 *
 	 * @return void
+	 * @todo Check constant?
 	 */
 	public function set_status( $status ): void {
 		if ( SubscriptionStatus::ACTIVE === $status && $this->status !== $status ) {
@@ -114,7 +114,9 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * Add the specified note to this subscription.
 	 *
 	 * @link https://developer.wordpress.org/reference/functions/wp_insert_comment/
+	 *
 	 * @param string $note A Note.
+	 *
 	 * @return int The new comment's ID.
 	 * @throws \Exception Throws exception when adding note fails.
 	 */
@@ -388,6 +390,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * Check if the payment is the first for this subscription.
 	 *
 	 * @param Payment $payment Payment.
+	 *
 	 * @return bool True if payment is the first, false otherwise.
 	 */
 	public function is_first_payment( Payment $payment ): bool {
@@ -436,6 +439,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * Set the next payment date of this subscription.
 	 *
 	 * @param \DateTimeInterface|null $date Date.
+	 *
 	 * @return void
 	 */
 	public function set_next_payment_date( $date ): void {
@@ -472,6 +476,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 		 *
 		 * @param DateTimeImmutable $next_payment_delivery_date Next payment delivery date.
 		 * @param Subscription      $subscription               Subscription.
+		 *
 		 * @since unreleased
 		 */
 		$next_payment_delivery_date = \apply_filters( 'pronamic_pay_subscription_next_payment_delivery_date', $next_payment_delivery_date, $subscription );
@@ -583,6 +588,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 *
 	 * @param mixed             $json         JSON.
 	 * @param Subscription|null $subscription Subscription.
+	 *
 	 * @return Subscription
 	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
@@ -674,6 +680,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * Set activated datetime.
 	 *
 	 * @param DateTime $activated_at Activated at.
+	 *
 	 * @return void
 	 */
 	public function set_activated_at( DateTime $activated_at ): void {
@@ -693,6 +700,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * Set phases.
 	 *
 	 * @param array<int, SubscriptionPhase> $phases Phases.
+	 *
 	 * @return void
 	 */
 	public function set_phases( $phases ): void {
@@ -703,6 +711,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * Add the specified phase to this subscription.
 	 *
 	 * @param SubscriptionPhase $phase Phase.
+	 *
 	 * @return void
 	 */
 	public function add_phase( SubscriptionPhase $phase ): void {
@@ -721,6 +730,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * @param \DateTimeInterface $start_date    Start date.
 	 * @param string             $interval_spec Interval specification.
 	 * @param Money              $amount        Amount.
+	 *
 	 * @return SubscriptionPhase
 	 */
 	public function new_phase( $start_date, $interval_spec, $amount ) {
@@ -879,6 +889,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * Get phase by sequence number.
 	 *
 	 * @param int $sequence_number Sequence number.
+	 *
 	 * @return SubscriptionPhase|null
 	 */
 	public function get_phase_by_sequence_number( $sequence_number ) {

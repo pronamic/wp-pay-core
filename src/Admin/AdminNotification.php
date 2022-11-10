@@ -13,9 +13,9 @@ namespace Pronamic\WordPress\Pay\Admin;
 /**
  * WordPress admin notification.
  *
- * @author Remco Tolsma
+ * @author  Remco Tolsma
  * @version 2.2.6
- * @since 3.7.0
+ * @since   3.7.0
  */
 class AdminNotification {
 	/**
@@ -42,6 +42,7 @@ class AdminNotification {
 	 * Constructs and initializes an notices object.
 	 *
 	 * @link https://github.com/woothemes/woocommerce/blob/2.4.3/includes/admin/class-wc-admin-notices.php
+	 *
 	 * @param string $id        ID.
 	 * @param string $name      Name.
 	 * @param bool   $condition Condition.

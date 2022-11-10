@@ -14,8 +14,8 @@ namespace Pronamic\WordPress\Pay\Banks;
  * Bank transfer details
  *
  * @author  Reüel van der Steege
- * @since   2.2.6
  * @version 2.2.6
+ * @since   2.2.6
  */
 class BankTransferDetails {
 	/**
@@ -41,6 +41,7 @@ class BankTransferDetails {
 	 * Set bank account.
 	 *
 	 * @param BankAccountDetails|null $bank_account Bank account.
+	 *
 	 * @return void
 	 */
 	public function set_bank_account( $bank_account ): void {
@@ -60,6 +61,7 @@ class BankTransferDetails {
 	 * Set reference.
 	 *
 	 * @param string|null $reference Reference.
+	 *
 	 * @return void
 	 */
 	public function set_reference( $reference ): void {
@@ -100,7 +102,6 @@ class BankTransferDetails {
 	 * @param BankTransferDetails|null $bank_transfer_details Bank account details.
 	 *
 	 * @return BankTransferDetails
-	 *
 	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
 	public static function from_json( $json, $bank_transfer_details = null ) {

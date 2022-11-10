@@ -21,7 +21,7 @@ class TextField extends Field {
 	 *
 	 * @return array<string, string>
 	 */
-	protected function get_html_attributes() : array {
+	protected function get_html_attributes(): array {
 		$attributes = parent::get_html_attributes();
 
 		$attributes['type'] = 'text';
@@ -36,7 +36,7 @@ class TextField extends Field {
 	 *
 	 * @return string
 	 */
-	public function render() : string {
+	public function render(): string {
 		$element = new Element( 'input', $this->get_html_attributes() );
 
 		return $element->render();
@@ -47,7 +47,7 @@ class TextField extends Field {
 	 *
 	 * @return array
 	 */
-	public function jsonSerialize() : array {
+	public function jsonSerialize(): array {
 		$data = parent::jsonSerialize();
 
 		$data['type'] = 'input';

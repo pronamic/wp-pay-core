@@ -49,6 +49,7 @@ trait SourceTrait {
 	 * Set the source of this payment.
 	 *
 	 * @param string|null $source Source.
+	 *
 	 * @return void
 	 */
 	public function set_source( $source ) {
@@ -68,6 +69,7 @@ trait SourceTrait {
 	 * Set the source ID of this payment.
 	 *
 	 * @param string|int|null $source_id Source ID.
+	 *
 	 * @return void
 	 */
 	public function set_source_id( $source_id ) {

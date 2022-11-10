@@ -25,6 +25,7 @@ trait SupportsTrait {
 	 * Add support.
 	 *
 	 * @param string $feature Feature.
+	 *
 	 * @return void
 	 */
 	public function add_support( $feature ): void {
@@ -35,6 +36,7 @@ trait SupportsTrait {
 	 * Check if supports a given feature.
 	 *
 	 * @param string $feature The feature to check.
+	 *
 	 * @return bool True if supported, false otherwise.
 	 */
 	public function supports( $feature ): bool {

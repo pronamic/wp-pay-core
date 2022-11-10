@@ -14,8 +14,8 @@ namespace Pronamic\WordPress\Pay;
  * Gender.
  *
  * @author  Remco Tolsma
- * @since   2.1.0
  * @version 2.0.8
+ * @since   2.1.0
  */
 class Gender {
 	/**
@@ -36,7 +36,6 @@ class Gender {
 	 * Other.
 	 *
 	 * @link https://en.wikipedia.org/wiki/Legal_recognition_of_non-binary_gender
-	 *
 	 * @var string
 	 */
 	public const OTHER = 'X';
@@ -45,6 +44,7 @@ class Gender {
 	 * Check if value is valid.
 	 *
 	 * @param string $gender Gender.
+	 *
 	 * @return boolean True if valid, false otherwise.
 	 */
 	public static function is_valid( $gender ): bool {

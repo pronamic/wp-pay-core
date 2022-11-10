@@ -122,10 +122,12 @@ class Install {
 	 *
 	 * @link https://github.com/WordPress/WordPress/blob/5.3/wp-admin/includes/misc.php#L1204-L1230
 	 * @link https://developer.wordpress.org/reference/functions/wp_removable_query_args/
+	 *
 	 * @param array $args Arguments.
+	 *
 	 * @return array
 	 */
-	public function removable_query_args( array $args ) : array {
+	public function removable_query_args( array $args ): array {
 		$args[] = 'pronamic_pay_upgraded';
 
 		return $args;
@@ -268,7 +270,7 @@ class Install {
 	 *
 	 * @return array<AbstractIntegration>
 	 */
-	private function get_upgradeable_integrations() : array {
+	private function get_upgradeable_integrations(): array {
 		$integrations = $this->plugin->integrations;
 
 		$integrations = array_filter(
@@ -277,6 +279,7 @@ class Install {
 			 * Filter integration with version option name.
 			 *
 			 * @param AbstractIntegration $integration Integration object.
+			 *
 			 * @return bool True if integration has version option name, false otherwise.
 			 */
 			function( AbstractIntegration $integration ): bool {
@@ -304,7 +307,7 @@ class Install {
 	 *
 	 * @return bool True if database update is required, false otherwise.
 	 */
-	public function requires_upgrade() : bool {
+	public function requires_upgrade(): bool {
 		$current_db_version = get_option( 'pronamic_pay_db_version' );
 
 		if (

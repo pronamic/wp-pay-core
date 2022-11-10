@@ -38,6 +38,7 @@ class StatusChecker {
 	 * Schedule event.
 	 *
 	 * @param Payment $payment The payment to schedule the status check event.
+	 *
 	 * @return void
 	 */
 	public static function schedule_event( $payment ) {
@@ -217,6 +218,7 @@ class StatusChecker {
 	 * Clear scheduled status check.
 	 *
 	 * @param int $post_id Post ID.
+	 *
 	 * @return void
 	 */
 	public function clear_scheduled_status_check( $post_id ) {

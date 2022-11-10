@@ -83,6 +83,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * Get payment by ID.
 	 *
 	 * @param int $id Payment ID.
+	 *
 	 * @return Payment|null
 	 */
 	public function get_payment( $id ) {
@@ -115,6 +116,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * Get post status from meta status.
 	 *
 	 * @param string|null $meta_status Meta status.
+	 *
 	 * @return string|null
 	 */
 	private function get_post_status_from_meta_status( $meta_status ) {
@@ -133,6 +135,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * Get meta status from post status.
 	 *
 	 * @param string $post_status Post status.
+	 *
 	 * @return string|null
 	 */
 	private function get_meta_status_from_post_status( $post_status ): ?string {
@@ -153,6 +156,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 *
 	 * @param array $data    An array of slashed post data.
 	 * @param array $postarr An array of sanitized, but otherwise unmodified post data.
+	 *
 	 * @return array
 	 * @throws \Exception When inserting payment post data JSON string fails.
 	 */
@@ -196,6 +200,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 *
 	 * @param Payment $payment Payment.
 	 * @param array   $postarr Post data array.
+	 *
 	 * @return void
 	 */
 	private function update_payment_form_post_array( $payment, $postarr ): void {
@@ -221,6 +226,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @param int      $post_id Post ID.
 	 * @param \WP_Post $post    Post object.
 	 * @param bool     $update  Whether this is an existing post being updated or not.
+	 *
 	 * @return void
 	 */
 	public function save_post_meta( $post_id, $post, $update ): void {
@@ -251,6 +257,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L47-L76
 	 *
 	 * @param Payment $payment The payment to create in this data store.
+	 *
 	 * @return bool
 	 * @throws \Exception Throws exception when create fails.
 	 */
@@ -307,6 +314,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
 	 *
 	 * @param Payment $payment The payment to update in this data store.
+	 *
 	 * @return bool
 	 * @throws \Exception Throws exception when update fails.
 	 */
@@ -336,7 +344,9 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/abstract-wc-order-data-store-cpt.php#L113-L154
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
+	 *
 	 * @param Payment $payment The payment to save in this data store.
+	 *
 	 * @return boolean True if saved, false otherwise.
 	 */
 	public function save( $payment ) {
@@ -357,6 +367,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @link https://developer.wordpress.org/reference/classes/wp_post/
 	 *
 	 * @param Payment $payment The payment to read from this data store.
+	 *
 	 * @return void
 	 * @throws \Exception Throws exception if payment date can not be set.
 	 */
@@ -406,6 +417,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * Get meta status label.
 	 *
 	 * @param string|null $meta_status The payment meta status to get the status label for.
+	 *
 	 * @return string|null
 	 */
 	public function get_meta_status_label( $meta_status ) {
@@ -735,7 +747,9 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * Read post meta.
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/abstracts/abstract-wc-data.php#L462-L507
+	 *
 	 * @param Payment $payment The payment to read.
+	 *
 	 * @return void
 	 */
 	protected function read_post_meta( $payment ) {
@@ -840,7 +854,9 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * Update payment post meta.
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/3.2.6/includes/data-stores/class-wc-order-data-store-cpt.php#L154-L257
+	 *
 	 * @param Payment $payment The payment to update.
+	 *
 	 * @return void
 	 */
 	private function update_post_meta( $payment ): void {
@@ -880,6 +896,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * Update meta status.
 	 *
 	 * @param Payment $payment The payment to update the status for.
+	 *
 	 * @return void
 	 */
 	public function update_meta_status( $payment ): void {

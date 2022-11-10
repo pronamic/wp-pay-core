@@ -57,6 +57,7 @@ class Region {
 	 * Set value.
 	 *
 	 * @param string|null $value Value.
+	 *
 	 * @return void
 	 */
 	public function set_value( $value ): void {
@@ -76,6 +77,7 @@ class Region {
 	 * Set code.
 	 *
 	 * @param string|null $code Code.
+	 *
 	 * @return void
 	 */
 	public function set_code( $code ): void {
@@ -95,6 +97,7 @@ class Region {
 	 * Set name.
 	 *
 	 * @param string|null $name Name.
+	 *
 	 * @return void
 	 */
 	public function set_name( $name ): void {
@@ -126,6 +129,7 @@ class Region {
 	 * Create from object.
 	 *
 	 * @param mixed $json JSON.
+	 *
 	 * @return Region
 	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */

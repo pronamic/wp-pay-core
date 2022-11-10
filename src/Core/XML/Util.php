@@ -20,9 +20,9 @@ use DOMText;
  * Copyright: 2005-2022 Pronamic
  * Company: Pronamic
  *
- * @author Remco Tolsma
+ * @author  Remco Tolsma
  * @version 2.2.6
- * @since 1.2.1
+ * @since   1.2.1
  */
 class Util {
 	/**
@@ -53,6 +53,7 @@ class Util {
 	 * @param DOMDocument $document DOM document to add the specified node to.
 	 * @param DOMNode     $parent   DOM node to add a new element to.
 	 * @param array       $elements The elements (name => value pairs) to add.
+	 *
 	 * @return void
 	 */
 	public static function add_elements( DOMDocument $document, DOMNode $parent, array $elements = [] ) {

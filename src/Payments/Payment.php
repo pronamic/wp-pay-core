@@ -149,7 +149,9 @@ class Payment extends PaymentInfo {
 	 * Add a note to this payment.
 	 *
 	 * @link https://developer.wordpress.org/reference/functions/wp_insert_comment/
+	 *
 	 * @param string $note The note to add.
+	 *
 	 * @return int The new comment's ID.
 	 * @throws \Exception Throws exception when adding note fails.
 	 */
@@ -177,7 +179,7 @@ class Payment extends PaymentInfo {
 		if ( false === $result ) {
 			/**
 			 * Should we throw an exception or handle this in some other way?
-			 * 
+			 *
 			 * @link https://github.com/pronamic/wp-pronamic-pay/issues/337
 			 * @todo
 			 */
@@ -198,6 +200,7 @@ class Payment extends PaymentInfo {
 	 * Set the transaction ID.
 	 *
 	 * @param string|null $transaction_id Transaction ID.
+	 *
 	 * @return void
 	 */
 	public function set_transaction_id( $transaction_id ): void {
@@ -226,6 +229,7 @@ class Payment extends PaymentInfo {
 	 * Set total amount.
 	 *
 	 * @param Money $total_amount Total amount.
+	 *
 	 * @return void
 	 */
 	public function set_total_amount( Money $total_amount ): void {
@@ -245,6 +249,7 @@ class Payment extends PaymentInfo {
 	 * Set refunded amount.
 	 *
 	 * @param Money|null $refunded_amount Refunded amount.
+	 *
 	 * @return void
 	 */
 	public function set_refunded_amount( $refunded_amount ): void {
@@ -264,6 +269,7 @@ class Payment extends PaymentInfo {
 	 * Set charged back amount.
 	 *
 	 * @param Money|null $charged_back_amount Charged back amount.
+	 *
 	 * @return void
 	 */
 	public function set_charged_back_amount( ?Money $charged_back_amount ): void {
@@ -273,8 +279,8 @@ class Payment extends PaymentInfo {
 	/**
 	 * Get the payment status.
 	 *
-	 * @todo Constant?
 	 * @return string|null
+	 * @todo Constant?
 	 */
 	public function get_status() {
 		return $this->status;
@@ -293,6 +299,7 @@ class Payment extends PaymentInfo {
 	 * Set the payment status.
 	 *
 	 * @param string|null $status Status.
+	 *
 	 * @return void
 	 */
 	public function set_status( $status ): void {
@@ -312,6 +319,7 @@ class Payment extends PaymentInfo {
 	 * Set failure reason.
 	 *
 	 * @param FailureReason|null $failure_reason Failure reason.
+	 *
 	 * @return void
 	 */
 	public function set_failure_reason( FailureReason $failure_reason = null ): void {
@@ -377,6 +385,7 @@ class Payment extends PaymentInfo {
 	 * Set the action URL.
 	 *
 	 * @param string|null $action_url Action URL.
+	 *
 	 * @return void
 	 */
 	public function set_action_url( $action_url ): void {
@@ -396,6 +405,7 @@ class Payment extends PaymentInfo {
 	 * Set expiry date.
 	 *
 	 * @param DateTime|null $expiry_date Expiry date.
+	 *
 	 * @return void
 	 */
 	public function set_expiry_date( $expiry_date ): void {
@@ -429,7 +439,6 @@ class Payment extends PaymentInfo {
 	 * Get edit payment URL.
 	 *
 	 * @link https://docs.woocommerce.com/wc-apidocs/source-class-WC_Order.html#1538-1546
-	 *
 	 * @return string
 	 */
 	public function get_edit_payment_url() {
@@ -596,8 +605,8 @@ class Payment extends PaymentInfo {
 	/**
 	 * Get subscription.
 	 *
-	 * @deprecated Use `get_subscriptions()`.
 	 * @return Subscription|null
+	 * @deprecated Use `get_subscriptions()`.
 	 */
 	public function get_subscription() {
 		$first = \reset( $this->subscriptions );
@@ -622,6 +631,7 @@ class Payment extends PaymentInfo {
 	 * Connect subscription to this payment.
 	 *
 	 * @param Subscription $subscription Subscription.
+	 *
 	 * @return void
 	 */
 	public function add_subscription( Subscription $subscription ): void {
@@ -638,6 +648,7 @@ class Payment extends PaymentInfo {
 	 * @link https://github.com/woocommerce/woocommerce/blob/v2.2.3/includes/abstracts/abstract-wc-email.php#L187-L195
 	 *
 	 * @param string $string The string to format.
+	 *
 	 * @return string
 	 */
 	public function format_string( $string ) {
@@ -690,8 +701,9 @@ class Payment extends PaymentInfo {
 	/**
 	 * Add subscription period.
 	 *
-	 * @since 2.5.0
 	 * @param SubscriptionPeriod $period Subscription period.
+	 *
+	 * @since 2.5.0
 	 * @return void
 	 */
 	public function add_period( SubscriptionPeriod $period ): void {
@@ -709,6 +721,7 @@ class Payment extends PaymentInfo {
 	 *
 	 * @param mixed        $json    JSON.
 	 * @param Payment|null $payment Payment.
+	 *
 	 * @return Payment
 	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */

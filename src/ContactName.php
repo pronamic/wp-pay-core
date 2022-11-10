@@ -29,7 +29,6 @@ class ContactName {
 	/**
 	 * Prefix.
 	 *
-	 *
 	 * @link https://en.wikipedia.org/wiki/Personal_name
 	 * @link https://en.wikipedia.org/wiki/Suffix_(name)
 	 */
@@ -38,7 +37,6 @@ class ContactName {
 	/**
 	 * Initials.
 	 *
-	 *
 	 * @link https://nl.wikipedia.org/wiki/Voorletter
 	 */
 	private ?string $initials = null;
@@ -46,14 +44,12 @@ class ContactName {
 	/**
 	 * First name.
 	 *
-	 *
 	 * @link https://en.wikipedia.org/wiki/Personal_name
 	 */
 	private ?string $first_name = null;
 
 	/**
 	 * Middle name.
-	 *
 	 *
 	 * @link https://en.wikipedia.org/wiki/Middle_name
 	 * @link https://en.wikipedia.org/wiki/Tussenvoegsel
@@ -63,7 +59,6 @@ class ContactName {
 	/**
 	 * Last name.
 	 *
-	 *
 	 * @link https://en.wikipedia.org/wiki/Personal_name
 	 * @link https://en.wikipedia.org/wiki/Surname
 	 */
@@ -71,7 +66,6 @@ class ContactName {
 
 	/**
 	 * Suffix.
-	 *
 	 *
 	 * @link https://en.wikipedia.org/wiki/Personal_name
 	 * @link https://en.wikipedia.org/wiki/Suffix_(name)
@@ -91,6 +85,7 @@ class ContactName {
 	 * Set full name.
 	 *
 	 * @param string|null $full_name Full name.
+	 *
 	 * @return void
 	 */
 	public function set_full_name( $full_name ): void {
@@ -110,6 +105,7 @@ class ContactName {
 	 * Set prefix.
 	 *
 	 * @param string|null $prefix Prefix.
+	 *
 	 * @return void
 	 */
 	public function set_prefix( $prefix ): void {
@@ -129,6 +125,7 @@ class ContactName {
 	 * Set initials.
 	 *
 	 * @param string|null $initials Initials.
+	 *
 	 * @return void
 	 */
 	public function set_initials( $initials ): void {
@@ -148,6 +145,7 @@ class ContactName {
 	 * Set first name.
 	 *
 	 * @param string|null $first_name First name.
+	 *
 	 * @return void
 	 */
 	public function set_first_name( $first_name ): void {
@@ -167,6 +165,7 @@ class ContactName {
 	 * Set middle name.
 	 *
 	 * @param string|null $middle_name Middle name.
+	 *
 	 * @return void
 	 */
 	public function set_middle_name( $middle_name ): void {
@@ -186,6 +185,7 @@ class ContactName {
 	 * Set last name.
 	 *
 	 * @param string|null $last_name Last name.
+	 *
 	 * @return void
 	 */
 	public function set_last_name( $last_name ): void {
@@ -205,6 +205,7 @@ class ContactName {
 	 * Set suffix.
 	 *
 	 * @param string|null $suffix Suffix.
+	 *
 	 * @return void
 	 */
 	public function set_suffix( $suffix ): void {
@@ -240,6 +241,7 @@ class ContactName {
 	 * Create contact name from object.
 	 *
 	 * @param mixed $json JSON.
+	 *
 	 * @return ContactName
 	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */

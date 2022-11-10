@@ -71,6 +71,7 @@ class SubscriptionsCompletionController {
 	 * Schedule page.
 	 *
 	 * @param int $page Page.
+	 *
 	 * @return int
 	 */
 	private function schedule_page( $page ) {
@@ -87,6 +88,7 @@ class SubscriptionsCompletionController {
 	 * Schedule paged.
 	 *
 	 * @param int $page Page.
+	 *
 	 * @return void
 	 */
 	public function schedule_paged( $page ): void {
@@ -118,11 +120,11 @@ class SubscriptionsCompletionController {
 		}
 	}
 
-
 	/**
 	 * Test if the subscription meets the notification requirements.
 	 *
 	 * @param Subscription $subscription Subscription.
+	 *
 	 * @return bool True if meets requirements, false otherwise.
 	 */
 	private function meets_completion_requirements( Subscription $subscription ): bool {
@@ -151,6 +153,7 @@ class SubscriptionsCompletionController {
 	 * Schedule subscription completion.
 	 *
 	 * @param Subscription $subscription Subscription.
+	 *
 	 * @return int|null
 	 */
 	private function schedule_subscription_completion( Subscription $subscription ) {
@@ -189,6 +192,7 @@ class SubscriptionsCompletionController {
 	 * Action complete subscription.
 	 *
 	 * @param int $subscription_id Subscription ID.
+	 *
 	 * @return void
 	 * @throws \Exception Throws exception when unable to load subscription.
 	 */
@@ -216,6 +220,7 @@ class SubscriptionsCompletionController {
 	 * Complete subscription.
 	 *
 	 * @param Subscription $subscription Subscription.
+	 *
 	 * @return void
 	 */
 	public function complete_subscription( Subscription $subscription ): void {
@@ -230,6 +235,7 @@ class SubscriptionsCompletionController {
 	 * Get WordPress query for subscriptions that require a notification.
 	 *
 	 * @param array $args Arguments.
+	 *
 	 * @return WP_Query
 	 */
 	private function get_subscriptions_wp_query_that_require_completion( $args = [] ) {

@@ -34,7 +34,7 @@ class CachedCallbackOptions implements IteratorAggregate {
 	/**
 	 * Construct cached callback options.
 	 *
-	 * @param callable $callback Callback.
+	 * @param callable $callback  Callback.
 	 * @param string   $cache_key Cache key.
 	 */
 	public function __construct( $callback, $cache_key ) {

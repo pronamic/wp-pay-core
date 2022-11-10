@@ -57,6 +57,7 @@ class HouseNumber {
 	 * Set value.
 	 *
 	 * @param string|null $value Value.
+	 *
 	 * @return void
 	 */
 	public function set_value( $value ): void {
@@ -76,6 +77,7 @@ class HouseNumber {
 	 * Set base.
 	 *
 	 * @param string|null $base Base.
+	 *
 	 * @return void
 	 */
 	public function set_base( $base ): void {
@@ -95,6 +97,7 @@ class HouseNumber {
 	 * Set addition.
 	 *
 	 * @param string|null $addition Addition.
+	 *
 	 * @return void
 	 */
 	public function set_addition( $addition ): void {
@@ -126,6 +129,7 @@ class HouseNumber {
 	 * Create from object.
 	 *
 	 * @param mixed $json JSON.
+	 *
 	 * @return HouseNumber
 	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */

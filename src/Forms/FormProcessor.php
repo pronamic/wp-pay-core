@@ -24,9 +24,9 @@ use WP_User;
 /**
  * Form Processor
  *
- * @author Remco Tolsma
+ * @author  Remco Tolsma
  * @version 2.7.1
- * @since 3.7.0
+ * @since   3.7.0
  */
 class FormProcessor {
 	/**

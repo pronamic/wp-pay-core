@@ -37,7 +37,6 @@ class WebhookLogger {
 	 * @param Payment $payment Payment.
 	 *
 	 * @return void
-	 *
 	 * @throws \Exception Throws an Exception on request date error.
 	 */
 	public function log_payment( Payment $payment ) {

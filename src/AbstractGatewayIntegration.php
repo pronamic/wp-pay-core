@@ -21,10 +21,10 @@ use Pronamic\WordPress\Pay\Core\SupportsTrait;
  * Copyright: 2005-2022 Pronamic
  * Company: Pronamic
  *
- * @author  Remco Tolsma
- * @version 2.5.1
- * @since   1.0.0
  * @link    https://github.com/thephpleague/omnipay-common/blob/master/src/Omnipay/Common/AbstractGateway.php
+ * @since   1.0.0
+ * @version 2.5.1
+ * @author  Remco Tolsma
  */
 abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	/**
@@ -108,7 +108,7 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	 *
 	 * @return string
 	 */
-	public function get_provider() : string {
+	public function get_provider(): string {
 		return $this->provider;
 	}
 
@@ -118,7 +118,7 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	 * @link https://github.com/wp-premium/gravityforms/blob/1.9.16/includes/fields/class-gf-field-multiselect.php#L21-L42
 	 * @return array
 	 */
-	public function get_settings() : array {
+	public function get_settings(): array {
 		return [];
 	}
 
@@ -127,7 +127,7 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	 *
 	 * @return array
 	 */
-	public function get_settings_fields() : array {
+	public function get_settings_fields(): array {
 		return [];
 	}
 
@@ -136,7 +136,7 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	 *
 	 * @return string|null
 	 */
-	public function get_dashboard_url() : ?string {
+	public function get_dashboard_url(): ?string {
 		return $this->dashboard_url;
 	}
 
@@ -145,7 +145,7 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	 *
 	 * @return string|null
 	 */
-	public function get_product_url() : ?string {
+	public function get_product_url(): ?string {
 		$url = null;
 
 		if ( isset( $this->product_url ) ) {
@@ -162,7 +162,7 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	 *
 	 * @return string|null
 	 */
-	public function get_manual_url() : ?string {
+	public function get_manual_url(): ?string {
 		return $this->manual_url;
 	}
 
@@ -170,6 +170,7 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	 * Set manual URL.
 	 *
 	 * @param string|null $manual_url Manual URL.
+	 *
 	 * @return void
 	 */
 	public function set_manual_url( ?string $manual_url ) {
@@ -181,7 +182,7 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	 *
 	 * @return string|null
 	 */
-	public function get_url() : ?string {
+	public function get_url(): ?string {
 		return $this->url;
 	}
 
@@ -190,10 +191,11 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	 *
 	 * @param string|int $post_id Post ID.
 	 * @param string     $key     Shortened meta key.
-	 * @return string
+	 *
 	 * @since 2.0.8
+	 * @return string
 	 */
-	protected function get_meta( $post_id, string $key ) : string {
+	protected function get_meta( $post_id, string $key ): string {
 		if ( empty( $post_id ) || empty( $key ) ) {
 			return '';
 		}
@@ -216,9 +218,10 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	 * Get config by post ID.
 	 *
 	 * @param int $post_id Post ID.
+	 *
 	 * @return GatewayConfig|null
 	 */
-	public function get_config( int $post_id ) : ?GatewayConfig {
+	public function get_config( int $post_id ): ?GatewayConfig {
 		return null;
 	}
 
@@ -226,9 +229,10 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	 * Get gateway.
 	 *
 	 * @param int $post_id Post ID.
+	 *
 	 * @return Gateway|null
 	 */
-	public function get_gateway( int $post_id ) : ?Gateway {
+	public function get_gateway( int $post_id ): ?Gateway {
 		return null;
 	}
 
@@ -236,9 +240,9 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	 * Save post.
 	 *
 	 * @param int $post_id Post ID.
+	 *
 	 * @return void
 	 */
 	public function save_post( int $post_id ) {
-
 	}
 }

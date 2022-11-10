@@ -17,9 +17,9 @@ use Pronamic\WordPress\Pay\Plugin;
 /**
  * Forms Module
  *
- * @author Remco Tolsma
+ * @author  Remco Tolsma
  * @version 2.2.6
- * @since 3.7.0
+ * @since   3.7.0
  */
 class FormsModule {
 	/**
@@ -56,7 +56,6 @@ class FormsModule {
 	 * @param string $content Post content to maybe extend with a payment form.
 	 *
 	 * @return string
-	 *
 	 * @throws \Exception Throws exception if output buffering is not active.
 	 */
 	public function maybe_add_form_to_content( $content ) {
@@ -73,7 +72,6 @@ class FormsModule {
 	 * @param int $id Form ID or form settings.
 	 *
 	 * @return string
-	 *
 	 * @throws \Exception Throws exception if output buffering is not active.
 	 */
 	public function get_form_output_by_id( $id ) {
@@ -112,7 +110,6 @@ class FormsModule {
 	 * @param array $args Form settings.
 	 *
 	 * @return string
-	 *
 	 * @throws \Exception When output buffering is not working as expected.
 	 */
 	public function get_form_output( $args ) {
@@ -154,6 +151,7 @@ class FormsModule {
 	 *
 	 * @param string  $text    The source text to filter.
 	 * @param Payment $payment The payment for the specified source text.
+	 *
 	 * @return string
 	 */
 	public function source_text( $text, Payment $payment ) {
@@ -185,6 +183,7 @@ class FormsModule {
 	 *
 	 * @param string  $text    The source text to filter.
 	 * @param Payment $payment The payment for the specified source text.
+	 *
 	 * @return string
 	 */
 	public function source_description( $text, Payment $payment ) {

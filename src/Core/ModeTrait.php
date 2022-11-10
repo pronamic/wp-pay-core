@@ -13,10 +13,10 @@ namespace Pronamic\WordPress\Pay\Core;
 /**
  * Mode Trait
  *
- * @author  Remco Tolsma
- * @version 2.5.0
- * @since   2.5.0
  * @link    https://github.com/search?q=%22trait+VersionTrait%22+language%3APHP&type=Code
+ * @since   2.5.0
+ * @version 2.5.0
+ * @author  Remco Tolsma
  */
 trait ModeTrait {
 	/**
@@ -30,6 +30,7 @@ trait ModeTrait {
 	 * Set mode.
 	 *
 	 * @param string $mode Mode.
+	 *
 	 * @return void
 	 * @throws \InvalidArgumentException Throws invalid argument exception when mode is not a string or not one of the mode constants.
 	 */

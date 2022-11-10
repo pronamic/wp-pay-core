@@ -201,6 +201,7 @@ class AdminSettings {
 	 * Settings section.
 	 *
 	 * @param array $args Arguments.
+	 *
 	 * @return void
 	 */
 	public function settings_section( $args ): void {
@@ -239,6 +240,7 @@ class AdminSettings {
 	 * Input text.
 	 *
 	 * @param array $args Arguments.
+	 *
 	 * @return void
 	 */
 	public function input_element( $args ): void {
@@ -281,7 +283,9 @@ class AdminSettings {
 	 *
 	 * @link https://github.com/WordPress/WordPress/blob/4.9.1/wp-admin/options-writing.php#L60-L68
 	 * @link https://github.com/WordPress/WordPress/blob/4.9.1/wp-admin/options-reading.php#L110-L141
+	 *
 	 * @param array $args Arguments.
+	 *
 	 * @return void
 	 */
 	public function input_checkbox( $args ): void {
@@ -321,6 +325,7 @@ class AdminSettings {
 	 * Input license key.
 	 *
 	 * @param array $args Arguments.
+	 *
 	 * @return void
 	 */
 	public function input_license_key( $args ): void {
@@ -342,6 +347,7 @@ class AdminSettings {
 	 * Input page.
 	 *
 	 * @param array $args Arguments.
+	 *
 	 * @return void
 	 */
 	public function input_page( $args ): void {
@@ -353,13 +359,13 @@ class AdminSettings {
 			$selected = '';
 		}
 
-		wp_dropdown_pages( array(
+		wp_dropdown_pages( [
 			'name'             => esc_attr( $name ),
 			'post_type'        => esc_attr( isset( $args['post_type'] ) ? $args['post_type'] : 'page' ),
 			'selected'         => esc_attr( $selected ),
 			'show_option_none' => esc_attr( isset( $args['show_option_none'] ) ? $args['show_option_none'] : __( '— Select a page —', 'pronamic_ideal' ) ),
 			'class'            => 'regular-text',
-		) );
+		] );
 	}
 
 	public function select_payment_method_status( $args ): void {

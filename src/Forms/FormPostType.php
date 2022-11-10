@@ -66,7 +66,6 @@ class FormPostType {
 		 *
 		 * @link https://core.trac.wordpress.org/ticket/28488.
 		 * @link https://core.trac.wordpress.org/changeset/29318.
-		 *
 		 * @link https://github.com/WordPress/WordPress/blob/4.0/wp-includes/post.php#L167.
 		 */
 		add_action( 'init', [ $this, 'register_post_type' ], 0 ); // Highest priority.
@@ -147,6 +146,7 @@ class FormPostType {
 	 * Edit columns.
 	 *
 	 * @param array $columns Edit columns.
+	 *
 	 * @return array
 	 */
 	public function edit_columns( $columns ) {
@@ -168,6 +168,7 @@ class FormPostType {
 	 *
 	 * @param string $column  Column.
 	 * @param int    $post_id Post ID.
+	 *
 	 * @return void
 	 */
 	public function custom_columns( $column, $post_id ): void {
@@ -279,6 +280,7 @@ class FormPostType {
 	 * Add meta boxes.
 	 *
 	 * @param string $post_type Post Type.
+	 *
 	 * @return void
 	 */
 	public function add_meta_boxes( $post_type ): void {
@@ -298,6 +300,7 @@ class FormPostType {
 	 * Pronamic Pay gateway config meta box.
 	 *
 	 * @param WP_Post $post The object for the current post/page.
+	 *
 	 * @return void
 	 */
 	public function meta_box_form_options( $post ): void {
@@ -308,7 +311,9 @@ class FormPostType {
 	 * When the post is saved, saves our custom data.
 	 *
 	 * @link https://github.com/WordPress/WordPress/blob/5.3/wp-includes/post.php#L4096-L4119
+	 *
 	 * @param int $post_id The ID of the post being saved.
+	 *
 	 * @return void
 	 */
 	public function save_post( $post_id ): void {
@@ -377,6 +382,7 @@ class FormPostType {
 	 * Get shortcode of the specified form post ID.
 	 *
 	 * @param int|null $post_id Post ID.
+	 *
 	 * @return string
 	 */
 	private function get_shortcode( $post_id = null ) {

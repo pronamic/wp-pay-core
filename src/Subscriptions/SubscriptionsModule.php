@@ -25,8 +25,8 @@ use Pronamic\WordPress\Pay\Plugin;
  * Copyright: 2005-2022 Pronamic
  * Company: Pronamic
  *
- * @link https://woocommerce.com/2017/04/woocommerce-3-0-release/
- * @link https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
+ * @link    https://woocommerce.com/2017/04/woocommerce-3-0-release/
+ * @link    https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
  * @author  Remco Tolsma
  * @version 2.5.0
  * @since   2.0.1
@@ -72,10 +72,10 @@ class SubscriptionsModule {
 		\add_filter( 'pronamic_payment_source_text_subscription_payment_method_change', [ $this, 'source_text_subscription_payment_method_change' ] );
 		\add_filter( 'pronamic_payment_source_description_subscription_payment_method_change', [ $this, 'source_description_subscription_payment_method_change' ] );
 
-		// Listen to payment status changes so we can update related subscriptions.
+		// Listen to payment status changes, so we can update related subscriptions.
 		\add_action( 'pronamic_payment_status_update', [ $this, 'payment_status_update' ] );
 
-		// Listen to subscription status changes so we can log these in a note.
+		// Listen to subscription status changes, so we can log these in a note.
 		\add_action( 'pronamic_subscription_status_update', [ $this, 'log_subscription_status_update' ], 10, 4 );
 
 		// REST API.
@@ -102,6 +102,7 @@ class SubscriptionsModule {
 	 *
 	 * @param array             $clauses The database query clauses.
 	 * @param \WP_Comment_Query $query   The WordPress comment query object.
+	 *
 	 * @return array
 	 */
 	public function exclude_subscription_comment_notes( $clauses, $query ) {
@@ -119,6 +120,7 @@ class SubscriptionsModule {
 	 * Complement subscription by payment.
 	 *
 	 * @param Payment $payment Payment.
+	 *
 	 * @return void
 	 */
 	public function complement_subscription_by_payment( $payment ): void {
@@ -136,6 +138,7 @@ class SubscriptionsModule {
 	 * Payment status update.
 	 *
 	 * @param Payment $payment The status updated payment.
+	 *
 	 * @return void
 	 */
 	public function payment_status_update( $payment ): void {
@@ -156,9 +159,9 @@ class SubscriptionsModule {
 					/**
 					 * Subscription status for failed payment.
 					 *
-					 * @todo Determine update status based on reason of failed payment. Use `failure` for now as that is usually the desired status.
 					 * @link https://www.europeanpaymentscouncil.eu/document-library/guidance-documents/guidance-reason-codes-sepa-direct-debit-r-transactions
 					 * @link https://github.com/pronamic/wp-pronamic-ideal/commit/48449417eac49eb6a93480e3b523a396c7db9b3d#diff-6712c698c6b38adfa7190a4be983a093
+					 * @todo Determine update status based on reason of failed payment. Use `failure` for now as that is usually the desired status.
 					 */
 					$status_update = SubscriptionStatus::ON_HOLD;
 
@@ -195,8 +198,9 @@ class SubscriptionsModule {
 	/**
 	 * Get subscription status update note.
 	 *
-	 * @param string|null $old_status   Old meta status.
-	 * @param string      $new_status   New meta status.
+	 * @param string|null $old_status Old meta status.
+	 * @param string      $new_status New meta status.
+	 *
 	 * @return string
 	 */
 	private function get_subscription_status_update_note( $old_status, $new_status ): string {
@@ -291,6 +295,7 @@ class SubscriptionsModule {
 	 * Handle cancel subscription action request.
 	 *
 	 * @param Subscription $subscription Subscription to cancel.
+	 *
 	 * @return void
 	 */
 	private function handle_subscription_cancel( Subscription $subscription ): void {
@@ -329,6 +334,7 @@ class SubscriptionsModule {
 	 * Handle renew subscription action request.
 	 *
 	 * @param Subscription $subscription Subscription to renew.
+	 *
 	 * @return void
 	 * @throws \Exception Throws exception if unable to redirect (empty payment action URL).
 	 */
@@ -414,6 +420,7 @@ class SubscriptionsModule {
 	 * Handle subscription mandate update action request.
 	 *
 	 * @param Subscription $subscription Subscription to update mandate for.
+	 *
 	 * @return void
 	 * @throws \Exception Throws exception if unable to redirect (empty payment action URL).
 	 */
@@ -549,6 +556,7 @@ class SubscriptionsModule {
 	 * Can payment be retried.
 	 *
 	 * @param Payment $payment Payment to retry.
+	 *
 	 * @return bool
 	 */
 	public function can_retry_payment( Payment $payment ): bool {
@@ -601,7 +609,6 @@ class SubscriptionsModule {
 	 *
 	 * @link https://developer.wordpress.org/rest-api/extending-the-rest-api/adding-custom-endpoints/
 	 * @link https://developer.wordpress.org/reference/hooks/rest_api_init/
-	 *
 	 * @return void
 	 */
 	public function rest_api_init(): void {
@@ -650,6 +657,7 @@ class SubscriptionsModule {
 	 * REST API subscription.
 	 *
 	 * @param \WP_REST_Request $request Request.
+	 *
 	 * @return object
 	 */
 	public function rest_api_subscription( \WP_REST_Request $request ) {
@@ -676,6 +684,7 @@ class SubscriptionsModule {
 	 * REST API subscription phase.
 	 *
 	 * @param \WP_REST_Request $request Request.
+	 *
 	 * @return object
 	 */
 	public function rest_api_subscription_phase( \WP_REST_Request $request ) {
@@ -718,6 +727,7 @@ class SubscriptionsModule {
 	 * Source text filter.
 	 *
 	 * @param string $text The source text to filter.
+	 *
 	 * @return string
 	 */
 	public function source_text_subscription_payment_method_change( $text ) {
@@ -728,6 +738,7 @@ class SubscriptionsModule {
 	 * Source description filter.
 	 *
 	 * @param string $text The source text to filter.
+	 *
 	 * @return string
 	 */
 	public function source_description_subscription_payment_method_change( $text ) {

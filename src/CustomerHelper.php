@@ -27,6 +27,7 @@ class CustomerHelper {
 	 * Complement customer.
 	 *
 	 * @param Customer $customer Customer to complement.
+	 *
 	 * @return void
 	 */
 	public static function complement_customer( Customer $customer ) {
@@ -180,6 +181,7 @@ class CustomerHelper {
 	 * Anonymize customer.
 	 *
 	 * @param Customer $customer Customer to anonymize.
+	 *
 	 * @return void
 	 */
 	public static function anonymize_customer( Customer $customer ) {
@@ -201,6 +203,7 @@ class CustomerHelper {
 	 * Create a customer from an array.
 	 *
 	 * @param array $data Data.
+	 *
 	 * @return Customer|null
 	 */
 	public static function from_array( $data ) {

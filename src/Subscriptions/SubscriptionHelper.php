@@ -26,6 +26,7 @@ class SubscriptionHelper {
 	 * Complement subscription.
 	 *
 	 * @param Subscription $subscription Subscription.
+	 *
 	 * @return void
 	 */
 	public static function complement_subscription( Subscription $subscription ) {
@@ -45,6 +46,7 @@ class SubscriptionHelper {
 	 *
 	 * @param Subscription $subscription Subscription.
 	 * @param Payment      $payment      Payment.
+	 *
 	 * @return void
 	 */
 	public static function complement_subscription_by_payment( Subscription $subscription, Payment $payment ) {

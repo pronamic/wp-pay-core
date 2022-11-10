@@ -93,6 +93,7 @@ class VatNumberValidity {
 	 * Set valid.
 	 *
 	 * @param bool $valid Valid.
+	 *
 	 * @return void
 	 */
 	public function set_valid( $valid ): void {
@@ -112,6 +113,7 @@ class VatNumberValidity {
 	 * Set name.
 	 *
 	 * @param string|null $name Name.
+	 *
 	 * @return void
 	 */
 	public function set_name( $name ): void {
@@ -131,6 +133,7 @@ class VatNumberValidity {
 	 * Set address.
 	 *
 	 * @param string|null $address Address.
+	 *
 	 * @return void
 	 */
 	public function set_address( $address ): void {
@@ -150,6 +153,7 @@ class VatNumberValidity {
 	 * Set service.
 	 *
 	 * @param string|null $service Service.
+	 *
 	 * @return void
 	 */
 	public function set_service( $service ): void {
@@ -187,6 +191,7 @@ class VatNumberValidity {
 	 * Create from object.
 	 *
 	 * @param mixed $json JSON.
+	 *
 	 * @return VatNumberValidity
 	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */

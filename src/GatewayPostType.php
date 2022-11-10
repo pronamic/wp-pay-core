@@ -34,7 +34,6 @@ class GatewayPostType {
 		 *
 		 * @link https://core.trac.wordpress.org/ticket/28488
 		 * @link https://core.trac.wordpress.org/changeset/29318
-		 *
 		 * @link https://github.com/WordPress/WordPress/blob/4.0/wp-includes/post.php#L167
 		 */
 		add_action( 'init', [ $this, 'register_gateway_post_type' ], 0 ); // Highest priority.
@@ -107,6 +106,7 @@ class GatewayPostType {
 	 * Maybe set the default gateway.
 	 *
 	 * @param int $post_id Post ID.
+	 *
 	 * @return void
 	 */
 	public function maybe_set_default_gateway( $post_id ): void {
@@ -156,7 +156,6 @@ class GatewayPostType {
 	 *
 	 * @link https://developer.wordpress.org/rest-api/extending-the-rest-api/adding-custom-endpoints/
 	 * @link https://developer.wordpress.org/reference/hooks/rest_api_init/
-	 *
 	 * @return void
 	 */
 	public function rest_api_init(): void {
@@ -209,6 +208,7 @@ class GatewayPostType {
 	 * REST API gateway.
 	 *
 	 * @param \WP_REST_Request $request Request.
+	 *
 	 * @return object
 	 */
 	public function rest_api_gateway( \WP_REST_Request $request ) {
@@ -221,7 +221,7 @@ class GatewayPostType {
 			return new \WP_Error(
 				'pronamic-pay-gateway-not-found',
 				\sprintf(
-					/* translators: %s: Subscription ID */
+				/* translators: %s: Subscription ID */
 					\__( 'Could not find gateway with ID `%s`.', 'pronamic_ideal' ),
 					$config_id
 				),
@@ -236,6 +236,7 @@ class GatewayPostType {
 	 * REST API gateway.
 	 *
 	 * @param \WP_REST_Request $request Request.
+	 *
 	 * @return object
 	 */
 	public function rest_api_gateway_admin( \WP_REST_Request $request ) {

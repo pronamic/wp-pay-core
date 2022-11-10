@@ -43,7 +43,6 @@ class FormShortcode {
 	 * @param array $atts Shortcode attributes array.
 	 *
 	 * @return string
-	 *
 	 * @throws \Exception Throws exception if output buffering is not active.
 	 */
 	public function shortcode_form( $atts ) {

@@ -45,6 +45,7 @@ abstract class Upgrade {
 	 * Set version.
 	 *
 	 * @param string $version Version.
+	 *
 	 * @return void
 	 */
 	public function set_version( $version ): void {

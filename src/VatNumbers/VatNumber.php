@@ -97,6 +97,7 @@ class VatNumber {
 	 * Set validity
 	 *
 	 * @param VatNumberValidity|null $validity Validity.
+	 *
 	 * @return void
 	 */
 	public function set_validity( VatNumberValidity $validity = null ): void {
@@ -125,6 +126,7 @@ class VatNumber {
 	 * Create VAT number from JSON.
 	 *
 	 * @param mixed $json JSON.
+	 *
 	 * @return VatNumber
 	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
@@ -156,6 +158,7 @@ class VatNumber {
 	 * Create VAT number from string.
 	 *
 	 * @param string $string VAT number string.
+	 *
 	 * @return VatNumber
 	 */
 	public static function from_string( $string ) {
@@ -167,6 +170,7 @@ class VatNumber {
 	 *
 	 * @param string $prefix Prefix (country code).
 	 * @param string $value  VAT number.
+	 *
 	 * @return VatNumber
 	 */
 	public static function from_prefix_and_number( $prefix, $value ) {
@@ -186,7 +190,9 @@ class VatNumber {
 	 * Normalize VAT number.
 	 *
 	 * @link https://gitlab.com/pronamic-plugins/edd-vat/-/blob/1.0.0/includes/class-check-vat-eu.php#L39-47
+	 *
 	 * @param string $value VAT identification number.
+	 *
 	 * @return string
 	 */
 	public static function normalize( $value ) {

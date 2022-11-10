@@ -15,19 +15,18 @@ use InvalidArgumentException;
 /**
  * Address
  *
- * @link   https://en.wikipedia.org/wiki/HTML_element#address
- * @link   https://en.wikipedia.org/wiki/Address_(geography)
- * @link   https://tools.ietf.org/html/rfc6350#section-6.3.1
- * @link   https://schema.org/PostalAddress
- * @link   https://github.com/wp-premium/gravityforms/blob/2.3.2/includes/fields/class-gf-field-address.php
- * @link   https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_address.htm
- * @link   https://c3.twinfield.com/webservices/documentation/#/ApiReference/Masters/Suppliers#Create-Update-Delete
- * @link   https://github.com/wp-pay-gateways/omnikassa-2/blob/develop/src/Address.php
- * @link   https://docs.adyen.com/developers/api-reference/common-api#address
- * @link   https://developer.paypal.com/docs/api/payments/v1/#definition-address
- * @link   https://docs.mollie.com/reference/v2/payments-api/create-payment
- * @link   https://epayments-api.developer-ingenico.com/s2sapi/v1/en_US/java/payments/create.html#payments-create-payload
- *
+ * @link    https://en.wikipedia.org/wiki/HTML_element#address
+ * @link    https://en.wikipedia.org/wiki/Address_(geography)
+ * @link    https://tools.ietf.org/html/rfc6350#section-6.3.1
+ * @link    https://schema.org/PostalAddress
+ * @link    https://github.com/wp-premium/gravityforms/blob/2.3.2/includes/fields/class-gf-field-address.php
+ * @link    https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_address.htm
+ * @link    https://c3.twinfield.com/webservices/documentation/#/ApiReference/Masters/Suppliers#Create-Update-Delete
+ * @link    https://github.com/wp-pay-gateways/omnikassa-2/blob/develop/src/Address.php
+ * @link    https://docs.adyen.com/developers/api-reference/common-api#address
+ * @link    https://developer.paypal.com/docs/api/payments/v1/#definition-address
+ * @link    https://docs.mollie.com/reference/v2/payments-api/create-payment
+ * @link    https://epayments-api.developer-ingenico.com/s2sapi/v1/en_US/java/payments/create.html#payments-create-payload
  * @author  Remco Tolsma
  * @version 2.2.6
  * @since   2.1.0
@@ -85,7 +84,6 @@ class Address {
 
 	/**
 	 * Region.
-	 *
 	 * Alias: `region`, `county`, `state`, `province`, `stateOrProvince`, `stateCode`.
 	 */
 	private ?Region $region = null;
@@ -113,6 +111,7 @@ class Address {
 	 * Set contact name.
 	 *
 	 * @param ContactName|null $name Contact name.
+	 *
 	 * @return void
 	 */
 	public function set_name( ContactName $name = null ): void {
@@ -132,6 +131,7 @@ class Address {
 	 * Set email.
 	 *
 	 * @param string|null $email Email.
+	 *
 	 * @return void
 	 */
 	public function set_email( $email ): void {
@@ -151,6 +151,7 @@ class Address {
 	 * Set company name.
 	 *
 	 * @param string|null $company_name Company name.
+	 *
 	 * @return void
 	 */
 	public function set_company_name( $company_name ): void {
@@ -170,6 +171,7 @@ class Address {
 	 * Set Kamer van Koophandel number.
 	 *
 	 * @param string|null $coc_number Kamer van Koophandel number.
+	 *
 	 * @return void
 	 */
 	public function set_coc_number( $coc_number ): void {
@@ -189,6 +191,7 @@ class Address {
 	 * Set address line 1.
 	 *
 	 * @param string|null $line_1 Address 1.
+	 *
 	 * @return void
 	 */
 	public function set_line_1( $line_1 ): void {
@@ -208,6 +211,7 @@ class Address {
 	 * Set address line 2.
 	 *
 	 * @param string|null $line_2 Address 2.
+	 *
 	 * @return void
 	 */
 	public function set_line_2( $line_2 ): void {
@@ -227,6 +231,7 @@ class Address {
 	 * Set street name.
 	 *
 	 * @param string|null $street_name Street name.
+	 *
 	 * @return void
 	 */
 	public function set_street_name( $street_name ): void {
@@ -246,6 +251,7 @@ class Address {
 	 * Set house number.
 	 *
 	 * @param string|HouseNumber|null $house_number House number.
+	 *
 	 * @return void
 	 */
 	public function set_house_number( $house_number ): void {
@@ -273,6 +279,7 @@ class Address {
 	 * Set house number base.
 	 *
 	 * @param string|null $house_number_base House number base.
+	 *
 	 * @return void
 	 */
 	public function set_house_number_base( $house_number_base ): void {
@@ -300,6 +307,7 @@ class Address {
 	 * Set house number addition.
 	 *
 	 * @param string|null $house_number_addition House number addition.
+	 *
 	 * @return void
 	 */
 	public function set_house_number_addition( $house_number_addition ): void {
@@ -323,6 +331,7 @@ class Address {
 	 * Set postal code.
 	 *
 	 * @param string|null $postal_code Postal Code.
+	 *
 	 * @return void
 	 */
 	public function set_postal_code( $postal_code ): void {
@@ -342,6 +351,7 @@ class Address {
 	 * Set city.
 	 *
 	 * @param string|null $city City.
+	 *
 	 * @return void
 	 */
 	public function set_city( $city ): void {
@@ -361,6 +371,7 @@ class Address {
 	 * Set region.
 	 *
 	 * @param string|Region|null $region Region.
+	 *
 	 * @return void
 	 */
 	public function set_region( $region ): void {
@@ -384,6 +395,7 @@ class Address {
 	 * Set country.
 	 *
 	 * @param Country|null $country Country.
+	 *
 	 * @return void
 	 */
 	public function set_country( $country ): void {
@@ -406,10 +418,10 @@ class Address {
 	/**
 	 * Set country code.
 	 *
-	 * @throws InvalidArgumentException Thrown when country code length is not equal to 2.
-	 *
 	 * @param null|string $country_code Country code.
+	 *
 	 * @return void
+	 * @throws InvalidArgumentException Thrown when country code length is not equal to 2.
 	 */
 	public function set_country_code( $country_code ): void {
 		if ( null === $this->country ) {
@@ -436,6 +448,7 @@ class Address {
 	 * Set country name.
 	 *
 	 * @param string|null $country_name Country name.
+	 *
 	 * @return void
 	 */
 	public function set_country_name( $country_name ): void {
@@ -459,6 +472,7 @@ class Address {
 	 * Set phone.
 	 *
 	 * @param string|null $phone Phone.
+	 *
 	 * @return void
 	 */
 	public function set_phone( $phone ): void {
@@ -500,6 +514,7 @@ class Address {
 	 * Create address from object.
 	 *
 	 * @param mixed $json JSON.
+	 *
 	 * @return Address
 	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */

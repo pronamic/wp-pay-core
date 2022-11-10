@@ -17,8 +17,8 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
 /**
  * Abstract Data Store Custom Post Type
  *
- * @link https://woocommerce.com/2017/04/woocommerce-3-0-release/
- * @link https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
+ * @link    https://woocommerce.com/2017/04/woocommerce-3-0-release/
+ * @link    https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
  * @author  Remco Tolsma
  * @version 2.5.0
  * @since   1.0.0
@@ -43,6 +43,7 @@ abstract class AbstractDataStoreCPT {
 	 *
 	 * @param string $meta_key Meta key to register.
 	 * @param array  $args     Settings for meta key.
+	 *
 	 * @return void
 	 */
 	protected function register_meta_key( string $meta_key, array $args ) {
@@ -54,7 +55,7 @@ abstract class AbstractDataStoreCPT {
 	 *
 	 * @return array
 	 */
-	public function get_registered_meta() : array {
+	public function get_registered_meta(): array {
 		return $this->meta;
 	}
 
@@ -62,9 +63,10 @@ abstract class AbstractDataStoreCPT {
 	 * Get a prefixed meta key for the specified key.
 	 *
 	 * @param string $key A key.
+	 *
 	 * @return string
 	 */
-	protected function get_meta_key( string $key ) : string {
+	protected function get_meta_key( string $key ): string {
 		return $this->meta_key_prefix . $key;
 	}
 
@@ -72,9 +74,10 @@ abstract class AbstractDataStoreCPT {
 	 * Get MySQL UTC datetime of the specified date.
 	 *
 	 * @param \DateTimeInterface $date The date.
+	 *
 	 * @return string
 	 */
-	protected function get_mysql_utc_date( \DateTimeInterface $date ) : string {
+	protected function get_mysql_utc_date( \DateTimeInterface $date ): string {
 		$date = clone $date;
 
 		if ( \method_exists( $date, 'setTimezone' ) ) {
@@ -89,6 +92,7 @@ abstract class AbstractDataStoreCPT {
 	 *
 	 * @param int    $id  Post ID.
 	 * @param string $key Key.
+	 *
 	 * @return string|null|false
 	 */
 	public function get_meta( int $id, string $key ) {
@@ -108,9 +112,10 @@ abstract class AbstractDataStoreCPT {
 	 *
 	 * @param int    $id  Post ID.
 	 * @param string $key Key.
+	 *
 	 * @return DateTime|null
 	 */
-	public function get_meta_date( int $id, string $key ) : ?DateTime {
+	public function get_meta_date( int $id, string $key ): ?DateTime {
 		$value = $this->get_meta( $id, $key );
 
 		if ( empty( $value ) ) {
@@ -131,9 +136,10 @@ abstract class AbstractDataStoreCPT {
 	 *
 	 * @param int    $id  Post ID.
 	 * @param string $key Key.
+	 *
 	 * @return string|null
 	 */
-	public function get_meta_string( int $id, string $key ) : ?string {
+	public function get_meta_string( int $id, string $key ): ?string {
 		$value = $this->get_meta( $id, $key );
 
 		if ( empty( $value ) ) {
@@ -148,9 +154,10 @@ abstract class AbstractDataStoreCPT {
 	 *
 	 * @param int    $id  Post ID.
 	 * @param string $key Key.
+	 *
 	 * @return int|null
 	 */
-	public function get_meta_int( int $id, string $key ) : ?int {
+	public function get_meta_int( int $id, string $key ): ?int {
 		$value = $this->get_meta( $id, $key );
 
 		if ( empty( $value ) ) {
@@ -190,9 +197,10 @@ abstract class AbstractDataStoreCPT {
 	 *
 	 * @param int    $id  Post ID.
 	 * @param string $key Key.
+	 *
 	 * @return bool|null
 	 */
-	public function get_meta_bool( int $id, string $key ) : ?bool {
+	public function get_meta_bool( int $id, string $key ): ?bool {
 		$meta_key = $this->get_meta_key( $key );
 
 		$value = get_post_meta( $id, $meta_key );
@@ -212,6 +220,7 @@ abstract class AbstractDataStoreCPT {
 	 * @param int    $id    Post ID.
 	 * @param string $key   Key.
 	 * @param mixed  $value Value.
+	 *
 	 * @return int|bool
 	 */
 	public function update_meta( int $id, string $key, $value ) {

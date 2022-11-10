@@ -72,6 +72,7 @@ class SubscriptionsNotificationsController {
 	 * Schedule page.
 	 *
 	 * @param int $page Page.
+	 *
 	 * @return int
 	 */
 	private function schedule_page( $page ) {
@@ -88,6 +89,7 @@ class SubscriptionsNotificationsController {
 	 * Schedule paged.
 	 *
 	 * @param int $page Page.
+	 *
 	 * @return void
 	 */
 	public function schedule_paged( $page ): void {
@@ -123,6 +125,7 @@ class SubscriptionsNotificationsController {
 	 * Test if the subscription meets the notification requirements.
 	 *
 	 * @param Subscription $subscription Subscription.
+	 *
 	 * @return bool True if meets requirements, false otherwise.
 	 */
 	private function meets_notification_requirements( Subscription $subscription ): bool {
@@ -169,6 +172,7 @@ class SubscriptionsNotificationsController {
 	 * Schedule subscription follow-up payment.
 	 *
 	 * @param Subscription $subscription Subscription.
+	 *
 	 * @return int|null
 	 */
 	private function schedule_subscription_notification( Subscription $subscription ) {
@@ -207,6 +211,7 @@ class SubscriptionsNotificationsController {
 	 * Action send subscription renewal notification.
 	 *
 	 * @param int $subscription_id Subscription ID.
+	 *
 	 * @return void
 	 * @throws \Exception Throws exception when unable to load subscription.
 	 */
@@ -234,6 +239,7 @@ class SubscriptionsNotificationsController {
 	 * Send subscription renewal notification.
 	 *
 	 * @param Subscription $subscription Subscription.
+	 *
 	 * @return void
 	 * @throws \Exception Throws exception when gateway not found.
 	 */
@@ -260,6 +266,7 @@ class SubscriptionsNotificationsController {
 	 * Get WordPress query for subscriptions that require a notification.
 	 *
 	 * @param array $args Arguments.
+	 *
 	 * @return WP_Query
 	 */
 	private function get_subscriptions_wp_query_that_require_notification( $args = [] ) {

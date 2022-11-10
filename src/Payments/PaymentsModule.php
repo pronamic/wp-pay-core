@@ -74,7 +74,7 @@ class PaymentsModule {
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			WP_CLI::add_command(
 				'pay payment status',
-				function ( $args, $assoc_args ): void {
+				function( $args, $assoc_args ): void {
 					foreach ( $args as $id ) {
 						$payment = get_pronamic_payment( $id );
 
@@ -183,8 +183,9 @@ class PaymentsModule {
 	/**
 	 * Get payment status update note.
 	 *
-	 * @param string|null $old_status   Old meta status.
-	 * @param string      $new_status   New meta status.
+	 * @param string|null $old_status Old meta status.
+	 * @param string      $new_status New meta status.
+	 *
 	 * @return string
 	 */
 	private function get_payment_status_update_note( $old_status, $new_status ): string {
@@ -228,7 +229,6 @@ class PaymentsModule {
 	 *
 	 * @link https://developer.wordpress.org/rest-api/extending-the-rest-api/adding-custom-endpoints/
 	 * @link https://developer.wordpress.org/reference/hooks/rest_api_init/
-	 *
 	 * @return void
 	 */
 	public function rest_api_init(): void {
@@ -255,6 +255,7 @@ class PaymentsModule {
 	 * REST API payment.
 	 *
 	 * @param \WP_REST_Request $request Request.
+	 *
 	 * @return object
 	 */
 	public function rest_api_payment( \WP_REST_Request $request ) {

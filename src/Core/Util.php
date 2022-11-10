@@ -19,9 +19,9 @@ use Pronamic\WordPress\Pay\Util as Pay_Util;
  * Copyright: 2005-2022 Pronamic
  * Company: Pronamic
  *
- * @author Remco Tolsma
+ * @author  Remco Tolsma
  * @version 2.2.6
- * @since 1.0.0
+ * @since   1.0.0
  */
 class Util {
 	/**
@@ -72,6 +72,7 @@ class Util {
 	 * @link https://www.php.net/manual/en/class.libxmlerror.php
 	 *
 	 * @param string $string The XML string to convert to a SimpleXMLElement object.
+	 *
 	 * @return \SimpleXMLElement
 	 * @throws \InvalidArgumentException If string could not be loaded in to a SimpleXMLElement object.
 	 */
@@ -144,8 +145,9 @@ class Util {
 	/**
 	 * String to interval period (user input string).
 	 *
-	 * @since 2.0.3
 	 * @param string $interval Interval user input string.
+	 *
+	 * @since 2.0.3
 	 * @return string|null
 	 */
 	public static function string_to_interval_period( $interval ) {
@@ -186,10 +188,9 @@ class Util {
 	/**
 	 * Convert the specified period to a single char notation.
 	 *
-	 * @since 1.3.9
-	 *
 	 * @param string $period The period value to convert to a single character/string value.
 	 *
+	 * @since 1.3.9
 	 * @return string
 	 */
 	public static function to_period( $period ) {
@@ -215,7 +216,7 @@ class Util {
 	/**
 	 * Get remote address.
 	 *
-	 * @link https://github.com/WordPress/WordPress/blob/4.9.8/wp-admin/includes/class-wp-community-events.php#L210-L274
+	 * @link  https://github.com/WordPress/WordPress/blob/4.9.8/wp-admin/includes/class-wp-community-events.php#L210-L274
 	 * @since 2.1.0
 	 * @return mixed|null
 	 */

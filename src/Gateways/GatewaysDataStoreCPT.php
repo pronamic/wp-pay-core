@@ -44,6 +44,7 @@ class GatewaysDataStoreCPT extends AbstractDataStoreCPT {
 	 * Get gateway by ID.
 	 *
 	 * @param int $post_id Gateway configuration post ID.
+	 *
 	 * @return Gateway|null
 	 */
 	public function get_gateway( $post_id ) {

@@ -85,7 +85,7 @@ class Plugin {
 	 *
 	 * @return Plugin
 	 */
-	public static function instance( $args = [] ) : Plugin {
+	public static function instance( $args = [] ): Plugin {
 		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self( $args );
 		}
@@ -375,9 +375,10 @@ class Plugin {
 	 * Get payment methods.
 	 *
 	 * @param array $args Query arguments.
+	 *
 	 * @return PaymentMethodsCollection
 	 */
-	public function get_payment_methods( array $args = [] ) : PaymentMethodsCollection {
+	public function get_payment_methods( array $args = [] ): PaymentMethodsCollection {
 		return $this->payment_methods->query( $args );
 	}
 
@@ -386,7 +387,7 @@ class Plugin {
 	 *
 	 * @return string The version number of this plugin.
 	 */
-	public function get_version() : string {
+	public function get_version(): string {
 		return $this->version;
 	}
 
@@ -395,7 +396,7 @@ class Plugin {
 	 *
 	 * @return string
 	 */
-	public function get_file() : string {
+	public function get_file(): string {
 		return self::$file;
 	}
 
@@ -403,9 +404,10 @@ class Plugin {
 	 * Get option.
 	 *
 	 * @param string $option Name of option to retrieve.
+	 *
 	 * @return string|null
 	 */
-	public function get_option( string $option ) : ?string {
+	public function get_option( string $option ): ?string {
 		if ( array_key_exists( $option, $this->options ) ) {
 			return $this->options[ $option ];
 		}
@@ -418,7 +420,7 @@ class Plugin {
 	 *
 	 * @return string
 	 */
-	public function get_plugin_dir_path() : string {
+	public function get_plugin_dir_path(): string {
 		return plugin_dir_path( $this->get_file() );
 	}
 
@@ -427,6 +429,7 @@ class Plugin {
 	 *
 	 * @param Payment|null $payment      The payment to update.
 	 * @param bool         $can_redirect Flag to indicate if redirect is allowed after the payment update.
+	 *
 	 * @return void
 	 */
 	public static function update_payment( Payment $payment = null, bool $can_redirect = true ): void {
@@ -618,7 +621,6 @@ class Plugin {
 	 * Get number payments.
 	 *
 	 * @link https://developer.wordpress.org/reference/functions/wp_count_posts/
-	 *
 	 * @return int|false
 	 */
 	public static function get_number_payments() {
@@ -751,9 +753,10 @@ class Plugin {
 	 *
 	 * @param string $locale A WordPress locale identifier.
 	 * @param string $domain A WordPress text domain identifier.
+	 *
 	 * @return string
 	 */
-	public function plugin_locale( string $locale, string $domain ) : string {
+	public function plugin_locale( string $locale, string $domain ): string {
 		if ( 'pronamic_ideal' !== $domain ) {
 			return $locale;
 		}
@@ -773,9 +776,10 @@ class Plugin {
 	 * Default date time format.
 	 *
 	 * @param string $format Format.
+	 *
 	 * @return string
 	 */
-	public function datetime_format( string $format ) : string {
+	public function datetime_format( string $format ): string {
 		$format = _x( 'D j M Y \a\t H:i', 'default datetime format', 'pronamic_ideal' );
 
 		return $format;
@@ -786,7 +790,7 @@ class Plugin {
 	 *
 	 * @return string
 	 */
-	public static function get_default_error_message() : string {
+	public static function get_default_error_message(): string {
 		return __( 'Something went wrong with the payment. Please try again or pay another way.', 'pronamic_ideal' );
 	}
 
@@ -811,9 +815,10 @@ class Plugin {
 	 * Get config select options.
 	 *
 	 * @param string|null $payment_method The gateway configuration options for the specified payment method.
+	 *
 	 * @return array
 	 */
-	public static function get_config_select_options( ?string $payment_method = null ) : array {
+	public static function get_config_select_options( ?string $payment_method = null ): array {
 		$args = [
 			'post_type' => 'pronamic_gateway',
 			'orderby'   => 'post_title',
@@ -848,6 +853,7 @@ class Plugin {
 	 * Render errors.
 	 *
 	 * @param array|WP_Error $errors An array with errors to render.
+	 *
 	 * @return void
 	 */
 	public static function render_errors( $errors = [] ): void {
@@ -864,6 +870,7 @@ class Plugin {
 	 * Render exception.
 	 *
 	 * @param \Exception $exception An exception.
+	 *
 	 * @return void
 	 */
 	public static function render_exception( \Exception $exception ): void {
@@ -874,11 +881,13 @@ class Plugin {
 	 * Get gateway.
 	 *
 	 * @link https://wordpress.org/support/article/post-status/#default-statuses
+	 *
 	 * @param int   $config_id A gateway configuration ID.
 	 * @param array $args      Extra arguments.
+	 *
 	 * @return null|Gateway
 	 */
-	public static function get_gateway( int $config_id, array $args = [] ) : ?Gateway {
+	public static function get_gateway( int $config_id, array $args = [] ): ?Gateway {
 		// Get gateway from data store.
 		$gateway = \pronamic_pay_plugin()->gateways_data_store->get_gateway( $config_id );
 
@@ -907,6 +916,7 @@ class Plugin {
 	 * Complement payment.
 	 *
 	 * @param Payment $payment Payment.
+	 *
 	 * @return void
 	 */
 	public static function complement_payment( Payment $payment ): void {
@@ -1053,6 +1063,7 @@ class Plugin {
 	 *
 	 * @param Payment $payment Payment.
 	 * @param array   $data    Data.
+	 *
 	 * @return void
 	 */
 	private static function process_payment_input_data( Payment $payment, array $data ): void {
@@ -1088,7 +1099,7 @@ class Plugin {
 	 *
 	 * @return int|null
 	 */
-	private static function get_default_config_id() : ?int {
+	private static function get_default_config_id(): ?int {
 		$value = (int) \get_option( 'pronamic_pay_config_id' );
 
 		if ( 0 === $value ) {
@@ -1106,10 +1117,11 @@ class Plugin {
 	 * Start payment.
 	 *
 	 * @param Payment $payment The payment to start at the specified gateway.
+	 *
 	 * @return Payment
 	 * @throws \Exception Throws exception if gateway payment start fails.
 	 */
-	public static function start_payment( Payment $payment ) : Payment {
+	public static function start_payment( Payment $payment ): Payment {
 		// Set default or filtered config ID.
 		$config_id = $payment->get_config_id();
 
@@ -1213,6 +1225,7 @@ class Plugin {
 	 * can be performed before payment.
 	 *
 	 * @param Payment $payment Payment.
+	 *
 	 * @return void
 	 */
 	private static function pronamic_service( Payment $payment ): void {
@@ -1270,10 +1283,11 @@ class Plugin {
 	 * @param Gateway     $gateway        Gateway.
 	 * @param Money       $amount         Refund amount.
 	 * @param string|null $description    Refund description.
+	 *
 	 * @return string|null
 	 * @throws \Exception Throws exception on error.
 	 */
-	public static function create_refund( string $transaction_id, Gateway $gateway, Money $amount, ?string $description = null ) : ?string {
+	public static function create_refund( string $transaction_id, Gateway $gateway, Money $amount, ?string $description = null ): ?string {
 		// Check if gateway supports refunds.
 		if ( ! $gateway->supports( 'refunds' ) || ! \method_exists( $gateway, 'create_refund' ) ) {
 			throw new \Exception( __( 'Unable to process refund as gateway does not support refunds.', 'pronamic_ideal' ) );
@@ -1333,7 +1347,7 @@ class Plugin {
 	 *
 	 * @return array
 	 */
-	public function get_pages() : array {
+	public function get_pages(): array {
 		$return = [];
 
 		$pages = [
@@ -1358,9 +1372,10 @@ class Plugin {
 	 *
 	 * @param string  $url     Redirect URL.
 	 * @param Payment $payment Payment.
+	 *
 	 * @return string
 	 */
-	public function payment_redirect_url( string $url, Payment $payment ) : string {
+	public function payment_redirect_url( string $url, Payment $payment ): string {
 		$source = $payment->get_source();
 
 		/**
@@ -1380,7 +1395,7 @@ class Plugin {
 	 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/blob/2.9.26/includes/misc-functions.php#L26-L38
 	 * @return bool True if debug mode is enabled, false otherwise.
 	 */
-	public function is_debug_mode() : bool {
+	public function is_debug_mode(): bool {
 		$value = \get_option( 'pronamic_pay_debug_mode', false );
 
 		if ( PRONAMIC_PAY_DEBUG ) {

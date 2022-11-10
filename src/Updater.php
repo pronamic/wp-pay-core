@@ -50,9 +50,11 @@ class Updater {
 	 * HTTP Response.
 	 *
 	 * @link https://github.com/WordPress/WordPress/blob/5.5/wp-includes/class-http.php#L437-L446
+	 *
 	 * @param array  $response    HTTP response.
 	 * @param array  $parsed_args HTTP request arguments.
 	 * @param string $url         The request URL.
+	 *
 	 * @return array
 	 */
 	public function http_response( $response, $parsed_args, $url ) {
@@ -77,6 +79,7 @@ class Updater {
 	 * @param array  $response    HTTP response.
 	 * @param array  $parsed_args HTTP request arguments.
 	 * @param string $type        Type.
+	 *
 	 * @return array
 	 */
 	public function extend_response_with_pronamic( $response, $parsed_args, $type ) {
@@ -111,6 +114,7 @@ class Updater {
 	 * @param string $url         URL to retrieve.
 	 * @param array  $args        Request arguments.
 	 * @param array  $parsed_args Parsed request arguments.
+	 *
 	 * @return array|WP_Error
 	 */
 	private function remote_post( $url, $args, $parsed_args ) {
@@ -133,6 +137,7 @@ class Updater {
 	 * Request plugins update check.
 	 *
 	 * @param array $parsed_args HTTP request arguments.
+	 *
 	 * @return array|false
 	 */
 	private function request_plugins_update_check( $parsed_args ) {
@@ -190,6 +195,7 @@ class Updater {
 	 * Return an instance of this class.
 	 *
 	 * @param callable $plugins_filter_callback Plugins filter callback.
+	 *
 	 * @return self A single instance of this class.
 	 */
 	public static function instance( $plugins_filter_callback = null ) {
