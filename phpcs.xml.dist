@@ -12,6 +12,8 @@
 	</rule>
 
 	<rule ref="PronamicWP">
+		<exclude name="Squiz.Commenting.VariableComment.MissingVar" />
+
 		<exclude name="WordPress.DB.SlowDBQuery.slow_db_query_meta_query" />
 
 		<exclude name="WordPress.Security.SafeRedirect.wp_redirect_wp_redirect" />
