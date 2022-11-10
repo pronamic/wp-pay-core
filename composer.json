@@ -94,6 +94,7 @@
 		"phpstan": "vendor/bin/phpstan analyse --memory-limit=-1",
 		"phpunit": "vendor/bin/phpunit --colors=always",
 		"psalm": "vendor/bin/psalm",
+		"rector": "XDEBUG_MODE=off vendor/bin/rector process",
 		"xmllint-phpcs": "xmllint --noout --schema vendor/squizlabs/php_codesniffer/phpcs.xsd phpcs.xml.dist",
 		"xmllint": [
 			"@xmllint-phpcs"
