@@ -43,7 +43,7 @@ class CachedCallbackOptions implements IteratorAggregate {
 	}
 
 	/**
-	 * Get itreator.
+	 * Get iterator.
 	 *
 	 * @return ArrayIterator<int, SelectFieldOption|SelectFieldOptionGroup>
 	 */

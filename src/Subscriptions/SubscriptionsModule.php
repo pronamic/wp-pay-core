@@ -590,7 +590,7 @@ class SubscriptionsModule {
 	 * @return void
 	 */
 	public function maybe_schedule_subscription_events(): void {
-		// Unschedule legacy WordPress Cron hook.
+		// Clear scheduled legacy WordPress Cron hook.
 		\wp_clear_scheduled_hook( 'pronamic_pay_update_subscription_payments' );
 		\wp_clear_scheduled_hook( 'pronamic_pay_complete_subscriptions' );
 	}

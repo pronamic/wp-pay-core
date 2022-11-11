@@ -294,7 +294,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		);
 
 		if ( is_wp_error( $result ) ) {
-			throw new \Exception( 'Could not craete payment' );
+			throw new \Exception( 'Could not create payment' );
 		}
 
 		/**
