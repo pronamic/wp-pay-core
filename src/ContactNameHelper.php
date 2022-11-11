@@ -71,6 +71,7 @@ class ContactNameHelper {
 				$name->set_initials( implode( '', $initials ) );
 			}
 		}
+
 		/*
 		 * Parse full name.
 		 *

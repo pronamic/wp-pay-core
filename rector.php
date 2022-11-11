@@ -1,4 +1,13 @@
 <?php
+/**
+ * Rector config.
+ *
+ * @author    Pronamic <info@pronamic.eu>
+ * @copyright 2005-2022 Pronamic
+ * @license   GPL-3.0-or-later
+ * @package   Pronamic\WordPress\Pay
+ * @link      https://getrector.org
+ */
 
 declare( strict_types=1 );
 
@@ -10,33 +19,36 @@ use Rector\Set\ValueObject\LevelSetList;
 use Rector\TypeDeclaration\Rector\ClassMethod\AddVoidReturnTypeWhereNoReturnRector;
 use Rector\TypeDeclaration\Rector\ClassMethod\ReturnTypeFromStrictNativeCallRector;
 
-return static function ( RectorConfig $rectorConfig ): void {
-	$rectorConfig->paths(
+return static function( RectorConfig $config ): void {
+	$config->paths(
 		[
 			__DIR__ . '/src',
 		]
 	);
 
-	// define sets of rules
-	$rectorConfig->sets(
+	$config->sets(
 		[
 			LevelSetList::UP_TO_PHP_74,
 		]
 	);
 
-	$rectorConfig->rules( [
-		ReturnTypeFromStrictNativeCallRector::class,
-		ReturnTypeFromStrictScalarReturnExprRector::class,
-		AddVoidReturnTypeWhereNoReturnRector::class,
-	] );
+	$config->rules(
+		[
+			ReturnTypeFromStrictNativeCallRector::class,
+			ReturnTypeFromStrictScalarReturnExprRector::class,
+			AddVoidReturnTypeWhereNoReturnRector::class,
+		]
+	);
 
-	$rectorConfig->skip( [
-		AddLiteralSeparatorToNumberRector::class,
-		ClosureToArrowFunctionRector::class
-	] );
+	$config->skip(
+		[
+			AddLiteralSeparatorToNumberRector::class,
+			ClosureToArrowFunctionRector::class,
+		]
+	);
 
-	$rectorConfig->importNames();
-	$rectorConfig->importShortClasses( false );
-	$rectorConfig->phpstanConfig( __DIR__ . '/phpstan.neon.dist' );
-	$rectorConfig->indent( "\t", 1 );
+	$config->importNames();
+	$config->importShortClasses( false );
+	$config->phpstanConfig( __DIR__ . '/phpstan.neon.dist' );
+	$config->indent( "\t", 1 );
 };
