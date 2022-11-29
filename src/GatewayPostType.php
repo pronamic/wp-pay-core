@@ -221,7 +221,7 @@ class GatewayPostType {
 			return new \WP_Error(
 				'pronamic-pay-gateway-not-found',
 				\sprintf(
-					/* translators: %s: Subscription ID */
+					/* translators: %s: Gateway configuration ID */
 					\__( 'Could not find gateway with ID `%s`.', 'pronamic_ideal' ),
 					$config_id
 				),
