@@ -48,7 +48,7 @@
 		}
 	],
 	"require": {
-		"php": ">=7.4",
+		"php": ">=8.0",
 		"ext-dom": "*",
 		"ext-libxml": "*",
 		"ext-simplexml": "*",
@@ -57,19 +57,19 @@
 		"pronamic/wp-http": "^1.0",
 		"pronamic/wp-money": "^2.0",
 		"pronamic/wp-number": "^1.1",
-		"roots/wordpress": "^5.7",
 		"viison/address-splitter": "^0.3.4",
 		"woocommerce/action-scheduler": "^3.4"
 	},
 	"require-dev": {
-		"automattic/wordbless": "^0.3.1",
+		"automattic/wordbless": "^0.4.0",
 		"bamarni/composer-bin-plugin": "^1.4",
 		"overtrue/phplint": "^2.2",
 		"php-coveralls/php-coveralls": "^2.4",
 		"php-stubs/wordpress-globals": "^0.2.0",
 		"php-stubs/wp-cli-stubs": "^2.4",
 		"phpmd/phpmd": "^2.9",
-		"pronamic/wp-coding-standards": "^1.0",
+		"pronamic/wp-coding-standards": "^1.3",
+		"roots/wordpress": "^6.0",
 		"wp-cli/wp-cli": "^2.3",
 		"wp-phpunit/wp-phpunit": "^5.7",
 		"yoast/phpunit-polyfills": "^1.0"
@@ -100,10 +100,10 @@
 		"build-docs": [
 			"XDEBUG_MODE=off vendor/bin/wp-documentor parse src --format=markdown --relative=docs > docs/hooks.md"
 		],
-		"post-install-cmd": "echo 'Optionally run: composer bin all install'",
+		"post-install-cmd": "WorDBless\\Composer\\InstallDropin::copy",
 		"post-update-cmd": [
 			"echo 'Optionally run: composer bin all update'",
-			"php -r \"copy('vendor/automattic/wordbless/src/dbless-wpdb.php', 'wordpress/wp-content/db.php');\""
+			"WorDBless\\Composer\\InstallDropin::copy"
 		]
 	}
 }
