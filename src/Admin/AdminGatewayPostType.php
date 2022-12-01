@@ -58,7 +58,7 @@ class AdminGatewayPostType {
 
 		add_action( 'after_delete_post', [ $this, 'after_delete_post' ], 10, 2 );
 
-		add_action( 'display_post_states', [ $this, 'display_post_states' ], 10, 2 );
+		add_filter( 'display_post_states', [ $this, 'display_post_states' ], 10, 2 );
 
 		add_filter( 'post_updated_messages', [ $this, 'post_updated_messages' ] );
 	}
