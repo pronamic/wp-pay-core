@@ -140,9 +140,9 @@ class Field implements JsonSerializable {
 	/**
 	 * Serialize to JSON.
 	 *
-	 * @return array
+	 * @return mixed
 	 */
-	public function jsonSerialize() {
+	public function jsonSerialize() : mixed {
 		return [
 			'type'     => '',
 			'id'       => $this->id,

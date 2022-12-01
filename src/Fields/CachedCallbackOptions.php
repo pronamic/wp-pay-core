@@ -12,6 +12,7 @@ namespace Pronamic\WordPress\Pay\Fields;
 
 use ArrayIterator;
 use IteratorAggregate;
+use Traversable;
 
 /**
  * Cached callback options class
@@ -49,7 +50,7 @@ class CachedCallbackOptions implements IteratorAggregate {
 	 *
 	 * @return ArrayIterator<int, SelectFieldOption|SelectFieldOptionGroup>
 	 */
-	public function getIterator() {
+	public function getIterator() : Traversable {
 		$options = $this->get_transient_options();
 
 		return new ArrayIterator( $options );

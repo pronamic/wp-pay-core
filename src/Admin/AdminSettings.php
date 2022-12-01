@@ -364,6 +364,12 @@ class AdminSettings {
 		) );
 	}
 
+	/**
+	 * Select payment method status.
+	 * 
+	 * @param array $args Arguments.
+	 * @return void
+	 */
 	public function select_payment_method_status( $args ) {
 		$name = $args['label_for'];
 

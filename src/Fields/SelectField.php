@@ -100,9 +100,9 @@ class SelectField extends Field {
 	/**
 	 * Serialize to JSON.
 	 *
-	 * @return array
+	 * @return mixed
 	 */
-	public function jsonSerialize() {
+	public function jsonSerialize() : mixed {
 		$data = parent::jsonSerialize();
 
 		$data['type']    = 'select';
