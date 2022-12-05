@@ -32,11 +32,6 @@ build:
     before:
       - mysql -e "CREATE DATABASE wp_phpunit_tests"
 
-filter:
-  excluded_paths:
-    # Exclude the external `xmlseclibs.php` library.
-    - 'includes/xmlseclibs/*'
-
 checks:
   php:
     coding_standard:

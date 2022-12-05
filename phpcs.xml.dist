@@ -3,7 +3,6 @@
 <ruleset name="WordPress Pay: Core rules">
 	<file>.</file>
 
-	<exclude-pattern>includes/xmlseclibs/*</exclude-pattern>
 	<exclude-pattern>tests/bootstrap.php</exclude-pattern>
 	<exclude-pattern>tests/wp-config.php</exclude-pattern>
 

@@ -28,8 +28,7 @@
 			"Pronamic\\WordPress\\Pay\\": "src/"
 		},
 		"files": [
-			"includes/functions.php",
-			"includes/xmlseclibs/xmlseclibs-ing.php"
+			"includes/functions.php"
 		]
 	},
 	"config": {
