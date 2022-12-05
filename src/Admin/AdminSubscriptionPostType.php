@@ -212,8 +212,15 @@ class AdminSubscriptionPostType {
 	 * @return void
 	 */
 	public function admin_notices() {
+		/* phpcs:ignore WordPress.Security.NonceVerification.Recommended */
+		$payment_ids = \array_key_exists( 'pronamic_payment_created', $_GET ) ? \sanitize_text_field( \wp_unslash( $_GET['pronamic_payment_created'] ) ) : null;
+
+		if ( null === $payment_ids ) {
+			return;
+		}
+
 		// Payment created for period.
-		$payment_ids = \wp_parse_id_list( \filter_input( \INPUT_GET, 'pronamic_payment_created', \FILTER_SANITIZE_STRING ) );
+		$payment_ids = \wp_parse_id_list( $payment_ids );
 
 		foreach ( $payment_ids as $payment_id ) {
 			$edit_post_link = \sprintf(

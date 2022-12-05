@@ -127,7 +127,7 @@ class WebhookRequestInfo implements JsonSerializable {
 	 * @link https://www.php.net/manual/en/jsonserializable.jsonserialize.php
 	 * @return mixed
 	 */
-	public function jsonSerialize() : mixed {
+	public function jsonSerialize(): mixed {
 		return $this->get_json();
 	}
 

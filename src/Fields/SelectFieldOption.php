@@ -50,7 +50,7 @@ class SelectFieldOption implements JsonSerializable {
 	 *
 	 * @return string
 	 */
-	public function render() : string {
+	public function render(): string {
 		$element = new Element(
 			'option',
 			[
@@ -69,7 +69,7 @@ class SelectFieldOption implements JsonSerializable {
 	 * @link https://developer.wordpress.org/block-editor/reference-guides/components/select-control/
 	 * @return array
 	 */
-	public function jsonSerialize() : array {
+	public function jsonSerialize(): array {
 		return [
 			'value' => $this->value,
 			'label' => $this->label,
