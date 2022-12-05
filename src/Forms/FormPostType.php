@@ -220,7 +220,7 @@ class FormPostType {
 					)
 				);
 
-				echo esc_html( number_format_i18n( $value ) );
+				echo esc_html( number_format_i18n( (int) $value ) );
 
 				break;
 			case 'pronamic_payment_form_earnings':

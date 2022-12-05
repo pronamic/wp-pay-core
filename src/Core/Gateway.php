@@ -139,7 +139,7 @@ abstract class Gateway {
 	 * @param array $args Query arguments.
 	 * @return PaymentMethodsCollection
 	 */
-	public function get_payment_methods( array $args = [] ) : PaymentMethodsCollection {
+	public function get_payment_methods( array $args = [] ): PaymentMethodsCollection {
 		return $this->payment_methods->query( $args );
 	}
 

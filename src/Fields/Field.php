@@ -78,7 +78,7 @@ class Field implements JsonSerializable {
 	 *
 	 * @return string
 	 */
-	public function get_label() : string {
+	public function get_label(): string {
 		return $this->label;
 	}
 
@@ -87,7 +87,7 @@ class Field implements JsonSerializable {
 	 *
 	 * @param string $label Label.
 	 */
-	public function set_label( string $label ) : void {
+	public function set_label( string $label ): void {
 		$this->label = $label;
 	}
 
@@ -96,7 +96,7 @@ class Field implements JsonSerializable {
 	 *
 	 * @param bool $required Required.
 	 */
-	public function set_required( bool $required ) : void {
+	public function set_required( bool $required ): void {
 		$this->required = $required;
 	}
 
@@ -105,7 +105,7 @@ class Field implements JsonSerializable {
 	 *
 	 * @return bool
 	 */
-	public function is_required() : bool {
+	public function is_required(): bool {
 		return $this->required;
 	}
 
@@ -142,7 +142,7 @@ class Field implements JsonSerializable {
 	 *
 	 * @return mixed
 	 */
-	public function jsonSerialize() : mixed {
+	public function jsonSerialize(): mixed {
 		return [
 			'type'     => '',
 			'id'       => $this->id,

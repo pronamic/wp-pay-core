@@ -17,7 +17,7 @@ use Traversable;
 
 /**
  * Payment methods collection class
- * 
+ *
  * @implements IteratorAggregate<string, PaymentMethod>
  */
 class PaymentMethodsCollection implements IteratorAggregate, Countable {
@@ -108,7 +108,7 @@ class PaymentMethodsCollection implements IteratorAggregate, Countable {
 	 *
 	 * @return ArrayIterator<string, PaymentMethod>
 	 */
-	public function getIterator() : Traversable {
+	public function getIterator(): Traversable {
 		return new ArrayIterator( $this->items );
 	}
 
@@ -117,7 +117,7 @@ class PaymentMethodsCollection implements IteratorAggregate, Countable {
 	 *
 	 * @return int
 	 */
-	public function count() : int {
+	public function count(): int {
 		return count( $this->items );
 	}
 

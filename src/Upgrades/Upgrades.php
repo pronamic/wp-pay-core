@@ -80,7 +80,7 @@ class Upgrades implements Countable, IteratorAggregate {
 	 *
 	 * @return Traversable
 	 */
-	public function getIterator() : Traversable {
+	public function getIterator(): Traversable {
 		return new ArrayIterator( $this->upgrades );
 	}
 
@@ -89,7 +89,7 @@ class Upgrades implements Countable, IteratorAggregate {
 	 *
 	 * @return int
 	 */
-	public function count() : int {
+	public function count(): int {
 		return count( $this->upgrades );
 	}
 }

@@ -50,7 +50,7 @@ class CachedCallbackOptions implements IteratorAggregate {
 	 *
 	 * @return ArrayIterator<int, SelectFieldOption|SelectFieldOptionGroup>
 	 */
-	public function getIterator() : Traversable {
+	public function getIterator(): Traversable {
 		$options = $this->get_transient_options();
 
 		return new ArrayIterator( $options );

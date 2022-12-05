@@ -78,7 +78,7 @@ class GatewayIntegrations implements IteratorAggregate {
 	 *
 	 * @return \ArrayIterator<string, AbstractGatewayIntegration>
 	 */
-	public function getIterator() : Traversable {
+	public function getIterator(): Traversable {
 		return new ArrayIterator( $this->integrations );
 	}
 }

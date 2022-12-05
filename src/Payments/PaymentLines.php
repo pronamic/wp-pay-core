@@ -45,7 +45,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 	 *
 	 * @return ArrayIterator<int, PaymentLine>
 	 */
-	public function getIterator() : Traversable {
+	public function getIterator(): Traversable {
 		return new ArrayIterator( $this->lines );
 	}
 
@@ -86,7 +86,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 	 *
 	 * @return int
 	 */
-	public function count() : int {
+	public function count(): int {
 		return count( $this->lines );
 	}
 

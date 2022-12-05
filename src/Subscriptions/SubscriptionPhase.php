@@ -510,7 +510,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 *
 	 * @return mixed
 	 */
-	public function jsonSerialize() : mixed {
+	public function jsonSerialize(): mixed {
 		return (object) [
 			'subscription'      => (object) [
 				'$ref' => \rest_url(

@@ -432,7 +432,7 @@ class AdminGatewayPostType {
 	 * @param WP_Post $post    Post.
 	 * @return void
 	 */
-	public function after_delete_post( $post_id, $post ) : void {
+	public function after_delete_post( $post_id, $post ): void {
 		if ( self::POST_TYPE !== $post->post_type ) {
 			return;
 		}
