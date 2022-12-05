@@ -45,9 +45,9 @@ class DateField extends Field {
 	/**
 	 * Serialize to JSON.
 	 *
-	 * @return array
+	 * @return mixed
 	 */
-	public function jsonSerialize() : array {
+	public function jsonSerialize() : mixed {
 		$data = parent::jsonSerialize();
 
 		$data['type'] = 'date';
