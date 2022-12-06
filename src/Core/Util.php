@@ -28,10 +28,10 @@ class Util {
 	/**
 	 * Remote get body.
 	 *
+	 * @deprecated Deprcated since version 5.0, see https://github.com/pronamic/wp-pay-core/issues/86 for more information.
 	 * @param string $url                    URL to request.
 	 * @param int    $required_response_code Required response code.
 	 * @param array  $args                   Remote request arguments.
-	 *
 	 * @return array|bool|string|\WP_Error
 	 */
 	public static function remote_get_body( $url, $required_response_code = 200, array $args = [] ) {
