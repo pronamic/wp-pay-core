@@ -140,6 +140,7 @@ class AdminPaymentBulkActions {
 				'status_updated'       => $status_updated,
 				'skipped_check'        => $skipped_check,
 				'unsupported_gateways' => implode( ',', $unsupported_gateways ),
+				'_wpnonce'             => \wp_create_nonce( 'pronamic_pay_bulk_check_status' ),
 			],
 			$sendback
 		);
@@ -153,71 +154,80 @@ class AdminPaymentBulkActions {
 	 * @return void
 	 */
 	public function admin_notices() {
-		if ( filter_has_var( INPUT_GET, 'status_updated' ) ) {
-			$updated = filter_input( INPUT_GET, 'status_updated', FILTER_VALIDATE_INT );
-
-			if ( $updated > 0 ) {
-				/* translators: %s: number updated payments */
-				$message = sprintf( _n( '%s payment updated.', '%s payments updated.', $updated, 'pronamic_ideal' ), number_format_i18n( $updated ) );
-
-				printf(
-					'<div class="notice notice-success"><p>%s</p></div>',
-					esc_html( $message )
-				);
-			}
+		if (
+			! \array_key_exists( 'status_updated', $_GET )
+				||
+			! \array_key_exists( 'skipped_check', $_GET )
+				||
+			! \array_key_exists( 'unsupported_gateways', $_GET )
+		) {
+			return;
 		}
 
-		if ( filter_has_var( INPUT_GET, 'skipped_check' ) ) {
-			$skipped = filter_input( INPUT_GET, 'skipped_check', FILTER_VALIDATE_INT );
-
-			if ( $skipped > 0 ) {
-				$message = sprintf(
-					/* translators: %s: number skipped payments */
-					_n( '%s payment is not updated because it already has a final payment status.', '%s payments are not updated because they already have a final payment status.', $skipped, 'pronamic_ideal' ),
-					number_format_i18n( $skipped )
-				);
-
-				printf(
-					'<div class="notice notice-warning"><p>%s</p></div>',
-					esc_html( $message )
-				);
-			}
+		if ( ! \check_admin_referer( 'pronamic_pay_bulk_check_status' ) ) {
+			return;
 		}
 
-		if ( filter_has_var( INPUT_GET, 'unsupported_gateways' ) ) {
-			$unsupported = filter_input( INPUT_GET, 'unsupported_gateways', FILTER_SANITIZE_STRING );
+		// Status updated.
+		$updated = filter_input( INPUT_GET, 'status_updated', FILTER_VALIDATE_INT );
 
-			if ( '' !== $unsupported ) {
-				$gateways = explode( ',', $unsupported );
-				$gateways = array_filter( $gateways );
-				$gateways = array_unique( $gateways );
+		if ( $updated > 0 ) {
+			/* translators: %s: number updated payments */
+			$message = sprintf( _n( '%s payment updated.', '%s payments updated.', $updated, 'pronamic_ideal' ), number_format_i18n( $updated ) );
 
-				if ( empty( $gateways ) ) {
-					return;
-				}
+			printf(
+				'<div class="notice notice-success"><p>%s</p></div>',
+				esc_html( $message )
+			);
+		}
 
-				$query = new WP_Query(
-					[
-						'post_type'              => 'pronamic_gateway',
-						'post__in'               => $gateways,
-						'nopaging'               => true,
-						'ignore_sticky_posts'    => true,
-						'no_found_rows'          => true,
-						'update_post_meta_cache' => false,
-						'update_post_term_cache' => false,
-					]
-				);
+		// Skipped.
+		$skipped = filter_input( INPUT_GET, 'skipped_check', FILTER_VALIDATE_INT );
 
-				$titles = wp_list_pluck( $query->posts, 'post_title' );
+		if ( $skipped > 0 ) {
+			$message = sprintf(
+				/* translators: %s: number skipped payments */
+				_n( '%s payment is not updated because it already has a final payment status.', '%s payments are not updated because they already have a final payment status.', $skipped, 'pronamic_ideal' ),
+				number_format_i18n( $skipped )
+			);
 
+			printf(
+				'<div class="notice notice-warning"><p>%s</p></div>',
+				esc_html( $message )
+			);
+		}
+
+		// Unsupported gateways.
+		$gateways = \wp_parse_id_list( \sanitize_text_field( \wp_unslash( $_GET['unsupported_gateways'] ) ) );
+
+		$gateways = array_filter( $gateways );
+		$gateways = array_unique( $gateways );
+
+		if ( ! empty( $gateways ) ) {
+			$query = new WP_Query(
+				[
+					'post_type'              => 'pronamic_gateway',
+					'post__in'               => $gateways,
+					'nopaging'               => true,
+					'ignore_sticky_posts'    => true,
+					'no_found_rows'          => true,
+					'update_post_meta_cache' => false,
+					'update_post_term_cache' => false,
+				]
+			);
+
+			$titles = wp_list_pluck( $query->posts, 'post_title' );
+
+			$message = sprintf(
 				/* translators: %s: gateways lists */
-				$message = sprintf( __( 'Requesting the current payment status is unsupported by %s.', 'pronamic_ideal' ), implode( ', ', $titles ) );
+				__( 'Requesting the current payment status is unsupported by %s.', 'pronamic_ideal' ),
+				implode( ', ', $titles )
+			);
 
-				printf(
-					'<div class="notice notice-error"><p>%s</p></div>',
-					esc_html( $message )
-				);
-			}
+			printf(
+				'<div class="notice notice-error"><p>%s</p></div>',
+				esc_html( $message )
+			);
 		}
 	}
 }

@@ -85,36 +85,40 @@ class Install {
 		add_action( 'admin_notices', [ $this, 'admin_notice_upgraded' ], 20 );
 
 		// Maybe update database.
-		if ( filter_has_var( INPUT_GET, 'pronamic_pay_upgrade' ) && wp_verify_nonce( filter_input( INPUT_GET, 'pronamic_pay_nonce', FILTER_SANITIZE_STRING ), 'pronamic_pay_upgrade' ) ) {
-			$this->upgrade();
+		if ( \array_key_exists( 'pronamic_pay_upgrade', $_GET ) && \array_key_exists( 'pronamic_pay_nonce', $_GET ) ) {
+			$nonce = \sanitize_text_field( \wp_unslash( $_GET['pronamic_pay_nonce'] ) );
 
-			/**
-			 * Redirect to admin dashboard or referer.
-			 *
-			 * @link https://developer.wordpress.org/reference/functions/admin_url/
-			 * @link https://developer.wordpress.org/reference/functions/wp_get_referer/
-			 * @link https://developer.wordpress.org/reference/functions/wp_safe_redirect/
-			 */
-			$location = admin_url();
+			if ( wp_verify_nonce( $nonce, 'pronamic_pay_upgrade' ) ) {
+				$this->upgrade();
 
-			$referer = wp_get_referer();
+				/**
+				 * Redirect to admin dashboard or referer.
+				 *
+				 * @link https://developer.wordpress.org/reference/functions/admin_url/
+				 * @link https://developer.wordpress.org/reference/functions/wp_get_referer/
+				 * @link https://developer.wordpress.org/reference/functions/wp_safe_redirect/
+				 */
+				$location = admin_url();
 
-			if ( false !== $referer ) {
-				$location = $referer;
+				$referer = wp_get_referer();
+
+				if ( false !== $referer ) {
+					$location = $referer;
+				}
+
+				$location = add_query_arg(
+					[
+						'pronamic_pay_upgrade'  => false,
+						'pronamic_pay_nonce'    => false,
+						'pronamic_pay_upgraded' => true,
+					],
+					$location
+				);
+
+				wp_safe_redirect( $location );
+
+				exit;
 			}
-
-			$location = add_query_arg(
-				[
-					'pronamic_pay_upgrade'  => false,
-					'pronamic_pay_nonce'    => false,
-					'pronamic_pay_upgraded' => true,
-				],
-				$location
-			);
-
-			wp_safe_redirect( $location );
-
-			exit;
 		}
 	}
 

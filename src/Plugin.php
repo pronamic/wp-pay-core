@@ -510,11 +510,16 @@ class Plugin {
 	 * @return void
 	 */
 	public function handle_returns() {
-		if ( ! filter_has_var( INPUT_GET, 'payment' ) ) {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		if (
+			! \array_key_exists( 'payment', $_GET )
+				||
+			! \array_key_exists( 'key', $_GET )
+		) {
 			return;
 		}
 
-		$payment_id = filter_input( INPUT_GET, 'payment', FILTER_SANITIZE_NUMBER_INT );
+		$payment_id = filter_var( $_GET['payment'], \FILTER_SANITIZE_NUMBER_INT );
 
 		$payment = get_pronamic_payment( $payment_id );
 
@@ -523,21 +528,15 @@ class Plugin {
 		}
 
 		// Check if payment key is valid.
-		$valid_key = false;
+		$key = \sanitize_text_field( \wp_unslash( $_GET['key'] ) );
 
-		if ( empty( $payment->key ) ) {
-			$valid_key = true;
-		} elseif ( filter_has_var( INPUT_GET, 'key' ) ) {
-			$key = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_STRING );
-
-			$valid_key = ( $key === $payment->key );
-		}
-
-		if ( ! $valid_key ) {
+		if ( $key !== $payment->key ) {
 			wp_safe_redirect( home_url() );
 
 			exit;
 		}
+
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		// Check if we should redirect.
 		$should_redirect = true;
@@ -565,12 +564,13 @@ class Plugin {
 	 * @return void
 	 */
 	public function maybe_redirect() {
-		if ( ! filter_has_var( INPUT_GET, 'payment_redirect' ) || ! filter_has_var( INPUT_GET, 'key' ) ) {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		if ( ! \array_key_exists( 'payment_redirect', $_GET ) || ! \array_key_exists( 'key', $_GET ) ) {
 			return;
 		}
 
 		// Get payment.
-		$payment_id = filter_input( INPUT_GET, 'payment_redirect', FILTER_SANITIZE_NUMBER_INT );
+		$payment_id = filter_var( $_GET['payment_redirect'], FILTER_SANITIZE_NUMBER_INT );
 
 		$payment = get_pronamic_payment( $payment_id );
 
@@ -579,11 +579,13 @@ class Plugin {
 		}
 
 		// Validate key.
-		$key = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_STRING );
+		$key = \sanitize_text_field( \wp_unslash( $_GET['key'] ) );
 
 		if ( $key !== $payment->key || empty( $payment->key ) ) {
 			return;
 		}
+
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		// Don't cache.
 		Core_Util::no_cache();

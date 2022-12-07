@@ -248,20 +248,19 @@ class SubscriptionsModule {
 	 * @return void
 	 */
 	public function maybe_handle_subscription_action() {
-		if ( ! Util::input_has_vars( INPUT_GET, [ 'subscription', 'action', 'key' ] ) ) {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		if ( ! isset( $_GET['subscription'] ) || ! isset( $_GET['action'] ) || ! isset( $_GET['key'] ) ) {
 			return;
 		}
 
 		Util::no_cache();
 
-		$subscription_id = filter_input( INPUT_GET, 'subscription', FILTER_SANITIZE_STRING );
-		$action          = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
-		$key             = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_STRING );
+		$subscription_id = filter_input( INPUT_GET, 'subscription', \FILTER_SANITIZE_NUMBER_INT );
 
 		$subscription = get_pronamic_subscription( $subscription_id );
 
 		// Check if subscription and key are valid.
-		if ( ! $subscription || $key !== $subscription->get_key() ) {
+		if ( ! $subscription || $_GET['key'] !== $subscription->get_key() ) {
 			wp_safe_redirect( home_url() );
 
 			exit;
@@ -271,7 +270,8 @@ class SubscriptionsModule {
 		Util::switch_to_user_locale();
 
 		// Handle action.
-		switch ( $action ) {
+		switch ( $_GET['action'] ) {
+			// phpcs:enable WordPress.Security.NonceVerification.Recommended
 			case 'cancel':
 				$this->handle_subscription_cancel( $subscription );
 
@@ -426,10 +426,10 @@ class SubscriptionsModule {
 			exit;
 		}
 
-		$nonce = filter_input( \INPUT_POST, 'pronamic_pay_nonce', \FILTER_SANITIZE_STRING );
+		$nonce = array_key_exists( 'pronamic_pay_nonce', $_POST ) ? \sanitize_text_field( \wp_unslash( $_POST['pronamic_pay_nonce'] ) ) : '';
 
-		if ( \wp_verify_nonce( $nonce, 'pronamic_pay_update_subscription_mandate' ) ) {
-			$mandate_id = \filter_input( \INPUT_POST, 'pronamic_pay_subscription_mandate', \FILTER_SANITIZE_STRING );
+		if ( \wp_verify_nonce( $nonce, 'pronamic_pay_update_subscription_mandate' ) && \array_key_exists( 'pronamic_pay_subscription_mandate', $_POST ) ) {
+			$mandate_id = \sanitize_text_field( \wp_unslash( $_POST['pronamic_pay_subscription_mandate'] ) );
 
 			if ( ! empty( $mandate_id ) ) {
 				try {
@@ -458,10 +458,12 @@ class SubscriptionsModule {
 				$payment->set_source_id( null );
 
 				// Set payment method.
-				$payment_method = \filter_input( \INPUT_POST, 'pronamic_pay_subscription_payment_method', \FILTER_SANITIZE_STRING );
+				if ( array_key_exists( 'pronamic_pay_subscription_payment_method', $_POST ) ) {
+					$payment_method = \sanitize_text_field( \wp_unslash( $_POST['pronamic_pay_subscription_payment_method'] ) );
 
-				if ( ! empty( $payment_method ) ) {
-					$payment->set_payment_method( $payment_method );
+					if ( ! empty( $payment_method ) ) {
+						$payment->set_payment_method( $payment_method );
+					}
 				}
 
 				/*

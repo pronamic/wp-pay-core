@@ -642,7 +642,7 @@ class AdminModule {
 			$currency_code = \sanitize_text_field( \wp_unslash( $_POST['test_currency_code'] ) );
 		}
 
-		$value = \filter_input( INPUT_POST, 'test_amount', \FILTER_SANITIZE_STRING );
+		$value = array_key_exists( 'test_amount', $_POST ) ? \sanitize_text_field( \wp_unslash( $_POST['test_amount'] ) ) : '';
 
 		try {
 			$amount = Number::from_string( $value );
@@ -663,7 +663,11 @@ class AdminModule {
 
 		$payment->set_config_id( \filter_input( \INPUT_POST, 'post_ID', \FILTER_SANITIZE_NUMBER_INT ) );
 
-		$payment->set_payment_method( \filter_input( \INPUT_POST, 'pronamic_pay_test_payment_method', \FILTER_SANITIZE_STRING ) );
+		if ( \array_key_exists( 'pronamic_pay_test_payment_method', $_POST ) ) {
+			$payment_method = \sanitize_text_field( \wp_unslash( $_POST['pronamic_pay_test_payment_method'] ) );
+
+			$payment->set_payment_method( $payment_method );
+		}
 
 		// Description.
 		$description = \sprintf(
@@ -699,8 +703,6 @@ class AdminModule {
 		// Data.
 		$user = \wp_get_current_user();
 
-		$phone = \filter_input( \INPUT_POST, 'test_phone', \FILTER_SANITIZE_STRING );
-
 		// Name.
 		$name = ContactNameHelper::from_array(
 			[
@@ -714,7 +716,7 @@ class AdminModule {
 			[
 				'name'    => $name,
 				'email'   => $user->user_email,
-				'phone'   => $phone,
+				'phone'   => \array_key_exists( 'test_phone', $_POST ) ? \sanitize_text_field( \wp_unslash( $_POST['test_phone'] ) ) : '',
 				'user_id' => $user->ID,
 			]
 		);
@@ -726,7 +728,7 @@ class AdminModule {
 			[
 				'name'         => $name,
 				'email'        => $user->user_email,
-				'phone'        => $phone,
+				'phone'        => $customer->get_phone(),
 				'line_1'       => 'Billing Line 1',
 				'postal_code'  => '1234 AB',
 				'city'         => 'Billing City',
@@ -740,7 +742,7 @@ class AdminModule {
 			[
 				'name'         => $name,
 				'email'        => $user->user_email,
-				'phone'        => $phone,
+				'phone'        => $customer->get_phone(),
 				'line_1'       => 'Shipping Line 1',
 				'postal_code'  => '5678 XY',
 				'city'         => 'Shipping City',
@@ -765,7 +767,7 @@ class AdminModule {
 		// Subscription.
 		$test_subscription = \filter_input( \INPUT_POST, 'pronamic_pay_test_subscription', \FILTER_VALIDATE_BOOLEAN );
 		$interval          = \filter_input( \INPUT_POST, 'pronamic_pay_test_repeat_interval', \FILTER_VALIDATE_INT );
-		$interval_period   = \filter_input( \INPUT_POST, 'pronamic_pay_test_repeat_frequency', \FILTER_SANITIZE_STRING );
+		$interval_period   = \array_key_exists( 'pronamic_pay_test_repeat_frequency', $_POST ) ? \sanitize_text_field( \wp_unslash( $_POST['pronamic_pay_test_repeat_frequency'] ) ) : '';
 
 		if ( ! empty( $test_subscription ) && ! empty( $interval ) && ! empty( $interval_period ) ) {
 			$subscription = new Subscription();
@@ -774,35 +776,35 @@ class AdminModule {
 			$subscription->set_lines( $payment->get_lines() );
 
 			// Ends on.
-			$ends_on = \filter_input( \INPUT_POST, 'pronamic_pay_ends_on', \FILTER_SANITIZE_STRING );
-
 			$total_periods = null;
 
-			switch ( $ends_on ) {
-				case 'count':
-					$count = \filter_input( \INPUT_POST, 'pronamic_pay_ends_on_count', \FILTER_VALIDATE_INT );
+			if ( \array_key_exists( 'pronamic_pay_ends_on', $_POST ) ) {
+				switch ( $_POST['pronamic_pay_ends_on'] ) {
+					case 'count':
+						$count = \filter_input( \INPUT_POST, 'pronamic_pay_ends_on_count', \FILTER_VALIDATE_INT );
 
-					if ( ! empty( $count ) ) {
-						$total_periods = $count;
-					}
+						if ( ! empty( $count ) ) {
+							$total_periods = $count;
+						}
 
-					break;
-				case 'date':
-					$end_date = \filter_input( \INPUT_POST, 'pronamic_pay_ends_on_date', \FILTER_SANITIZE_STRING );
+						break;
+					case 'date':
+						$end_date = \array_key_exists( 'pronamic_pay_ends_on_date', $_POST ) ? \sanitize_text_field( \wp_unslash( $_POST['pronamic_pay_ends_on_date'] ) ) : '';
 
-					if ( ! empty( $end_date ) ) {
-						$interval_spec = 'P' . $interval . Util::to_period( $interval_period );
+						if ( ! empty( $end_date ) ) {
+							$interval_spec = 'P' . $interval . Util::to_period( $interval_period );
 
-						$period = new \DatePeriod(
-							new \DateTime(),
-							new \DateInterval( $interval_spec ),
-							new \DateTime( $end_date )
-						);
+							$period = new \DatePeriod(
+								new \DateTime(),
+								new \DateInterval( $interval_spec ),
+								new \DateTime( $end_date )
+							);
 
-						$total_periods = iterator_count( $period );
-					}
+							$total_periods = iterator_count( $period );
+						}
 
-					break;
+						break;
+				}
 			}
 
 			// Phase.

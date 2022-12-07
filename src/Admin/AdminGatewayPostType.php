@@ -347,13 +347,13 @@ class AdminGatewayPostType {
 			return;
 		}
 
-		// OK, its safe for us to save the data now.
-		if ( ! \filter_has_var( INPUT_POST, '_pronamic_gateway_id' ) ) {
+		// OK, it's safe for us to save the data now.
+		if ( ! \array_key_exists( '_pronamic_gateway_id', $_POST ) ) {
 			return;
 		}
 
 		// Gateway.
-		$gateway_id = \filter_input( INPUT_POST, '_pronamic_gateway_id', FILTER_SANITIZE_STRING );
+		$gateway_id = \sanitize_text_field( \wp_unslash( $_POST['_pronamic_gateway_id'] ) );
 
 		\update_post_meta( $post_id, '_pronamic_gateway_id', $gateway_id );
 

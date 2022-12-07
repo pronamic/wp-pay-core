@@ -27,6 +27,7 @@
 		<exclude name="WordPressVIPMinimum.Performance.NoPaging.nopaging_nopaging" />
 		<exclude name="WordPressVIPMinimum.Performance.RemoteRequestTimeout.timeout_timeout" />
 
+		<exclude name="WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___COOKIE" />
 		<exclude name="WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___SERVER__HTTP_USER_AGENT__" />
 	</rule>
 

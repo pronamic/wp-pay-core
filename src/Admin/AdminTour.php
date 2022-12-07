@@ -49,10 +49,14 @@ class AdminTour {
 	 * @return void
 	 */
 	public function admin_init() {
-		if ( filter_has_var( INPUT_GET, 'pronamic_pay_ignore_tour' ) && wp_verify_nonce( filter_input( INPUT_GET, 'pronamic_pay_nonce', FILTER_SANITIZE_STRING ), 'pronamic_pay_ignore_tour' ) ) {
-			$ignore = filter_input( INPUT_GET, 'pronamic_pay_ignore_tour', FILTER_VALIDATE_BOOLEAN );
+		if ( \array_key_exists( 'pronamic_pay_ignore_tour', $_GET ) && \array_key_exists( 'pronamic_pay_nonce', $_GET ) ) {
+			$nonce = \sanitize_text_field( \wp_unslash( $_GET['pronamic_pay_nonce'] ) );
 
-			update_user_meta( get_current_user_id(), 'pronamic_pay_ignore_tour', $ignore );
+			if ( wp_verify_nonce( $nonce, 'pronamic_pay_ignore_tour' ) ) {
+				$ignore = filter_var( $_GET['pronamic_pay_ignore_tour'], FILTER_VALIDATE_BOOLEAN );
+
+				update_user_meta( get_current_user_id(), 'pronamic_pay_ignore_tour', $ignore );
+			}
 		}
 
 		if ( ! get_user_meta( get_current_user_id(), 'pronamic_pay_ignore_tour', true ) ) {
@@ -139,7 +143,6 @@ class AdminTour {
 	private function get_pointers() {
 		$pointers = [];
 
-		$page   = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
 		$screen = get_current_screen();
 
 		if ( null !== $screen ) {
@@ -227,6 +230,9 @@ class AdminTour {
 					break;
 			}
 		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$page = \array_key_exists( 'page', $_GET ) ? \sanitize_text_field( \wp_unslash( $_GET['page'] ) ) : '';
 
 		switch ( $page ) {
 			case 'pronamic_pay_settings':

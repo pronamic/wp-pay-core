@@ -10,7 +10,6 @@
 
 global $pronamic_pay_errors;
 
-use Pronamic\WordPress\Number\Number;
 use Pronamic\WordPress\Money\Currency;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Core\SelectField;
@@ -24,17 +23,14 @@ if ( ! isset( $settings ) ) {
 }
 
 $methods_with_choices = [
-	\Pronamic\WordPress\Pay\Forms\FormPostType::AMOUNT_METHOD_CHOICES_ONLY,
-	\Pronamic\WordPress\Pay\Forms\FormPostType::AMOUNT_METHOD_CHOICES_AND_INPUT,
+	FormPostType::AMOUNT_METHOD_CHOICES_ONLY,
+	FormPostType::AMOUNT_METHOD_CHOICES_AND_INPUT,
 ];
 
 $gateway = Plugin::get_gateway( $settings['config_id'] );
 
-$amount_value = '';
-
-if ( filter_has_var( INPUT_GET, 'amount' ) ) {
-	$amount_value = filter_input( INPUT_GET, 'amount', FILTER_SANITIZE_STRING );
-}
+// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+$amount_value = array_key_exists( 'amount', $_GET ) ? \sanitize_text_field( \wp_unslash( $_GET['amount'] ) ) : '';
 
 if ( null === $gateway ) {
 	return;
@@ -82,7 +78,7 @@ $currency = Currency::get_instance( 'EUR' );
 
 						<?php endforeach; ?>
 
-						<?php if ( \Pronamic\WordPress\Pay\Forms\FormPostType::AMOUNT_METHOD_CHOICES_AND_INPUT === $settings['amount_method'] ) : ?>
+						<?php if ( FormPostType::AMOUNT_METHOD_CHOICES_AND_INPUT === $settings['amount_method'] ) : ?>
 
 							<div>
 								<input class="pronamic-pay-amount-input pronamic-pay-input" id="pronamic-pay-amount-other" name="pronamic_pay_amount" type="radio" required="required" value="other" />
@@ -97,7 +93,7 @@ $currency = Currency::get_instance( 'EUR' );
 
 				<?php endif; ?>
 
-				<?php if ( \Pronamic\WordPress\Pay\Forms\FormPostType::AMOUNT_METHOD_INPUT_ONLY === $settings['amount_method'] ) : ?>
+				<?php if ( FormPostType::AMOUNT_METHOD_INPUT_ONLY === $settings['amount_method'] ) : ?>
 
 					<span class="pronamic-pay-currency-symbol pronamic-pay-currency-position-before">€</span>
 					<input class="pronamic-pay-amount-input pronamic-pay-input" id="pronamic-pay-amount" name="pronamic_pay_amount" type="number" step="any" autocomplete="off" value="<?php echo esc_attr( $amount_value ); ?>" />

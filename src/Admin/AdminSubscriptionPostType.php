@@ -175,8 +175,12 @@ class AdminSubscriptionPostType {
 					return;
 				}
 
-				$start_date = new DateTimeImmutable( \filter_input( \INPUT_GET, 'start_date', \FILTER_SANITIZE_STRING ) );
-				$end_date   = new DateTimeImmutable( \filter_input( \INPUT_GET, 'end_date', \FILTER_SANITIZE_STRING ) );
+				if ( ! isset( $_GET['start_date'] ) || ! isset( $_GET['end_date'] ) ) {
+					return;
+				}
+
+				$start_date = new DateTimeImmutable( \sanitize_text_field( \wp_unslash( $_GET['start_date'] ) ) );
+				$end_date   = new DateTimeImmutable( \sanitize_text_field( \wp_unslash( $_GET['end_date'] ) ) );
 
 				$period = new SubscriptionPeriod( $phase, $start_date, $end_date, $phase->get_amount() );
 

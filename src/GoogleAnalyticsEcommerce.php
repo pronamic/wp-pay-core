@@ -351,16 +351,20 @@ class GoogleAnalyticsEcommerce {
 	 * @return string|null
 	 */
 	public static function get_cookie_client_id() {
-		$client_id = null;
+		// Check `_ga` cookie.
+		if ( ! \array_key_exists( '_ga', $_COOKIE ) ) {
+			return null;
+		}
 
-		$ga_cookie = filter_input( INPUT_COOKIE, '_ga', FILTER_SANITIZE_STRING );
+		$ga_cookie = \sanitize_text_field( $_COOKIE['_ga'] );
 
 		if ( empty( $ga_cookie ) ) {
-			// No `_ga` cookie available.
-			return $client_id;
+			return null;
 		}
 
 		$ga = explode( '.', $ga_cookie );
+
+		$client_id = null;
 
 		if ( isset( $ga[2] ) && self::is_uuid( $ga[2] ) ) {
 			// Use UUID from cookie.

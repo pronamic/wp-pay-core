@@ -8,15 +8,14 @@
  * @package   Pronamic\WordPress\Pay
  */
 
-use Pronamic\WordPress\Pay\Plugin;
-
 $nav_tabs = [
 	'system_status' => __( 'System Status', 'pronamic_ideal' ),
 	'gateways'      => __( 'Payment Gateways', 'pronamic_ideal' ),
 	'extensions'    => __( 'Extensions', 'pronamic_ideal' ),
 ];
 
-$current_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+$current_tab = array_key_exists( 'tab', $_GET ) ? \sanitize_text_field( \wp_unslash( $_GET['tab'] ) ) : '';
 $current_tab = empty( $current_tab ) ? key( $nav_tabs ) : $current_tab;
 
 ?>
