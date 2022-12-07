@@ -261,69 +261,6 @@ class Util {
 	}
 
 	/**
-	 * Convert input fields array to HTML.
-	 *
-	 * @param array $fields Array with fields data to convert to HTML.
-	 *
-	 * @return string
-	 */
-	public static function input_fields_html( array $fields ) {
-		$html = '';
-
-		foreach ( $fields as $field ) {
-			if ( ! isset( $field['type'], $field['name'] ) ) {
-				continue;
-			}
-
-			$field = \wp_parse_args(
-				$field,
-				[
-					'id'       => $field['name'],
-					'type'     => 'text',
-					'value'    => ( \filter_has_var( INPUT_POST, $field['name'] ) ? \filter_input( INPUT_POST, $field['name'], FILTER_SANITIZE_STRING ) : null ),
-					'required' => false,
-					'max'      => null,
-				]
-			);
-
-			// Field label.
-			$html .= sprintf(
-				'<label for="%s">%s</label> ',
-				esc_attr( $field['id'] ),
-				$field['label']
-			);
-
-			switch ( $field['type'] ) {
-				case 'select':
-					$html .= sprintf(
-						'<select id="%s" name="%s" %s>%s</select>',
-						esc_attr( $field['id'] ),
-						esc_attr( $field['name'] ),
-						( $field['required'] ? 'required' : null ),
-						Pay_Util::select_options_grouped( $field['choices'] )
-					);
-
-					break;
-				default:
-					$attributes = [
-						'type'     => $field['type'],
-						'id'       => $field['id'],
-						'name'     => $field['name'],
-						'value'    => $field['value'],
-						'max'      => $field['max'],
-						'required' => $field['required'],
-					];
-
-					$html .= sprintf( '<input %s>', Pay_Util::array_to_html_attributes( $attributes ) );
-
-					break;
-			}
-		}
-
-		return $html;
-	}
-
-	/**
 	 * Method exists
 	 *
 	 * This helper function was created to fix an issue with `method_exists` calls
