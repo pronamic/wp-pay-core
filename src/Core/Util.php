@@ -28,7 +28,7 @@ class Util {
 	/**
 	 * Remote get body.
 	 *
-	 * @deprecated Deprcated since version 5.0, see https://github.com/pronamic/wp-pay-core/issues/86 for more information.
+	 * @deprecated Deprecated since version 5.0, see https://github.com/pronamic/wp-pay-core/issues/86 for more information.
 	 * @param string $url                    URL to request.
 	 * @param int    $required_response_code Required response code.
 	 * @param array  $args                   Remote request arguments.
@@ -71,7 +71,7 @@ class Util {
 	 * @link https://akrabat.com/throw-an-exception-when-simplexml_load_string-fails/
 	 * @link https://www.php.net/manual/en/class.invalidargumentexception.php
 	 * @link https://www.php.net/manual/en/class.libxmlerror.php
-	 * @deprecated Deprcated since version 5.0, see https://github.com/pronamic/wp-pay-core/issues/85 for more information.
+	 * @deprecated Deprecated since version 5.0, see https://github.com/pronamic/wp-pay-core/issues/85 for more information.
 	 * @param string $string The XML string to convert to a SimpleXMLElement object.
 	 * @return \SimpleXMLElement
 	 * @throws \InvalidArgumentException If string could not be loaded in to a SimpleXMLElement object.

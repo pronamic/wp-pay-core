@@ -21,13 +21,13 @@ use SimpleXMLElement;
  * @author Remco Tolsma
  * @version 2.2.6
  * @since 1.0.0
- * @deprecated Deprcated since version 5.0, see https://github.com/pronamic/wp-pay-core/issues/84 for more information.
+ * @deprecated Deprecated since version 5.0, see https://github.com/pronamic/wp-pay-core/issues/84 for more information.
  */
 class Security {
 	/**
 	 * Filter XML variable.
 	 *
-	 * @deprecated Deprcated since version 5.0, see https://github.com/pronamic/wp-pay-core/issues/84 for more information.
+	 * @deprecated Deprecated since version 5.0, see https://github.com/pronamic/wp-pay-core/issues/84 for more information.
 	 * @param string|SimpleXMLElement $variable Variable to filter.
 	 * @param int                     $filter   PHP filter flag constant.
 	 * @return mixed|null
