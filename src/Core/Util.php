@@ -276,24 +276,6 @@ class Util {
 	}
 
 	/**
-	 * Check if input type has vars.
-	 *
-	 * @param int   $type           One of INPUT_GET, INPUT_POST, INPUT_COOKIE, INPUT_SERVER, or INPUT_ENV.
-	 * @param array $variable_names Array of variable names to check in input type.
-	 *
-	 * @return bool
-	 */
-	public static function input_has_vars( $type, $variable_names ) {
-		foreach ( $variable_names as $variable_name ) {
-			if ( ! filter_has_var( $type, $variable_name ) ) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
 	 * Switch to user locale.
 	 *
 	 * @return void
