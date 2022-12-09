@@ -389,29 +389,36 @@ class AdminGatewayPostType {
 				continue;
 			}
 
-			$name   = $field['meta_key'];
-			$filter = $field['filter'];
+			$name = $field['meta_key'];
 
 			// Check field in input.
 			if ( ! \filter_has_var( INPUT_POST, $name ) ) {
 				continue;
 			}
 
-			// Filter options.
-			$options = [];
+			$value = array_key_exists( $name, $_POST ) ? \sanitize_text_field( \wp_unslash( $_POST[ $name ] ) ) : '';
 
-			if ( isset( $filter['flags'] ) ) {
-				$options['flags'] = $filter['flags'];
+			// Filter input.
+			if ( isset( $field['filter'] ) ) {
+				$filter = $field['filter'];
+
+				$options = [];
+
+				// Make sure filter is not an array.
+				if ( \is_array( $filter ) ) {
+					if ( isset( $filter['flags'] ) ) {
+						$options['flags'] = $filter['flags'];
+					}
+
+					if ( isset( $filter['filter'] ) ) {
+						$filter = $filter['filter'];
+					}
+				}
+
+				$value = \filter_input( INPUT_POST, $name, $filter, $options );
 			}
 
-			// Make sure filter is not an array.
-			if ( \is_array( $filter ) && isset( $filter['filter'] ) ) {
-				$filter = $filter['filter'];
-			}
-
-			// Get filtered input and update post meta.
-			$value = \filter_input( INPUT_POST, $name, $filter, $options );
-
+			// Update post meta.
 			if ( '' !== $value ) {
 				\update_post_meta( $post_id, $name, $value );
 			} else {
