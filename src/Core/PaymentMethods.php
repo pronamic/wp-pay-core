@@ -37,7 +37,9 @@ class PaymentMethods {
 	/**
 	 * AfterPay (afterpay.nl).
 	 *
+	 * @link https://github.com/pronamic/wp-pronamic-pay/issues/339
 	 * @link https://www.afterpay.nl/
+	 * @deprecated Use `RIVERTY` instead, see https://github.com/pronamic/wp-pronamic-pay/issues/339 for details.
 	 * @var string
 	 */
 	const AFTERPAY_NL = 'afterpay_nl';
@@ -339,6 +341,15 @@ class PaymentMethods {
 	const PRZELEWY24 = 'przelewy24';
 
 	/**
+	 * Riverty.
+	 *
+	 * @link https://github.com/pronamic/wp-pronamic-pay/issues/339
+	 * @since 5.0.0
+	 * @var string
+	 */
+	const RIVERTY = 'riverty';
+
+	/**
 	 * Santander
 	 *
 	 * @var string
@@ -460,6 +471,7 @@ class PaymentMethods {
 			self::PAYCONIQ                => __( 'Payconiq', 'pronamic_ideal' ),
 			self::PAYPAL                  => __( 'PayPal', 'pronamic_ideal' ),
 			self::PRZELEWY24              => __( 'Przelewy24', 'pronamic_ideal' ),
+			self::RIVERTY                 => __( 'Riverty', 'pronamic_ideal' ),
 			self::SANTANDER               => __( 'Santander', 'pronamic_ideal' ),
 			self::SOFORT                  => __( 'SOFORT Banking', 'pronamic_ideal' ),
 			self::SPRAYPAY                => __( 'SprayPay', 'pronamic_ideal' ),

@@ -371,6 +371,7 @@ class Plugin {
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::PAYCONIQ ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::PAYPAL ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::PRZELEWY24 ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::RIVERTY ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::SANTANDER ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::SOFORT ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::SPRAYPAY ) );
