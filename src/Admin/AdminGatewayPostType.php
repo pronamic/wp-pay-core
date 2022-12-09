@@ -385,7 +385,7 @@ class AdminGatewayPostType {
 
 		foreach ( $fields as $field ) {
 			// Check presence of required field settings.
-			if ( ! isset( $field['meta_key'], $field['filter'] ) ) {
+			if ( ! isset( $field['meta_key'] ) ) {
 				continue;
 			}
 
