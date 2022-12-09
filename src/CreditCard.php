@@ -57,7 +57,6 @@ class CreditCard {
 	 * Constructs and initializes an credit card object.
 	 */
 	public function __construct() {
-
 	}
 
 	/**

@@ -22,16 +22,16 @@ require_once __DIR__ . '/../vendor/autoload.php';
  * Psalm.
  */
 if ( defined( 'PSALM_VERSION' ) ) {
-    return;
+	return;
 }
 
 /**
  * Plugin.
  */
 $plugin = \Pronamic\WordPress\Pay\Plugin::instance(
-    array(
-        'action_scheduler' => __DIR__ . '/../vendor/woocommerce/action-scheduler/action-scheduler.php',
-    )
+	array(
+		'action_scheduler' => __DIR__ . '/../vendor/woocommerce/action-scheduler/action-scheduler.php',
+	)
 );
 
 $plugin->plugins_loaded();

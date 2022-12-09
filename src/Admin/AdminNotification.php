@@ -66,7 +66,7 @@ class AdminNotification {
 
 	/**
 	 * Get ID.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_id() {
@@ -75,7 +75,7 @@ class AdminNotification {
 
 	/**
 	 * Get name.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_name() {
@@ -84,7 +84,7 @@ class AdminNotification {
 
 	/**
 	 * Is met.
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function is_met() {
@@ -93,7 +93,7 @@ class AdminNotification {
 
 	/**
 	 * Get version.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_version() {
@@ -102,7 +102,7 @@ class AdminNotification {
 
 	/**
 	 * Get message.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_message() {

@@ -61,7 +61,6 @@ class Field implements JsonSerializable {
 	 * @return void
 	 */
 	protected function setup() {
-
 	}
 
 	/**

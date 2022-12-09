@@ -537,7 +537,7 @@ class SubscriptionsModule {
 
 		\wp_register_style(
 			'pronamic-pay-subscription-mandate',
-			plugins_url( 'css/card-slider.css', dirname( dirname( __FILE__ ) ) ),
+			plugins_url( 'css/card-slider.css', dirname( __DIR__ ) ),
 			[ 'pronamic-pay-redirect', 'pronamic-pay-card-slider-slick', 'pronamic-pay-card-slider-google-font' ],
 			$this->plugin->get_version()
 		);

@@ -243,6 +243,5 @@ abstract class AbstractGatewayIntegration extends AbstractIntegration {
 	 * @return void
 	 */
 	public function save_post( $post_id ) {
-
 	}
 }

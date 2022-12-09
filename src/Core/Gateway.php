@@ -180,7 +180,6 @@ abstract class Gateway {
 	 * @return void
 	 */
 	public function payment_redirect( Payment $payment ) {
-
 	}
 
 	/**
@@ -235,7 +234,6 @@ abstract class Gateway {
 	 * @return void
 	 */
 	public function start( Payment $payment ) {
-
 	}
 
 	/**
@@ -374,6 +372,5 @@ abstract class Gateway {
 	 * @return void
 	 */
 	public function update_status( Payment $payment ) {
-
 	}
 }

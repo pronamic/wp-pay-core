@@ -187,7 +187,7 @@ class Payment extends PaymentInfo {
 		if ( false === $result ) {
 			/**
 			 * Should we throw an exception or handle this in some other way?
-			 * 
+			 *
 			 * @link https://github.com/pronamic/wp-pronamic-pay/issues/337
 			 * @todo
 			 */
