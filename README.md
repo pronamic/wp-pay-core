@@ -7,7 +7,7 @@
 <h1 align="center">WordPress Pay » Core</h3>
 
 <p align="center">
-	Core components for the WordPress payment processing library.
+	The WordPress payment processing library is intended to make payments and integrations with payment providers easier to set up and maintain within WordPress. It has similarities to libraries like https://github.com/Payum/Payum and https://github.com/thephpleague/omnipay, but is more focused on WordPress. The code complies with the WordPress Coding Standards and the WordPress APIs are used.
 </p>
 
 ## Table of contents
