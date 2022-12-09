@@ -26,46 +26,6 @@ use Pronamic\WordPress\Pay\Util as Pay_Util;
  */
 class Util {
 	/**
-	 * Remote get body.
-	 *
-	 * @deprecated Deprecated since version 5.0, see https://github.com/pronamic/wp-pay-core/issues/86 for more information.
-	 * @param string $url                    URL to request.
-	 * @param int    $required_response_code Required response code.
-	 * @param array  $args                   Remote request arguments.
-	 * @return array|bool|string|\WP_Error
-	 */
-	public static function remote_get_body( $url, $required_response_code = 200, array $args = [] ) {
-		$result = wp_remote_request( $url, $args );
-
-		if ( $result instanceof \WP_Error ) {
-			return $result;
-		}
-
-		/*
-		 * The response code is cast to a integer since WordPress 4.1, therefore we can't use
-		 * strict comparison on the required response code.
-		 *
-		 * @link https://github.com/WordPress/WordPress/blob/4.1/wp-includes/class-http.php#L528-L529
-		 * @link https://github.com/WordPress/WordPress/blob/4.0/wp-includes/class-http.php#L527
-		 */
-		/* phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison */
-		if ( wp_remote_retrieve_response_code( $result ) == $required_response_code ) {
-			return wp_remote_retrieve_body( $result );
-		}
-
-		// Wrong response code.
-		return new \WP_Error(
-			'wrong_response_code',
-			sprintf(
-				/* translators: 1: received response code, 2: required response code */
-				__( 'The response code (<code>%1$s</code>) was incorrect, required response code <code>%2$s</code>.', 'pronamic_ideal' ),
-				wp_remote_retrieve_response_code( $result ),
-				$required_response_code
-			)
-		);
-	}
-
-	/**
 	 * SimpleXML load string.
 	 *
 	 * @link https://akrabat.com/throw-an-exception-when-simplexml_load_string-fails/
