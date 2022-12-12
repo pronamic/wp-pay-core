@@ -26,58 +26,6 @@ use Pronamic\WordPress\Pay\Util as Pay_Util;
  */
 class Util {
 	/**
-	 * SimpleXML load string.
-	 *
-	 * @link https://akrabat.com/throw-an-exception-when-simplexml_load_string-fails/
-	 * @link https://www.php.net/manual/en/class.invalidargumentexception.php
-	 * @link https://www.php.net/manual/en/class.libxmlerror.php
-	 * @deprecated Deprecated since version 5.0, see https://github.com/pronamic/wp-pay-core/issues/85 for more information.
-	 * @param string $string The XML string to convert to a SimpleXMLElement object.
-	 * @return \SimpleXMLElement
-	 * @throws \InvalidArgumentException If string could not be loaded in to a SimpleXMLElement object.
-	 */
-	public static function simplexml_load_string( $string ) {
-		// Suppress all XML errors.
-		$use_errors = libxml_use_internal_errors( true );
-
-		// Load.
-		$xml = simplexml_load_string( $string );
-
-		// Check result.
-		if ( false !== $xml ) {
-			// Set back to previous value.
-			libxml_use_internal_errors( $use_errors );
-
-			return $xml;
-		}
-
-		// Error message.
-		$messages = [
-			__( 'Could not load the XML string.', 'pronamic_ideal' ),
-		];
-
-		foreach ( libxml_get_errors() as $error ) {
-			$messages[] = sprintf(
-				'%s on line: %s, column: %s',
-				$error->message,
-				$error->line,
-				$error->column
-			);
-		}
-
-		// Clear errors.
-		libxml_clear_errors();
-
-		// Set back to previous value.
-		libxml_use_internal_errors( $use_errors );
-
-		// Throw exception.
-		$message = implode( PHP_EOL, $messages );
-
-		throw new \InvalidArgumentException( $message );
-	}
-
-	/**
 	 * No cache.
 	 *
 	 * @return void
