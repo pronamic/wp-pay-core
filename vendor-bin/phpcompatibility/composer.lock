@@ -88,12 +88,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCompatibility/PHPCompatibility.git",
-                "reference": "acfb64a0721b514d54eb87433134239184cfa0cc"
+                "reference": "e669bf6d918288065a605566324dd445e3d8d3d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibility/zipball/acfb64a0721b514d54eb87433134239184cfa0cc",
-                "reference": "acfb64a0721b514d54eb87433134239184cfa0cc",
+                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibility/zipball/e669bf6d918288065a605566324dd445e3d8d3d3",
+                "reference": "e669bf6d918288065a605566324dd445e3d8d3d3",
                 "shasum": ""
             },
             "require": {
@@ -155,7 +155,7 @@
                 "issues": "https://github.com/PHPCompatibility/PHPCompatibility/issues",
                 "source": "https://github.com/PHPCompatibility/PHPCompatibility"
             },
-            "time": "2022-12-05T12:13:54+00:00"
+            "time": "2022-12-07T01:00:01+00:00"
         },
         {
             "name": "phpcsstandards/phpcsutils",
@@ -163,12 +163,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHPCSUtils.git",
-                "reference": "ad3207d6a8053d755d166f6184dd22d50ff2d305"
+                "reference": "3d9a543fa603c680cc84739b36ce0057b9c93dda"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/ad3207d6a8053d755d166f6184dd22d50ff2d305",
-                "reference": "ad3207d6a8053d755d166f6184dd22d50ff2d305",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/3d9a543fa603c680cc84739b36ce0057b9c93dda",
+                "reference": "3d9a543fa603c680cc84739b36ce0057b9c93dda",
                 "shasum": ""
             },
             "require": {
@@ -230,7 +230,7 @@
                 "issues": "https://github.com/PHPCSStandards/PHPCSUtils/issues",
                 "source": "https://github.com/PHPCSStandards/PHPCSUtils"
             },
-            "time": "2022-11-12T14:05:05+00:00"
+            "time": "2022-12-09T00:13:07+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
