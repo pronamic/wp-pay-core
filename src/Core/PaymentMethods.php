@@ -344,7 +344,7 @@ class PaymentMethods {
 	 * Riverty.
 	 *
 	 * @link https://github.com/pronamic/wp-pronamic-pay/issues/339
-	 * @since 5.0.0
+	 * @since 4.6.0
 	 * @var string
 	 */
 	const RIVERTY = 'riverty';
