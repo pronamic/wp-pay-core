@@ -55,7 +55,7 @@ class GoogleAnalyticsEcommerce {
 		add_action( 'pronamic_payment_status_update', [ $this, 'maybe_send_transaction' ], 10 );
 
 		// Filters.
-		add_filter( 'pronamic_payment_redirect_url', [ $this, 'payment_redirect_url' ], 15, 2 );
+		add_filter( 'pronamic_payment_redirect_url', [ $this, 'payment_redirect_url' ], 15, 1 );
 	}
 
 	/**
@@ -356,7 +356,6 @@ class GoogleAnalyticsEcommerce {
 			return null;
 		}
 
-		$ga_cookie = \sanitize_text_field( $_COOKIE['_ga'] );
 		$ga_cookie = \sanitize_text_field( \wp_unslash( $_COOKIE['_ga'] ) );
 
 		if ( empty( $ga_cookie ) ) {
@@ -381,11 +380,10 @@ class GoogleAnalyticsEcommerce {
 	/**
 	 * Payment redirect URL.
 	 *
-	 * @param string  $url     Redirect URL.
-	 * @param Payment $payment Payment.
+	 * @param string $url Redirect URL.
 	 * @return string
 	 */
-	public function payment_redirect_url( $url, Payment $payment ) {
+	public function payment_redirect_url( $url ) {
 		/**
 		 * Payment Gateway Referral Exclusions in Google Analytics.
 		 *
