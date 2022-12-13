@@ -520,7 +520,7 @@ class Plugin {
 			return;
 		}
 
-		$payment_id = filter_var( $_GET['payment'], \FILTER_SANITIZE_NUMBER_INT );
+		$payment_id = (int) $_GET['payment'];
 
 		$payment = get_pronamic_payment( $payment_id );
 
@@ -571,7 +571,7 @@ class Plugin {
 		}
 
 		// Get payment.
-		$payment_id = filter_var( $_GET['payment_redirect'], FILTER_SANITIZE_NUMBER_INT );
+		$payment_id = (int) $_GET['payment_redirect'];
 
 		$payment = get_pronamic_payment( $payment_id );
 
