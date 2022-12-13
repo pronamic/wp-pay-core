@@ -357,6 +357,7 @@ class GoogleAnalyticsEcommerce {
 		}
 
 		$ga_cookie = \sanitize_text_field( $_COOKIE['_ga'] );
+		$ga_cookie = \sanitize_text_field( \wp_unslash( $_COOKIE['_ga'] ) );
 
 		if ( empty( $ga_cookie ) ) {
 			return null;
