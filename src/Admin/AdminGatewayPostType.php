@@ -418,6 +418,8 @@ class AdminGatewayPostType {
 				$value = \filter_input( INPUT_POST, $name, $filter, $options );
 			}
 
+	        $value = \trim( $value );
+
 			// Update post meta.
 			if ( '' !== $value ) {
 				\update_post_meta( $post_id, $name, $value );
