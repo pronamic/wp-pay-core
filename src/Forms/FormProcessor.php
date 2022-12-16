@@ -95,7 +95,7 @@ class FormProcessor {
 
 		// Source.
 		$source    = array_key_exists( 'pronamic_pay_source', $_POST ) ? \sanitize_text_field( \wp_unslash( $_POST['pronamic_pay_source'] ) ) : '';
-		$source_id = array_key_exists( 'pronamic_pay_source_id', $_POST ) ? \sanitize_text_field( \wp_unslash( $_POST['pronamic_pay_source_id'] ) ) : '';
+		$source_id = array_key_exists( 'pronamic_pay_source_id', $_POST ) ? (int) \sanitize_text_field( \wp_unslash( $_POST['pronamic_pay_source_id'] ) ) : 0;
 
 		if ( ! FormsSource::is_valid( $source ) ) {
 			return;
@@ -114,7 +114,7 @@ class FormProcessor {
 		$first_name = array_key_exists( 'pronamic_pay_first_name', $_POST ) ? \sanitize_text_field( \wp_unslash( $_POST['pronamic_pay_first_name'] ) ) : '';
 		$last_name  = array_key_exists( 'pronamic_pay_last_name', $_POST ) ? \sanitize_text_field( \wp_unslash( $_POST['pronamic_pay_last_name'] ) ) : '';
 		$email      = filter_input( INPUT_POST, 'pronamic_pay_email', FILTER_VALIDATE_EMAIL );
-		$order_id   = time();
+		$order_id   = (string) time();
 
 		$description = null;
 
@@ -122,7 +122,7 @@ class FormProcessor {
 			$description = get_post_meta( $source_id, '_pronamic_payment_form_description', true );
 
 			if ( ! empty( $description ) ) {
-				$description = sprintf( '%s %s', $description, (string) $order_id );
+				$description = sprintf( '%s %s', $description, $order_id );
 			}
 		}
 
@@ -130,7 +130,7 @@ class FormProcessor {
 			$description = sprintf(
 				/* translators: %s: order id */
 				__( 'Payment Form %s', 'pronamic_ideal' ),
-				(string) $order_id
+				$order_id
 			);
 		}
 
@@ -239,10 +239,12 @@ class FormProcessor {
 			$user = new WP_User( $result );
 		}
 
-		if ( is_object( $user ) ) {
+		$payment_id = $payment->get_id();
+
+		if ( is_object( $user ) && null !== $payment_id ) {
 			wp_update_post(
 				[
-					'ID'          => $payment->get_id(),
+					'ID'          => $payment_id,
 					'post_author' => $user->ID,
 				]
 			);

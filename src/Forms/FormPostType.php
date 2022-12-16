@@ -341,6 +341,10 @@ class FormPostType {
 
 		$data = \filter_input_array( INPUT_POST, $definition );
 
+		if ( ! \is_array( $data ) ) {
+			return;
+		}
+
 		if ( \array_key_exists( '_pronamic_payment_form_button_text', $_POST ) ) {
 			$data['_pronamic_payment_form_button_text'] = \sanitize_text_field( \wp_unslash( $_POST['_pronamic_payment_form_button_text'] ) );
 		}
@@ -351,10 +355,6 @@ class FormPostType {
 
 		if ( \array_key_exists( '_pronamic_payment_form_amount_method', $_POST ) ) {
 			$data['_pronamic_payment_form_amount_method'] = \sanitize_text_field( \wp_unslash( $_POST['_pronamic_payment_form_amount_method'] ) );
-		}
-
-		if ( ! \is_array( $data ) ) {
-			return;
 		}
 
 		// Convert amount choices to cents.

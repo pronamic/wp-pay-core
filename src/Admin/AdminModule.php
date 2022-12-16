@@ -728,7 +728,7 @@ class AdminModule {
 			[
 				'name'         => $name,
 				'email'        => $user->user_email,
-				'phone'        => $customer->get_phone(),
+				'phone'        => null === $customer ? null : $customer->get_phone(),
 				'line_1'       => 'Billing Line 1',
 				'postal_code'  => '1234 AB',
 				'city'         => 'Billing City',
@@ -742,7 +742,7 @@ class AdminModule {
 			[
 				'name'         => $name,
 				'email'        => $user->user_email,
-				'phone'        => $customer->get_phone(),
+				'phone'        => null === $customer ? null : $customer->get_phone(),
 				'line_1'       => 'Shipping Line 1',
 				'postal_code'  => '5678 XY',
 				'city'         => 'Shipping City',

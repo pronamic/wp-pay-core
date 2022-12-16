@@ -191,9 +191,9 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 			$name = PaymentMethods::get_name( $payment_method );
 			$name = ( null === $name ) ? $payment_method : $name;
 
-			$gateway = Plugin::get_gateway( $payment->get_config_id() );
+			$gateway = Plugin::get_gateway( (int) $payment->get_config_id() );
 
-			if ( null !== $gateway ) {
+			if ( null !== $gateway && null !== $payment_method ) {
 				$method = $gateway->get_payment_method( $payment_method );
 
 				if ( null !== $method ) {
