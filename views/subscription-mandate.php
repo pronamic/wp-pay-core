@@ -19,7 +19,7 @@ if ( ! isset( $gateway ) ) {
 	return;
 }
 
-if ( ! class_exists( '\Pronamic\WordPress\Pay\Gateways\Mollie\Client' ) ) {
+if ( ! class_exists( '\Pronamic\WordPress\Mollie\Client' ) ) {
 	return;
 }
 
@@ -33,7 +33,7 @@ if ( empty( $mollie_customer_id ) ) {
 
 $api_key = \get_post_meta( $subscription->config_id, '_pronamic_gateway_mollie_api_key', true );
 
-$client = new \Pronamic\WordPress\Pay\Gateways\Mollie\Client( $api_key );
+$client = new \Pronamic\WordPress\Mollie\Client( $api_key );
 
 /**
  * Mandates.
