@@ -6,6 +6,42 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.6.0] - 2022-12-20
+### Updated
+
+- Increased minimum PHP version to version `8` or higher.
+- Improved support for PHP `8.1` and `8.2`.
+- Removed usage of deprecated constant `FILTER_SANITIZE_STRING`.
+- Updated `pronamic/wp-http` library to version `^1.2`.
+- Updated logos library to version `1.13.0`. ([25ea2f9](https://github.com/pronamic/wp-pay-core/commit/25ea2f9661b1d9bd08bf6d55a13708f799c742f9))
+
+### Fixed
+
+- Fixed using Mollie client from `pronamic/wp-mollie`. ([dc21b2a](https://github.com/pronamic/wp-pay-core/commit/dc21b2a4f8a3a564bcc8936ae5c3c4560dc71682))
+- The `display_post_states` hook is a filter, not an action. ([8b82c99](https://github.com/pronamic/wp-pay-core/commit/8b82c992957e5c2b083a9923b14690f88083d953))
+
+### Changed
+
+- Credit card properties are nullable. ([80a7db9](https://github.com/pronamic/wp-pay-core/commit/80a7db99cff86188477d3e93b1f02fb798986a3e))
+
+### Removed
+
+- Removed `Util::simplexml_load_string( $string )`, no longer used. ([ff878d7](https://github.com/pronamic/wp-pay-core/commit/ff878d7ba7f8934db0ce41696357933180ca00e2))
+- Removed `Pronamic\WordPress\Pay\Core\Util::remote_get_body()` function, no longer used. ([e0faca4](https://github.com/pronamic/wp-pay-core/commit/e0faca4938c86f782baf9dd110830b9ee9859fde))
+- Removed usage of deprecated `\FILTER_SANITIZE_STRING` in gateway settings fields. ([2a1e778](https://github.com/pronamic/wp-pay-core/commit/2a1e7780fce7b86f57b4bc1404c6d94cd71400bd))
+- Removed unused `Util::input_has_vars()`. ([53fe34f](https://github.com/pronamic/wp-pay-core/commit/53fe34f47dc6bf9a14bef06b6b0a08c86f7ae157))
+- Removed `Pronamic\WordPress\Pay\Core\XML\Security` class, no longer used. ([f7c9169](https://github.com/pronamic/wp-pay-core/commit/f7c91694a23fc84fb722c8277b31b1a5c59d633e))
+- Removed unused method `Core\Util::input_fields_html()`. ([608597b](https://github.com/pronamic/wp-pay-core/commit/608597bee9c39e1dfd98b5dc7f31ff00a7ba334f))
+- Removed `xmlseclibs.php`, library is no longer used. ([8c91fbb](https://github.com/pronamic/wp-pay-core/commit/8c91fbb439f387e497996bea50d5524149da93c3))
+
+### Added
+
+- Added Riverty payment method constant. ([95ba774](https://github.com/pronamic/wp-pay-core/commit/95ba774643c387653e5b6a5a181b6f5501079424))
+
+Full set of changes: [`4.5.0...4.6.0`][4.6.0]
+
+[4.6.0]: https://github.com/pronamic/wp-pay-core/compare/v4.5.0...v4.6.0
+
 ## [4.5.0] - 2022-11-03
 - Catch exceptions while retrieving options from for example iDEAL issuer select fields. ([#78](https://github.com/pronamic/wp-pay-core/issues/78))
 - Allow subscription payments at gateways that don't have support for recurring payments. ([pronamic/wp-pronamic-pay-woocommerce#15](https://github.com/pronamic/wp-pronamic-pay-woocommerce/issues/15))
