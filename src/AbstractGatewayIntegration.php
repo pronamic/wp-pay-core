@@ -3,7 +3,7 @@
  * Abstract gateway integration
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2022 Pronamic
+ * @copyright 2005-2023 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Gateways\Common
  */
@@ -18,7 +18,7 @@ use Pronamic\WordPress\Pay\Core\SupportsTrait;
 /**
  * Title: Abstract gateway integration
  * Description:
- * Copyright: 2005-2022 Pronamic
+ * Copyright: 2005-2023 Pronamic
  * Company: Pronamic
  *
  * @author  Remco Tolsma

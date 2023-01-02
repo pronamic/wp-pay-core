@@ -5,7 +5,7 @@
  * @link https://github.com/woothemes/woocommerce/blob/2.4.3/includes/admin/views/html-notice-update.php
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2022 Pronamic
+ * @copyright 2005-2023 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */

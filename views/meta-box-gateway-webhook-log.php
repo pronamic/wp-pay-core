@@ -3,7 +3,7 @@
  * Meta Box Gateway Webhook Log
  *
  * @author Pronamic <info@pronamic.eu>
- * @copyright 2005-2022 Pronamic
+ * @copyright 2005-2023 Pronamic
  * @license GPL-3.0-or-later
  * @package Pronamic\WordPress\Pay
  * @var string                               $gateway_id Gateway ID.
