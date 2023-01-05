@@ -428,8 +428,12 @@ class SubscriptionsModule {
 
 		$nonce = array_key_exists( 'pronamic_pay_nonce', $_POST ) ? \sanitize_text_field( \wp_unslash( $_POST['pronamic_pay_nonce'] ) ) : '';
 
-		if ( \wp_verify_nonce( $nonce, 'pronamic_pay_update_subscription_mandate' ) && \array_key_exists( 'pronamic_pay_subscription_mandate', $_POST ) ) {
-			$mandate_id = \sanitize_text_field( \wp_unslash( $_POST['pronamic_pay_subscription_mandate'] ) );
+		if ( \wp_verify_nonce( $nonce, 'pronamic_pay_update_subscription_mandate' ) ) {
+			$mandate_id = null;
+
+			if ( \array_key_exists( 'pronamic_pay_subscription_mandate', $_POST ) ) {
+				$mandate_id = \sanitize_text_field( \wp_unslash( $_POST['pronamic_pay_subscription_mandate'] ) );
+			}
 
 			if ( ! empty( $mandate_id ) ) {
 				try {
