@@ -276,7 +276,7 @@ if ( is_array( $current_mandate ) ) {
 					centerMode: true,
 				} );
 
-				$slider.find( '.slick-current input[type="radio"]' ).attr( 'checked', 'checked' );
+				$slider.find( '.slick-current input[type="radio"]' ).prop( 'checked', true );
 
 				$slider.find( '.slick-slide' ).on( 'click', function () {
 					var index = jQuery( this ).data( 'slick-index' );
@@ -284,10 +284,10 @@ if ( is_array( $current_mandate ) ) {
 					$slider.slick( 'slickGoTo', index );
 				} );
 
-				$slider.on( 'afterChange', function ( event, slick, currentSlide, nextSlide ) {
-					$slider.find( 'input[type="radio"]' ).removeAttr( 'checked' );
+				$slider.on( 'afterChange', function ( event, slick, currentSlide ) {
+					$slider.find( 'input[type="radio"]' ).prop( 'checked', false );
 
-					$slider.find( '.slick-slide' ).eq( currentSlide ).find( 'input[type="radio"]' ).attr( 'checked', 'checked' );
+					$slider.find( '.slick-slide' ).eq( currentSlide ).find( 'input[type="radio"]' ).prop( 'checked', true );
 				} );
 			} );
 		</script>
