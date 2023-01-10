@@ -55,4 +55,18 @@
   position: relative;
 }
 
+.pronamic-pay-payment-method-list {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.pronamic-pay-payment-method-list input + label + .pronamic-pay-payment-method-fields {
+  display: none;
+}
+
+.pronamic-pay-payment-method-list input:checked + label + .pronamic-pay-payment-method-fields {
+  display: block;
+}
+
 /*# sourceMappingURL=forms.css.map */
