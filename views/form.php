@@ -188,7 +188,23 @@ foreach ( $payment_methods as $payment_method ) {
 										<?php endif; ?>
 									</label>
 
-									<?php $field->output(); ?>
+									<?php
+
+									try {
+										$field->output();
+									} catch ( \Exception $exception ) {
+										echo '<em>';
+
+										printf(
+											/* translators: %s: Exception message. */
+											esc_html__( 'This field could not be displayed due to the following error message: "%s".', 'pronamic_ideal' ),
+											esc_html( $exception->getMessage() )
+										);
+
+										echo '</em>';
+									}
+
+									?>
 								</p>
 
 							<?php endforeach; ?>
