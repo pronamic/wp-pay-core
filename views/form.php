@@ -38,6 +38,17 @@ if ( null === $gateway ) {
 
 $currency = Currency::get_instance( 'EUR' );
 
+// First payment method.
+$payment_methods = $gateway->get_payment_methods();
+
+$payment_method_default = null;
+
+foreach ( $payment_methods as $payment_method ) {
+	$payment_method_default = $payment_method;
+
+	break;
+}
+
 ?>
 <div class="pronamic-pay-form-wrap">
 
@@ -136,41 +147,76 @@ $currency = Currency::get_instance( 'EUR' );
 			</p>
 		</fieldset>
 
-		<?php
+		<fieldset>
+			<legend><?php esc_html_e( 'Payment Info', 'pronamic_ideal' ); ?></legend>
 
-		$fields = [];
+			<ul class="pronamic-pay-payment-method-list">
 
-		foreach ( $gateway->get_payment_methods() as $payment_method ) {
-			foreach ( $payment_method->get_fields() as $field ) {
-				if ( $field->is_required() ) {
-					$fields[] = $field;
-				}
-			}
-		}
+				<?php foreach ( $gateway->get_payment_methods() as $payment_method ) : ?>
 
-		?>
+					<li>
+						<?php
 
-		<?php if ( ! empty( $fields ) ) : ?>
+						$html_id = 'pronamic-pay-payment-method-' . $payment_method->get_id();
 
-			<fieldset>
-				<legend><?php esc_html_e( 'Payment Info', 'pronamic_ideal' ); ?></legend>
+						printf(
+							'<input id="%s" type="radio" name="payment_method" value="%s" %s />',
+							\esc_attr( $html_id ),
+							\esc_attr( $payment_method->get_id() ),
+							checked( $payment_method === $payment_method_default, true, false )
+						);
 
-				<?php foreach ( $fields as $field ) : ?>
+						echo ' ';
 
-					<p class="pronamic-pay-form-row pronamic-pay-form-row-wide">
-						<label class="pronamic-pay-label" for="<?php echo esc_attr( $field->get_id() ); ?>">
-							<?php echo esc_html( $field->get_label() ); ?>
-							<span class="pronamic-pay-required-indicator">*</span>
-						</label>
+						printf(
+							'<label for="%s">%s</label>',
+							\esc_attr( $html_id ),
+							\esc_html( $payment_method->get_name() )
+						);
 
-						<?php $field->output(); ?>
-					</p>
+						?>
+						<div class="pronamic-pay-payment-method-fields">
+
+							<?php foreach ( $payment_method->get_fields() as $field ) : ?>
+
+								<p class="pronamic-pay-form-row pronamic-pay-form-row-wide">
+									<label class="pronamic-pay-label" for="<?php echo esc_attr( $field->get_id() ); ?>">
+										<?php echo esc_html( $field->get_label() ); ?>
+
+										<?php if ( $field->is_required() ) : ?>
+											<span class="pronamic-pay-required-indicator">*</span>
+										<?php endif; ?>
+									</label>
+
+									<?php
+
+									try {
+										$field->output();
+									} catch ( \Exception $exception ) {
+										echo '<em>';
+
+										printf(
+											/* translators: %s: Exception message. */
+											esc_html__( 'This field could not be displayed due to the following error message: "%s".', 'pronamic_ideal' ),
+											esc_html( $exception->getMessage() )
+										);
+
+										echo '</em>';
+									}
+
+									?>
+								</p>
+
+							<?php endforeach; ?>
+
+						</div>
+					</li>
 
 				<?php endforeach; ?>
 
-			</fieldset>
+			</ul>
 
-		<?php endif; ?>
+		</fieldset>
 
 		<?php if ( ! empty( $pronamic_pay_errors ) ) : ?>
 

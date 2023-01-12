@@ -59,11 +59,13 @@ class FormScripts {
 	public function register() {
 		$min = SCRIPT_DEBUG ? '' : '.min';
 
+		$file = 'css/forms' . $min . '.css';
+
 		wp_register_style(
 			'pronamic-pay-forms',
-			plugins_url( 'css/forms' . $min . '.css', dirname( __DIR__ ) ),
+			plugins_url( $file, dirname( __DIR__ ) ),
 			[],
-			$this->plugin->get_version()
+			\hash_file( 'crc32b', dirname( __DIR__, 2 ) . '/' . $file ),
 		);
 	}
 

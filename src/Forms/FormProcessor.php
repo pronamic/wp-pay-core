@@ -183,6 +183,11 @@ class FormProcessor {
 		// Amount.
 		$payment->set_total_amount( $this->get_amount() );
 
+		// Method.
+		$payment_method = \array_key_exists( 'payment_method', $_POST ) ? \sanitize_text_field( \wp_unslash( $_POST['payment_method'] ) ) : null;
+
+		$payment->set_payment_method( $payment_method );
+
 		// Payment lines.
 		$payment->lines = new PaymentLines();
 
