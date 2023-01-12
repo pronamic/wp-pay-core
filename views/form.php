@@ -12,6 +12,7 @@ global $pronamic_pay_errors;
 
 use Pronamic\WordPress\Money\Currency;
 use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Core\SelectField;
 use Pronamic\WordPress\Pay\Forms\FormPostType;
 use Pronamic\WordPress\Pay\Forms\FormsSource;
@@ -39,15 +40,40 @@ if ( null === $gateway ) {
 $currency = Currency::get_instance( 'EUR' );
 
 // First payment method.
-$payment_methods = $gateway->get_payment_methods();
+$payment_methods = $gateway->get_payment_methods(
+	[ 
+		'status' => [
+			'',
+			'active',
+		],
+	]
+)->get_array();
 
-$payment_method_default = null;
+$payment_methods = array_filter(
+	$payment_methods,
+	function( $payment_method ) {
+		return ! in_array(
+			$payment_method->get_id(),
+			[
+				PaymentMethods::AFTERPAY,
+				PaymentMethods::AFTERPAY_NL,
+				PaymentMethods::AFTERPAY_COM,
+				PaymentMethods::APPLE_PAY,
+				PaymentMethods::IN3,
+				PaymentMethods::DIRECT_DEBIT_BANCONTACT,
+				PaymentMethods::DIRECT_DEBIT_IDEAL,
+				PaymentMethods::DIRECT_DEBIT_SOFORT,
+				PaymentMethods::KLARNA_PAY_LATER,
+				PaymentMethods::KLARNA_PAY_OVER_TIME,
+				PaymentMethods::RIVERTY,
+				PaymentMethods::SPRAYPAY,
+			],
+			true
+		);
+	}
+);
 
-foreach ( $payment_methods as $payment_method ) {
-	$payment_method_default = $payment_method;
-
-	break;
-}
+$payment_method_default = \reset( $payment_methods );
 
 ?>
 <div class="pronamic-pay-form-wrap">
@@ -152,7 +178,7 @@ foreach ( $payment_methods as $payment_method ) {
 
 			<ul class="pronamic-pay-payment-method-list">
 
-				<?php foreach ( $gateway->get_payment_methods() as $payment_method ) : ?>
+				<?php foreach ( $payment_methods as $payment_method ) : ?>
 
 					<li>
 						<?php

@@ -113,6 +113,15 @@ class PaymentMethodsCollection implements IteratorAggregate, Countable {
 	}
 
 	/**
+	 * Get array.
+	 *
+	 * @return array<string, PaymentMethod>
+	 */
+	public function get_array() {
+		return $this->items;
+	}
+
+	/**
 	 * Count items.
 	 *
 	 * @return int
