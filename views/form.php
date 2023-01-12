@@ -150,9 +150,10 @@ foreach ( $payment_methods as $payment_method ) {
 		<fieldset>
 			<legend><?php esc_html_e( 'Payment Info', 'pronamic_ideal' ); ?></legend>
 
-			<?php foreach ( $gateway->get_payment_methods() as $payment_method ) : ?>
+			<ul class="pronamic-pay-payment-method-list">
 
-				<ul class="pronamic-pay-payment-method-list">
+				<?php foreach ( $gateway->get_payment_methods() as $payment_method ) : ?>
+
 					<li>
 						<?php
 
@@ -194,9 +195,10 @@ foreach ( $payment_methods as $payment_method ) {
 
 						</div>
 					</li>
-				</ul>
 
-			<?php endforeach; ?>
+				<?php endforeach; ?>
+
+			</ul>
 
 		</fieldset>
 
