@@ -113,7 +113,8 @@ class SubscriptionInterval extends \DateInterval implements \JsonSerializable {
 	 * @link https://www.php.net/manual/en/jsonserializable.jsonserialize.php
 	 * @return mixed
 	 */
-	public function jsonSerialize(): mixed {
+	#[\ReturnTypeWillChange]
+	public function jsonSerialize() {
 		return $this->specification;
 	}
 

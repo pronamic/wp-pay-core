@@ -141,7 +141,8 @@ class Field implements JsonSerializable {
 	 *
 	 * @return mixed
 	 */
-	public function jsonSerialize(): mixed {
+	#[\ReturnTypeWillChange]
+	public function jsonSerialize() {
 		return [
 			'type'     => '',
 			'id'       => $this->id,
