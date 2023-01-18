@@ -6,6 +6,23 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.7.0] - 2023-01-18
+### Fixed
+
+- Show payment methods list in the built-in payment forms, solves problem with bank choice with iDEAL Advanced. ([#89](https://github.com/pronamic/wp-pay-core/issues/89))
+
+### Commits
+
+- Improve PHP 7.4 compat for now. ([b59cc53](https://github.com/pronamic/wp-pay-core/commit/b59cc53ae4974de599b4c635651f992173d87007))
+- Use file hash as version for forms style. ([005a167](https://github.com/pronamic/wp-pay-core/commit/005a16743824a9e44bc5ff63b888d586bbaaf6d6))
+- Fixed adding new payment method via subscription mandate page. ([0da98dd](https://github.com/pronamic/wp-pay-core/commit/0da98ddcf2baf8b063a94f629dfb25e348723c19))
+- Set `checked` property instead of attribute in mandate selection. ([cad9298](https://github.com/pronamic/wp-pay-core/commit/cad929805172b5333ac8761c45569457478dd03c))
+- Happy 2023. ([11bf73b](https://github.com/pronamic/wp-pay-core/commit/11bf73b3a4e7ab23f0a8fe904cbb7c9c2376805a))
+
+Full set of changes: [`4.6.0...4.7.0`][4.7.0]
+
+[4.7.0]: https://github.com/pronamic/wp-pay-core/compare/v4.6.0...v4.7.0
+
 ## [4.6.0] - 2022-12-20
 ### Updated
 
