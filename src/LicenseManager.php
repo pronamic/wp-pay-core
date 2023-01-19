@@ -27,13 +27,78 @@ class LicenseManager {
 	 */
 	public function __construct() {
 		// Actions.
-		add_action( 'pronamic_pay_license_check', [ $this, 'license_check_event' ] );
-		add_action( 'admin_notices', [ $this, 'admin_notices' ] );
+		\add_action( 'admin_init', [ $this, 'admin_init' ], 9 );
+		\add_action( 'admin_notices', [ $this, 'admin_notices' ] );
+		\add_action( 'pronamic_pay_license_check', [ $this, 'license_check_event' ] );
 
 		// Filters.
 		\add_filter( sprintf( 'pre_update_option_%s', 'pronamic_pay_license_key' ), [ $this, 'pre_update_option_license_key' ], 10, 2 );
 
 		\add_filter( 'debug_information', [ $this, 'debug_information' ], 15 );
+	}
+
+	/**
+	 * Admin initialize.
+	 *
+	 * @return void
+	 */
+	public function admin_init() {
+		// License key setting.
+		\add_settings_field(
+			'pronamic_pay_license_key',
+			\__( 'Support License Key', 'pronamic_ideal' ),
+			[ $this, 'input_license_key' ],
+			'pronamic_pay',
+			'pronamic_pay_general',
+			[
+				'label_for' => 'pronamic_pay_license_key',
+				'classes'   => 'regular-text code',
+			]
+		);
+	}
+
+	/**
+	 * Input license key.
+	 *
+	 * @param array $args Arguments.
+	 * @return void
+	 */
+	public function input_license_key( $args ) {
+		/**
+		 * Perform license check.
+		 */
+		\do_action( 'pronamic_pay_license_check' );
+
+		$args = \wp_parse_args(
+			$args,
+			[
+				'type'    => 'text',
+				'classes' => 'regular-text',
+			]
+		);
+
+		$name = $args['label_for'];
+
+		$atts = [
+			'name'  => $name,
+			'id'    => $name,
+			'type'  => $args['type'],
+			'class' => $args['classes'],
+			'value' => \get_option( $name ),
+		];
+
+		printf(
+			'<input %s />',
+			// @codingStandardsIgnoreStart
+			Util::array_to_html_attributes( $atts )
+			// @codingStandardsIgnoreEnd
+		);
+
+		$status = \get_option( 'pronamic_pay_license_status' );
+
+		$icon = 'valid' === $status ? 'yes' : 'no';
+
+		printf( '<span class="dashicons dashicons-%s" style="vertical-align: text-bottom;"></span>', \esc_attr( $icon ) );
 	}
 
 	/**

@@ -54,18 +54,6 @@ class AdminSettings {
 			'pronamic_pay'
 		);
 
-		add_settings_field(
-			'pronamic_pay_license_key',
-			__( 'Support License Key', 'pronamic_ideal' ),
-			[ $this, 'input_license_key' ],
-			'pronamic_pay',
-			'pronamic_pay_general',
-			[
-				'label_for' => 'pronamic_pay_license_key',
-				'classes'   => 'regular-text code',
-			]
-		);
-
 		// Default Config.
 		add_settings_field(
 			'pronamic_pay_config_id',
@@ -317,27 +305,6 @@ class AdminSettings {
 		echo '</label>';
 
 		echo '</fieldset>';
-	}
-
-	/**
-	 * Input license key.
-	 *
-	 * @param array $args Arguments.
-	 * @return void
-	 */
-	public function input_license_key( $args ) {
-		/**
-		 * Perform license check.
-		 */
-		do_action( 'pronamic_pay_license_check' );
-
-		$this->input_element( $args );
-
-		$status = get_option( 'pronamic_pay_license_status' );
-
-		$icon = 'valid' === $status ? 'yes' : 'no';
-
-		printf( '<span class="dashicons dashicons-%s" style="vertical-align: text-bottom;"></span>', esc_attr( $icon ) );
 	}
 
 	/**
