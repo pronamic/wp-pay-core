@@ -139,13 +139,6 @@ class Plugin {
 	public $subscription_post_type;
 
 	/**
-	 * Licence manager.
-	 *
-	 * @var LicenseManager
-	 */
-	public $license_manager;
-
-	/**
 	 * Privacy manager.
 	 *
 	 * @var PrivacyManager
@@ -672,9 +665,6 @@ class Plugin {
 		$this->gateway_post_type      = new GatewayPostType();
 		$this->payment_post_type      = new PaymentPostType();
 		$this->subscription_post_type = new SubscriptionPostType();
-
-		// License Manager.
-		$this->license_manager = new LicenseManager();
 
 		// Privacy Manager.
 		$this->privacy_manager = new PrivacyManager();
