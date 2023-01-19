@@ -10,8 +10,6 @@
 
 namespace Pronamic\WordPress\Pay\Forms;
 
-use Pronamic\WordPress\Pay\Plugin;
-
 /**
  * Form Scripts
  *
@@ -21,20 +19,9 @@ use Pronamic\WordPress\Pay\Plugin;
  */
 class FormScripts {
 	/**
-	 * Plugin.
-	 *
-	 * @var Plugin
+	 * Constructs and initialize a form scripts object.
 	 */
-	private $plugin;
-
-	/**
-	 * Constructs and initialize an form scripts object.
-	 *
-	 * @param Plugin $plugin Plugin.
-	 */
-	public function __construct( $plugin ) {
-		$this->plugin = $plugin;
-
+	public function __construct() {
 		/**
 		 * We register the form style in the 'init' action so the style
 		 * is available on the front end and admin pages. This is

@@ -12,7 +12,6 @@ namespace Pronamic\WordPress\Pay\Forms;
 
 use Pronamic\WordPress\Number\Number;
 use Pronamic\WordPress\Pay\Payments\Payment;
-use Pronamic\WordPress\Pay\Plugin;
 
 /**
  * Forms Module
@@ -24,10 +23,8 @@ use Pronamic\WordPress\Pay\Plugin;
 class FormsModule {
 	/**
 	 * Construct and initialize a forms module object.
-	 *
-	 * @param Plugin $plugin Plugin.
 	 */
-	public function __construct( $plugin ) {
+	public function __construct() {
 		// Form Post Type.
 		new FormPostType();
 
@@ -35,7 +32,7 @@ class FormsModule {
 		new FormProcessor();
 
 		// Scripts.
-		new FormScripts( $plugin );
+		new FormScripts();
 
 		// Shortcode.
 		new FormShortcode( $this );
