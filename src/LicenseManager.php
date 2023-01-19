@@ -31,7 +31,9 @@ class LicenseManager {
 		add_action( 'admin_notices', [ $this, 'admin_notices' ] );
 
 		// Filters.
-		add_filter( sprintf( 'pre_update_option_%s', 'pronamic_pay_license_key' ), [ $this, 'pre_update_option_license_key' ], 10, 2 );
+		\add_filter( sprintf( 'pre_update_option_%s', 'pronamic_pay_license_key' ), [ $this, 'pre_update_option_license_key' ], 10, 2 );
+
+		\add_filter( 'debug_information', [ $this, 'debug_information' ], 15 );
 	}
 
 	/**
@@ -300,5 +302,50 @@ class LicenseManager {
 		}
 
 		return $next_license_check;
+	}
+
+	/**
+	 * Site Health debug information.
+	 *
+	 * @param array $debug_information Debug information.
+	 * @return array
+	 */
+	public function debug_information( $debug_information ) {
+		// Add debug information section.
+		if ( ! \array_key_exists( 'pronamic-pay', $debug_information ) ) {
+			$debug_information['pronamic-pay'] = [
+				'label'  => __( 'Pronamic Pay', 'pronamic_ideal' ),
+				'fields' => [],
+			];
+		}
+
+		$fields = [
+			// License key.
+			'license_key'        => [
+				'label'   => __( 'Support license key', 'pronamic_ideal' ),
+				'value'   => esc_html( get_option( 'pronamic_pay_license_key', __( 'No license key found', 'pronamic_ideal' ) ) ),
+				'private' => true,
+			],
+
+			// License status.
+			'license_status'     => [
+				'label' => __( 'License status', 'pronamic_ideal' ),
+				'value' => esc_html( $this->get_formatted_license_status() ),
+			],
+
+			// Next scheduled license check.
+			'next_license_check' => [
+				'label' => __( 'Next scheduled license check', 'pronamic_ideal' ),
+				'value' => esc_html( $this->get_formatted_next_license_check() ),
+			],
+		];
+
+		if ( \array_key_exists( 'fields', $debug_information['pronamic-pay'] ) ) {
+			$fields = \array_merge( $fields, $debug_information['pronamic-pay']['fields'] );
+		}
+
+		$debug_information['pronamic-pay']['fields'] = $fields;
+
+		return $debug_information;
 	}
 }
