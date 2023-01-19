@@ -55,7 +55,6 @@ class LicenseManager {
 
 		// Filters.
 		\add_filter( sprintf( 'pre_update_option_%s', 'pronamic_pay_license_key' ), [ $this, 'pre_update_option_license_key' ], 10, 2 );
-
 		\add_filter( 'debug_information', [ $this, 'debug_information' ], 15 );
 	}
 
