@@ -26,6 +26,15 @@ $config_id = $post->ID;
 
 $gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 
+// Select gateway if we already know which one to use, because there is only a single gateway registered.
+if ( empty( $gateway_id ) && 1 === count( $integrations ) ) {
+	$integration = reset( $integrations );
+
+	if ( false !== $integration ) {
+		$gateway_id = $integration->get_id();
+	}
+}
+
 ?>
 <div id="pronamic-pay-gateway-config-editor">
 	<table class="form-table">
