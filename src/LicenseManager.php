@@ -55,6 +55,11 @@ class LicenseManager {
 				'classes'   => 'regular-text code',
 			]
 		);
+
+		// License check.
+		if ( ! \wp_next_scheduled( 'pronamic_pay_license_check' ) ) {
+			\wp_schedule_event( time(), 'daily', 'pronamic_pay_license_check' );
+		}
 	}
 
 	/**
