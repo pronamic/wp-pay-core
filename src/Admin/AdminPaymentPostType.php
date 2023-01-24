@@ -587,14 +587,18 @@ class AdminPaymentPostType {
 			'high'
 		);
 
-		add_meta_box(
-			'pronamic_payment_subscription',
-			__( 'Subscription', 'pronamic_ideal' ),
-			[ $this, 'meta_box_subscription' ],
-			$post_type,
-			'normal',
-			'high'
-		);
+		$modules = \apply_filters( 'pronamic_pay_modules', [] );
+
+		if ( \in_array( 'subscriptions', $modules, true ) ) {
+			\add_meta_box(
+				'pronamic_payment_subscription',
+				\__( 'Subscription', 'pronamic_ideal' ),
+				[ $this, 'meta_box_subscription' ],
+				$post_type,
+				'normal',
+				'high'
+			);
+		}
 
 		add_meta_box(
 			'pronamic_payment_notes',
