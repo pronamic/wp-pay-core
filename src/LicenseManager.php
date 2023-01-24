@@ -23,15 +23,108 @@ use WP_Error;
  */
 class LicenseManager {
 	/**
+	 * Instance of this class.
+	 *
+	 * @since 4.7.1
+	 * @var self
+	 */
+	protected static $instance = null;
+
+	/**
+	 * Return an instance of this class.
+	 *
+	 * @return self A single instance of this class.
+	 */
+	public static function instance() {
+		// If the single instance hasn't been set, set it now.
+		if ( null === self::$instance ) {
+			self::$instance = new self();
+		}
+
+		return self::$instance;
+	}
+
+	/**
 	 * Construct license manager.
 	 */
 	public function __construct() {
 		// Actions.
-		add_action( 'pronamic_pay_license_check', [ $this, 'license_check_event' ] );
-		add_action( 'admin_notices', [ $this, 'admin_notices' ] );
+		\add_action( 'admin_init', [ $this, 'admin_init' ], 9 );
+		\add_action( 'admin_notices', [ $this, 'admin_notices' ] );
+		\add_action( 'pronamic_pay_license_check', [ $this, 'license_check_event' ] );
 
 		// Filters.
-		add_filter( sprintf( 'pre_update_option_%s', 'pronamic_pay_license_key' ), [ $this, 'pre_update_option_license_key' ], 10, 2 );
+		\add_filter( sprintf( 'pre_update_option_%s', 'pronamic_pay_license_key' ), [ $this, 'pre_update_option_license_key' ], 10, 2 );
+		\add_filter( 'debug_information', [ $this, 'debug_information' ], 15 );
+	}
+
+	/**
+	 * Admin initialize.
+	 *
+	 * @return void
+	 */
+	public function admin_init() {
+		// License key setting.
+		\add_settings_field(
+			'pronamic_pay_license_key',
+			\__( 'Support License Key', 'pronamic_ideal' ),
+			[ $this, 'input_license_key' ],
+			'pronamic_pay',
+			'pronamic_pay_general',
+			[
+				'label_for' => 'pronamic_pay_license_key',
+				'classes'   => 'regular-text code',
+			]
+		);
+
+		// License check.
+		if ( ! \wp_next_scheduled( 'pronamic_pay_license_check' ) ) {
+			\wp_schedule_event( time(), 'daily', 'pronamic_pay_license_check' );
+		}
+	}
+
+	/**
+	 * Input license key.
+	 *
+	 * @param array $args Arguments.
+	 * @return void
+	 */
+	public function input_license_key( $args ) {
+		/**
+		 * Perform license check.
+		 */
+		\do_action( 'pronamic_pay_license_check' );
+
+		$args = \wp_parse_args(
+			$args,
+			[
+				'type'    => 'text',
+				'classes' => 'regular-text',
+			]
+		);
+
+		$name = $args['label_for'];
+
+		$atts = [
+			'name'  => $name,
+			'id'    => $name,
+			'type'  => $args['type'],
+			'class' => $args['classes'],
+			'value' => \get_option( $name ),
+		];
+
+		printf(
+			'<input %s />',
+			// @codingStandardsIgnoreStart
+			Util::array_to_html_attributes( $atts )
+			// @codingStandardsIgnoreEnd
+		);
+
+		$status = \get_option( 'pronamic_pay_license_status' );
+
+		$icon = 'valid' === $status ? 'yes' : 'no';
+
+		printf( '<span class="dashicons dashicons-%s" style="vertical-align: text-bottom;"></span>', \esc_attr( $icon ) );
 	}
 
 	/**
@@ -42,12 +135,48 @@ class LicenseManager {
 	 * @return void
 	 */
 	public function admin_notices() {
+		// Show notices only to options managers (administrators).
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		// License activation notice.
 		$data = get_transient( 'pronamic_pay_license_data' );
 
 		if ( $data ) {
 			include __DIR__ . '/../views/notice-license.php';
 
 			delete_transient( 'pronamic_pay_license_data' );
+		}
+
+		// License status notice.
+		if ( 'valid' !== get_option( 'pronamic_pay_license_status' ) ) {
+			$class = Plugin::get_number_payments() > 20 ? 'error' : 'updated';
+
+			$license = get_option( 'pronamic_pay_license_key' );
+
+			if ( '' === $license ) {
+				$notice = sprintf(
+				/* translators: 1: Pronamic Pay settings page URL, 2: Pronamic.eu plugin page URL */
+					__( '<strong>Pronamic Pay</strong> — You have not entered a valid <a href="%1$s">support license key</a>, please <a href="%2$s" target="_blank">get your key at pronamic.eu</a>.', 'pronamic_ideal' ),
+					add_query_arg( 'page', 'pronamic_pay_settings', get_admin_url( null, 'admin.php' ) ),
+					'https://www.pronamic.eu/plugins/pronamic-ideal/'
+				);
+			} else {
+				$notice = sprintf(
+				/* translators: 1: Pronamic Pay settings page URL, 2: Pronamic.eu plugin page URL, 3: Pronamic.eu account page URL */
+					__( '<strong>Pronamic Pay</strong> — You have not entered a valid <a href="%1$s">support license key</a>. Please <a href="%2$s" target="_blank">get your key at pronamic.eu</a> or login to <a href="%3$s" target="_blank">check your license status</a>.', 'pronamic_ideal' ),
+					add_query_arg( 'page', 'pronamic_pay_settings', get_admin_url( null, 'admin.php' ) ),
+					'https://www.pronamic.eu/plugins/pronamic-ideal/',
+					'https://www.pronamic.eu/account/'
+				);
+			}
+
+			printf(
+				'<div class="%s"><p>%s</p></div>',
+				esc_attr( $class ),
+				wp_kses_post( $notice )
+			);
 		}
 	}
 
@@ -264,5 +393,50 @@ class LicenseManager {
 		}
 
 		return $next_license_check;
+	}
+
+	/**
+	 * Site Health debug information.
+	 *
+	 * @param array $debug_information Debug information.
+	 * @return array
+	 */
+	public function debug_information( $debug_information ) {
+		// Add debug information section.
+		if ( ! \array_key_exists( 'pronamic-pay', $debug_information ) ) {
+			$debug_information['pronamic-pay'] = [
+				'label'  => __( 'Pronamic Pay', 'pronamic_ideal' ),
+				'fields' => [],
+			];
+		}
+
+		$fields = [
+			// License key.
+			'license_key'        => [
+				'label'   => __( 'Support license key', 'pronamic_ideal' ),
+				'value'   => esc_html( get_option( 'pronamic_pay_license_key', __( 'No license key found', 'pronamic_ideal' ) ) ),
+				'private' => true,
+			],
+
+			// License status.
+			'license_status'     => [
+				'label' => __( 'License status', 'pronamic_ideal' ),
+				'value' => esc_html( $this->get_formatted_license_status() ),
+			],
+
+			// Next scheduled license check.
+			'next_license_check' => [
+				'label' => __( 'Next scheduled license check', 'pronamic_ideal' ),
+				'value' => esc_html( $this->get_formatted_next_license_check() ),
+			],
+		];
+
+		if ( \array_key_exists( 'fields', $debug_information['pronamic-pay'] ) ) {
+			$fields = \array_merge( $fields, $debug_information['pronamic-pay']['fields'] );
+		}
+
+		$debug_information['pronamic-pay']['fields'] = $fields;
+
+		return $debug_information;
 	}
 }
