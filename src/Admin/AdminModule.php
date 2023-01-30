@@ -160,11 +160,6 @@ class AdminModule {
 		new AdminGatewayPostType( $this->plugin );
 		new AdminPaymentPostType( $this->plugin );
 		new AdminSubscriptionPostType( $this->plugin );
-
-		// License check.
-		if ( ! wp_next_scheduled( 'pronamic_pay_license_check' ) ) {
-			wp_schedule_event( time(), 'daily', 'pronamic_pay_license_check' );
-		}
 	}
 
 	/**
@@ -989,52 +984,65 @@ class AdminModule {
 			}
 		}
 
+		$modules = \apply_filters( 'pronamic_pay_modules', [] );
+
 		/**
 		 * Submenu pages.
 		 */
-		$submenu_pages = [
-			[
-				'page_title' => __( 'Payments', 'pronamic_ideal' ),
-				'menu_title' => __( 'Payments', 'pronamic_ideal' ) . $badges['payments']['html'],
-				'capability' => 'edit_payments',
-				'menu_slug'  => 'edit.php?post_type=pronamic_payment',
-			],
-			[
+		$submenu_pages = [];
+
+		$submenu_pages[] = [
+			'page_title' => __( 'Payments', 'pronamic_ideal' ),
+			'menu_title' => __( 'Payments', 'pronamic_ideal' ) . $badges['payments']['html'],
+			'capability' => 'edit_payments',
+			'menu_slug'  => 'edit.php?post_type=pronamic_payment',
+		];
+
+		if ( \in_array( 'subscriptions', $modules, true ) ) {
+			$submenu_pages[] = [
 				'page_title' => __( 'Subscriptions', 'pronamic_ideal' ),
 				'menu_title' => __( 'Subscriptions', 'pronamic_ideal' ) . $badges['subscriptions']['html'],
 				'capability' => 'edit_payments',
 				'menu_slug'  => 'edit.php?post_type=pronamic_pay_subscr',
-			],
-			[
+			];
+		}
+
+		if ( \in_array( 'reports', $modules, true ) ) {
+			$submenu_pages[] = [
 				'page_title' => __( 'Reports', 'pronamic_ideal' ),
 				'menu_title' => __( 'Reports', 'pronamic_ideal' ),
 				'capability' => 'edit_payments',
 				'menu_slug'  => 'pronamic_pay_reports',
-				'function'   => function() {
+				'function'   => function () {
 					$this->reports->page_reports();
 				},
-			],
-			[
+			];
+		}
+
+		if ( \in_array( 'forms', $modules, true ) ) {
+			$submenu_pages[] = [
 				'page_title' => __( 'Payment Forms', 'pronamic_ideal' ),
 				'menu_title' => __( 'Forms', 'pronamic_ideal' ),
 				'capability' => 'edit_forms',
 				'menu_slug'  => 'edit.php?post_type=pronamic_pay_form',
-			],
-			[
-				'page_title' => __( 'Configurations', 'pronamic_ideal' ),
-				'menu_title' => __( 'Configurations', 'pronamic_ideal' ),
-				'capability' => 'manage_options',
-				'menu_slug'  => 'edit.php?post_type=pronamic_gateway',
-			],
-			[
-				'page_title' => __( 'Settings', 'pronamic_ideal' ),
-				'menu_title' => __( 'Settings', 'pronamic_ideal' ),
-				'capability' => 'manage_options',
-				'menu_slug'  => 'pronamic_pay_settings',
-				'function'   => function() {
-					$this->render_page( 'settings' );
-				},
-			],
+			];
+		}
+
+		$submenu_pages[] = [
+			'page_title' => __( 'Configurations', 'pronamic_ideal' ),
+			'menu_title' => __( 'Configurations', 'pronamic_ideal' ),
+			'capability' => 'manage_options',
+			'menu_slug'  => 'edit.php?post_type=pronamic_gateway',
+		];
+
+		$submenu_pages[] = [
+			'page_title' => __( 'Settings', 'pronamic_ideal' ),
+			'menu_title' => __( 'Settings', 'pronamic_ideal' ),
+			'capability' => 'manage_options',
+			'menu_slug'  => 'pronamic_pay_settings',
+			'function'   => function() {
+				$this->render_page( 'settings' );
+			},
 		];
 
 		if ( version_compare( get_bloginfo( 'version' ), '5.2', '<' ) ) {

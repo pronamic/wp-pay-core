@@ -50,36 +50,6 @@ class AdminNotices {
 			return;
 		}
 
-		// License notice.
-		if ( 'valid' !== get_option( 'pronamic_pay_license_status' ) ) {
-			$class = Plugin::get_number_payments() > 20 ? 'error' : 'updated';
-
-			$license = get_option( 'pronamic_pay_license_key' );
-
-			if ( '' === $license ) {
-				$notice = sprintf(
-					/* translators: 1: Pronamic Pay settings page URL, 2: Pronamic.eu plugin page URL */
-					__( '<strong>Pronamic Pay</strong> — You have not entered a valid <a href="%1$s">support license key</a>, please <a href="%2$s" target="_blank">get your key at pronamic.eu</a>.', 'pronamic_ideal' ),
-					add_query_arg( 'page', 'pronamic_pay_settings', get_admin_url( null, 'admin.php' ) ),
-					'https://www.pronamic.eu/plugins/pronamic-ideal/'
-				);
-			} else {
-				$notice = sprintf(
-					/* translators: 1: Pronamic Pay settings page URL, 2: Pronamic.eu plugin page URL, 3: Pronamic.eu account page URL */
-					__( '<strong>Pronamic Pay</strong> — You have not entered a valid <a href="%1$s">support license key</a>. Please <a href="%2$s" target="_blank">get your key at pronamic.eu</a> or login to <a href="%3$s" target="_blank">check your license status</a>.', 'pronamic_ideal' ),
-					add_query_arg( 'page', 'pronamic_pay_settings', get_admin_url( null, 'admin.php' ) ),
-					'https://www.pronamic.eu/plugins/pronamic-ideal/',
-					'https://www.pronamic.eu/account/'
-				);
-			}
-
-			printf(
-				'<div class="%s"><p>%s</p></div>',
-				esc_attr( $class ),
-				wp_kses_post( $notice )
-			);
-		}
-
 		$this->removed_support_notices();
 	}
 
