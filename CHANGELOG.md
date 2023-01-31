@@ -6,6 +6,19 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.7.1] - 2023-01-31
+### Commits
+
+- Updated minified forms style. ([8f8be83](https://github.com/pronamic/wp-pay-core/commit/8f8be830398a8488200dd0c1b74fd346a2cc6962))
+- Select gateway if we already know which one to use, because there is only a single gateway registered. ([eea5b74](https://github.com/pronamic/wp-pay-core/commit/eea5b74230267f67b8c3db1f2ecc5415e29906cb))
+
+### Composer
+
+- Changed `php` from `>=8.0` to `>=7.4`.
+Full set of changes: [`4.7.0...4.7.1`][4.7.1]
+
+[4.7.1]: https://github.com/pronamic/wp-pay-core/compare/v4.7.0...v4.7.1
+
 ## [4.7.0] - 2023-01-18
 ### Fixed
 
