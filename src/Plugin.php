@@ -1397,7 +1397,7 @@ class Plugin {
 	public function is_debug_mode() {
 		$value = \get_option( 'pronamic_pay_debug_mode', false );
 
-		if ( PRONAMIC_PAY_DEBUG ) {
+		if ( defined( '\PRONAMIC_PAY_DEBUG' ) && PRONAMIC_PAY_DEBUG ) {
 			$value = true;
 		}
 
