@@ -239,7 +239,7 @@ abstract class AbstractIntegration {
 			return null;
 		}
 
-		return \get_option( $this->version_option_name );
+		return \get_option( $this->version_option_name, null );
 	}
 
 	/**
@@ -289,7 +289,7 @@ abstract class AbstractIntegration {
 			return null;
 		}
 
-		return \get_option( $this->db_version_option_name );
+		return \get_option( $this->db_version_option_name, null );
 	}
 
 	/**
@@ -299,5 +299,32 @@ abstract class AbstractIntegration {
 	 */
 	public function get_upgrades() {
 		return $this->upgrades;
+	}
+
+	/**
+	 * Maybe install.
+	 *
+	 * @return void
+	 */
+	public function maybe_install() {
+		if ( null === $this->version_option_name ) {
+			return;
+		}
+
+		if ( null === $this->version ) {
+			return;
+		}
+
+		if ( \get_option( $this->version_option_name, null ) === $this->version ) {
+			return;
+		}
+
+		\update_option( $this->version_option_name, $this->version );
+
+		$db_version = \get_option( $this->db_version_option_name, null );
+
+		if ( null === $db_version ) {
+			\update_option( $this->db_version_option_name, $this->version );
+		}
 	}
 }
