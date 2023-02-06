@@ -39,19 +39,6 @@ class Install {
 	private $admin;
 
 	/**
-	 * Database updates.
-	 *
-	 * @var array
-	 */
-	private $db_updates = [
-		'2.0.0',
-		'2.0.1',
-		'3.3.0',
-		'3.7.0',
-		'3.7.2',
-	];
-
-	/**
 	 * Constructs and initializes an install object.
 	 *
 	 * @link https://github.com/woothemes/woocommerce/blob/2.4.3/includes/class-wc-install.php
@@ -322,21 +309,6 @@ class Install {
 	 * @return bool True if database update is required, false otherwise.
 	 */
 	public function requires_upgrade() {
-		$current_db_version = \get_option( 'pronamic_pay_db_version', null );
-
-		if (
-			null !== $current_db_version
-				&&
-			(
-				// Check for old database version notation without dots, for example `366`.
-				false === \strpos( $current_db_version, '.' )
-					||
-				\version_compare( $current_db_version, \max( $this->db_updates ), '<' )
-			)
-		) {
-			return true;
-		}
-
 		// Integrations.
 		$integrations = $this->get_upgradeable_integrations();
 
@@ -365,24 +337,6 @@ class Install {
 	 * @return void
 	 */
 	public function upgrade() {
-		$current_db_version = get_option( 'pronamic_pay_db_version', null );
-
-		if ( $current_db_version ) {
-			foreach ( $this->db_updates as $version ) {
-				if ( ! version_compare( $current_db_version, $version, '<' ) ) {
-					continue;
-				}
-
-				$file = plugin_dir_path( $this->plugin->get_file() ) . 'includes/updates/update-' . $version . '.php';
-
-				if ( is_readable( $file ) ) {
-					include $file;
-
-					update_option( 'pronamic_pay_db_version', $version );
-				}
-			}
-		}
-
 		// Integrations.
 		$integrations = $this->get_upgradeable_integrations();
 
