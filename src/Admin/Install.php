@@ -76,9 +76,7 @@ class Install {
 	 */
 	public function admin_init() {
 		// Install.
-		if ( get_option( 'pronamic_pay_version' ) !== $this->plugin->get_version() ) {
-			$this->install();
-		}
+		$this->maybe_install();
 
 		// Notices.
 		add_action( 'admin_notices', [ $this, 'admin_notice_upgrades_available' ], 20 );
@@ -134,6 +132,20 @@ class Install {
 		$args[] = 'pronamic_pay_upgraded';
 
 		return $args;
+	}
+
+	/**
+	 * Maybe install.
+	 */
+	private function maybe_install() {
+		if ( \get_option( 'pronamic_pay_version', null ) !== $this->plugin->get_version() ) {
+			$this->install();
+		}
+
+		// Integrations.
+		foreach ( $this->plugin->integrations as $integration ) {
+			$integration->maybe_install();
+		}
 	}
 
 	/**
@@ -310,13 +322,17 @@ class Install {
 	 * @return bool True if database update is required, false otherwise.
 	 */
 	public function requires_upgrade() {
-		$current_db_version = get_option( 'pronamic_pay_db_version' );
+		$current_db_version = \get_option( 'pronamic_pay_db_version', null );
 
 		if (
-			// Check for old database version notation without dots, for example `366`.
-			false === strpos( $current_db_version, '.' )
-				||
-			version_compare( $current_db_version, max( $this->db_updates ), '<' )
+			null !== $current_db_version
+				&&
+			(
+				// Check for old database version notation without dots, for example `366`.
+				false === \strpos( $current_db_version, '.' )
+					||
+				\version_compare( $current_db_version, \max( $this->db_updates ), '<' )
+			)
 		) {
 			return true;
 		}
