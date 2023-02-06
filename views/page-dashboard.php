@@ -357,38 +357,39 @@ $container_index = 1;
 
 								echo ' ';
 
-								printf(
-									'<a href="%s" class="button-secondary">%s</a>',
-									esc_attr(
-										add_query_arg(
-											[
-												'page' => 'pronamic-pay-about',
-												'tab'  => 'new',
-											]
-										)
-									),
-									esc_html__( 'What is new', 'pronamic_ideal' )
-								);
+								if ( null !== $this->plugin->get_option( 'about_page_file' ) ) {
+									printf(
+										'<a href="%s" class="button-secondary">%s</a>',
+										esc_attr(
+											add_query_arg(
+												[
+													'page' => 'pronamic-pay-about',
+													'tab'  => 'new',
+												]
+											)
+										),
+										esc_html__( 'What is new', 'pronamic_ideal' )
+									);
 
-								echo ' ';
+									echo ' ';
 
-								printf(
-									'<a href="%s" class="button-secondary">%s</a>',
-									esc_attr(
-										add_query_arg(
-											[
-												'page' => 'pronamic-pay-about',
-												'tab'  => 'getting-started',
-											]
-										)
-									),
-									esc_html__( 'Getting started', 'pronamic_ideal' )
-								);
+									printf(
+										'<a href="%s" class="button-secondary">%s</a>',
+										esc_attr(
+											add_query_arg(
+												[
+													'page' => 'pronamic-pay-about',
+													'tab'  => 'getting-started',
+												]
+											)
+										),
+										esc_html__( 'Getting started', 'pronamic_ideal' )
+									);
 
-								echo ' ';
+									echo ' ';
+								}
 
 								// Site Health button.
-
 								if ( version_compare( get_bloginfo( 'version' ), '5.2', '>=' ) && current_user_can( 'view_site_health_checks' ) ) :
 
 									printf(
