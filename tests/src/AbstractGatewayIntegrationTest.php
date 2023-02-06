@@ -27,20 +27,16 @@ class AbstractGatewayIntegrationTest extends TestCase {
 		$mock = $this->getMockForAbstractClass( AbstractGatewayIntegration::class );
 
 		$this->assertNull( $mock->get_version_option_name() );
-		$this->assertNull( $mock->get_db_version_option_name() );
 
 		$mock->set_manual_url( 'https://domain.tld/manuals/test/' );
 		$mock->set_version( '1.0.0' );
 		$mock->set_version_option_name( 'pronamic_pay_mollie_version' );
-		$mock->set_db_version_option_name( 'pronamic_pay_mollie_db_version' );
 
 		$this->assertEquals( 'https://domain.tld/manuals/test/', $mock->get_manual_url() );
 		$this->assertEquals( '1.0.0', $mock->get_version() );
 		$this->assertEquals( 'pronamic_pay_mollie_version', $mock->get_version_option_name() );
-		$this->assertEquals( 'pronamic_pay_mollie_db_version', $mock->get_db_version_option_name() );
 
 		$this->assertEquals( '', $mock->get_version_option() );
-		$this->assertEquals( '', $mock->get_db_version_option() );
 
 		$mock->update_version_option();
 

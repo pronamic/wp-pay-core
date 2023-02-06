@@ -51,87 +51,44 @@ class Install {
 		$this->admin  = $admin;
 
 		// Actions.
-		add_action( 'admin_init', [ $this, 'admin_init' ], 5 );
-
-		add_filter( 'removable_query_args', [ $this, 'removable_query_args' ] );
+		add_action( 'init', [ $this, 'init' ], 5 );
 	}
 
 	/**
-	 * Admin initialize.
+	 * Initialize.
 	 *
 	 * @return void
 	 */
-	public function admin_init() {
-		// Install.
-		$this->maybe_install();
-
-		// Notices.
-		add_action( 'admin_notices', [ $this, 'admin_notice_upgrades_available' ], 20 );
-		add_action( 'admin_notices', [ $this, 'admin_notice_upgraded' ], 20 );
-
-		// Maybe update database.
-		if ( \array_key_exists( 'pronamic_pay_upgrade', $_GET ) && \array_key_exists( 'pronamic_pay_nonce', $_GET ) ) {
-			$nonce = \sanitize_text_field( \wp_unslash( $_GET['pronamic_pay_nonce'] ) );
-
-			if ( wp_verify_nonce( $nonce, 'pronamic_pay_upgrade' ) ) {
-				$this->upgrade();
-
-				/**
-				 * Redirect to admin dashboard or referer.
-				 *
-				 * @link https://developer.wordpress.org/reference/functions/admin_url/
-				 * @link https://developer.wordpress.org/reference/functions/wp_get_referer/
-				 * @link https://developer.wordpress.org/reference/functions/wp_safe_redirect/
-				 */
-				$location = admin_url();
-
-				$referer = wp_get_referer();
-
-				if ( false !== $referer ) {
-					$location = $referer;
-				}
-
-				$location = add_query_arg(
-					[
-						'pronamic_pay_upgrade'  => false,
-						'pronamic_pay_nonce'    => false,
-						'pronamic_pay_upgraded' => true,
-					],
-					$location
-				);
-
-				wp_safe_redirect( $location );
-
-				exit;
-			}
-		}
-	}
-
-	/**
-	 * Removable query arguments.
-	 *
-	 * @link https://github.com/WordPress/WordPress/blob/5.3/wp-admin/includes/misc.php#L1204-L1230
-	 * @link https://developer.wordpress.org/reference/functions/wp_removable_query_args/
-	 * @param array $args Arguments.
-	 * @return array
-	 */
-	public function removable_query_args( $args ) {
-		$args[] = 'pronamic_pay_upgraded';
-
-		return $args;
-	}
-
-	/**
-	 * Maybe install.
-	 */
-	private function maybe_install() {
+	public function init() {
 		if ( \get_option( 'pronamic_pay_version', null ) !== $this->plugin->get_version() ) {
 			$this->install();
 		}
 
 		// Integrations.
-		foreach ( $this->plugin->integrations as $integration ) {
-			$integration->maybe_install();
+		$integrations = $this->get_upgradeable_integrations();
+
+		foreach ( $integrations as $integration ) {
+			$version_option_name = $integration->get_version_option_name();
+
+			if ( null === $version_option_name ) {
+				continue;
+			}
+
+			$version_option = \strval( $integration->get_version_option() );
+
+			$upgrades = $integration->get_upgrades();
+
+			foreach ( $upgrades as $upgrade ) {
+				$version = $upgrade->get_version();
+
+				if ( ! version_compare( $version_option, $version, '<' ) ) {
+					continue;
+				}
+
+				$upgrade->execute();
+
+				update_option( $version_option_name, $version );
+			}
 		}
 	}
 
@@ -187,45 +144,8 @@ class Install {
 			update_option( 'pronamic_pay_about_page_version', $about_page_version );
 		}
 
-		// Set database version option.
-		$db_version = \get_option( 'pronamic_pay_db_version', null );
-
-		if ( null === $db_version ) {
-			\update_option( 'pronamic_pay_db_version', $this->plugin->get_version() );
-		}
-
 		// Update version.
 		update_option( 'pronamic_pay_version', $version );
-	}
-
-	/**
-	 * Admin notice upgrades.
-	 *
-	 * @link https://developer.wordpress.org/reference/hooks/admin_notices/
-	 * @return void
-	 */
-	public function admin_notice_upgrades_available() {
-		if ( ! $this->requires_upgrade() ) {
-			return;
-		}
-
-		include __DIR__ . '/../../views/notice-upgrade.php';
-	}
-
-	/**
-	 * Admin notice upgraded.
-	 *
-	 * @link https://developer.wordpress.org/reference/hooks/admin_notices/
-	 * @return void
-	 */
-	public function admin_notice_upgraded() {
-		$upgraded = filter_input( INPUT_GET, 'pronamic_pay_upgraded', FILTER_VALIDATE_BOOLEAN );
-
-		if ( true !== $upgraded ) {
-			return;
-		}
-
-		include __DIR__ . '/../../views/notice-upgraded.php';
 	}
 
 	/**
@@ -301,69 +221,5 @@ class Install {
 		);
 
 		return $integrations;
-	}
-
-	/**
-	 * Requires upgrade.
-	 *
-	 * @return bool True if database update is required, false otherwise.
-	 */
-	public function requires_upgrade() {
-		// Integrations.
-		$integrations = $this->get_upgradeable_integrations();
-
-		foreach ( $integrations as $integration ) {
-			$version_option = $integration->get_db_version_option();
-
-			if ( null === $version_option ) {
-				continue;
-			}
-
-			$upgrades = $integration->get_upgrades();
-
-			foreach ( $upgrades as $upgrade ) {
-				if ( version_compare( $version_option, $upgrade->get_version(), '<' ) ) {
-					return true;
-				}
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * Upgrade.
-	 *
-	 * @return void
-	 */
-	public function upgrade() {
-		// Integrations.
-		$integrations = $this->get_upgradeable_integrations();
-
-		foreach ( $integrations as $integration ) {
-			$db_version_option_name = $integration->get_db_version_option_name();
-
-			if ( null === $db_version_option_name ) {
-				continue;
-			}
-
-			$db_version_option = \strval( $integration->get_db_version_option() );
-
-			$upgrades = $integration->get_upgrades();
-
-			foreach ( $upgrades as $upgrade ) {
-				$version = $upgrade->get_version();
-
-				if ( ! version_compare( $db_version_option, $version, '<' ) ) {
-					continue;
-				}
-
-				$upgrade->execute();
-
-				update_option( $db_version_option_name, $version );
-			}
-		}
-
-		update_option( 'pronamic_pay_db_version', $this->plugin->get_version() );
 	}
 }
