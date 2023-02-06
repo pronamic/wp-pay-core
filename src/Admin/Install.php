@@ -208,7 +208,7 @@ class Install {
 					return false;
 				}
 
-				if ( null === $integration->get_db_version_option_name() ) {
+				if ( null === $integration->get_version_option_name() ) {
 					return false;
 				}
 

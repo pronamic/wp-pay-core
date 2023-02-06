@@ -84,12 +84,11 @@ abstract class AbstractIntegration {
 		$args = wp_parse_args(
 			$args,
 			[
-				'id'                     => null,
-				'name'                   => null,
-				'version'                => null,
-				'version_option_name'    => null,
-				'db_version_option_name' => null,
-				'deprecated'             => false,
+				'id'                  => null,
+				'name'                => null,
+				'version'             => null,
+				'version_option_name' => null,
+				'deprecated'          => false,
 			]
 		);
 
