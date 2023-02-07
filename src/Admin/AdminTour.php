@@ -113,10 +113,10 @@ class AdminTour {
 	 * @return string
 	 * @throws \Exception When output buffering is not active.
 	 */
-	private function get_content( $file ) {
+	private function get_content( $pointer ) {
 		$content = '';
 
-		$path = __DIR__ . '/../../views/' . $file . '.php';
+		$path = __DIR__ . '/../../views/pointer-' . $pointer . '.php';
 
 		if ( is_readable( $path ) ) {
 			ob_start();
@@ -125,11 +125,15 @@ class AdminTour {
 
 			include $path;
 
-			$content = ob_get_clean();
+			$content = '';
 
-			if ( false === $content ) {
-				throw new \Exception( 'Output buffering is not active.' );
+			$output = ob_get_clean();
+
+			if ( false !== $output ) {
+				$content .= $output;
 			}
+
+			$content .= $this->get_navigation( $pointer );
 		}
 
 		return $content;
@@ -154,7 +158,7 @@ class AdminTour {
 								// @link https://github.com/WordPress/WordPress/blob/4.7/wp-admin/edit.php#L321
 								'selector' => '.wrap h1',
 								'options'  => (object) [
-									'content'      => $this->get_content( 'pointer-dashboard' ),
+									'content'      => $this->get_content( 'dashboard' ),
 									'position'     => (object) [
 										'edge'  => 'top',
 										'align' => ( is_rtl() ) ? 'left' : 'right',
@@ -174,7 +178,7 @@ class AdminTour {
 							[
 								'selector' => '.wrap .wp-header-end',
 								'options'  => (object) [
-									'content'      => $this->get_content( 'pointer-payments' ),
+									'content'      => $this->get_content( 'payments' ),
 									'position'     => (object) [
 										'edge'  => 'top',
 										'align' => ( is_rtl() ) ? 'left' : 'right',
@@ -194,7 +198,7 @@ class AdminTour {
 							[
 								'selector' => '.wrap .wp-header-end',
 								'options'  => (object) [
-									'content'      => $this->get_content( 'pointer-gateways' ),
+									'content'      => $this->get_content( 'gateways' ),
 									'position'     => (object) [
 										'edge'  => 'top',
 										'align' => ( is_rtl() ) ? 'left' : 'right',
@@ -214,7 +218,7 @@ class AdminTour {
 							[
 								'selector' => '.wrap .wp-header-end',
 								'options'  => (object) [
-									'content'      => $this->get_content( 'pointer-forms' ),
+									'content'      => $this->get_content( 'forms' ),
 									'position'     => (object) [
 										'edge'  => 'top',
 										'align' => ( is_rtl() ) ? 'left' : 'right',
@@ -241,7 +245,7 @@ class AdminTour {
 						[
 							'selector' => '.wrap .wp-header-end',
 							'options'  => (object) [
-								'content'      => $this->get_content( 'pointer-settings' ),
+								'content'      => $this->get_content( 'settings' ),
 								'position'     => (object) [
 									'edge'  => 'top',
 									'align' => ( is_rtl() ) ? 'left' : 'right',
@@ -261,7 +265,7 @@ class AdminTour {
 						[
 							'selector' => '.wrap .wp-header-end',
 							'options'  => (object) [
-								'content'      => $this->get_content( 'pointer-reports' ),
+								'content'      => $this->get_content( 'reports' ),
 								'position'     => (object) [
 									'edge'  => 'top',
 									'align' => ( is_rtl() ) ? 'left' : 'right',
@@ -283,7 +287,7 @@ class AdminTour {
 					[
 						'selector' => 'li.toplevel_page_pronamic_ideal',
 						'options'  => (object) [
-							'content'  => $this->get_content( 'pointer-start' ),
+							'content'  => $this->get_content( 'start' ),
 							'position' => (object) [
 								'edge'  => 'left',
 								'align' => 'center',
@@ -314,5 +318,123 @@ class AdminTour {
 			'pronamic_pay_ignore_tour',
 			'pronamic_pay_nonce'
 		);
+	}
+
+	/**
+	 * Get pages.
+	 * 
+	 * @return string[]
+	 */
+	private function get_pages() {
+		$modules = \apply_filters( 'pronamic_pay_modules', [] );
+
+		$pages = [
+			'dashboard' => \add_query_arg( 'page', 'pronamic_ideal', \admin_url( 'edit.php' ) ),
+			'payments'  => \add_query_arg( 'post_type', 'pronamic_payment', \admin_url( 'edit.php' ) ),
+			'gateways'  => \add_query_arg( 'post_type', 'pronamic_gateway', \admin_url( 'edit.php' ) ),
+			'settings'  => \add_query_arg( 'page', 'pronamic_pay_settings', \admin_url( 'admin.php' ) ),
+		];
+
+		if ( \in_array( 'forms', $modules, true ) ) {
+			$pages['forms'] = \add_query_arg( 'post_type', 'pronamic_pay_form', \admin_url( 'edit.php' ) );
+		}
+
+		if ( \in_array( 'reports', $modules, true ) ) {
+			$pages['reports'] = \add_query_arg( 'page', 'pronamic_pay_reports', \admin_url( 'admin.php' ) );
+		}
+
+		return $pages;
+	}
+
+	/**
+	 * Get navigation.
+	 * 
+	 * @param string $current Current page.
+	 * @return string
+	 */
+	private function get_navigation( $current ) {
+		$content = '<div class="wp-pointer-buttons pp-pointer-buttons">';
+
+		$previous_url = $this->get_previous_page( $current );
+
+		if ( false !== $previous_url ) {
+			$content .= \sprintf(
+				'<a href="%s" class="button-secondary pp-pointer-button-prev">%s</a>',
+				\esc_url( $previous_url ),
+				\esc_html__( 'Previous', 'pronamic_ideal' )
+			);
+
+			$content .= ' ';
+		}
+
+		$content .= '<span class="pp-pointer-buttons-right">';
+
+		if ( 'start' === $current ) {
+			$content .= \sprintf(
+				'<a href="%s" class="button-primary pp-pointer-button-next">%s</a>',
+				\esc_url( add_query_arg( 'page', 'pronamic_ideal', admin_url( 'admin.php' ) ) ),
+				\esc_html__( 'Start tour', 'pronamic_ideal' )
+			);
+		}
+
+		$next_url = $this->get_next_page( $current );
+
+		if ( false !== $next_url ) {
+			$content .= \sprintf(
+				'<a href="%s" class="button-primary pp-pointer-button-next">%s</a>',
+				\esc_url( $next_url ),
+				\esc_html__( 'Next', 'pronamic_ideal' )
+			);
+
+			$content .= ' ';
+		}
+
+		$content .= \sprintf(
+			'<a href="%s" class="button-secondary pp-pointer-button-close">%s</a>',
+			\esc_url( $this->get_close_url() ),
+			\esc_html__( 'Close', 'pronamic_ideal' )
+		);
+
+		$content .= '</span>';
+	
+		$content .= '</div>';
+
+		return $content;
+	}
+
+	/**
+	 * Get next page URL.
+	 * 
+	 * @param string $current Current page key.
+	 * @return string|false
+	 */
+	private function get_next_page( $current ) {
+		$pages = $this->get_pages();
+
+		foreach ( $pages as $key => $url ) {
+			if ( $key === $current ) {
+				return \next( $pages );
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get previous page URL.
+	 * 
+	 * @param string $current Current page key.
+	 * @return string|false
+	 */
+	private function get_previous_page( $current ) {
+		$pages = $this->get_pages();
+
+		foreach ( $pages as $key => $url ) {
+			if ( $key === $current ) {
+				return \prev( $pages );
+			}
+		}
+
+		return false;
 	}
 }
