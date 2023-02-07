@@ -387,7 +387,7 @@ class AdminTour {
 			if ( \key( $pages ) === $current ) {
 				return \next( $pages );
 			}
-		} while( \next( $pages ) );
+		} while ( \next( $pages ) );
 
 		return false;
 	}
@@ -405,7 +405,7 @@ class AdminTour {
 			if ( \key( $pages ) === $current ) {
 				return \prev( $pages );
 			}
-		} while( \next( $pages ) );
+		} while ( \next( $pages ) );
 
 		return false;
 	}
