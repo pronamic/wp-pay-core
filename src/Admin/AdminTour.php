@@ -411,11 +411,11 @@ class AdminTour {
 	private function get_next_page( $current ) {
 		$pages = $this->get_pages();
 
-		foreach ( $pages as $key => $url ) {
-			if ( $key === $current ) {
+		do {
+			if ( \key( $pages ) === $current ) {
 				return \next( $pages );
 			}
-		}
+		} while( \next( $pages ) );
 
 		return false;
 	}
@@ -429,11 +429,11 @@ class AdminTour {
 	private function get_previous_page( $current ) {
 		$pages = $this->get_pages();
 
-		foreach ( $pages as $key => $url ) {
-			if ( $key === $current ) {
+		do {
+			if ( \key( $pages ) === $current ) {
 				return \prev( $pages );
 			}
-		}
+		} while( \next( $pages ) );
 
 		return false;
 	}
