@@ -6,6 +6,21 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.7.2] - 2023-02-07
+### Changed
+
+- Improved admin tour, only navigate to enabled modules.
+- Improved admin dashboard, only show about page link when an about page is defined.
+- Simplified database upgrades, all upgrades are now executed without user confirmation.
+
+### Fixed
+
+- Fixed "Fatal error: Uncaught Error: Undefined constant "PRONAMIC_PAY_DEBUG". ([10b7865](https://github.com/pronamic/wp-pay-core/commit/10b78655eea7c641ee33b0fb0cccc26037074067))
+
+Full set of changes: [`4.7.1...4.7.2`][4.7.2]
+
+[4.7.2]: https://github.com/pronamic/wp-pay-core/compare/v4.7.1...v4.7.2
+
 ## [4.7.1] - 2023-01-31
 ### Commits
 
