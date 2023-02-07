@@ -109,7 +109,7 @@ class AdminTour {
 	/**
 	 * Get pointer content.
 	 *
-	 * @param string $file File.
+	 * @param string $pointer Pointer key.
 	 * @return string
 	 * @throws \Exception When output buffering is not active.
 	 */
