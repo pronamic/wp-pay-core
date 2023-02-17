@@ -484,6 +484,12 @@ class SubscriptionsModule {
 						$amount = 0.10;
 
 						break;
+					case PaymentMethods::APPLE_PAY:
+					case PaymentMethods::CREDIT_CARD:
+					case PaymentMethods::PAYPAL:
+						$amount = 0.00;
+
+						break;
 					default:
 						$amount = 0.01;
 				}
