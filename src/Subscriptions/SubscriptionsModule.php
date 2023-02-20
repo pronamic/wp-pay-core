@@ -358,6 +358,8 @@ class SubscriptionsModule {
 
 				$payment->order_id = $subscription->get_order_id();
 
+				$payment->set_payment_method( null );
+
 				$payment->set_lines( $subscription->get_lines() );
 				$payment->set_total_amount( $current_phase->get_amount() );
 
