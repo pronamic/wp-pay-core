@@ -604,8 +604,6 @@ class Plugin {
 
 			// Handle HTML form redirect.
 			if ( $gateway->is_html_form() ) {
-				$gateway->start( $payment );
-
 				$gateway->redirect( $payment );
 			}
 		}
