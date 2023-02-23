@@ -6,6 +6,18 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.7.3] - 2023-02-23
+
+### Commits
+
+- Fixed duplicate execution of `$gateway->start( $payment )` in redirect routine of HTML form gateways. ([467aeb5](https://github.com/pronamic/wp-pay-core/commit/467aeb59e24846c0bbd01e88ff5e1191bcfde6b5))
+- Lowered payment amount to `0.00` for credit card and PayPal authorizations when updating mandate. ([3132ff6](https://github.com/pronamic/wp-pay-core/commit/3132ff61a0a8f78f98c8f499e584364d7bfc869a))
+- Use Mollie Checkout to choose payment method on manual subscription renewal. ([af9c0c9](https://github.com/pronamic/wp-pay-core/commit/af9c0c922b6abcbf5ff1c5bc9417a2ad9568db21))
+
+Full set of changes: [`4.7.2...4.7.3`][4.7.3]
+
+[4.7.3]: https://github.com/pronamic/wp-pay-core/compare/v4.7.2...v4.7.3
+
 ## [4.7.2] - 2023-02-07
 ### Changed
 
