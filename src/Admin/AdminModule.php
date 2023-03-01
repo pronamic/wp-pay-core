@@ -30,7 +30,6 @@ use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionInterval;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
-use Pronamic\WordPress\Pay\Webhooks\WebhookManager;
 
 /**
  * WordPress Pay admin
@@ -137,9 +136,6 @@ class AdminModule {
 		if ( null !== $about_page_file ) {
 			$this->about_page = new AdminAboutPage( $plugin, $about_page_file );
 		}
-
-		// Webhook Manager.
-		new WebhookManager();
 	}
 
 	/**

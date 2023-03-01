@@ -15,7 +15,6 @@
 use Pronamic\WordPress\Html\Element;
 use Pronamic\WordPress\Pay\Admin\AdminGatewayPostType;
 use Pronamic\WordPress\Pay\Util;
-use Pronamic\WordPress\Pay\Webhooks\WebhookManager;
 use Pronamic\WordPress\Pay\Webhooks\WebhookRequestInfo;
 
 $integration = $plugin->gateway_integrations->get_integration( $gateway_id );
@@ -78,7 +77,7 @@ if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_n
 		$request_info = WebhookRequestInfo::from_json( $log );
 
 		// Validate log request URL against current home URL.
-		if ( WebhookManager::validate_request_url( $request_info ) ) {
+		if ( str_starts_with( $request_info->get_request_url(), home_url( '/' ) ) ) {
 			$webhook_config_needed = false;
 		}
 	}
