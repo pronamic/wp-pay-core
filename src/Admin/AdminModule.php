@@ -348,6 +348,15 @@ class AdminModule {
 	 */
 	private function create_pages( $pages, $parent = null ) {
 		foreach ( $pages as $page ) {
+			// Check if page already exists.
+			if ( isset( $page['option_name'] ) ) {
+				$page_id = \get_option( $page['option_name'] );
+
+				if ( ! empty( $page_id ) && null !== \get_post( $page_id ) ) {
+					continue;
+				}
+			}
+
 			$post = [
 				'post_title'     => $page['post_title'],
 				'post_name'      => $page['post_title'],
