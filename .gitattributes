@@ -5,10 +5,13 @@
 /scss              export-ignore
 /tests             export-ignore
 /vendor-bin        export-ignore
+/.editorconfig     export-ignore
 /.eslintignore     export-ignore
 /.eslintrc         export-ignore
 /.gitattributes    export-ignore
+/.github/          export-ignore
 /.gitignore        export-ignore
+/.idea/            export-ignore
 /.phplint.yml      export-ignore
 /.sass-lint.yml    export-ignore
 /.scrutinizer.yml  export-ignore
