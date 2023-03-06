@@ -363,10 +363,6 @@ class AdminModule {
 				'comment_status' => 'closed',
 			];
 
-			if ( isset( $parent ) ) {
-				$post['post_parent'] = $parent;
-			}
-
 			$result = wp_insert_post( $post, true );
 
 			if ( $result instanceof \WP_Error ) {
