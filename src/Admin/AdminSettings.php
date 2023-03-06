@@ -202,19 +202,18 @@ class AdminSettings {
 
 				$pages = [ 'completed', 'cancel', 'expired', 'error', 'unknown' ];
 
-				$hide_button = true;
+				$statuses = \array_map(
+					function( $key ) {
+						$option_name = sprintf( 'pronamic_pay_%s_page_id', $key );
 
-				foreach ( $pages as $status ) {
-					$option_name = sprintf( 'pronamic_pay_%s_page_id', $status );
+						$page_id = \get_option( $option_name );
 
-					$option = get_option( $option_name );
+						return \get_post_status( $page_id );
+					},
+					$pages
+				);
 
-					if ( $hide_button && ( empty( $option ) || null === get_post( $option ) ) ) {
-						$hide_button = false;
-					}
-				}
-
-				if ( false === $hide_button ) {
+				if ( \in_array( false, $statuses, true ) ) {
 					submit_button(
 						__( 'Set default pages', 'pronamic_ideal' ),
 						'',
