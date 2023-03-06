@@ -153,6 +153,13 @@ class Plugin {
 	public $admin;
 
 	/**
+	 * Home URL controller.
+	 *
+	 * @var HomeUrlController
+	 */
+	private $home_url_controller;
+
+	/**
 	 * Blocks module.
 	 *
 	 * @var Blocks\BlocksModule
@@ -690,6 +697,9 @@ class Plugin {
 		if ( is_admin() ) {
 			$this->admin = new Admin\AdminModule( $this );
 		}
+
+		$this->home_url_controller = new HomeUrlController();
+		$this->home_url_controller->setup();
 
 		$gateways = [];
 
