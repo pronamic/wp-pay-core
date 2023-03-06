@@ -153,6 +153,13 @@ class Plugin {
 	public $admin;
 
 	/**
+	 * Pages controller.
+	 *
+	 * @var PagesController
+	 */
+	private $pages_controller;
+
+	/**
 	 * Blocks module.
 	 *
 	 * @var Blocks\BlocksModule
@@ -690,6 +697,9 @@ class Plugin {
 		if ( is_admin() ) {
 			$this->admin = new Admin\AdminModule( $this );
 		}
+
+		$this->pages_controller = new PagesController();
+		$this->pages_controller->setup();
 
 		$gateways = [];
 
@@ -1338,31 +1348,6 @@ class Plugin {
 		}
 
 		return $reference;
-	}
-
-	/**
-	 * Get pages.
-	 *
-	 * @return array
-	 */
-	public function get_pages() {
-		$return = [];
-
-		$pages = [
-			'completed' => __( 'Completed', 'pronamic_ideal' ),
-			'cancel'    => __( 'Canceled', 'pronamic_ideal' ),
-			'expired'   => __( 'Expired', 'pronamic_ideal' ),
-			'error'     => __( 'Error', 'pronamic_ideal' ),
-			'unknown'   => __( 'Unknown', 'pronamic_ideal' ),
-		];
-
-		foreach ( $pages as $key => $label ) {
-			$id = sprintf( 'pronamic_pay_%s_page_id', $key );
-
-			$return[ $id ] = $label;
-		}
-
-		return $return;
 	}
 
 	/**

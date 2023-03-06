@@ -103,22 +103,6 @@ class Settings {
 			]
 		);
 
-		// Pages.
-		$pages = $this->plugin->get_pages();
-
-		$pages['pronamic_pay_subscription_canceled_page_id'] = __( 'Subscription Canceled', 'pronamic_ideal' );
-
-		foreach ( $pages as $id => $label ) {
-			register_setting(
-				'pronamic_pay',
-				$id,
-				[
-					'type'              => 'integer',
-					'sanitize_callback' => [ $this, 'sanitize_published_post_id' ],
-				]
-			);
-		}
-
 		// Payment Methods.
 		$payment_methods = $this->plugin->get_payment_methods();
 
