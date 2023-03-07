@@ -79,6 +79,21 @@ class HomeUrlController {
 				?>
 			</p>
 
+			<?php
+
+			$modules = \apply_filters( 'pronamic_pay_modules', [] );
+
+			if ( \in_array( 'subscriptions', $modules, true ) ) {
+
+				printf(
+					'<p>%s</p>',
+					\esc_html__( 'If you use subscriptions, you may want to update processing of recurring payments in the plugin debug settings to prevent duplicate payments being started in a development environment.', 'pronamic_ideal' )
+				);
+
+			}
+
+			?>
+
 			<p>
 				<strong><a href="<?php echo \esc_url( \add_query_arg( 'post_type', 'pronamic_gateway', \get_admin_url( null, 'edit.php' ) ), ); ?>"><?php \esc_html_e( 'Payment Gateway Configurations', 'pronamic_ideal' ); ?></a></strong>
 			</p>
