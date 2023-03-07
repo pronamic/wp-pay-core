@@ -68,8 +68,9 @@ class HomeUrlController {
 				<strong><?php esc_html_e( 'Pronamic Pay', 'pronamic_ideal' ); ?></strong> —
 				<?php
 
-				\esc_html_e(
+				echo \esc_html(
 					\sprintf(
+						/* translators: 1: Pronamic Pay home URL option, 2: home URL */
 						__( 'We noticed the WordPress home URL has changed from %1$s to %2$s. Please verify the payment gateway settings. For example, you might want to switch between live and test mode or need to update an URL at the gateway to continue receiving payment status updates. Also keep an eye on pending payments to discover possible configuration issues.', 'pronamic-ideal' ),
 						\get_option( 'pronamic_pay_home_url' ),
 						\home_url()
