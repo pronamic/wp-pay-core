@@ -79,6 +79,10 @@ class HomeUrlController {
 				?>
 			</p>
 
+			<p>
+				<strong><a href="<?php echo \esc_url( \add_query_arg( 'post_type', 'pronamic_gateway', \get_admin_url( null, 'edit.php' ) ), ); ?>"><?php \esc_html_e( 'Payment Gateway Configurations', 'pronamic_ideal' ); ?></a></strong>
+			</p>
+
 			<a href="<?php echo \esc_url( $dismiss_notification_url ); ?>" class="notice-dismiss"><span class="screen-reader-text"><?php \esc_html_e( 'Dismiss this notice.', 'pronamic_ideal' ); ?></span></a>
 		</div>
 		<?php
