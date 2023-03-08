@@ -160,6 +160,13 @@ class Plugin {
 	private $pages_controller;
 
 	/**
+	 * Home URL controller.
+	 *
+	 * @var HomeUrlController
+	 */
+	private $home_url_controller;
+
+	/**
 	 * Blocks module.
 	 *
 	 * @var Blocks\BlocksModule
@@ -700,6 +707,9 @@ class Plugin {
 
 		$this->pages_controller = new PagesController();
 		$this->pages_controller->setup();
+
+		$this->home_url_controller = new HomeUrlController();
+		$this->home_url_controller->setup();
 
 		$gateways = [];
 

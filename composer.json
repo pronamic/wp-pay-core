@@ -4,6 +4,7 @@
 	"keywords": ["wordpress", "wp", "pay", "core", "gateway", "pronamic"],
 	"homepage": "https://www.wp-pay.org/",
 	"license": "GPL-3.0-or-later" ,
+	"type": "wordpress-plugin",
 	"authors": [
 		{
 			"name": "Pronamic",

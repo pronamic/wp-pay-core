@@ -92,7 +92,7 @@ class AdminNotices {
 		}
 
 		$dismiss_notification_url = \add_query_arg( 'pronamic_pay_dismiss_notification', $notification->get_id() );
-		$dismiss_notification_url = \wp_nonce_url( $dismiss_notification_url, 'pronamic_pay_dismiss_notification:' . $notification->get_id(), 'pronamic_pay_dismiss_notification_nonce' )
+		$dismiss_notification_url = \wp_nonce_url( $dismiss_notification_url, 'pronamic_pay_dismiss_notification:' . $notification->get_id(), 'pronamic_pay_dismiss_notification_nonce' );
 
 		?>
 		<div class="error notice is-dismissible">
