@@ -38,7 +38,7 @@ class PagesController {
 				$page['option_name'],
 				[
 					'type'              => 'integer',
-					'sanitize_callback' => [ $this, 'sanitize_published_post_id' ],
+					'sanitize_callback' => [ Settings::class, 'sanitize_published_post_id' ],
 				]
 			);
 		}

@@ -61,7 +61,7 @@ class Settings {
 			'pronamic_pay_config_id',
 			[
 				'type'              => 'integer',
-				'sanitize_callback' => [ $this, 'sanitize_published_post_id' ],
+				'sanitize_callback' => [ self::class, 'sanitize_published_post_id' ],
 			]
 		);
 
@@ -127,7 +127,7 @@ class Settings {
 	 * @param integer $value Check if the value is published post ID.
 	 * @return int|null Post ID if value is published post ID, null otherwise.
 	 */
-	public function sanitize_published_post_id( $value ) {
+	public static function sanitize_published_post_id( $value ) {
 		if ( 'publish' === get_post_status( $value ) ) {
 			return $value;
 		}
