@@ -116,13 +116,6 @@ Argument | Type | Description
 
 Source: [src/PrivacyManager.php](../src/PrivacyManager.php), [line 77](../src/PrivacyManager.php#L77-L82)
 
-### `pronamic_pay_license_check`
-
-*Perform license check.*
-
-
-Source: [src/Admin/AdminSettings.php](../src/Admin/AdminSettings.php), [line 329](../src/Admin/AdminSettings.php#L329-L332)
-
 ### `pronamic_pay_pre_create_subscription`
 
 *Pre-create subscription.*
@@ -211,6 +204,13 @@ Argument | Type | Description
 `$subscription` | `\Pronamic\WordPress\Pay\Subscriptions\Subscription` | Subscription.
 
 Source: [src/Subscriptions/SubscriptionsNotificationsController.php](../src/Subscriptions/SubscriptionsNotificationsController.php), [line 247](../src/Subscriptions/SubscriptionsNotificationsController.php#L247-L254)
+
+### `pronamic_pay_license_check`
+
+*Perform license check.*
+
+
+Source: [src/LicenseManager.php](../src/LicenseManager.php), [line 93](../src/LicenseManager.php#L93-L96)
 
 ## Filters
 
@@ -368,7 +368,7 @@ Argument | Type | Description
 `$should_redirect` | `bool` | Flag to indicate if redirect is allowed on handling payment return.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 545](../src/Plugin.php#L545-L551)
+Source: [src/Plugin.php](../src/Plugin.php), [line 552](../src/Plugin.php#L552-L558)
 
 ### `pronamic_pay_gateways`
 
@@ -380,7 +380,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$gateways` | `\Pronamic\WordPress\Pay\AbstractGatewayIntegration[]` | Gateway integrations.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 708](../src/Plugin.php#L708-L713)
+Source: [src/Plugin.php](../src/Plugin.php), [line 716](../src/Plugin.php#L716-L721)
 
 ### `pronamic_pay_plugin_integrations`
 
@@ -392,7 +392,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$plugin_integrations` | `\Pronamic\WordPress\Pay\AbstractPluginIntegration[]` | Plugin integrations.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 723](../src/Plugin.php#L723-L728)
+Source: [src/Plugin.php](../src/Plugin.php), [line 731](../src/Plugin.php#L731-L736)
 
 ### `pronamic_payment_gateway_configuration_id`
 
@@ -405,7 +405,7 @@ Argument | Type | Description
 `$config_id` | `null\|int` | Gateway configuration ID.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 1144](../src/Plugin.php#L1144-L1150)
+Source: [src/Plugin.php](../src/Plugin.php), [line 1152](../src/Plugin.php#L1152-L1158)
 
 ### `pronamic_payment_redirect_url_{$source}`
 
@@ -418,7 +418,17 @@ Argument | Type | Description
 `$url` | `string` | Redirect URL.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 1390](../src/Plugin.php#L1390-L1396)
+Source: [src/Plugin.php](../src/Plugin.php), [line 1373](../src/Plugin.php#L1373-L1379)
+
+### `pronamic_pay_modules`
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`[]` |  | 
+
+Source: [src/Admin/AdminPaymentPostType.php](../src/Admin/AdminPaymentPostType.php), [line 590](../src/Admin/AdminPaymentPostType.php#L590-L590)
 
 ### `pronamic_gateway_configuration_display_value`
 
@@ -451,6 +461,16 @@ Argument | Type | Description
 
 Source: [src/Admin/AdminGatewayPostType.php](../src/Admin/AdminGatewayPostType.php), [line 139](../src/Admin/AdminGatewayPostType.php#L139-L150)
 
+### `pronamic_pay_modules`
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`[]` |  | 
+
+Source: [src/Admin/AdminModule.php](../src/Admin/AdminModule.php), [line 814](../src/Admin/AdminModule.php#L814-L814)
+
 ### `pronamic_pay_removed_extension_notifications`
 
 *Filters the removed extensions notifications.*
@@ -461,7 +481,17 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$notifications` | `\Pronamic\WordPress\Pay\Admin\AdminNotification[]` | Notifications for removed extensions.
 
-Source: [src/Admin/AdminNotices.php](../src/Admin/AdminNotices.php), [line 95](../src/Admin/AdminNotices.php#L95-L100)
+Source: [src/Admin/AdminNotices.php](../src/Admin/AdminNotices.php), [line 65](../src/Admin/AdminNotices.php#L65-L70)
+
+### `pronamic_pay_modules`
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`[]` |  | 
+
+Source: [src/Admin/AdminTour.php](../src/Admin/AdminTour.php), [line 301](../src/Admin/AdminTour.php#L301-L301)
 
 ### `pronamic_subscription_source_text_{$source}`
 
@@ -553,6 +583,16 @@ Argument | Type | Description
 `$subscription` | `\Pronamic\WordPress\Pay\Subscriptions\Subscription` | Subscription.
 
 Source: [src/Subscriptions/Subscription.php](../src/Subscriptions/Subscription.php), [line 475](../src/Subscriptions/Subscription.php#L475-L482)
+
+### `pronamic_pay_modules`
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`[]` |  | 
+
+Source: [src/HomeUrlController.php](../src/HomeUrlController.php), [line 85](../src/HomeUrlController.php#L85-L85)
 
 
 <p align="center"><a href="https://github.com/pronamic/wp-documentor"><img src="https://cdn.jsdelivr.net/gh/pronamic/wp-documentor@main/logos/pronamic-wp-documentor.svgo-min.svg" alt="Pronamic WordPress Documentor" width="32" height="32"></a><br><em>Generated by <a href="https://github.com/pronamic/wp-documentor">Pronamic WordPress Documentor</a> <code>1.2.0</code></em><p>

@@ -357,7 +357,7 @@ $container_index = 1;
 
 								echo ' ';
 
-								if ( null !== $this->plugin->get_option( 'about_page_file' ) ) {
+								if ( isset( $this ) && null !== $this->plugin->get_option( 'about_page_file' ) ) {
 									printf(
 										'<a href="%s" class="button-secondary">%s</a>',
 										esc_attr(

@@ -16,6 +16,8 @@ namespace Pronamic\WordPress\Pay;
 class HomeUrlController {
 	/**
 	 * Setup.
+	 *
+	 * @return void
 	 */
 	public function setup() {
 		\add_action( 'init', [ $this, 'init' ] );
