@@ -50,7 +50,9 @@ class AdminSettings {
 		add_settings_section(
 			'pronamic_pay_general',
 			__( 'General', 'pronamic_ideal' ),
-			[ $this, 'settings_section' ],
+			function() {
+
+			},
 			'pronamic_pay'
 		);
 
@@ -136,37 +138,14 @@ class AdminSettings {
 			);
 		}
 
-		// Settings - Pages.
-		add_settings_section(
-			'pronamic_pay_pages',
-			__( 'Payment Status Pages', 'pronamic_ideal' ),
-			[ $this, 'settings_section' ],
-			'pronamic_pay'
-		);
-
-		$pages = $this->plugin->get_pages();
-
-		$pages['pronamic_pay_subscription_canceled_page_id'] = __( 'Subscription Canceled', 'pronamic_ideal' );
-
-		foreach ( $pages as $id => $label ) {
-			add_settings_field(
-				$id,
-				$label,
-				[ $this, 'input_page' ],
-				'pronamic_pay',
-				'pronamic_pay_pages',
-				[
-					'label_for' => $id,
-				]
-			);
-		}
-
 		if ( version_compare( $this->plugin->get_version(), '10', '>=' ) ) {
 			// Settings - Payment Methods.
 			\add_settings_section(
 				'pronamic_pay_payment_methods',
 				\__( 'Payment Methods', 'pronamic_ideal' ),
-				[ $this, 'settings_section' ],
+				function() {
+
+				},
 				'pronamic_pay'
 			);
 
@@ -184,45 +163,6 @@ class AdminSettings {
 					]
 				);
 			}
-		}
-	}
-
-	/**
-	 * Settings section.
-	 *
-	 * @param array $args Arguments.
-	 * @return void
-	 */
-	public function settings_section( $args ) {
-		switch ( $args['id'] ) {
-			case 'pronamic_pay_pages':
-				echo '<p>';
-				esc_html_e( 'The page an user will get redirected to after payment, based on the payment status.', 'pronamic_ideal' );
-				echo '</p>';
-
-				$pages = [ 'completed', 'cancel', 'expired', 'error', 'unknown' ];
-
-				$statuses = \array_map(
-					function( $key ) {
-						$option_name = sprintf( 'pronamic_pay_%s_page_id', $key );
-
-						$page_id = \get_option( $option_name );
-
-						return \get_post_status( $page_id );
-					},
-					$pages
-				);
-
-				if ( \in_array( false, $statuses, true ) ) {
-					submit_button(
-						__( 'Set default pages', 'pronamic_ideal' ),
-						'',
-						'pronamic_pay_create_pages',
-						false
-					);
-				}
-
-				break;
 		}
 	}
 
