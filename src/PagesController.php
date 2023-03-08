@@ -32,10 +32,10 @@ class PagesController {
 		// Pages.
 		$pages = $this->get_pages();
 
-		foreach ( $pages as $id => $label ) {
+		foreach ( $pages as $page ) {
 			\register_setting(
 				'pronamic_pay',
-				$id,
+				$page['option_name'],
 				[
 					'type'              => 'integer',
 					'sanitize_callback' => [ $this, 'sanitize_published_post_id' ],
