@@ -98,7 +98,7 @@ class PaymentLine {
 	/**
 	 * Refunded amount.
 	 *
-	 * @var Money|null
+	 * @var Money
 	 */
 	private $refunded_amount;
 
@@ -142,6 +142,7 @@ class PaymentLine {
 	 */
 	public function __construct() {
 		$this->set_total_amount( new Money() );
+		$this->set_refunded_amount( new Money() );
 
 		$this->refunded_quantity = 0;
 	}
@@ -361,7 +362,7 @@ class PaymentLine {
 	/**
 	 * Get refunded amount.
 	 *
-	 * @return Money|null
+	 * @return Money
 	 */
 	public function get_refunded_amount() {
 		return $this->refunded_amount;
@@ -370,7 +371,7 @@ class PaymentLine {
 	/**
 	 * Set refunded amount.
 	 *
-	 * @param Money|null $refunded_amount Refunded amount.
+	 * @param Money $refunded_amount Refunded amount.
 	 * @return void
 	 */
 	public function set_refunded_amount( $refunded_amount ) {
@@ -582,7 +583,7 @@ class PaymentLine {
 			'discount_amount'   => ( null === $this->discount_amount ) ? null : $this->discount_amount->jsonSerialize(),
 			'total_amount'      => $this->total_amount->jsonSerialize(),
 			'refunded_quantity' => $this->get_refunded_quantity(),
-			'refunded_amount'   => ( null === $this->refunded_amount ) ? null : $this->refunded_amount->jsonSerialize(),
+			'refunded_amount'   => $this->refunded_amount->jsonSerialize(),
 			'product_url'       => $this->get_product_url(),
 			'image_url'         => $this->get_image_url(),
 			'product_category'  => $this->get_product_category(),
