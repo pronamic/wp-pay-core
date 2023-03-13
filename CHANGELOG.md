@@ -6,6 +6,23 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.8.0] - 2023-03-10
+### Added
+
+- Added a home URL change detector to warn users.
+
+### Changed
+
+- Simplified the payment status pages generator feature.
+
+### Removed
+
+- Removed webhook manager, instead there is now the home URL change detector feature.
+
+Full set of changes: [`4.7.3...4.8.0`][4.8.0]
+
+[4.8.0]: https://github.com/pronamic/wp-pay-core/compare/v4.7.3...v4.8.0
+
 ## [4.7.3] - 2023-02-23
 
 ### Commits
