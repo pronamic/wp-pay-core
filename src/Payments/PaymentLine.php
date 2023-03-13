@@ -91,7 +91,7 @@ class PaymentLine {
 	/**
 	 * Refunded quantity.
 	 *
-	 * @var int|null
+	 * @var int
 	 */
 	private $refunded_quantity;
 
@@ -142,6 +142,8 @@ class PaymentLine {
 	 */
 	public function __construct() {
 		$this->set_total_amount( new Money() );
+
+		$this->refunded_quantity = 0;
 	}
 
 	/**
@@ -340,7 +342,7 @@ class PaymentLine {
 	/**
 	 * Get refunded quantity.
 	 *
-	 * @return int|null
+	 * @return int
 	 */
 	public function get_refunded_quantity() {
 		return $this->refunded_quantity;
@@ -349,7 +351,7 @@ class PaymentLine {
 	/**
 	 * Set refunded quantity.
 	 *
-	 * @param int|null $refunded_quantity Refunded quantity.
+	 * @param int $refunded_quantity Refunded quantity.
 	 * @return void
 	 */
 	public function set_refunded_quantity( $refunded_quantity ) {
