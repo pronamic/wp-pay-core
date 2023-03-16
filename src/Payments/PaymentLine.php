@@ -135,7 +135,7 @@ class PaymentLine {
 	 *
 	 * @var array
 	 */
-	public $meta;
+	public array $meta;
 
 	/**
 	 * Payment line constructor.
@@ -145,6 +145,8 @@ class PaymentLine {
 		$this->set_refunded_amount( new Money() );
 
 		$this->refunded_quantity = 0;
+
+		$this->meta = [];
 	}
 
 	/**
@@ -560,7 +562,7 @@ class PaymentLine {
 		}
 
 		if ( property_exists( $json, 'meta' ) ) {
-			$line->meta = $json->meta;
+			$line->meta = (array) $json->meta;
 		}
 
 		return $line;

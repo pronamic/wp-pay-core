@@ -24,6 +24,7 @@ use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Payments\PaymentsDataStoreCPT;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
+use Pronamic\WordPress\Pay\Payments\Refund;
 use Pronamic\WordPress\Pay\Payments\StatusChecker;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionsDataStoreCPT;
@@ -1298,20 +1299,28 @@ class Plugin {
 	/**
 	 * Create refund.
 	 *
-	 * @param string      $transaction_id Gateway transaction ID.
-	 * @param Gateway     $gateway        Gateway.
-	 * @param Money       $amount         Refund amount.
-	 * @param string|null $description    Refund description.
+	 * @param Refund $refund Refund.
 	 * @return string|null
 	 * @throws \Exception Throws exception on error.
 	 */
-	public static function create_refund( $transaction_id, $gateway, Money $amount, $description = null ) {
-		// Check if gateway supports refunds.
-		if ( ! $gateway->supports( 'refunds' ) || ! \method_exists( $gateway, 'create_refund' ) ) {
+	public static function create_refund( Refund $refund ) {
+		$payment = $refund->get_payment();
+
+		$gateway = $payment->get_gateway();
+
+		// Check gateway.
+		if ( null === $gateway ) {
+			throw new \Exception( __( 'Unable to process refund as gateway could not be found.', 'pronamic_ideal' ) );
+		}
+
+		// Check gateway refunds support.
+		if ( ! $gateway->supports( 'refunds' ) ) {
 			throw new \Exception( __( 'Unable to process refund as gateway does not support refunds.', 'pronamic_ideal' ) );
 		}
 
 		// Check amount.
+		$amount = $refund->get_amount();
+
 		if ( $amount->get_value() <= 0 ) {
 			throw new \Exception(
 				sprintf(
@@ -1323,12 +1332,40 @@ class Plugin {
 		}
 
 		// Create refund.
-		$reference = $gateway->create_refund( $transaction_id, $amount, $description );
+		$reference = $gateway->create_refund( $refund );
 
 		// Add note to original payment.
-		$payment = \get_pronamic_payment_by_transaction_id( $transaction_id );
+		if ( null !== $payment->get_id() ) {
+			/*
+			 * Update payment lines.
+			 */
+			$payment_lines = $payment->get_lines();
 
-		if ( null !== $payment ) {
+			if ( null !== $payment_lines ) {
+				foreach ( $refund->get_lines() as $refund_line ) {
+					foreach ( $payment_lines as $payment_line ) {
+						$refunded_line_id = [
+							$refund_line->get_id(),
+							$refund_line->get_meta( 'refunded_line_id' ),
+						];
+
+						if ( ! \in_array( $payment_line->get_id(), $refunded_line_id ) ) {
+							continue;
+						}
+
+						$payment_line->set_refunded_quantity( $payment_line->get_refunded_quantity() + $refund_line->get_quantity() );
+						$payment_line->set_refunded_amount( $payment_line->get_refunded_amount()->add( $refund_line->get_total_amount() ) );
+					}
+				}
+
+				$payment->save();
+			}
+
+			/*
+			 * Add payment note.
+			 */
+			$description = $refund->get_description();
+
 			/* translators: 1: refunded amount */
 			$format = __( 'Refunded %1$s.', 'pronamic_ideal' );
 
@@ -1347,14 +1384,14 @@ class Plugin {
 				}
 			}
 
-			$note = sprintf(
-				$format,
-				$amount->format_i18n(),
-				$description,
-				$reference
+			$payment->add_note(
+				\sprintf(
+					$format,
+					$amount->format_i18n(),
+					$description,
+					$reference
+				)
 			);
-
-			$payment->add_note( $note );
 		}
 
 		return $reference;

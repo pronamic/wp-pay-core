@@ -81,15 +81,28 @@ if ( empty( $lines ) ) : ?>
 
 						$quantity_total = new Number( 0 );
 
+						$refunded_quantity_total = new Number( 0 );
+
 						foreach ( $lines as $line ) {
 							$quantity = $line->get_quantity();
 
 							if ( null !== $quantity ) {
 								$quantity_total = $quantity_total->add( Number::from_int( $quantity ) );
 							}
+
+							// Refunded quantity.
+							$refunded_quantity = $line->get_refunded_quantity();
+
+							if ( null !== $refunded_quantity ) {
+								$refunded_quantity_total = $refunded_quantity_total->add( Number::from_int( $refunded_quantity ) );
+							}
 						}
 
 						echo \esc_html( $quantity_total->format_i18n() );
+
+						if ( ! $refunded_quantity_total->is_zero() ) {
+							\printf( '<br>⃔ -%s', \esc_html( $refunded_quantity_total->format_i18n() ) );
+						}
 
 						?>
 					</td>
@@ -112,7 +125,27 @@ if ( empty( $lines ) ) : ?>
 						?>
 					</td>
 					<td>
-						<?php echo \esc_html( $lines->get_amount()->format_i18n() ); ?>
+						<?php
+
+						echo \esc_html( $lines->get_amount()->format_i18n() );
+
+						$refunded_amount_total = new Money( 0, $lines->get_amount()->get_currency() );
+
+						foreach ( $lines->get_array() as $line ) {
+							$refunded_amount = $line->get_refunded_amount();
+
+							if ( $refunded_amount->get_number()->is_zero() ) {
+								continue;
+							}
+
+							$refunded_amount_total = $refunded_amount_total->add( $refunded_amount );
+						}
+
+						if ( ! $refunded_amount_total->get_number()->is_zero() ) {
+							\printf( '<br>⃔ %s', \esc_html( $refunded_amount_total->multiply( -1 )->format_i18n() ) );
+						}
+
+						?>
 					</td>
 					<td>
 						<?php
@@ -234,7 +267,19 @@ if ( empty( $lines ) ) : ?>
 
 							?>
 						</td>
-						<td><?php echo \esc_html( $line->get_quantity() ); ?></td>
+						<td>
+							<?php echo \esc_html( $line->get_quantity() ); ?>
+
+							<?php
+
+							$refunded_quantity = $line->get_refunded_quantity();
+
+							if ( $refunded_quantity > 0 ) {
+								\printf( '<br>⃔ -%s', \esc_html( $refunded_quantity ) );
+							}
+
+							?>
+						</td>
 						<td>
 							<?php
 
@@ -275,6 +320,12 @@ if ( empty( $lines ) ) : ?>
 								\esc_attr( \implode( '<br />', $tips ) ),
 								\esc_html( $line_total->format_i18n() )
 							);
+
+							$refunded_amount = $line->get_refunded_amount();
+
+							if ( ! $refunded_amount->get_number()->is_zero() ) {
+								\printf( '<br>⃔ %s', \esc_html( $refunded_amount->multiply( -1 )->format_i18n() ) );
+							}
 
 							?>
 						</td>
