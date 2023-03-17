@@ -135,6 +135,29 @@ class PaymentLines implements Countable, IteratorAggregate {
 	}
 
 	/**
+	 * Get first line with the specified ID.
+	 * 
+	 * @param string $id ID.
+	 * @return null|PaymentLine
+	 */
+	public function first( $id ) {
+		$lines = \array_filter(
+			$this->lines,
+			function( PaymentLine $line ) use ( $id ) {
+				return ( $id === $line->get_id() );
+			}
+		);
+
+		$line = \reset( $lines );
+
+		if ( false === $line ) {
+			return null;
+		}
+
+		return $line;
+	}
+
+	/**
 	 * Get JSON.
 	 *
 	 * @return array
