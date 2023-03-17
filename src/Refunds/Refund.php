@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Refunds;
 
+use JsonSerializable;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Payments\Payment;
 
@@ -23,7 +24,7 @@ use Pronamic\WordPress\Pay\Payments\Payment;
  * @version 4.9.0
  * @since   4.9.0
  */
-class Refund {
+class Refund implements JsonSerializable {
 	/**
 	 * Payment.
 	 *
@@ -54,7 +55,7 @@ class Refund {
 
 	/**
 	 * Payment service provider ID.
-	 * 
+	 *
 	 * @var string
 	 */
 	public string $psp_id = '';
@@ -115,5 +116,19 @@ class Refund {
 	 */
 	public function get_lines(): RefundLines {
 		return $this->lines;
+	}
+
+	/**
+	 * Serialize to JSON.
+	 *
+	 * @return object
+	 */
+	public function jsonSerialize() {
+		return (object) [
+			'amount'      => $this->amount,
+			'description' => $this->description,
+			'lines'       => $this->lines,
+			'psp_id'      => $this->psp_id,
+		];
 	}
 }

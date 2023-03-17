@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Refunds;
 
 use InvalidArgumentException;
+use JsonSerializable;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
@@ -23,7 +24,7 @@ use Pronamic\WordPress\Pay\Payments\PaymentLine;
  * @version 2.2.6
  * @since   2.1.0
  */
-class RefundLine {
+class RefundLine implements JsonSerializable {
 	/**
 	 * The ID.
 	 *
@@ -54,7 +55,7 @@ class RefundLine {
 
     /**
      * Refund.
-     * 
+     *
      * @var Refund|null
      */
     private $refund;
@@ -273,9 +274,31 @@ class RefundLine {
 			'meta'         => $this->meta,
 		];
 
+		if ( null !== $this->payment_line ) {
+			$properties['payment_line'] = [
+				'$ref' => \rest_url(
+					\sprintf(
+						'/pronamic-pay/v1/payments/%d/lines/%d',
+						$this->payment_line->get_payment()->get_id(),
+						$this->payment_line->get_id()
+					)
+				),
+				'id'   => $this->payment_line->get_id(),
+			];
+		}
+
 		$properties = array_filter( $properties );
 
 		return (object) $properties;
+	}
+
+	/**
+	 * Serialize to JSON.
+	 *
+	 * @return object
+	 */
+	public function jsonSerialize() {
+		return $this->get_json();
 	}
 
 	/**

@@ -13,6 +13,7 @@ namespace Pronamic\WordPress\Pay\Refunds;
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
+use JsonSerializable;
 use Traversable;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
@@ -154,6 +155,15 @@ class RefundLines implements Countable, IteratorAggregate {
 		);
 
 		return $objects;
+	}
+
+	/**
+	 * Serialize to JSON.
+	 *
+	 * @return object
+	 */
+	public function jsonSerialize() {
+		return $this->get_json();
 	}
 
 	/**

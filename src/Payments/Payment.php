@@ -16,6 +16,7 @@ use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
+use Pronamic\WordPress\Pay\Refunds\Refund;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPeriod;
 
@@ -125,6 +126,13 @@ class Payment extends PaymentInfo {
 	 * @var PaymentLines|null
 	 */
 	public $lines;
+
+	/**
+	 * Refunds.
+	 *
+	 * @var Refund[]
+	 */
+	public $refunds = [];
 
 	/**
 	 * Construct and initialize payment object.
@@ -893,6 +901,9 @@ class Payment extends PaymentInfo {
 		if ( null !== $transaction_id ) {
 			$properties['transaction_id'] = $transaction_id;
 		}
+
+		// Refunds
+		$properties['refunds'] = $this->refunds;
 
 		$object = (object) $properties;
 
