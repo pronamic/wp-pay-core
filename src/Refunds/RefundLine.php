@@ -51,6 +51,13 @@ class RefundLine {
 	 */
 	private $payment_line;
 
+    /**
+     * Refund.
+     * 
+     * @var Refund|null
+     */
+    private $refund;
+
 	/**
 	 * Meta.
 	 *

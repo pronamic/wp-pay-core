@@ -46,11 +46,11 @@ class Refund {
 	private ?string $description;
 
 	/**
-	 * Payment lines.
+	 * Refund lines.
 	 *
-	 * @var PaymentLines|null
+	 * @var RefundLines|null
 	 */
-	public ?PaymentLines $lines;
+	public ?RefundLines $lines;
 
 	/**
 	 * Construct a refund.
