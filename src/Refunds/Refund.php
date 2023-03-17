@@ -11,6 +11,8 @@
 namespace Pronamic\WordPress\Pay\Refunds;
 
 use JsonSerializable;
+use Pronamic\WordPress\DateTime\DateTimeImmutable;
+use Pronamic\WordPress\DateTime\DateTimeInterface;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 use Pronamic\WordPress\Pay\Payments\Payment;
@@ -26,6 +28,13 @@ use Pronamic\WordPress\Pay\Payments\Payment;
  * @since   4.9.0
  */
 class Refund implements JsonSerializable {
+	/**
+	 * Created at.
+	 *
+	 * @var DateTimeInterface
+	 */
+	private $created_at;
+
 	/**
 	 * Payment.
 	 *
@@ -68,9 +77,10 @@ class Refund implements JsonSerializable {
 	 * @param Money   $amount  Amount to refund.
 	 */
 	public function __construct( Payment $payment, Money $amount ) {
-		$this->payment = $payment;
-		$this->amount  = $amount;
-		$this->lines   = new RefundLines();
+		$this->created_at = new DateTimeImmutable();
+		$this->payment    = $payment;
+		$this->amount     = $amount;
+		$this->lines      = new RefundLines();
 	}
 
 	/**
@@ -126,6 +136,7 @@ class Refund implements JsonSerializable {
 	 */
 	public function jsonSerialize() {
 		return (object) [
+			'created_at'  => $this->created_at->format( \DATE_ATOM ),
 			'amount'      => $this->amount,
 			'description' => $this->description,
 			'lines'       => $this->lines,
@@ -145,6 +156,10 @@ class Refund implements JsonSerializable {
 			$payment,
 			MoneyJsonTransformer::from_json( $json->amount )
 		);
+
+		if ( \property_exists( $json, 'created_at' ) ) {
+			$refund->created_at = new DateTimeImmutable( $json->created_at );
+		}
 
 		if ( isset( $json->lines ) ) {
 			$refund->lines = RefundLines::from_json( $json->lines, $refund );
