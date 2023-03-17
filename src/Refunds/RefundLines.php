@@ -147,13 +147,13 @@ class RefundLines implements Countable, IteratorAggregate, JsonSerializable {
 	/**
 	 * Create items from object.
 	 *
-	 * @param mixed       $json   JSON.
-	 * @param Refund|null $refund Refund.
+	 * @param mixed  $json   JSON.
+	 * @param Refund $refund Refund.
 	 *
 	 * @return RefundLines
 	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON is not an array.
 	 */
-	public static function from_json( $json, Refund $refund = null ) {
+	public static function from_json( $json, Refund $refund ) {
 		if ( ! is_array( $json ) ) {
 			throw new \InvalidArgumentException( 'JSON value must be an array.' );
 		}

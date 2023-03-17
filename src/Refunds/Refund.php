@@ -71,6 +71,13 @@ class Refund implements JsonSerializable {
 	public string $psp_id = '';
 
 	/**
+	 * Metadata.
+	 *
+	 * @var array
+	 */
+	public array $meta = [];
+
+	/**
 	 * Construct a refund.
 	 *
 	 * @param Payment $payment Payment.
@@ -141,6 +148,7 @@ class Refund implements JsonSerializable {
 			'description' => $this->description,
 			'lines'       => $this->lines,
 			'psp_id'      => $this->psp_id,
+			'meta'        => $this->meta,
 		];
 	}
 
@@ -163,6 +171,14 @@ class Refund implements JsonSerializable {
 
 		if ( isset( $json->lines ) ) {
 			$refund->lines = RefundLines::from_json( $json->lines, $refund );
+		}
+
+		if ( \property_exists( $json, 'psp_id' ) ) {
+			$refund->psp_id = $json->psp_id;
+		}
+
+		if ( \property_exists( $json, 'meta' ) ) {
+			$refund->meta = (array) $json->meta;
 		}
 
 		return $refund;

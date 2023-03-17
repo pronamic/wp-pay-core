@@ -231,11 +231,12 @@ class RefundLine implements JsonSerializable {
 	/**
 	 * Create payment line from object.
 	 *
-	 * @param mixed $json JSON.
+	 * @param mixed $json    JSON.
+	 * @param Refund $refund Refund.
 	 * @return PaymentLine
 	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
-	public static function from_json( $json, ?Refund $refund ) {
+	public static function from_json( $json, Refund $refund ) {
 		if ( ! is_object( $json ) ) {
 			throw new InvalidArgumentException( 'JSON value must be an array.' );
 		}
@@ -260,7 +261,7 @@ class RefundLine implements JsonSerializable {
 
 		$line->refund = $refund;
 
-		if ( null !== $refund && \property_exists( $json, 'payment_line' ) ) {
+		if ( \property_exists( $json, 'payment_line' ) ) {
 			$payment = $refund->get_payment();
 
 			$line->payment_line = $payment->lines->first( $json->payment_line->id );
