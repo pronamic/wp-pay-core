@@ -101,20 +101,20 @@ class Refund {
 	}
 
 	/**
-	 * Get payment lines.
+	 * Get refund lines.
 	 *
-	 * @return PaymentLines|null
+	 * @return RefundLines|null
 	 */
-	public function get_lines(): ?PaymentLines {
+	public function get_lines(): ?RefundLines {
 		return $this->lines;
 	}
 
 	/**
 	 * Set payment lines.
 	 *
-	 * @param PaymentLines|null $lines Payment lines.
+	 * @param RefundLines|null $lines Payment lines.
 	 */
-	public function set_lines( ?PaymentLines $lines ): void {
+	public function set_lines( ?RefundLines $lines ): void {
 		$this->lines = $lines;
 	}
 }

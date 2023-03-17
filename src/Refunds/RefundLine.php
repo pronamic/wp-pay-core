@@ -278,7 +278,6 @@ class RefundLine {
 	public function __toString() {
 		$parts = [
 			$this->get_id(),
-			$this->get_description(),
 			$this->get_quantity(),
 		];
 
