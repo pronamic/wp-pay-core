@@ -1343,19 +1343,14 @@ class Plugin {
 
 			if ( null !== $payment_lines ) {
 				foreach ( $refund->get_lines() as $refund_line ) {
-					foreach ( $payment_lines as $payment_line ) {
-						$refunded_line_id = [
-							$refund_line->get_id(),
-							$refund_line->get_meta( 'refunded_line_id' ),
-						];
+					$payment_line = $refund_line->get_payment_line();
 
-						if ( ! \in_array( $payment_line->get_id(), $refunded_line_id ) ) {
-							continue;
-						}
-
-						$payment_line->set_refunded_quantity( $payment_line->get_refunded_quantity() + $refund_line->get_quantity() );
-						$payment_line->set_refunded_amount( $payment_line->get_refunded_amount()->add( $refund_line->get_total_amount() ) );
+					if ( null === $payment_line ) {
+						continue;
 					}
+
+					$payment_line->set_refunded_quantity( $payment_line->get_refunded_quantity() + $refund_line->get_quantity() );
+					$payment_line->set_refunded_amount( $payment_line->get_refunded_amount()->add( $refund_line->get_total_amount() ) );
 				}
 
 				$payment->save();

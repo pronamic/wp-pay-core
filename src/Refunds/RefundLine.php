@@ -14,6 +14,7 @@ use InvalidArgumentException;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
+use Pronamic\WordPress\Pay\Payments\PaymentLine;
 
 /**
  * Refund line.
@@ -45,7 +46,7 @@ class RefundLine {
 	private $total_amount;
 
 	/**
-	 * Payment
+	 * Payment line.
 	 *
 	 * @var PaymentLine|null
 	 */
@@ -184,10 +185,10 @@ class RefundLine {
 	/**
 	 * Set payment line.
 	 *
-	 * @param PaymentLine $payment_line Payment line.
+	 * @param null|PaymentLine $payment_line Payment line.
 	 * @return void
 	 */
-	public function set_payment_line( PaymentLine $payment_line ) {
+	public function set_payment_line( ?PaymentLine $payment_line ) {
 		$this->payment_line = $payment_line;
 	}
 
