@@ -1336,6 +1336,8 @@ class Plugin {
 
 		// Add note to original payment.
 		if ( null !== $payment->get_id() ) {
+			$payment->refunds[] = $refund;
+
 			/*
 			 * Update payment lines.
 			 */
@@ -1352,8 +1354,6 @@ class Plugin {
 					$payment_line->set_refunded_quantity( $payment_line->get_refunded_quantity() + $refund_line->get_quantity() );
 					$payment_line->set_refunded_amount( $payment_line->get_refunded_amount()->add( $refund_line->get_total_amount() ) );
 				}
-
-				$payment->save();
 			}
 
 			/*
@@ -1387,6 +1387,8 @@ class Plugin {
 					$reference
 				)
 			);
+
+			$payment->save();
 		}
 
 		return $reference;

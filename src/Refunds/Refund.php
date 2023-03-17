@@ -12,6 +12,7 @@ namespace Pronamic\WordPress\Pay\Refunds;
 
 use JsonSerializable;
 use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 use Pronamic\WordPress\Pay\Payments\Payment;
 
 /**
@@ -42,9 +43,9 @@ class Refund implements JsonSerializable {
 	/**
 	 * Description.
 	 *
-	 * @var string|null
+	 * @var string
 	 */
-	private ?string $description;
+	private string $description = '';
 
 	/**
 	 * Refund lines.
@@ -93,19 +94,19 @@ class Refund implements JsonSerializable {
 	/**
 	 * Get description.
 	 *
-	 * @return string|null
+	 * @return string
 	 */
-	public function get_description(): ?string {
+	public function get_description(): string {
 		return $this->description;
 	}
 
 	/**
 	 * Set description.
 	 *
-	 * @param string|null $description Description.
+	 * @param string $description Description.
 	 * @return void
 	 */
-	public function set_description( ?string $description ): void {
+	public function set_description( string $description ): void {
 		$this->description = $description;
 	}
 
@@ -130,5 +131,25 @@ class Refund implements JsonSerializable {
 			'lines'       => $this->lines,
 			'psp_id'      => $this->psp_id,
 		];
+	}
+
+	/**
+	 * Get refund from JSON.
+	 *
+	 * @param object  $json    JSON.
+	 * @param Payment $payment Payment.
+	 * @return Refund
+	 */
+	public static function from_json( $json, Payment $payment ) {
+		$refund = new self(
+			$payment,
+			MoneyJsonTransformer::from_json( $json->amount )
+		);
+
+		if ( isset( $json->lines ) ) {
+			$refund->lines = RefundLines::from_json( $json->lines, $refund );
+		}
+
+		return $refund;
 	}
 }

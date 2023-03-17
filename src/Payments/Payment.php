@@ -800,6 +800,12 @@ class Payment extends PaymentInfo {
 			$payment->set_transaction_id( $json->transaction_id );
 		}
 
+		if ( isset( $json->refunds ) ) {
+			foreach ( $json->refunds as $json_refund ) {
+				$payment->refunds[] = Refund::from_json( $json_refund, $payment );
+			}
+		}
+
 		return $payment;
 	}
 

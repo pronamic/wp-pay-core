@@ -167,10 +167,10 @@ class RefundLine implements JsonSerializable {
 	/**
 	 * Set refund.
 	 *
-	 * @param Payment $payment Payment.
+	 * @param null|Refund $refund Refund.
 	 * @return void
 	 */
-	public function set_refund( Refund $refund ) {
+	public function set_refund( ?Refund $refund ) {
 		$this->refund = $refund;
 	}
 
@@ -235,7 +235,7 @@ class RefundLine implements JsonSerializable {
 	 * @return PaymentLine
 	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
-	public static function from_json( $json ) {
+	public static function from_json( $json, ?Refund $refund ) {
 		if ( ! is_object( $json ) ) {
 			throw new InvalidArgumentException( 'JSON value must be an array.' );
 		}
@@ -258,15 +258,23 @@ class RefundLine implements JsonSerializable {
 			$line->meta = (array) $json->meta;
 		}
 
+		$line->refund = $refund;
+
+		if ( null !== $refund && \property_exists( $json, 'payment_line' ) ) {
+			$payment = $refund->get_payment();
+
+			$line->payment_line = $payment->lines->first( $json->payment_line->id );
+		}
+
 		return $line;
 	}
 
 	/**
-	 * Get JSON.
+	 * Serialize to JSON.
 	 *
 	 * @return object
 	 */
-	public function get_json() {
+	public function jsonSerialize() {
 		$properties = [
 			'id'           => $this->get_id(),
 			'quantity'     => $this->get_quantity(),
@@ -290,15 +298,6 @@ class RefundLine implements JsonSerializable {
 		$properties = array_filter( $properties );
 
 		return (object) $properties;
-	}
-
-	/**
-	 * Serialize to JSON.
-	 *
-	 * @return object
-	 */
-	public function jsonSerialize() {
-		return $this->get_json();
 	}
 
 	/**

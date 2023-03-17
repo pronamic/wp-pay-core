@@ -26,7 +26,7 @@ use Pronamic\WordPress\Money\TaxedMoney;
  * @since      2.1.0
  * @implements \IteratorAggregate<int, RefundLine>
  */
-class RefundLines implements Countable, IteratorAggregate {
+class RefundLines implements Countable, IteratorAggregate, JsonSerializable {
 	/**
 	 * The lines.
 	 *
@@ -136,34 +136,12 @@ class RefundLines implements Countable, IteratorAggregate {
 	}
 
 	/**
-	 * Get JSON.
+	 * Serialize to JSON.
 	 *
 	 * @return array
 	 */
-	public function get_json() {
-		$objects = array_map(
-			/**
-			 * Get JSON for payment line.
-			 *
-			 * @param PaymentLine $line Payment line.
-			 * @return object
-			 */
-			function( RefundLine $line ) {
-				return $line->get_json();
-			},
-			$this->lines
-		);
-
-		return $objects;
-	}
-
-	/**
-	 * Serialize to JSON.
-	 *
-	 * @return object
-	 */
 	public function jsonSerialize() {
-		return $this->get_json();
+		return $this->lines;
 	}
 
 	/**
@@ -189,18 +167,13 @@ class RefundLines implements Countable, IteratorAggregate {
 			 * @param object $object Object.
 			 * @return PaymentLine
 			 */
-			function( $object ) {
-				return RefundLine::from_json( $object );
+			function( $object ) use ( $refund ) {
+				return RefundLine::from_json( $object, $refund );
 			},
 			$json
 		);
 
 		foreach ( $lines as $line ) {
-			// Set payment.
-			if ( $refund instanceof Refund ) {
-				$line->set_refund( $refund );
-			}
-
 			$object->add_line( $line );
 		}
 
