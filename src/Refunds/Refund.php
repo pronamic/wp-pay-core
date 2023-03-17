@@ -48,9 +48,9 @@ class Refund {
 	/**
 	 * Refund lines.
 	 *
-	 * @var RefundLines|null
+	 * @var RefundLines
 	 */
-	public ?RefundLines $lines;
+	public RefundLines $lines;
 
 	/**
 	 * Construct a refund.
@@ -61,6 +61,7 @@ class Refund {
 	public function __construct( Payment $payment, Money $amount ) {
 		$this->payment = $payment;
 		$this->amount  = $amount;
+		$this->lines   = new RefundLines();
 	}
 
 	/**
@@ -103,18 +104,9 @@ class Refund {
 	/**
 	 * Get refund lines.
 	 *
-	 * @return RefundLines|null
+	 * @return RefundLines
 	 */
-	public function get_lines(): ?RefundLines {
+	public function get_lines(): RefundLines {
 		return $this->lines;
-	}
-
-	/**
-	 * Set payment lines.
-	 *
-	 * @param RefundLines|null $lines Payment lines.
-	 */
-	public function set_lines( ?RefundLines $lines ): void {
-		$this->lines = $lines;
 	}
 }
