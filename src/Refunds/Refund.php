@@ -53,6 +53,13 @@ class Refund {
 	public RefundLines $lines;
 
 	/**
+	 * Payment service provider ID.
+	 * 
+	 * @var string
+	 */
+	public string $psp_id = '';
+
+	/**
 	 * Construct a refund.
 	 *
 	 * @param Payment $payment Payment.
