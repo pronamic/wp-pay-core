@@ -16,6 +16,7 @@ use Pronamic\WordPress\DateTime\DateTimeInterface;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 use Pronamic\WordPress\Pay\Payments\Payment;
+use WP_User;
 
 /**
  * Title: Refund
@@ -34,6 +35,13 @@ class Refund implements JsonSerializable {
 	 * @var DateTimeInterface
 	 */
 	public DateTimeInterface $created_at;
+
+	/**
+	 * Created by.
+	 *
+	 * @var WP_User
+	 */
+	public WP_User $created_by;
 
 	/**
 	 * Payment.
@@ -85,6 +93,7 @@ class Refund implements JsonSerializable {
 	 */
 	public function __construct( Payment $payment, Money $amount ) {
 		$this->created_at = new DateTimeImmutable();
+		$this->created_by = \wp_get_current_user();
 		$this->payment    = $payment;
 		$this->amount     = $amount;
 		$this->lines      = new RefundLines();
@@ -144,6 +153,7 @@ class Refund implements JsonSerializable {
 	public function jsonSerialize() {
 		return (object) [
 			'created_at'  => $this->created_at->format( \DATE_ATOM ),
+			'created_by'  => $this->created_by->ID,
 			'amount'      => $this->amount,
 			'description' => $this->description,
 			'lines'       => $this->lines,
@@ -167,6 +177,16 @@ class Refund implements JsonSerializable {
 
 		if ( \property_exists( $json, 'created_at' ) ) {
 			$refund->created_at = new DateTimeImmutable( $json->created_at );
+		}
+
+		$refund->created_by = new WP_User();
+
+		if ( \property_exists( $json, 'created_by' ) ) {
+			$user = \get_user_by( 'id', $json->created_by );
+
+			if ( false !== $user ) {
+				$refund->created_by = $user;
+			}
 		}
 
 		if ( \property_exists( $json, 'description' ) ) {

@@ -22,7 +22,8 @@ if ( empty( $payment->refunds ) ) : ?>
 		<table class="pronamic-pay-table widefat">
 			<thead>
 				<tr>
-					<th scope="col"><?php \esc_html_e( 'ID', 'pronamic_ideal' ); ?></th>
+					<th scope="col"><?php \esc_html_e( 'Date', 'pronamic_ideal' ); ?></th>
+					<th scope="col"><?php \esc_html_e( 'By', 'pronamic_ideal' ); ?></th>
 					<th scope="col"><?php \esc_html_e( 'Amount', 'pronamic_ideal' ); ?></th>
 					<th scope="col"><?php \esc_html_e( 'Description', 'pronamic_ideal' ); ?></th>
 					<th scope="col"><?php \esc_html_e( 'PSP ID', 'pronamic_ideal' ); ?></th>
@@ -31,6 +32,7 @@ if ( empty( $payment->refunds ) ) : ?>
 
 			<tfoot>
 				<tr>
+					<td></td>
 					<td></td>
 					<td></td>
 					<td></td>
@@ -44,6 +46,7 @@ if ( empty( $payment->refunds ) ) : ?>
 
 					<tr>
 						<td><?php echo \esc_html( $refund->created_at->format_i18n() ); ?></td>
+						<td><?php echo \esc_html( $refund->created_by->display_name ); ?></td>
 						<td><?php echo \esc_html( $refund->get_amount()->format_i18n() ); ?></td>
 						<td><?php echo \esc_html( $refund->get_description() ); ?></td>
 						<td><?php echo \esc_html( $refund->psp_id ); ?></td>
