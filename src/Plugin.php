@@ -1300,6 +1300,7 @@ class Plugin {
 	 * Create refund.
 	 *
 	 * @param Refund $refund Refund.
+	 * @retrun void
 	 * @throws \Exception Throws exception on error.
 	 */
 	public static function create_refund( Refund $refund ) {
