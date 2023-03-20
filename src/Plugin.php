@@ -1316,6 +1316,12 @@ class Plugin {
 			$gateway->create_refund( $refund );
 
 			$payment->refunds[] = $refund;
+
+			$refunded_amount = $payment->get_refunded_amount();
+
+			$refunded_amount = $refunded_amount->add( $refund->get_amount() );
+
+			$payment->set_refunded_amount( $refunded_amount );
 		} catch ( \Exception $exception ) {
 			$payment->add_note( $exception->getMessage() );
 
