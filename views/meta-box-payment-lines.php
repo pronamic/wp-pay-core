@@ -23,6 +23,14 @@ if ( empty( $lines ) ) : ?>
 
 <?php else : ?>
 
+	<style>
+		.pronamic-pay-refunded {
+			display: block;
+			color: #a00;
+			white-space: nowrap;
+		}
+	</style>
+
 	<div class="pronamic-pay-table-responsive">
 		<table class="pronamic-pay-table widefat">
 			<thead>
@@ -69,6 +77,54 @@ if ( empty( $lines ) ) : ?>
 				</tr>
 			</thead>
 
+			<?php
+
+			$currency = $lines->get_amount()->get_currency();
+
+			$quantity_total          = new Number( 0 );
+			$tax_amount_total        = new Money( 0, $currency );
+			$refunded_quantity_total = new Number( 0 );
+			$refunded_amount_total   = new Money( 0, $currency );
+			$refunded_tax_total      = new Money( 0, $currency );
+
+			foreach ( $lines as $line ) {
+				$quantity = $line->get_quantity();
+
+				if ( null !== $quantity ) {
+					$quantity_total = $quantity_total->add( Number::from_int( $quantity ) );
+				}
+
+				$total_amount = $line->get_total_amount();
+
+				if ( $total_amount instanceof TaxedMoney ) {
+					$tax_amount = $total_amount->get_tax_amount();
+
+					if ( null !== $tax_amount ) {
+						$tax_amount_total = $tax_amount_total->add( $tax_amount );
+					}
+				}
+			}
+
+			foreach ( $payment->refunds as $refund ) {
+				foreach ( $refund->lines as $refund_line ) {
+					$refunded_quantity_total = $refunded_quantity_total->add( Number::from_int( $refund_line->get_quantity() ) );
+
+					$line_total = $refund_line->get_total_amount();
+
+					$refunded_amount_total = $refunded_amount_total->add( $refund_line->get_total_amount() );
+
+					if ( $line_total instanceof TaxedMoney ) {
+						$tax_amount = $line_total->get_tax_amount();
+
+						if ( null !== $tax_amount ) {
+							$refunded_tax_total = $refunded_tax_total->add( $tax_amount );
+						}
+					}
+				}
+			}
+
+			?>
+
 			<tfoot>
 				<tr>
 					<td></td>
@@ -79,28 +135,10 @@ if ( empty( $lines ) ) : ?>
 					<td>
 						<?php
 
-						$quantity_total = new Number( 0 );
-
-						foreach ( $lines as $line ) {
-							$quantity = $line->get_quantity();
-
-							if ( null !== $quantity ) {
-								$quantity_total = $quantity_total->add( Number::from_int( $quantity ) );
-							}
-						}
-
-						$refunded_quantity_total = new Number( 0 );
-
-						foreach ( $payment->refunds as $refund ) {
-							foreach ( $refund->lines as $refund_line ) {
-								$refunded_quantity_total = $refunded_quantity_total->add( Number::from_int( $refund_line->get_quantity() ) );
-							}
-						}
-
 						echo \esc_html( $quantity_total->format_i18n() );
 
 						if ( ! $refunded_quantity_total->is_zero() ) {
-							\printf( '<br>↩ -%s', \esc_html( $refunded_quantity_total->format_i18n() ) );
+							\printf( '<small class="pronamic-pay-refunded">↩ %s</small>', \esc_html( $refunded_quantity_total->multiply( Number::from_int( -1) )->format_i18n() ) );
 						}
 
 						?>
@@ -128,16 +166,8 @@ if ( empty( $lines ) ) : ?>
 
 						echo \esc_html( $lines->get_amount()->format_i18n() );
 
-						$refunded_amount_total = new Money( 0, $lines->get_amount()->get_currency() );
-
-						foreach ( $payment->refunds as $refund ) {
-							foreach ( $refund->lines as $refund_line ) {
-								$refunded_amount_total = $refunded_amount_total->add( $refund_line->get_total_amount() );
-							}
-						}
-
 						if ( ! $refunded_amount_total->get_number()->is_zero() ) {
-							\printf( '<br>↩ %s', \esc_html( $refunded_amount_total->multiply( -1 )->format_i18n() ) );
+							\printf( '<small class="pronamic-pay-refunded">↩ %s</small>', \esc_html( $refunded_amount_total->multiply( -1 )->format_i18n() ) );
 						}
 
 						?>
@@ -145,22 +175,11 @@ if ( empty( $lines ) ) : ?>
 					<td>
 						<?php
 
-						$values = \array_map(
-							function( PaymentLine $line ) {
-								$total_amount = $line->get_total_amount();
-
-								if ( $total_amount instanceof TaxedMoney ) {
-									return $total_amount->get_tax_value();
-								}
-
-								return null;
-							},
-							$lines->get_array()
-						);
-
-						$tax_amount = new Money( \array_sum( $values ), $lines->get_amount()->get_currency() );
-
 						echo \esc_html( $tax_amount->format_i18n() );
+
+						if ( ! $refunded_tax_total->get_number()->is_zero() ) {
+							\printf( '<small class="pronamic-pay-refunded">↩ %s</small>', \esc_html( $refunded_tax_total->multiply( -1 )->format_i18n() ) );
+						}
 
 						?>
 					</td>
@@ -172,6 +191,33 @@ if ( empty( $lines ) ) : ?>
 				<?php foreach ( $lines as $line ) : ?>
 
 					<tr>
+						<?php
+
+						$refunded_quantity = 0;
+						$refunded_amount   = new Money();
+						$refunded_tax      = new Money();
+
+						foreach ( $payment->refunds as $refund ) {
+							foreach ( $refund->lines as $refund_line ) {
+								if ( $refund_line->get_payment_line() === $line ) {
+									$refunded_quantity += $refund_line->get_quantity();
+
+									$line_total = $refund_line->get_total_amount();
+
+									$refunded_amount = $refunded_amount->add( $line_total );
+
+									if ( $line_total instanceof TaxedMoney ) {
+										$tax_amount = $line_total->get_tax_amount();
+
+										if ( null !== $tax_amount ) {
+											$refunded_tax = $refunded_tax->add( $tax_amount );
+										}
+									}
+								}
+							}
+						}
+
+						?>
 						<td><?php echo \esc_html( $line->get_id() ); ?></td>
 						<td><?php echo \esc_html( $line->get_sku() ); ?></td>
 						<td>
@@ -267,18 +313,8 @@ if ( empty( $lines ) ) : ?>
 
 							echo \esc_html( $line->get_quantity() );
 
-							$refunded_quantity = 0;
-
-							foreach ( $payment->refunds as $refund ) {
-								foreach ( $refund->lines as $refund_line ) {
-									if ( $refund_line->get_payment_line() === $line ) {
-										$refunded_quantity += $refund_line->get_quantity();
-									}
-								}
-							}
-
 							if ( $refunded_quantity > 0 ) {
-								\printf( '<br>↩ -%s', \esc_html( $refunded_quantity ) );
+								\printf( '<small class="pronamic-pay-refunded">↩ -%s</small>', \esc_html( $refunded_quantity ) );
 							}
 
 							?>
@@ -324,18 +360,8 @@ if ( empty( $lines ) ) : ?>
 								\esc_html( $line_total->format_i18n() )
 							);
 
-							$refunded_amount = new Money();
-
-							foreach ( $payment->refunds as $refund ) {
-								foreach ( $refund->lines as $refund_line ) {
-									if ( $refund_line->get_payment_line() === $line ) {
-										$refunded_amount = $refunded_amount->add( $refund_line->get_total_amount() );
-									}
-								}
-							}
-
 							if ( ! $refunded_amount->get_number()->is_zero() ) {
-								\printf( '<br>↩ %s', \esc_html( $refunded_amount->multiply( -1 )->format_i18n() ) );
+								\printf( '<small class="pronamic-pay-refunded">↩ %s</small>', \esc_html( $refunded_amount->multiply( -1 )->format_i18n() ) );
 							}
 
 							?>
@@ -362,6 +388,10 @@ if ( empty( $lines ) ) : ?>
 										\esc_html( $tax_amount->format_i18n() )
 									);
 								}
+							}
+
+							if ( ! $refunded_tax->get_number()->is_zero() ) {
+								\printf( '<small class="pronamic-pay-refunded">↩ %s</small>', \esc_html( $refunded_tax->multiply( -1 )->format_i18n() ) );
 							}
 
 							?>
