@@ -1313,11 +1313,6 @@ class Plugin {
 			throw new \Exception( __( 'Unable to process refund as gateway could not be found.', 'pronamic_ideal' ) );
 		}
 
-		// Check gateway refunds support.
-		if ( ! $gateway->supports( 'refunds' ) ) {
-			throw new \Exception( __( 'Unable to process refund as gateway does not support refunds.', 'pronamic_ideal' ) );
-		}
-
 		try {
 			$gateway->create_refund( $refund );
 
