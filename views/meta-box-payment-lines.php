@@ -138,7 +138,7 @@ if ( empty( $lines ) ) : ?>
 						echo \esc_html( $quantity_total->format_i18n() );
 
 						if ( ! $refunded_quantity_total->is_zero() ) {
-							\printf( '<small class="pronamic-pay-refunded">%s</small>', \esc_html( $refunded_quantity_total->multiply( Number::from_int( -1) )->format_i18n() ) );
+							\printf( '<small class="pronamic-pay-refunded">%s</small>', \esc_html( $refunded_quantity_total->multiply( Number::from_int( -1 ) )->format_i18n() ) );
 						}
 
 						?>
