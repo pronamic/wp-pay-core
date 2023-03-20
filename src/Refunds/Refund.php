@@ -169,6 +169,10 @@ class Refund implements JsonSerializable {
 			$refund->created_at = new DateTimeImmutable( $json->created_at );
 		}
 
+		if ( \property_exists( $json, 'description' ) ) {
+			$refund->description = $json->description;
+		}
+
 		if ( isset( $json->lines ) ) {
 			$refund->lines = RefundLines::from_json( $json->lines, $refund );
 		}
