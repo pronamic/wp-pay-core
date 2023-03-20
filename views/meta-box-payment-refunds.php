@@ -13,7 +13,7 @@ namespace Pronamic\WordPress\Pay;
 if ( empty( $payment->refunds ) ) : ?>
 
 	<p>
-		<?php \esc_html_e( 'No payment refunds found.', 'pronamic_ideal' ); ?>
+		<?php \esc_html_e( 'No refunds found for this payment.', 'pronamic_ideal' ); ?>
 	</p>
 
 <?php else : ?>
@@ -23,10 +23,10 @@ if ( empty( $payment->refunds ) ) : ?>
 			<thead>
 				<tr>
 					<th scope="col"><?php \esc_html_e( 'Date', 'pronamic_ideal' ); ?></th>
-					<th scope="col"><?php \esc_html_e( 'By', 'pronamic_ideal' ); ?></th>
+					<th scope="col"><?php \esc_html_e( 'User', 'pronamic_ideal' ); ?></th>
 					<th scope="col"><?php \esc_html_e( 'Amount', 'pronamic_ideal' ); ?></th>
-					<th scope="col"><?php \esc_html_e( 'Description', 'pronamic_ideal' ); ?></th>
 					<th scope="col"><?php \esc_html_e( 'PSP ID', 'pronamic_ideal' ); ?></th>
+					<th scope="col"><?php \esc_html_e( 'Description', 'pronamic_ideal' ); ?></th>
 				</tr>
 			</thead>
 
@@ -48,8 +48,8 @@ if ( empty( $payment->refunds ) ) : ?>
 						<td><?php echo \esc_html( $refund->created_at->format_i18n() ); ?></td>
 						<td><?php echo \esc_html( $refund->created_by->display_name ); ?></td>
 						<td><?php echo \esc_html( $refund->get_amount()->format_i18n() ); ?></td>
-						<td><?php echo \esc_html( $refund->get_description() ); ?></td>
 						<td><?php echo \esc_html( $refund->psp_id ); ?></td>
+						<td><?php echo \esc_html( $refund->get_description() ); ?></td>
 					</tr>
 
 				<?php endforeach; ?>

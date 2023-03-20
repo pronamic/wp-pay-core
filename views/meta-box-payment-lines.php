@@ -138,7 +138,7 @@ if ( empty( $lines ) ) : ?>
 						echo \esc_html( $quantity_total->format_i18n() );
 
 						if ( ! $refunded_quantity_total->is_zero() ) {
-							\printf( '<small class="pronamic-pay-refunded">↩ %s</small>', \esc_html( $refunded_quantity_total->multiply( Number::from_int( -1) )->format_i18n() ) );
+							\printf( '<small class="pronamic-pay-refunded">%s</small>', \esc_html( $refunded_quantity_total->multiply( Number::from_int( -1) )->format_i18n() ) );
 						}
 
 						?>
@@ -167,7 +167,7 @@ if ( empty( $lines ) ) : ?>
 						echo \esc_html( $lines->get_amount()->format_i18n() );
 
 						if ( ! $refunded_amount_total->get_number()->is_zero() ) {
-							\printf( '<small class="pronamic-pay-refunded">↩ %s</small>', \esc_html( $refunded_amount_total->multiply( -1 )->format_i18n() ) );
+							\printf( '<small class="pronamic-pay-refunded">%s</small>', \esc_html( $refunded_amount_total->multiply( -1 )->format_i18n() ) );
 						}
 
 						?>
@@ -175,10 +175,10 @@ if ( empty( $lines ) ) : ?>
 					<td>
 						<?php
 
-						echo \esc_html( $tax_amount->format_i18n() );
+						echo \esc_html( $tax_amount_total->format_i18n() );
 
 						if ( ! $refunded_tax_total->get_number()->is_zero() ) {
-							\printf( '<small class="pronamic-pay-refunded">↩ %s</small>', \esc_html( $refunded_tax_total->multiply( -1 )->format_i18n() ) );
+							\printf( '<small class="pronamic-pay-refunded">%s</small>', \esc_html( $refunded_tax_total->multiply( -1 )->format_i18n() ) );
 						}
 
 						?>
@@ -314,7 +314,7 @@ if ( empty( $lines ) ) : ?>
 							echo \esc_html( $line->get_quantity() );
 
 							if ( $refunded_quantity > 0 ) {
-								\printf( '<small class="pronamic-pay-refunded">↩ -%s</small>', \esc_html( $refunded_quantity ) );
+								\printf( '<small class="pronamic-pay-refunded">-%s</small>', \esc_html( $refunded_quantity ) );
 							}
 
 							?>
@@ -361,7 +361,7 @@ if ( empty( $lines ) ) : ?>
 							);
 
 							if ( ! $refunded_amount->get_number()->is_zero() ) {
-								\printf( '<small class="pronamic-pay-refunded">↩ %s</small>', \esc_html( $refunded_amount->multiply( -1 )->format_i18n() ) );
+								\printf( '<small class="pronamic-pay-refunded">%s</small>', \esc_html( $refunded_amount->multiply( -1 )->format_i18n() ) );
 							}
 
 							?>
@@ -391,7 +391,7 @@ if ( empty( $lines ) ) : ?>
 							}
 
 							if ( ! $refunded_tax->get_number()->is_zero() ) {
-								\printf( '<small class="pronamic-pay-refunded">↩ %s</small>', \esc_html( $refunded_tax->multiply( -1 )->format_i18n() ) );
+								\printf( '<small class="pronamic-pay-refunded">%s</small>', \esc_html( $refunded_tax->multiply( -1 )->format_i18n() ) );
 							}
 
 							?>
