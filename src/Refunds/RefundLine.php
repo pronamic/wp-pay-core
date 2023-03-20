@@ -53,12 +53,12 @@ class RefundLine implements JsonSerializable {
 	 */
 	private $payment_line;
 
-    /**
-     * Refund.
-     *
-     * @var Refund|null
-     */
-    private $refund;
+	/**
+	 * Refund.
+	 *
+	 * @var Refund|null
+	 */
+	private $refund;
 
 	/**
 	 * Meta.
@@ -231,7 +231,7 @@ class RefundLine implements JsonSerializable {
 	/**
 	 * Create payment line from object.
 	 *
-	 * @param mixed $json    JSON.
+	 * @param mixed  $json    JSON.
 	 * @param Refund $refund Refund.
 	 * @return PaymentLine
 	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.

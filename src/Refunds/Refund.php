@@ -33,7 +33,7 @@ class Refund implements JsonSerializable {
 	 *
 	 * @var DateTimeInterface
 	 */
-	private $created_at;
+	public DateTimeInterface $created_at;
 
 	/**
 	 * Payment.

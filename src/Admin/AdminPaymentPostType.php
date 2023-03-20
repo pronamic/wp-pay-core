@@ -600,6 +600,15 @@ class AdminPaymentPostType {
 			);
 		}
 
+		\add_meta_box(
+			'pronamic_payment_refunds',
+			\__( 'Refunds', 'pronamic_ideal' ),
+			[ $this, 'meta_box_refunds' ],
+			$post_type,
+			'normal',
+			'high'
+		);
+
 		add_meta_box(
 			'pronamic_payment_notes',
 			__( 'Notes', 'pronamic_ideal' ),
@@ -655,6 +664,22 @@ class AdminPaymentPostType {
 		$lines = $payment->get_lines();
 
 		include __DIR__ . '/../../views/meta-box-payment-lines.php';
+	}
+
+	/**
+	 * Pronamic Pay payment refunds meta box.
+	 *
+	 * @param WP_Post $post The object for the current post/page.
+	 * @return void
+	 */
+	public function meta_box_refunds( $post ) {
+		$payment = get_pronamic_payment( $post->ID );
+
+		if ( null === $payment ) {
+			return;
+		}
+
+		include __DIR__ . '/../../views/meta-box-payment-refunds.php';
 	}
 
 	/**

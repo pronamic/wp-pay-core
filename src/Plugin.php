@@ -1339,24 +1339,6 @@ class Plugin {
 			$payment->refunds[] = $refund;
 
 			/*
-			 * Update payment lines.
-			 */
-			$payment_lines = $payment->get_lines();
-
-			if ( null !== $payment_lines ) {
-				foreach ( $refund->get_lines() as $refund_line ) {
-					$payment_line = $refund_line->get_payment_line();
-
-					if ( null === $payment_line ) {
-						continue;
-					}
-
-					$payment_line->set_refunded_quantity( $payment_line->get_refunded_quantity() + $refund_line->get_quantity() );
-					$payment_line->set_refunded_amount( $payment_line->get_refunded_amount()->add( $refund_line->get_total_amount() ) );
-				}
-			}
-
-			/*
 			 * Add payment note.
 			 */
 			$description = $refund->get_description();
