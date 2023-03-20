@@ -1318,7 +1318,6 @@ class Plugin {
 			throw new \Exception( __( 'Unable to process refund as gateway does not support refunds.', 'pronamic_ideal' ) );
 		}
 
-		// Create refund.
 		try {
 			$gateway->create_refund( $refund );
 
