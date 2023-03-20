@@ -1318,19 +1318,6 @@ class Plugin {
 			throw new \Exception( __( 'Unable to process refund as gateway does not support refunds.', 'pronamic_ideal' ) );
 		}
 
-		// Check amount.
-		$amount = $refund->get_amount();
-
-		if ( $amount->get_value() <= 0 ) {
-			throw new \Exception(
-				sprintf(
-					/* translators: %s: formatted amount */
-					__( 'Unable to process refund because of invalid amount (%s).', 'pronamic_ideal' ),
-					$amount->format_i18n()
-				)
-			);
-		}
-
 		// Create refund.
 		try {
 			$gateway->create_refund( $refund );
