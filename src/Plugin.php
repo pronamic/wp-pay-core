@@ -1308,7 +1308,6 @@ class Plugin {
 
 		$gateway = $payment->get_gateway();
 
-		// Check gateway.
 		if ( null === $gateway ) {
 			throw new \Exception( __( 'Unable to process refund as gateway could not be found.', 'pronamic_ideal' ) );
 		}
