@@ -841,7 +841,9 @@ class Payment extends PaymentInfo {
 		}
 
 		// Refunded amount.
-		$properties['refunded_amount'] = $this->get_refunded_amount()->jsonSerialize();
+		if ( ! $this->refunded_amount->is_zero() ) {
+			$properties['refunded_amount'] = $this->refunded_amount->jsonSerialize();
+		}
 
 		// Charged back amount.
 		$charged_back_amount = $this->get_charged_back_amount();
