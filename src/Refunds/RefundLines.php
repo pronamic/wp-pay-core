@@ -140,6 +140,7 @@ class RefundLines implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * @return array
 	 */
+	#[\ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return $this->lines;
 	}

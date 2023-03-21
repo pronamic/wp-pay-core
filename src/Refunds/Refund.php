@@ -150,6 +150,7 @@ class Refund implements JsonSerializable {
 	 *
 	 * @return object
 	 */
+	#[\ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return (object) [
 			'created_at'  => $this->created_at->format( \DATE_ATOM ),
@@ -168,8 +169,13 @@ class Refund implements JsonSerializable {
 	 * @param object  $json    JSON.
 	 * @param Payment $payment Payment.
 	 * @return Refund
+	 * @throws \InvalidArgumentException Throws invalid argument exception if the JSON object is invalid.
 	 */
 	public static function from_json( $json, Payment $payment ) {
+		if ( ! \property_exists( $json, 'amount' ) ) {
+			throw new \InvalidArgumentException( 'The JSON object must contain the `amount` property.' );
+		}
+
 		$refund = new self(
 			$payment,
 			MoneyJsonTransformer::from_json( $json->amount )

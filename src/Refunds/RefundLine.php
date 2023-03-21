@@ -233,7 +233,7 @@ class RefundLine implements JsonSerializable {
 	 *
 	 * @param mixed  $json    JSON.
 	 * @param Refund $refund Refund.
-	 * @return PaymentLine
+	 * @return self
 	 * @throws InvalidArgumentException Throws invalid argument exception when JSON is not an object.
 	 */
 	public static function from_json( $json, Refund $refund ) {
@@ -275,6 +275,7 @@ class RefundLine implements JsonSerializable {
 	 *
 	 * @return object
 	 */
+	#[\ReturnTypeWillChange]
 	public function jsonSerialize() {
 		$properties = [
 			'id'           => $this->get_id(),
