@@ -87,6 +87,13 @@ class SubscriptionHelper {
 				$customer->set_user_id( $payment_customer->get_user_id() );
 			}
 
+			// Email.
+			$email = $customer->get_email();
+
+			if ( null === $email ) {
+				$customer->set_email( $payment_customer->get_email() );
+			}
+
 			$subscription->set_customer( $customer );
 		}
 
@@ -110,15 +117,6 @@ class SubscriptionHelper {
 
 		if ( null === $description ) {
 			$subscription->set_description( $payment->get_description() );
-		}
-
-		// Email.
-		$email = $customer->get_email();
-
-		if ( null === $email ) {
-			$customer->set_email( $payment->email );
-
-			$subscription->set_customer( $customer );
 		}
 
 		// Payment method.
