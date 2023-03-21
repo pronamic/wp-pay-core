@@ -242,6 +242,7 @@ abstract class Gateway {
 	 * 
 	 * @param Refund $refund Reund.
 	 * @return void
+	 * @throws \Exception Throws an exception if the refund could not be processed.
 	 */
 	public function create_refund( Refund $refund ) {
 		throw new \Exception( 'Gateway does not support refunds.' );

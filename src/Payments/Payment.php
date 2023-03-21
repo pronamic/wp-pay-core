@@ -906,7 +906,7 @@ class Payment extends PaymentInfo {
 			$properties['transaction_id'] = $transaction_id;
 		}
 
-		// Refunds
+		// Refunds.
 		$properties['refunds'] = $this->refunds;
 
 		$object = (object) $properties;
