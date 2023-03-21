@@ -909,7 +909,9 @@ class Payment extends PaymentInfo {
 		}
 
 		// Refunds.
-		$properties['refunds'] = $this->refunds;
+		if ( \count( $this->refunds ) > 0 ) {
+			$properties['refunds'] = $this->refunds;
+		}
 
 		$object = (object) $properties;
 
