@@ -267,7 +267,9 @@ class RefundLine implements JsonSerializable {
 		if ( \property_exists( $json, 'payment_line' ) ) {
 			$payment = $refund->get_payment();
 
-			$line->payment_line = $payment->lines->first( $json->payment_line->id );
+			if ( null !== $payment->lines ) {
+				$line->payment_line = $payment->lines->first( $json->payment_line->id );
+			}
 		}
 
 		return $line;
@@ -288,16 +290,20 @@ class RefundLine implements JsonSerializable {
 		];
 
 		if ( null !== $this->payment_line ) {
-			$properties['payment_line'] = [
-				'$ref' => \rest_url(
-					\sprintf(
-						'/pronamic-pay/v1/payments/%d/lines/%d',
-						$this->payment_line->get_payment()->get_id(),
-						$this->payment_line->get_id()
-					)
-				),
-				'id'   => $this->payment_line->get_id(),
-			];
+			$payment = $this->payment_line->get_payment();
+
+			if ( null !== $payment ) {
+				$properties['payment_line'] = [
+					'$ref' => \rest_url(
+						\sprintf(
+							'/pronamic-pay/v1/payments/%d/lines/%d',
+							$payment->get_id(),
+							$this->payment_line->get_id()
+						)
+					),
+					'id'   => $this->payment_line->get_id(),
+				];
+			}
 		}
 
 		$properties = array_filter( $properties );
