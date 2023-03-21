@@ -55,8 +55,8 @@
 		"pronamic/wp-datetime": "^2.1",
 		"pronamic/wp-html": "^2.1",
 		"pronamic/wp-http": "^1.2",
-		"pronamic/wp-money": "^2.2",
-		"pronamic/wp-number": "^1.2",
+		"pronamic/wp-money": "^2.3",
+		"pronamic/wp-number": "^1.3",
 		"viison/address-splitter": "^0.3.4",
 		"woocommerce/action-scheduler": "^3.4"
 	},

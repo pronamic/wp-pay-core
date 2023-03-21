@@ -14,6 +14,7 @@ use Pronamic\WordPress\Pay\Core\Util as Core_Util;
 use Pronamic\WordPress\Pay\Fields\Field;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
+use Pronamic\WordPress\Pay\Refunds\Refund;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 use Pronamic\WordPress\Pay\Util as PayUtil;
 use WP_Error;
@@ -234,6 +235,17 @@ abstract class Gateway {
 	 * @return void
 	 */
 	public function start( Payment $payment ) {
+	}
+
+	/**
+	 * Create refund.
+	 * 
+	 * @param Refund $refund Reund.
+	 * @return void
+	 * @throws \Exception Throws an exception if the refund could not be processed.
+	 */
+	public function create_refund( Refund $refund ) {
+		throw new \Exception( 'Gateway does not support refunds.' );
 	}
 
 	/**

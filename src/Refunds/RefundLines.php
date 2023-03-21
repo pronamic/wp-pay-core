@@ -1,6 +1,6 @@
 <?php
 /**
- * Payment lines
+ * Refund lines
  *
  * @author    Pronamic <info@pronamic.eu>
  * @copyright 2005-2023 Pronamic
@@ -8,24 +8,25 @@
  * @package   Pronamic\WordPress\Pay\Payments
  */
 
-namespace Pronamic\WordPress\Pay\Payments;
+namespace Pronamic\WordPress\Pay\Refunds;
 
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
+use JsonSerializable;
 use Traversable;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
 
 /**
- * Payment lines
+ * Refund lines
  *
  * @author     Remco Tolsma
  * @version    2.5.1
  * @since      2.1.0
- * @implements \IteratorAggregate<int, PaymentLine>
+ * @implements \IteratorAggregate<int, RefundLine>
  */
-class PaymentLines implements Countable, IteratorAggregate {
+class RefundLines implements Countable, IteratorAggregate, JsonSerializable {
 	/**
 	 * The lines.
 	 *
@@ -43,7 +44,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 	/**
 	 * Get iterator.
 	 *
-	 * @return ArrayIterator<int, PaymentLine>
+	 * @return ArrayIterator<int, RefundLine>
 	 */
 	public function getIterator(): Traversable {
 		return new ArrayIterator( $this->lines );
@@ -52,7 +53,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 	/**
 	 * Get array.
 	 *
-	 * @return array<int, PaymentLine>
+	 * @return array<int, RefundLine>
 	 */
 	public function get_array() {
 		return $this->lines;
@@ -61,20 +62,20 @@ class PaymentLines implements Countable, IteratorAggregate {
 	/**
 	 * Add line.
 	 *
-	 * @param PaymentLine $line The line to add.
+	 * @param RefundLine $line The line to add.
 	 * @return void
 	 */
-	public function add_line( PaymentLine $line ) {
+	public function add_line( RefundLine $line ) {
 		$this->lines[] = $line;
 	}
 
 	/**
 	 * New line.
 	 *
-	 * @return PaymentLine
+	 * @return RefundLine
 	 */
 	public function new_line() {
-		$line = new PaymentLine();
+		$line = new RefundLine();
 
 		$this->add_line( $line );
 
@@ -135,60 +136,25 @@ class PaymentLines implements Countable, IteratorAggregate {
 	}
 
 	/**
-	 * Get first line with the specified ID.
-	 * 
-	 * @param string $id ID.
-	 * @return null|PaymentLine
-	 */
-	public function first( $id ) {
-		$lines = \array_filter(
-			$this->lines,
-			function( PaymentLine $line ) use ( $id ) {
-				return ( $id === $line->get_id() );
-			}
-		);
-
-		$line = \reset( $lines );
-
-		if ( false === $line ) {
-			return null;
-		}
-
-		return $line;
-	}
-
-	/**
-	 * Get JSON.
+	 * Serialize to JSON.
 	 *
 	 * @return array
 	 */
-	public function get_json() {
-		$objects = array_map(
-			/**
-			 * Get JSON for payment line.
-			 *
-			 * @param PaymentLine $line Payment line.
-			 * @return object
-			 */
-			function( PaymentLine $line ) {
-				return $line->get_json();
-			},
-			$this->lines
-		);
-
-		return $objects;
+	#[\ReturnTypeWillChange]
+	public function jsonSerialize() {
+		return $this->lines;
 	}
 
 	/**
 	 * Create items from object.
 	 *
-	 * @param mixed            $json         JSON.
-	 * @param PaymentInfo|null $payment_info Payment info.
+	 * @param mixed  $json   JSON.
+	 * @param Refund $refund Refund.
 	 *
-	 * @return PaymentLines
+	 * @return RefundLines
 	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON is not an array.
 	 */
-	public static function from_json( $json, PaymentInfo $payment_info = null ) {
+	public static function from_json( $json, Refund $refund ) {
 		if ( ! is_array( $json ) ) {
 			throw new \InvalidArgumentException( 'JSON value must be an array.' );
 		}
@@ -202,18 +168,13 @@ class PaymentLines implements Countable, IteratorAggregate {
 			 * @param object $object Object.
 			 * @return PaymentLine
 			 */
-			function( $object ) {
-				return PaymentLine::from_json( $object );
+			function( $object ) use ( $refund ) {
+				return RefundLine::from_json( $object, $refund );
 			},
 			$json
 		);
 
 		foreach ( $lines as $line ) {
-			// Set payment.
-			if ( $payment_info instanceof Payment ) {
-				$line->set_payment( $payment_info );
-			}
-
 			$object->add_line( $line );
 		}
 

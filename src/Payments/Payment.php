@@ -16,6 +16,7 @@ use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
+use Pronamic\WordPress\Pay\Refunds\Refund;
 use Pronamic\WordPress\Pay\Subscriptions\Subscription;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPeriod;
 
@@ -37,7 +38,7 @@ class Payment extends PaymentInfo {
 	/**
 	 * Refunded amount.
 	 *
-	 * @var Money|null
+	 * @var Money
 	 */
 	private $refunded_amount;
 
@@ -127,6 +128,13 @@ class Payment extends PaymentInfo {
 	public $lines;
 
 	/**
+	 * Refunds.
+	 *
+	 * @var Refund[]
+	 */
+	public $refunds = [];
+
+	/**
 	 * Construct and initialize payment object.
 	 *
 	 * @param integer $post_id A payment post ID or null.
@@ -140,6 +148,8 @@ class Payment extends PaymentInfo {
 		$this->set_status( PaymentStatus::OPEN );
 
 		$this->set_total_amount( new Money() );
+
+		$this->refunded_amount = new Money();
 
 		if ( null !== $post_id ) {
 			pronamic_pay_plugin()->payments_data_store->read( $this );
@@ -245,7 +255,7 @@ class Payment extends PaymentInfo {
 	/**
 	 * Get refunded amount.
 	 *
-	 * @return Money|null
+	 * @return Money
 	 */
 	public function get_refunded_amount() {
 		return $this->refunded_amount;
@@ -254,7 +264,7 @@ class Payment extends PaymentInfo {
 	/**
 	 * Set refunded amount.
 	 *
-	 * @param Money|null $refunded_amount Refunded amount.
+	 * @param Money $refunded_amount Refunded amount.
 	 * @return void
 	 */
 	public function set_refunded_amount( $refunded_amount ) {
@@ -792,6 +802,12 @@ class Payment extends PaymentInfo {
 			$payment->set_transaction_id( $json->transaction_id );
 		}
 
+		if ( isset( $json->refunds ) ) {
+			foreach ( $json->refunds as $json_refund ) {
+				$payment->refunds[] = Refund::from_json( $json_refund, $payment );
+			}
+		}
+
 		return $payment;
 	}
 
@@ -825,11 +841,7 @@ class Payment extends PaymentInfo {
 		}
 
 		// Refunded amount.
-		$refunded_amount = $this->get_refunded_amount();
-
-		if ( null !== $refunded_amount ) {
-			$properties['refunded_amount'] = $refunded_amount->jsonSerialize();
-		}
+		$properties['refunded_amount'] = $this->get_refunded_amount()->jsonSerialize();
 
 		// Charged back amount.
 		$charged_back_amount = $this->get_charged_back_amount();
@@ -893,6 +905,9 @@ class Payment extends PaymentInfo {
 		if ( null !== $transaction_id ) {
 			$properties['transaction_id'] = $transaction_id;
 		}
+
+		// Refunds.
+		$properties['refunds'] = $this->refunds;
 
 		$object = (object) $properties;
 

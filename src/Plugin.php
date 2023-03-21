@@ -25,6 +25,7 @@ use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Payments\PaymentsDataStoreCPT;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Payments\StatusChecker;
+use Pronamic\WordPress\Pay\Refunds\Refund;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionsDataStoreCPT;
 use Pronamic\WordPress\Pay\Webhooks\WebhookLogger;
@@ -1298,66 +1299,36 @@ class Plugin {
 	/**
 	 * Create refund.
 	 *
-	 * @param string      $transaction_id Gateway transaction ID.
-	 * @param Gateway     $gateway        Gateway.
-	 * @param Money       $amount         Refund amount.
-	 * @param string|null $description    Refund description.
-	 * @return string|null
+	 * @param Refund $refund Refund.
+	 * @return void
 	 * @throws \Exception Throws exception on error.
 	 */
-	public static function create_refund( $transaction_id, $gateway, Money $amount, $description = null ) {
-		// Check if gateway supports refunds.
-		if ( ! $gateway->supports( 'refunds' ) || ! \method_exists( $gateway, 'create_refund' ) ) {
-			throw new \Exception( __( 'Unable to process refund as gateway does not support refunds.', 'pronamic_ideal' ) );
+	public static function create_refund( Refund $refund ) {
+		$payment = $refund->get_payment();
+
+		$gateway = $payment->get_gateway();
+
+		if ( null === $gateway ) {
+			throw new \Exception( __( 'Unable to process refund as gateway could not be found.', 'pronamic_ideal' ) );
 		}
 
-		// Check amount.
-		if ( $amount->get_value() <= 0 ) {
-			throw new \Exception(
-				sprintf(
-					/* translators: %s: formatted amount */
-					__( 'Unable to process refund because of invalid amount (%s).', 'pronamic_ideal' ),
-					$amount->format_i18n()
-				)
-			);
+		try {
+			$gateway->create_refund( $refund );
+
+			$payment->refunds[] = $refund;
+
+			$refunded_amount = $payment->get_refunded_amount();
+
+			$refunded_amount = $refunded_amount->add( $refund->get_amount() );
+
+			$payment->set_refunded_amount( $refunded_amount );
+		} catch ( \Exception $exception ) {
+			$payment->add_note( $exception->getMessage() );
+
+			throw $exception;
+		} finally {
+			$payment->save();
 		}
-
-		// Create refund.
-		$reference = $gateway->create_refund( $transaction_id, $amount, $description );
-
-		// Add note to original payment.
-		$payment = \get_pronamic_payment_by_transaction_id( $transaction_id );
-
-		if ( null !== $payment ) {
-			/* translators: 1: refunded amount */
-			$format = __( 'Refunded %1$s.', 'pronamic_ideal' );
-
-			if ( ! empty( $reference ) ) {
-				/* translators: 1: refunded amount, 3: refund reference */
-				$format = __( 'Refunded %1$s with gateway reference `%3$s`.', 'pronamic_ideal' );
-			}
-
-			if ( ! empty( $description ) ) {
-				/* translators: 1: refunded amount, 2: refund description */
-				$format = __( 'Refunded %1$s ("%2$s").', 'pronamic_ideal' );
-
-				if ( ! empty( $reference ) ) {
-					/* translators: 1: refunded amount, 2: refund description, 3: refund reference */
-					$format = __( 'Refunded %1$s ("%2$s") with gateway reference `%3$s`.', 'pronamic_ideal' );
-				}
-			}
-
-			$note = sprintf(
-				$format,
-				$amount->format_i18n(),
-				$description,
-				$reference
-			);
-
-			$payment->add_note( $note );
-		}
-
-		return $reference;
 	}
 
 	/**

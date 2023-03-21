@@ -89,20 +89,6 @@ class PaymentLine {
 	private $total_amount;
 
 	/**
-	 * Refunded quantity.
-	 *
-	 * @var int|null
-	 */
-	private $refunded_quantity;
-
-	/**
-	 * Refunded amount.
-	 *
-	 * @var Money|null
-	 */
-	private $refunded_amount;
-
-	/**
 	 * Product URL.
 	 *
 	 * @var string|null
@@ -135,13 +121,15 @@ class PaymentLine {
 	 *
 	 * @var array
 	 */
-	public $meta;
+	public array $meta;
 
 	/**
 	 * Payment line constructor.
 	 */
 	public function __construct() {
 		$this->set_total_amount( new Money() );
+
+		$this->meta = [];
 	}
 
 	/**
@@ -338,44 +326,6 @@ class PaymentLine {
 	}
 
 	/**
-	 * Get refunded quantity.
-	 *
-	 * @return int|null
-	 */
-	public function get_refunded_quantity() {
-		return $this->refunded_quantity;
-	}
-
-	/**
-	 * Set refunded quantity.
-	 *
-	 * @param int|null $refunded_quantity Refunded quantity.
-	 * @return void
-	 */
-	public function set_refunded_quantity( $refunded_quantity ) {
-		$this->refunded_quantity = $refunded_quantity;
-	}
-
-	/**
-	 * Get refunded amount.
-	 *
-	 * @return Money|null
-	 */
-	public function get_refunded_amount() {
-		return $this->refunded_amount;
-	}
-
-	/**
-	 * Set refunded amount.
-	 *
-	 * @param Money|null $refunded_amount Refunded amount.
-	 * @return void
-	 */
-	public function set_refunded_amount( $refunded_amount ) {
-		$this->refunded_amount = $refunded_amount;
-	}
-
-	/**
 	 * Get product URL.
 	 *
 	 * @return string|null
@@ -536,14 +486,6 @@ class PaymentLine {
 			$line->set_total_amount( MoneyJsonTransformer::from_json( $json->total_amount ) );
 		}
 
-		if ( isset( $json->refunded_quantity ) ) {
-			$line->set_refunded_quantity( $json->refunded_quantity );
-		}
-
-		if ( isset( $json->refunded_amount ) ) {
-			$line->set_refunded_amount( MoneyJsonTransformer::from_json( $json->refunded_amount ) );
-		}
-
 		if ( property_exists( $json, 'product_url' ) ) {
 			$line->set_product_url( $json->product_url );
 		}
@@ -557,7 +499,7 @@ class PaymentLine {
 		}
 
 		if ( property_exists( $json, 'meta' ) ) {
-			$line->meta = $json->meta;
+			$line->meta = (array) $json->meta;
 		}
 
 		return $line;
@@ -570,21 +512,19 @@ class PaymentLine {
 	 */
 	public function get_json() {
 		$properties = [
-			'id'                => $this->get_id(),
-			'type'              => $this->get_type(),
-			'sku'               => $this->get_sku(),
-			'name'              => $this->get_name(),
-			'description'       => $this->get_description(),
-			'quantity'          => $this->get_quantity(),
-			'unit_price'        => ( null === $this->unit_price ) ? null : $this->unit_price->jsonSerialize(),
-			'discount_amount'   => ( null === $this->discount_amount ) ? null : $this->discount_amount->jsonSerialize(),
-			'total_amount'      => $this->total_amount->jsonSerialize(),
-			'refunded_quantity' => $this->get_refunded_quantity(),
-			'refunded_amount'   => ( null === $this->refunded_amount ) ? null : $this->refunded_amount->jsonSerialize(),
-			'product_url'       => $this->get_product_url(),
-			'image_url'         => $this->get_image_url(),
-			'product_category'  => $this->get_product_category(),
-			'meta'              => $this->meta,
+			'id'               => $this->get_id(),
+			'type'             => $this->get_type(),
+			'sku'              => $this->get_sku(),
+			'name'             => $this->get_name(),
+			'description'      => $this->get_description(),
+			'quantity'         => $this->get_quantity(),
+			'unit_price'       => ( null === $this->unit_price ) ? null : $this->unit_price->jsonSerialize(),
+			'discount_amount'  => ( null === $this->discount_amount ) ? null : $this->discount_amount->jsonSerialize(),
+			'total_amount'     => $this->total_amount->jsonSerialize(),
+			'product_url'      => $this->get_product_url(),
+			'image_url'        => $this->get_image_url(),
+			'product_category' => $this->get_product_category(),
+			'meta'             => $this->meta,
 		];
 
 		$properties = array_filter( $properties );
