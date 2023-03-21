@@ -14,6 +14,7 @@ use InvalidArgumentException;
 use JsonSerializable;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
+use Pronamic\WordPress\Number\Number;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 use Pronamic\WordPress\Pay\Payments\PaymentLine;
 
@@ -28,14 +29,14 @@ class RefundLine implements JsonSerializable {
 	/**
 	 * The ID.
 	 *
-	 * @var string|null
+	 * @var string
 	 */
-	private $id;
+	private $id = '';
 
 	/**
 	 * The quantity.
 	 *
-	 * @var int|null
+	 * @var Number
 	 */
 	private $quantity;
 
@@ -71,6 +72,8 @@ class RefundLine implements JsonSerializable {
 	 * Payment line constructor.
 	 */
 	public function __construct() {
+		$this->quantity = Number::from_int( 0 );
+
 		$this->set_total_amount( new Money() );
 
 		$this->meta = [];
@@ -79,7 +82,7 @@ class RefundLine implements JsonSerializable {
 	/**
 	 * Get the id / identifier of this payment line.
 	 *
-	 * @return string|null
+	 * @return string
 	 */
 	public function get_id() {
 		return $this->id;
@@ -88,7 +91,7 @@ class RefundLine implements JsonSerializable {
 	/**
 	 * Set the id / identifier of this payment line.
 	 *
-	 * @param string|null $id Number.
+	 * @param string $id Number.
 	 * @return void
 	 */
 	public function set_id( $id ) {
@@ -98,7 +101,7 @@ class RefundLine implements JsonSerializable {
 	/**
 	 * Get the quantity of this payment line.
 	 *
-	 * @return int|null
+	 * @return Number
 	 */
 	public function get_quantity() {
 		return $this->quantity;
@@ -107,10 +110,10 @@ class RefundLine implements JsonSerializable {
 	/**
 	 * Set the quantity of this payment line.
 	 *
-	 * @param int|null $quantity Quantity.
+	 * @param Number $quantity Quantity.
 	 * @return void
 	 */
-	public function set_quantity( $quantity ) {
+	public function set_quantity( Number $quantity ) {
 		$this->quantity = $quantity;
 	}
 
@@ -248,7 +251,7 @@ class RefundLine implements JsonSerializable {
 		}
 
 		if ( property_exists( $json, 'quantity' ) ) {
-			$line->set_quantity( $json->quantity );
+			$line->set_quantity( Number::from_mixed( $json->quantity ) );
 		}
 
 		if ( isset( $json->total_amount ) ) {

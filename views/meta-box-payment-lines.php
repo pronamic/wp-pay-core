@@ -193,14 +193,14 @@ if ( ! isset( $payment ) || empty( $lines ) ) : ?>
 					<tr>
 						<?php
 
-						$refunded_quantity = 0;
+						$refunded_quantity = Number::from_int( 0 );
 						$refunded_amount   = new Money();
 						$refunded_tax      = new Money();
 
 						foreach ( $payment->refunds as $refund ) {
 							foreach ( $refund->lines as $refund_line ) {
 								if ( $refund_line->get_payment_line() === $line ) {
-									$refunded_quantity += $refund_line->get_quantity();
+									$refunded_quantity = $refunded_quantity->add( $refund_line->get_quantity() );
 
 									$line_total = $refund_line->get_total_amount();
 
@@ -313,8 +313,8 @@ if ( ! isset( $payment ) || empty( $lines ) ) : ?>
 
 							echo \esc_html( $line->get_quantity() );
 
-							if ( $refunded_quantity > 0 ) {
-								\printf( '<small class="pronamic-pay-refunded">-%s</small>', \esc_html( $refunded_quantity ) );
+							if ( ! $refunded_quantity->is_zero() ) {
+								\printf( '<small class="pronamic-pay-refunded">-%s</small>', \esc_html( $refunded_quantity->format_i18n() ) );
 							}
 
 							?>
