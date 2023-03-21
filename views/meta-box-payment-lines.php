@@ -15,7 +15,7 @@ use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Number\Number;
 use Pronamic\WordPress\Pay\Payments\PaymentLine;
 
-if ( empty( $lines ) ) : ?>
+if ( ! isset( $payment ) || empty( $lines ) ) : ?>
 
 	<p>
 		<?php \esc_html_e( 'No payment lines found.', 'pronamic_ideal' ); ?>
