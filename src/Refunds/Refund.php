@@ -93,7 +93,7 @@ class Refund implements JsonSerializable {
 	 */
 	public function __construct( Payment $payment, Money $amount ) {
 		$this->created_at = new DateTimeImmutable();
-		$this->created_by = \wp_get_current_user();
+		$this->created_by = new WP_User();
 		$this->payment    = $payment;
 		$this->amount     = $amount;
 		$this->lines      = new RefundLines();
