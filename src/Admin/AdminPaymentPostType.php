@@ -499,7 +499,7 @@ class AdminPaymentPostType {
 
 				$refunded_amount = $payment->get_refunded_amount();
 
-				if ( null !== $refunded_amount ) {
+				if ( ! $refunded_amount->is_zero() ) {
 					$remaining_amount = $remaining_amount->subtract( $refunded_amount );
 
 					$tip[] = \sprintf(
