@@ -23,10 +23,10 @@ if ( empty( $payment->refunds ) ) : ?>
 			<thead>
 				<tr>
 					<th scope="col"><?php \esc_html_e( 'Date', 'pronamic_ideal' ); ?></th>
-					<th scope="col"><?php \esc_html_e( 'User', 'pronamic_ideal' ); ?></th>
 					<th scope="col"><?php \esc_html_e( 'Amount', 'pronamic_ideal' ); ?></th>
 					<th scope="col"><?php \esc_html_e( 'PSP ID', 'pronamic_ideal' ); ?></th>
 					<th scope="col"><?php \esc_html_e( 'Description', 'pronamic_ideal' ); ?></th>
+					<th scope="col"><?php \esc_html_e( 'User', 'pronamic_ideal' ); ?></th>
 				</tr>
 			</thead>
 
@@ -46,10 +46,10 @@ if ( empty( $payment->refunds ) ) : ?>
 
 					<tr>
 						<td><?php echo \esc_html( $refund->created_at->format_i18n() ); ?></td>
-						<td><?php echo \esc_html( $refund->created_by->display_name ); ?></td>
 						<td><?php echo \esc_html( $refund->get_amount()->format_i18n() ); ?></td>
 						<td><?php echo \esc_html( $refund->psp_id ); ?></td>
 						<td><?php echo \esc_html( $refund->get_description() ); ?></td>
+						<td><?php echo \esc_html( $refund->created_by->display_name ); ?></td>
 					</tr>
 
 				<?php endforeach; ?>
