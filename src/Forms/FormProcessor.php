@@ -216,45 +216,6 @@ class FormProcessor {
 			exit;
 		}
 
-		// @link https://github.com/WordImpress/Give/blob/1.1/includes/payments/functions.php#L172-L178.
-		// @link https://github.com/woothemes/woocommerce/blob/2.4.3/includes/wc-user-functions.php#L36-L118.
-		$user = get_user_by( 'email', $email );
-
-		if ( ! empty( $email ) && ! $user ) {
-			// Make a random string for password.
-			$password = wp_generate_password( 10 );
-
-			// Make a user with the username as the email.
-			$result = wp_insert_user(
-				[
-					'user_login' => $email,
-					'user_pass'  => $password,
-					'user_email' => $email,
-					'role'       => 'payer',
-					'first_name' => $first_name,
-					'last_name'  => $last_name,
-				]
-			);
-
-			if ( $result instanceof WP_Error ) {
-				throw new Exception( $result->get_error_message() );
-			}
-
-			// User.
-			$user = new WP_User( $result );
-		}
-
-		$payment_id = $payment->get_id();
-
-		if ( is_object( $user ) && null !== $payment_id ) {
-			wp_update_post(
-				[
-					'ID'          => $payment_id,
-					'post_author' => $user->ID,
-				]
-			);
-		}
-
 		$gateway->redirect( $payment );
 
 		exit;
