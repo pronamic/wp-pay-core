@@ -49,7 +49,19 @@ if ( empty( $payment->refunds ) ) : ?>
 						<td><?php echo \esc_html( $refund->get_amount()->format_i18n() ); ?></td>
 						<td><?php echo \esc_html( $refund->psp_id ); ?></td>
 						<td><?php echo \esc_html( $refund->get_description() ); ?></td>
-						<td><?php echo \esc_html( $refund->created_by->display_name ); ?></td>
+						<td>
+							<?php
+
+							$name = __( 'Anonymous', 'pronamic_ideal' );
+
+							if ( $refund->created_by->ID > 0 ) {
+								$name = $refund->created_by->display_name;
+							}
+
+							echo \esc_html( $name );
+
+							?>
+						</td>
 					</tr>
 
 				<?php endforeach; ?>
