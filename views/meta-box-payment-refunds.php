@@ -52,7 +52,7 @@ if ( empty( $payment->refunds ) ) : ?>
 						<td>
 							<?php
 
-							$name = __( 'Anonymous', 'pronamic_ideal' );
+							$name = __( 'Unknown', 'pronamic_ideal' );
 
 							if ( $refund->created_by->ID > 0 ) {
 								$name = $refund->created_by->display_name;
