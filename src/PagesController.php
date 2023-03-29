@@ -238,7 +238,7 @@ class PagesController {
 				'option_name'  => 'pronamic_pay_cancel_page_id',
 			],
 			[
-				'post_title'   => \__( 'Payment expired', 'pronamic_ideal' ),
+				'post_title'   => \__( 'Payment Expired', 'pronamic_ideal' ),
 				'post_name'    => \__( 'payment-expired', 'pronamic_ideal' ),
 				'post_content' => \sprintf(
 					'<p>%s</p>',
