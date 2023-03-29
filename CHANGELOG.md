@@ -6,6 +6,26 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.9.0] - 2023-03-29
+### Changed
+
+- Extended support for refunds.
+
+### Commits
+
+- No longer create WordPress user for built-in form entries. ([10e04cf](https://github.com/pronamic/wp-pay-core/commit/10e04cf2597cc2c9ec322cf2c87d891e0fbce663))
+- Fixed setting customer email address in subscription. ([5d853f1](https://github.com/pronamic/wp-pay-core/commit/5d853f18567355f78b74117ba05e1312a8d5dcdc))
+
+### Composer
+
+- Changed `pronamic/wp-money` from `^2.2` to `v2.4.0`.
+	Release notes: https://github.com/pronamic/wp-money/releases/tag/v2.4.0
+- Changed `pronamic/wp-number` from `^1.2` to `v1.3.0`.
+	Release notes: https://github.com/pronamic/wp-number/releases/tag/v1.3.0
+Full set of changes: [`4.8.0...4.9.0`][4.9.0]
+
+[4.9.0]: https://github.com/pronamic/wp-pay-core/compare/v4.8.0...v4.9.0
+
 ## [4.8.0] - 2023-03-10
 ### Added
 
