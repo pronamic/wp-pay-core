@@ -229,11 +229,11 @@ class PagesController {
 				'option_name'  => 'pronamic_pay_completed_page_id',
 			],
 			[
-				'post_title'   => \__( 'Payment Cancelled', 'pronamic_ideal' ),
-				'post_name'    => \__( 'payment-cancelled', 'pronamic_ideal' ),
+				'post_title'   => \__( 'Payment Canceled', 'pronamic_ideal' ),
+				'post_name'    => \__( 'payment-canceled', 'pronamic_ideal' ),
 				'post_content' => \sprintf(
 					'<p>%s</p>',
-					\__( 'You have cancelled the payment.', 'pronamic_ideal' )
+					\__( 'You have canceled the payment.', 'pronamic_ideal' )
 				),
 				'option_name'  => 'pronamic_pay_cancel_page_id',
 			],
