@@ -6,6 +6,19 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.9.1] - 2023-03-30
+
+### Commits
+
+- Fixed refunded amount check. ([073e1a7](https://github.com/pronamic/wp-pay-core/commit/073e1a7792f45f1961f83ff2e8ef7b4851d16b75))
+- Fixed text domains. ([d2f591e](https://github.com/pronamic/wp-pay-core/commit/d2f591e9482272b62eda0dd1df9cfc669e7faec1), [af3a4ed](https://github.com/pronamic/wp-pay-core/commit/af3a4ed14be1c18d8126d72adf867e7f4d0eb294))
+- Updated default payment status pages. ([f19598e](https://github.com/pronamic/wp-pay-core/commit/f19598e973ac82f289e37f2dfe8d6760a742dd13), [9e551f5](https://github.com/pronamic/wp-pay-core/commit/9e551f5650d196c5b4bdb9b3628d8b06301154aa))
+- Updated tests. ([6f7a434](https://github.com/pronamic/wp-pay-core/commit/6f7a4342adfca277601b4153eb20c53b773cc456), [8029d8e](https://github.com/pronamic/wp-pay-core/commit/8029d8e33cc7cb6d74413a92192ba094587df964))
+
+Full set of changes: [`4.9.0...4.9.1`][4.9.1]
+
+[4.9.1]: https://github.com/pronamic/wp-pay-core/compare/v4.9.0...v4.9.1
+
 ## [4.9.0] - 2023-03-29
 ### Changed
 
