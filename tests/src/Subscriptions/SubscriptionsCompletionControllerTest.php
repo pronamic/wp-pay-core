@@ -33,7 +33,7 @@ class SubscriptionsCompletionControllerTest extends TestCase {
 
 		$phase = new SubscriptionPhase(
 			$subscription,
-			new \DateTime( '-1 month midnight', new \DateTimeZone( 'GMT' ) ),
+			new \DateTime( '2005-05-05 00:00:00', new \DateTimeZone( 'GMT' ) ),
 			new SubscriptionInterval( 'P1M' ),
 			new Money( '10', 'EUR' )
 		);
@@ -56,7 +56,7 @@ class SubscriptionsCompletionControllerTest extends TestCase {
 		 */
 		$end_date = $subscription->get_end_date();
 
-		$expected = new \DateTime( 'midnight', new \DateTimeZone( 'GMT' ) );
+		$expected = new \DateTime( '2005-06-05 00:00:00', new \DateTimeZone( 'GMT' ) );
 
 		$this->assertEquals( $expected, $end_date );
 
