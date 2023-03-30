@@ -239,20 +239,20 @@ class AdminHealth {
 				$result['actions'] .= sprintf(
 					'<a href="%s">%s</a> - ',
 					esc_url( 'https://www.pronamic.eu/plugins/pronamic-ideal/' ),
-					__( 'Purchase license' )
+					\__( 'Purchase license', 'pronamic_ideal' )
 				);
 			}
 
 			$result['actions'] .= sprintf(
 				'<a href="%s">%s</a> - ',
 				add_query_arg( 'page', 'pronamic_pay_settings', get_admin_url( null, 'admin.php' ) ),
-				__( 'License settings' )
+				\__( 'License settings', 'pronamic_ideal' )
 			);
 
 			$result['actions'] .= sprintf(
 				'<a href="%s">%s</a>',
 				esc_url( 'https://www.pronamic.eu/account/' ),
-				__( 'Check existing license' )
+				\__( 'Check existing license', 'pronamic_ideal' )
 			);
 
 			$result['actions'] .= '</p>';
