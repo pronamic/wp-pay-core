@@ -18,7 +18,6 @@
 /.stylelintrc.json export-ignore
 /.travis.yml       export-ignore
 /Gruntfile.js      export-ignore
-/package.json      export-ignore
 /phpcs.xml.dist    export-ignore
 /phpmd.ruleset.xml export-ignore
 /phpstan.neon.dist export-ignore
