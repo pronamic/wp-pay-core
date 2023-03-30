@@ -98,7 +98,7 @@ use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
 
 	$amount_refunded = $payment->get_refunded_amount();
 
-	if ( null !== $amount_refunded && $amount_refunded->get_value() > 0 ) :
+	if ( $amount_refunded->get_value() > 0 ) :
 
 		?>
 
