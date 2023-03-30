@@ -111,14 +111,19 @@ class SubscriptionsFollowUpPaymentsControllerTest extends TestCase {
 		/**
 		 * Subscription.
 		 */
+		$timezone = new \DateTimeZone( 'GMT' );
+		$interval = new SubscriptionInterval( 'P1M' );
+
+		$start = new \DateTimeImmutable( '-1 month midnight', $timezone );
+
 		$subscription = new Subscription();
 
 		$subscription->set_mode( 'test' );
 
 		$phase = new SubscriptionPhase(
 			$subscription,
-			new \DateTime( '-1 month midnight', new \DateTimeZone( 'GMT' ) ),
-			new SubscriptionInterval( 'P1M' ),
+			$start,
+			$interval,
 			new Money( '10', 'EUR' )
 		);
 
@@ -138,7 +143,7 @@ class SubscriptionsFollowUpPaymentsControllerTest extends TestCase {
 		 */
 		$next_date = $subscription->get_next_payment_date();
 
-		$expected = new \DateTime( 'midnight', new \DateTimeZone( 'GMT' ) );
+		$expected = $start->add( $interval );
 
 		$this->assertEquals( $expected, $next_date );
 
@@ -152,7 +157,7 @@ class SubscriptionsFollowUpPaymentsControllerTest extends TestCase {
 		 */
 		$next_date = $subscription->get_next_payment_date();
 
-		$expected = new \DateTime( '+1 month midnight', new \DateTimeZone( 'GMT' ) );
+		$expected = $start->add( $interval )->add( $interval );
 
 		$this->assertEquals( $expected, $next_date );
 	}
