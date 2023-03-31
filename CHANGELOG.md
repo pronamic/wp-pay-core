@@ -6,6 +6,16 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.9.2] - 2023-03-31
+
+### Commits
+
+- Added quotes around URLs in changed home URL notice. ([ea5f026](https://github.com/pronamic/wp-pay-core/commit/ea5f026d008ff2c4e5550a658695aff5b5e9eb56))
+
+Full set of changes: [`4.9.1...4.9.2`][4.9.2]
+
+[4.9.2]: https://github.com/pronamic/wp-pay-core/compare/v4.9.1...v4.9.2
+
 ## [4.9.1] - 2023-03-30
 
 ### Commits
