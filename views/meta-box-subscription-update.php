@@ -55,7 +55,7 @@ $subscription = \get_pronamic_subscription( (int) get_the_ID() );
 
 				<div id="pronamic-pay-post-status-input" class="hide-if-js">
 					<input type="hidden" name="hidden_pronamic_pay_post_status" id="hidden_pronamic_pay_post_status" value="<?php echo esc_attr( ( 'auto-draft' === $post->post_status ) ? 'draft' : $post->post_status ); ?>" />
-					<label for="pronamic-pay-post-status" class="screen-reader-text"><?php _e( 'Set status' ); ?></label>
+					<label for="pronamic-pay-post-status" class="screen-reader-text"><?php _e( 'Set status', 'pronamic_ideal' ); ?></label>
 					<select id="pronamic-pay-post-status" name="pronamic_subscription_post_status">
 						<?php
 
@@ -81,8 +81,8 @@ $subscription = \get_pronamic_subscription( (int) get_the_ID() );
 						?>
 					</select>
 
-					<a href="#pronamic-pay-post-status" class="save-pronamic-pay-post-status hide-if-no-js button"><?php _e( 'OK' ); ?></a>
-					<a href="#pronamic-pay-post-status" class="cancel-pronamic-pay-post-status hide-if-no-js button-cancel"><?php _e( 'Cancel' ); ?></a>
+					<a href="#pronamic-pay-post-status" class="save-pronamic-pay-post-status hide-if-no-js button"><?php _e( 'OK', 'pronamic_ideal' ); ?></a>
+					<a href="#pronamic-pay-post-status" class="cancel-pronamic-pay-post-status hide-if-no-js button-cancel"><?php _e( 'Cancel', 'pronamic_ideal' ); ?></a>
 				</div>
 
 				<?php if ( null !== $subscription && in_array( $subscription->get_status(), [ SubscriptionStatus::FAILURE, SubscriptionStatus::ON_HOLD ], true ) ) : ?>
@@ -154,8 +154,8 @@ $subscription = \get_pronamic_subscription( (int) get_the_ID() );
 
 					?>
 
-					<a href="#pronamic-pay-next-payment-date" class="save-pronamic-pay-next-payment-date hide-if-no-js button"><?php _e( 'OK' ); ?></a>
-					<a href="#pronamic-pay-next-payment-date" class="cancel-pronamic-pay-next-payment-date hide-if-no-js button-cancel"><?php _e( 'Cancel' ); ?></a>
+					<a href="#pronamic-pay-next-payment-date" class="save-pronamic-pay-next-payment-date hide-if-no-js button"><?php _e( 'OK', 'pronamic_ideal' ); ?></a>
+					<a href="#pronamic-pay-next-payment-date" class="cancel-pronamic-pay-next-payment-date hide-if-no-js button-cancel"><?php _e( 'Cancel', 'pronamic_ideal' ); ?></a>
 				</div>
 
 				<?php

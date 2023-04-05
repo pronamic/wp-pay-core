@@ -169,37 +169,37 @@ class AdminHealth {
 	public function status_tests( $status_tests ) {
 		// Test valid license.
 		$status_tests['direct']['pronamic_pay_valid_license'] = [
-			'label' => __( 'Pronamic Pay support license key test' ),
+			'label' => __( 'Pronamic Pay support license key test', 'pronamic_ideal' ),
 			'test'  => [ $this, 'test_valid_license' ],
 		];
 
 		// Test minimum required WordPress version.
 		$status_tests['direct']['pronamic_pay_wordpress_version'] = [
-			'label' => __( 'Pronamic Pay WordPress version test' ),
+			'label' => __( 'Pronamic Pay WordPress version test', 'pronamic_ideal' ),
 			'test'  => [ $this, 'test_wordpress_version' ],
 		];
 
 		// Test memory limit.
 		$status_tests['direct']['pronamic_pay_memory_limit'] = [
-			'label' => __( 'Pronamic Pay memory limit test' ),
+			'label' => __( 'Pronamic Pay memory limit test', 'pronamic_ideal' ),
 			'test'  => [ $this, 'test_memory_limit' ],
 		];
 
 		// Test character set.
 		$status_tests['direct']['pronamic_pay_character_set'] = [
-			'label' => __( 'Pronamic Pay UTF-8 character set test' ),
+			'label' => __( 'Pronamic Pay UTF-8 character set test', 'pronamic_ideal' ),
 			'test'  => [ $this, 'test_character_set' ],
 		];
 
 		// Test hashing algorithms.
 		$status_tests['direct']['pronamic_pay_hashing_algorithms'] = [
-			'label' => __( 'Pronamic Pay hashing algorithms test' ),
+			'label' => __( 'Pronamic Pay hashing algorithms test', 'pronamic_ideal' ),
 			'test'  => [ $this, 'test_hashing_algorithms' ],
 		];
 
 		// Test supported extensions.
 		$status_tests['direct']['pronamic_pay_extensions_support'] = [
-			'label' => __( 'Pronamic Pay extensions support test' ),
+			'label' => __( 'Pronamic Pay extensions support test', 'pronamic_ideal' ),
 			'test'  => [ $this, 'test_extensions_support' ],
 		];
 

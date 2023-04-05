@@ -59,7 +59,7 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 
 			<div id="pronamic-pay-post-status-input" class="hide-if-js">
 				<input type="hidden" name="hidden_pronamic_pay_post_status" id="hidden_pronamic_pay_post_status" value="<?php echo esc_attr( ( 'auto-draft' === $post->post_status ) ? 'draft' : $post->post_status ); ?>" />
-				<label for="pronamic-pay-post-status" class="screen-reader-text"><?php _e( 'Set status' ); ?></label>
+				<label for="pronamic-pay-post-status" class="screen-reader-text"><?php _e( 'Set status', 'pronamic_ideal' ); ?></label>
 				<select id="pronamic-pay-post-status" name="pronamic_payment_post_status">
 					<?php
 
@@ -75,8 +75,8 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 					?>
 				</select>
 
-				<a href="#pronamic-pay-post-status" class="save-pronamic-pay-post-status hide-if-no-js button"><?php _e( 'OK' ); ?></a>
-				<a href="#pronamic-pay-post-status" class="cancel-pronamic-pay-post-status hide-if-no-js button-cancel"><?php _e( 'Cancel' ); ?></a>
+				<a href="#pronamic-pay-post-status" class="save-pronamic-pay-post-status hide-if-no-js button"><?php _e( 'OK', 'pronamic_ideal' ); ?></a>
+				<a href="#pronamic-pay-post-status" class="cancel-pronamic-pay-post-status hide-if-no-js button-cancel"><?php _e( 'Cancel', 'pronamic_ideal' ); ?></a>
 			</div>
 		</div>
 
