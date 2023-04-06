@@ -765,7 +765,7 @@ class Plugin {
 
 		\load_plugin_textdomain( 'pronamic_ideal', false, $rel_path . '/languages' );
 
-		\load_plugin_textdomain( 'pronamic-money', false, $rel_path . '/vendor/pronamic/wp-money/languages' );
+		\load_plugin_textdomain( 'pronamic-money', false, $rel_path . '/packages/pronamic/wp-money/languages' );
 	}
 
 	/**
