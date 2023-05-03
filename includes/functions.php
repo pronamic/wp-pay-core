@@ -304,30 +304,6 @@ function get_pronamic_subscriptions_by_source( $source, $source_id = null ) {
 }
 
 /**
- * Bind the global providers and gateways together.
- */
-function bind_providers_and_gateways() {
-	global $pronamic_pay_providers;
-
-	$integrations = pronamic_pay_plugin()->gateway_integrations;
-
-	foreach ( $integrations as $integration ) {
-		$provider = $integration->provider;
-
-		if ( ! isset( $pronamic_pay_providers[ $provider ] ) ) {
-			$pronamic_pay_providers[ $provider ] = [
-				'integrations' => [],
-			];
-		}
-
-		$pronamic_pay_providers[ $provider ]['integrations'][] = $integration;
-	}
-
-	// Sort by provider.
-	ksort( $pronamic_pay_providers );
-}
-
-/**
  * Let to num function.
  *
  * This function transforms the php.ini notation for numbers (like '2M') to an integer.
