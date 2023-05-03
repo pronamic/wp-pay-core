@@ -65,6 +65,4 @@ use Pronamic\WordPress\Pay\Util;
 			</div>
 		</div>
 	</div>
-
-	<?php require __DIR__ . '/pronamic.php'; ?>
 </div>

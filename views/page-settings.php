@@ -46,6 +46,4 @@ if ( ! empty( $message_id ) ) {
 
 		<?php submit_button(); ?>
 	</form>
-
-	<?php require __DIR__ . '/pronamic.php'; ?>
 </div>

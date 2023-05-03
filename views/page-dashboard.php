@@ -445,8 +445,6 @@ $container_index = 1;
 						</div>
 					</div>
 
-					<?php require __DIR__ . '/pronamic.php'; ?>
-
 				</div>
 			</div>
 
