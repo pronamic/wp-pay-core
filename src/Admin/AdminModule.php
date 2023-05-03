@@ -872,18 +872,6 @@ class AdminModule {
 			},
 		];
 
-		if ( version_compare( get_bloginfo( 'version' ), '5.2', '<' ) ) {
-			$submenu_pages[] = [
-				'page_title' => __( 'Tools', 'pronamic_ideal' ),
-				'menu_title' => __( 'Tools', 'pronamic_ideal' ),
-				'capability' => 'manage_options',
-				'menu_slug'  => 'pronamic_pay_tools',
-				'function'   => function() {
-					$this->render_page( 'tools' );
-				},
-			];
-		}
-
 		$minimum_capability = $this->get_minimum_capability( $submenu_pages );
 
 		try {
