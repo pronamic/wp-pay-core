@@ -33,9 +33,9 @@ class HomeUrlController {
 	 * @return void
 	 */
 	public function init() {
-		$option = \get_option( 'pronamic_pay_home_url', null );
+		$option = (string) \get_option( 'pronamic_pay_home_url' );
 
-		if ( null === $option ) {
+		if ( '' === $option ) {
 			\update_option( 'pronamic_pay_home_url', \home_url() );
 		}
 
