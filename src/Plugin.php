@@ -957,6 +957,12 @@ class Plugin {
 			$referer = \wp_get_referer();
 
 			if ( null === $origin_id && false !== $referer ) {
+				$referer_host = \wp_parse_url( $referer, \PHP_URL_HOST );
+
+				if ( null === $referer_host ) {
+					$referer = \home_url( $referer );
+				}
+
 				$post_id = \url_to_postid( $referer );
 
 				if ( $post_id > 0 ) {
