@@ -40,6 +40,14 @@ class HomeUrlController {
 		}
 
 		\register_setting(
+			/**
+			 * We deliberately use the 'pronamic_pay_home_url' option group
+			 * here, as this setting is not visible to administrators. Using
+			 * the 'pronamic_pay' option group will clear the setting after
+			 * saving.
+			 * 
+			 * @link https://github.com/pronamic/wp-pay-core/issues/119
+			 */
 			'pronamic_pay_home_url',
 			'pronamic_pay_home_url',
 			[
