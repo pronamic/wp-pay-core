@@ -33,14 +33,14 @@ class HomeUrlController {
 	 * @return void
 	 */
 	public function init() {
-		$option = (string) \get_option( 'pronamic_pay_home_url' );
+		$option = \get_option( 'pronamic_pay_home_url', null );
 
-		if ( '' === $option ) {
+		if ( null === $option ) {
 			\update_option( 'pronamic_pay_home_url', \home_url() );
 		}
 
 		\register_setting(
-			'pronamic_pay',
+			'pronamic_pay_home_url',
 			'pronamic_pay_home_url',
 			[
 				'type'              => 'string',
