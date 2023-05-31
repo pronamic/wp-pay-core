@@ -65,7 +65,16 @@ class HomeUrlController {
 	 * @return void
 	 */
 	public function admin_notices() {
-		if ( \home_url() === \get_option( 'pronamic_pay_home_url' ) ) {
+		/**
+		 * We use the `get_option( 'home' )` here and not `home_url()` to
+		 * bypass the `home_url` filter. The WPML plugin hooks into the 
+		 * `home_url` filter and this causes the notice to be displayed
+		 * unnecessarily. That's why we decided to compare on the
+		 * unfiltered home URL directly from the options.
+		 * 
+		 * @link https://github.com/pronamic/wp-pay-core/issues/121
+		 */
+		if ( \get_option( 'home' ) === \get_option( 'pronamic_pay_home_url' ) ) {
 			return;
 		}
 
