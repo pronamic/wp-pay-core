@@ -33,14 +33,22 @@ class HomeUrlController {
 	 * @return void
 	 */
 	public function init() {
-		$option = (string) \get_option( 'pronamic_pay_home_url' );
+		$option = \get_option( 'pronamic_pay_home_url', null );
 
-		if ( '' === $option ) {
+		if ( null === $option ) {
 			\update_option( 'pronamic_pay_home_url', \home_url() );
 		}
 
 		\register_setting(
-			'pronamic_pay',
+			/**
+			 * We deliberately use the 'pronamic_pay_home_url' option group
+			 * here, as this setting is not visible to administrators. Using
+			 * the 'pronamic_pay' option group will clear the setting after
+			 * saving.
+			 * 
+			 * @link https://github.com/pronamic/wp-pay-core/issues/119
+			 */
+			'pronamic_pay_home_url',
 			'pronamic_pay_home_url',
 			[
 				'type'              => 'string',
