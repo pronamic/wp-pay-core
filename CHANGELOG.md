@@ -6,6 +6,24 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.9.3] - 2023-06-01
+
+### Commits
+
+- Switch from `pronamic/wp-deployer` to `pronamic/pronamic-cli`. ([71550af](https://github.com/pronamic/wp-pay-core/commit/71550afef3bf8a067d54938ccab96a71aea9e311))
+- Fixed WPML conflict. ([bdc3e6c](https://github.com/pronamic/wp-pay-core/commit/bdc3e6c60febff84d7f86cb959fd6b7a8610d1a3))
+- Updated HomeUrlController.php ([470fa98](https://github.com/pronamic/wp-pay-core/commit/470fa98a17a61f2214baee036c4400b883525e64))
+- Added support for setting origin ID with Charitable. ([3eccc8b](https://github.com/pronamic/wp-pay-core/commit/3eccc8b8add83159f35862f53c91a3bd6b748450))
+- Removed unused function. ([eca49ab](https://github.com/pronamic/wp-pay-core/commit/eca49abeb2df431a1f706bd25d2f1908ed9bd787))
+- Removed Pronamic socials. ([0e7684a](https://github.com/pronamic/wp-pay-core/commit/0e7684a8e78c98de9a29712ddc495994fb109ed4))
+- Removed legacy 'Tools' page. ([f68dec5](https://github.com/pronamic/wp-pay-core/commit/f68dec541d29981a48dde00734b18c22f5e03929))
+- Fixed loading bundled WordPress money translations. ([2b04615](https://github.com/pronamic/wp-pay-core/commit/2b04615a2e80626c92a881e950b8e3b20bb15df8))
+- Added missing text domain. ([f99733d](https://github.com/pronamic/wp-pay-core/commit/f99733d92507b1689fc04d6f3cf979ebf8863d2c))
+
+Full set of changes: [`4.9.2...4.9.3`][4.9.3]
+
+[4.9.3]: https://github.com/pronamic/wp-pay-core/compare/v4.9.2...v4.9.3
+
 ## [4.9.2] - 2023-03-31
 
 ### Commits
