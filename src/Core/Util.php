@@ -193,8 +193,6 @@ class Util {
 
 		\add_filter( 'determine_locale', 'get_user_locale' );
 
-		Plugin::load_plugin_textdomain();
-
 		\remove_filter( 'determine_locale', 'get_user_locale' );
 	}
 }
