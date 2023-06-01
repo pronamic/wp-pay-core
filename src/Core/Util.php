@@ -182,17 +182,4 @@ class Util {
 	public static function class_method_exists( $class, $method ) {
 		return class_exists( $class ) && method_exists( $class, $method );
 	}
-
-	/**
-	 * Switch to user locale.
-	 *
-	 * @return void
-	 */
-	public static function switch_to_user_locale() {
-		\switch_to_locale( \get_user_locale() );
-
-		\add_filter( 'determine_locale', 'get_user_locale' );
-
-		\remove_filter( 'determine_locale', 'get_user_locale' );
-	}
 }

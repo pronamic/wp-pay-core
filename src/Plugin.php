@@ -599,9 +599,6 @@ class Plugin {
 		// Don't cache.
 		Core_Util::no_cache();
 
-		// Switch to user locale.
-		Core_Util::switch_to_user_locale();
-
 		// Handle redirect message from payment meta.
 		$redirect_message = $payment->get_meta( 'payment_redirect_message' );
 
