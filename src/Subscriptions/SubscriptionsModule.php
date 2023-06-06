@@ -266,9 +266,6 @@ class SubscriptionsModule {
 			exit;
 		}
 
-		// Switch to user locale.
-		Util::switch_to_user_locale();
-
 		// Handle action.
 		switch ( $_GET['action'] ) {
 			// phpcs:enable WordPress.Security.NonceVerification.Recommended
