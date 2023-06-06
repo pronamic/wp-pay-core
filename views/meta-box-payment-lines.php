@@ -15,7 +15,7 @@ use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Number\Number;
 use Pronamic\WordPress\Pay\Payments\PaymentLine;
 
-if ( ! isset( $payment ) || empty( $lines ) ) : ?>
+if ( empty( $lines ) ) : ?>
 
 	<p>
 		<?php \esc_html_e( 'No payment lines found.', 'pronamic_ideal' ); ?>
@@ -105,19 +105,21 @@ if ( ! isset( $payment ) || empty( $lines ) ) : ?>
 				}
 			}
 
-			foreach ( $payment->refunds as $refund ) {
-				foreach ( $refund->lines as $refund_line ) {
-					$refunded_quantity_total = $refunded_quantity_total->add( $refund_line->get_quantity() );
+			if ( isset( $payment ) ) {
+				foreach ( $payment->refunds as $refund ) {
+					foreach ( $refund->lines as $refund_line ) {
+						$refunded_quantity_total = $refunded_quantity_total->add( $refund_line->get_quantity() );
 
-					$line_total = $refund_line->get_total_amount();
+						$line_total = $refund_line->get_total_amount();
 
-					$refunded_amount_total = $refunded_amount_total->add( $refund_line->get_total_amount() );
+						$refunded_amount_total = $refunded_amount_total->add( $refund_line->get_total_amount() );
 
-					if ( $line_total instanceof TaxedMoney ) {
-						$tax_amount = $line_total->get_tax_amount();
+						if ( $line_total instanceof TaxedMoney ) {
+							$tax_amount = $line_total->get_tax_amount();
 
-						if ( null !== $tax_amount ) {
-							$refunded_tax_total = $refunded_tax_total->add( $tax_amount );
+							if ( null !== $tax_amount ) {
+								$refunded_tax_total = $refunded_tax_total->add( $tax_amount );
+							}
 						}
 					}
 				}
@@ -197,20 +199,22 @@ if ( ! isset( $payment ) || empty( $lines ) ) : ?>
 						$refunded_amount   = new Money();
 						$refunded_tax      = new Money();
 
-						foreach ( $payment->refunds as $refund ) {
-							foreach ( $refund->lines as $refund_line ) {
-								if ( $refund_line->get_payment_line() === $line ) {
-									$refunded_quantity = $refunded_quantity->add( $refund_line->get_quantity() );
+						if ( isset( $payment ) ) {
+							foreach ( $payment->refunds as $refund ) {
+								foreach ( $refund->lines as $refund_line ) {
+									if ( $refund_line->get_payment_line() === $line ) {
+										$refunded_quantity = $refunded_quantity->add( $refund_line->get_quantity() );
 
-									$line_total = $refund_line->get_total_amount();
+										$line_total = $refund_line->get_total_amount();
 
-									$refunded_amount = $refunded_amount->add( $line_total );
+										$refunded_amount = $refunded_amount->add( $line_total );
 
-									if ( $line_total instanceof TaxedMoney ) {
-										$tax_amount = $line_total->get_tax_amount();
+										if ( $line_total instanceof TaxedMoney ) {
+											$tax_amount = $line_total->get_tax_amount();
 
-										if ( null !== $tax_amount ) {
-											$refunded_tax = $refunded_tax->add( $tax_amount );
+											if ( null !== $tax_amount ) {
+												$refunded_tax = $refunded_tax->add( $tax_amount );
+											}
 										}
 									}
 								}

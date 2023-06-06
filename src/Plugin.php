@@ -308,9 +308,6 @@ class Plugin {
 		 */
 		add_action( 'plugins_loaded', [ $this, 'plugins_loaded' ], 0 );
 
-		// Plugin locale.
-		add_filter( 'plugin_locale', [ $this, 'plugin_locale' ], 10, 2 );
-
 		// Register styles.
 		add_action( 'init', [ $this, 'register_styles' ], 9 );
 
@@ -746,30 +743,6 @@ class Plugin {
 
 		// Actions.
 		\add_action( 'pronamic_pay_pre_create_payment', [ __CLASS__, 'complement_payment' ], 10, 1 );
-	}
-
-	/**
-	 * Filter plugin locale.
-	 *
-	 * @param string $locale A WordPress locale identifier.
-	 * @param string $domain A WordPress text domain identifier.
-	 *
-	 * @return string
-	 */
-	public function plugin_locale( $locale, $domain ) {
-		if ( 'pronamic_ideal' !== $domain ) {
-			return $locale;
-		}
-
-		if ( 'nl_NL_formal' === $locale ) {
-			return 'nl_NL';
-		}
-
-		if ( 'nl_BE' === $locale ) {
-			return 'nl_NL';
-		}
-
-		return $locale;
 	}
 
 	/**
