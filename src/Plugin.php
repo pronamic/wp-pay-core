@@ -596,9 +596,6 @@ class Plugin {
 		// Don't cache.
 		Core_Util::no_cache();
 
-		// Switch to user locale.
-		Core_Util::switch_to_user_locale();
-
 		// Handle redirect message from payment meta.
 		$redirect_message = $payment->get_meta( 'payment_redirect_message' );
 
@@ -653,13 +650,9 @@ class Plugin {
 	 * Plugins loaded.
 	 *
 	 * @link https://developer.wordpress.org/reference/hooks/plugins_loaded/
-	 * @link https://developer.wordpress.org/reference/functions/load_plugin_textdomain/
 	 * @return void
 	 */
 	public function plugins_loaded() {
-		// Load plugin textdomain.
-		self::load_plugin_textdomain();
-
 		// Settings.
 		$this->settings = new Settings( $this );
 
@@ -750,19 +743,6 @@ class Plugin {
 
 		// Actions.
 		\add_action( 'pronamic_pay_pre_create_payment', [ __CLASS__, 'complement_payment' ], 10, 1 );
-	}
-
-	/**
-	 * Load plugin text domain.
-	 *
-	 * @return void
-	 */
-	public static function load_plugin_textdomain() {
-		$rel_path = \dirname( \plugin_basename( self::$file ) );
-
-		\load_plugin_textdomain( 'pronamic_ideal', false, $rel_path . '/languages' );
-
-		\load_plugin_textdomain( 'pronamic-money', false, $rel_path . '/packages/pronamic/wp-money/languages' );
 	}
 
 	/**
