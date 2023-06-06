@@ -75,13 +75,6 @@ class AdminModule {
 	public $health;
 
 	/**
-	 * Admin notices page.
-	 *
-	 * @var AdminNotices
-	 */
-	public $notices;
-
-	/**
 	 * Admin reports page.
 	 *
 	 * @var AdminReports
@@ -126,7 +119,6 @@ class AdminModule {
 		$this->settings  = new AdminSettings( $plugin );
 		$this->dashboard = new AdminDashboard();
 		$this->health    = new AdminHealth( $plugin );
-		$this->notices   = new AdminNotices();
 		$this->reports   = new AdminReports( $plugin );
 		$this->tour      = new AdminTour( $plugin );
 
