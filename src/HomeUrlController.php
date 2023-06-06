@@ -45,7 +45,7 @@ class HomeUrlController {
 			 * here, as this setting is not visible to administrators. Using
 			 * the 'pronamic_pay' option group will clear the setting after
 			 * saving.
-			 * 
+			 *
 			 * @link https://github.com/pronamic/wp-pay-core/issues/119
 			 */
 			'pronamic_pay_home_url',
@@ -67,11 +67,11 @@ class HomeUrlController {
 	public function admin_notices() {
 		/**
 		 * We use the `get_option( 'home' )` here and not `home_url()` to
-		 * bypass the `home_url` filter. The WPML plugin hooks into the 
+		 * bypass the `home_url` filter. The WPML plugin hooks into the
 		 * `home_url` filter and this causes the notice to be displayed
 		 * unnecessarily. That's why we decided to compare on the
 		 * unfiltered home URL directly from the options.
-		 * 
+		 *
 		 * @link https://github.com/pronamic/wp-pay-core/issues/121
 		 */
 		if ( \get_option( 'home' ) === \get_option( 'pronamic_pay_home_url' ) ) {
@@ -92,7 +92,7 @@ class HomeUrlController {
 						/* translators: 1: Pronamic Pay home URL option, 2: home URL */
 						__( 'We noticed the WordPress home URL has changed from "%1$s" to "%2$s". Please verify the payment gateway settings. For example, you might want to switch between live and test mode or need to update an URL at the gateway to continue receiving payment status updates. Also keep an eye on pending payments to discover possible configuration issues.', 'pronamic_ideal' ),
 						\get_option( 'pronamic_pay_home_url' ),
-						\home_url()
+						\get_option( 'home' )
 					)
 				);
 
