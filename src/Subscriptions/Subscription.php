@@ -775,8 +775,18 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * @return SubscriptionPhase|null
 	 */
 	public function get_current_phase() {
+		return $this->get_phase_for_date( $this->get_next_payment_date() );
+	}
+
+	/**
+	 * Get phase for date.
+	 * 
+	 * @param DateTimeInterface $date Date.
+	 * @return SubscriptionPhase|null
+	 */
+	public function get_phase_for_date( DateTimeInterface $date ) {
 		foreach ( $this->phases as $phase ) {
-			if ( $phase->all_periods_created() ) {
+			if ( $phase->is_completed_to_date( $date ) ) {
 				continue;
 			}
 
@@ -785,6 +795,27 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 			}
 
 			return $phase;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get current period.
+	 *
+	 * @return SubscriptionPeriod|null
+	 */
+	public function get_current_period() {
+		$date = $this->get_next_payment_date();
+
+		foreach ( $this->phases as $phase ) {
+			$start_date = $phase->substract_interval( $date );
+
+			$period = $phase->get_period( $start_date );
+
+			if ( null !== $period ) {
+				return $period;
+			}
 		}
 
 		return null;
