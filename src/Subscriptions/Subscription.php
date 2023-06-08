@@ -822,6 +822,37 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	}
 
 	/**
+	 * Get start date of this subscription.
+	 * 
+	 * @return DateTimeImmutable|null
+	 */
+	public function get_start_date() {
+		$phase = \reset( $this->phases );
+
+		if ( false === $phase ) {
+			return null;
+		}
+
+		return $phase->get_start_date();
+	}
+
+	/**
+	 * Get period for date.
+	 *
+	 * @param DateTimeInterface $date Date.
+	 * @return SubscriptionPeriod|null
+	 */
+	public function get_period_for_date( DateTimeInterface $date ) {
+		$phase = $this->get_phase_for_date( $date );
+
+		if ( null === $phase ) {
+			return null;
+		}
+
+		return $phase->get_period( $date );
+	}
+
+	/**
 	 * Get phase for display.
 	 *
 	 * @return SubscriptionPhase|null
