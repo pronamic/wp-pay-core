@@ -801,27 +801,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	}
 
 	/**
-	 * Get current period.
-	 *
-	 * @return SubscriptionPeriod|null
-	 */
-	public function get_current_period() {
-		$date = $this->get_next_payment_date();
-
-		foreach ( $this->phases as $phase ) {
-			$start_date = $phase->substract_interval( $date );
-
-			$period = $phase->get_period( $start_date );
-
-			if ( null !== $period ) {
-				return $period;
-			}
-		}
-
-		return null;
-	}
-
-	/**
 	 * Get period for date.
 	 *
 	 * @param DateTimeInterface $date Date.
