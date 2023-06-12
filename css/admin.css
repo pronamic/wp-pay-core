@@ -449,7 +449,7 @@ body.post-type-pronamic_payment #post-body-content, body.post-type-pronamic_pay_
 }
 @media only screen and (max-width: 782px) {
   .pronamic-pay-tab .form-table th,
-.pronamic-pay-tab .form-table td {
+  .pronamic-pay-tab .form-table td {
     padding: 11px;
   }
 }

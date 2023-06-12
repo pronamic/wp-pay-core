@@ -119,77 +119,77 @@
   height: 100%;
 }
 .pp-card.brand-american-express .pp-card__background {
-  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/american-express/card-american-express-background-480x270.svg");
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.16.0/dist/cards/american-express/card-american-express-background-480x270.svg");
 }
 .pp-card.brand-carta-si .pp-card__background {
-  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/carta-si/card-carta-si-background-480x270.svg");
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.16.0/dist/cards/carta-si/card-carta-si-background-480x270.svg");
 }
 .pp-card.brand-carte-bleue .pp-card__background {
-  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/carte-bleue/card-carte-bleue-background-480x270.svg");
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.16.0/dist/cards/carte-bleue/card-carte-bleue-background-480x270.svg");
 }
 .pp-card.brand-dankort .pp-card__background {
-  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/dankort/card-dankort-background-480x270.svg");
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.16.0/dist/cards/dankort/card-dankort-background-480x270.svg");
 }
 .pp-card.brand-diners-club .pp-card__background {
-  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/diners-club/card-diners-club-background-480x270.svg");
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.16.0/dist/cards/diners-club/card-diners-club-background-480x270.svg");
 }
 .pp-card.brand-diners-club .pp-card__content {
   color: #000;
 }
 .pp-card.brand-discover .pp-card__background {
-  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/discover/card-discover-background-480x270.svg");
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.16.0/dist/cards/discover/card-discover-background-480x270.svg");
 }
 .pp-card.brand-discover .pp-card__content {
   color: #000;
 }
 .pp-card.brand-jcb .pp-card__background {
-  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/jcb/card-jcb-background-480x270.svg");
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.16.0/dist/cards/jcb/card-jcb-background-480x270.svg");
 }
 .pp-card.brand-maestro .pp-card__background {
-  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/maestro/card-maestro-background-480x270.svg");
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.16.0/dist/cards/maestro/card-maestro-background-480x270.svg");
 }
 .pp-card.brand-mastercard .pp-card__background {
-  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/mastercard/card-mastercard-background-480x270.svg");
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.16.0/dist/cards/mastercard/card-mastercard-background-480x270.svg");
 }
 .pp-card.brand-mastercard .pp-card__content {
   color: #000;
 }
 .pp-card.brand-unionpay .pp-card__background {
-  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/unionpay/card-unionpay-background-480x270.svg");
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.16.0/dist/cards/unionpay/card-unionpay-background-480x270.svg");
 }
 .pp-card.brand-unionpay .pp-card__content {
   color: #000;
 }
 .pp-card.brand-visa .pp-card__background {
-  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/visa/card-visa-background-480x270.svg");
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.16.0/dist/cards/visa/card-visa-background-480x270.svg");
 }
 .pp-card.brand-abn-amro .pp-card__background {
-  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/abn-amro/card-abn-amro-background-480x270.svg");
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.16.0/dist/cards/abn-amro/card-abn-amro-background-480x270.svg");
 }
 .pp-card.brand-abn-amro .pp-card__value {
   color: #000;
 }
 .pp-card.brand-asn-bank .pp-card__background {
-  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/asn-bank/card-asn-bank-background-480x270.svg");
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.16.0/dist/cards/asn-bank/card-asn-bank-background-480x270.svg");
 }
 .pp-card.brand-asn-bank .pp-card__content {
   color: #000;
   opacity: 0.6;
 }
 .pp-card.brand-bunq .pp-card__background {
-  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/bunq/card-bunq-background-480x270.svg");
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.16.0/dist/cards/bunq/card-bunq-background-480x270.svg");
 }
 .pp-card.brand-handelsbanken .pp-card__background {
-  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/handelsbanken/card-handelsbanken-background-480x270.svg");
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.16.0/dist/cards/handelsbanken/card-handelsbanken-background-480x270.svg");
 }
 .pp-card.brand-ing .pp-card__background {
-  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/ing/card-ing-background-480x270.svg");
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.16.0/dist/cards/ing/card-ing-background-480x270.svg");
 }
 .pp-card.brand-ing .pp-card__value {
   color: #000;
 }
 .pp-card.brand-knab .pp-card__background {
-  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/knab/card-knab-background-480x270.svg");
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.16.0/dist/cards/knab/card-knab-background-480x270.svg");
 }
 .pp-card.brand-knab .pp-card__label {
   color: #ec5f7d;
@@ -198,28 +198,28 @@
   color: #003b5a;
 }
 .pp-card.brand-rabobank .pp-card__background {
-  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/rabobank/card-rabobank-background-480x270.svg");
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.16.0/dist/cards/rabobank/card-rabobank-background-480x270.svg");
 }
 .pp-card.brand-rabobank .pp-card__content {
   color: #000;
 }
 .pp-card.brand-regiobank .pp-card__background {
-  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/regiobank/card-regiobank-background-480x270.svg");
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.16.0/dist/cards/regiobank/card-regiobank-background-480x270.svg");
 }
 .pp-card.brand-regiobank .pp-card__value {
   color: #000;
 }
 .pp-card.brand-sns .pp-card__background {
-  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/sns/card-sns-background-480x270.svg");
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.16.0/dist/cards/sns/card-sns-background-480x270.svg");
 }
 .pp-card.brand-triodos-bank .pp-card__background {
-  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/triodos-bank/card-triodos-bank-background-480x270.svg");
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.16.0/dist/cards/triodos-bank/card-triodos-bank-background-480x270.svg");
 }
 .pp-card.brand-triodos-bank .pp-card__content {
   color: #000;
 }
 .pp-card.brand-van-lanschot .pp-card__background {
-  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.5.0/dist/cards/van-lanschot/card-van-lanschot-background-480x270.svg");
+  background-image: url("https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.16.0/dist/cards/van-lanschot/card-van-lanschot-background-480x270.svg");
 }
 
 .slick-slide {
