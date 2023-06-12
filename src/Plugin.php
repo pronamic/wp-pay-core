@@ -349,6 +349,7 @@ class Plugin {
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BANCONTACT ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BANK_TRANSFER ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BELFIUS ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BILLIE ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BILLINK ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BITCOIN ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BLIK ) );
