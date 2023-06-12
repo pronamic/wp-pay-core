@@ -425,7 +425,7 @@ class SubscriptionPhase implements \JsonSerializable {
 
 	/**
 	 * Check if this phase is completed to date.
-	 * 
+	 *
 	 * @param DateTimeInterface|null $date Date.
 	 * @return bool True if phase is completed to date, false otherwise.
 	 */
@@ -471,7 +471,7 @@ class SubscriptionPhase implements \JsonSerializable {
 
 	/**
 	 * Substract the interval of this subscription phase from the specified date.
-	 * 
+	 *
 	 * @param DateTimeImmutable $date  Date to substract interval period from.
 	 * @param int               $times Number of times to substract interval.
 	 * @return DateTimeImmutable
@@ -488,11 +488,11 @@ class SubscriptionPhase implements \JsonSerializable {
 
 	/**
 	 * Get period for the specified start date.
-	 * 
-	 * @param DateTimeInterface $start_date Start date.
+	 *
+	 * @param DateTimeImmutable $start_date Start date.
 	 * @return SubscriptionPeriod|null
 	 */
-	public function get_period( DateTimeInterface $start_date = null ) {
+	public function get_period( DateTimeImmutable $start_date = null ) {
 		if ( null === $start_date ) {
 			return null;
 		}

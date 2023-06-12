@@ -809,10 +809,10 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	/**
 	 * Get period for date.
 	 *
-	 * @param DateTimeInterface $date Date.
+	 * @param DateTimeImmutable $date Date.
 	 * @return SubscriptionPeriod|null
 	 */
-	public function get_period_for_date( DateTimeInterface $date ) {
+	public function get_period_for_date( DateTimeImmutable $date ) {
 		$phase = $this->get_phase_for_date( $date );
 
 		if ( null === $phase ) {
