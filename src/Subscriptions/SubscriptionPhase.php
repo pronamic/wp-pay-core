@@ -470,23 +470,6 @@ class SubscriptionPhase implements \JsonSerializable {
 	}
 
 	/**
-	 * Substract the interval of this subscription phase from the specified date.
-	 *
-	 * @param DateTimeImmutable $date  Date to substract interval period from.
-	 * @param int               $times Number of times to substract interval.
-	 * @return DateTimeImmutable
-	 */
-	public function substract_interval( $date, $times = 1 ) {
-		// If times is zero there is nothing to add.
-		if ( 0 === $times ) {
-			return $date;
-		}
-
-		// Multiply date interval.
-		return $date->sub( $this->interval->multiply( $times ) );
-	}
-
-	/**
 	 * Get period for the specified start date.
 	 *
 	 * @param DateTimeImmutable $start_date Start date.
