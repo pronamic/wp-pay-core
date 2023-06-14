@@ -623,9 +623,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 		$subscription->set_activated_at( $activated_at );
 
 		if ( \property_exists( $json, 'next_payment_date' ) ) {
-			if ( null !== $json->next_payment_date ) {
-				$subscription->set_next_payment_date( new DateTimeImmutable( $json->next_payment_date ) );
-			}
+			$subscription->set_next_payment_date( null === $json->next_payment_date ? null : new DateTimeImmutable( $json->next_payment_date ) );
 		}
 
 		return $subscription;
@@ -775,8 +773,24 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	 * @return SubscriptionPhase|null
 	 */
 	public function get_current_phase() {
+		$next_payment_date = $this->get_next_payment_date();
+
+		if ( null === $next_payment_date ) {
+			return null;
+		}
+
+		return $this->get_phase_for_date( $next_payment_date );
+	}
+
+	/**
+	 * Get phase for date.
+	 *
+	 * @param DateTimeInterface $date Date.
+	 * @return SubscriptionPhase|null
+	 */
+	public function get_phase_for_date( DateTimeInterface $date ) {
 		foreach ( $this->phases as $phase ) {
-			if ( $phase->all_periods_created() ) {
+			if ( $phase->is_completed_to_date( $date ) ) {
 				continue;
 			}
 
@@ -788,6 +802,22 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get period for date.
+	 *
+	 * @param DateTimeImmutable $date Date.
+	 * @return SubscriptionPeriod|null
+	 */
+	public function get_period_for_date( DateTimeImmutable $date ) {
+		$phase = $this->get_phase_for_date( $date );
+
+		if ( null === $phase ) {
+			return null;
+		}
+
+		return $phase->get_period( $date );
 	}
 
 	/**
@@ -898,6 +928,21 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get start date.
+	 *
+	 * @return DateTimeImmutable|null
+	 */
+	public function get_start_date() {
+		$phase = \reset( $this->phases );
+
+		if ( false === $phase ) {
+			return null;
+		}
+
+		return $phase->get_start_date();
 	}
 
 	/**
