@@ -100,6 +100,13 @@ class PaymentMethods {
 	const BELFIUS = 'belfius';
 
 	/**
+	 * Billie
+	 *
+	 * @var string
+	 */
+	const BILLIE = 'billie';
+
+	/**
 	 * Billink
 	 *
 	 * @since 2.0.9
@@ -431,6 +438,7 @@ class PaymentMethods {
 			self::BANCONTACT              => __( 'Bancontact', 'pronamic_ideal' ),
 			self::BANK_TRANSFER           => __( 'Bank Transfer', 'pronamic_ideal' ),
 			self::BELFIUS                 => __( 'Belfius Direct Net', 'pronamic_ideal' ),
+			self::BILLIE                  => __( 'Billie', 'pronamic_ideal' ),
 			self::BILLINK                 => __( 'Billink', 'pronamic_ideal' ),
 			self::BITCOIN                 => __( 'Bitcoin', 'pronamic_ideal' ),
 			self::BLIK                    => __( 'BLIK', 'pronamic_ideal' ),
@@ -528,7 +536,7 @@ class PaymentMethods {
 		}
 
 		return \sprintf(
-			'https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.13.0/dist/methods/%1$s/method-%1$s-%2$s.svg',
+			'https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.16.0/dist/methods/%1$s/method-%1$s-%2$s.svg',
 			\str_replace( '_', '-', $method ),
 			$size
 		);
