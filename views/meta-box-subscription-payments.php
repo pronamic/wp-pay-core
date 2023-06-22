@@ -149,7 +149,7 @@ if ( null === $subscription_id ) {
 						$key = $period->get_start_date()->getTimestamp();
 
 						// Add payment if period already exists in data.
-						if ( \array_key_exists( $key, $data ) ) {
+						if ( \array_key_exists( $key, $data ) && array_key_exists( 'payments', $data[ $key ] ) && array_key_exists( 'payments', $item ) ) {
 							$data[ $key ]['payments'] = $data[ $key ]['payments'] + $item['payments'];
 
 							$item = null;
@@ -169,6 +169,10 @@ if ( null === $subscription_id ) {
 			$result = [];
 
 			foreach ( $data as $item ) {
+				if ( ! array_key_exists( 'payments', $item ) ) {
+					continue;
+				}
+
 				\ksort( $item['payments'] );
 
 				// Determine wether payment for period can be retried.
@@ -206,7 +210,7 @@ if ( null === $subscription_id ) {
 			foreach ( $result as $sort_key => $item ) :
 				$period = $item['period'];
 
-				$is_first = ( null !== $period );
+				$is_first = true;
 
 				foreach ( $item['payments'] as $payment ) :
 					$payment_id         = $payment->get_id();
@@ -244,7 +248,7 @@ if ( null === $subscription_id ) {
 						</td>
 					</tr>
 
-					<?php if ( $is_first && $item['can_retry'] && $plugin->subscriptions_module->can_retry_payment( $payment ) ) : ?>
+					<?php if ( null !== $period && $is_first && $item['can_retry'] && $plugin->subscriptions_module->can_retry_payment( $payment ) ) : ?>
 
 						<tr>
 							<td>&nbsp;</td>
