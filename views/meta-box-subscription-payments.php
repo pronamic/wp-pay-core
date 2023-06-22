@@ -20,9 +20,78 @@ if ( null === $subscription_id ) {
 	return;
 }
 
-?>
+$payments = $subscription->get_payments();
 
-<?php if ( 0 === count( $subscription->get_payments() ) ) : ?>
+$data = [];
+
+foreach ( $payments as $payment ) {
+	$periods = (array) $payment->get_periods();
+
+	/**
+	 * A payment can be for multiple and different subscription periods.
+	 * Here we only want to show the periods of this subscription and
+	 * therefore we filter out other periods.
+	 */
+	$periods = \array_filter(
+		$periods,
+		function( $period ) use ( $subscription ) {
+			return ( $subscription->get_id() === $period->get_phase()->get_subscription()->get_id() );
+		}
+	);
+
+	if ( 0 === count( $periods ) ) {
+		$key = 'payment-' . $payment->get_id();
+
+		$data[ $key ] = (object) [
+			'date'     => $payment->get_date(),
+			'payments' => [ $payment ],
+			'period'   => null,
+		];
+	}
+
+	foreach ( $periods as $period ) {
+		$key = 'period-' . $period->get_start_date()->getTimestamp();
+
+		if ( ! array_key_exists( $key, $data ) ) {
+			$data[ $key ] = (object) [
+				'date'     => $period->get_start_date(),
+				'payments' => [],
+				'period'   => $period,
+			];
+		}
+
+		$data[ $key ]->payments[] = $payment;
+	}
+}
+
+foreach ( $data as $item ) {
+	usort(
+		$item->payments,
+		function( $a, $b ) {
+			return $a->get_date() <=> $b->get_date();
+		}
+	);
+
+	$item->first = reset( $item->payments );
+
+	$statuses = array_map(
+		function( $payment ) {
+			return $payment->get_status();
+		},
+		$item->payments
+	);
+
+	$item->can_retry = ! ( in_array( PaymentStatus::OPEN, $statuses, true ) || in_array( PaymentStatus::SUCCESS, $statuses, true ) );
+}
+
+usort(
+	$data,
+	function( $a, $b ) {
+		return $b->date <=> $a->date;
+	}
+);
+
+if ( 0 === count( $payments ) ) : ?>
 
 	<?php esc_html_e( 'No payments found.', 'pronamic_ideal' ); ?>
 
@@ -119,100 +188,8 @@ if ( null === $subscription_id ) {
 
 			endif;
 
-			$data = [];
-
-			foreach ( $subscription->get_payments() as $payment ) {
-				$key = sprintf(
-					'%s-%s',
-					$payment->get_date()->getTimestamp(),
-					$payment->get_id()
-				);
-
-				$item = [
-					'period'   => null,
-					'payments' => [
-						$key => $payment,
-					],
-				];
-
-				// Maybe bundle payments for period.
-				$periods = $payment->get_periods();
-
-				if ( null !== $periods ) {
-					foreach ( $periods as $period ) {
-						if ( $subscription->get_id() !== $period->get_phase()->get_subscription()->get_id() ) {
-							continue;
-						}
-
-						$item['period'] = $period;
-
-						$key = $period->get_start_date()->getTimestamp();
-
-						// Add payment if period already exists in data.
-						if ( \array_key_exists( $key, $data ) && array_key_exists( 'payments', $data[ $key ] ) && array_key_exists( 'payments', $item ) ) {
-							$data[ $key ]['payments'] = $data[ $key ]['payments'] + $item['payments'];
-
-							$item = null;
-						}
-
-						break;
-					}
-				}
-
-				// Add item.
-				if ( null !== $item ) {
-					$data[ $key ] = $item;
-				}
-			}
-
-			// Add items to result.
-			$result = [];
-
-			foreach ( $data as $item ) {
-				if ( ! array_key_exists( 'payments', $item ) ) {
-					continue;
-				}
-
-				\ksort( $item['payments'] );
-
-				// Determine wether payment for period can be retried.
-				$can_retry = false;
-
-				if ( null !== $item['period'] ) {
-					$has_open_or_success = array_intersect(
-						\wp_list_pluck( $item['payments'], 'status' ),
-						[
-							PaymentStatus::OPEN,
-							PaymentStatus::SUCCESS,
-						]
-					);
-
-					$can_retry = empty( $has_open_or_success );
-				}
-
-				$item['can_retry'] = $can_retry;
-
-				// Add item to result using (first) payment date as key for sorting.
-				$payment = reset( $item['payments'] );
-
-				$key = sprintf(
-					'%s-%s',
-					$payment->get_date()->getTimestamp(),
-					$payment->get_id()
-				);
-
-				$result[ $key ] = $item;
-			}
-
-			// Sort items by date.
-			\krsort( $result );
-
-			foreach ( $result as $sort_key => $item ) :
-				$period = $item['period'];
-
-				$is_first = true;
-
-				foreach ( $item['payments'] as $payment ) :
+			foreach ( $data as $item ) :
+				foreach ( $item->payments as $payment ) :
 					$payment_id         = $payment->get_id();
 					$payments_post_type = get_post_type( $payment_id );
 
@@ -225,10 +202,10 @@ if ( null === $subscription_id ) {
 						<td>
 							<?php
 
-							if ( null !== $period ) :
-								$prefix = ( $is_first ? '' : '⌙ ' );
+							if ( null !== $item->period ) :
+								$prefix = ( $payment === $item->first ? '' : '⌙ ' );
 
-								echo esc_html( $prefix . $period->human_readable_range() );
+								echo esc_html( $prefix . $item->period->human_readable_range() );
 
 							endif;
 
@@ -248,7 +225,7 @@ if ( null === $subscription_id ) {
 						</td>
 					</tr>
 
-					<?php if ( null !== $period && $is_first && $item['can_retry'] && $plugin->subscriptions_module->can_retry_payment( $payment ) ) : ?>
+					<?php if ( null !== $item->period && $payment === $item->first && $item->can_retry && $plugin->subscriptions_module->can_retry_payment( $payment ) ) : ?>
 
 						<tr>
 							<td>&nbsp;</td>
@@ -261,9 +238,9 @@ if ( null === $subscription_id ) {
 											[
 												'period_payment' => true,
 												'subscription_id' => $subscription->get_id(),
-												'sequence_number' => $period->get_phase()->get_sequence_number(),
-												'start_date' => $period->get_start_date()->format( DATE_ATOM ),
-												'end_date' => $period->get_end_date()->format( DATE_ATOM ),
+												'sequence_number' => $item->period->get_phase()->get_sequence_number(),
+												'start_date' => $item->period->get_start_date()->format( DATE_ATOM ),
+												'end_date' => $item->period->get_end_date()->format( DATE_ATOM ),
 											]
 										),
 										\get_edit_post_link( $subscription_id )
@@ -289,13 +266,7 @@ if ( null === $subscription_id ) {
 
 					<?php endif; ?>
 
-					<?php
-
-					$is_first = false;
-
-				endforeach;
-
-				?>
+				<?php endforeach; ?>
 
 			<?php endforeach; ?>
 
