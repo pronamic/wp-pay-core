@@ -10,6 +10,7 @@
  * @var \Pronamic\WordPress\Pay\Subscriptions\Subscription $subscription Subscription.
  */
 
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
 
@@ -19,11 +20,9 @@ if ( null === $subscription_id ) {
 	return;
 }
 
-$periods = $subscription->get_payments_by_period();
-
 ?>
 
-<?php if ( empty( $periods ) ) : ?>
+<?php if ( 0 === count( $subscription->get_payments() ) ) : ?>
 
 	<?php esc_html_e( 'No payments found.', 'pronamic_ideal' ); ?>
 
@@ -120,22 +119,96 @@ $periods = $subscription->get_payments_by_period();
 
 			endif;
 
-			foreach ( $periods as $period ) :
+			$data = [];
 
-				$is_first = true;
+			foreach ( $subscription->get_payments() as $payment ) {
+				$key = sprintf(
+					'%s-%s',
+					$payment->get_date()->getTimestamp(),
+					$payment->get_id()
+				);
 
-				$can_retry = $period['can_retry'];
+				$item = [
+					'period'   => null,
+					'payments' => [
+						$key => $payment,
+					],
+				];
 
-				$payments = $period['payments'];
+				// Maybe bundle payments for period.
+				$periods = $payment->get_periods();
 
-				$period = $period['period'];
+				if ( null !== $periods ) {
+					foreach ( $periods as $period ) {
+						if ( $subscription->get_id() !== $period->get_phase()->get_subscription()->get_id() ) {
+							continue;
+						}
 
-				?>
+						$item['period'] = $period;
 
-				<?php foreach ( $payments as $payment ) : ?>
+						$key = $period->get_start_date()->getTimestamp();
 
-					<?php
+						// Add payment if period already exists in data.
+						if ( \array_key_exists( $key, $data ) ) {
+							$data[ $key ]['payments'] = $data[ $key ]['payments'] + $item['payments'];
 
+							$item = null;
+						}
+
+						break;
+					}
+				}
+
+				// Add item.
+				if ( null !== $item ) {
+					$data[ $key ] = $item;
+				}
+			}
+
+			// Add items to result.
+			$result = [];
+
+			foreach ( $data as $item ) {
+				\ksort( $item['payments'] );
+
+				// Determine wether payment for period can be retried.
+				$can_retry = false;
+
+				if ( null !== $item['period'] ) {
+					$has_open_or_success = array_intersect(
+						\wp_list_pluck( $item['payments'], 'status' ),
+						[
+							PaymentStatus::OPEN,
+							PaymentStatus::SUCCESS,
+						]
+					);
+
+					$can_retry = empty( $has_open_or_success );
+				}
+
+				$item['can_retry'] = $can_retry;
+
+				// Add item to result using (first) payment date as key for sorting.
+				$payment = reset( $item['payments'] );
+
+				$key = sprintf(
+					'%s-%s',
+					$payment->get_date()->getTimestamp(),
+					$payment->get_id()
+				);
+
+				$result[ $key ] = $item;
+			}
+
+			// Sort items by date.
+			\krsort( $result );
+
+			foreach ( $result as $sort_key => $item ) :
+				$period = $item['period'];
+
+				$is_first = ( null !== $period );
+
+				foreach ( $item['payments'] as $payment ) :
 					$payment_id         = $payment->get_id();
 					$payments_post_type = get_post_type( $payment_id );
 
@@ -148,15 +221,14 @@ $periods = $subscription->get_payments_by_period();
 						<td>
 							<?php
 
-							if ( ! $is_first ) :
+							if ( null !== $period ) :
+								$prefix = ( $is_first ? '' : '⌙ ' );
 
-								echo esc_html( '⌙ ' );
+								echo esc_html( $prefix . $period->human_readable_range() );
 
 							endif;
 
 							?>
-
-							<?php echo esc_html( $period->human_readable_range() ); ?>
 						</td>
 						<td>
 							<?php do_action( 'manage_' . $payments_post_type . '_posts_custom_column', 'pronamic_payment_title', $payment_id ); ?>
@@ -172,7 +244,7 @@ $periods = $subscription->get_payments_by_period();
 						</td>
 					</tr>
 
-					<?php if ( $is_first && $can_retry && $plugin->subscriptions_module->can_retry_payment( $payment ) ) : ?>
+					<?php if ( $is_first && $item['can_retry'] && $plugin->subscriptions_module->can_retry_payment( $payment ) ) : ?>
 
 						<tr>
 							<td>&nbsp;</td>
