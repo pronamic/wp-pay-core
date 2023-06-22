@@ -10,6 +10,7 @@
  * @var \Pronamic\WordPress\Pay\Subscriptions\Subscription $subscription Subscription.
  */
 
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
 
@@ -19,11 +20,82 @@ if ( null === $subscription_id ) {
 	return;
 }
 
-$periods = $subscription->get_payments_by_period();
+$payments = $subscription->get_payments();
 
-?>
+$data = [];
 
-<?php if ( empty( $periods ) ) : ?>
+foreach ( $payments as $payment ) {
+	$periods = (array) $payment->get_periods();
+
+	/**
+	 * A payment can be for multiple and different subscription periods.
+	 * Here we only want to show the periods of this subscription and
+	 * therefore we filter out other periods.
+	 */
+	$periods = \array_filter(
+		$periods,
+		function( $period ) use ( $subscription ) {
+			return ( $subscription->get_id() === $period->get_phase()->get_subscription()->get_id() );
+		}
+	);
+
+	if ( 0 === count( $periods ) ) {
+		$key = 'payment-' . $payment->get_id();
+
+		$data[ $key ] = (object) [
+			'date'     => $payment->get_date(),
+			'payments' => [ $payment ],
+			'period'   => null,
+		];
+	}
+
+	foreach ( $periods as $period ) {
+		$key = 'period-' . $period->get_start_date()->getTimestamp();
+
+		if ( ! array_key_exists( $key, $data ) ) {
+			$data[ $key ] = (object) [
+				'date'     => $payment->get_date(),
+				'payments' => [],
+				'period'   => $period,
+			];
+		}
+
+		$data[ $key ]->payments[] = $payment;
+	}
+}
+
+foreach ( $data as $item ) {
+	usort(
+		$item->payments,
+		function( $a, $b ) {
+			return $a->get_date() <=> $b->get_date();
+		}
+	);
+
+	$item->first = reset( $item->payments );
+
+	if ( false !== $item->first ) {
+		$item->date = $item->first->get_date();
+	}
+
+	$statuses = array_map(
+		function( $payment ) {
+			return $payment->get_status();
+		},
+		$item->payments
+	);
+
+	$item->can_retry = ! ( in_array( PaymentStatus::OPEN, $statuses, true ) || in_array( PaymentStatus::SUCCESS, $statuses, true ) );
+}
+
+usort(
+	$data,
+	function( $a, $b ) {
+		return $b->date <=> $a->date;
+	}
+);
+
+if ( 0 === count( $payments ) ) : ?>
 
 	<?php esc_html_e( 'No payments found.', 'pronamic_ideal' ); ?>
 
@@ -120,22 +192,8 @@ $periods = $subscription->get_payments_by_period();
 
 			endif;
 
-			foreach ( $periods as $period ) :
-
-				$is_first = true;
-
-				$can_retry = $period['can_retry'];
-
-				$payments = $period['payments'];
-
-				$period = $period['period'];
-
-				?>
-
-				<?php foreach ( $payments as $payment ) : ?>
-
-					<?php
-
+			foreach ( $data as $item ) :
+				foreach ( $item->payments as $payment ) :
 					$payment_id         = $payment->get_id();
 					$payments_post_type = get_post_type( $payment_id );
 
@@ -148,15 +206,14 @@ $periods = $subscription->get_payments_by_period();
 						<td>
 							<?php
 
-							if ( ! $is_first ) :
+							if ( null !== $item->period ) :
+								$prefix = ( $payment === $item->first ? '' : '⌙ ' );
 
-								echo esc_html( '⌙ ' );
+								echo esc_html( $prefix . $item->period->human_readable_range() );
 
 							endif;
 
 							?>
-
-							<?php echo esc_html( $period->human_readable_range() ); ?>
 						</td>
 						<td>
 							<?php do_action( 'manage_' . $payments_post_type . '_posts_custom_column', 'pronamic_payment_title', $payment_id ); ?>
@@ -172,7 +229,7 @@ $periods = $subscription->get_payments_by_period();
 						</td>
 					</tr>
 
-					<?php if ( $is_first && $can_retry && $plugin->subscriptions_module->can_retry_payment( $payment ) ) : ?>
+					<?php if ( null !== $item->period && $payment === $item->first && $item->can_retry && $plugin->subscriptions_module->can_retry_payment( $payment ) ) : ?>
 
 						<tr>
 							<td>&nbsp;</td>
@@ -185,9 +242,9 @@ $periods = $subscription->get_payments_by_period();
 											[
 												'period_payment' => true,
 												'subscription_id' => $subscription->get_id(),
-												'sequence_number' => $period->get_phase()->get_sequence_number(),
-												'start_date' => $period->get_start_date()->format( DATE_ATOM ),
-												'end_date' => $period->get_end_date()->format( DATE_ATOM ),
+												'sequence_number' => $item->period->get_phase()->get_sequence_number(),
+												'start_date' => $item->period->get_start_date()->format( DATE_ATOM ),
+												'end_date' => $item->period->get_end_date()->format( DATE_ATOM ),
 											]
 										),
 										\get_edit_post_link( $subscription_id )
@@ -213,13 +270,7 @@ $periods = $subscription->get_payments_by_period();
 
 					<?php endif; ?>
 
-					<?php
-
-					$is_first = false;
-
-				endforeach;
-
-				?>
+				<?php endforeach; ?>
 
 			<?php endforeach; ?>
 
