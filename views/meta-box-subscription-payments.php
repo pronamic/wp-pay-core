@@ -54,7 +54,7 @@ foreach ( $payments as $payment ) {
 
 		if ( ! array_key_exists( $key, $data ) ) {
 			$data[ $key ] = (object) [
-				'date'     => $period->get_start_date(),
+				'date'     => $payment->get_date(),
 				'payments' => [],
 				'period'   => $period,
 			];
@@ -73,6 +73,10 @@ foreach ( $data as $item ) {
 	);
 
 	$item->first = reset( $item->payments );
+
+	if ( false !== $item->first ) {
+		$item->date = $item->first->get_date();
+	}
 
 	$statuses = array_map(
 		function( $payment ) {
