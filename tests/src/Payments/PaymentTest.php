@@ -173,7 +173,6 @@ class PaymentTest extends TestCase {
 		$payment->set_id( 1 );
 		$payment->set_mode( Gateway::MODE_LIVE );
 		$payment->set_total_amount( new TaxedMoney( 242, 'EUR', 42, 21 ) );
-		$payment->set_meta( 'google_analytics_tracked', true );
 
 		// Name.
 		$name = new ContactName();

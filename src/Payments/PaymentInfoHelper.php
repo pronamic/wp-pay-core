@@ -263,15 +263,6 @@ class PaymentInfoHelper {
 			$payment_info->key = $json->key;
 		}
 
-		/*
-		 * Legacy.
-		 */
-
-		// Google Analytics tracked.
-		if ( isset( $json->ga_tracked ) ) {
-			$payment_info->set_meta( 'google_analytics_tracked', $json->ga_tracked );
-		}
-
 		return $payment_info;
 	}
 }

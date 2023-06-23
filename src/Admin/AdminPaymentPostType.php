@@ -155,34 +155,6 @@ class AdminPaymentPostType {
 				'message' => __( 'Payment status updated.', 'pronamic_ideal' ),
 			];
 		}
-
-		// Send to Google Analytics action.
-		if ( filter_has_var( INPUT_GET, 'pronamic_pay_ga_track' ) && check_admin_referer( 'pronamic_payment_ga_track_' . $post_id ) ) {
-			$ga_ecommerce = pronamic_pay_plugin()->google_analytics_ecommerce;
-
-			if ( ! $ga_ecommerce->valid_payment( $payment ) ) {
-				$notice = [
-					'type'    => 'error',
-					'message' => __( 'Payment details or an invalid tracking ID prevent payment from being tracked by Google Analytics.', 'pronamic_ideal' ),
-				];
-			} else {
-				pronamic_pay_plugin()->google_analytics_ecommerce->send_transaction( $payment );
-
-				if ( true === $payment->get_meta( 'google_analytics_tracked' ) ) {
-					$notice = [
-						'type'    => 'info',
-						'message' => __( 'Payment sent to Google Analytics.', 'pronamic_ideal' ),
-					];
-				} else {
-					$notice = [
-						'type'    => 'error',
-						'message' => __( 'Payment could not be sent to Google Analytics.', 'pronamic_ideal' ),
-					];
-				}
-			}
-
-			$this->admin_notices[] = $notice;
-		}
 	}
 
 	/**

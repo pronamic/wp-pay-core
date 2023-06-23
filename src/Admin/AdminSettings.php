@@ -70,20 +70,6 @@ class AdminSettings {
 			]
 		);
 
-		// Google Analytics property UA code.
-		add_settings_field(
-			'pronamic_pay_google_analytics_property',
-			__( 'Google Analytics tracking ID', 'pronamic_ideal' ),
-			[ $this, 'input_element' ],
-			'pronamic_pay',
-			'pronamic_pay_general',
-			[
-				'description' => __( 'Set a Google Analytics tracking UA code to track ecommerce revenue.', 'pronamic_ideal' ),
-				'label_for'   => 'pronamic_pay_google_analytics_property',
-				'classes'     => 'regular-text code',
-			]
-		);
-
 		// Remove data on uninstall.
 		add_settings_field(
 			'pronamic_pay_uninstall_clear_data',

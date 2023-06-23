@@ -671,14 +671,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		);
 
 		$this->register_meta_key(
-			'analytics_client_id',
-			[
-				'label'           => __( 'Analytics Client ID', 'pronamic_ideal' ),
-				'privacy_erasure' => 'erase',
-			]
-		);
-
-		$this->register_meta_key(
 			'subscription_id',
 			[
 				'label'          => __( 'Subscription ID', 'pronamic_ideal' ),
@@ -796,8 +788,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		// Meta.
 		$keys = [
-			'_pronamic_payment_issuer'              => 'issuer',
-			'_pronamic_payment_analytics_client_id' => 'google_analytics_client_id',
+			'_pronamic_payment_issuer' => 'issuer',
 		];
 
 		foreach ( $keys as $post_meta_key => $payment_meta_key ) {

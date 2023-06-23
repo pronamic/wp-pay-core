@@ -203,13 +203,6 @@ class Plugin {
 	public $subscriptions_module;
 
 	/**
-	 * Google analytics ecommerce.
-	 *
-	 * @var GoogleAnalyticsEcommerce
-	 */
-	public $google_analytics_ecommerce;
-
-	/**
 	 * Gateway integrations.
 	 *
 	 * @var GatewayIntegrations
@@ -689,9 +682,6 @@ class Plugin {
 			$this->blocks_module->setup();
 		}
 
-		// Google Analytics Ecommerce.
-		$this->google_analytics_ecommerce = new GoogleAnalyticsEcommerce();
-
 		// Admin.
 		if ( is_admin() ) {
 			$this->admin = new Admin\AdminModule( $this );
@@ -926,17 +916,6 @@ class Plugin {
 
 			// Set origin ID.
 			$payment->set_origin_id( $origin_id );
-		}
-
-		// Google Analytics client ID.
-		$google_analytics_client_id = $payment->get_meta( 'google_analytics_client_id' );
-
-		if ( null === $google_analytics_client_id ) {
-			$google_analytics_client_id = GoogleAnalyticsEcommerce::get_cookie_client_id();
-
-			if ( null !== $google_analytics_client_id ) {
-				$payment->set_meta( 'google_analytics_client_id', $google_analytics_client_id );
-			}
 		}
 
 		// Customer.

@@ -100,9 +100,7 @@
     "reference": "ABCD-1234-EFGH-5678"
   },
   "mode":"live",
-  "meta": {
-    "google_analytics_tracked": true
-  },
+  "meta": {},
   "expiry_date": "2005-05-05T00:30:00+00:00",
   "total_amount": {
     "value": "242",

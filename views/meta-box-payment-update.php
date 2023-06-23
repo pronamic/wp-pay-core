@@ -108,32 +108,6 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 			);
 		}
 
-		/**
-		 * Send to Google Analytics button.
-		 */
-		$can_track = pronamic_pay_plugin()->google_analytics_ecommerce->valid_payment( $payment );
-
-		if ( $can_track ) {
-			// Only show button for payments that can be tracked.
-			$action_url = wp_nonce_url(
-				add_query_arg(
-					[
-						'post'                  => $post->ID,
-						'action'                => 'edit',
-						'pronamic_pay_ga_track' => true,
-					],
-					admin_url( 'post.php' )
-				),
-				'pronamic_payment_ga_track_' . $post->ID
-			);
-
-			printf(
-				'<div class="misc-pub-section"><a class="button" href="%s">%s</a></div>',
-				esc_url( $action_url ),
-				esc_html__( 'Send to Google Analytics', 'pronamic_ideal' )
-			);
-		}
-
 		?>
 	</div>
 </div>

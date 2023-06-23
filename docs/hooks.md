@@ -58,7 +58,7 @@ Argument | Type | Description
 `$previous_status` | `null\|string` | Previous [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
 `$updated_status` | `null\|string` | Updated [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
 
-Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 919](../src/Payments/PaymentsDataStoreCPT.php#L919-L931)
+Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 910](../src/Payments/PaymentsDataStoreCPT.php#L910-L922)
 
 ### `pronamic_payment_status_update_{$source}`
 
@@ -75,7 +75,7 @@ Argument | Type | Description
 `$previous_status` | `null\|string` | Previous [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
 `$updated_status` | `null\|string` | Updated [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status)).
 
-Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 933](../src/Payments/PaymentsDataStoreCPT.php#L933-L943)
+Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 924](../src/Payments/PaymentsDataStoreCPT.php#L924-L934)
 
 ### `pronamic_payment_status_update`
 
@@ -90,7 +90,7 @@ Argument | Type | Description
 `$previous_status` | `null\|string` | Previous [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
 `$updated_status` | `null\|string` | Updated [payment status](https://github.com/pronamic/wp-pronamic-pay/wiki#payment-status).
 
-Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 945](../src/Payments/PaymentsDataStoreCPT.php#L945-L953)
+Source: [src/Payments/PaymentsDataStoreCPT.php](../src/Payments/PaymentsDataStoreCPT.php), [line 936](../src/Payments/PaymentsDataStoreCPT.php#L936-L944)
 
 ### `pronamic_pay_privacy_register_exporters`
 
@@ -225,7 +225,7 @@ Argument | Type | Description
 `$url` |  | 
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 427](../src/Payments/Payment.php#L427-L433)
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 437](../src/Payments/Payment.php#L437-L443)
 
 ### `pronamic_payment_source_text_{$source}`
 
@@ -238,7 +238,7 @@ Argument | Type | Description
 `$text` | `string` | Source text.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 477](../src/Payments/Payment.php#L477-L483)
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 487](../src/Payments/Payment.php#L487-L493)
 
 ### `pronamic_payment_source_text`
 
@@ -251,7 +251,7 @@ Argument | Type | Description
 `$text` | `string` | Source text.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 486](../src/Payments/Payment.php#L486-L492)
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 496](../src/Payments/Payment.php#L496-L502)
 
 ### `pronamic_payment_source_description`
 
@@ -264,7 +264,7 @@ Argument | Type | Description
 `$description` | `string` | Source description.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 509](../src/Payments/Payment.php#L509-L515)
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 519](../src/Payments/Payment.php#L519-L525)
 
 ### `pronamic_payment_source_description_{$source}`
 
@@ -277,7 +277,7 @@ Argument | Type | Description
 `$description` | `string` | Source description.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 518](../src/Payments/Payment.php#L518-L524)
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 528](../src/Payments/Payment.php#L528-L534)
 
 ### `pronamic_payment_source_url`
 
@@ -290,7 +290,7 @@ Argument | Type | Description
 `$url` | `null\|string` | Source URL.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 542](../src/Payments/Payment.php#L542-L548)
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 552](../src/Payments/Payment.php#L552-L558)
 
 ### `pronamic_payment_source_url_{$source}`
 
@@ -303,7 +303,7 @@ Argument | Type | Description
 `$url` | `null\|string` | Source URL.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 551](../src/Payments/Payment.php#L551-L557)
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 561](../src/Payments/Payment.php#L561-L567)
 
 ### `pronamic_payment_provider_url`
 
@@ -316,7 +316,7 @@ Argument | Type | Description
 `$url` | `null\|string` | Provider URL.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 573](../src/Payments/Payment.php#L573-L579)
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 583](../src/Payments/Payment.php#L583-L589)
 
 ### `pronamic_payment_provider_url_{$gateway_id}`
 
@@ -329,33 +329,7 @@ Argument | Type | Description
 `$url` | `null\|string` | Provider URL.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 594](../src/Payments/Payment.php#L594-L600)
-
-### `pronamic_pay_google_analytics_ecommerce_item_name`
-
-*Filters the item name for Google Analytics e-commerce tracking.*
-
-**Arguments**
-
-Argument | Type | Description
--------- | ---- | -----------
-`$name` | `string` | Item name.
-`$line` | `\Pronamic\WordPress\Pay\Payments\PaymentLine` | Payment line.
-
-Source: [src/GoogleAnalyticsEcommerce.php](../src/GoogleAnalyticsEcommerce.php), [line 215](../src/GoogleAnalyticsEcommerce.php#L215-L222)
-
-### `pronamic_pay_google_analytics_ecommerce_item_product_category`
-
-*Filters the product category for Google Analytics e-commerce tracking.*
-
-**Arguments**
-
-Argument | Type | Description
--------- | ---- | -----------
-`$product_category` | `string\|null` | Product category.
-`$line` | `\Pronamic\WordPress\Pay\Payments\PaymentLine` | Payment line.
-
-Source: [src/GoogleAnalyticsEcommerce.php](../src/GoogleAnalyticsEcommerce.php), [line 262](../src/GoogleAnalyticsEcommerce.php#L262-L269)
+Source: [src/Payments/Payment.php](../src/Payments/Payment.php), [line 604](../src/Payments/Payment.php#L604-L610)
 
 ### `pronamic_pay_return_should_redirect`
 
@@ -368,7 +342,7 @@ Argument | Type | Description
 `$should_redirect` | `bool` | Flag to indicate if redirect is allowed on handling payment return.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 552](../src/Plugin.php#L552-L558)
+Source: [src/Plugin.php](../src/Plugin.php), [line 544](../src/Plugin.php#L544-L550)
 
 ### `pronamic_pay_gateways`
 
@@ -380,7 +354,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$gateways` | `\Pronamic\WordPress\Pay\AbstractGatewayIntegration[]` | Gateway integrations.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 716](../src/Plugin.php#L716-L721)
+Source: [src/Plugin.php](../src/Plugin.php), [line 698](../src/Plugin.php#L698-L703)
 
 ### `pronamic_pay_plugin_integrations`
 
@@ -392,7 +366,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$plugin_integrations` | `\Pronamic\WordPress\Pay\AbstractPluginIntegration[]` | Plugin integrations.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 731](../src/Plugin.php#L731-L736)
+Source: [src/Plugin.php](../src/Plugin.php), [line 713](../src/Plugin.php#L713-L718)
 
 ### `pronamic_payment_gateway_configuration_id`
 
@@ -405,7 +379,7 @@ Argument | Type | Description
 `$config_id` | `null\|int` | Gateway configuration ID.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 1152](../src/Plugin.php#L1152-L1158)
+Source: [src/Plugin.php](../src/Plugin.php), [line 1092](../src/Plugin.php#L1092-L1098)
 
 ### `pronamic_payment_redirect_url_{$source}`
 
@@ -418,7 +392,7 @@ Argument | Type | Description
 `$url` | `string` | Redirect URL.
 `$payment` | `\Pronamic\WordPress\Pay\Payments\Payment` | Payment.
 
-Source: [src/Plugin.php](../src/Plugin.php), [line 1373](../src/Plugin.php#L1373-L1379)
+Source: [src/Plugin.php](../src/Plugin.php), [line 1283](../src/Plugin.php#L1283-L1289)
 
 ### `pronamic_pay_modules`
 
@@ -428,7 +402,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `[]` |  | 
 
-Source: [src/Admin/AdminPaymentPostType.php](../src/Admin/AdminPaymentPostType.php), [line 590](../src/Admin/AdminPaymentPostType.php#L590-L590)
+Source: [src/Admin/AdminPaymentPostType.php](../src/Admin/AdminPaymentPostType.php), [line 562](../src/Admin/AdminPaymentPostType.php#L562-L562)
 
 ### `pronamic_gateway_configuration_display_value`
 
@@ -469,19 +443,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `[]` |  | 
 
-Source: [src/Admin/AdminModule.php](../src/Admin/AdminModule.php), [line 814](../src/Admin/AdminModule.php#L814-L814)
-
-### `pronamic_pay_removed_extension_notifications`
-
-*Filters the removed extensions notifications.*
-
-**Arguments**
-
-Argument | Type | Description
--------- | ---- | -----------
-`$notifications` | `\Pronamic\WordPress\Pay\Admin\AdminNotification[]` | Notifications for removed extensions.
-
-Source: [src/Admin/AdminNotices.php](../src/Admin/AdminNotices.php), [line 65](../src/Admin/AdminNotices.php#L65-L70)
+Source: [src/Admin/AdminModule.php](../src/Admin/AdminModule.php), [line 806](../src/Admin/AdminModule.php#L806-L806)
 
 ### `pronamic_pay_modules`
 
@@ -592,7 +554,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `[]` |  | 
 
-Source: [src/HomeUrlController.php](../src/HomeUrlController.php), [line 85](../src/HomeUrlController.php#L85-L85)
+Source: [src/HomeUrlController.php](../src/HomeUrlController.php), [line 104](../src/HomeUrlController.php#L104-L104)
 
 
 <p align="center"><a href="https://github.com/pronamic/wp-documentor"><img src="https://cdn.jsdelivr.net/gh/pronamic/wp-documentor@main/logos/pronamic-wp-documentor.svgo-min.svg" alt="Pronamic WordPress Documentor" width="32" height="32"></a><br><em>Generated by <a href="https://github.com/pronamic/wp-documentor">Pronamic WordPress Documentor</a> <code>1.2.0</code></em><p>

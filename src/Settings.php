@@ -74,15 +74,6 @@ class Settings {
 			]
 		);
 
-		register_setting(
-			'pronamic_pay',
-			'pronamic_pay_google_analytics_property',
-			[
-				'type'              => 'string',
-				'sanitize_callback' => 'sanitize_text_field',
-			]
-		);
-
 		\register_setting(
 			'pronamic_pay',
 			'pronamic_pay_debug_mode',
