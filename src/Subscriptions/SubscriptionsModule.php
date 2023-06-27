@@ -185,10 +185,12 @@ class SubscriptionsModule {
 
 			if ( $is_renewal || ! in_array( $status_before, [ SubscriptionStatus::CANCELLED, SubscriptionStatus::COMPLETED, SubscriptionStatus::ON_HOLD ], true ) ) {
 				$subscription->set_status( $status_update );
-			}
 
-			// Update.
-			$subscription->save();
+				// Update.
+				if ( $status_before !== $status_update ) {
+					$subscription->save();
+				}
+			}
 		}
 	}
 
@@ -356,9 +358,9 @@ class SubscriptionsModule {
 				$payment->order_id = $subscription->get_order_id();
 
 				/**
-				 * We set the payment method to `null` so that users get the 
+				 * We set the payment method to `null` so that users get the
 				 * chance to choose a payment method themselves if possible.
-				 * 
+				 *
 				 * @link https://github.com/pronamic/wp-pronamic-pay-mollie/issues/23
 				 * @link https://github.com/pronamic/wp-pay-core/pull/99
 				 */
