@@ -661,29 +661,20 @@ class Payment extends PaymentInfo {
 	 * @return string
 	 */
 	public function format_string( $string ) {
-		$id = $this->get_id();
-
 		// Replacements definition.
 		$replacements = [
 			'{order_id}'   => $this->get_order_id(),
-			'{payment_id}' => $id,
+			'{payment_id}' => $this->get_id(),
 		];
 
 		// Find and replace.
-		$count = 0;
-
 		$string = str_replace(
 			array_keys( $replacements ),
 			array_values( $replacements ),
-			$string,
-			$count
+			$string
 		);
 
-		// Make sure there is an dynamic part in the order ID.
-		// @link https://secure.ogone.com/ncol/param_cookbook.asp.
-		if ( 0 === $count && null !== $id ) {
-			$string .= $id;
-		}
+		$string = trim( $string );
 
 		return $string;
 	}
