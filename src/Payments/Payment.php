@@ -674,8 +674,6 @@ class Payment extends PaymentInfo {
 			$string
 		);
 
-		$string = trim( $string );
-
 		return $string;
 	}
 
