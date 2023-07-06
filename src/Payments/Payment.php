@@ -661,18 +661,12 @@ class Payment extends PaymentInfo {
 	 * @return string
 	 */
 	public function format_string( $string ) {
-		// Replacements definition.
-		$replacements = [
+		$replace_pairs = [
 			'{order_id}'   => $this->get_order_id(),
 			'{payment_id}' => $this->get_id(),
 		];
 
-		// Find and replace.
-		$string = str_replace(
-			array_keys( $replacements ),
-			array_values( $replacements ),
-			$string
-		);
+		$string = \strtr( $string, $replace_pairs );
 
 		return $string;
 	}
