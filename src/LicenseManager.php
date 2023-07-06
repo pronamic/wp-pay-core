@@ -59,6 +59,16 @@ class LicenseManager {
 	}
 
 	/**
+	 * Get home URL.
+	 * 
+	 * @link https://github.com/pronamic/wp-pay-core/issues/136
+	 * @return string
+	 */
+	private function get_home_url() {
+		return \home_url();
+	}
+
+	/**
 	 * Admin initialize.
 	 *
 	 * @return void
@@ -255,7 +265,7 @@ class LicenseManager {
 		$args = [
 			'license' => $license,
 			'name'    => 'Pronamic Pay',
-			'url'     => home_url(),
+			'url'     => $this->get_home_url(),
 		];
 
 		$args = urlencode_deep( $args );
@@ -303,7 +313,7 @@ class LicenseManager {
 		$args = [
 			'license' => $license,
 			'name'    => 'Pronamic Pay',
-			'url'     => home_url(),
+			'url'     => $this->get_home_url(),
 		];
 
 		$args = urlencode_deep( $args );
@@ -327,7 +337,7 @@ class LicenseManager {
 		$args = [
 			'license' => $license,
 			'name'    => 'Pronamic Pay',
-			'url'     => home_url(),
+			'url'     => $this->get_home_url(),
 		];
 
 		$args = urlencode_deep( $args );
