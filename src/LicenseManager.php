@@ -59,6 +59,24 @@ class LicenseManager {
 	}
 
 	/**
+	 * Get home URL.
+	 * 
+	 * @return string
+	 */
+	private function get_home_url() {
+		/**
+		 * We use the `get_option( 'home' )` here and not `home_url()` to
+		 * bypass the `home_url` filter. The WPML plugin hooks into the 
+		 * `home_url` filter and this causes the notice to be displayed
+		 * unnecessarily. That's why we decided to compare on the
+		 * unfiltered home URL directly from the options.
+		 * 
+	 	 * @link https://github.com/pronamic/wp-pay-core/issues/136
+		 */
+		return \get_option( 'home' );
+	}
+
+	/**
 	 * Admin initialize.
 	 *
 	 * @return void
@@ -255,7 +273,7 @@ class LicenseManager {
 		$args = [
 			'license' => $license,
 			'name'    => 'Pronamic Pay',
-			'url'     => home_url(),
+			'url'     => $this->get_home_url(),
 		];
 
 		$args = urlencode_deep( $args );
@@ -303,7 +321,7 @@ class LicenseManager {
 		$args = [
 			'license' => $license,
 			'name'    => 'Pronamic Pay',
-			'url'     => home_url(),
+			'url'     => $this->get_home_url(),
 		];
 
 		$args = urlencode_deep( $args );
@@ -327,7 +345,7 @@ class LicenseManager {
 		$args = [
 			'license' => $license,
 			'name'    => 'Pronamic Pay',
-			'url'     => home_url(),
+			'url'     => $this->get_home_url(),
 		];
 
 		$args = urlencode_deep( $args );
