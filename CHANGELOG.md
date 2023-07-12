@@ -6,6 +6,39 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.9.4] - 2023-07-12
+
+### Added
+
+- Register Billie payment method. ([6308ab6](https://github.com/pronamic/wp-pay-core/commit/6308ab6efc6af243fe882a07e5cf4193249984f9))
+
+### Changed
+
+- Use unfiltered home URL in license manager.
+- Updated logos library to version 1.16.0. ([feacc4b](https://github.com/pronamic/wp-pay-core/commit/feacc4b6092c42b70fde7a3c8508f60b74b31e1a))
+- Changes links in license notice. ([19088b1](https://github.com/pronamic/wp-pay-core/commit/19088b1746901c973627bfbc1a081b961d8d6b8c))
+
+### Fixed
+
+- Fixed duplicate `_pronamic_payment_subscription_id` meta due to unprefixed meta key. ([8da8177](https://github.com/pronamic/wp-pay-core/commit/8da8177599fee97fe26061210fa84c7d67da624a))
+- Prevent duplicate subscription status update. ([6368536](https://github.com/pronamic/wp-pay-core/commit/63685363ab043a0d759495b8c4c6ba84d066296d))
+- Show payments without periods in subscription payments meta box. ([872eab3](https://github.com/pronamic/wp-pay-core/commit/872eab3bb4bc69cd1e42000451a31e5e3fc588ff))
+- Reflect home URL change from bdc3e6c6 in admin notice. ([30a59e9](https://github.com/pronamic/wp-pay-core/commit/30a59e9c1d5f7dc39ca0fd6a235076ffa5c96f15))
+- Fixed payment lines not displayed in meta box for subscriptions. ([be14ef9](https://github.com/pronamic/wp-pay-core/commit/be14ef946d39ab956ce34a758f00c87b7402e752))
+
+### Removed
+
+- Removed payment ID fallback from formatted payment string (pronamic/wp-pronamic-pay-adyen#23). ([2e0c0a6](https://github.com/pronamic/wp-pay-core/commit/2e0c0a6015b39ad628659a11801f3403bb05c6c2))
+- Removed Google Analytics integration, closes #127. ([7199613](https://github.com/pronamic/wp-pay-core/commit/71996137587ffbd4b5110dbf3a67cb5bff478d75))
+- Removed admin notices feature for removed extensions, no longer used. ([76cdf8a](https://github.com/pronamic/wp-pay-core/commit/76cdf8aa10c9b16b20755da41e070abc4a4c6b5f))
+- Removed `switch_to_user_locale`. ([b9c0cb1](https://github.com/pronamic/wp-pay-core/commit/b9c0cb17feb9f7a6737d04fcc891f6d97ccff384))
+- Removed `load_plugin_textdomain` functions. ([966f230](https://github.com/pronamic/wp-pay-core/commit/966f2304068c51468fd3d843ac326a5d29d4a46f))
+- Removed `plugin_locale` filter for `nl_NL_formal` and `nl_BE`. ([5a0064d](https://github.com/pronamic/wp-pay-core/commit/5a0064d60669e8b302f1fb4326095a669a57d6d7))
+
+Full set of changes: [`4.9.3...4.9.4`][4.9.4]
+
+[4.9.4]: https://github.com/pronamic/wp-pay-core/compare/v4.9.3...v4.9.4
+
 ## [4.9.3] - 2023-06-01
 
 ### Commits
