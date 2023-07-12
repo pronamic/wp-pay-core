@@ -71,7 +71,7 @@ class LicenseManager {
 		 * unnecessarily. That's why we decided to compare on the
 		 * unfiltered home URL directly from the options.
 		 * 
-	 	 * @link https://github.com/pronamic/wp-pay-core/issues/136
+		 * @link https://github.com/pronamic/wp-pay-core/issues/136
 		 */
 		return \get_option( 'home' );
 	}
