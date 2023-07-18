@@ -6,6 +6,16 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.10.0] - 2023-07-18
+
+### Removed
+
+- Removed forms module, moved to https://github.com/pronamic/wp-pronamic-pay-forms.
+
+Full set of changes: [`4.9.4...4.10.0`][4.10.0]
+
+[4.10.0]: https://github.com/pronamic/wp-pay-core/compare/v4.9.4...v4.10.0
+
 ## [4.9.4] - 2023-07-12
 
 ### Added
