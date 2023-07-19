@@ -6,6 +6,16 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.10.1] - 2023-07-19
+
+### Commits
+
+- Moved references of forms to pronamic/wp-pronamic-pay-forms library. ([a466897](https://github.com/pronamic/wp-pay-core/commit/a466897162b141d7e27e4fd59178a07300887f22))
+
+Full set of changes: [`4.10.0...4.10.1`][4.10.1]
+
+[4.10.1]: https://github.com/pronamic/wp-pay-core/compare/v4.10.0...v4.10.1
+
 ## [4.10.0] - 2023-07-18
 
 ### Removed
