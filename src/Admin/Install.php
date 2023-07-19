@@ -11,7 +11,6 @@
 namespace Pronamic\WordPress\Pay\Admin;
 
 use Pronamic\WordPress\Pay\AbstractIntegration;
-use Pronamic\WordPress\Pay\Forms\FormPostType;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Upgrades\Upgrade620;
@@ -176,13 +175,6 @@ class Install {
 		unset( $payment_capabilities['create_posts'] );
 
 		foreach ( $payment_capabilities as $capability ) {
-			$roles->add_cap( 'administrator', $capability );
-		}
-
-		// Forms.
-		$form_capabilities = FormPostType::get_capabilities();
-
-		foreach ( $form_capabilities as $capability ) {
 			$roles->add_cap( 'administrator', $capability );
 		}
 	}

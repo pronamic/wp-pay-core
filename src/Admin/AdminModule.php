@@ -23,7 +23,6 @@ use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\CreditCard;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\CustomerHelper;
-use Pronamic\WordPress\Pay\Forms\FormPostType;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentLines;
 use Pronamic\WordPress\Pay\Plugin;
@@ -672,7 +671,6 @@ class AdminModule {
 		}
 
 		switch ( $screen->id ) {
-			case FormPostType::POST_TYPE:
 			case AdminGatewayPostType::POST_TYPE:
 			case AdminPaymentPostType::POST_TYPE:
 			case AdminSubscriptionPostType::POST_TYPE:
@@ -835,15 +833,6 @@ class AdminModule {
 				'function'   => function () {
 					$this->reports->page_reports();
 				},
-			];
-		}
-
-		if ( \in_array( 'forms', $modules, true ) ) {
-			$submenu_pages[] = [
-				'page_title' => __( 'Payment Forms', 'pronamic_ideal' ),
-				'menu_title' => __( 'Forms', 'pronamic_ideal' ),
-				'capability' => 'edit_forms',
-				'menu_slug'  => 'edit.php?post_type=pronamic_pay_form',
 			];
 		}
 
