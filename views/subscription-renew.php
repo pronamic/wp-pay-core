@@ -8,13 +8,13 @@
  * @package   Pronamic\WordPress\Pay
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 use Pronamic\WordPress\DateTime\DateTimeImmutable;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! isset( $subscription, $gateway ) ) {
 	return;

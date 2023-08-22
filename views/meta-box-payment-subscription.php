@@ -9,11 +9,11 @@
  * @var \Pronamic\WordPress\Pay\Payments\Payment $payment Payment.
  */
 
+use Pronamic\WordPress\Pay\Util;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
-use Pronamic\WordPress\Pay\Util;
 
 $subscriptions = $payment->get_subscriptions();
 

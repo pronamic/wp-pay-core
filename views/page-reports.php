@@ -9,12 +9,12 @@
  * @var \Pronamic\WordPress\Pay\Admin\AdminReports $admin_reports Admin reports.
  */
 
+use Pronamic\WordPress\Money\Money;
+use Pronamic\WordPress\Pay\Util;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
-use Pronamic\WordPress\Money\Money;
-use Pronamic\WordPress\Pay\Util;
 
 ?>
 <div class="wrap">

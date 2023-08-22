@@ -10,13 +10,13 @@
  * @var \Pronamic\WordPress\Pay\Subscriptions\Subscription $subscription Subscription.
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 $subscription_id = $subscription->get_id();
 

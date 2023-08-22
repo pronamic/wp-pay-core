@@ -10,15 +10,15 @@
  * @var \Pronamic\WordPress\Pay\Payments\Payment $payment Payment.
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Gender;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\VatNumbers\VatNumberValidationService;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 ?>
 <table class="form-table">

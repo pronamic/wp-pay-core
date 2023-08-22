@@ -11,12 +11,12 @@
  * @var \Pronamic\WordPress\Pay\Core\Gateway $gateway    Gateway.
  */
 
+use Pronamic\WordPress\Pay\Plugin;
+use Pronamic\WordPress\Pay\Webhooks\WebhookRequestInfo;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
-use Pronamic\WordPress\Pay\Plugin;
-use Pronamic\WordPress\Pay\Webhooks\WebhookRequestInfo;
 
 $integration = pronamic_pay_plugin()->gateway_integrations->get_integration( $gateway_id );
 

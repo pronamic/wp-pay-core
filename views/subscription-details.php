@@ -8,12 +8,12 @@
  * @package   Pronamic\WordPress\Pay
  */
 
+use Pronamic\WordPress\Pay\Core\PaymentMethods;
+use Pronamic\WordPress\Pay\Util;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
-use Pronamic\WordPress\Pay\Core\PaymentMethods;
-use Pronamic\WordPress\Pay\Util;
 
 if ( ! isset( $subscription ) ) {
 	return;

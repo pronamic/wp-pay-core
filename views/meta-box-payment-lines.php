@@ -8,16 +8,16 @@
  * @package   Pronamic\WordPress\Pay
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 namespace Pronamic\WordPress\Pay;
 
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Number\Number;
 use Pronamic\WordPress\Pay\Payments\PaymentLine;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( empty( $lines ) ) : ?>
 

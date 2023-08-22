@@ -10,11 +10,11 @@
  * @var \WP_Post                       $post   Post.
  */
 
+use Pronamic\WordPress\Pay\Util;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
-use Pronamic\WordPress\Pay\Util;
 
 $integrations = iterator_to_array( $plugin->gateway_integrations );
 

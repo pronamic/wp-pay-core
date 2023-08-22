@@ -8,14 +8,14 @@
  * @package   Pronamic\WordPress\Pay
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
 use Pronamic\WordPress\Pay\Util;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! isset( $post ) ) {
 	return;

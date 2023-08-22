@@ -8,14 +8,14 @@
  * @package   Pronamic\WordPress\Pay
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 namespace Pronamic\WordPress\Pay;
 
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! isset( $notes ) ) {
 	return;
