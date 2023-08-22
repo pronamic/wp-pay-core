@@ -553,6 +553,7 @@ class SubscriptionsModule {
 			'pronamic-pay-google-font-roboto-mono',
 			'https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap',
 			[],
+			// phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- No version for Google Fonts.
 			null
 		);
 
