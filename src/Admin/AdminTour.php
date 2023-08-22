@@ -49,19 +49,36 @@ class AdminTour {
 	 * @return void
 	 */
 	public function admin_init() {
-		if ( \array_key_exists( 'pronamic_pay_ignore_tour', $_GET ) && \array_key_exists( 'pronamic_pay_nonce', $_GET ) ) {
-			$nonce = \sanitize_text_field( \wp_unslash( $_GET['pronamic_pay_nonce'] ) );
-
-			if ( wp_verify_nonce( $nonce, 'pronamic_pay_ignore_tour' ) ) {
-				$ignore = filter_var( $_GET['pronamic_pay_ignore_tour'], FILTER_VALIDATE_BOOLEAN );
-
-				update_user_meta( get_current_user_id(), 'pronamic_pay_ignore_tour', $ignore );
-			}
-		}
+		$this->handle_ignore_tour_request();
 
 		if ( ! get_user_meta( get_current_user_id(), 'pronamic_pay_ignore_tour', true ) ) {
 			add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ] );
 		}
+	}
+
+	/**
+	 * Handle ignore tour request.
+	 *
+	 * @return void
+	 */
+	private function handle_ignore_tour_request() {
+		if ( ! \array_key_exists( 'pronamic_pay_ignore_tour', $_GET ) ) {
+			return;
+		}
+
+		if ( ! \array_key_exists( 'pronamic_pay_nonce', $_GET ) ) {
+			return;
+		}
+
+		$nonce = \sanitize_text_field( \wp_unslash( $_GET['pronamic_pay_nonce'] ) );
+
+		if ( ! \wp_verify_nonce( $nonce, 'pronamic_pay_ignore_tour' ) ) {
+			return;
+		}
+
+		$value = \sanitize_text_field( \wp_unslash( $_GET['pronamic_pay_ignore_tour'] ) );
+
+		\update_user_meta( \get_current_user_id(), 'pronamic_pay_ignore_tour', ( 'true' === $value ) );
 	}
 
 	/**
@@ -284,7 +301,7 @@ class AdminTour {
 		return wp_nonce_url(
 			add_query_arg(
 				[
-					'pronamic_pay_ignore_tour' => true,
+					'pronamic_pay_ignore_tour' => 'true',
 				]
 			),
 			'pronamic_pay_ignore_tour',
