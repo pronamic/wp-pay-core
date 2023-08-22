@@ -294,7 +294,7 @@ class AdminTour {
 
 	/**
 	 * Get pages.
-	 * 
+	 *
 	 * @return string[]
 	 */
 	private function get_pages() {
@@ -320,7 +320,7 @@ class AdminTour {
 
 	/**
 	 * Get navigation.
-	 * 
+	 *
 	 * @param string $current Current page.
 	 * @return string
 	 */
@@ -368,7 +368,7 @@ class AdminTour {
 		);
 
 		$content .= '</span>';
-	
+
 		$content .= '</div>';
 
 		return $content;
@@ -376,7 +376,7 @@ class AdminTour {
 
 	/**
 	 * Get next page URL.
-	 * 
+	 *
 	 * @param string $current Current page key.
 	 * @return string|false
 	 */
@@ -394,7 +394,7 @@ class AdminTour {
 
 	/**
 	 * Get previous page URL.
-	 * 
+	 *
 	 * @param string $current Current page key.
 	 * @return string|false
 	 */

@@ -239,7 +239,7 @@ abstract class Gateway {
 
 	/**
 	 * Create refund.
-	 * 
+	 *
 	 * @param Refund $refund Reund.
 	 * @return void
 	 * @throws \Exception Throws an exception if the refund could not be processed.

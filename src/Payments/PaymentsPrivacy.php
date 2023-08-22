@@ -242,5 +242,4 @@ class PaymentsPrivacy {
 			'done'           => true,
 		];
 	}
-
 }

@@ -51,7 +51,6 @@ class AdminSettings {
 			'pronamic_pay_general',
 			__( 'General', 'pronamic_ideal' ),
 			function() {
-
 			},
 			'pronamic_pay'
 		);
@@ -130,7 +129,6 @@ class AdminSettings {
 				'pronamic_pay_payment_methods',
 				\__( 'Payment Methods', 'pronamic_ideal' ),
 				function() {
-
 				},
 				'pronamic_pay'
 			);

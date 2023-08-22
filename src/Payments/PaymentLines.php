@@ -136,7 +136,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 
 	/**
 	 * Get first line with the specified ID.
-	 * 
+	 *
 	 * @param string $id ID.
 	 * @return null|PaymentLine
 	 */
