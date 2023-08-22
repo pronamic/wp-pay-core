@@ -349,7 +349,7 @@ $container_index = 1;
 											add_query_arg(
 												[
 													'page' => 'pronamic_ideal',
-													'pronamic_pay_ignore_tour' => '0',
+													'pronamic_pay_ignore_tour' => 'false',
 												]
 											),
 											'pronamic_pay_ignore_tour',
