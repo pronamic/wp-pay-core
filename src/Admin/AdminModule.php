@@ -708,7 +708,7 @@ class AdminModule {
 			throw new \Exception(
 				\sprintf(
 					'Could not read WordPress admin menu icon from file: %s.',
-					$file
+					\esc_html( $file )
 				)
 			);
 		}
@@ -719,7 +719,7 @@ class AdminModule {
 			throw new \Exception(
 				\sprintf(
 					'Could not read WordPress admin menu icon from file: %s.',
-					$file
+					\esc_html( $file )
 				)
 			);
 		}

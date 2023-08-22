@@ -125,7 +125,7 @@ class AdminAboutPage {
 			throw new \Exception(
 				\sprintf(
 					'Could not open file to get version: %s.',
-					$file
+					\esc_html( $file )
 				)
 			);
 		}
@@ -138,7 +138,7 @@ class AdminAboutPage {
 			throw new \Exception(
 				\sprintf(
 					'Could not read file to get version: %s.',
-					$file
+					\esc_html( $file )
 				)
 			);
 		}

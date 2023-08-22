@@ -55,9 +55,9 @@ class Country {
 	public function set_code( $code ) {
 		if ( null !== $code && 2 !== strlen( $code ) ) {
 			throw new InvalidArgumentException(
-				sprintf(
+				\sprintf(
 					'Given country code `%s` not ISO 3166-1 alpha-2 value.',
-					$code
+					\esc_html( $code )
 				)
 			);
 		}
