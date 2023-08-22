@@ -864,7 +864,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		foreach ( $payment->get_subscriptions() as $subscription ) {
 			$subscription_id = $subscription->get_id();
 
-			if ( ! in_array( $subscription_id, $subscriptions_ids ) ) {
+			if ( ! in_array( $subscription_id, $subscriptions_ids, true ) ) {
 				\add_post_meta( $id, $meta_key, $subscription_id, false );
 			}
 		}
