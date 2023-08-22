@@ -150,7 +150,7 @@ class WebhookRequestInfo implements JsonSerializable {
 				sprintf(
 					'JSON value must be an object (%s).',
 					// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export
-					var_export( $json, true )
+					\esc_html( \var_export( $json, true ) )
 				)
 			);
 		}
@@ -160,7 +160,7 @@ class WebhookRequestInfo implements JsonSerializable {
 				sprintf(
 					'JSON must contain `post_data` property (%s).',
 					// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export
-					var_export( $json, true )
+					\esc_html( \var_export( $json, true ) )
 				)
 			);
 		}
@@ -170,7 +170,7 @@ class WebhookRequestInfo implements JsonSerializable {
 				sprintf(
 					'JSON must contain `request_date` property (%s).',
 					// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export
-					var_export( $json, true )
+					\esc_html( \var_export( $json, true ) )
 				)
 			);
 		}
@@ -180,7 +180,7 @@ class WebhookRequestInfo implements JsonSerializable {
 				sprintf(
 					'JSON must contain `request_url` property (%s).',
 					// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export
-					var_export( $json, true )
+					\esc_html( \var_export( $json, true ) )
 				)
 			);
 		}
