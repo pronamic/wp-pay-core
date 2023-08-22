@@ -53,13 +53,13 @@ $subscription = \get_pronamic_subscription( (int) get_the_ID() );
 			<?php if ( 'subscr_completed' !== $post->post_status ) : ?>
 
 				<a href="#pronamic-pay-post-status" class="edit-pronamic-pay-post-status hide-if-no-js" role="button">
-					<span aria-hidden="true"><?php _e( 'Edit', 'pronamic_ideal' ); ?></span>
-					<span class="screen-reader-text"><?php _e( 'Edit status', 'pronamic_ideal' ); ?></span>
+					<span aria-hidden="true"><?php esc_html_e( 'Edit', 'pronamic_ideal' ); ?></span>
+					<span class="screen-reader-text"><?php esc_html_e( 'Edit status', 'pronamic_ideal' ); ?></span>
 				</a>
 
 				<div id="pronamic-pay-post-status-input" class="hide-if-js">
 					<input type="hidden" name="hidden_pronamic_pay_post_status" id="hidden_pronamic_pay_post_status" value="<?php echo esc_attr( ( 'auto-draft' === $post->post_status ) ? 'draft' : $post->post_status ); ?>" />
-					<label for="pronamic-pay-post-status" class="screen-reader-text"><?php _e( 'Set status', 'pronamic_ideal' ); ?></label>
+					<label for="pronamic-pay-post-status" class="screen-reader-text"><?php esc_html_e( 'Set status', 'pronamic_ideal' ); ?></label>
 					<select id="pronamic-pay-post-status" name="pronamic_subscription_post_status">
 						<?php
 
@@ -130,15 +130,15 @@ $subscription = \get_pronamic_subscription( (int) get_the_ID() );
 				<?php if ( 'woocommerce' !== $subscription->get_source() ) : ?>
 
 					<a href="#pronamic-pay-next-payment-date" class="edit-pronamic-pay-next-payment-date hide-if-no-js" role="button">
-						<span aria-hidden="true"><?php _e( 'Edit', 'pronamic_ideal' ); ?></span>
-						<span class="screen-reader-text"><?php _e( 'Edit next payment date', 'pronamic_ideal' ); ?></span>
+						<span aria-hidden="true"><?php esc_html_e( 'Edit', 'pronamic_ideal' ); ?></span>
+						<span class="screen-reader-text"><?php esc_html_e( 'Edit next payment date', 'pronamic_ideal' ); ?></span>
 					</a>
 
 				<?php endif; ?>
 
 				<div id="pronamic-pay-next-payment-date-input" class="hide-if-js">
 					<input type="hidden" name="hidden_pronamic_pay_next_payment_date" id="hidden_pronamic_pay_next_payment_date" value="<?php echo \esc_attr( null === $next_payment_date ? '' : $next_payment_date->format( 'Y-m-d' ) ); ?>" />
-					<label for="pronamic-pay-next-payment-date" class="screen-reader-text"><?php _e( 'Set date' ); ?></label>
+					<label for="pronamic-pay-next-payment-date" class="screen-reader-text"><?php esc_html_e( 'Set date' ); ?></label>
 
 					<?php
 
@@ -158,8 +158,8 @@ $subscription = \get_pronamic_subscription( (int) get_the_ID() );
 
 					?>
 
-					<a href="#pronamic-pay-next-payment-date" class="save-pronamic-pay-next-payment-date hide-if-no-js button"><?php _e( 'OK', 'pronamic_ideal' ); ?></a>
-					<a href="#pronamic-pay-next-payment-date" class="cancel-pronamic-pay-next-payment-date hide-if-no-js button-cancel"><?php _e( 'Cancel', 'pronamic_ideal' ); ?></a>
+					<a href="#pronamic-pay-next-payment-date" class="save-pronamic-pay-next-payment-date hide-if-no-js button"><?php esc_html_e( 'OK', 'pronamic_ideal' ); ?></a>
+					<a href="#pronamic-pay-next-payment-date" class="cancel-pronamic-pay-next-payment-date hide-if-no-js button-cancel"><?php esc_html_e( 'Cancel', 'pronamic_ideal' ); ?></a>
 				</div>
 
 				<?php
