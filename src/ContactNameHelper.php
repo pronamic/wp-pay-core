@@ -88,15 +88,15 @@ class ContactNameHelper {
 	/**
 	 * Convert string to uppercase.
 	 *
-	 * @param string $string String.
+	 * @param string $value String.
 	 * @return string
 	 */
-	private static function string_to_uppercase( $string ) {
+	private static function string_to_uppercase( $value ) {
 		if ( \function_exists( 'mb_strtoupper' ) ) {
-			return \mb_strtoupper( $string );
+			return \mb_strtoupper( $value );
 		}
 
-		return \strtoupper( $string );
+		return \strtoupper( $value );
 	}
 
 	/**
