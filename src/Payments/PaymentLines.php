@@ -199,11 +199,11 @@ class PaymentLines implements Countable, IteratorAggregate {
 			/**
 			 * Get payment line from object.
 			 *
-			 * @param object $object Object.
+			 * @param object $value Object.
 			 * @return PaymentLine
 			 */
-			function ( $object ) {
-				return PaymentLine::from_json( $object );
+			function ( $value ) {
+				return PaymentLine::from_json( $value );
 			},
 			$json
 		);
