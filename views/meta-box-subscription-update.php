@@ -85,8 +85,8 @@ $subscription = \get_pronamic_subscription( (int) get_the_ID() );
 						?>
 					</select>
 
-					<a href="#pronamic-pay-post-status" class="save-pronamic-pay-post-status hide-if-no-js button"><?php _e( 'OK', 'pronamic_ideal' ); ?></a>
-					<a href="#pronamic-pay-post-status" class="cancel-pronamic-pay-post-status hide-if-no-js button-cancel"><?php _e( 'Cancel', 'pronamic_ideal' ); ?></a>
+					<a href="#pronamic-pay-post-status" class="save-pronamic-pay-post-status hide-if-no-js button"><?php esc_html_e( 'OK', 'pronamic_ideal' ); ?></a>
+					<a href="#pronamic-pay-post-status" class="cancel-pronamic-pay-post-status hide-if-no-js button-cancel"><?php esc_html_e( 'Cancel', 'pronamic_ideal' ); ?></a>
 				</div>
 
 				<?php if ( null !== $subscription && in_array( $subscription->get_status(), [ SubscriptionStatus::FAILURE, SubscriptionStatus::ON_HOLD ], true ) ) : ?>
