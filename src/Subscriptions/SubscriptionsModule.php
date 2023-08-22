@@ -335,7 +335,7 @@ class SubscriptionsModule {
 		// Check gateway.
 		$gateway = $subscription->get_gateway();
 
-		if ( null == $gateway ) {
+		if ( null === $gateway ) {
 			require __DIR__ . '/../../views/subscription-renew-failed.php';
 
 			exit;
