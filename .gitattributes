@@ -1,4 +1,5 @@
 /bin               export-ignore
+/docs              export-ignore
 /fonts/src         export-ignore
 /images/src        export-ignore
 /js/src            export-ignore
