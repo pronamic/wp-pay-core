@@ -548,6 +548,7 @@ class SubscriptionsModule {
 			'1.8.1'
 		);
 
+		// phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- No version for Google Fonts.
 		\wp_register_style(
 			'pronamic-pay-google-font-roboto-mono',
 			'https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap',
