@@ -159,11 +159,11 @@ class VatNumber {
 	/**
 	 * Create VAT number from string.
 	 *
-	 * @param string $string VAT number string.
+	 * @param string $value VAT number string.
 	 * @return VatNumber
 	 */
-	public static function from_string( $string ) {
-		return new self( $string );
+	public static function from_string( $value ) {
+		return new self( $value );
 	}
 
 	/**
