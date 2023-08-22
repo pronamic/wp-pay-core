@@ -264,7 +264,7 @@ if ( is_array( $current_mandate ) ) {
 			</div>
 		</div>
 
-		<?php wp_print_scripts( 'pronamic-pay-subscription-mandate' ); ?>
+		<?php wp_print_scripts( 'pronamic-pay-slick-carousel-script' ); ?>
 
 		<script type="text/javascript">
 			jQuery( document ).ready( function () {

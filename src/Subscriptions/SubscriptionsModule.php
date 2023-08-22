@@ -532,31 +532,37 @@ class SubscriptionsModule {
 		}
 
 		\wp_register_script(
-			'pronamic-pay-subscription-mandate',
-			'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js',
-			[ 'jquery' ],
-			$this->plugin->get_version(),
+			'pronamic-pay-slick-carousel-script',
+			plugins_url( 'assets/slick-carousel/slick.min.js', dirname( __DIR__ ) ),
+			[
+				'jquery',
+			],
+			'1.8.1',
 			false
 		);
 
 		\wp_register_style(
-			'pronamic-pay-card-slider-slick',
-			'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css',
+			'pronamic-pay-slick-carousel-style',
+			plugins_url( 'assets/slick-carousel/slick.min.css', dirname( __DIR__ ) ),
 			[],
-			$this->plugin->get_version()
+			'1.8.1'
 		);
 
 		\wp_register_style(
-			'pronamic-pay-card-slider-google-font',
+			'pronamic-pay-google-font-roboto-mono',
 			'https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap',
 			[],
-			$this->plugin->get_version()
+			false
 		);
 
 		\wp_register_style(
 			'pronamic-pay-subscription-mandate',
 			plugins_url( 'css/card-slider.css', dirname( __DIR__ ) ),
-			[ 'pronamic-pay-redirect', 'pronamic-pay-card-slider-slick', 'pronamic-pay-card-slider-google-font' ],
+			[
+				'pronamic-pay-redirect',
+				'pronamic-pay-slick-carousel-style',
+				'pronamic-pay-google-font-roboto-mono',
+			],
 			$this->plugin->get_version()
 		);
 

@@ -41,6 +41,8 @@
   },
   "devDependencies": {
     "autoprefixer": "^9.8.8",
+    "clean-css-cli": "^5.6.2",
+    "copyfiles": "^2.4.1",
     "cssnano": "^4.1.11",
     "eslint": "^8.0",
     "eslint-plugin-json": "^3.1",
@@ -75,6 +77,9 @@
     "build-image-png-white-512": "rsvg-convert -w 512 -h 512 images/src/wp-pay-white.svg -o images/src/wp-pay-white-512.png",
     "build-image-png-white-512-min": "pngquant images/src/wp-pay-white-512.png --output images/dist/wp-pay-white-512.pngquant-min.png --force",
     "build-image-ico": "icon-gen --input images/src/wp-pay.svg --output images/dist --ico name=wp-pay --icns name=wp-pay -r",
+    "build-slick-carousel": "npm-run-all copy-slick-carousel cssmin-slick-carousel js-minify-slick-carousel",
+    "copy-slick-carousel": "copyfiles -f -E node_modules/slick-carousel/slick/slick.js node_modules/slick-carousel/slick/slick.css assets/slick-carousel/",
+    "cssmin-slick-carousel": "cleancss -o assets/slick-carousel/slick.min.css assets/slick-carousel/slick.css",
     "eslint": "eslint . --ext .json --ext .js",
     "lint": "npm-run-all --parallel eslint sass-lint",
     "sass-lint": "sass-lint --verbose",
@@ -84,6 +89,7 @@
     "js-minify-admin": "terser --compress --mangle --output js/dist/admin.min.js js/src/admin.js",
     "js-minify-admin-reports": "terser --compress --mangle --output js/dist/admin-reports.min.js js/src/admin-reports.js",
     "js-minify-admin-tour": "terser --compress --mangle --output js/dist/admin-tour.min.js js/src/admin-tour.js",
+    "js-minify-slick-carousel": "terser --compress --mangle --output assets/slick-carousel/slick.min.js assets/slick-carousel/slick.js",
     "sass": "sass scss:css"
   }
 }
