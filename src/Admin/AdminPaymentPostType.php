@@ -501,7 +501,7 @@ class AdminPaymentPostType {
 				}
 
 				// Show original amount and remaining amount.
-				echo \sprintf(
+				\printf(
 					'<del class="pronamic-pay-tip" data-toggle="tooltip" data-placement="top" title="%3$s">%1$s</del> %2$s',
 					esc_html( $total_amount->format_i18n() ),
 					\esc_html( $remaining_amount->format_i18n() ),
