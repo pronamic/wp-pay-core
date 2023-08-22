@@ -29,20 +29,20 @@ class Util {
 	 * Create and add an element with the specified name and value to the specified parent.
 	 *
 	 * @param DOMDocument $document DOM document to add the specified node to.
-	 * @param DOMNode     $parent   DOM node to add a new element to.
+	 * @param DOMNode     $node     DOM node to add a new element to.
 	 * @param string      $name     Name of the new DOM element to add.
 	 * @param string      $value    Value of the new DOM element to add.
 	 *
 	 * @return \DOMElement
 	 */
-	public static function add_element( DOMDocument $document, DOMNode $parent, $name, $value = null ) {
+	public static function add_element( DOMDocument $document, DOMNode $node, $name, $value = null ) {
 		$element = $document->createElement( $name );
 
 		if ( null !== $value ) {
 			$element->appendChild( new DOMText( $value ) );
 		}
 
-		$parent->appendChild( $element );
+		$node->appendChild( $element );
 
 		return $element;
 	}
@@ -51,11 +51,11 @@ class Util {
 	 * Add the specified elements to the parent node.
 	 *
 	 * @param DOMDocument $document DOM document to add the specified node to.
-	 * @param DOMNode     $parent   DOM node to add a new element to.
+	 * @param DOMNode     $node     DOM node to add a new element to.
 	 * @param array       $elements The elements (name => value pairs) to add.
 	 * @return void
 	 */
-	public static function add_elements( DOMDocument $document, DOMNode $parent, array $elements = [] ) {
+	public static function add_elements( DOMDocument $document, DOMNode $node, array $elements = [] ) {
 		foreach ( $elements as $name => $value ) {
 			$element = $document->createElement( $name );
 
@@ -63,7 +63,7 @@ class Util {
 				$element->appendChild( new DOMText( $value ) );
 			}
 
-			$parent->appendChild( $element );
+			$node->appendChild( $element );
 		}
 	}
 }
