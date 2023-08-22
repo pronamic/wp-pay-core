@@ -203,7 +203,7 @@ class PagesController {
 			$result = \wp_insert_post( $post, true );
 
 			if ( $result instanceof \WP_Error ) {
-				throw new \Exception( $result->get_error_message() );
+				throw new \Exception( \esc_html( $result->get_error_message() ) );
 			}
 
 			\update_post_meta( $result, '_yoast_wpseo_meta-robots-noindex', true );
