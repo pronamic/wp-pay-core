@@ -203,14 +203,14 @@ class Util {
 	 *
 	 * @link https://github.com/pronamic/wp-pay-core/issues/73
 	 * @param iterable $data   Data.
-	 * @param string   $parent Parent.
+	 * @param string   $name   Parent.
 	 * @param array    $result Result.
 	 * @return array
 	 */
-	private static function array_square_bracket( $data, $parent = '', $result = [] ) {
+	private static function array_square_bracket( $data, $name = '', $result = [] ) {
 		foreach ( $data as $key => $item ) {
-			if ( '' !== $parent ) {
-				$key = $parent . '[' . $key . ']';
+			if ( '' !== $name ) {
+				$key = $name . '[' . $key . ']';
 			}
 
 			if ( is_array( $item ) ) {
