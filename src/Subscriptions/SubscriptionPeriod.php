@@ -192,7 +192,7 @@ class SubscriptionPeriod {
 			throw new \Exception(
 				\sprintf(
 					'Unable to find subscription by id: %s.',
-					$json->phase->subscription->id
+					\esc_html( $json->phase->subscription->id )
 				)
 			);
 		}
@@ -203,7 +203,7 @@ class SubscriptionPeriod {
 			throw new \Exception(
 				\sprintf(
 					'Unable to find subscription phase by sequence number: %s.',
-					$json->phase->sequence_number
+					\esc_html( $json->phase->sequence_number )
 				)
 			);
 		}

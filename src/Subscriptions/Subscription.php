@@ -128,7 +128,7 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 			throw new \Exception(
 				\sprintf(
 					'Could not add note "%s" to subscription without ID.',
-					$note
+					\esc_html( $note )
 				)
 			);
 		}
@@ -146,8 +146,8 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 			throw new \Exception(
 				\sprintf(
 					'Could not add note "%s" to subscription with ID "%d".',
-					$note,
-					$this->id
+					\esc_html( $note ),
+					\esc_html( $this->id )
 				)
 			);
 		}

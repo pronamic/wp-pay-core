@@ -201,7 +201,7 @@ class SubscriptionsCompletionController {
 			throw new \Exception(
 				\sprintf(
 					'Unable to load subscription from post ID: %d.',
-					$subscription_id
+					\esc_html( $subscription_id )
 				)
 			);
 		}
