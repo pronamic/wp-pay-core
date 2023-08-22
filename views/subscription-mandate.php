@@ -46,6 +46,8 @@ $client = new \Pronamic\WordPress\Mollie\Client( $api_key );
  */
 $mollie_customer_mandates = [];
 
+// phpcs:disable Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+
 try {
 	$response = $client->get_mandates( $mollie_customer_id );
 
@@ -65,6 +67,8 @@ try {
 	 * it should still be possible to add a new payment method to the subscription.
 	 */
 }
+
+// phpcs:enable Generic.CodeAnalysis.EmptyStatement.DetectedCatch
 
 $subscription_mandate_id = $subscription->get_meta( 'mollie_mandate_id' );
 
