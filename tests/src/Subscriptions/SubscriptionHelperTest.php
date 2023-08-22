@@ -167,7 +167,7 @@ class SubscriptionHelperTest extends TestCase {
 		// Filter.
 		\add_filter(
 			'pronamic_pay_subscription_next_payment_delivery_date',
-			function( $next_payment_delivery_date, $subscription ) {
+			function ( $next_payment_delivery_date, $subscription ) {
 				return new \Pronamic\WordPress\DateTime\DateTime( '1970-01-01' );
 			},
 			10,

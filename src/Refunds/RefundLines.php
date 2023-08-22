@@ -168,7 +168,7 @@ class RefundLines implements Countable, IteratorAggregate, JsonSerializable {
 			 * @param object $object Object.
 			 * @return PaymentLine
 			 */
-			function( $object ) use ( $refund ) {
+			function ( $object ) use ( $refund ) {
 				return RefundLine::from_json( $object, $refund );
 			},
 			$json

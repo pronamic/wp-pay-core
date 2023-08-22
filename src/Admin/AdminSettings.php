@@ -50,7 +50,7 @@ class AdminSettings {
 		add_settings_section(
 			'pronamic_pay_general',
 			__( 'General', 'pronamic_ideal' ),
-			function() {
+			function () {
 			},
 			'pronamic_pay'
 		);
@@ -128,7 +128,7 @@ class AdminSettings {
 			\add_settings_section(
 				'pronamic_pay_payment_methods',
 				\__( 'Payment Methods', 'pronamic_ideal' ),
-				function() {
+				function () {
 				},
 				'pronamic_pay'
 			);

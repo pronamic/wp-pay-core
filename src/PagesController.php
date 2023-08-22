@@ -89,7 +89,7 @@ class PagesController {
 		$pages = $this->get_pages();
 
 		$statuses = \array_map(
-			function( $page ) {
+			function ( $page ) {
 				$option_name = $page['option_name'];
 
 				$page_id = \get_option( $option_name );

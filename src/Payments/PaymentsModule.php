@@ -239,7 +239,7 @@ class PaymentsModule {
 			[
 				'methods'             => 'GET',
 				'callback'            => [ $this, 'rest_api_payment' ],
-				'permission_callback' => function() {
+				'permission_callback' => function () {
 					return \current_user_can( 'edit_payments' );
 				},
 				'args'                => [

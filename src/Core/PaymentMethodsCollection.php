@@ -68,7 +68,7 @@ class PaymentMethodsCollection implements IteratorAggregate, Countable {
 
 			$items = \array_filter(
 				$items,
-				function( $payment_method ) use ( $id_list ) {
+				function ( $payment_method ) use ( $id_list ) {
 					return \in_array( $payment_method->get_id(), $id_list, true );
 				}
 			);
@@ -79,7 +79,7 @@ class PaymentMethodsCollection implements IteratorAggregate, Countable {
 
 			$items = \array_filter(
 				$items,
-				function( $payment_method ) use ( $status_list ) {
+				function ( $payment_method ) use ( $status_list ) {
 					return \in_array( $payment_method->get_status(), $status_list, true );
 				}
 			);
@@ -90,7 +90,7 @@ class PaymentMethodsCollection implements IteratorAggregate, Countable {
 
 			$items = \array_filter(
 				$items,
-				function( $payment_method ) use ( $feature ) {
+				function ( $payment_method ) use ( $feature ) {
 					return $payment_method->supports( $feature );
 				}
 			);

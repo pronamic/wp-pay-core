@@ -848,7 +848,7 @@ class AdminModule {
 			'menu_title' => __( 'Settings', 'pronamic_ideal' ),
 			'capability' => 'manage_options',
 			'menu_slug'  => 'pronamic_pay_settings',
-			'function'   => function() {
+			'function'   => function () {
 				$this->render_page( 'settings' );
 			},
 		];
@@ -884,7 +884,7 @@ class AdminModule {
 			__( 'Pay', 'pronamic_ideal' ) . $pay_badge,
 			$minimum_capability,
 			'pronamic_ideal',
-			function() {
+			function () {
 				$this->render_page( 'dashboard' );
 			},
 			$menu_icon_url

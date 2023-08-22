@@ -195,7 +195,7 @@ class Install {
 			 * @param AbstractIntegration $integration Integration object.
 			 * @return bool True if integration has version option name, false otherwise.
 			 */
-			function( $integration ) {
+			function ( $integration ) {
 				if ( ! $integration->is_active() ) {
 					return false;
 				}

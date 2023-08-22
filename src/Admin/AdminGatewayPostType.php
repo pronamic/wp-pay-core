@@ -291,7 +291,7 @@ class AdminGatewayPostType {
 		$payment_methods = $gateway->get_payment_methods()->getIterator();
 
 		$payment_methods->uasort(
-			function( $a, $b ) {
+			function ( $a, $b ) {
 				return strnatcasecmp( $a->get_name(), $b->get_name() );
 			}
 		);

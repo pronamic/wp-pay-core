@@ -121,7 +121,7 @@ class ContactNameHelper {
 	public static function from_array( $data ) {
 		$data = \array_filter(
 			$data,
-			function( $value ) {
+			function ( $value ) {
 				return ( null !== $value ) && ( '' !== $value );
 			}
 		);

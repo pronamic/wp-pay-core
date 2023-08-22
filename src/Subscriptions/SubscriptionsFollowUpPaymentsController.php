@@ -51,7 +51,7 @@ class SubscriptionsFollowUpPaymentsController {
 
 		WP_CLI::add_command(
 			'pay subscription list',
-			function( $args, $assoc_args ) {
+			function ( $args, $assoc_args ) {
 				WP_CLI::debug( 'Query subscriptions that require follow-up payment.' );
 
 				$query = $this->get_subscriptions_wp_query_that_require_follow_up_payment();
@@ -71,7 +71,7 @@ class SubscriptionsFollowUpPaymentsController {
 
 		WP_CLI::add_command(
 			'pay subscription schedule',
-			function( $args, $assoc_args ) {
+			function ( $args, $assoc_args ) {
 				if ( $this->is_processing_disabled() ) {
 					WP_CLI::error( 'Subscriptions processing is disabled.' );
 				}
@@ -192,7 +192,7 @@ class SubscriptionsFollowUpPaymentsController {
 
 		$posts = \array_filter(
 			$query->posts,
-			function( $post ) {
+			function ( $post ) {
 				return ( $post instanceof WP_Post );
 			}
 		);

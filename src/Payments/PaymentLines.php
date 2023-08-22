@@ -143,7 +143,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 	public function first( $id ) {
 		$lines = \array_filter(
 			$this->lines,
-			function( PaymentLine $line ) use ( $id ) {
+			function ( PaymentLine $line ) use ( $id ) {
 				return ( $id === $line->get_id() );
 			}
 		);
@@ -170,7 +170,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 			 * @param PaymentLine $line Payment line.
 			 * @return object
 			 */
-			function( PaymentLine $line ) {
+			function ( PaymentLine $line ) {
 				return $line->get_json();
 			},
 			$this->lines
@@ -202,7 +202,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 			 * @param object $object Object.
 			 * @return PaymentLine
 			 */
-			function( $object ) {
+			function ( $object ) {
 				return PaymentLine::from_json( $object );
 			},
 			$json

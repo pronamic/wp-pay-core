@@ -638,7 +638,7 @@ class SubscriptionsModule {
 			[
 				'methods'             => 'GET',
 				'callback'            => [ $this, 'rest_api_subscription' ],
-				'permission_callback' => function() {
+				'permission_callback' => function () {
 					return \current_user_can( 'edit_payments' );
 				},
 				'args'                => [
@@ -656,7 +656,7 @@ class SubscriptionsModule {
 			[
 				'methods'             => 'GET',
 				'callback'            => [ $this, 'rest_api_subscription_phase' ],
-				'permission_callback' => function() {
+				'permission_callback' => function () {
 					return \current_user_can( 'edit_payments' );
 				},
 				'args'                => [

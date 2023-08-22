@@ -153,7 +153,7 @@ if ( empty( $lines ) ) : ?>
 						<?php
 
 						$values = \array_map(
-							function( PaymentLine $line ) {
+							function ( PaymentLine $line ) {
 								$discount_amount = $line->get_discount_amount();
 
 								return ( null === $discount_amount ) ? null : $discount_amount->get_value();
