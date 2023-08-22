@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Core;
 
+use Pronamic\WordPress\Html\Element;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
 use Pronamic\WordPress\Pay\Fields\Field;
 use Pronamic\WordPress\Pay\Payments\Payment;
@@ -343,7 +344,16 @@ abstract class Gateway {
 		);
 
 		if ( $auto_submit ) {
-			$html .= '<script type="text/javascript">document.pronamic_ideal_form.submit();</script>';
+			$element = new Element(
+				'script',
+				[
+					'type' => 'text/javascript',
+				]
+			);
+
+			$element->children[] = 'document.pronamic_ideal_form.submit();';
+
+			$html .= (string) $element;
 		}
 
 		return $html;
