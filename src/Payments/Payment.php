@@ -657,18 +657,18 @@ class Payment extends PaymentInfo {
 	 *
 	 * @link https://github.com/woocommerce/woocommerce/blob/v2.2.3/includes/abstracts/abstract-wc-email.php#L187-L195
 	 *
-	 * @param string $string The string to format.
+	 * @param string $value The string to format.
 	 * @return string
 	 */
-	public function format_string( $string ) {
+	public function format_string( $value ) {
 		$replace_pairs = [
 			'{order_id}'   => $this->get_order_id(),
 			'{payment_id}' => $this->get_id(),
 		];
 
-		$string = \strtr( $string, $replace_pairs );
+		$value = \strtr( $value, $replace_pairs );
 
-		return $string;
+		return $value;
 	}
 
 	/**
