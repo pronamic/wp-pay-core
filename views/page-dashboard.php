@@ -322,7 +322,7 @@ $container_index = 1;
 					<?php endif; ?>
 				</div>
 
-				<?php $container_index++; ?>
+				<?php ++$container_index; ?>
 
 			<?php endif; ?>
 

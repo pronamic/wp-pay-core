@@ -136,7 +136,7 @@ class AlignmentRule {
 
 		// 1 > null === true
 		if ( $day >= $this->by_day_of_the_month && 'W' !== $this->frequency ) {
-			$month++;
+			++$month;
 		}
 
 		if ( null !== $this->by_day_of_the_month ) {
@@ -145,7 +145,7 @@ class AlignmentRule {
 
 		if ( null !== $this->by_month ) {
 			if ( $month > $this->by_month ) {
-				$year++;
+				++$year;
 			}
 
 			$month = $this->by_month;

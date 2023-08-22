@@ -106,7 +106,7 @@ class AdminPaymentBulkActions {
 
 			// Only check status for pending payments.
 			if ( \Pronamic\WordPress\Pay\Payments\PaymentStatus::OPEN !== $payment->status && '' !== $payment->status ) {
-				$skipped_check++;
+				++$skipped_check;
 
 				continue;
 			}
@@ -132,7 +132,7 @@ class AdminPaymentBulkActions {
 
 			Plugin::update_payment( $payment, false );
 
-			$status_updated++;
+			++$status_updated;
 		}
 
 		$sendback = add_query_arg(
