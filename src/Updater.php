@@ -152,8 +152,11 @@ class Updater {
 			$parsed_args
 		);
 
-		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
-		if ( \is_wp_error( $raw_response ) || '200' != \wp_remote_retrieve_response_code( $raw_response ) ) {
+		if ( \is_wp_error( $raw_response ) ) {
+			return false;
+		}
+
+		if ( '200' !== (string) \wp_remote_retrieve_response_code( $raw_response ) ) {
 			return false;
 		}
 
