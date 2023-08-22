@@ -283,16 +283,16 @@ class AdminReports {
 	 * @link https://github.com/woothemes/woocommerce/blob/2.3.11/assets/js/admin/reports.js
 	 * @link https://github.com/woothemes/woocommerce/blob/master/includes/admin/reports/class-wc-report-sales-by-date.php
 	 *
-	 * @param string    $status   Status.
-	 * @param string    $function Function.
-	 * @param \DateTime $start    Start date.
-	 * @param \DateTime $end      End date.
+	 * @param string    $status    Status.
+	 * @param string    $aggregate Aggregate function.
+	 * @param \DateTime $start     Start date.
+	 * @param \DateTime $end       End date.
 	 *
 	 * @return array
 	 *
 	 * @throws \Exception Throws exception on date interval error.
 	 */
-	private function get_report( $status, $function, $start, $end ) {
+	private function get_report( $status, $aggregate, $start, $end ) {
 		global $wpdb;
 
 		$interval = new \DateInterval( 'P1M' );
@@ -328,7 +328,7 @@ class AdminReports {
 
 		$months = wp_list_pluck( $results, 'month' );
 
-		switch ( $function ) {
+		switch ( $aggregate ) {
 			case 'COUNT':
 				$data = array_count_values( $months );
 
