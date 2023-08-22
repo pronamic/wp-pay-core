@@ -12,6 +12,10 @@
  * @var \Pronamic\WordPress\Pay\Core\Gateway $gateway    Gateway.
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 use Pronamic\WordPress\Html\Element;
 use Pronamic\WordPress\Pay\Admin\AdminGatewayPostType;
 use Pronamic\WordPress\Pay\Util;

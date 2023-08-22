@@ -11,6 +11,10 @@
  * @var \Pronamic\WordPress\Pay\Core\Gateway $gateway    Gateway.
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Webhooks\WebhookRequestInfo;
 

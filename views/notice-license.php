@@ -8,8 +8,8 @@
  * @package   Pronamic\WordPress\Pay
  */
 
-if ( ! defined( 'WPINC' ) ) {
-	die;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
 if ( ! isset( $data ) ) {

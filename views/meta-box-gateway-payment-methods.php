@@ -11,6 +11,10 @@
  * @var bool                  $supports_methods_request Supports methods request.
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 
 $show_recurring_column = false;

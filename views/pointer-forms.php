@@ -8,6 +8,10 @@
  * @package   Pronamic\WordPress\Pay
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 ?>
 <h3><?php esc_html_e( 'Payment Forms', 'pronamic_ideal' ); ?></h3>
 

@@ -8,11 +8,11 @@
  * @package   Pronamic\WordPress\Pay
  */
 
-use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
-
-if ( ! defined( 'WPINC' ) ) {
-	die;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
+
+use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
 
 if ( ! isset( $subscription ) ) {
 	return;

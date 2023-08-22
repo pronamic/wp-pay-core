@@ -8,6 +8,10 @@
  * @package   Pronamic\WordPress\Pay
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 ?>
 <h3><?php esc_html_e( 'Dashboard', 'pronamic_ideal' ); ?></h3>
 

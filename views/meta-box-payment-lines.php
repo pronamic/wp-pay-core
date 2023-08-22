@@ -8,6 +8,10 @@
  * @package   Pronamic\WordPress\Pay
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 namespace Pronamic\WordPress\Pay;
 
 use Pronamic\WordPress\Money\Money;

@@ -8,6 +8,10 @@
  * @package   Pronamic\WordPress\Pay
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 $message_id = array_key_exists( 'message', $_GET ) ? \sanitize_text_field( \wp_unslash( $_GET['message'] ) ) : '';
 

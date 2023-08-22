@@ -9,6 +9,10 @@
  * @var \WP_Post $post WordPress post.
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 use Pronamic\WordPress\Money\Currencies;
 use Pronamic\WordPress\Money\Currency;
 use Pronamic\WordPress\Pay\Plugin;
