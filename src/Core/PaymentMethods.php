@@ -498,23 +498,23 @@ class PaymentMethods {
 	 *
 	 * @since 1.3.0
 	 *
-	 * @param string|null $method  Method to get the name for.
-	 * @param string|null $default Default name to return if method was not found.
+	 * @param string|null $method   Method to get the name for.
+	 * @param string|null $fallback Default name to return if method was not found.
 	 *
 	 * @return string|null
 	 */
-	public static function get_name( $method = null, $default = null ) {
+	public static function get_name( $method = null, $fallback = null ) {
 		$payment_methods = self::get_payment_methods();
 
 		if ( null !== $method && array_key_exists( $method, $payment_methods ) ) {
 			return $payment_methods[ $method ];
 		}
 
-		if ( null === $default ) {
+		if ( null === $fallback ) {
 			return $method;
 		}
 
-		return $default;
+		return $fallback;
 	}
 
 	/**
