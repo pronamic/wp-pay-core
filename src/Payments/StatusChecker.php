@@ -78,12 +78,12 @@ class StatusChecker {
 	/**
 	 * Get the delay seconds for the specified try.
 	 *
-	 * @param int     $try     Which try/round to get the delay seconds for.
+	 * @param int     $attempt Which try/round to get the delay seconds for.
 	 * @param Payment $payment Payment.
 	 *
 	 * @return int
 	 */
-	private static function get_delay_seconds( $try, $payment ) {
+	private static function get_delay_seconds( $attempt, $payment ) {
 		if ( \in_array(
 			$payment->get_payment_method(),
 			[
@@ -94,7 +94,7 @@ class StatusChecker {
 			],
 			true
 		) ) {
-			switch ( $try ) {
+			switch ( $attempt ) {
 				case 1:
 					return 15 * MINUTE_IN_SECONDS;
 
@@ -111,7 +111,7 @@ class StatusChecker {
 		}
 
 		// Delays for regular payments.
-		switch ( $try ) {
+		switch ( $attempt ) {
 			case 1:
 				return 15 * MINUTE_IN_SECONDS;
 
@@ -130,12 +130,11 @@ class StatusChecker {
 	/**
 	 * Check status of the specified payment.
 	 *
-	 * @param integer $payment_id The payment ID to check.
-	 * @param integer $try        The try number for this status check.
-	 *
+	 * @param int $payment_id The payment ID to check.
+	 * @param int $attempt    The try number for this status check.
 	 * @return void
 	 */
-	public function check_status( $payment_id = null, $try = 1 ) {
+	public function check_status( $payment_id = null, $attempt = 1 ) {
 		$payment = get_pronamic_payment( $payment_id );
 
 		// No payment found, unable to check status.
@@ -162,7 +161,7 @@ class StatusChecker {
 		Plugin::update_payment( $payment, false );
 
 		// Limit number of tries.
-		if ( 4 === $try ) {
+		if ( 4 === $attempt ) {
 			return;
 		}
 
@@ -170,17 +169,17 @@ class StatusChecker {
 		$status = $payment->get_status();
 
 		if ( empty( $status ) || PaymentStatus::OPEN === $status ) {
-			$next_try = ( $try + 1 );
+			$next_attempt = ( $attempt + 1 );
 
 			// Get delay seconds for next status check.
-			$delay = self::get_delay_seconds( $next_try, $payment );
+			$delay = self::get_delay_seconds( $next_attempt, $payment );
 
 			\as_schedule_single_action(
 				time() + $delay,
 				'pronamic_pay_payment_status_check',
 				[
 					'payment_id' => $payment->get_id(),
-					'try'        => $next_try,
+					'try'        => $next_attempt,
 				],
 				'pronamic-pay'
 			);
@@ -230,8 +229,8 @@ class StatusChecker {
 			'payment_id' => $post_id,
 		];
 
-		foreach ( range( 1, 4 ) as $try ) {
-			$args['try'] = $try;
+		foreach ( range( 1, 4 ) as $attempt ) {
+			$args['try'] = $attempt;
 
 			\as_unschedule_action( 'pronamic_pay_payment_status_check', $args );
 		}
