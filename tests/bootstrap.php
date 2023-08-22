@@ -28,10 +28,10 @@ if ( defined( 'PSALM_VERSION' ) ) {
 /**
  * Plugin.
  */
-$plugin = \Pronamic\WordPress\Pay\Plugin::instance(
+$pronamic_pay_plugin = \Pronamic\WordPress\Pay\Plugin::instance(
 	array(
 		'action_scheduler' => __DIR__ . '/../vendor/woocommerce/action-scheduler/action-scheduler.php',
 	)
 );
 
-$plugin->plugins_loaded();
+$pronamic_pay_plugin->plugins_loaded();
