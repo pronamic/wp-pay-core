@@ -552,7 +552,7 @@ class SubscriptionsModule {
 			'pronamic-pay-google-font-roboto-mono',
 			'https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap',
 			[],
-			false
+			null
 		);
 
 		\wp_register_style(
