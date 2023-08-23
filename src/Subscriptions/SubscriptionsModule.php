@@ -541,6 +541,17 @@ class SubscriptionsModule {
 			false
 		);
 
+		\wp_register_script(
+			'pronamic-pay-subscription-mandate',
+			plugins_url( 'js/dist/subscription-mandate.min.js', dirname( __DIR__ ) ),
+			[
+				'jquery',
+				'pronamic-pay-slick-carousel-script'
+			],
+			$this->plugin->get_version(),
+			false
+		);
+
 		\wp_register_style(
 			'pronamic-pay-slick-carousel-style',
 			plugins_url( 'assets/slick-carousel/slick.min.css', dirname( __DIR__ ) ),

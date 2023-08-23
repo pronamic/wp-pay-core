@@ -88,8 +88,10 @@
     "js-minify": "npm-run-all js-minify-*",
     "js-minify-admin": "terser --compress --mangle --output js/dist/admin.min.js js/src/admin.js",
     "js-minify-admin-reports": "terser --compress --mangle --output js/dist/admin-reports.min.js js/src/admin-reports.js",
+    "js-minify-admin-test": "terser --compress --mangle --output js/dist/admin-test.min.js js/src/admin-test.js",
     "js-minify-admin-tour": "terser --compress --mangle --output js/dist/admin-tour.min.js js/src/admin-tour.js",
     "js-minify-slick-carousel": "terser --compress --mangle --output assets/slick-carousel/slick.min.js assets/slick-carousel/slick.js",
+    "js-minify-subscription-mandate": "terser --compress --mangle --output js/dist/subscription-mandate.min.js js/src/subscription-mandate.js",
     "sass": "sass scss:css"
   }
 }

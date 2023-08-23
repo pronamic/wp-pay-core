@@ -323,6 +323,16 @@ class AdminGatewayPostType {
 	 * @return void
 	 */
 	public function meta_box_test( $post ) {
+		\wp_register_script(
+			'pronamic-pay-gateway-test',
+			plugins_url( 'js/dist/admin-test.min.js', dirname( __DIR__ ) ),
+			[
+				'jquery',
+			],
+			$this->plugin->get_version(),
+			false
+		);
+
 		include __DIR__ . '/../../views/meta-box-gateway-test.php';
 	}
 
