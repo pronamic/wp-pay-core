@@ -6,6 +6,21 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.11.0] - 2023-08-23
+
+### Changed
+
+- Improved including JS and/or CSS after review from the WordPress.org plugin review team.
+- Improved calling files remotely after review from the WordPress.org plugin review team.
+  - The Slick carousel library from Ken Wheeler will no longer load from the Cloudflare CDN.
+- Improved sanitizing and escaping.
+  - Escaping is also applied to exception messages, following the advice of the WordPress Coding Standards library version 3.
+- No longer use reserved keywords like "try", "parent", "class", "object" and "default" in variable names.
+
+Full set of changes: [`4.10.1...4.11.0`][4.11.0]
+
+[4.11.0]: https://github.com/pronamic/wp-pay-core/compare/v4.10.1...v4.11.0
+
 ## [4.10.1] - 2023-07-19
 
 ### Commits
