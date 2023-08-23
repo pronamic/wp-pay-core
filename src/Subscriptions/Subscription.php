@@ -145,9 +145,9 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 		if ( false === $result ) {
 			throw new \Exception(
 				\sprintf(
-					'Could not add note "%s" to subscription with ID "%d".',
+					'Could not add note "%s" to subscription with ID "%s".',
 					\esc_html( $note ),
-					\esc_html( $this->id )
+					\esc_html( (string) $this->id )
 				)
 			);
 		}

@@ -200,8 +200,8 @@ class SubscriptionsCompletionController {
 		if ( null === $subscription ) {
 			throw new \Exception(
 				\sprintf(
-					'Unable to load subscription from post ID: %d.',
-					\esc_html( $subscription_id )
+					'Unable to load subscription from post ID: %s.',
+					\esc_html( (string) $subscription_id )
 				)
 			);
 		}

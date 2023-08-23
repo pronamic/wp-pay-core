@@ -203,9 +203,9 @@ class Payment extends PaymentInfo {
 			 */
 			throw new \Exception(
 				\sprintf(
-					'Could not add note "%s" to payment with ID "%d", last database error: "%s".',
+					'Could not add note "%s" to payment with ID "%s", last database error: "%s".',
 					\esc_html( $note ),
-					\esc_html( $this->id ),
+					\esc_html( (string) $this->id ),
 					\esc_html( $wpdb->last_error )
 				)
 			);
