@@ -135,6 +135,14 @@ class Payment extends PaymentInfo {
 	public $refunds = [];
 
 	/**
+	 * Slug.
+	 * 
+	 * @link https://github.com/pronamic/wp-pay-core/issues/146
+	 * @var string
+	 */
+	private $slug = '';
+
+	/**
 	 * Construct and initialize payment object.
 	 *
 	 * @param integer $post_id A payment post ID or null.
@@ -708,6 +716,25 @@ class Payment extends PaymentInfo {
 	}
 
 	/**
+	 * Get slug.
+	 * 
+	 * @return string
+	 */
+	public function get_slug() {
+		return $this->slug;
+	}
+
+	/**
+	 * Set slug.
+	 * 
+	 * @param string $slug Slug.
+	 * @return void
+	 */
+	public function set_slug( $slug ) {
+		$this->slug = $slug;
+	}
+
+	/**
 	 * Create payment from object.
 	 *
 	 * @param mixed        $json    JSON.
@@ -725,6 +752,10 @@ class Payment extends PaymentInfo {
 		}
 
 		PaymentInfoHelper::from_json( $json, $payment );
+
+		if ( isset( $json->slug ) ) {
+			$payment->set_slug( $json->slug );
+		}
 
 		if ( isset( $json->action_url ) ) {
 			$payment->set_action_url( $json->action_url );
@@ -803,6 +834,8 @@ class Payment extends PaymentInfo {
 		$object = PaymentInfoHelper::to_json( $this );
 
 		$properties = (array) $object;
+
+		$properties['slug'] = $this->slug;
 
 		// Action URL.
 		if ( null !== $this->action_url ) {
