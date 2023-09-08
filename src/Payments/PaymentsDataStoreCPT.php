@@ -285,6 +285,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 					'Payment %s',
 					$payment->get_key()
 				),
+				'post_name'        => $payment->get_slug(),
 				'post_author'      => null === $customer_user_id ? 0 : $customer_user_id,
 				'pronamic_payment' => $payment,
 			],
@@ -324,6 +325,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		$data = [
 			'ID'               => $id,
+			'post_name'        => $payment->get_slug(),
 			'pronamic_payment' => $payment,
 		];
 
@@ -386,6 +388,8 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		if ( is_object( $json ) ) {
 			Payment::from_json( $json, $payment );
 		}
+
+		$payment->set_slug( get_post_field( 'post_name', $id, 'raw' ) );
 
 		// Set user ID from `post_author` field if not set from payment JSON.
 		$customer = $payment->get_customer();
