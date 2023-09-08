@@ -244,6 +244,26 @@ if ( is_array( $current_mandate ) ) {
 										]
 									);
 
+									/*
+									 * Filter out payment methods with required fields,
+									 * as these are not supported for now.
+									 *
+									 * @link https://github.com/pronamic/wp-pronamic-pay/issues/361
+									 */
+									$payment_methods = array_filter(
+										$payment_methods->get_array(),
+										function ( $payment_method ) {
+											$required_fields = array_filter(
+												$payment_method->get_fields(),
+												function ( $field ) {
+													return $field->is_required();
+												}
+											);
+
+											return 0 === count( $required_fields );
+										}
+									);
+
 									foreach ( $payment_methods as $payment_method ) {
 										$payment_method_id = $payment_method->get_id();
 
