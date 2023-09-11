@@ -6,6 +6,17 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.12.0] - 2023-09-11
+
+### Commits
+
+- Only payment methods without required fields can be used on subscription payment method update (fixes pronamic/wp-pronamic-pay#361). ([f245c00](https://github.com/pronamic/wp-pay-core/commit/f245c00682adf3b59888705fd66b13d6b33feef2))
+- Added support for payment slug. ([90626d2](https://github.com/pronamic/wp-pay-core/commit/90626d2557419a6c92581a5317e4e595ee9f8305))
+
+Full set of changes: [`4.11.0...4.12.0`][4.12.0]
+
+[4.12.0]: https://github.com/pronamic/wp-pay-core/compare/v4.11.0...v4.12.0
+
 ## [4.11.0] - 2023-08-23
 
 ### Changed
