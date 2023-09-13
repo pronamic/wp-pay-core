@@ -84,7 +84,7 @@ $phase = $subscription->get_current_phase();
 								printf(
 									/* translators: %s: next period range */
 									esc_html( __( 'Renew the subscription by paying for the period %s.', 'pronamic_ideal' ) ),
-									esc_html( $next_period->human_readable_range( __( 'l j F Y', 'pronamic_ideal' ), _x( 'until', 'period seperator', 'pronamic_ideal' ) ) )
+									esc_html( $next_period->human_readable_range( __( 'l j F Y', 'pronamic_ideal' ), _x( 'until', 'period separator', 'pronamic_ideal' ) ) )
 								);
 
 								?>
