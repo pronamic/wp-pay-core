@@ -669,14 +669,9 @@ class Payment extends PaymentInfo {
 	 * @return string
 	 */
 	public function format_string( $value ) {
-		$replace_pairs = [
-			'{order_id}'   => $this->get_order_id(),
-			'{payment_id}' => $this->get_id(),
-		];
+		$merge_tags_controller = new PaymentMergeTagsController( $this );
 
-		$value = \strtr( $value, $replace_pairs );
-
-		return $value;
+		return $merge_tags_controller->format_string( $value );
 	}
 
 	/**

@@ -49,6 +49,15 @@ class MergeTag {
 	}
 
 	/**
+	 * Get slug.
+	 * 
+	 * @return string
+	 */
+	public function get_slug() {
+		return $this->slug;
+	}
+
+	/**
 	 * Resolve.
 	 * 
 	 * @return string

@@ -285,4 +285,17 @@ class PaymentTest extends TestCase {
 
 		$this->assertJsonStringEqualsJsonFile( $json_file, $json_string );
 	}
+
+	/**
+	 * Test format string.
+	 */
+	public function test_format_string() {
+		$payment = new Payment();
+		$payment->set_id( 19092023 );
+		$payment->order_id = 'Order 1234567890';
+
+		$value = '{payment_id} - {order_id}';
+
+		$this->assertEquals( '19092023 - Order 1234567890', $payment->format_string( $value ) );
+	}
 }

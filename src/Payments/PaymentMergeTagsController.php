@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Payments;
 
 use Pronamic\WordPress\Pay\MergeTags\MergeTagsController;
+use Pronamic\WordPress\Pay\MergeTags\MergeTag;
 
 /**
  * Payment Merge Tags Controller class
