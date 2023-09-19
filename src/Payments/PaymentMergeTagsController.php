@@ -53,5 +53,28 @@ class PaymentMergeTagsController extends MergeTagsController {
 				}
 			)
 		);
+
+		$this->add_merge_tag(
+			new MergeTag(
+				'payment_lines_names',
+				\__( 'Payment Lines Names', 'pronamic_ideal' ),
+				function () use ( $payment ) {
+					$names = [];
+
+					$lines = $payment->get_lines();
+
+					if ( null !== $lines ) {
+						$names = array_map(
+							function ( \Pronamic\WordPress\Pay\Payments\PaymentLine $line ) {
+								return (string) $line->get_name();
+							},
+							$lines->get_array()
+						);
+					}
+
+					return implode( ', ', $names );
+				}
+			)
+		);
 	}
 }

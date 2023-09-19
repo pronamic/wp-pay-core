@@ -319,5 +319,20 @@ class PaymentTest extends TestCase {
 		$value = '{payment_id} - {order_id} - {zero}';
 
 		$this->assertEquals( '19092023 - Order 1234567890 - 0', $payment->format_string( $value ) );
+
+		// Payment lines.
+		$lines = new PaymentLines();
+
+		$line = $lines->new_line();
+		$line->set_name( 'Product A' );
+
+		$line = $lines->new_line();
+		$line->set_name( 'Product B' );
+
+		$payment->set_lines( $lines );
+
+		$value = '{payment_id} - {payment_lines_names}';
+
+		$this->assertEquals( '19092023 - Product A, Product B', $payment->format_string( $value ) );
 	}
 }
