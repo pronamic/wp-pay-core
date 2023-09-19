@@ -38,6 +38,15 @@ class MergeTagsController {
 	}
 
 	/**
+	 * Get slug.
+	 * 
+	 * @return string
+	 */
+	public function get_slug() {
+		return $this->slug;
+	}
+
+	/**
 	 * Add merge tag.
 	 * 
 	 * @param MergeTag $merge_tag Merge tag.
