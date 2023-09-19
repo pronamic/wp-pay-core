@@ -31,7 +31,7 @@ class MergeTag {
 	/**
 	 * Resolver.
 	 * 
-	 * @var callback
+	 * @var callable
 	 */
 	private $resolver;
 
@@ -40,7 +40,7 @@ class MergeTag {
 	 * 
 	 * @param string   $slug     Slug.
 	 * @param string   $name     Name.
-	 * @param callback $resolver Resolver.
+	 * @param callable $resolver Resolver.
 	 */
 	public function __construct( $slug, $name, $resolver ) {
 		$this->slug     = $slug;
