@@ -56,6 +56,7 @@ class LicenseManager {
 		// Filters.
 		\add_filter( sprintf( 'pre_update_option_%s', 'pronamic_pay_license_key' ), [ $this, 'pre_update_option_license_key' ], 10, 2 );
 		\add_filter( 'debug_information', [ $this, 'debug_information' ], 15 );
+		\add_filter( 'site_status_tests', [ $this, 'site_status_tests' ] );
 	}
 
 	/**
@@ -456,5 +457,78 @@ class LicenseManager {
 		$debug_information['pronamic-pay']['fields'] = $fields;
 
 		return $debug_information;
+	}
+
+
+	/**
+	 * Site status tests.
+	 *
+	 * @link https://developer.wordpress.org/reference/hooks/site_status_tests/
+	 * @param array $status_tests Status tests.
+	 * @return array
+	 */
+	public function site_status_tests( $status_tests ) {
+		// Test valid license.
+		$status_tests['direct']['pronamic_pay_valid_license'] = [
+			'label' => \__( 'Pronamic Pay support license key test', 'pronamic_ideal' ),
+			'test'  => [ $this, 'test_valid_license' ],
+		];
+
+		return $status_tests;
+	}
+
+	/**
+	 * Test if configuration exists.
+	 *
+	 * @return array<string, array<string,string>|string>
+	 */
+	public function test_valid_license() {
+		// Good.
+		$result = [
+			'test'        => 'pronamic_pay_valid_license',
+			'label'       => \__( 'Pronamic Pay license key is valid', 'pronamic_ideal' ),
+			'description' => \sprintf(
+				'<p>%s</p>',
+				\__( 'A valid license is required for technical support and continued plugin updates.', 'pronamic_ideal' )
+			),
+			'badge'       => [
+				'label' => \__( 'Security' ),
+				'color' => 'blue',
+			],
+			'status'      => 'good',
+			'actions'     => '',
+		];
+
+		// Recommendation.
+		if ( 'valid' !== \get_option( 'pronamic_pay_license_status' ) ) {
+			$result['status'] = 'recommended';
+			$result['label']  = \__( 'No valid license key for Pronamic Pay', 'pronamic_ideal' );
+
+			$result['actions'] = '<p>';
+
+			if ( '' === \get_option( 'pronamic_pay_license_key' ) ) {
+				$result['actions'] .= \sprintf(
+					'<a href="%s">%s</a> - ',
+					\esc_url( 'https://www.pronamic.eu/plugins/pronamic-ideal/' ),
+					\__( 'Purchase license', 'pronamic_ideal' )
+				);
+			}
+
+			$result['actions'] .= \sprintf(
+				'<a href="%s">%s</a> - ',
+				\add_query_arg( 'page', 'pronamic_pay_settings', \get_admin_url( null, 'admin.php' ) ),
+				\__( 'License settings', 'pronamic_ideal' )
+			);
+
+			$result['actions'] .= \sprintf(
+				'<a href="%s">%s</a>',
+				\esc_url( 'https://www.pronamic.eu/account/' ),
+				\__( 'Check existing license', 'pronamic_ideal' )
+			);
+
+			$result['actions'] .= '</p>';
+		}
+
+		return $result;
 	}
 }
