@@ -1093,6 +1093,14 @@ class Plugin {
 			$payment->set_config_id( $config_id );
 		}
 
+		/**
+		 * Merge tags.
+		 * 
+		 * @link https://github.com/pronamic/wp-pronamic-pay/issues/358
+		 * @link https://github.com/pronamic/wp-pronamic-pay-woocommerce/issues/43
+		 */
+		$payment->set_description( $payment->format_string( $payment->get_description() ) );
+
 		// Save payment.
 		$payment->save();
 
