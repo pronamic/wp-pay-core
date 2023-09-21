@@ -18,21 +18,12 @@ use Pronamic\WordPress\Pay\MergeTags\MergeTag;
  */
 class PaymentMergeTagsController extends MergeTagsController {
 	/**
-	 * Payment.
-	 * 
-	 * @var Payment
-	 */
-	private $payment;
-
-	/**
 	 * Construct payment merge tags controllers.
 	 * 
 	 * @param Payment $payment Payment.
 	 */
 	public function __construct( Payment $payment ) {
 		parent::__construct( 'payment' );
-
-		$this->payment = $payment;
 
 		$this->add_merge_tag(
 			new MergeTag(
