@@ -1099,7 +1099,7 @@ class Plugin {
 		 * @link https://github.com/pronamic/wp-pronamic-pay/issues/358
 		 * @link https://github.com/pronamic/wp-pronamic-pay-woocommerce/issues/43
 		 */
-		$payment->set_description( $payment->format_string( $payment->get_description() ) );
+		$payment->set_description( $payment->format_string( (string) $payment->get_description() ) );
 
 		// Save payment.
 		$payment->save();
