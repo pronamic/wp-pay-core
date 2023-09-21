@@ -50,6 +50,7 @@ class MergeTagsController {
 	 * Add merge tag.
 	 * 
 	 * @param MergeTag $merge_tag Merge tag.
+	 * @return void
 	 */
 	public function add_merge_tag( MergeTag $merge_tag ) {
 		$this->merge_tags[] = $merge_tag;
@@ -82,7 +83,8 @@ class MergeTagsController {
 	/**
 	 * Format string.
 	 * 
-	 * @param string $value
+	 * @param string $value Value.
+	 * @return string
 	 */
 	public function format_string( $value ) {
 		$replace_pairs = [];
