@@ -59,6 +59,23 @@ class PaymentLines implements Countable, IteratorAggregate {
 	}
 
 	/**
+	 * Get name.
+	 * 
+	 * @link https://github.com/pronamic/wp-pronamic-pay-woocommerce/issues/43
+	 * @return string
+	 */
+	public function get_name() {
+		$names = \array_map(
+			function ( PaymentLine $line ) {
+				return (string) $line->get_name();
+			},
+			$this->get_array()
+		);
+
+		return \implode( ', ', $names );
+	}
+
+	/**
 	 * Add line.
 	 *
 	 * @param PaymentLine $line The line to add.

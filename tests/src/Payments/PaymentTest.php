@@ -331,7 +331,7 @@ class PaymentTest extends TestCase {
 
 		$payment->set_lines( $lines );
 
-		$value = '{payment_id} - {payment_lines_names}';
+		$value = '{payment_id} - {payment_lines_name}';
 
 		$this->assertEquals( '19092023 - Product A, Product B', $payment->format_string( $value ) );
 	}
