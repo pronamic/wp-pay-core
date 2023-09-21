@@ -90,7 +90,9 @@ class MergeTagsController {
 		$replace_pairs = [];
 
 		foreach ( $this->get_merge_tags() as $merge_tag ) {
-			$replace_pairs['{' . $merge_tag->get_slug() . '}'] = $merge_tag->resolve();
+			$from = '{' . $merge_tag->get_slug() . '}';
+
+			$replace_pairs[ $from ] = $merge_tag->resolve();
 		}
 
 		$value = \strtr( $value, $replace_pairs );
