@@ -22,13 +22,6 @@ class MergeTag {
 	private $slug;
 
 	/**
-	 * Name of this merge tag.
-	 * 
-	 * @var string
-	 */
-	private $name;
-
-	/**
 	 * Resolver.
 	 * 
 	 * @var callable
@@ -39,12 +32,10 @@ class MergeTag {
 	 * Construct merge tag.
 	 * 
 	 * @param string   $slug     Slug.
-	 * @param string   $name     Name.
 	 * @param callable $resolver Resolver.
 	 */
-	public function __construct( $slug, $name, $resolver ) {
+	public function __construct( $slug, $resolver ) {
 		$this->slug     = $slug;
-		$this->name     = $name;
 		$this->resolver = $resolver;
 	}
 

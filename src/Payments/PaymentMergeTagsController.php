@@ -26,7 +26,6 @@ class PaymentMergeTagsController extends MergeTagsController {
 		$this->add_merge_tag(
 			new MergeTag(
 				'payment_id',
-				\__( 'Payment ID', 'pronamic_ideal' ),
 				function () use ( $payment ) {
 					return $payment->get_id();
 				}
@@ -36,7 +35,6 @@ class PaymentMergeTagsController extends MergeTagsController {
 		$this->add_merge_tag(
 			new MergeTag(
 				'order_id',
-				\__( 'Order ID', 'pronamic_ideal' ),
 				function () use ( $payment ) {
 					return $payment->get_order_id();
 				}
@@ -46,7 +44,6 @@ class PaymentMergeTagsController extends MergeTagsController {
 		$this->add_merge_tag(
 			new MergeTag(
 				'payment_lines_name',
-				\__( 'Payment Lines Name', 'pronamic_ideal' ),
 				function () use ( $payment ) {
 					$lines = $payment->get_lines();
 
