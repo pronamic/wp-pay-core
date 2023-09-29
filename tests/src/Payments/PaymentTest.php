@@ -20,6 +20,7 @@ use Pronamic\WordPress\Pay\ContactName;
 use Pronamic\WordPress\Pay\Core\Gateway;
 use Pronamic\WordPress\Pay\CreditCard;
 use Pronamic\WordPress\Pay\Customer;
+use Pronamic\WordPress\Pay\MergeTags\MergeTag;
 use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 /**
@@ -284,5 +285,50 @@ class PaymentTest extends TestCase {
 		$this->assertEquals( wp_json_encode( $json_data, JSON_PRETTY_PRINT ), $json_string );
 
 		$this->assertJsonStringEqualsJsonFile( $json_file, $json_string );
+	}
+
+	/**
+	 * Test format string.
+	 */
+	public function test_format_string() {
+		\add_filter(
+			'pronamic_pay_merge_tags',
+			function( $merge_tags, $controller ) {
+				$merge_tags[] = new MergeTag(
+					'zero',
+					'Zero',
+					function() {
+						return '0';
+					}
+				);
+
+				return $merge_tags;
+			},
+			10,
+			2
+		);
+
+		$payment = new Payment();
+		$payment->set_id( 19092023 );
+		$payment->order_id = 'Order 1234567890';
+
+		$value = '{payment_id} - {order_id} - {zero}';
+
+		$this->assertEquals( '19092023 - Order 1234567890 - 0', $payment->format_string( $value ) );
+
+		// Payment lines.
+		$lines = new PaymentLines();
+
+		$line = $lines->new_line();
+		$line->set_name( 'Product A' );
+
+		$line = $lines->new_line();
+		$line->set_name( 'Product B' );
+
+		$payment->set_lines( $lines );
+
+		$value = '{payment_id} - {payment_lines_name}';
+
+		$this->assertEquals( '19092023 - Product A, Product B', $payment->format_string( $value ) );
 	}
 }
