@@ -23,8 +23,6 @@ class PaymentMergeTagsController extends MergeTagsController {
 	 * @param Payment $payment Payment.
 	 */
 	public function __construct( Payment $payment ) {
-		parent::__construct( 'payment' );
-
 		$this->add_merge_tag(
 			new MergeTag(
 				'payment_id',

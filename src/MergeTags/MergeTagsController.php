@@ -15,36 +15,11 @@ namespace Pronamic\WordPress\Pay\MergeTags;
  */
 class MergeTagsController {
 	/**
-	 * Slug of this controller.
-	 * 
-	 * @var string
-	 */
-	private $slug;
-
-	/**
 	 * Merge tags.
 	 *
 	 * @var MergeTag[]
 	 */
 	private $merge_tags = [];
-
-	/**
-	 * Construct merge tags controller.
-	 * 
-	 * @param string $slug Slug.
-	 */
-	public function __construct( $slug ) {
-		$this->slug = $slug;
-	}
-
-	/**
-	 * Get slug.
-	 * 
-	 * @return string
-	 */
-	public function get_slug() {
-		return $this->slug;
-	}
 
 	/**
 	 * Add merge tag.

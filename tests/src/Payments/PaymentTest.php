@@ -294,10 +294,6 @@ class PaymentTest extends TestCase {
 		\add_filter(
 			'pronamic_pay_merge_tags',
 			function( $merge_tags, $controller ) {
-				if ( 'payment' !== $controller->get_slug() ) {
-					return $merge_tags;
-				}
-
 				$merge_tags[] = new MergeTag(
 					'zero',
 					'Zero',
