@@ -26,12 +26,7 @@
 				<div class="pp-page-section-container">
 					<div class="pp-page-section-wrapper">
 						<p>
-							<?php
-
-							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-							echo wpautop( $redirect_message );
-
-							?>
+							<?php echo wpautop( $redirect_message ); ?>
 						</p>
 					</div>
 				</div>
