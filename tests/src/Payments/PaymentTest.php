@@ -293,10 +293,10 @@ class PaymentTest extends TestCase {
 	public function test_format_string() {
 		\add_filter(
 			'pronamic_pay_merge_tags',
-			function( $merge_tags, $controller ) {
+			function ( $merge_tags, $controller ) {
 				$merge_tags[] = new MergeTag(
 					'zero',
-					function() {
+					function () {
 						return '0';
 					}
 				);
