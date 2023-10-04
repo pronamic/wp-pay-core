@@ -136,20 +136,7 @@ $sections = array_filter(
 		<?php foreach ( $sections as $section ) : ?>
 
 			<li>
-				<?php
-
-				if ( isset( $section->icon ) ) {
-					printf(
-						'<span class="%s"></span>',
-						$section->icon
-					);
-
-					echo ' ';
-				}
-
-				echo esc_html( $section->title );
-
-				?>
+				<?php echo esc_html( $section->title ); ?>
 			</li>
 
 		<?php endforeach; ?>
