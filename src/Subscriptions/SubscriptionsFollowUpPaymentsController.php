@@ -51,7 +51,7 @@ class SubscriptionsFollowUpPaymentsController {
 
 		WP_CLI::add_command(
 			'pay subscription list',
-			function ( $args, $assoc_args ) {
+			function ( $args ) {
 				WP_CLI::debug( 'Query subscriptions that require follow-up payment.' );
 
 				$query = $this->get_subscriptions_wp_query_that_require_follow_up_payment();
