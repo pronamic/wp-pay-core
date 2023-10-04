@@ -64,12 +64,14 @@ if ( null !== $payment_id ) {
 		esc_html( (string) $payment_id )
 	);
 } else {
-	printf(
-		/* translators: 1: formatted date, 2: payment edit url, 3: payment id */
-		__(
-			'Last webhook request processed on %1$s.',
-			'pronamic_ideal'
-		),
-		esc_html( $webhook_log_request_info->get_request_date()->format_i18n( _x( 'l j F Y \a\t H:i', 'full datetime format', 'pronamic_ideal' ) ) )
+	echo esc_html(
+		sprintf(
+			/* translators: %s: formatted date */
+			__(
+				'Last webhook request processed on %s.',
+				'pronamic_ideal'
+			),
+			$webhook_log_request_info->get_request_date()->format_i18n( _x( 'l j F Y \a\t H:i', 'full datetime format', 'pronamic_ideal' ) )
+		)
 	);
 }
