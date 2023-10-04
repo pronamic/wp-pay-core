@@ -96,7 +96,7 @@ if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_n
 			'section'  => 'general',
 			'title'    => __( 'Transaction feedback', 'pronamic_ideal' ),
 			'type'     => 'custom',
-			'callback' => function() {
+			'callback' => function () {
 				printf(
 					'⚠️ %s',
 					__(
@@ -104,7 +104,7 @@ if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_n
 						'pronamic_ideal'
 					)
 				);
-			}
+			},
 		];
 	}
 }
