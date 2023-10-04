@@ -190,15 +190,16 @@ $sections = array_filter(
 
 					?>
 					<tr class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>">
-
-						<?php if ( 'html' !== $field['type'] ) { ?>
-
 						<th scope="row">
-							<label for="<?php echo esc_attr( $field_id ); ?>">
-								<?php echo esc_html( $field['title'] ); ?>
-							</label>
-
 							<?php
+
+							if ( array_key_exists( 'title', $field ) ) {
+								printf(
+									'<label for="%s">%s</label>',
+									esc_attr( $field_id ),
+									esc_html( $field['title'] )
+								);
+							}
 
 							if ( isset( $field['tooltip'] ) && ! empty( $field['tooltip'] ) ) {
 								printf(
@@ -209,14 +210,7 @@ $sections = array_filter(
 
 							?>
 						</th>
-
-						<?php } ?>
-
-						<td
-						<?php
-						if ( 'html' === $field['type'] ) :
-							?>
-							colspan="2"<?php endif; ?>>
+						<td>
 							<?php
 
 							$field = (array) $field;
