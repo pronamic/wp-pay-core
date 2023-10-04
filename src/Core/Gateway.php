@@ -310,7 +310,7 @@ abstract class Gateway {
 		} else {
 			Core_Util::no_cache();
 
-			include Plugin::$dirname . '/views/redirect-via-html.php';
+			include __DIR__ . '/../..//views/redirect-via-html.php';
 		}
 
 		exit;
