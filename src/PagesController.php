@@ -78,10 +78,9 @@ class PagesController {
 	/**
 	 * Settings section.
 	 *
-	 * @param array $args Arguments.
 	 * @return void
 	 */
-	public function settings_section( $args ) {
+	public function settings_section() {
 		echo '<p>';
 		\esc_html_e( 'The page an user will get redirected to after payment, based on the payment status.', 'pronamic_ideal' );
 		echo '</p>';
