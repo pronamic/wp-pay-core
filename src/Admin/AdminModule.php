@@ -202,52 +202,6 @@ class AdminModule {
 	}
 
 	/**
-	 * Input checkbox.
-	 *
-	 * @param array $args Arguments.
-	 * @return void
-	 */
-	public static function input_checkbox( $args ) {
-		$defaults = [
-			'label_for' => '',
-			'type'      => 'text',
-			'label'     => '',
-		];
-
-		$args = wp_parse_args( $args, $defaults );
-
-		$id    = $args['label_for'];
-		$value = get_option( $id );
-
-		$legend = sprintf(
-			'<legend class="screen-reader-text"><span>%s</span></legend>',
-			esc_html( $args['label'] )
-		);
-
-		$input = sprintf(
-			'<input name="%s" id="%s" type="%s" value="%s" %s />',
-			esc_attr( $id ),
-			esc_attr( $id ),
-			esc_attr( 'checkbox' ),
-			esc_attr( '1' ),
-			checked( $value, true, false )
-		);
-
-		$label = sprintf(
-			'<label for="%s">%s %s</label>',
-			esc_attr( $id ),
-			$input,
-			esc_html( $args['label'] )
-		);
-
-		printf(
-			'<fieldset>%s %s</fieldset>',
-			$legend,
-			$label
-		);
-	}
-
-	/**
 	 * Sanitize the specified value to a boolean.
 	 *
 	 * @param mixed $value Value.
