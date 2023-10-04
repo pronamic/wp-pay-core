@@ -23,11 +23,20 @@ if ( ! isset( $payment ) ) {
 
 		<?php wp_print_styles( 'pronamic-pay-redirect' ); ?>
 
+		<?php
+
+		/**
+		 * Break out of iframe.
+		 * 
+		 * @link https://github.com/pronamic/wp-pronamic-pay-give/issues/2
+		 * @link https://github.com/pronamic/wp-pronamic-pay/commit/6936ec048c6778e688386d3c15f6a6c1cbaa8eb9
+		 */
+
+		?>
 		<script>
-		// Break out of iframe.
-		if ( window.top.location !== window.location ) {
-			window.top.location = window.location;
-		}
+			if ( window.top.location !== window.location ) {
+				window.top.location = window.location;
+			}
 		</script>
 	</head>
 
