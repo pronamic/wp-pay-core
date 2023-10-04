@@ -45,4 +45,12 @@
 		<exclude-pattern>/src/Admin/AdminGatewayPostType.php</exclude-pattern>
 		<exclude-pattern>/src/Core/Gateway.php</exclude-pattern>
 	</rule>
+
+	<rule ref="WordPress.WP.Capabilities">
+		<properties>
+			<property name="custom_capabilities" type="array">
+				<element value="edit_payments" />
+			</property>
+		</properties>
+	</rule>
 </ruleset>
