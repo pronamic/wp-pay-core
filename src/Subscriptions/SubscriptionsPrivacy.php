@@ -141,11 +141,9 @@ class SubscriptionsPrivacy {
 	 * Subscriptions anonymizer.
 	 *
 	 * @param string $email_address Email address.
-	 * @param int    $page          Page.
-	 *
 	 * @return array
 	 */
-	public function subscriptions_anonymizer( $email_address, $page = 1 ) {
+	public function subscriptions_anonymizer( $email_address ) {
 		// Subscriptions data store.
 		$data_store = pronamic_pay_plugin()->subscriptions_data_store;
 
