@@ -760,7 +760,9 @@ class SubscriptionsModule {
 	 * @return string
 	 */
 	public function source_text_subscription_payment_method_change( $text ) {
-		return __( 'Subscription payment method change', 'pronamic_ideal' );
+		$text = \__( 'Subscription payment method change', 'pronamic_ideal' );
+
+		return $text;
 	}
 
 	/**
@@ -770,6 +772,8 @@ class SubscriptionsModule {
 	 * @return string
 	 */
 	public function source_description_subscription_payment_method_change( $text ) {
-		return __( 'subscription payment method change', 'pronamic_ideal' );
+		$text = \__( 'subscription payment method change', 'pronamic_ideal' );
+
+		return $text;
 	}
 }
