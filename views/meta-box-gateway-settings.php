@@ -150,18 +150,6 @@ $sections = array_filter(
 		<div class="pronamic-pay-tab">
 			<div class="pronamic-pay-tab-block gateway-config-section-header">
 				<h4 class="pronamic-pay-cloack"><?php echo esc_html( $section->title ); ?></h4>
-
-				<?php if ( isset( $section->description ) ) : ?>
-
-					<p>
-						<?php
-
-						echo $section->description;
-
-						?>
-					</p>
-
-				<?php endif; ?>
 			</div>
 
 			<table class="form-table">
