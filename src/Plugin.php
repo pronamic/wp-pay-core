@@ -587,7 +587,7 @@ class Plugin {
 		$redirect_message = $payment->get_meta( 'payment_redirect_message' );
 
 		if ( ! empty( $redirect_message ) ) {
-			require self::$dirname . '/views/redirect-message.php';
+			require __DIR__ . '/../views/redirect-message.php';
 
 			exit;
 		}
