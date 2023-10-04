@@ -8,6 +8,7 @@
  * @package   Pronamic\WordPress\Pay
  */
 
+use Pronamic\WordPress\Html\Element;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
@@ -142,18 +143,18 @@ $subscription = \get_pronamic_subscription( (int) get_the_ID() );
 
 					<?php
 
-					$atts = [
-						'id'       => 'pronamic-pay-next-payment-date',
-						'name'     => 'pronamic_subscription_next_payment_date',
-						'type'     => 'date',
-						'value'    => null === $next_payment_date ? '' : $next_payment_date->format( 'Y-m-d' ),
-						'data-min' => ( new DateTimeImmutable( 'tomorrow' ) )->format( 'Y-m-d' ),
-					];
-
-					\printf(
-						'<input %s>',
-						Util::array_to_html_attributes( $atts )
+					$element = new Element(
+						'input',
+						[
+							'id'       => 'pronamic-pay-next-payment-date',
+							'name'     => 'pronamic_subscription_next_payment_date',
+							'type'     => 'date',
+							'value'    => null === $next_payment_date ? '' : $next_payment_date->format( 'Y-m-d' ),
+							'data-min' => ( new DateTimeImmutable( 'tomorrow' ) )->format( 'Y-m-d' ),
+						]
 					);
+
+					$element->output();
 
 					?>
 
