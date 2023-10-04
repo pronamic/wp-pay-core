@@ -827,7 +827,9 @@ class Plugin {
 	 * @param \Exception $exception An exception.
 	 * @return void
 	 */
-	public static function render_exception( \Exception $exception ) {
+	public static function render_exception( // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Parameter is used in include.
+		\Exception $exception
+	) {
 		include self::$dirname . '/views/exception.php';
 	}
 

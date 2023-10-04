@@ -245,7 +245,9 @@ abstract class Gateway {
 	 * @return void
 	 * @throws \Exception Throws an exception if the refund could not be processed.
 	 */
-	public function create_refund( Refund $refund ) {
+	public function create_refund( // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Parameter is required for function signature.
+		Refund $refund
+	) {
 		throw new \Exception( 'Gateway does not support refunds.' );
 	}
 
@@ -367,7 +369,9 @@ abstract class Gateway {
 	 * @return array
 	 * @since 1.2.0
 	 */
-	public function get_output_fields( Payment $payment ) {
+	public function get_output_fields( // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Parameter is required for function signature.
+		Payment $payment
+	) {
 		return [];
 	}
 

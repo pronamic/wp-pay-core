@@ -694,7 +694,9 @@ class AdminPaymentPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 * @return void
 	 */
-	public function meta_box_update( $post ) {
+	public function meta_box_update( // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Parameter is used in include.
+		$post
+	) {
 		wp_nonce_field( 'pronamic_payment_update', 'pronamic_payment_update_nonce' );
 
 		include __DIR__ . '/../../views/meta-box-payment-update.php';

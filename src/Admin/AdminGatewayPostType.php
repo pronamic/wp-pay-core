@@ -283,7 +283,10 @@ class AdminGatewayPostType {
 	 *
 	 * @return void
 	 */
-	public static function settings_payment_methods( $gateway, $gateway_id ) {
+	public static function settings_payment_methods( // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter -- Parameters are used in include.
+		$gateway,
+		$gateway_id
+	) {
 		if ( null === $gateway ) {
 			return;
 		}
@@ -308,7 +311,11 @@ class AdminGatewayPostType {
 	 *
 	 * @return void
 	 */
-	public static function settings_webhook_log( $gateway, $gateway_id, $config_id ) {
+	public static function settings_webhook_log( // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter -- Parameters are used in include.
+		$gateway,
+		$gateway_id,
+		$config_id
+	) {
 		if ( null === $gateway ) {
 			return;
 		}
@@ -322,7 +329,9 @@ class AdminGatewayPostType {
 	 * @param WP_Post $post The object for the current post/page.
 	 * @return void
 	 */
-	public function meta_box_test( $post ) {
+	public function meta_box_test( // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Parameter is used in include.
+		$post
+	) {
 		\wp_register_script(
 			'pronamic-pay-gateway-test',
 			plugins_url( 'js/dist/admin-test.min.js', dirname( __DIR__ ) ),
