@@ -412,7 +412,17 @@ $sections = array_filter(
 							if ( isset( $field['description'] ) ) {
 								printf(
 									'<p class="pronamic-pay-description description">%s</p>',
-									$field['description']
+									\wp_kses(
+										$field['description'],
+										[
+											'a'    => [
+												'href'   => true,
+												'target' => true,
+											],
+											'br'   => [],
+											'code' => [],
+										]
+									)
 								);
 							}
 
