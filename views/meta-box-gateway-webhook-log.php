@@ -53,15 +53,23 @@ $payment = $webhook_log_request_info->get_payment();
 $payment_id = ( null === $payment ) ? null : $payment->get_id();
 
 if ( null !== $payment_id ) {
-	printf(
-		/* translators: 1: formatted date, 2: payment edit url, 3: payment id */
-		__(
-			'Last webhook request processed on %1$s for <a href="%2$s" title="Payment %3$s">payment #%3$s</a>.',
-			'pronamic_ideal'
+	echo wp_kses(
+		sprintf(
+			/* translators: 1: formatted date, 2: payment edit url, 3: payment id */
+			__(
+				'Last webhook request processed on %1$s for <a href="%2$s" title="Payment %3$s">payment #%3$s</a>.',
+				'pronamic_ideal'
+			),
+			$webhook_log_request_info->get_request_date()->format_i18n( _x( 'l j F Y \a\t H:i', 'full datetime format', 'pronamic_ideal' ) ),
+			esc_url( (string) get_edit_post_link( $payment_id ) ),
+			(string) $payment_id
 		),
-		esc_html( $webhook_log_request_info->get_request_date()->format_i18n( _x( 'l j F Y \a\t H:i', 'full datetime format', 'pronamic_ideal' ) ) ),
-		esc_url( (string) get_edit_post_link( $payment_id ) ),
-		esc_html( (string) $payment_id )
+		[
+			'a' => [
+				'href'  => true,
+				'title' => true,
+			],
+		]
 	);
 } else {
 	echo esc_html(
