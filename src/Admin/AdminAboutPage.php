@@ -118,7 +118,7 @@ class AdminAboutPage {
 	 */
 	private function get_file_version( $file ) {
 		// We don't need to write to the file, so just open for reading.
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fopen
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
 		$fp = \fopen( $file, 'r' );
 
 		if ( false === $fp ) {
@@ -131,7 +131,7 @@ class AdminAboutPage {
 		}
 
 		// Pull only the first 8kiB of the file in.
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fread
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
 		$file_data = \fread( $fp, 8192 );
 
 		if ( false === $file_data ) {
