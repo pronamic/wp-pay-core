@@ -48,7 +48,7 @@ $sections = [
 			[
 				'section'  => 'payment_methods',
 				'title'    => __( 'Supported Payment Methods', 'pronamic_ideal' ),
-				'type'     => 'html',
+				'type'     => 'custom',
 				'callback' => function () use ( $gateway, $gateway_id ) {
 					AdminGatewayPostType::settings_payment_methods( $gateway, $gateway_id );
 				},
@@ -62,7 +62,7 @@ if ( $integration->supports( 'webhook' ) ) {
 	$fields[] = [
 		'section'  => 'feedback',
 		'title'    => __( 'Webhook Status', 'pronamic_ideal' ),
-		'type'     => 'description',
+		'type'     => 'custom',
 		'callback' => function () use ( $gateway, $gateway_id, $config_id ) {
 			AdminGatewayPostType::settings_webhook_log( $gateway, $gateway_id, $config_id );
 		},
@@ -93,16 +93,18 @@ if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_n
 		);
 
 		$fields[] = [
-			'section' => 'general',
-			'title'   => __( 'Transaction feedback', 'pronamic_ideal' ),
-			'type'    => 'description',
-			'html'    => sprintf(
-				'⚠️ %s',
-				__(
-					'Processing gateway transaction feedback in the background requires additional configuration.',
-					'pronamic_ideal'
-				)
-			),
+			'section'  => 'general',
+			'title'    => __( 'Transaction feedback', 'pronamic_ideal' ),
+			'type'     => 'custom',
+			'callback' => function() {
+				printf(
+					'⚠️ %s',
+					__(
+						'Processing gateway transaction feedback in the background requires additional configuration.',
+						'pronamic_ideal'
+					)
+				);
+			}
 		];
 	}
 }
@@ -396,17 +398,6 @@ $sections = array_filter(
 									}
 
 									break;
-							}
-
-							if ( isset( $field['html'] ) ) {
-								if ( 'description' !== $field['type'] && isset( $field['title'] ) && ! empty( $field['title'] ) ) {
-									printf(
-										'<strong>%s</strong><br>',
-										esc_html( $field['title'] )
-									);
-								}
-
-								echo $field['html'];
 							}
 
 							if ( isset( $field['description'] ) ) {
