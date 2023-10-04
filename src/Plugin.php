@@ -583,15 +583,6 @@ class Plugin {
 		// Don't cache.
 		Core_Util::no_cache();
 
-		// Handle redirect message from payment meta.
-		$redirect_message = $payment->get_meta( 'payment_redirect_message' );
-
-		if ( ! empty( $redirect_message ) ) {
-			require __DIR__ . '/../views/redirect-message.php';
-
-			exit;
-		}
-
 		$gateway = $payment->get_gateway();
 
 		if ( null !== $gateway ) {
