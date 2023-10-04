@@ -580,7 +580,6 @@ class Plugin {
 
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
-		// Don't cache.
 		Core_Util::no_cache();
 
 		$gateway = $payment->get_gateway();
