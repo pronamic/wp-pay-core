@@ -241,11 +241,9 @@ class AdminModule {
 		);
 
 		printf(
-			/* phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped */
 			'<fieldset>%s %s</fieldset>',
 			$legend,
 			$label
-			/* phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped */
 		);
 	}
 

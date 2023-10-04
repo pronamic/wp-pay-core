@@ -245,7 +245,6 @@ $phase = $subscription->get_display_phase();
 		<td>
 			<?php
 
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo $subscription->get_source_text();
 
 			?>

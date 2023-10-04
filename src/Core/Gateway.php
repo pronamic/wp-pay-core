@@ -306,7 +306,6 @@ abstract class Gateway {
 	 */
 	public function redirect_via_html( Payment $payment ) {
 		if ( headers_sent() ) {
-			/* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */
 			echo $this->get_form_html( $payment, true );
 		} else {
 			Core_Util::no_cache();

@@ -152,7 +152,6 @@ $subscription = \get_pronamic_subscription( (int) get_the_ID() );
 
 					\printf(
 						'<input %s>',
-						/* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */
 						Util::array_to_html_attributes( $atts )
 					);
 
@@ -186,7 +185,6 @@ $subscription = \get_pronamic_subscription( (int) get_the_ID() );
 						\printf(
 							/* translators: %s subscription source description */
 							\esc_html( \__( 'Editing the next payment date does not affect the current status or validity of %s.', 'pronamic_ideal' ) ),
-							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							\str_replace(
 								[ '<br>', '<br/>', '<br />' ],
 								' ',

@@ -724,7 +724,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<td>
 			<?php
 
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo $payment->get_source_text();
 
 			?>

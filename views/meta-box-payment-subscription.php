@@ -124,7 +124,6 @@ if ( empty( $subscriptions ) ) : ?>
 				<td>
 					<?php
 
-					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					echo $subscription->get_source_text();
 
 					?>

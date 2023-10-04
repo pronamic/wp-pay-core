@@ -141,7 +141,6 @@ $sections = array_filter(
 				if ( isset( $section->icon ) ) {
 					printf(
 						'<span class="%s"></span>',
-						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 						$section->icon
 					);
 
@@ -168,7 +167,6 @@ $sections = array_filter(
 					<p>
 						<?php
 
-						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 						echo $section->description;
 
 						?>
@@ -421,14 +419,12 @@ $sections = array_filter(
 									);
 								}
 
-								// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 								echo $field['html'];
 							}
 
 							if ( isset( $field['description'] ) ) {
 								printf(
 									'<p class="pronamic-pay-description description">%s</p>',
-									// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 									$field['description']
 								);
 							}

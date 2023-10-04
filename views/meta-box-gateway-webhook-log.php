@@ -55,7 +55,7 @@ $payment_id = ( null === $payment ) ? null : $payment->get_id();
 if ( null !== $payment_id ) {
 	printf(
 		/* translators: 1: formatted date, 2: payment edit url, 3: payment id */
-		__( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		__(
 			'Last webhook request processed on %1$s for <a href="%2$s" title="Payment %3$s">payment #%3$s</a>.',
 			'pronamic_ideal'
 		),
@@ -66,7 +66,7 @@ if ( null !== $payment_id ) {
 } else {
 	printf(
 		/* translators: 1: formatted date, 2: payment edit url, 3: payment id */
-		__( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		__(
 			'Last webhook request processed on %1$s.',
 			'pronamic_ideal'
 		),
