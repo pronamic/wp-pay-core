@@ -306,7 +306,7 @@ abstract class Gateway {
 	 */
 	public function redirect_via_html( Payment $payment ) {
 		if ( headers_sent() ) {
-			echo $this->get_form_html( $payment, true );
+			echo $this->get_form_html( $payment );
 		} else {
 			Core_Util::no_cache();
 
@@ -319,12 +319,11 @@ abstract class Gateway {
 	/**
 	 * Get form HTML.
 	 *
-	 * @param Payment $payment     Payment to get form HTML for.
-	 * @param bool    $auto_submit Flag to auto submit.
+	 * @param Payment $payment Payment to get form HTML for.
 	 * @return string
 	 * @throws \Exception When payment action URL is empty.
 	 */
-	public function get_form_html( Payment $payment, $auto_submit = false ) {
+	public function get_form_html( Payment $payment ) {
 		$form_inner = $this->get_output_html( $payment );
 
 		$form_inner .= sprintf(
@@ -343,6 +342,12 @@ abstract class Gateway {
 			esc_attr( $action_url ),
 			$form_inner
 		);
+
+		$auto_submit = true;
+
+		if ( defined( '\PRONAMIC_PAY_DEBUG' ) && \PRONAMIC_PAY_DEBUG ) {
+			$auto_submit = true;
+		}
 
 		if ( $auto_submit ) {
 			$element = new Element(

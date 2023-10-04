@@ -31,19 +31,7 @@ if ( ! isset( $payment ) ) {
 		</script>
 	</head>
 
-	<?php
-
-	$auto_submit = true;
-
-	if ( defined( '\PRONAMIC_PAY_DEBUG' ) && \PRONAMIC_PAY_DEBUG ) {
-		$auto_submit = false;
-	}
-
-	$onload = $auto_submit ? 'document.forms[0].submit();' : '';
-
-	?>
-
-	<body onload="<?php esc_attr( $onload ); ?>">
+	<body>
 		<div class="pronamic-pay-redirect-page">
 			<div class="pronamic-pay-redirect-container">
 				<h1><?php esc_html_e( 'Redirecting…', 'pronamic-ideal' ); ?></h1>
@@ -58,7 +46,7 @@ if ( ! isset( $payment ) ) {
 							<?php esc_html_e( 'Please click the button below if you are not automatically redirected.', 'pronamic-ideal' ); ?>
 						</p>
 
-						<?php echo $this->get_form_html( $payment, $auto_submit ); ?>
+						<?php echo $this->get_form_html( $payment ); ?>
 					</div>
 				</div>
 
