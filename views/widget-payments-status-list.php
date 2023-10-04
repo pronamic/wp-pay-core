@@ -46,13 +46,18 @@ $url = \add_query_arg(
 
 					$count = isset( $counts->$payment_status ) ? $counts->$payment_status : 0;
 
-					\printf(
-						$label,
-						'<strong>' . \sprintf(
-							/* translators: %s: Number payments */
-							\esc_html( \_n( '%s payment', '%s payments', $count, 'pronamic_ideal' ) ),
-							\esc_html( \number_format_i18n( $count ) )
-						) . '</strong>'
+					echo \wp_kses(
+						\sprintf(
+							$label,
+							'<strong>' . \sprintf(
+								/* translators: %s: Number payments */
+								\_n( '%s payment', '%s payments', $count, 'pronamic_ideal' ),
+								\number_format_i18n( $count )
+							) . '</strong>'
+						),
+						[
+							'strong' => [],
+						]
 					);
 
 					?>
