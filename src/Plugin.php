@@ -817,7 +817,7 @@ class Plugin {
 		}
 
 		foreach ( $errors as $pay_error ) {
-			include self::$dirname . '/views/error.php';
+			include __DIR__ . '/../views/error.php';
 		}
 	}
 
