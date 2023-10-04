@@ -99,7 +99,7 @@ if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_n
 			'callback' => function () {
 				printf(
 					'⚠️ %s',
-					__(
+					esc_html__(
 						'Processing gateway transaction feedback in the background requires additional configuration.',
 						'pronamic_ideal'
 					)
