@@ -324,18 +324,18 @@ abstract class Gateway {
 	 * @throws \Exception When payment action URL is empty.
 	 */
 	public function get_form_html( Payment $payment ) {
+		$action_url = $payment->get_action_url();
+
+		if ( empty( $action_url ) ) {
+			throw new \Exception( 'Action URL is empty, can not get form HTML.' );
+		}
+
 		$form_inner = $this->get_output_html( $payment );
 
 		$form_inner .= sprintf(
 			'<input class="pronamic-pay-btn" type="submit" name="pay" value="%s" />',
 			__( 'Pay', 'pronamic_ideal' )
 		);
-
-		$action_url = $payment->get_action_url();
-
-		if ( empty( $action_url ) ) {
-			throw new \Exception( 'Action URL is empty, can not get form HTML.' );
-		}
 
 		$html = sprintf(
 			'<form id="pronamic_ideal_form" name="pronamic_ideal_form" method="post" action="%s">%s</form>',
