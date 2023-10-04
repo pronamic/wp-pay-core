@@ -47,7 +47,6 @@ $url = \add_query_arg(
 					$count = isset( $counts->$payment_status ) ? $counts->$payment_status : 0;
 
 					\printf(
-                        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 						$label,
 						'<strong>' . \sprintf(
 							/* translators: %s: Number payments */
