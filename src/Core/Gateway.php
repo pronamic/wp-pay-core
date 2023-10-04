@@ -306,63 +306,31 @@ abstract class Gateway {
 	 */
 	public function redirect_via_html( Payment $payment ) {
 		if ( headers_sent() ) {
-			echo $this->get_form_html( $payment );
+			$this->output_form( $payment );
 		} else {
 			Core_Util::no_cache();
 
-			include __DIR__ . '/../..//views/redirect-via-html.php';
+			include __DIR__ . '/../../views/redirect-via-html.php';
 		}
 
 		exit;
 	}
 
 	/**
-	 * Get form HTML.
-	 *
-	 * @param Payment $payment Payment to get form HTML for.
-	 * @return string
+	 * Output form.
+	 * 
+	 * @param Payment $payment Payment.
+	 * @return void
 	 * @throws \Exception When payment action URL is empty.
 	 */
-	public function get_form_html( Payment $payment ) {
+	private function output_form( Payment $payment ) {
 		$action_url = $payment->get_action_url();
 
 		if ( empty( $action_url ) ) {
 			throw new \Exception( 'Action URL is empty, can not get form HTML.' );
 		}
 
-		$form_inner = $this->get_output_html( $payment );
-
-		$form_inner .= sprintf(
-			'<input class="pronamic-pay-btn" type="submit" name="pay" value="%s" />',
-			__( 'Pay', 'pronamic_ideal' )
-		);
-
-		$html = sprintf(
-			'<form id="pronamic_ideal_form" name="pronamic_ideal_form" method="post" action="%s">%s</form>',
-			esc_attr( $action_url ),
-			$form_inner
-		);
-
-		$auto_submit = true;
-
-		if ( defined( '\PRONAMIC_PAY_DEBUG' ) && \PRONAMIC_PAY_DEBUG ) {
-			$auto_submit = false;
-		}
-
-		if ( $auto_submit ) {
-			$element = new Element(
-				'script',
-				[
-					'type' => 'text/javascript',
-				]
-			);
-
-			$element->children[] = 'document.pronamic_ideal_form.submit();';
-
-			$html .= (string) $element;
-		}
-
-		return $html;
+		include __DIR__ . '/../../views/form.php';
 	}
 
 	/**
@@ -377,19 +345,6 @@ abstract class Gateway {
 		Payment $payment
 	) {
 		return [];
-	}
-
-	/**
-	 * Get the output HTML
-	 *
-	 * @param Payment $payment Payment.
-	 *
-	 * @return string
-	 */
-	public function get_output_html( Payment $payment ) {
-		$fields = $this->get_output_fields( $payment );
-
-		return PayUtil::html_hidden_fields( $fields );
 	}
 
 	/**

@@ -55,7 +55,7 @@ if ( ! isset( $payment ) ) {
 							<?php esc_html_e( 'Please click the button below if you are not automatically redirected.', 'pronamic-ideal' ); ?>
 						</p>
 
-						<?php echo $this->get_form_html( $payment ); ?>
+						<?php $this->output_form( $payment ); ?>
 					</div>
 				</div>
 

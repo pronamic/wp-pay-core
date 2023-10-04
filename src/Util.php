@@ -207,7 +207,7 @@ class Util {
 	 * @param array    $result Result.
 	 * @return array
 	 */
-	private static function array_square_bracket( $data, $name = '', $result = [] ) {
+	public static function array_square_bracket( $data, $name = '', $result = [] ) {
 		foreach ( $data as $key => $item ) {
 			if ( '' !== $name ) {
 				$key = $name . '[' . $key . ']';
