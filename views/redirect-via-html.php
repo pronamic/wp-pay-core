@@ -58,12 +58,7 @@ if ( ! isset( $payment ) ) {
 							<?php esc_html_e( 'Please click the button below if you are not automatically redirected.', 'pronamic-ideal' ); ?>
 						</p>
 
-						<?php
-
-						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-						echo $this->get_form_html( $payment, $auto_submit );
-
-						?>
+						<?php echo $this->get_form_html( $payment, $auto_submit ); ?>
 					</div>
 				</div>
 
