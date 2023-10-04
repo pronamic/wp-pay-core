@@ -346,7 +346,7 @@ abstract class Gateway {
 		$auto_submit = true;
 
 		if ( defined( '\PRONAMIC_PAY_DEBUG' ) && \PRONAMIC_PAY_DEBUG ) {
-			$auto_submit = true;
+			$auto_submit = false;
 		}
 
 		if ( $auto_submit ) {
