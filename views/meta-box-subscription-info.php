@@ -245,7 +245,15 @@ $phase = $subscription->get_display_phase();
 		<td>
 			<?php
 
-			echo $subscription->get_source_text();
+			echo wp_kses(
+				$subscription->get_source_text(),
+				[
+					'a'  => [
+						'href' => true,
+					],
+					'br' => [],
+				]
+			);
 
 			?>
 		</td>
