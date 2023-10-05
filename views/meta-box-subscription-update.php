@@ -186,10 +186,13 @@ $subscription = \get_pronamic_subscription( (int) get_the_ID() );
 						\printf(
 							/* translators: %s subscription source description */
 							\esc_html( \__( 'Editing the next payment date does not affect the current status or validity of %s.', 'pronamic_ideal' ) ),
-							\str_replace(
-								[ '<br>', '<br/>', '<br />' ],
-								' ',
-								$subscription->get_source_text()
+							\wp_kses(
+								$subscription->get_source_text(),
+								[
+									'a' => [
+										'href' => true,
+									],
+								]
 							)
 						);
 
