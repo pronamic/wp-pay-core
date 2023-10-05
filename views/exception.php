@@ -33,7 +33,7 @@ if ( ! $exception instanceof \Exception ) {
 				<?php
 
 				echo '<pre>';
-				echo $exception->getTraceAsString();
+				echo esc_html( $exception->getTraceAsString() );
 				echo '</pre>';
 
 				?>
