@@ -6,6 +6,8 @@
  * @copyright 2005-2023 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
+ * @var       \Pronamic\WordPress\Pay\Payments\Payment $payment Payment.
+ * @var       \Pronamic\WordPress\Pay\Core\Gateway     $this    Gateway.
  */
 
 use Pronamic\WordPress\Html\Element;
@@ -13,6 +15,14 @@ use Pronamic\WordPress\Pay\Util;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
+
+$action_url = $payment->get_action_url();
+
+if ( empty( $action_url ) ) {
+	esc_html_e( 'It is currently not possible to pay, please contact us for more information (error: no action URL found).', 'pronamic_ideal' );
+
+	return;
 }
 
 ?>

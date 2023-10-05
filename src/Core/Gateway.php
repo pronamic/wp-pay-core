@@ -323,13 +323,9 @@ abstract class Gateway {
 	 * @return void
 	 * @throws \Exception When payment action URL is empty.
 	 */
-	private function output_form( Payment $payment ) {
-		$action_url = $payment->get_action_url();
-
-		if ( empty( $action_url ) ) {
-			throw new \Exception( 'Action URL is empty, can not get form HTML.' );
-		}
-
+	public function output_form( // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Parameter is used in include.
+		Payment $payment
+	) {
 		include __DIR__ . '/../../views/form.php';
 	}
 

@@ -6,14 +6,12 @@
  * @copyright 2005-2023 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
+ * @var       \Pronamic\WordPress\Pay\Payments\Payment $payment Payment.
+ * @var       \Pronamic\WordPress\Pay\Core\Gateway     $this    Gateway.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
-}
-
-if ( ! isset( $payment ) ) {
-	return;
 }
 
 ?>
@@ -81,7 +79,7 @@ if ( ! isset( $payment ) ) {
 							<?php endif; ?>
 
 							<dt><?php esc_html_e( 'Description', 'pronamic_ideal' ); ?></dt>
-							<dd><?php echo esc_html( $payment->get_description() ); ?></dd>
+							<dd><?php echo esc_html( (string) $payment->get_description() ); ?></dd>
 
 							<dt><?php esc_html_e( 'Amount', 'pronamic_ideal' ); ?></dt>
 							<dd><?php echo esc_html( $payment->get_total_amount()->format_i18n() ); ?></dd>

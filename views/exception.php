@@ -6,14 +6,11 @@
  * @copyright 2005-2023 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
+ * @var       \Exception $exception Exception.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
-}
-
-if ( ! isset( $exception ) ) {
-	return;
 }
 
 ?>
