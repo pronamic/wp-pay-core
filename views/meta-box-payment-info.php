@@ -724,7 +724,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<td>
 			<?php
 
-			echo $payment->get_source_text();
+			echo wp_kses(
+				$payment->get_source_text(),
+				[
+					'a'  => [
+						'href' => true,
+					],
+					'br' => [],
+				]
+			);
 
 			?>
 		</td>
