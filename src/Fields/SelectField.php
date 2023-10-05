@@ -20,20 +20,6 @@ use Pronamic\WordPress\Html\Element;
  */
 class SelectField extends Field {
 	/**
-	 * Get HTML attributes.
-	 *
-	 * @return array<string, string>
-	 */
-	protected function get_html_attributes() {
-		$attributes = parent::get_html_attributes();
-
-		$attributes['id']   = $this->get_id();
-		$attributes['name'] = $this->get_id();
-
-		return $attributes;
-	}
-
-	/**
 	 * Options.
 	 *
 	 * @var iterable<SelectFieldOption|SelectFieldOptionGroup>
@@ -83,18 +69,24 @@ class SelectField extends Field {
 	}
 
 	/**
-	 * Render field.
-	 *
-	 * @return string
+	 * Get element.
+	 * 
+	 * @return Element|null
 	 */
-	public function render() {
-		$element = new Element( 'select', $this->get_html_attributes() );
+	protected function get_element() {
+		$element = new Element(
+			'select',
+			[
+				'id'   => $this->get_id(),
+				'name' => $this->get_id(),
+			]
+		);
 
 		foreach ( $this->get_options() as $child ) {
-			$element->children[] = $child->render();
+			$element->children[] = $child->get_element()->render();
 		}
 
-		return $element->render();
+		return $element;
 	}
 
 	/**

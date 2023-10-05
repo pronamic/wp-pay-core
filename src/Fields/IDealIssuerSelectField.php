@@ -28,20 +28,6 @@ class IDealIssuerSelectField extends SelectField {
 	}
 
 	/**
-	 * Get HTML attributes.
-	 *
-	 * @return array<string, string>
-	 */
-	protected function get_html_attributes() {
-		$attributes = parent::get_html_attributes();
-
-		$attributes['id']   = $this->get_id();
-		$attributes['name'] = $this->get_id();
-
-		return $attributes;
-	}
-
-	/**
 	 * Get options.
 	 *
 	 * @return array<SelectFieldOption|SelectFieldOptionGroup>

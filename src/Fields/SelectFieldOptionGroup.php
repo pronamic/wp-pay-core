@@ -40,11 +40,11 @@ class SelectFieldOptionGroup {
 	}
 
 	/**
-	 * Render.
+	 * Get element.
 	 *
-	 * @return string
+	 * @return Element
 	 */
-	public function render() {
+	public function get_element() {
 		$element = new Element(
 			'optgroup',
 			[
@@ -53,9 +53,9 @@ class SelectFieldOptionGroup {
 		);
 
 		foreach ( $this->options as $option ) {
-			$element->children[] = $option->render();
+			$element->children[] = $option->get_element()->render();
 		}
 
-		return $element->render();
+		return $element;
 	}
 }

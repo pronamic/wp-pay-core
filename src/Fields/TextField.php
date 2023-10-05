@@ -17,29 +17,21 @@ use Pronamic\WordPress\Html\Element;
  */
 class TextField extends Field {
 	/**
-	 * Get HTML attributes.
-	 *
-	 * @return array<string, string>
+	 * Get element.
+	 * 
+	 * @return Element|null
 	 */
-	protected function get_html_attributes(): array {
-		$attributes = parent::get_html_attributes();
+	protected function get_element() {
+		$element = new Element(
+			'input',
+			[
+				'type' => 'text',
+				'id'   => $this->get_id(),
+				'name' => $this->get_id(),
+			]
+		);
 
-		$attributes['type'] = 'text';
-		$attributes['id']   = $this->get_id();
-		$attributes['name'] = $this->get_id();
-
-		return $attributes;
-	}
-
-	/**
-	 * Render field.
-	 *
-	 * @return string
-	 */
-	public function render(): string {
-		$element = new Element( 'input', $this->get_html_attributes() );
-
-		return $element->render();
+		return $element;
 	}
 
 	/**

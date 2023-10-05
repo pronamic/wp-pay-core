@@ -46,11 +46,11 @@ class SelectFieldOption implements JsonSerializable {
 	}
 
 	/**
-	 * Render field.
+	 * Get element.
 	 *
-	 * @return string
+	 * @return Element
 	 */
-	public function render(): string {
+	public function get_element() {
 		$element = new Element(
 			'option',
 			[
@@ -60,7 +60,7 @@ class SelectFieldOption implements JsonSerializable {
 
 		$element->children[] = $this->label;
 
-		return $element->render();
+		return $element;
 	}
 
 	/**

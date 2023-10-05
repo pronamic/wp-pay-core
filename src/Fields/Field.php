@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Fields;
 
 use JsonSerializable;
+use Pronamic\WordPress\Html\Element;
 
 /**
  * Field class
@@ -109,12 +110,12 @@ class Field implements JsonSerializable {
 	}
 
 	/**
-	 * Get HTML attributes.
-	 *
-	 * @return array<string, string>
+	 * Get element.
+	 * 
+	 * @return Element|null
 	 */
-	protected function get_html_attributes() {
-		return [];
+	protected function get_element() {
+		return null;
 	}
 
 	/**
@@ -123,16 +124,28 @@ class Field implements JsonSerializable {
 	 * @return string
 	 */
 	public function render() {
-		return '';
+		$element = $this->get_element();
+
+		if ( null === $element ) {
+			return '';
+		}
+
+		return $element->render();
 	}
 
 	/**
-	 * Print output.
+	 * Output.
 	 *
 	 * @return int
 	 */
 	public function output() {
-		return print $this->render();
+		$element = $this->get_element();
+
+		if ( null === $element ) {
+			return 0;
+		}
+
+		return $element->output();
 	}
 
 	/**
