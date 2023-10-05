@@ -1121,7 +1121,7 @@ class Plugin {
 			$payment->add_note(
 				\sprintf(
 					/* translators: %d: Gateway configuration ID */
-					__( 'Payment failed because gateway configuration with ID `%d` does not exist.' ),
+					\__( 'Payment failed because gateway configuration with ID `%d` does not exist.', 'pronamic_ideal' ),
 					$config_id
 				)
 			);
