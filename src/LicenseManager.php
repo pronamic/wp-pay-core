@@ -492,7 +492,7 @@ class LicenseManager {
 				\__( 'A valid license is required for technical support and continued plugin updates.', 'pronamic_ideal' )
 			),
 			'badge'       => [
-				'label' => \__( 'Security' ),
+				'label' => \__( 'Security', 'pronamic_ideal' ),
 				'color' => 'blue',
 			],
 			'status'      => 'good',
