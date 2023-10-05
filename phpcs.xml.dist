@@ -33,7 +33,9 @@
 
 	<rule ref="WordPress.WP.I18n">
 		<properties>
-			<property name="text_domain" value="pronamic_ideal" />
+			<property name="text_domain" type="array">
+				<element value="pronamic_ideal" />
+			</property>
 		</properties>
 	</rule>
 
