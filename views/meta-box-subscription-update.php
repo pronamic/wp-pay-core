@@ -139,7 +139,7 @@ $subscription = \get_pronamic_subscription( (int) get_the_ID() );
 
 				<div id="pronamic-pay-next-payment-date-input" class="hide-if-js">
 					<input type="hidden" name="hidden_pronamic_pay_next_payment_date" id="hidden_pronamic_pay_next_payment_date" value="<?php echo \esc_attr( null === $next_payment_date ? '' : $next_payment_date->format( 'Y-m-d' ) ); ?>" />
-					<label for="pronamic-pay-next-payment-date" class="screen-reader-text"><?php esc_html_e( 'Set date' ); ?></label>
+					<label for="pronamic-pay-next-payment-date" class="screen-reader-text"><?php esc_html_e( 'Set date', 'pronamic_ideal' ); ?></label>
 
 					<?php
 
