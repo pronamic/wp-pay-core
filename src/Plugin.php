@@ -796,22 +796,6 @@ class Plugin {
 	}
 
 	/**
-	 * Render errors.
-	 *
-	 * @param array|WP_Error $errors An array with errors to render.
-	 * @return void
-	 */
-	public static function render_errors( $errors = [] ) {
-		if ( ! is_array( $errors ) ) {
-			$errors = [ $errors ];
-		}
-
-		foreach ( $errors as $pay_error ) {
-			include __DIR__ . '/../views/error.php';
-		}
-	}
-
-	/**
 	 * Render exception.
 	 *
 	 * @param \Exception $exception An exception.
