@@ -136,16 +136,16 @@ class Field implements JsonSerializable {
 	/**
 	 * Output.
 	 *
-	 * @return int
+	 * @return void
 	 */
 	public function output() {
 		$element = $this->get_element();
 
 		if ( null === $element ) {
-			return 0;
+			return;
 		}
 
-		return $element->output();
+		$element->output();
 	}
 
 	/**

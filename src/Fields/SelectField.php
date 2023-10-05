@@ -83,7 +83,7 @@ class SelectField extends Field {
 		);
 
 		foreach ( $this->get_options() as $child ) {
-			$element->children[] = $child->get_element()->render();
+			$element->children[] = $child->get_element();
 		}
 
 		return $element;

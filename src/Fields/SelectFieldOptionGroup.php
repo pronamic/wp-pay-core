@@ -53,7 +53,7 @@ class SelectFieldOptionGroup {
 		);
 
 		foreach ( $this->options as $option ) {
-			$element->children[] = $option->get_element()->render();
+			$element->children[] = $option->get_element();
 		}
 
 		return $element;
