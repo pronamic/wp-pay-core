@@ -41,9 +41,10 @@ $object = json_decode( $webhook_log_json_string );
 try {
 	$webhook_log_request_info = WebhookRequestInfo::from_json( $object );
 } catch ( InvalidArgumentException $e ) {
-	$webhook_error = new WP_Error( 'webhook_request_info_error', $e->getMessage() );
-
-	Plugin::render_errors( $webhook_error );
+	printf(
+		__( 'The following error occurred when reading the webhook request information: "%s".', 'pronamic_ideal' ),
+		esc_html( $e->getMessage() )
+	);
 
 	return;
 }
