@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! $exception instanceof \Exception ) {
+if ( ! isset( $exception ) ) {
 	return;
 }
 
