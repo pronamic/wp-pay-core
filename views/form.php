@@ -8,6 +8,7 @@
  * @package   Pronamic\WordPress\Pay
  */
 
+use Pronamic\WordPress\Html\Element;
 use Pronamic\WordPress\Pay\Util;
 
 if ( ! defined( 'ABSPATH' ) ) {
