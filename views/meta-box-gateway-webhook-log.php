@@ -42,7 +42,8 @@ try {
 	$webhook_log_request_info = WebhookRequestInfo::from_json( $object );
 } catch ( InvalidArgumentException $e ) {
 	printf(
-		__( 'The following error occurred when reading the webhook request information: "%s".', 'pronamic_ideal' ),
+		/* translators: %s: Exception message. */
+		esc_html__( 'The following error occurred when reading the webhook request information: "%s".', 'pronamic_ideal' ),
 		esc_html( $e->getMessage() )
 	);
 
