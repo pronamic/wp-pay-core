@@ -8,6 +8,10 @@
  * @package   Pronamic\WordPress\Pay
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! $exception instanceof \Exception ) {
 	return;
 }

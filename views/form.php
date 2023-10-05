@@ -10,6 +10,10 @@
 
 use Pronamic\WordPress\Pay\Util;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 ?>
 <form id="pronamic_ideal_form" name="pronamic_ideal_form" method="post" action="<?php echo esc_url( $action_url ); ?>">
 	<?php
