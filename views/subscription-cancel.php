@@ -65,7 +65,9 @@ $phase = $subscription->get_current_phase();
 							</p>
 
 							<form id="pronamic_ideal_form" name="pronamic_ideal_form" method="post">
-								<input type="submit" value="<?php esc_attr_e( 'Cancel subscription', 'pronamic_ideal' ); ?>"/>
+								<?php wp_nonce_field( 'pronamic_pay_cancel_subscription_' . $subscription->get_id(), 'pronamic_pay_cancel_subscription_nonce' ); ?>
+
+								<input type="submit" value="<?php esc_attr_e( 'Cancel subscription', 'pronamic_ideal' ); ?>" />
 							</form>
 
 						</div>
