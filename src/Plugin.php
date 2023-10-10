@@ -917,8 +917,7 @@ class Plugin {
 		}
 
 		// Post data.
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		self::process_payment_input_data( $payment, $_POST );
+		self::process_payment_post_data( $payment );
 
 		// Gender.
 		if ( null !== $customer->get_gender() ) {
@@ -986,10 +985,9 @@ class Plugin {
 	 * Process payment input data.
 	 *
 	 * @param Payment $payment Payment.
-	 * @param array   $data    Data.
 	 * @return void
 	 */
-	private static function process_payment_input_data( Payment $payment, $data ) {
+	private static function process_payment_post_data( Payment $payment ) {
 		$gateway = $payment->get_gateway();
 
 		if ( null === $gateway ) {
@@ -1011,10 +1009,10 @@ class Plugin {
 		foreach ( $payment_method->get_fields() as $field ) {
 			$id = $field->get_id();
 
-			if ( \array_key_exists( $id, $data ) ) {
-				$value = $data[ $id ];
-
-				$value = \sanitize_text_field( \wp_unslash( $value ) );
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
+			if ( \array_key_exists( $id, $_POST ) ) {
+				// phpcs:ignore WordPress.Security.NonceVerification.Missing
+				$value = \sanitize_text_field( \wp_unslash( $_POST[ $id ] ) );
 
 				if ( '' !== $field->meta_key ) {
 					$payment->set_meta( $field->meta_key, $value );
