@@ -277,21 +277,6 @@ class Plugin {
 		// Integrations.
 		$this->integrations = [];
 
-		/*
-		 * Plugins loaded.
-		 *
-		 * Priority should be at least lower then 8 to support the "WP eCommerce" plugin.
-		 *
-		 * new WP_eCommerce()
-		 * add_action( 'plugins_loaded' , array( $this, 'init' ), 8 );
-		 * $this->load();
-		 * wpsc_core_load_gateways();
-		 *
-		 * @link https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L342-L343
-		 * @link https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L26-L35
-		 * @link https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L54
-		 * @link https://github.com/wp-e-commerce/WP-e-Commerce/blob/branch-3.11.2/wp-shopping-cart.php#L296-L297
-		 */
 		add_action( 'plugins_loaded', [ $this, 'plugins_loaded' ], 0 );
 
 		// Register styles.
