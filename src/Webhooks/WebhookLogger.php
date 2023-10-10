@@ -50,7 +50,7 @@ class WebhookLogger {
 
 		$request_info = new WebhookRequestInfo(
 			new DateTime(),
-			( is_ssl() ? 'https://' : 'http://' ) . Server::get( 'HTTP_HOST' ) . Server::get( 'REQUEST_URI' ),
+			\get_self_link(),
 			$post_data
 		);
 
