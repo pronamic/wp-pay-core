@@ -90,24 +90,10 @@ class CustomerHelper {
 				$locales[] = $user->locale;
 			}
 
-			// Locale based on ACCEPT_LANGUAGE header.
-			if ( function_exists( 'locale_accept_from_http' ) ) {
-				/**
-				 * Please note that `locale_accept_from_http` can also return `false`,
-				 * this is not documented on PHP.net.
-				 *
-				 * @link https://www.php.net/manual/en/locale.acceptfromhttp.php
-				 * @link https://github.com/php/php-src/blob/php-7.3.5/ext/intl/locale/locale_methods.c#L1578-L1631
-				 */
-				$accept_language = Server::get( 'HTTP_ACCEPT_LANGUAGE' );
+			$http_locale = self::locale_accept_from_http();
 
-				if ( ! empty( $accept_language ) ) {
-					$http_locale = locale_accept_from_http( $accept_language );
-
-					if ( false !== $http_locale ) {
-						$locales[] = $http_locale;
-					}
-				}
+			if ( '' !== $http_locale ) {
+				$locales[] = $http_locale;
 			}
 
 			// Site locale.
@@ -174,6 +160,42 @@ class CustomerHelper {
 				$customer->set_birth_date( $birth_date );
 			}
 		}
+	}
+
+	/**
+	 * Locale accept from HTTP.
+	 * 
+	 * @return string
+	 */
+	private static function locale_accept_from_http() {
+		if ( ! \function_exists( '\locale_accept_from_http' ) ) {
+			return '';
+		}
+
+		if ( ! \array_key_exists( 'HTTP_ACCEPT_LANGUAGE', $_SERVER ) ) {
+			return '';
+		}
+
+		$accept_language = \sanitize_text_field( \wp_unslash( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) );
+
+		if ( '' === $accept_language ) {
+			return '';
+		}
+
+		/**
+		 * Please note that `locale_accept_from_http` can also return `false`,
+		 * this is not documented on PHP.net.
+		 *
+		 * @link https://www.php.net/manual/en/locale.acceptfromhttp.php
+		 * @link https://github.com/php/php-src/blob/php-7.3.5/ext/intl/locale/locale_methods.c#L1578-L1631
+		 */
+		$http_locale = \locale_accept_from_http( $accept_language );
+
+		if ( false === $http_locale ) {
+			return '';
+		}
+
+		return $http_locale;
 	}
 
 	/**
