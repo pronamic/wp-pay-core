@@ -457,16 +457,6 @@ class SubscriptionsModule {
 	}
 
 	/**
-	 * Maybe renew subscription.
-	 * 
-	 * @param Subscription $subscription Subscription.
-	 * @return void
-	 */
-	private function maybe_renew_subscription( Subscription $subscription ) {
-
-	}
-
-	/**
 	 * Handle subscription mandate update action request.
 	 *
 	 * @param Subscription $subscription Subscription to update mandate for.
