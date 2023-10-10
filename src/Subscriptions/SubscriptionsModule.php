@@ -343,6 +343,26 @@ class SubscriptionsModule {
 	}
 
 	/**
+	 * Check if subscription should be renewed.
+	 * 
+	 * @param Subscription $subscription Subscription.
+	 * @return bool
+	 */
+	private function should_renew( Subscription $subscription ) {
+		if ( ! \array_key_exists( 'pronamic_pay_renew_subscription_nonce', $_POST ) ) {
+			return false;
+		}
+
+		$nonce = \sanitize_key( $_POST['pronamic_pay_renew_subscription_nonce'] );
+
+		if ( ! wp_verify_nonce( $nonce, 'pronamic_pay_renew_subscription_' . $subscription->get_id() ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Handle renew subscription action request.
 	 *
 	 * @param Subscription $subscription Subscription to renew.
@@ -368,7 +388,7 @@ class SubscriptionsModule {
 			exit;
 		}
 
-		if ( 'POST' === Server::get( 'REQUEST_METHOD' ) ) {
+		if ( $this->should_renew( $subscription ) ) {
 			try {
 				// Create payment.
 				$payment = $subscription->new_payment();
@@ -434,6 +454,16 @@ class SubscriptionsModule {
 		require __DIR__ . '/../../views/subscription-renew.php';
 
 		exit;
+	}
+
+	/**
+	 * Maybe renew subscription.
+	 * 
+	 * @param Subscription $subscription Subscription.
+	 * @return void
+	 */
+	private function maybe_renew_subscription( Subscription $subscription ) {
+
 	}
 
 	/**
