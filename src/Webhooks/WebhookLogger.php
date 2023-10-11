@@ -41,16 +41,9 @@ class WebhookLogger {
 	 * @throws \Exception Throws an Exception on request date error.
 	 */
 	public function log_payment( Payment $payment ) {
-		$post_data = file_get_contents( 'php://input' );
-
-		if ( ! $post_data ) {
-			$post_data = null;
-		}
-
 		$request_info = new WebhookRequestInfo(
 			new DateTime(),
-			\get_self_link(),
-			$post_data
+			\get_self_link()
 		);
 
 		$request_info->set_payment( $payment );
