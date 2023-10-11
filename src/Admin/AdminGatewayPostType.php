@@ -461,6 +461,12 @@ class AdminGatewayPostType {
 
 			$value = \call_user_func( $callback, $name );
 
+			if ( array_key_exists( 'filter', $field ) ) {
+				$filter = $field['filter'];
+
+				$value = \filter_var( $value, $filter );
+			}
+
 			// Update post meta.
 			if ( '' !== $value ) {
 				\update_post_meta( $post_id, $name, $value );
