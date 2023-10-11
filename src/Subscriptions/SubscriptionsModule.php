@@ -13,7 +13,6 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 use Pronamic\WordPress\DateTime\DateTimeImmutable;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
-use Pronamic\WordPress\Pay\Core\Server;
 use Pronamic\WordPress\Pay\Core\Util;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;

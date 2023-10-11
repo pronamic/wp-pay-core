@@ -46,7 +46,6 @@ class UtilTest extends TestCase {
 	public function status_matrix_provider() {
 		return [
 			[ __NAMESPACE__ . '\Util', 'class_method_exists', true ],
-			[ __NAMESPACE__ . '\Server', 'get', true ],
 			[ 'ClassDoesNotExist', 'method_does_not_exist', false ],
 			[ '', '', false ],
 			[ null, null, false ],
