@@ -6,6 +6,51 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.13.0] - 2023-10-13
+
+### Added
+
+- Added templates from the Pronamic Pay plugin that are required by this library.
+- Added merge tags controller.
+- Added support for `{payment_lines_name}` merge tag.
+- Added support for a custom payment slug.
+
+### Changed
+
+- No longer use the PHP filter_* functions for sanitizing. ([72caa31](https://github.com/pronamic/wp-pay-core/commit/72caa3110df7522c059f750a21112a25e02100a1))
+- Improve fields API and escaping. ([519532b](https://github.com/pronamic/wp-pay-core/commit/519532b7d65fb68a5374341ea1c1934885b28e5c))
+- Simplified exception handling. ([5d2e271](https://github.com/pronamic/wp-pay-core/commit/5d2e271cad6e7a41626b86f83e57236e82c3307f))
+- Other form output setup to avoid escaping. ([27f55ad](https://github.com/pronamic/wp-pay-core/commit/27f55adaab009370ae67d13c70843e108ea6cb26))
+- Escape payment gateway integration settings field description. ([ffca40b](https://github.com/pronamic/wp-pay-core/commit/ffca40bfda9bd72aa1002e46c37abe1b14075b16))
+- Updated to `pronamic/wp-coding-standards` version `2`. ([db9027c](https://github.com/pronamic/wp-pay-core/commit/db9027c4ba58701e74e2ddab4d64fa5291211957))
+- Move license check from AdminHealth class to LicenseManager class. ([aa80870](https://github.com/pronamic/wp-pay-core/commit/aa80870edb0f8cf727299d92940d9abd97ac25b1))
+
+### Fixed
+
+- Fixed "Mismatched text domain. Expected 'pronamic_ideal' but got ...". ([8fe39eb](https://github.com/pronamic/wp-pay-core/commit/8fe39eb241b17369fdda54cdc822ad8bee20b1a9))
+
+### Removed
+
+- No longer log entire raw post data in webhook logger. ([3696a29](https://github.com/pronamic/wp-pay-core/commit/3696a29a2227a7f429e968dc689e9007b89c65be))
+- Removed `Pronamic\WordPress\Pay\Core\Server` class, no longer used, had some sanitizing challenges. ([eab3b2e](https://github.com/pronamic/wp-pay-core/commit/eab3b2e30ad135c35afab8859ea3000a4db6f5a0))
+- Removed old `WP-e-Commerce` related comment. ([2378651](https://github.com/pronamic/wp-pay-core/commit/2378651684d1ec1b4086356b494ef5abcf083b13))
+- Removed te old `WP_Error` render function, no longer used. ([478accc](https://github.com/pronamic/wp-pay-core/commit/478acccef2e4b5ff2aac82c1bac8b65d45cc3efc))
+- Removed "Handle redirect message from payment meta" feature, no longer used. ([b51bc18](https://github.com/pronamic/wp-pay-core/commit/b51bc1886d44bdac45285cc4fe34c18c798f10d7))
+- Removed section description support, no longer used. ([93f4411](https://github.com/pronamic/wp-pay-core/commit/93f441187ef98521e51a6f0a4bb6806349dce78f))
+- Removed 'html' and 'description' field type. ([b99751a](https://github.com/pronamic/wp-pay-core/commit/b99751abcada30da899c7500d9a24154595a6db3))
+- Removed admin gateway settings section icon support, no longer in use. ([8382cc0](https://github.com/pronamic/wp-pay-core/commit/8382cc083a42cf8ff5987c9a54bb8b483398b9fa))
+
+### Composer
+
+- Changed `pronamic/wp-html` from `^2.1` to `v2.2.0`.
+	Release notes: https://github.com/pronamic/wp-html/releases/tag/v2.2.0
+- Changed `woocommerce/action-scheduler` from `^3.4` to `3.6.4`.
+	Release notes: https://github.com/woocommerce/action-scheduler/releases/tag/3.6.4
+
+Full set of changes: [`4.12.0...4.13.0`][4.13.0]
+
+[4.13.0]: https://github.com/pronamic/wp-pay-core/compare/v4.12.0...v4.13.0
+
 ## [4.12.0] - 2023-09-11
 
 ### Commits
