@@ -117,44 +117,17 @@ class AdminAboutPage {
 	 * @throws \Exception Throws exception when reading file version fails.
 	 */
 	private function get_file_version( $file ) {
-		// We don't need to write to the file, so just open for reading.
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
-		$fp = \fopen( $file, 'r' );
+		$data = \get_file_data(
+			$file,
+			[
+				'Version' => 'Version',
+			]
+		);
 
-		if ( false === $fp ) {
-			throw new \Exception(
-				\sprintf(
-					'Could not open file to get version: %s.',
-					\esc_html( $file )
-				)
-			);
-		}
-
-		// Pull only the first 8kiB of the file in.
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
-		$file_data = \fread( $fp, 8192 );
-
-		if ( false === $file_data ) {
-			throw new \Exception(
-				\sprintf(
-					'Could not read file to get version: %s.',
-					\esc_html( $file )
-				)
-			);
-		}
-
-		// PHP will close file handle, but we are good citizens.
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
-		\fclose( $fp );
-
-		// Search.
-		\preg_match( '/^[ \t\/*#@]*@version(?P<version>.*)$/mi', $file_data, $matches );
-
-		// Version.
 		$version = '';
 
-		if ( \array_key_exists( 'version', $matches ) ) {
-			$version = \trim( $matches['version'] );
+		if ( \array_key_exists( 'Version', $data ) ) {
+			$version = $data['Version'];
 		}
 
 		return $version;
