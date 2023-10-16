@@ -6,6 +6,16 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.13.1] - 2023-10-16
+
+### Commits
+
+- Use `get_file_data()` to retrieve about page version. ([cfad1af](https://github.com/pronamic/wp-pay-core/commit/cfad1af133b47a81f79d18d1091a567c945844d8))
+
+Full set of changes: [`4.13.0...4.13.1`][4.13.1]
+
+[4.13.1]: https://github.com/pronamic/wp-pay-core/compare/v4.13.0...v4.13.1
+
 ## [4.13.0] - 2023-10-13
 
 ### Added
