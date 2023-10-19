@@ -6,6 +6,16 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.13.2] - 2023-10-19
+
+### Changed
+
+- Make sure new created payments are directly stored in memory. This prevents payments with an ID from having different instances in memory. ([b7f5769](https://github.com/pronamic/wp-pay-core/commit/b7f57699808f451980da5c4048293bdb1cbf96a2))
+
+Full set of changes: [`4.13.1...4.13.2`][4.13.2]
+
+[4.13.2]: https://github.com/pronamic/wp-pay-core/compare/v4.13.1...v4.13.2
+
 ## [4.13.1] - 2023-10-16
 
 ### Commits
