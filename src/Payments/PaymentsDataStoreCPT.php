@@ -233,6 +233,8 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			$payment = $this->payment;
 
 			if ( ! $update && null === $payment->get_id() ) {
+				$this->payments[ $post_id ] = $payment;
+
 				$payment->set_id( $post_id );
 				$payment->post = $post;
 			}
