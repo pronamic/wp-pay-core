@@ -80,27 +80,29 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @return Payment|null
 	 */
 	public function get_payment( $id ) {
-		if ( ! isset( $this->payments[ $id ] ) ) {
-			if ( empty( $id ) ) {
-				return null;
-			}
-
-			$id = (int) $id;
-
-			$post_type = get_post_type( $id );
-
-			if ( 'pronamic_payment' !== $post_type ) {
-				return null;
-			}
-
-			$payment = new Payment();
-
-			$payment->set_id( $id );
-
-			$this->payments[ $id ] = $payment;
-
-			$this->read( $payment );
+		if ( \array_key_exists( $id, $this->payments ) ) {
+			return $this->payments[ $id ];
 		}
+
+		if ( empty( $id ) ) {
+			return null;
+		}
+
+		$id = (int) $id;
+
+		$post_type = \get_post_type( $id );
+
+		if ( 'pronamic_payment' !== $post_type ) {
+			return null;
+		}
+
+		$payment = new Payment();
+
+		$payment->set_id( $id );
+
+		$this->payments[ $id ] = $payment;
+
+		$this->read( $payment );
 
 		return $this->payments[ $id ];
 	}
