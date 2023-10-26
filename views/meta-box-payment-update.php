@@ -8,8 +8,7 @@
  * @package   Pronamic\WordPress\Pay
  */
 
-use Pronamic\WordPress\Pay\Core\PaymentMethods;
-use Pronamic\WordPress\Pay\Payments\PaymentPostType;
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -19,9 +18,18 @@ if ( ! isset( $post ) ) {
 	return;
 }
 
-$states = PaymentPostType::get_payment_states();
+$states = [
+	PaymentStatus::OPEN       => _x( 'Pending', 'Payment status', 'pronamic_ideal' ),
+	PaymentStatus::ON_HOLD    => _x( 'On Hold', 'Payment status', 'pronamic_ideal' ),
+	PaymentStatus::SUCCESS    => _x( 'Completed', 'Payment status', 'pronamic_ideal' ),
+	PaymentStatus::CANCELLED  => _x( 'Cancelled', 'Payment status', 'pronamic_ideal' ),
+	PaymentStatus::REFUNDED   => _x( 'Refunded', 'Payment status', 'pronamic_ideal' ),
+	PaymentStatus::FAILURE    => _x( 'Failed', 'Payment status', 'pronamic_ideal' ),
+	PaymentStatus::EXPIRED    => _x( 'Expired', 'Payment status', 'pronamic_ideal' ),
+	PaymentStatus::AUTHORIZED => _x( 'Authorized', 'Payment status', 'pronamic_ideal' ),
+];
 
-$payment = get_pronamic_payment( get_the_ID() );
+$payment = \get_pronamic_payment( \get_the_ID() );
 
 if ( null === $payment ) {
 	return;
@@ -48,12 +56,11 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 
 			<?php
 
-			$status_object = get_post_status_object( $post->post_status );
+			$status_label = $payment->get_status_label();
 
-			$status_label = isset( $status_object, $status_object->label ) ? $status_object->label : '—';
+			$status_label = ( null === $status_label ) ? '—' : $status_label;
 
 			?>
-
 			<span id="pronamic-pay-post-status-display"><?php echo esc_html( $status_label ); ?></span>
 
 			<a href="#pronamic-pay-post-status" class="edit-pronamic-pay-post-status hide-if-no-js" role="button">
@@ -62,16 +69,15 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 			</a>
 
 			<div id="pronamic-pay-post-status-input" class="hide-if-js">
-				<input type="hidden" name="hidden_pronamic_pay_post_status" id="hidden_pronamic_pay_post_status" value="<?php echo esc_attr( ( 'auto-draft' === $post->post_status ) ? 'draft' : $post->post_status ); ?>" />
 				<label for="pronamic-pay-post-status" class="screen-reader-text"><?php esc_html_e( 'Set status', 'pronamic_ideal' ); ?></label>
-				<select id="pronamic-pay-post-status" name="pronamic_payment_post_status">
+				<select id="pronamic-pay-post-status" name="pronamic_payment_status">
 					<?php
 
 					foreach ( $states as $payment_status => $label ) {
 						printf(
 							'<option value="%s" %s>%s</option>',
 							esc_attr( $payment_status ),
-							selected( $payment_status, $post->post_status, false ),
+							selected( $payment_status, $payment->get_status(), false ),
 							esc_html( $label )
 						);
 					}
@@ -121,6 +127,11 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 		<?php
 
 		wp_nonce_field( 'pronamic_payment_update', 'pronamic_payment_nonce' );
+
+		printf(
+			'<input type="hidden" name="pronamic_payment_id" value="%s" />',
+			esc_attr( $payment->get_id() )
+		);
 
 		submit_button(
 			__( 'Update', 'pronamic_ideal' ),

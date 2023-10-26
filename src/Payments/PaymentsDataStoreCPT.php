@@ -126,22 +126,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	}
 
 	/**
-	 * Get meta status from post status.
-	 *
-	 * @param string $post_status Post status.
-	 * @return string|null
-	 */
-	private function get_meta_status_from_post_status( $post_status ) {
-		$key = array_search( $post_status, $this->status_map, true );
-
-		if ( false !== $key ) {
-			return \strval( $key );
-		}
-
-		return null;
-	}
-
-	/**
 	 * Get post data.
 	 * 
 	 * @param Payment $payment Payment.
@@ -152,7 +136,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$json_string = \wp_json_encode( $payment->get_json() );
 
 		if ( false === $json_string ) {
-			throw new \Exception( 'Error inserting payment post data as JSON.' );
+			throw new \Exception( 'Error occurred while encoding the payment to JSON.' );
 		}
 
 		$data['post_content']   = \wp_slash( $json_string );
@@ -166,28 +150,6 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		}
 
 		return $data;
-	}
-
-	/**
-	 * Update payment from post array.
-	 *
-	 * @param Payment $payment Payment.
-	 * @param array   $postarr Post data array.
-	 * @return void
-	 */
-	private function update_payment_form_post_array( $payment, $postarr ) {
-		if ( ! isset( $postarr['pronamic_payment_post_status'] ) ) {
-			return;
-		}
-
-		$post_status = sanitize_text_field( stripslashes( $postarr['pronamic_payment_post_status'] ) );
-		$meta_status = $this->get_meta_status_from_post_status( $post_status );
-
-		if ( null === $meta_status ) {
-			return;
-		}
-
-		$payment->set_status( $meta_status );
 	}
 
 	/**
