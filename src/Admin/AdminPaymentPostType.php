@@ -768,7 +768,7 @@ class AdminPaymentPostType {
 	 * @return void
 	 */
 	public function admin_init() {
-		$this->maybe_update_payment_status();
+		$this->maybe_update_payment();
 	}
 
 	/**
@@ -776,7 +776,7 @@ class AdminPaymentPostType {
 	 * 
 	 * @return void
 	 */
-	private function maybe_update_payment_status() {
+	private function maybe_update_payment() {
 		if ( ! \array_key_exists( 'pronamic_payment_update', $_POST ) ) {
 			return;
 		}

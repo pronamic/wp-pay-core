@@ -10,6 +10,7 @@
 
 use Pronamic\WordPress\Html\Element;
 use Pronamic\WordPress\Pay\Plugin;
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
 use Pronamic\WordPress\Pay\Util;
@@ -22,16 +23,37 @@ if ( ! isset( $post ) ) {
 	return;
 }
 
-$states = SubscriptionPostType::get_states();
+$subscription = \get_pronamic_subscription( (int) get_the_ID() );
+
+if ( null === $subscription ) {
+	return;
+}
+
+$states = [
+	SubscriptionStatus::OPEN      => _x( 'Pending', 'Subscription status', 'pronamic_ideal' ),
+	SubscriptionStatus::CANCELLED => _x( 'Cancelled', 'Subscription status', 'pronamic_ideal' ),
+	SubscriptionStatus::EXPIRED   => _x( 'Expired', 'Subscription status', 'pronamic_ideal' ),
+	SubscriptionStatus::FAILURE   => _x( 'Failed', 'Subscription status', 'pronamic_ideal' ),
+	SubscriptionStatus::ON_HOLD   => _x( 'On Hold', 'Subscription status', 'pronamic_ideal' ),
+	SubscriptionStatus::ACTIVE    => _x( 'Active', 'Subscription status', 'pronamic_ideal' ),
+	SubscriptionStatus::COMPLETED => _x( 'Completed', 'Subscription status', 'pronamic_ideal' ),
+	// Map payment status `Success` for backwards compatibility.
+	PaymentStatus::SUCCESS        => _x( 'Active', 'Subscription status', 'pronamic_ideal' ),
+];
 
 ksort( $states );
+
+$states_options = [
+	SubscriptionStatus::ACTIVE,
+	SubscriptionStatus::CANCELLED,
+	SubscriptionStatus::ON_HOLD,
+];
 
 // WordPress by default doesn't allow `post_author` values of `0`, that's why we use a dash (`-`).
 // @link https://github.com/WordPress/WordPress/blob/4.9.5/wp-admin/includes/post.php#L56-L64.
 $post_author = get_post_field( 'post_author' );
 $post_author = empty( $post_author ) ? '-' : $post_author;
 
-$subscription = \get_pronamic_subscription( (int) get_the_ID() );
 
 ?>
 <input type="hidden" name="post_author_override" value="<?php echo esc_attr( $post_author ); ?>" />
@@ -59,26 +81,19 @@ $subscription = \get_pronamic_subscription( (int) get_the_ID() );
 				</a>
 
 				<div id="pronamic-pay-post-status-input" class="hide-if-js">
-					<input type="hidden" name="hidden_pronamic_pay_post_status" id="hidden_pronamic_pay_post_status" value="<?php echo esc_attr( ( 'auto-draft' === $post->post_status ) ? 'draft' : $post->post_status ); ?>" />
 					<label for="pronamic-pay-post-status" class="screen-reader-text"><?php esc_html_e( 'Set status', 'pronamic_ideal' ); ?></label>
-					<select id="pronamic-pay-post-status" name="pronamic_subscription_post_status">
+					<select id="pronamic-pay-post-status" name="pronamic_subscription_status">
 						<?php
 
-						$states_options = [
-							'subscr_active',
-							'subscr_cancelled',
-							'subscr_on_hold',
-						];
-
 						foreach ( $states as $subscription_status => $label ) {
-							if ( ! in_array( $subscription_status, $states_options, true ) && $subscription_status !== $post->post_status ) {
+							if ( ! in_array( $subscription_status, $states_options, true ) && $subscription_status !== $subscription->get_status() ) {
 								continue;
 							}
 
 							printf(
 								'<option value="%s" %s>%s</option>',
 								esc_attr( $subscription_status ),
-								selected( $subscription_status, $post->post_status, false ),
+								selected( $subscription_status, $subscription->get_status(), false ),
 								esc_html( $label )
 							);
 						}
@@ -113,96 +128,91 @@ $subscription = \get_pronamic_subscription( (int) get_the_ID() );
 			<?php endif; ?>
 		</div>
 
-		<?php if ( null !== $subscription ) : ?>
+		<div class="misc-pub-section curtime">
+			<?php
 
-			<div class="misc-pub-section curtime">
+			$next_payment_date = $subscription->get_next_payment_date();
+
+			?>
+
+			<span id="timestamp">
+				<?php echo esc_html( __( 'Next payment:', 'pronamic_ideal' ) ); ?>
+			</span>
+
+			<span id="pronamic-pay-next-payment-date-display"><?php echo esc_html( null === $next_payment_date ? '—' : $next_payment_date->format_i18n( \__( 'D j M Y', 'pronamic_ideal' ) ) ); ?></span>
+
+			<?php if ( 'woocommerce' !== $subscription->get_source() ) : ?>
+
+				<a href="#pronamic-pay-next-payment-date" class="edit-pronamic-pay-next-payment-date hide-if-no-js" role="button">
+					<span aria-hidden="true"><?php esc_html_e( 'Edit', 'pronamic_ideal' ); ?></span>
+					<span class="screen-reader-text"><?php esc_html_e( 'Edit next payment date', 'pronamic_ideal' ); ?></span>
+				</a>
+
+			<?php endif; ?>
+
+			<div id="pronamic-pay-next-payment-date-input" class="hide-if-js">
+				<input type="hidden" name="hidden_pronamic_pay_next_payment_date" id="hidden_pronamic_pay_next_payment_date" value="<?php echo \esc_attr( null === $next_payment_date ? '' : $next_payment_date->format( 'Y-m-d' ) ); ?>" />
+				<label for="pronamic-pay-next-payment-date" class="screen-reader-text"><?php esc_html_e( 'Set date', 'pronamic_ideal' ); ?></label>
+
 				<?php
 
-				$next_payment_date = $subscription->get_next_payment_date();
+				$element = new Element(
+					'input',
+					[
+						'id'       => 'pronamic-pay-next-payment-date',
+						'name'     => 'pronamic_subscription_next_payment_date',
+						'type'     => 'date',
+						'value'    => null === $next_payment_date ? '' : $next_payment_date->format( 'Y-m-d' ),
+						'data-min' => ( new DateTimeImmutable( 'tomorrow' ) )->format( 'Y-m-d' ),
+					]
+				);
+
+				$element->output();
 
 				?>
 
-				<span id="timestamp">
-					<?php echo esc_html( __( 'Next payment:', 'pronamic_ideal' ) ); ?>
-				</span>
-
-				<span id="pronamic-pay-next-payment-date-display"><?php echo esc_html( null === $next_payment_date ? '—' : $next_payment_date->format_i18n( \__( 'D j M Y', 'pronamic_ideal' ) ) ); ?></span>
-
-				<?php if ( 'woocommerce' !== $subscription->get_source() ) : ?>
-
-					<a href="#pronamic-pay-next-payment-date" class="edit-pronamic-pay-next-payment-date hide-if-no-js" role="button">
-						<span aria-hidden="true"><?php esc_html_e( 'Edit', 'pronamic_ideal' ); ?></span>
-						<span class="screen-reader-text"><?php esc_html_e( 'Edit next payment date', 'pronamic_ideal' ); ?></span>
-					</a>
-
-				<?php endif; ?>
-
-				<div id="pronamic-pay-next-payment-date-input" class="hide-if-js">
-					<input type="hidden" name="hidden_pronamic_pay_next_payment_date" id="hidden_pronamic_pay_next_payment_date" value="<?php echo \esc_attr( null === $next_payment_date ? '' : $next_payment_date->format( 'Y-m-d' ) ); ?>" />
-					<label for="pronamic-pay-next-payment-date" class="screen-reader-text"><?php esc_html_e( 'Set date', 'pronamic_ideal' ); ?></label>
-
-					<?php
-
-					$element = new Element(
-						'input',
-						[
-							'id'       => 'pronamic-pay-next-payment-date',
-							'name'     => 'pronamic_subscription_next_payment_date',
-							'type'     => 'date',
-							'value'    => null === $next_payment_date ? '' : $next_payment_date->format( 'Y-m-d' ),
-							'data-min' => ( new DateTimeImmutable( 'tomorrow' ) )->format( 'Y-m-d' ),
-						]
-					);
-
-					$element->output();
-
-					?>
-
-					<a href="#pronamic-pay-next-payment-date" class="save-pronamic-pay-next-payment-date hide-if-no-js button"><?php esc_html_e( 'OK', 'pronamic_ideal' ); ?></a>
-					<a href="#pronamic-pay-next-payment-date" class="cancel-pronamic-pay-next-payment-date hide-if-no-js button-cancel"><?php esc_html_e( 'Cancel', 'pronamic_ideal' ); ?></a>
-				</div>
-
-				<?php
-
-				$today = new DateTimeImmutable( 'today midnight', new DateTimeZone( Plugin::TIMEZONE ) );
-
-				if ( SubscriptionStatus::ACTIVE === $subscription->get_status() && null !== $next_payment_date && $next_payment_date < $today ) :
-					?>
-
-					<div id="pronamic-pay-next-payment-date-error" class="error inline">
-						<p><?php echo esc_html( __( 'Set the next payment date to a future date to continue payments for this subscription.', 'pronamic_ideal' ) ); ?></p>
-					</div>
-
-				<?php endif; ?>
-
-				<div id="pronamic-pay-next-payment-date-min-error" class="hidden error inline">
-					<p><?php echo esc_html( __( 'Please select a future date.', 'pronamic_ideal' ) ); ?></p>
-				</div>
-
-				<div id="pronamic-pay-next-payment-date-notice" class="hidden notice inline">
-					<p>
-						<?php
-
-						\printf(
-							/* translators: %s subscription source description */
-							\esc_html( \__( 'Editing the next payment date does not affect the current status or validity of %s.', 'pronamic_ideal' ) ),
-							\wp_kses(
-								$subscription->get_source_text(),
-								[
-									'a' => [
-										'href' => true,
-									],
-								]
-							)
-						);
-
-						?>
-					</p>
-				</div>
+				<a href="#pronamic-pay-next-payment-date" class="save-pronamic-pay-next-payment-date hide-if-no-js button"><?php esc_html_e( 'OK', 'pronamic_ideal' ); ?></a>
+				<a href="#pronamic-pay-next-payment-date" class="cancel-pronamic-pay-next-payment-date hide-if-no-js button-cancel"><?php esc_html_e( 'Cancel', 'pronamic_ideal' ); ?></a>
 			</div>
 
-		<?php endif; ?>
+			<?php
 
+			$today = new DateTimeImmutable( 'today midnight', new DateTimeZone( Plugin::TIMEZONE ) );
+
+			if ( SubscriptionStatus::ACTIVE === $subscription->get_status() && null !== $next_payment_date && $next_payment_date < $today ) :
+				?>
+
+				<div id="pronamic-pay-next-payment-date-error" class="error inline">
+					<p><?php echo esc_html( __( 'Set the next payment date to a future date to continue payments for this subscription.', 'pronamic_ideal' ) ); ?></p>
+				</div>
+
+			<?php endif; ?>
+
+			<div id="pronamic-pay-next-payment-date-min-error" class="hidden error inline">
+				<p><?php echo esc_html( __( 'Please select a future date.', 'pronamic_ideal' ) ); ?></p>
+			</div>
+
+			<div id="pronamic-pay-next-payment-date-notice" class="hidden notice inline">
+				<p>
+					<?php
+
+					\printf(
+						/* translators: %s subscription source description */
+						\esc_html( \__( 'Editing the next payment date does not affect the current status or validity of %s.', 'pronamic_ideal' ) ),
+						\wp_kses(
+							$subscription->get_source_text(),
+							[
+								'a' => [
+									'href' => true,
+								],
+							]
+						)
+					);
+
+					?>
+				</p>
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -211,6 +221,11 @@ $subscription = \get_pronamic_subscription( (int) get_the_ID() );
 		<?php
 
 		wp_nonce_field( 'pronamic_subscription_update', 'pronamic_subscription_nonce' );
+
+		printf(
+			'<input type="hidden" name="pronamic_subscription_id" value="%s" />',
+			esc_attr( $subscription->get_id() )
+		);
 
 		submit_button(
 			__( 'Update', 'pronamic_ideal' ),

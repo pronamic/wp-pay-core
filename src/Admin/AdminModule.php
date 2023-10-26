@@ -143,12 +143,15 @@ class AdminModule {
 		$this->maybe_redirect();
 
 		// Post types.
+		new AdminGatewayPostType( $this->plugin );
+
 		$admin_payment_post_type = new AdminPaymentPostType( $this->plugin );
 
 		$admin_payment_post_type->admin_init();
 
-		new AdminGatewayPostType( $this->plugin );
-		new AdminSubscriptionPostType( $this->plugin );
+		$admin_subscription_post_type = new AdminSubscriptionPostType( $this->plugin );
+
+		$admin_subscription_post_type->admin_init();
 	}
 
 	/**
