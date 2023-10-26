@@ -623,7 +623,6 @@ class Plugin {
 		$this->payments_data_store      = new PaymentsDataStoreCPT();
 		$this->subscriptions_data_store = new SubscriptionsDataStoreCPT();
 
-		$this->payments_data_store->setup();
 		$this->subscriptions_data_store->setup();
 
 		// Post Types.
