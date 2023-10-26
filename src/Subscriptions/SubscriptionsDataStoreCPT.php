@@ -128,9 +128,10 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
 	 * Get post data.
 	 * 
-	 * @param Payment $payment Payment.
-	 * @param array   $data    Post data.
+	 * @param Subscription $subscription Payment.
+	 * @param array        $data         Post data.
 	 * @return array
+	 * @throws \Exception Throws an exception if an error occurs while encoding the payment to JSON.
 	 */
 	private function get_post_data( Subscription $subscription, $data ) {
 		$json_string = \wp_json_encode( $subscription->get_json() );

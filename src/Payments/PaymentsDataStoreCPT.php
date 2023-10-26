@@ -131,6 +131,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	 * @param Payment $payment Payment.
 	 * @param array   $data    Post data.
 	 * @return array
+	 * @throws \Exception Throws an exception if an error occurs while encoding the payment to JSON.
 	 */
 	private function get_post_data( Payment $payment, $data ) {
 		$json_string = \wp_json_encode( $payment->get_json() );
