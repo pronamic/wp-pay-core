@@ -196,6 +196,8 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$payment->set_id( $result );
 		$payment->post = \get_post( $result );
 
+		$this->payments[ $result ] = $payment;
+
 		/**
 		 * New payment created.
 		 *
@@ -238,6 +240,8 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		}
 
 		$payment->post = \get_post( $result );
+
+		$this->payments[ $result ] = $payment;
 
 		return true;
 	}
