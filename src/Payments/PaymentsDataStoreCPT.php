@@ -179,7 +179,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 				[
 					'post_type'     => 'pronamic_payment',
 					'post_date_gmt' => $this->get_mysql_utc_date( $payment->date ),
-					'post_title'       => \sprintf(
+					'post_title'    => \sprintf(
 						'Payment %s',
 						$payment->get_key()
 					),

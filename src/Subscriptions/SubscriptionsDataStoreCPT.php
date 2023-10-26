@@ -176,13 +176,13 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			$this->get_post_data(
 				$subscription,
 				[
-					'post_type'             => 'pronamic_pay_subscr',
-					'post_date_gmt'         => $this->get_mysql_utc_date( $subscription->date ),
-					'post_title'            => \sprintf(
+					'post_type'     => 'pronamic_pay_subscr',
+					'post_date_gmt' => $this->get_mysql_utc_date( $subscription->date ),
+					'post_title'    => \sprintf(
 						'Subscription %s',
 						$subscription->get_key()
 					),
-					'post_author'           => null === $customer_user_id ? 0 : $customer_user_id,
+					'post_author'   => null === $customer_user_id ? 0 : $customer_user_id,
 				]
 			),
 			true
