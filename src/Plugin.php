@@ -10,7 +10,6 @@
 
 namespace Pronamic\WordPress\Pay;
 
-use Composer\InstalledVersions;
 use Pronamic\WordPress\Http\Facades\Http;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Admin\AdminModule;
@@ -301,11 +300,12 @@ class Plugin {
 		 * Action scheduler.
 		 *
 		 * @link https://actionscheduler.org/
-		 * @link https://github.com/pronamic/wp-pay-core/issues/154
 		 */
-		$action_scheduler_path = InstalledVersions::getInstallPath( 'woocommerce/action-scheduler' );
+		if ( ! \array_key_exists( 'action_scheduler', $args ) ) {
+			$args['action_scheduler'] = self::$dirname . '/wp-content/plugins/action-scheduler/action-scheduler.php';
+		}
 
-		require_once $action_scheduler_path . '/action-scheduler.php';
+		require_once $args['action_scheduler'];
 
 		/**
 		 * Payment methods.
