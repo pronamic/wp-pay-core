@@ -689,20 +689,6 @@ class AdminPaymentPostType {
 	}
 
 	/**
-	 * Pronamic Pay gateway update meta box.
-	 *
-	 * @param WP_Post $post The object for the current post/page.
-	 * @return void
-	 */
-	public function meta_box_update( // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Parameter is used in include.
-		$post
-	) {
-		wp_nonce_field( 'pronamic_payment_update', 'pronamic_payment_update_nonce' );
-
-		include __DIR__ . '/../../views/meta-box-payment-update.php';
-	}
-
-	/**
 	 * Post row actions.
 	 *
 	 * @param array   $actions Actions array.
@@ -760,5 +746,74 @@ class AdminPaymentPostType {
 		];
 
 		return $messages;
+	}
+
+	/**
+	 * Pronamic Pay payment update meta box.
+	 *
+	 * @param WP_Post $post The object for the current post/page.
+	 * @return void
+	 */
+	public function meta_box_update( // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Parameter is used in include.
+		$post
+	) {
+		wp_nonce_field( 'pronamic_payment_update', 'pronamic_payment_update_nonce' );
+
+		include __DIR__ . '/../../views/meta-box-payment-update.php';
+	}
+
+	/**
+	 * Admin init.
+	 * 
+	 * @return void
+	 */
+	public function admin_init() {
+		$this->maybe_update_payment();
+	}
+
+	/**
+	 * Maybe update payment status.
+	 * 
+	 * @return void
+	 */
+	private function maybe_update_payment() {
+		if ( ! \array_key_exists( 'pronamic_payment_update', $_POST ) ) {
+			return;
+		}
+
+		if ( ! \array_key_exists( 'pronamic_payment_id', $_POST ) ) {
+			return;
+		}
+
+		if ( ! \array_key_exists( 'pronamic_payment_status', $_POST ) ) {
+			return;
+		}
+
+		if ( ! \array_key_exists( 'pronamic_payment_update_nonce', $_POST ) ) {
+			return;
+		}
+
+		$nonce = \sanitize_text_field( \wp_unslash( $_POST['pronamic_payment_update_nonce'] ) );
+
+		if ( ! \wp_verify_nonce( $nonce, 'pronamic_payment_update' ) ) {
+			\wp_die( \esc_html__( 'Action failed. Please refresh the page and retry.', 'pronamic_ideal' ) );
+		}
+
+		$payment_id = \sanitize_text_field( \wp_unslash( $_POST['pronamic_payment_id'] ) );
+
+		$payment = \get_pronamic_payment( $payment_id );
+
+		if ( null === $payment ) {
+			return;
+		}
+
+		$status = \sanitize_text_field( \wp_unslash( $_POST['pronamic_payment_status'] ) );
+
+		if ( '' === $status ) {
+			return;
+		}
+
+		$payment->set_status( $status );
+		$payment->save();
 	}
 }

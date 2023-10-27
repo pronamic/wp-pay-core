@@ -694,20 +694,6 @@ class AdminSubscriptionPostType {
 	}
 
 	/**
-	 * Pronamic Pay subscription update meta box.
-	 *
-	 * @param WP_Post $post The object for the current post/page.
-	 * @return void
-	 */
-	public function meta_box_update( // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Parameter is used in include.
-		$post
-	) {
-		wp_nonce_field( 'pronamic_subscription_update', 'pronamic_subscription_update_nonce' );
-
-		include __DIR__ . '/../../views/meta-box-subscription-update.php';
-	}
-
-	/**
 	 * Post row actions.
 	 *
 	 * @param array   $actions Actions array.
@@ -765,5 +751,102 @@ class AdminSubscriptionPostType {
 		];
 
 		return $messages;
+	}
+
+	/**
+	 * Pronamic Pay subscription update meta box.
+	 *
+	 * @param WP_Post $post The object for the current post/page.
+	 * @return void
+	 */
+	public function meta_box_update( // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Parameter is used in include.
+		$post
+	) {
+		wp_nonce_field( 'pronamic_subscription_update', 'pronamic_subscription_update_nonce' );
+
+		include __DIR__ . '/../../views/meta-box-subscription-update.php';
+	}
+
+	/**
+	 * Admin init.
+	 * 
+	 * @return void
+	 */
+	public function admin_init() {
+		$this->maybe_update_subscription();
+	}
+
+	/**
+	 * Maybe update subscription.
+	 * 
+	 * @return void
+	 */
+	private function maybe_update_subscription() {
+		if ( ! \array_key_exists( 'pronamic_subscription_update', $_POST ) ) {
+			return;
+		}
+
+		if ( ! \array_key_exists( 'pronamic_subscription_id', $_POST ) ) {
+			return;
+		}
+
+		if ( ! \array_key_exists( 'pronamic_subscription_status', $_POST ) ) {
+			return;
+		}
+
+		if ( ! \array_key_exists( 'pronamic_subscription_update_nonce', $_POST ) ) {
+			return;
+		}
+
+		$nonce = \sanitize_text_field( \wp_unslash( $_POST['pronamic_subscription_update_nonce'] ) );
+
+		if ( ! \wp_verify_nonce( $nonce, 'pronamic_subscription_update' ) ) {
+			\wp_die( \esc_html__( 'Action failed. Please refresh the page and retry.', 'pronamic_ideal' ) );
+		}
+
+		$subscription_id = (int) \sanitize_text_field( \wp_unslash( $_POST['pronamic_subscription_id'] ) );
+
+		$subscription = \get_pronamic_subscription( $subscription_id );
+
+		if ( null === $subscription ) {
+			return;
+		}
+
+		$status = \sanitize_text_field( \wp_unslash( $_POST['pronamic_subscription_status'] ) );
+
+		if ( '' !== $status ) {
+			$subscription->set_status( $status );
+		}
+
+		if ( \array_key_exists( 'hidden_pronamic_pay_next_payment_date', $_POST ) && \array_key_exists( 'pronamic_subscription_next_payment_date', $_POST ) ) {
+			$old_value = \sanitize_text_field( \wp_unslash( $_POST['hidden_pronamic_pay_next_payment_date'] ) );
+
+			$new_value = \sanitize_text_field( \wp_unslash( $_POST['pronamic_subscription_next_payment_date'] ) );
+
+			if ( ! empty( $new_value ) && $old_value !== $new_value ) {
+				$new_date = new DateTimeImmutable( $new_value );
+
+				$next_payment_date = $subscription->get_next_payment_date();
+
+				$updated_date = null === $next_payment_date ? clone $new_date : clone $next_payment_date;
+
+				$updated_date = $updated_date->setDate( (int) $new_date->format( 'Y' ), (int) $new_date->format( 'm' ), (int) $new_date->format( 'd' ) );
+
+				if ( false !== $updated_date ) {
+					$subscription->set_next_payment_date( $updated_date );
+
+					$note = \sprintf(
+						/* translators: %1: old formatted date, %2: new formatted date */
+						\__( 'Next payment date updated from %1$s to %2$s.', 'pronamic_ideal' ),
+						null === $next_payment_date ? '' : $next_payment_date->format_i18n( \__( 'D j M Y', 'pronamic_ideal' ) ),
+						$updated_date->format_i18n( \__( 'D j M Y', 'pronamic_ideal' ) )
+					);
+
+					$subscription->add_note( $note );
+				}
+			}
+		}
+
+		$subscription->save();
 	}
 }

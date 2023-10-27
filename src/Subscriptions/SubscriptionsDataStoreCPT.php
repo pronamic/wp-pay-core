@@ -30,13 +30,6 @@ use Pronamic\WordPress\Pay\Payments\PaymentStatus;
  */
 class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
-	 * Subscription.
-	 *
-	 * @var Subscription|null
-	 */
-	private $subscription;
-
-	/**
 	 * Subscriptions.
 	 *
 	 * @var array
@@ -74,44 +67,35 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	}
 
 	/**
-	 * Setup.
-	 *
-	 * @return void
-	 */
-	public function setup() {
-		add_filter( 'wp_insert_post_data', [ $this, 'insert_subscription_post_data' ], 10, 2 );
-
-		add_action( 'save_post_pronamic_pay_subscr', [ $this, 'save_post_meta' ], 100, 3 );
-	}
-
-	/**
 	 * Get subscription by ID.
 	 *
 	 * @param int $id Payment ID.
 	 * @return Subscription|null
 	 */
 	public function get_subscription( $id ) {
-		if ( ! isset( $this->subscriptions[ $id ] ) ) {
-			if ( empty( $id ) ) {
-				return null;
-			}
-
-			$id = (int) $id;
-
-			$post_type = \get_post_type( $id );
-
-			if ( 'pronamic_pay_subscr' !== $post_type ) {
-				return null;
-			}
-
-			$subscription = new Subscription();
-
-			$subscription->set_id( $id );
-
-			$this->subscriptions[ $id ] = $subscription;
-
-			$this->read( $subscription );
+		if ( \array_key_exists( $id, $this->subscriptions ) ) {
+			return $this->subscriptions[ $id ];
 		}
+
+		if ( empty( $id ) ) {
+			return null;
+		}
+
+		$id = (int) $id;
+
+		$post_type = \get_post_type( $id );
+
+		if ( 'pronamic_pay_subscr' !== $post_type ) {
+			return null;
+		}
+
+		$subscription = new Subscription();
+
+		$subscription->set_id( $id );
+
+		$this->subscriptions[ $id ] = $subscription;
+
+		$this->read( $subscription );
 
 		return $this->subscriptions[ $id ];
 	}
@@ -135,146 +119,30 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	}
 
 	/**
-	 * Get meta status from post status.
-	 *
-	 * @param string $post_status Post status.
-	 * @return string|null
-	 */
-	private function get_meta_status_from_post_status( $post_status ) {
-		$key = array_search( $post_status, $this->status_map, true );
-
-		if ( false !== $key ) {
-			return \strval( $key );
-		}
-
-		return null;
-	}
-
-	/**
-	 * Complement subscription post data.
-	 *
-	 * @link https://github.com/WordPress/WordPress/blob/5.0.3/wp-includes/post.php#L3515-L3523
-	 *
-	 * @param array $data    An array of slashed post data.
-	 * @param array $postarr An array of sanitized, but otherwise unmodified post data.
+	 * Get post data.
+	 * 
+	 * @param Subscription $subscription Payment.
+	 * @param array        $data         Post data.
 	 * @return array
-	 * @throws \Exception When inserting subscription post data JSON string fails.
+	 * @throws \Exception Throws an exception if an error occurs while encoding the payment to JSON.
 	 */
-	public function insert_subscription_post_data( $data, $postarr ) {
-		$this->subscription = null;
+	private function get_post_data( Subscription $subscription, $data ) {
+		$json_string = \wp_json_encode( $subscription->get_json() );
 
-		if ( isset( $postarr['pronamic_subscription'] ) ) {
-			$this->subscription = $postarr['pronamic_subscription'];
-		} elseif ( isset( $postarr['ID'] ) ) {
-			$post_id = $postarr['ID'];
-
-			if ( 'pronamic_pay_subscr' === get_post_type( $post_id ) ) {
-				$this->subscription = $this->get_subscription( $post_id );
-			}
+		if ( false === $json_string ) {
+			throw new \Exception( 'Error occurred while encoding the subscription to JSON.' );
 		}
 
-		if ( $this->subscription instanceof Subscription ) {
-			$subscription = $this->subscription;
+		$data['post_content']   = \wp_slash( $json_string );
+		$data['post_mime_type'] = 'application/json';
 
-			// Update subscription from post array.
-			$this->update_subscription_form_post_array( $subscription, $postarr );
+		$status = $this->get_post_status_from_meta_status( $subscription->get_status() );
 
-			if ( ! isset( $data['post_status'] ) || 'trash' !== $data['post_status'] ) {
-				$data['post_status'] = $this->get_post_status_from_meta_status( $subscription->get_status() );
-			}
-
-			// Data.
-			$json_string = wp_json_encode( $subscription->get_json() );
-
-			if ( false === $json_string ) {
-				throw new \Exception( 'Error inserting subscription post data as JSON.' );
-			}
-
-			$data['post_content']   = wp_slash( $json_string );
-			$data['post_mime_type'] = 'application/json';
+		if ( null !== $status ) {
+			$data['post_status'] = $status;
 		}
 
 		return $data;
-	}
-
-	/**
-	 * Update subscription from post array.
-	 *
-	 * @param Subscription $subscription Subscription.
-	 * @param array        $postarr      Post data array.
-	 * @return void
-	 * @throws \Exception Throws exception if amount could not be parsed to Money object.
-	 */
-	private function update_subscription_form_post_array( $subscription, $postarr ) {
-		if ( isset( $postarr['pronamic_subscription_post_status'] ) ) {
-			$post_status = sanitize_text_field( stripslashes( $postarr['pronamic_subscription_post_status'] ) );
-			$meta_status = $this->get_meta_status_from_post_status( $post_status );
-
-			if ( null !== $meta_status ) {
-				$subscription->set_status( $meta_status );
-			}
-		}
-
-		if ( ! isset( $postarr['pronamic_subscription_update_nonce'] ) ) {
-			return;
-		}
-
-		if ( ! check_admin_referer( 'pronamic_subscription_update', 'pronamic_subscription_update_nonce' ) ) {
-			return;
-		}
-
-		// Next payment date.
-		if ( \array_key_exists( 'hidden_pronamic_pay_next_payment_date', $postarr ) && \array_key_exists( 'pronamic_subscription_next_payment_date', $postarr ) ) {
-			$old_value = $postarr['hidden_pronamic_pay_next_payment_date'];
-
-			$new_value = $postarr['pronamic_subscription_next_payment_date'];
-
-			if ( ! empty( $new_value ) && $old_value !== $new_value ) {
-				$new_date = new DateTimeImmutable( $new_value );
-
-				$next_payment_date = $subscription->get_next_payment_date();
-
-				$updated_date = null === $next_payment_date ? clone $new_date : clone $next_payment_date;
-
-				$updated_date = $updated_date->setDate( (int) $new_date->format( 'Y' ), (int) $new_date->format( 'm' ), (int) $new_date->format( 'd' ) );
-
-				if ( false !== $updated_date ) {
-					$subscription->set_next_payment_date( $updated_date );
-
-					$note = \sprintf(
-						/* translators: %1: old formatted date, %2: new formatted date */
-						\__( 'Next payment date updated from %1$s to %2$s.', 'pronamic_ideal' ),
-						null === $next_payment_date ? '' : $next_payment_date->format_i18n( \__( 'D j M Y', 'pronamic_ideal' ) ),
-						$updated_date->format_i18n( \__( 'D j M Y', 'pronamic_ideal' ) )
-					);
-
-					$subscription->add_note( $note );
-				}
-			}
-		}
-	}
-
-	/**
-	 * Save post meta.
-	 *
-	 * @link https://github.com/WordPress/WordPress/blob/5.0.3/wp-includes/post.php#L3724-L3736
-	 *
-	 * @param int      $post_id Post ID.
-	 * @param \WP_Post $post    Post object.
-	 * @param bool     $update  Whether this is an existing post being updated or not.
-	 * @return void
-	 */
-	public function save_post_meta( $post_id, $post, $update ) {
-		if ( $this->subscription instanceof Subscription ) {
-			if ( ! $update && null === $this->subscription->get_id() ) {
-				$this->subscription->set_id( $post_id );
-				$this->subscription->post = $post;
-			}
-
-			$this->update_post_meta( $this->subscription );
-		}
-
-		$this->subscription = null;
 	}
 
 	/**
@@ -298,23 +166,19 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		$customer_user_id = null === $customer ? 0 : $customer->get_user_id();
 
-		$result = wp_insert_post(
-			/**
-			 * The 'pronamic_subscription' key is not an official argument for the
-			 * WordPress `wp_insert_post` function.
-			 *
-			 * @todo Simplify storing subscriptions.
-			 */
-			[
-				'post_type'             => 'pronamic_pay_subscr',
-				'post_date_gmt'         => $this->get_mysql_utc_date( $subscription->date ),
-				'post_title'            => \sprintf(
-					'Subscription %s',
-					$subscription->get_key()
-				),
-				'post_author'           => null === $customer_user_id ? 0 : $customer_user_id,
-				'pronamic_subscription' => $subscription,
-			],
+		$result = \wp_insert_post(
+			$this->get_post_data(
+				$subscription,
+				[
+					'post_type'     => 'pronamic_pay_subscr',
+					'post_date_gmt' => $this->get_mysql_utc_date( $subscription->date ),
+					'post_title'    => \sprintf(
+						'Subscription %s',
+						$subscription->get_key()
+					),
+					'post_author'   => null === $customer_user_id ? 0 : $customer_user_id,
+				]
+			),
 			true
 		);
 
@@ -327,7 +191,10 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			);
 		}
 
-		$this->update_post_meta( $subscription );
+		$subscription->set_id( $result );
+		$subscription->post = \get_post( $result );
+
+		$this->subscriptions[ $result ] = $subscription;
 
 		/**
 		 * New subscription created.
@@ -356,12 +223,15 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			return false;
 		}
 
-		$data = [
-			'ID'                    => $id,
-			'pronamic_subscription' => $subscription,
-		];
-
-		$result = wp_update_post( $data, true );
+		$result = \wp_update_post(
+			$this->get_post_data(
+				$subscription,
+				[
+					'ID' => $id,
+				]
+			),
+			true
+		);
 
 		if ( \is_wp_error( $result ) ) {
 			throw new \Exception(
@@ -371,6 +241,10 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 				)
 			);
 		}
+
+		$subscription->post = \get_post( $result );
+
+		$this->subscriptions[ $result ] = $subscription;
 
 		return true;
 	}
@@ -387,6 +261,8 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		$id = $subscription->get_id();
 
 		$result = empty( $id ) ? $this->create( $subscription ) : $this->update( $subscription );
+
+		$this->update_post_meta( $subscription );
 
 		return $result;
 	}
