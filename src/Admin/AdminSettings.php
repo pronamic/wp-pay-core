@@ -168,18 +168,18 @@ class AdminSettings {
 		$name  = $args['label_for'];
 		$value = get_option( $name );
 
-		$atts = [
-			'name'  => $name,
-			'id'    => $name,
-			'type'  => $args['type'],
-			'class' => $args['classes'],
-			'value' => $value,
-		];
-
-		printf(
-			'<input %s />',
-			Util::array_to_html_attributes( $atts )
+		$element = new Element(
+			'input',
+			[
+				'name'  => $name,
+				'id'    => $name,
+				'type'  => $args['type'],
+				'class' => $args['classes'],
+				'value' => $value,
+			]
 		);
+
+		$element->output();
 
 		if ( ! empty( $args['description'] ) ) {
 			printf(
