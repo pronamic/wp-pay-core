@@ -31,13 +31,6 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPeriod;
  */
 class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	/**
-	 * Payment.
-	 *
-	 * @var Payment|null
-	 */
-	private $payment;
-
-	/**
 	 * Payments.
 	 *
 	 * @var array
