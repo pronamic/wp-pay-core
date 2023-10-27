@@ -804,7 +804,7 @@ class AdminSubscriptionPostType {
 			\wp_die( \esc_html__( 'Action failed. Please refresh the page and retry.', 'pronamic_ideal' ) );
 		}
 
-		$subscription_id = \sanitize_text_field( \wp_unslash( $_POST['pronamic_subscription_id'] ) );
+		$subscription_id = (int) \sanitize_text_field( \wp_unslash( $_POST['pronamic_subscription_id'] ) );
 
 		$subscription = \get_pronamic_subscription( $subscription_id );
 
