@@ -10,9 +10,9 @@
 
 namespace Pronamic\WordPress\Pay;
 
-use Pronamic\WordPress\Html\Element;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
+use Pronamic\WordPress\Html\Element;
 use WP_Error;
 
 /**
