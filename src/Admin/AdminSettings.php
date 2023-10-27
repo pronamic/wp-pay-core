@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Admin;
 
+use Pronamic\WordPress\Html\Element;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Util;
 
@@ -215,13 +216,24 @@ class AdminSettings {
 			esc_attr( $id )
 		);
 
-		printf(
-			'<input name="%s" id="%s" type="checkbox" value="1" %s %s/>',
-			esc_attr( $name ),
-			esc_attr( $id ),
-			checked( $value, 1, false ),
-			\array_key_exists( 'disabled', $args ) ? $args['disabled'] : ''
-		);
+		$attributes = [
+			'name'  => $name,
+			'id'    => $id,
+			'type'  => 'checkbox',
+			'value' => '1',
+		];
+
+		if ( $value ) {
+			$attributes['checked'] = 'checked';
+		}
+
+		if ( \array_key_exists( 'disabled', $args ) && $args['disabled'] ) {
+			$attributes['disabled'] = 'disabled';
+		}
+
+		$element = new Element( 'input', $attributes );
+
+		$element->output();
 
 		echo esc_html( $args['description'] );
 
