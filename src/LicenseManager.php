@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay;
 
+use Pronamic\WordPress\Html\Element;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\DateTime\DateTimeZone;
 use WP_Error;
@@ -124,18 +125,18 @@ class LicenseManager {
 
 		$name = $args['label_for'];
 
-		$atts = [
-			'name'  => $name,
-			'id'    => $name,
-			'type'  => $args['type'],
-			'class' => $args['classes'],
-			'value' => \get_option( $name ),
-		];
-
-		printf(
-			'<input %s />',
-			Util::array_to_html_attributes( $atts )
+		$element = new Element(
+			'input',
+			[
+				'name'  => $name,
+				'id'    => $name,
+				'type'  => $args['type'],
+				'class' => $args['classes'],
+				'value' => \get_option( $name ),
+			]
 		);
+
+		$element->output();
 
 		$status = \get_option( 'pronamic_pay_license_status' );
 
