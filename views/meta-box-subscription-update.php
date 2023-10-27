@@ -224,7 +224,7 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 
 		printf(
 			'<input type="hidden" name="pronamic_subscription_id" value="%s" />',
-			esc_attr( $subscription->get_id() )
+			esc_attr( (string) $subscription->get_id() )
 		);
 
 		submit_button(
