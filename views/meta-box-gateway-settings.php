@@ -314,11 +314,13 @@ $sections = array_filter(
 										\esc_attr( $field_id )
 									);
 
-									printf(
-										'<input %s %s />',
-										Util::array_to_html_attributes( $attributes ),
-										checked( $value, true, false )
-									);
+									if ( true === (bool) $value ) {
+										$attributes['checked'] = 'checked';
+									}
+
+									$element = new Element( 'input', $attributes );
+
+									$element->output();
 
 									printf( ' ' );
 
