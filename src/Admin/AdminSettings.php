@@ -178,9 +178,7 @@ class AdminSettings {
 
 		printf(
 			'<input %s />',
-			// @codingStandardsIgnoreStart
 			Util::array_to_html_attributes( $atts )
-			// @codingStandardsIgnoreEn
 		);
 
 		if ( ! empty( $args['description'] ) ) {

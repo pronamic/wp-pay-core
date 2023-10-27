@@ -134,9 +134,7 @@ class LicenseManager {
 
 		printf(
 			'<input %s />',
-			// @codingStandardsIgnoreStart
 			Util::array_to_html_attributes( $atts )
-			// @codingStandardsIgnoreEnd
 		);
 
 		$status = \get_option( 'pronamic_pay_license_status' );
