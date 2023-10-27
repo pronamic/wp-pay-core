@@ -130,7 +130,7 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 
 		printf(
 			'<input type="hidden" name="pronamic_payment_id" value="%s" />',
-			esc_attr( $payment->get_id() )
+			esc_attr( (string) $payment->get_id() )
 		);
 
 		submit_button(
