@@ -32,6 +32,7 @@
   },
   "homepage": "http://www.wp-pay.org/",
   "dependencies": {
+    "@wp-pay/logos": "^1.19.0",
     "accounting": "^0.4.1",
     "Flot": "github:flot/flot#958e5fd43c6dff4bab3e1fd5cb6109df5c1e8003",
     "icon-gen": "^2.1.0",
