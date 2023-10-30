@@ -351,11 +351,21 @@ $sections = array_filter(
 
 									break;
 								case 'select':
-									printf(
-										'<select %s>%s</select>',
-										Util::array_to_html_attributes( $attributes ),
-										Util::select_options_grouped( $field['options'], $value )
-									);
+									$element = new Element( 'select', $attributes );
+
+									foreach ( $field['options'] as $key => $label ) {
+										$option = new Element( 'option', [ 'value' => $key ] );
+
+										$option->children[] = $label;
+
+										if ( $value === $key ) {
+											$option->attributes['selected'] = 'selected';
+										}
+
+										$element->children[] = $option;
+									}
+
+									$element->output();
 
 									break;
 								case 'optgroup':
