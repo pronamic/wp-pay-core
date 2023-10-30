@@ -6,6 +6,18 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.14.0] - 2023-10-30
+
+### Changed
+
+- Improved escaping for `Util::array_to_html_attributes` usage.
+- Added cards images so they no longer load via `cdn.wp-pay.org`.
+- Simplified custom post type data store for payments and subscriptions.
+
+Full set of changes: [`4.13.2...4.14.0`][4.14.0]
+
+[4.14.0]: https://github.com/pronamic/wp-pay-core/compare/v4.13.2...v4.14.0
+
 ## [4.13.2] - 2023-10-19
 
 ### Changed
