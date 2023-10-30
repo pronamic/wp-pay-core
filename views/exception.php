@@ -48,4 +48,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $exception = $exception->getPrevious();
 
-require __FILE__;
+if ( null !== $exception ) {
+	require __FILE__;
+}
