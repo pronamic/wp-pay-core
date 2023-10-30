@@ -135,10 +135,6 @@ class AdminModule {
 	 * @return void
 	 */
 	public function admin_init() {
-		global $pronamic_ideal_errors;
-
-		$pronamic_ideal_errors = [];
-
 		// Maybe.
 		$this->maybe_redirect();
 
