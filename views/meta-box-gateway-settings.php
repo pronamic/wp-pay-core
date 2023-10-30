@@ -335,11 +335,11 @@ $sections = array_filter(
 									$attributes['rows'] = 4;
 									$attributes['cols'] = 65;
 
-									printf(
-										'<textarea %s>%s</textarea>',
-										Util::array_to_html_attributes( $attributes ),
-										esc_textarea( $value )
-									);
+									$element = new Element( 'textarea', $attributes );
+
+									$element->children[] = $value;
+
+									$element->output();
 
 									break;
 								case 'file':
