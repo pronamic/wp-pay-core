@@ -286,7 +286,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 		$result = empty( $id ) ? $this->create( $payment ) : $this->update( $payment );
 
-		\remove_filter( 'wp_insert_post_data', [ $this, 'preserve_post_content' ], 5, 3 );
+		\remove_filter( 'wp_insert_post_data', [ $this, 'preserve_post_content' ], 5 );
 
 		$this->update_post_meta( $payment );
 
