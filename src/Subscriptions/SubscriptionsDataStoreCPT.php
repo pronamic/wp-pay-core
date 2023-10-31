@@ -67,6 +67,37 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	}
 
 	/**
+	 * Preserves the initial JSON post_content passed to save into the post.
+	 * 
+	 * This is needed to prevent KSES and other {@see 'content_save_pre'} filters
+	 * from corrupting JSON data.
+	 * 
+	 * @link https://github.com/pronamic/wp-pay-core/issues/160
+	 * @link https://developer.wordpress.org/reference/hooks/wp_insert_post_data/
+	 * @param array $data                An array of slashed and processed post data.
+	 * @param array $postarr             An array of sanitized (and slashed) but otherwise unmodified post data.
+	 * @param array $unsanitized_postarr An array of slashed yet *unsanitized* and unprocessed post data as originally passed to wp_insert_post().
+	 * @return array Filtered post data.
+	 */
+	public function preserve_post_content( $data, $postarr, $unsanitized_postarr ) {
+		if ( ! \array_key_exists( 'post_type', $data ) ) {
+			return $data;
+		}
+
+		if ( 'pronamic_pay_subscr' !== $data['post_type'] ) {
+			return $data;
+		}
+
+		if ( ! \array_key_exists( 'post_content', $unsanitized_postarr ) ) {
+			return $data;
+		}
+
+		$data['post_content'] = $unsanitized_postarr['post_content'];
+
+		return $data;
+	}
+
+	/**
 	 * Get subscription by ID.
 	 *
 	 * @param int $id Payment ID.
@@ -260,7 +291,11 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	public function save( $subscription ) {
 		$id = $subscription->get_id();
 
+		\add_filter( 'wp_insert_post_data', array( $this, 'preserve_post_content' ), 5, 3 );
+
 		$result = empty( $id ) ? $this->create( $subscription ) : $this->update( $subscription );
+
+		\remove_filter( 'wp_insert_post_data', array( $this, 'preserve_post_content' ), 5, 3 );
 
 		$this->update_post_meta( $subscription );
 
