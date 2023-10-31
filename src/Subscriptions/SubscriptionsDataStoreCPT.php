@@ -291,11 +291,11 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	public function save( $subscription ) {
 		$id = $subscription->get_id();
 
-		\add_filter( 'wp_insert_post_data', array( $this, 'preserve_post_content' ), 5, 3 );
+		\add_filter( 'wp_insert_post_data', [ $this, 'preserve_post_content' ], 5, 3 );
 
 		$result = empty( $id ) ? $this->create( $subscription ) : $this->update( $subscription );
 
-		\remove_filter( 'wp_insert_post_data', array( $this, 'preserve_post_content' ), 5, 3 );
+		\remove_filter( 'wp_insert_post_data', [ $this, 'preserve_post_content' ], 5, 3 );
 
 		$this->update_post_meta( $subscription );
 
