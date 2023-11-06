@@ -6,6 +6,25 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.14.1] - 2023-11-06
+
+### Fixed
+
+- Fixed storage of JSON in custom post type. ([160](https://github.com/pronamic/wp-pay-core/issues/160))
+- Fixed "Fatal error: Uncaught Error: Call to a member function getMessage() on null". ([8e373a4](https://github.com/pronamic/wp-pay-core/commit/8e373a419c2a4f0c6d4b30fd25df71861485b693))
+
+### Removed
+
+- Removed `global $pronamic_ideal_errors`, no longer used. ([f260bc3](https://github.com/pronamic/wp-pay-core/commit/f260bc3b6cf38737260e075d7098ce679e3a3f20))
+
+### Changed
+
+- Removed `Updater` class, use https://github.com/pronamic/pronamic-wp-updater instead. ([d0d66c8](https://github.com/pronamic/wp-pay-core/commit/d0d66c8be210329cb9f08380933e7f46e6196844))
+
+Full set of changes: [`4.14.0...4.14.1`][4.14.1]
+
+[4.14.1]: https://github.com/pronamic/wp-pay-core/compare/v4.14.0...v4.14.1
+
 ## [4.14.0] - 2023-10-30
 
 ### Changed
