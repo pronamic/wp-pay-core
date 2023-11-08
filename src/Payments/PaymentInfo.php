@@ -454,7 +454,13 @@ abstract class PaymentInfo {
 
 		$key = $this->meta_key_prefix . $key;
 
-		return get_post_meta( $this->id, $key, true );
+		$meta_values = \get_post_meta( $this->id, $key, false );
+
+		if ( 0 === count( $meta_values ) ) {
+			return null;
+		}
+
+		return \get_post_meta( $this->id, $key, true );
 	}
 
 	/**
