@@ -456,7 +456,7 @@ abstract class PaymentInfo {
 
 		$meta_values = \get_post_meta( $this->id, $key, false );
 
-		if ( 0 === count( $meta_values ) ) {
+		if ( \is_array( $meta_values ) && 0 === \count( $meta_values ) ) {
 			return null;
 		}
 
