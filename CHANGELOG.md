@@ -6,6 +6,21 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.14.2] - 2023-11-09
+
+### Changed
+
+- Changed return value for non-existing meta in payment info from empty string to `null`. ([163](https://github.com/pronamic/wp-pay-core/issues/163))
+
+### Commits
+
+- Check array type (#163). ([b058268](https://github.com/pronamic/wp-pay-core/commit/b058268e1f2408704daf970fd4920ae9d4be205a))
+- Return `null` from `PaymentInfo::get_meta()` if meta does not exist (fixes #163). ([649ec6a](https://github.com/pronamic/wp-pay-core/commit/649ec6aff28464abd8ce9905431fcf6d84ed8f0e))
+
+Full set of changes: [`4.14.1...4.14.2`][4.14.2]
+
+[4.14.2]: https://github.com/pronamic/wp-pay-core/compare/v4.14.1...v4.14.2
+
 ## [4.14.1] - 2023-11-06
 
 ### Fixed
