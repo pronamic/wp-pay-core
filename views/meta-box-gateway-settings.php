@@ -358,7 +358,7 @@ $sections = array_filter(
 
 										$option->children[] = $label;
 
-										if ( $value === $key ) {
+										if ( $value === (string) $key ) {
 											$option->attributes['selected'] = 'selected';
 										}
 
