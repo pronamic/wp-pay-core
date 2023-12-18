@@ -6,6 +6,16 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.14.3] - 2023-12-18
+
+### Commits
+
+- Fixed string type comparison of select fields in gateway settings (fixes #164). ([8d349ce](https://github.com/pronamic/wp-pay-core/commit/8d349ce1e61e7960aa6d384248b7a165bdb41f11))
+
+Full set of changes: [`4.14.2...4.14.3`][4.14.3]
+
+[4.14.3]: https://github.com/pronamic/wp-pay-core/compare/v4.14.2...v4.14.3
+
 ## [4.14.2] - 2023-11-09
 
 ### Changed
