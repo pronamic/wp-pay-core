@@ -99,9 +99,16 @@ body {
 		font-size: 1.25em;
 		font-weight: 300;
 		letter-spacing: .05rem;
+		white-space: normal;
 
 		&:hover {
 			background-color: $wp-button-primary-background-hover-color;
+		}
+	}
+
+	@media (max-width: 600px) {
+		input[type="submit"] {
+			font-size: 3.5vw;
 		}
 	}
 }

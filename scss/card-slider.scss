@@ -313,6 +313,12 @@
 			background-image: url("../images/dist/cards/van-lanschot/card-van-lanschot-background-480x270.svg");
 		}
 	}
+
+	@media (max-width: 600px) {
+		.pp-card__value {
+			font-size: 3vw;
+		}
+	}
 }
 
 // Slick

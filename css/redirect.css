@@ -69,9 +69,15 @@ body {
   font-size: 1.25em;
   font-weight: 300;
   letter-spacing: 0.05rem;
+  white-space: normal;
 }
 .pronamic-pay-redirect-container input[type=submit]:hover {
   background-color: #135e96;
+}
+@media (max-width: 600px) {
+  .pronamic-pay-redirect-container input[type=submit] {
+    font-size: 3.5vw;
+  }
 }
 
 hr {
