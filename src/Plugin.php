@@ -640,6 +640,7 @@ class Plugin {
 		$controllers = [
 			new PagesController(),
 			new HomeUrlController(),
+			new ActionSchedulerController(),
 		];
 
 		foreach ( $controllers as $controller ) {
