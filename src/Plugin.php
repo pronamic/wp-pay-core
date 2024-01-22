@@ -154,20 +154,6 @@ class Plugin {
 	public $admin;
 
 	/**
-	 * Pages controller.
-	 *
-	 * @var PagesController
-	 */
-	private $pages_controller;
-
-	/**
-	 * Home URL controller.
-	 *
-	 * @var HomeUrlController
-	 */
-	private $home_url_controller;
-
-	/**
 	 * Blocks module.
 	 *
 	 * @var Blocks\BlocksModule
@@ -651,11 +637,14 @@ class Plugin {
 			$this->admin = new Admin\AdminModule( $this );
 		}
 
-		$this->pages_controller = new PagesController();
-		$this->pages_controller->setup();
+		$controllers = [
+			new PagesController(),
+			new HomeUrlController(),
+		];
 
-		$this->home_url_controller = new HomeUrlController();
-		$this->home_url_controller->setup();
+		foreach ( $controllers as $controller ) {
+			$controller->setup();
+		}
 
 		$gateways = [];
 
