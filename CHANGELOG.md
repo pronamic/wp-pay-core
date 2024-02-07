@@ -6,6 +6,16 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.15.0] - 2024-02-07
+
+### Added
+
+- Added Action Scheduler controller to keep track of AS tasks via `PRONAMIC_ACTION_SCHEDULER_CONTEXT` define. [b1c28b0](https://github.com/pronamic/wp-pay-core/commit/b1c28b0d2f7e4772ce4e600ff6215e613cc87996) [pronamic/wp-pay-core#170](https://github.com/pronamic/wp-pay-core/issues/170)
+
+Full set of changes: [`4.14.3...4.15.0`][4.15.0]
+
+[4.15.0]: https://github.com/pronamic/wp-pay-core/compare/v4.14.3...v4.15.0
+
 ## [4.14.3] - 2023-12-18
 
 ### Commits
