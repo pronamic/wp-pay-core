@@ -6,6 +6,16 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.15.1] - 2024-02-13
+
+### Changed
+
+- Variables and options must be escaped when echo'd. [#172](https://github.com/pronamic/wp-pay-core/issues/172)
+
+Full set of changes: [`4.15.0...4.15.1`][4.15.1]
+
+[4.15.1]: https://github.com/pronamic/wp-pay-core/compare/v4.15.0...v4.15.1
+
 ## [4.15.0] - 2024-02-07
 
 ### Added
