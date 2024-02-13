@@ -690,7 +690,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 				$address = $payment->get_billing_address();
 
-				echo nl2br( esc_html( (string) $address ) );
+				echo wp_kses(
+					nl2br( (string) $address ),
+					[
+						'br' => [],
+					]
+				);
 
 				?>
 			</td>
@@ -709,7 +714,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 				$address = $payment->get_shipping_address();
 
-				echo nl2br( esc_html( (string) $address ) );
+				echo wp_kses(
+					nl2br( (string) $address ),
+					[
+						'br' => [],
+					]
+				);
 
 				?>
 			</td>
