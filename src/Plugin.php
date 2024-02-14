@@ -313,6 +313,7 @@ class Plugin {
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BUNQ ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::IN3 ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::CAPAYABLE ) );
+		$this->payment_methods->add( new PaymentMethod( PaymentMethods::CARD ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::CREDIT_CARD ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::DIRECT_DEBIT ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::DIRECT_DEBIT_BANCONTACT ) );
