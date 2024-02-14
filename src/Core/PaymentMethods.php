@@ -158,6 +158,14 @@ class PaymentMethods {
 	const CAPAYABLE = 'capayable';
 
 	/**
+	 * Card.
+	 *
+	 * @link https://github.com/pronamic/pronamic-pay/issues/82
+	 * @var string
+	 */
+	const CARD = 'card';
+
+	/**
 	 * Credit Card
 	 *
 	 * @var string
