@@ -453,6 +453,7 @@ class PaymentMethods {
 			self::BUNQ                    => __( 'Bunq', 'pronamic_ideal' ),
 			self::CAPAYABLE               => __( 'Capayable', 'pronamic_ideal' ),
 			self::IN3                     => __( 'In3', 'pronamic_ideal' ),
+			self::CARD                    => __( 'Card', 'pronamic_ideal' ),
 			self::CREDIT_CARD             => __( 'Credit Card', 'pronamic_ideal' ),
 			self::DIRECT_DEBIT            => __( 'Direct Debit', 'pronamic_ideal' ),
 			self::DIRECT_DEBIT_BANCONTACT => sprintf(
