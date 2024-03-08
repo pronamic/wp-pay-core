@@ -88,6 +88,8 @@ if ( is_array( $current_mandate ) ) {
 	<head>
 		<meta charset="<?php bloginfo( 'charset' ); ?>" />
 
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 		<title><?php esc_html_e( 'Change subscription payment method', 'pronamic_ideal' ); ?></title>
 
 		<?php wp_print_styles( 'pronamic-pay-subscription-mandate' ); ?>

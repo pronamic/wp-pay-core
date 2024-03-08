@@ -29,6 +29,8 @@ $phase = $subscription->get_current_phase();
 	<head>
 		<meta charset="<?php bloginfo( 'charset' ); ?>" />
 
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 		<title><?php esc_html_e( 'Subscription Renewal', 'pronamic_ideal' ); ?></title>
 
 		<?php wp_print_styles( 'pronamic-pay-redirect' ); ?>
