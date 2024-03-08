@@ -23,6 +23,7 @@
 
 .pp-card-slider {
 	margin: 0 -40px;
+	overflow: hidden;
 }
 
 .pp-card-container {
@@ -63,15 +64,16 @@
 			box-shadow: 0 0 10px rgba(0, 0, 0, .1);
 			color: #81cf1f;
 			content: '';
-			line-height: 40px;
+			font-size: clamp(10px, 3vw, 1.2em);
+			line-height: clamp(10px, 6vw, 40px);
 			opacity: 0;
 			position: absolute;
 			top: 20px;
 			right: 20px;
 			text-align: center;
 			transition: opacity .2s;
-			width: 40px;
-			height: 40px;
+			width: clamp(10px, 6vw, 40px);
+			height: clamp(10px, 6vw, 40px);
 
 			&::after {
 				content: '✓';
@@ -100,7 +102,7 @@
 	}
 
 	.pp-card__label {
-		font-size: 14px;
+		font-size: clamp(10px, 2.5vw, 14px);
 		font-weight: normal;
 		opacity: .6;
 		margin: 0;
@@ -108,7 +110,7 @@
 
 	.pp-card__value {
 		font-family: 'Roboto Mono';
-		font-size: 20px;
+		font-size: clamp(8px, 3vw, 20px);
 		margin: 0;
 	}
 
@@ -311,12 +313,6 @@
 	&.brand-van-lanschot {
 		.pp-card__background {
 			background-image: url("../images/dist/cards/van-lanschot/card-van-lanschot-background-480x270.svg");
-		}
-	}
-
-	@media (max-width: 600px) {
-		.pp-card__value {
-			font-size: 3vw;
 		}
 	}
 }
