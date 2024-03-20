@@ -294,71 +294,301 @@ class Plugin {
 		require_once $args['action_scheduler'];
 
 		/**
+		 * Get Buy Now, Pay Later disclaimer.
+		 * 
+		 * @link https://github.com/pronamic/pronamic-pay/issues/70
+		 * @param string $provider Provider.
+		 * @return string
+		 */
+		/* translators: %s: provider */
+		$bnpl_disclaimer_template = \__( 'You must be at least 18+ to use this service. If you pay on time, you will avoid additional costs and ensure that you can use %s services again in the future. By continuing, you accept the Terms and Conditions and confirm that you have read the Privacy Statement and Cookie Statement.', 'pronamic_ideal' );
+
+		/**
 		 * Payment methods.
 		 */
 		$this->payment_methods = new PaymentMethodsCollection();
 
+		// AfterPay.nl.
 		$payment_method_afterpay_nl = new PaymentMethod( PaymentMethods::AFTERPAY_NL );
 
-		/**
-		 * AfterPay method description.
-		 *
-		 * @link https://www.afterpay.nl/en/customers/where-can-i-pay-with-afterpay
-		 */
-		$payment_method_afterpay_nl->description = \__( 'AfterPay is one of the largest and most popular post-payment system in the Benelux. Millions of Dutch and Belgians use AfterPay to pay for products.', 'pronamic_ideal' );
+		$payment_method_afterpay_nl->descriptions = [           
+			/**
+			 * AfterPay method description.
+			 *
+			 * @link https://www.afterpay.nl/en/customers/where-can-i-pay-with-afterpay
+			 */
+			'default' => \__( 'AfterPay is one of the largest and most popular post-payment system in the Benelux. Millions of Dutch and Belgians use AfterPay to pay for products.', 'pronamic_ideal' ),
+		];
+
+		$payment_method_afterpay_com->images = [
+			'woocommerce' => __DIR__ . '/../images/dist/methods/afterpay-nl/method-afterpay-nl-wc-51x32.svg',
+		];
 
 		$this->payment_methods->add( $payment_method_afterpay_nl );
 
+		// AfterPay.com.
 		$payment_method_afterpay_com = new PaymentMethod( PaymentMethods::AFTERPAY_COM );
 
-		/**
-		 * Afterpay method description.
-		 *
-		 * @link https://en.wikipedia.org/wiki/Afterpay
-		 * @link https://docs.adyen.com/payment-methods/afterpaytouch
-		 */
-		$payment_method_afterpay_com->description = \__( 'Afterpay is a popular buy now, pay later service in Australia, New Zealand, the United States, and Canada.', 'pronamic_ideal' );
+		$payment_method_afterpay_com->descriptions = [
+			/**
+			 * Afterpay method description.
+			 *
+			 * @link https://en.wikipedia.org/wiki/Afterpay
+			 * @link https://docs.adyen.com/payment-methods/afterpaytouch
+			 */
+			'default' => \__( 'Afterpay is a popular buy now, pay later service in Australia, New Zealand, the United States, and Canada.', 'pronamic_ideal' ),
+		];
+
+		$payment_method_afterpay_com->images = [
+			'woocommerce' => __DIR__ . '/../images/dist/methods/afterpay-com/method-afterpay-com-wc-51x32.svg',
+		];
 
 		$this->payment_methods->add( $payment_method_afterpay_com );
 
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::ALIPAY ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::AMERICAN_EXPRESS ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::APPLE_PAY ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BANCONTACT ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BANK_TRANSFER ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BELFIUS ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BILLIE ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BILLINK ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BITCOIN ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BLIK ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BUNQ ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::IN3 ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::CAPAYABLE ) );
+		// Alipay.
+		$payment_method_alipay = new PaymentMethod( PaymentMethods::ALIPAY );
 
+		$payment_method_alipay->images = [
+			'woocommerce' => __DIR__ . '/../images/dist/methods/alipay/method-alipay-wc-51x32.svg',
+		];
+
+		$this->payment_methods->add( $payment_method_alipay );
+
+		// American Express.
+		$payment_method_american_express = new PaymentMethod( PaymentMethods::AMERICAN_EXPRESS );
+
+		$payment_method_american_express->images = [
+			'woocommerce' => __DIR__ . '/../images/dist/methods/american-express/method-american-express-wc-51x32.svg',
+		];
+
+		$this->payment_methods->add( $payment_method_american_express );
+
+		// Apple Pay.
+		$payment_method_apple_pay = new PaymentMethod( PaymentMethods::APPLE_PAY );
+
+		$payment_method_apple_pay->images = [
+			'woocommerce' => __DIR__ . '/../images/dist/methods/apple-pay/method-apple-pay-wc-51x32.svg',
+		];
+
+		$this->payment_methods->add( $payment_method_apple_pay );
+
+		// Bancontact.
+		$payment_method_bancontact = new PaymentMethod( PaymentMethods::BANCONTACT );
+
+		$payment_method_bancontact->images = [
+			'woocommerce' => __DIR__ . '/../images/dist/methods/bancontact/method-bancontact-wc-51x32.svg',
+		];
+
+		$this->payment_methods->add( $payment_method_bancontact );
+
+		// Bank Transfer.
+		$payment_method_bank_transfer = new PaymentMethod( PaymentMethods::BANK_TRANSFER );
+
+		$payment_method_bank_transfer->images = [
+			'woocommerce' => __DIR__ . '/../images/dist/methods/bank-transfer/method-bank-transfer-wc-51x32.svg',
+		];
+
+		$this->payment_methods->add( $payment_method_bank_transfer );
+
+		// Belfius Direct Net.
+		$payment_method_belfius = new PaymentMethod( PaymentMethods::BELFIUS );
+
+		$payment_method_belfius->images = [
+			'woocommerce' => __DIR__ . '/../images/dist/methods/belfius/method-belfius-wc-51x32.svg',
+		];
+
+		$this->payment_methods->add( $payment_method_belfius );
+
+		// Billie.
+		$payment_method_billie = new PaymentMethod( PaymentMethods::BILLIE );
+
+		$payment_method_billie->images = [
+			'woocommerce' => __DIR__ . '/../images/dist/methods/billie/method-billie-wc-51x32.svg',
+		];
+
+		$this->payment_methods->add( $payment_method_billie );
+
+		// Billink.
+		$payment_method_billink = new PaymentMethod( PaymentMethods::BILLINK );
+
+		$payment_method_billie->images = [
+			'woocommerce' => __DIR__ . '/../images/dist/methods/billink/method-billink-wc-51x32.svg',
+		];
+
+		$this->payment_methods->add( $payment_method_billink );
+
+		// Bitcoin.
+		$payment_method_bitcoin = new PaymentMethod( PaymentMethods::BITCOIN );
+
+		$payment_method_bitcoin->images = [
+			'woocommerce' => __DIR__ . '/../images/dist/methods/bitcoin/method-bitcoin-wc-51x32.svg',
+		];
+
+		$this->payment_methods->add( $payment_method_bitcoin );
+
+		// BLIK.
+		$payment_method_blik = new PaymentMethod( PaymentMethods::BLIK );
+
+		$payment_method_blik->images = [
+			'woocommerce' => __DIR__ . '/../images/dist/methods/blik/method-blik-wc-51x32.svg',
+		];
+
+		$this->payment_methods->add( $payment_method_blik );
+
+		// Bunq.
+		$payment_method_bunq = new PaymentMethod( PaymentMethods::BUNQ );
+
+		$payment_method_bunq->images = [
+			'woocommerce' => __DIR__ . '/../images/dist/methods/bunq/method-bunq-wc-51x32.svg',
+		];
+
+		$this->payment_methods->add( $payment_method_bunq );
+
+		// In3.
+		$payment_method_in3 = new PaymentMethod( PaymentMethods::IN3 );
+
+		$payment_method_in3->descriptions = [
+			'customer' => \sprintf( $bnpl_disclaimer_template, $payment_method_in3->name ),
+		];
+
+		$payment_method_in3->images = [
+			'woocommerce' => __DIR__ . '/../images/dist/methods/in3/method-in3-wc-51x32.svg',
+		];
+
+		$this->payment_methods->add( $payment_method_in3 );
+
+		// Capayable.
+		$payment_method_capayable = new PaymentMethod( PaymentMethods::CAPAYABLE );
+
+		$payment_method_capayable->images = [];
+
+		$this->payment_methods->add( $payment_method_capayable );
+
+		// Card.
 		$payment_method_card = new PaymentMethod( PaymentMethods::CARD );
 
-		$payment_method_card->description = \__( 'The most popular payment method in the world. Offers customers a safe and trusted way to pay online. Customers can pay for their order quickly and easily with their card, without having to worry about their security. It is possible to charge a payment surcharge for card costs.', 'pronamic_ideal' );
+		$payment_method_card->descriptions = [
+			'default' => \__( 'The most popular payment method in the world. Offers customers a safe and trusted way to pay online. Customers can pay for their order quickly and easily with their card, without having to worry about their security. It is possible to charge a payment surcharge for card costs.', 'pronamic_ideal' ),
+		];
+
+		$payment_method_card->images = [
+			'woocommerce' => __DIR__ . '/../images/dist/methods/credit-card/method-credit-card-wc-51x32.svg',
+		];
 
 		$this->payment_methods->add( $payment_method_card );
 
+		// Credit card.
 		$payment_method_credit_card = new PaymentMethod( PaymentMethods::CREDIT_CARD );
 
-		$payment_method_credit_card->description = \__( 'The most popular payment method in the world. Offers customers a safe and trusted way to pay online. Customers can pay for their order quickly and easily with their credit card, without having to worry about their security. It is possible to charge a payment surcharge for credit card costs.', 'pronamic_ideal' );
+		$payment_method_credit_card->descriptions = [
+			'default' => \__( 'The most popular payment method in the world. Offers customers a safe and trusted way to pay online. Customers can pay for their order quickly and easily with their credit card, without having to worry about their security. It is possible to charge a payment surcharge for credit card costs.', 'pronamic_ideal' ),
+		];
+
+		$payment_method_card->images = [
+			'woocommerce' => __DIR__ . '/../images/dist/methods/credit-card/method-credit-card-wc-51x32.svg',
+		];
 
 		$this->payment_methods->add( $payment_method_credit_card );
 
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::DIRECT_DEBIT ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::DIRECT_DEBIT_BANCONTACT ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::DIRECT_DEBIT_IDEAL ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::DIRECT_DEBIT_SOFORT ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::EPS ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::FOCUM ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::IDEAL ) );
+		// Direct debit.
+		$payment_method_direct_debit = new PaymentMethod( PaymentMethods::DIRECT_DEBIT );
+
+		$payment_method_direct_debit->images = [
+			'woocommerce' => __DIR__ . '/../images/dist/methods/direct-debit/method-direct-debit-wc-51x32.svg',
+		];
+
+		$this->payment_methods->add( $payment_method_direct_debit );
+
+		/* translators: %s: payment method */
+		$description_template = \__( 'By using this payment method you authorize us via %s to debit payments from your bank account.', 'pronamic_ideal' );
+
+		// Direct debit (mandate via Bancontact).
+		$payment_method_direct_debit_bancontact = new PaymentMethod( PaymentMethods::DIRECT_DEBIT_BANCONTACT );
+
+		$payment_method_direct_debit_bancontact->descriptions = [
+			'customer' => \sprintf( $description_template, $payment_method_direct_debit_bancontact->name ),
+		];
+
+		$payment_method_direct_debit_bancontact->images = [
+			'woocommerce' => __DIR__ . '/../images/dist/methods/direct-debit-bancontact/method-direct-debit-bancontact-wc-107x32.svg',
+		];
+
+		$this->payment_methods->add( $payment_method_direct_debit_bancontact );
+
+		// Direct debit (mandate via Bancontact).
+		$payment_method_direct_debit_ideal = new PaymentMethod( PaymentMethods::DIRECT_DEBIT_IDEAL );
+
+		$payment_method_direct_debit_ideal->descriptions = [
+			'customer' => \sprintf( $description_template, $payment_method_direct_debit_ideal->name ),
+		];
+
+		$payment_method_direct_debit_ideal->images = [
+			'woocommerce' => __DIR__ . '/../images/dist/methods/direct-debit-ideal/method-direct-debit-ideal-wc-107x32.svg',
+		];
+
+		$this->payment_methods->add( $payment_method_direct_debit_ideal );
+
+		// Direct debit (mandate via SOFORT).
+		$payment_method_direct_debit_sofort = new PaymentMethod( PaymentMethods::DIRECT_DEBIT_SOFORT );
+
+		$payment_method_direct_debit_sofort->descriptions = [
+			'customer' => \sprintf( $description_template, $payment_method_direct_debit_sofort->name ),
+		];
+
+		$payment_method_direct_debit_sofort->images = [
+			'woocommerce' => __DIR__ . '/../images/dist/methods/direct-debit-sofort/method-direct-debit-sofort-wc-107x32.svg',
+		];
+
+		$this->payment_methods->add( $payment_method_direct_debit_sofort );
+
+		// EPS.
+		$payment_method_eps = new PaymentMethod( PaymentMethods::EPS );
+
+		$payment_method_eps->images = [
+			'woocommerce' => __DIR__ . '/../images/dist/methods/eps/method-eps-wc-51x32.svg',
+		];
+
+		$this->payment_methods->add( $payment_method_eps );
+
+		// Focum.
+		$payment_method_focum = new PaymentMethod( PaymentMethods::FOCUM );
+
+		$payment_method_eps->images = [
+			'woocommerce' => __DIR__ . '/../images/dist/methods/focum/method-focum-wc-51x32.svg',
+		];
+
+		$this->payment_methods->add( $payment_method_focum );
+
+		// IDEAL.
+		$payment_method_ideal = new PaymentMethod( PaymentMethods::IDEAL );
+
+		$payment_method_ideal->descriptions = [
+			'customer' => \__( 'With iDEAL you can easily pay online in the secure environment of your own bank.', 'pronamic_ideal' ),
+		];
+
+		$payment_method_ideal->images = [
+			'woocommerce' => __DIR__ . '/../images/dist/methods/ideal/method-ideal-wc-51x32.svg',
+		];
+
+		$this->payment_methods->add( $payment_method_ideal );
+
+		// IDEAL QR.
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::IDEALQR ) );
+
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::GIROPAY ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::GOOGLE_PAY ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::KBC ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::KLARNA_PAY_LATER ) );
+
+		// Klarna Pay Later.
+		$payment_method_klarna_pay_later = new PaymentMethod( PaymentMethods::KLARNA_PAY_LATER );
+
+		$payment_method_klarna_pay_later->descriptions = [
+			'customer' => \sprintf( $bnpl_disclaimer_template, $payment_method_klarna_pay_later->name ),
+		];
+
+		$this->payment_methods->add( $payment_method_klarna_pay_later );
+
+		// Klarna Pay Now.
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::KLARNA_PAY_NOW ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::KLARNA_PAY_OVER_TIME ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::MAESTRO ) );
@@ -368,12 +598,17 @@ class Plugin {
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::PAYPAL ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::PRZELEWY24 ) );
 
+		// Riverty.
 		$payment_method_riverty = new PaymentMethod( PaymentMethods::RIVERTY );
 
-		$payment_method_riverty->description = \__( 'Riverty (formerly AfterPay) is a payment service that allows customers to pay after receiving the product.', 'pronamic_ideal' );
+		$payment_method_riverty->descriptions = [
+			'default'  => \__( 'Riverty (formerly AfterPay) is a payment service that allows customers to pay after receiving the product.', 'pronamic_ideal' ),
+			'customer' => \sprintf( $bnpl_disclaimer_template, $payment_method_riverty->name ),
+		];
 
 		$this->payment_methods->add( $payment_method_riverty );
 
+		// Santander.
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::SANTANDER ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::SOFORT ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::SPRAYPAY ) );
