@@ -597,7 +597,7 @@ class Plugin {
 			'woocommerce' => __DIR__ . '/../images/dist/methods/google-pay/method-google-pay-wc-51x32.svg',
 		];
 
-		$this->payment_methods->add( $$payment_method_google_pay );
+		$this->payment_methods->add( $payment_method_google_pay );
 
 		// KBC/CBC Payment Button.
 		$payment_method_kbc = new PaymentMethod( PaymentMethods::KBC );
