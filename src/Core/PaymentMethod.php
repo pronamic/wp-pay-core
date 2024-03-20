@@ -28,7 +28,7 @@ class PaymentMethod {
 	 *
 	 * @var string
 	 */
-	private $name;
+	public $name;
 
 	/**
 	 * Status.
