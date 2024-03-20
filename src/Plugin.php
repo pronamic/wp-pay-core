@@ -320,7 +320,7 @@ class Plugin {
 			'default' => \__( 'AfterPay is one of the largest and most popular post-payment system in the Benelux. Millions of Dutch and Belgians use AfterPay to pay for products.', 'pronamic_ideal' ),
 		];
 
-		$payment_method_afterpay_com->images = [
+		$payment_method_afterpay_nl->images = [
 			'woocommerce' => __DIR__ . '/../images/dist/methods/afterpay-nl/method-afterpay-nl-wc-51x32.svg',
 		];
 
