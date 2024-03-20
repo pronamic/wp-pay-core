@@ -589,14 +589,44 @@ class Plugin {
 		$this->payment_methods->add( $payment_method_klarna_pay_later );
 
 		// Klarna Pay Now.
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::KLARNA_PAY_NOW ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::KLARNA_PAY_OVER_TIME ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::MAESTRO ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::MASTERCARD ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::MB_WAY ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::PAYCONIQ ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::PAYPAL ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::PRZELEWY24 ) );
+		$payment_method_klarna_pay_now = new PaymentMethod( PaymentMethods::KLARNA_PAY_NOW );
+
+		$this->payment_methods->add( $payment_method_klarna_pay_now );
+
+		// Klarna Pay Over Time.
+		$payment_method_klarna_pay_over_time = new PaymentMethod( PaymentMethods::KLARNA_PAY_OVER_TIME );
+
+		$this->payment_methods->add( $payment_method_klarna_pay_over_time );
+
+		// Maestro.
+		$payment_method_maestro = new PaymentMethod( PaymentMethods::MAESTRO );
+
+		$this->payment_methods->add( $payment_method_maestro );
+
+		// Mastercard.
+		$payment_method_mastercard = new PaymentMethod( PaymentMethods::MASTERCARD );
+
+		$this->payment_methods->add( $payment_method_mastercard );
+
+		// MB WAY.
+		$payment_method_mb_way = new PaymentMethod( PaymentMethods::MB_WAY );
+
+		$this->payment_methods->add( $payment_method_mb_way );
+
+		// Payconiq.
+		$payment_method_payconiq = new PaymentMethod( PaymentMethods::PAYCONIQ );
+
+		$this->payment_methods->add( $payment_method_payconiq );
+
+		// PayPal.
+		$payment_method_paypal = new PaymentMethod( PaymentMethods::PAYPAL );
+
+		$this->payment_methods->add( $payment_method_paypal );
+
+		// Przelewy24.
+		$payment_method_przelewy24 = new PaymentMethod( PaymentMethods::PRZELEWY24 );
+
+		$this->payment_methods->add( $payment_method_przelewy24 );
 
 		// Riverty.
 		$payment_method_riverty = new PaymentMethod( PaymentMethods::RIVERTY );
@@ -610,12 +640,26 @@ class Plugin {
 
 		// Santander.
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::SANTANDER ) );
+
+		// SOFORT Banking.
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::SOFORT ) );
+
+		// SprayPay.
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::SPRAYPAY ) );
+
+		// Swish.
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::SWISH ) );
+
+		// TWINT.
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::TWINT ) );
+
+		// V PAY.
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::V_PAY ) );
+
+		// Vipps.
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::VIPPS ) );
+
+		// Visa.
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::VISA ) );
 	}
 
