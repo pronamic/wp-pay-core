@@ -484,7 +484,7 @@ class Plugin {
 			'default' => \__( 'The most popular payment method in the world. Offers customers a safe and trusted way to pay online. Customers can pay for their order quickly and easily with their credit card, without having to worry about their security. It is possible to charge a payment surcharge for credit card costs.', 'pronamic_ideal' ),
 		];
 
-		$payment_method_card->images = [
+		$payment_method_credit_card->images = [
 			'woocommerce' => __DIR__ . '/../images/dist/methods/credit-card/method-credit-card-wc-51x32.svg',
 		];
 
