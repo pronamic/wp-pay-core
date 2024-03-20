@@ -31,11 +31,11 @@ class PaymentMethod {
 	public $name;
 
 	/**
-	 * Description.
+	 * Descriptions.
 	 *
-	 * @var string
+	 * @var array<string, string>
 	 */
-	public $description = '';
+	public $descriptions = [];
 
 	/**
 	 * Status.
