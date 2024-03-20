@@ -31,6 +31,13 @@ class PaymentMethod {
 	public $name;
 
 	/**
+	 * Description.
+	 *
+	 * @var string
+	 */
+	public $description = '';
+
+	/**
 	 * Status.
 	 *
 	 * @var string
