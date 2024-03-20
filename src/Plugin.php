@@ -298,8 +298,29 @@ class Plugin {
 		 */
 		$this->payment_methods = new PaymentMethodsCollection();
 
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::AFTERPAY_NL ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::AFTERPAY_COM ) );
+		$payment_method_afterpay_nl = new PaymentMethod( PaymentMethods::AFTERPAY_NL );
+
+		/**
+		 * AfterPay method description.
+		 *
+		 * @link https://www.afterpay.nl/en/customers/where-can-i-pay-with-afterpay
+		 */
+		$payment_method_afterpay_nl->description = \__( 'AfterPay is one of the largest and most popular post-payment system in the Benelux. Millions of Dutch and Belgians use AfterPay to pay for products.', 'pronamic_ideal' );
+
+		$this->payment_methods->add( $payment_method_afterpay_nl );
+
+		$payment_method_afterpay_com = new PaymentMethod( PaymentMethods::AFTERPAY_COM );
+
+		/**
+		 * Afterpay method description.
+		 *
+		 * @link https://en.wikipedia.org/wiki/Afterpay
+		 * @link https://docs.adyen.com/payment-methods/afterpaytouch
+		 */
+		$payment_method_afterpay_com->description = \__( 'Afterpay is a popular buy now, pay later service in Australia, New Zealand, the United States, and Canada.', 'pronamic_ideal' );
+
+		$this->payment_methods->add( $payment_method_afterpay_com );
+
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::ALIPAY ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::AMERICAN_EXPRESS ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::APPLE_PAY ) );
@@ -313,8 +334,19 @@ class Plugin {
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::BUNQ ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::IN3 ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::CAPAYABLE ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::CARD ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::CREDIT_CARD ) );
+
+		$payment_method_card = new PaymentMethod( PaymentMethods::CARD );
+
+		$payment_method_card->description = \__( 'The most popular payment method in the world. Offers customers a safe and trusted way to pay online. Customers can pay for their order quickly and easily with their card, without having to worry about their security. It is possible to charge a payment surcharge for card costs.', 'pronamic_ideal' );
+
+		$this->payment_methods->add( $payment_method_card );
+
+		$payment_method_credit_card = new PaymentMethod( PaymentMethods::CREDIT_CARD );
+
+		$payment_method_credit_card->description = \__( 'The most popular payment method in the world. Offers customers a safe and trusted way to pay online. Customers can pay for their order quickly and easily with their credit card, without having to worry about their security. It is possible to charge a payment surcharge for credit card costs.', 'pronamic_ideal' );
+
+		$this->payment_methods->add( $payment_method_credit_card );
+
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::DIRECT_DEBIT ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::DIRECT_DEBIT_BANCONTACT ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::DIRECT_DEBIT_IDEAL ) );
@@ -335,7 +367,13 @@ class Plugin {
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::PAYCONIQ ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::PAYPAL ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::PRZELEWY24 ) );
-		$this->payment_methods->add( new PaymentMethod( PaymentMethods::RIVERTY ) );
+
+		$payment_method_riverty = new PaymentMethod( PaymentMethods::RIVERTY );
+
+		$payment_method_riverty->description = \__( 'Riverty (formerly AfterPay) is a payment service that allows customers to pay after receiving the product.', 'pronamic_ideal' );
+
+		$this->payment_methods->add( $payment_method_riverty );
+
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::SANTANDER ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::SOFORT ) );
 		$this->payment_methods->add( new PaymentMethod( PaymentMethods::SPRAYPAY ) );
