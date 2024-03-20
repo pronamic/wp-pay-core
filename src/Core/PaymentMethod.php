@@ -52,6 +52,13 @@ class PaymentMethod {
 	private $fields = [];
 
 	/**
+	 * Images.
+	 *
+	 * @var array<string, string>
+	 */
+	public $images = [];
+
+	/**
 	 * Supports.
 	 */
 	use SupportsTrait;
