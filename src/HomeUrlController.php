@@ -144,7 +144,7 @@ class HomeUrlController {
 		$nonce = \sanitize_text_field( \wp_unslash( $_GET['pronamic_pay_dismiss_home_url_change_nonce'] ) );
 
 		if ( ! \wp_verify_nonce( $nonce, 'pronamic_pay_dismiss_home_url_change' ) ) {
-			\wp_die( \esc_html__( 'Action failed. Please refresh the page and retry.', 'pronamic_ideal' ) );
+			\wp_die( \esc_html__( 'The security code (nonce) to verify the dismiss action expired or was invalid, please refresh and try again.', 'pronamic_ideal' ) );
 		}
 
 		if ( ! \current_user_can( 'manage_options' ) ) {
@@ -154,7 +154,7 @@ class HomeUrlController {
 		$result = \update_option( 'pronamic_pay_home_url', \get_option( 'home' ) );
 
 		if ( false === $result ) {
-			\wp_die( \esc_html__( 'Action failed. Please refresh the page and retry.', 'pronamic_ideal' ) );
+			\wp_die( \esc_html__( 'Unable to dismiss the home URL change because the home URL option could not be updated, please refresh and try again.', 'pronamic_ideal' ) );
 		}
 
 		// Redirect.
