@@ -77,7 +77,7 @@ $payment_methods = $gateway->get_payment_methods(
 
 		<?php foreach ( $payment_method->get_fields() as $field ) : ?>
 
-			<tr class="pronamic-pay-cloack pronamic-pay-test-payment-method <?php echo esc_attr( $payment_method->get_id() ); ?>">
+			<tr class="pronamic-pay-cloak pronamic-pay-test-payment-method <?php echo esc_attr( $payment_method->get_id() ); ?>">
 				<th scope="row">
 					<?php echo esc_html( $field->get_label() ); ?>
 				</th>
@@ -217,7 +217,7 @@ $payment_methods = $gateway->get_payment_methods(
 				</script>
 			</td>
 		</tr>
-		<tr class="pronamic-pay-cloack pronamic-pay-test-subscription">
+		<tr class="pronamic-pay-cloak pronamic-pay-test-subscription">
 			<th scope="row">
 				<label for="pronamic_pay_test_repeat_frequency"><?php esc_html_e( 'Frequency', 'pronamic_ideal' ); ?></label>
 			</th>
@@ -244,7 +244,7 @@ $payment_methods = $gateway->get_payment_methods(
 				</select>
 			</td>
 		</tr>
-		<tr class="pronamic-pay-cloack pronamic-pay-test-subscription">
+		<tr class="pronamic-pay-cloak pronamic-pay-test-subscription">
 			<th scope="row">
 				<label for="pronamic_pay_test_repeat_interval"><?php esc_html_e( 'Repeat every', 'pronamic_ideal' ); ?></label>
 			</th>
@@ -266,7 +266,7 @@ $payment_methods = $gateway->get_payment_methods(
 				<span id="pronamic_pay_test_repeat_interval_suffix"><?php esc_html_e( 'days/weeks/months/year', 'pronamic_ideal' ); ?></span>
 			</td>
 		</tr>
-		<tr class="pronamic-pay-cloack pronamic-pay-test-subscription">
+		<tr class="pronamic-pay-cloak pronamic-pay-test-subscription">
 			<th scope="row">
 				<?php esc_html_e( 'Ends On', 'pronamic_ideal' ); ?>
 			</th>
