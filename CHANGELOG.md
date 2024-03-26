@@ -6,6 +6,25 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.16.0] - 2024-03-26
+
+### Changed
+
+- Improved home URL check. [52e5d37](https://github.com/pronamic/wp-pay-core/commit/52e5d375e57e79930118d5120fa6c36ed4eb20c9)
+- Improved error messages in home URL change detector. [#175](https://github.com/pronamic/wp-pay-core/issues/175) [b1c50c2](https://github.com/pronamic/wp-pay-core/commit/b1c50c2c74947c200650d7b0538b18c8963cb4bb)
+- Marked `name` property in `PaymentMethod` as public. [e45f5c7](https://github.com/pronamic/wp-pay-core/commit/e45f5c74b6578e66fa43d20d6277b1cfb369536a)
+- Improved view of redirection and subscription pages on mobile. [#169](https://github.com/pronamic/wp-pay-core/pull/169)
+
+### Added
+
+- Added support for `descriptions` in `PaymentMethod` class.
+- Added support for `images` in `PaymentMethod` class.
+- Register new more general card payment method. [3b28a44](https://github.com/pronamic/wp-pay-core/commit/3b28a44c7e6b28e83e983537f8d8429ee686eb97) [5e684b6](https://github.com/pronamic/wp-pay-core/commit/5e684b6c7605e269c3f4b92e1cb6e8fb089ca0ba) [1c142b6](https://github.com/pronamic/wp-pay-core/commit/1c142b671ab61e705e74827a7e45affddc1dd88f)
+
+Full set of changes: [`4.15.1...4.16.0`][4.16.0]
+
+[4.16.0]: https://github.com/pronamic/wp-pay-core/compare/v4.15.1...v4.16.0
+
 ## [4.15.1] - 2024-02-13
 
 ### Changed
