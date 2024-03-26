@@ -736,7 +736,7 @@ Full set of changes: [`4.5.0...4.6.0`][4.6.0]
 - Move tools to site health debug information and status tests.
 - Read plugin version from plugin file header.
 - Catch money parser exception for test payments.
-- Sepereated `Statuses` class in `PaymentStatus` and `SubscriptionStatus` class.
+- Separated `Statuses` class in `PaymentStatus` and `SubscriptionStatus` class.
 - Require `edit_payments` capability for payments related meta boxes on dashboard page.
 - Set menu page capability to minimum required capability based on submenu pages.
 - Only redirect to about page if not already viewed.
