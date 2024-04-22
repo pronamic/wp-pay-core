@@ -88,21 +88,12 @@ class AdminModule {
 	public $tour;
 
 	/**
-	 * Plugin installation.
-	 *
-	 * @var Install
-	 */
-	public $install;
-
-	/**
 	 * Construct and initialize an admin object.
 	 *
 	 * @param Plugin $plugin Plugin.
 	 */
 	public function __construct( Plugin $plugin ) {
 		$this->plugin = $plugin;
-
-		$this->install = new Install( $plugin, $this );
 
 		// Actions.
 		add_action( 'admin_init', [ $this, 'admin_init' ] );
