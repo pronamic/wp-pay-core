@@ -31,23 +31,13 @@ class Install {
 	private $plugin;
 
 	/**
-	 * Admin.
-	 *
-	 * @var AdminModule
-	 */
-	private $admin;
-
-	/**
 	 * Constructs and initializes an install object.
 	 *
 	 * @link https://github.com/woothemes/woocommerce/blob/2.4.3/includes/class-wc-install.php
-	 *
-	 * @param Plugin      $plugin Plugin.
-	 * @param AdminModule $admin  Admin.
+	 * @param Plugin $plugin Plugin.
 	 */
-	public function __construct( Plugin $plugin, AdminModule $admin ) {
+	public function __construct( Plugin $plugin ) {
 		$this->plugin = $plugin;
-		$this->admin  = $admin;
 
 		// Actions.
 		add_action( 'init', [ $this, 'init' ], 5 );
@@ -80,13 +70,13 @@ class Install {
 			foreach ( $upgrades as $upgrade ) {
 				$version = $upgrade->get_version();
 
-				if ( ! version_compare( $version_option, $version, '<' ) ) {
+				if ( ! \version_compare( $version_option, $version, '<' ) ) {
 					continue;
 				}
 
 				$upgrade->execute();
 
-				update_option( $version_option_name, $version );
+				\update_option( $version_option_name, $version );
 			}
 		}
 	}
@@ -101,50 +91,16 @@ class Install {
 		$this->create_roles();
 
 		// Rewrite Rules.
-		flush_rewrite_rules();
+		\flush_rewrite_rules();
 
 		// Version.
 		$version = $this->plugin->get_version();
 
-		$current_version = get_option( 'pronamic_pay_version', null );
-
-		// Redirect.
-		if ( null !== $this->admin->about_page ) {
-			try {
-				$about_page_version = $this->admin->about_page->get_version();
-			} catch ( \Exception $e ) {
-				$about_page_version = '';
-			}
-
-			$about_page_version_viewed = get_option( 'pronamic_pay_about_page_version', null );
-
-			$tab = null;
-
-			if ( null === $current_version ) {
-				// No version? This is a new install :).
-				$tab = 'getting-started';
-			} elseif ( version_compare( $about_page_version_viewed, $about_page_version, '<' ) ) {
-				// Show about page only if viewed version is lower then current version.
-				$tab = 'new';
-			}
-
-			if ( null !== $tab ) {
-				$url = add_query_arg(
-					[
-						'page' => 'pronamic-pay-about',
-						'tab'  => $tab,
-					],
-					admin_url( 'index.php' )
-				);
-
-				set_transient( 'pronamic_pay_admin_redirect', $url, 3600 );
-			}
-
-			update_option( 'pronamic_pay_about_page_version', $about_page_version );
-		}
+		// Action.
+		\do_action( 'pronamic_pay_install' );
 
 		// Update version.
-		update_option( 'pronamic_pay_version', $version );
+		\update_option( 'pronamic_pay_version', $version );
 	}
 
 	/**
@@ -157,7 +113,7 @@ class Install {
 	 */
 	private function create_roles() {
 		// Payer role.
-		add_role(
+		\add_role(
 			'payer',
 			__( 'Payer', 'pronamic_ideal' ),
 			[
@@ -166,7 +122,7 @@ class Install {
 		);
 
 		// @link https://developer.wordpress.org/reference/functions/wp_roles/.
-		$roles = wp_roles();
+		$roles = \wp_roles();
 
 		// Payments.
 		$payment_capabilities = PaymentPostType::get_capabilities();
@@ -187,7 +143,7 @@ class Install {
 	private function get_upgradeable_integrations() {
 		$integrations = $this->plugin->integrations;
 
-		$integrations = array_filter(
+		$integrations = \array_filter(
 			$integrations,
 			/**
 			 * Filter integration with version option name.
