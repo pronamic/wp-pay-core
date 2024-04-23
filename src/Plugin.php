@@ -1072,7 +1072,7 @@ class Plugin {
 			$this->admin = new Admin\AdminModule( $this );
 		}
 
-		new Admin\Install( $this, $this->admin ); 
+		new Admin\Install( $this ); 
 
 		$controllers = [
 			new PagesController(),
