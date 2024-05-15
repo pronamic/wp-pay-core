@@ -6,6 +6,22 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.17.0] - 2024-05-15
+
+### Commits
+
+- Updated hooks.md ([c91f15f](https://github.com/pronamic/wp-pay-core/commit/c91f15f5c754b39daf4fdde406ebeb7f929dc138))
+- Updated to logos library v2, remove all PNG's, SVG only now. ([1cf0dee](https://github.com/pronamic/wp-pay-core/commit/1cf0dee16ef89e8d5f6b9345e24fec8050c70cfb))
+- Alway install not only in administrative interface pages. ([a4ec06e](https://github.com/pronamic/wp-pay-core/commit/a4ec06eadeb28c189bf4f06b5189651b944dced5))
+
+### Composer
+
+- Added `automattic/jetpack-autoloader` `^3.0`.
+
+Full set of changes: [`4.16.0...4.17.0`][4.17.0]
+
+[4.17.0]: https://github.com/pronamic/wp-pay-core/compare/v4.16.0...v4.17.0
+
 ## [4.16.0] - 2024-03-26
 
 ### Changed
