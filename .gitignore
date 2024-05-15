@@ -22,4 +22,5 @@
 /wp-content/
 
 # PHPUnit
+/.phpunit.cache/
 /.phpunit.result.cache

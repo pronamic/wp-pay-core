@@ -68,7 +68,7 @@ class PaymentTest extends TestCase {
 	 *
 	 * @return array
 	 */
-	public function get_and_set_provider() {
+	public static function get_and_set_provider() {
 		$now = new DateTime();
 
 		return [
@@ -127,7 +127,7 @@ class PaymentTest extends TestCase {
 	 *
 	 * @return array
 	 */
-	public function get_provider() {
+	public static function get_provider() {
 		return [
 			[ 'order_id', 'get_order_id', 1234 ],
 			[ 'email', 'get_email', 'john.doe@example.com' ],

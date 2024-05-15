@@ -53,7 +53,7 @@ class SubscriptionTest extends TestCase {
 	 *
 	 * @return array
 	 */
-	public function get_and_set_provider() {
+	public static function get_and_set_provider() {
 		return [
 			[ 'set_id', 'get_id', uniqid() ],
 			[ 'set_status', 'get_status', 'completed' ],
@@ -82,7 +82,7 @@ class SubscriptionTest extends TestCase {
 	 *
 	 * @return array
 	 */
-	public function get_provider() {
+	public static function get_provider() {
 		return [
 			[ 'key', 'get_key', uniqid() ],
 			[ 'source', 'get_source', 'woocommerce' ],

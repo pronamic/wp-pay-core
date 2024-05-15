@@ -92,7 +92,7 @@ class CreditCardTest extends TestCase {
 	 *
 	 * @return array
 	 */
-	public function expiration_dates_provider() {
+	public static function expiration_dates_provider() {
 		return [
 			[ '2018', '12', new \DateTime( 'first day of December 2018' ) ],
 			[ 2018, 12, new \DateTime( 'first day of December 2018' ) ],

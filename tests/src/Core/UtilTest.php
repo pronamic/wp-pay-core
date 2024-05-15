@@ -43,7 +43,7 @@ class UtilTest extends TestCase {
 	 *
 	 * @return array
 	 */
-	public function status_matrix_provider() {
+	public static function status_matrix_provider() {
 		return [
 			[ __NAMESPACE__ . '\Util', 'class_method_exists', true ],
 			[ 'ClassDoesNotExist', 'method_does_not_exist', false ],
@@ -78,7 +78,7 @@ class UtilTest extends TestCase {
 	 *
 	 * @return array
 	 */
-	public function server_ip_matrix_provider() {
+	public static function server_ip_matrix_provider() {
 		return [
 			[
 				[
