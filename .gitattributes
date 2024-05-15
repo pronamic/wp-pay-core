@@ -5,7 +5,6 @@
 /js/src            export-ignore
 /scss              export-ignore
 /tests             export-ignore
-/vendor-bin        export-ignore
 /.editorconfig     export-ignore
 /.eslintignore     export-ignore
 /.eslintrc         export-ignore
