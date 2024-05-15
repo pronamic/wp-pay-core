@@ -86,8 +86,6 @@ class PaymentsModule {
 									$id
 								)
 							);
-
-							exit( 1 );
 						}
 
 						WP_CLI::log(
