@@ -1,6 +1,5 @@
 parameters:
 	level: 8
-	checkMissingIterableValueType: false
 	dynamicConstantNames:
 		- DOING_AUTOSAVE
 		- DOING_CRON
@@ -16,3 +15,8 @@ parameters:
 	paths:
 		- src/
 		- views/
+	ignoreErrors:
+		-
+			identifier: missingType.generics
+		-
+			identifier: missingType.iterableValue
