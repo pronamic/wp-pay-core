@@ -1,15 +1,5 @@
 parameters:
 	level: 8
-	dynamicConstantNames:
-		- DOING_AUTOSAVE
-		- DOING_CRON
-		- PRONAMIC_PAY_DEBUG
-		- SCRIPT_DEBUG
-	bootstrapFiles:
-		- tests/phpstan/bootstrap.php
-	scanFiles:
-		- vendor/php-stubs/wordpress-globals/wordpress-globals.php
-		- vendor/php-stubs/wp-cli-stubs/wp-cli-stubs.php
 	scanDirectories:
 		- vendor/woocommerce/action-scheduler
 	paths:
