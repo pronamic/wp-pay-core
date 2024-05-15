@@ -94,9 +94,9 @@ class AdminSettings {
 			'type'        => 'checkbox',
 		];
 
-		if ( defined( '\PRONAMIC_PAY_DEBUG' ) && \PRONAMIC_PAY_DEBUG ) {
+		if ( defined( 'PRONAMIC_PAY_DEBUG' ) && PRONAMIC_PAY_DEBUG ) {
 			$debug_mode_args['value']    = true;
-			$debug_mode_args['disabled'] = \disabled( \PRONAMIC_PAY_DEBUG, true, false );
+			$debug_mode_args['disabled'] = \disabled( PRONAMIC_PAY_DEBUG, true, false );
 		}
 
 		\add_settings_field(

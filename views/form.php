@@ -50,7 +50,7 @@ if ( empty( $action_url ) ) {
 
 $auto_submit = true;
 
-if ( defined( '\PRONAMIC_PAY_DEBUG' ) && \PRONAMIC_PAY_DEBUG ) {
+if ( defined( 'PRONAMIC_PAY_DEBUG' ) && PRONAMIC_PAY_DEBUG ) {
 	$auto_submit = false;
 }
 

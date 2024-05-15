@@ -362,7 +362,7 @@ class AdminGatewayPostType {
 		\check_admin_referer( 'pronamic_pay_save_gateway', 'pronamic_pay_nonce' );
 
 		// If this is an autosave, our form has not been submitted, so we don't want to do anything.
-		if ( \defined( '\DOING_AUTOSAVE' ) && \DOING_AUTOSAVE ) {
+		if ( \defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return;
 		}
 
