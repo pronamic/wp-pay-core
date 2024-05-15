@@ -45,13 +45,18 @@
 			"dealerdirect/phpcodesniffer-composer-installer": true,
 			"roots/wordpress-core-installer": true,
 			"composer/installers": true,
-			"phpstan/extension-installer": true
+			"phpstan/extension-installer": true,
+			"automattic/jetpack-autoloader": true
 		}
 	},
 	"repositories": [
 		{
 			"type": "composer",
 			"url": "https://wpackagist.org"
+		},
+		{
+			"type": "git",
+			"url": "https://github.com/wordpress/sqlite-database-integration.git"
 		}
 	],
 	"require": {
@@ -59,6 +64,7 @@
 		"ext-dom": "*",
 		"ext-libxml": "*",
 		"ext-simplexml": "*",
+		"automattic/jetpack-autoloader": "^3.0",
 		"pronamic/wp-datetime": "^2.1",
 		"pronamic/wp-html": "^2.2",
 		"pronamic/wp-http": "^1.2",
@@ -68,7 +74,6 @@
 		"woocommerce/action-scheduler": "^3.6"
 	},
 	"require-dev": {
-		"automattic/wordbless": "^0.4.2",
 		"overtrue/phplint": "^9.0",
 		"php-coveralls/php-coveralls": "^2.4",
 		"php-stubs/wordpress-globals": "^0.2.0",
@@ -82,9 +87,10 @@
 		"roots/wordpress": "^6.0",
 		"szepeviktor/phpstan-wordpress": "^1.3",
 		"vimeo/psalm": "^5.24",
+		"wordpress/sqlite-database-integration": "^2.1",
 		"wp-cli/wp-cli": "^2.3",
 		"wp-phpunit/wp-phpunit": "^6.1",
-		"yoast/phpunit-polyfills": "^1.0"
+		"yoast/phpunit-polyfills": "^1.1"
 	},
 	"scripts": {
 		"ci": [
@@ -111,10 +117,6 @@
 		],
 		"build-docs": [
 			"XDEBUG_MODE=off vendor/bin/wp-documentor parse src --format=markdown --relative=docs > docs/hooks.md"
-		],
-		"post-install-cmd": "WorDBless\\Composer\\InstallDropin::copy",
-		"post-update-cmd": [
-			"WorDBless\\Composer\\InstallDropin::copy"
 		]
 	}
 }
