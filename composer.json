@@ -90,7 +90,7 @@
 		"wordpress/sqlite-database-integration": "^2.1",
 		"wp-cli/wp-cli": "^2.3",
 		"wp-phpunit/wp-phpunit": "^6.1",
-		"yoast/phpunit-polyfills": "^1.1"
+		"yoast/phpunit-polyfills": "^2.0"
 	},
 	"scripts": {
 		"ci": [
