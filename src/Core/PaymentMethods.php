@@ -331,6 +331,16 @@ class PaymentMethods {
 	const MOBILEPAY = 'mobilepay';
 
 	/**
+	 * MyBank.
+	 * 
+	 * @link https://github.com/mollie/mollie-api-php/blob/ed5b2ba1dc8f30a4674f10ca78ad547c2df91008/src/Types/PaymentMethod.php#L114-L117
+	 * @link https://github.com/mollie/WooCommerce/blob/bda9155ac19e1c576f19f436d74fe3f7fe845298/src/PaymentMethods/Mybank.php#L7
+	 * @link https://mybank.eu/
+	 * @var string
+	 */
+	const MYBANK = 'mybank';
+
+	/**
 	 * Constant for the Payconiq method.
 	 *
 	 * @since 2.0.0
