@@ -125,8 +125,7 @@ class PaymentMethods {
 	/**
 	 * BLIK
 	 *
-	 * @since unreleased
-	 * @link  https://blik.com/
+	 * @link https://blik.com/
 	 * @var string
 	 */
 	const BLIK = 'blik';
