@@ -666,6 +666,11 @@ class Plugin {
 
 		$this->payment_methods->add( $payment_method_mb_way );
 
+		// MyBank.
+		$payment_method_mybank = new PaymentMethod( PaymentMethods::MYBANK );
+
+		$this->payment_methods->add( $payment_method_mybank );
+
 		// Payconiq.
 		$payment_method_payconiq = new PaymentMethod( PaymentMethods::PAYCONIQ );
 
