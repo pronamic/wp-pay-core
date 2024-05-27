@@ -6,6 +6,24 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.18.0] - 2024-05-27
+
+### Commits
+
+- Updated composer.json ([d5203c2](https://github.com/pronamic/wp-pay-core/commit/d5203c2c8f43ec2a2bd93e5d319341f6ff4c26a2))
+- Register payment method MyBank. ([fe2cd13](https://github.com/pronamic/wp-pay-core/commit/fe2cd13397cb777b67b2f91fc3e8d33d1937babe))
+- Added MyBank. ([1790d28](https://github.com/pronamic/wp-pay-core/commit/1790d289054961db97f2e7b4871d199e7c060247))
+- Updated PaymentMethods.php ([cfb370b](https://github.com/pronamic/wp-pay-core/commit/cfb370b5f6c37be7938b5ccdb71b402102ae259c))
+
+### Composer
+
+- Changed `woocommerce/action-scheduler` from `^3.6` to `3.8.0`.
+	Release notes: https://github.com/woocommerce/action-scheduler/releases/tag/3.8.0
+
+Full set of changes: [`4.17.0...4.18.0`][4.18.0]
+
+[4.18.0]: https://github.com/pronamic/wp-pay-core/compare/v4.17.0...v4.18.0
+
 ## [4.17.0] - 2024-05-15
 
 ### Commits
