@@ -297,7 +297,7 @@ $phase = $subscription->get_display_phase();
 	</tr>
 	<tr>
 		<th scope="row">
-			<?php esc_html_e( 'Mandate Selection URL', 'pronamic_ideal' ); ?>
+			<?php esc_html_e( 'Change payment method URL', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
 			<?php
