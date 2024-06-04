@@ -269,8 +269,8 @@ class Plugin {
 		add_action( 'init', [ $this, 'register_styles' ], 9 );
 
 		// If WordPress is loaded check on returns and maybe redirect requests.
-		add_action( 'wp_loaded', [ $this, 'handle_returns' ], 10 );
-		add_action( 'wp_loaded', [ $this, 'maybe_redirect' ], 10 );
+		add_action( 'wp_loaded', [ $this, 'handle_returns' ], 100 );
+		add_action( 'wp_loaded', [ $this, 'maybe_redirect' ], 100 );
 
 		// Default date time format.
 		add_filter( 'pronamic_datetime_default_format', [ $this, 'datetime_format' ], 10, 1 );
