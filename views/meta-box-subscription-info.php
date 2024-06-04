@@ -310,21 +310,11 @@ $phase = $subscription->get_display_phase();
 
 			<style>
 				.pronamic-pay-action-link {
-					display: flex;
-
-					flex-direction: column;
-
-					gap: 5px;
-				}
-
-				.pronamic-pay-action-link-tool {
 					align-items: center;
 
 					display: flex;
 
 					flex-direction: row;
-
-					justify-content: flex-start;
 
 					gap: 5px;
 				}
@@ -344,39 +334,31 @@ $phase = $subscription->get_display_phase();
 				.pronamic-pay-action-link-clipboard .success {
 					color: #007017;
 				}
-
-				.pronamic-pay-description {
-					color: #646970;
-				}
 			</style>
 		</th>
 		<td>
 			<div class="pronamic-pay-action-link">
 				<div>
-					<strong><?php esc_html_e( 'Cancel link', 'pronamic_ideal' ); ?></strong>
-				</div>
-
-				<div>
 					<?php
 
 					$url = $subscription->get_cancel_url();
 
-					printf(
+					\printf(
 						'<a class="pronamic-pay-action-link-anchor" href="%s">%s</a>',
-						esc_attr( $url ),
-						esc_html( $url )
+						\esc_attr( $url ),
+						\esc_html__( 'Customer subscription cancel page →', 'pronamic_ideal' )
 					);
 
 					?>
 				</div>
 
+				<div>
+					<span class="dashicons dashicons-editor-help pronamic-pay-tip" title="<?php echo \esc_attr__( 'This page can be shared with the customer and gives the customer the option to cancel this subscription.', 'pronamic_ideal' ); ?>" tabindex="0"></span>
+				</div>
+
 				<div class="pronamic-pay-action-link-clipboard">
 					<button type="button" class="button button-small pronamic-pay-copy-url" data-clipboard-text="<?php echo \esc_url( $url ); ?>"><?php \esc_html_e( 'Copy URL to clipboard', 'pronamic_ideal' ); ?></button>
 					<span class="success hidden" aria-hidden="true"><?php \esc_html_e( 'Copied!', 'pronamic_ideal' ); ?></span>
-				</div>
-
-				<div class="pronamic-pay-description">
-					<?php \esc_html_e( 'This link can be shared with the customer and gives the customer the option to cancel this subscription.', 'pronamic_ideal' ); ?>
 				</div>
 			</div>
 		</td>
@@ -384,31 +366,27 @@ $phase = $subscription->get_display_phase();
 	<tr>
 		<td>
 			<div class="pronamic-pay-action-link">
-				<div>
-					<strong><?php esc_html_e( 'Renewal link', 'pronamic_ideal' ); ?></strong>
-				</div>
-
 				<div>
 					<?php
 
 					$url = $subscription->get_renewal_url();
 
-					printf(
+					\printf(
 						'<a class="pronamic-pay-action-link-anchor" href="%s">%s</a>',
-						esc_attr( $url ),
-						esc_html( $url )
+						\esc_attr( $url ),
+						\esc_html__( 'Customer subscription renew page →', 'pronamic_ideal' )
 					);
 
 					?>
 				</div>
 
+				<div>
+					<span class="dashicons dashicons-editor-help pronamic-pay-tip" title="<?php echo \esc_attr__( 'This page can be shared with the customer and gives the customer the option to (early) renew the subscription.', 'pronamic_ideal' ); ?>" tabindex="0"></span>
+				</div>
+
 				<div class="pronamic-pay-action-link-clipboard">
 					<button type="button" class="button button-small pronamic-pay-copy-url" data-clipboard-text="<?php echo \esc_url( $url ); ?>"><?php \esc_html_e( 'Copy URL to clipboard', 'pronamic_ideal' ); ?></button>
 					<span class="success hidden" aria-hidden="true"><?php \esc_html_e( 'Copied!', 'pronamic_ideal' ); ?></span>
-				</div>
-
-				<div class="pronamic-pay-description">
-					<?php \esc_html_e( 'This link can be shared with the customer and gives the customer the option to (early) renew the subscription.', 'pronamic_ideal' ); ?>
 				</div>
 			</div>
 		</td>
@@ -417,30 +395,26 @@ $phase = $subscription->get_display_phase();
 		<td>
 			<div class="pronamic-pay-action-link">
 				<div>
-					<strong><?php esc_html_e( 'Change payment method link', 'pronamic_ideal' ); ?></strong>
-				</div>
-
-				<div>
 					<?php
 
 					$url = $subscription->get_mandate_selection_url();
 
-					printf(
+					\printf(
 						'<a class="pronamic-pay-action-link-anchor" href="%s">%s</a>',
-						esc_attr( $url ),
-						esc_html( $url )
+						\esc_attr( $url ),
+						\esc_html__( 'Customer change payment method page →', 'pronamic_ideal' )
 					);
 
 					?>
 				</div>
 
+				<div>
+					<span class="dashicons dashicons-editor-help pronamic-pay-tip" title="<?php echo \esc_attr__( 'This link can be shared with the customer and gives the customer the opportunity to change the payment method. This is useful if a credit card expires or if a customer wants to have the charge debited from another account.', 'pronamic_ideal' ); ?>" tabindex="0"></span>
+				</div>
+
 				<div class="pronamic-pay-action-link-clipboard">
 					<button type="button" class="button button-small pronamic-pay-copy-url" data-clipboard-text="<?php echo \esc_url( $url ); ?>"><?php \esc_html_e( 'Copy URL to clipboard', 'pronamic_ideal' ); ?></button>
 					<span class="success hidden" aria-hidden="true"><?php \esc_html_e( 'Copied!', 'pronamic_ideal' ); ?></span>
-				</div>
-
-				<div class="pronamic-pay-description">
-					<?php \esc_html_e( 'This link can be shared with the customer and gives the customer the opportunity to change the payment method. This is useful if a credit card expires or if a customer wants to have the charge debited from another account.', 'pronamic_ideal' ); ?>
 				</div>
 			</div>
 		</td>
