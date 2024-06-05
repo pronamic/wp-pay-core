@@ -685,10 +685,6 @@ class SubscriptionPhase implements \JsonSerializable {
 		$alignment_phase->set_end_date( $alignment_end_date );
 		$alignment_phase->set_alignment_rate( $alignment_difference->days / $regular_difference->days );
 
-		if ( null === $alignment_phase->get_end_date() ) {
-			throw new \Exception( 'The align phase should always end because this phase exists for one period.' );
-		}
-
 		$phase->set_start_date( $alignment_end_date );
 
 		if ( null !== $phase->end_date ) {
