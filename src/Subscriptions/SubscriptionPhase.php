@@ -474,6 +474,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 *
 	 * @param DateTimeImmutable $start_date Start date.
 	 * @return SubscriptionPeriod|null
+	 * @throws \Exception Throws exception on invalid date period.
 	 */
 	public function get_period( DateTimeImmutable $start_date = null ) {
 		if ( null === $start_date ) {
@@ -487,7 +488,11 @@ class SubscriptionPhase implements \JsonSerializable {
 		$end_date = $this->add_interval( $start_date );
 
 		if ( null !== $this->end_date && $end_date > $this->end_date ) {
-			return null;
+			$end_date = $this->end_date;
+
+			if ( $start_date > $end_date ) {
+				throw new \Exception( 'The start date of a subscription period cannot be later than the end date.' );
+			}
 		}
 
 		$period = new SubscriptionPeriod( $this, $start_date, $end_date, $this->get_amount() );
