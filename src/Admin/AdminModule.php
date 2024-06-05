@@ -533,38 +533,6 @@ class AdminModule {
 			$subscription->set_description( $description );
 			$subscription->set_lines( $payment->get_lines() );
 
-			// Ends on.
-			$total_periods = null;
-
-			if ( \array_key_exists( 'pronamic_pay_ends_on', $_POST ) ) {
-				switch ( $_POST['pronamic_pay_ends_on'] ) {
-					case 'count':
-						$count = \filter_input( \INPUT_POST, 'pronamic_pay_ends_on_count', \FILTER_VALIDATE_INT );
-
-						if ( ! empty( $count ) ) {
-							$total_periods = $count;
-						}
-
-						break;
-					case 'date':
-						$end_date = \array_key_exists( 'pronamic_pay_ends_on_date', $_POST ) ? \sanitize_text_field( \wp_unslash( $_POST['pronamic_pay_ends_on_date'] ) ) : '';
-
-						if ( ! empty( $end_date ) ) {
-							$interval_spec = 'P' . $interval . Util::to_period( $interval_period );
-
-							$period = new \DatePeriod(
-								new \DateTime(),
-								new \DateInterval( $interval_spec ),
-								new \DateTime( $end_date )
-							);
-
-							$total_periods = iterator_count( $period );
-						}
-
-						break;
-				}
-			}
-
 			// Phase.
 			$phase = new SubscriptionPhase(
 				$subscription,
@@ -573,7 +541,39 @@ class AdminModule {
 				$price
 			);
 
-			$phase->set_total_periods( $total_periods );
+			// Ends on.
+			$total_periods = null;
+
+			if ( \array_key_exists( 'pronamic_pay_ends_on', $_POST ) ) {
+				$total_periods = null;
+
+				switch ( $_POST['pronamic_pay_ends_on'] ) {
+					case 'count':
+						$total_periods = (int) \filter_input( \INPUT_POST, 'pronamic_pay_ends_on_count', \FILTER_VALIDATE_INT );
+
+						break;
+					case 'date':
+						$end_date = \array_key_exists( 'pronamic_pay_ends_on_date', $_POST ) ? \sanitize_text_field( \wp_unslash( $_POST['pronamic_pay_ends_on_date'] ) ) : '';
+
+						if ( ! empty( $end_date ) ) {
+							$period = new \DatePeriod(
+								$phase->get_start_date(),
+								$phase->get_interval(),
+								new \DateTime( $end_date )
+							);
+
+							$total_periods = iterator_count( $period );
+						}
+
+						break;
+				}
+
+				if ( null !== $total_periods ) {
+					$end_date = $phase->get_start_date()->add( $phase->get_interval()->multiply( $total_periods ) );
+
+					$phase->set_end_date( $end_date );
+				}
+			}
 
 			$subscription->add_phase( $phase );
 
