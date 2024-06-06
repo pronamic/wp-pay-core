@@ -12,6 +12,7 @@ namespace Pronamic\WordPress\Pay\Payments;
 
 use Pronamic\WordPress\Pay\MergeTags\MergeTagsController;
 use Pronamic\WordPress\Pay\MergeTags\MergeTag;
+use Pronamic\WordPress\Pay\Payments\PaymentLineType;
 
 /**
  * Payment Merge Tags Controller class
@@ -19,7 +20,7 @@ use Pronamic\WordPress\Pay\MergeTags\MergeTag;
 class PaymentMergeTagsController extends MergeTagsController {
 	/**
 	 * Construct payment merge tags controllers.
-	 * 
+	 *
 	 * @param Payment $payment Payment.
 	 */
 	public function __construct( Payment $payment ) {
@@ -51,7 +52,12 @@ class PaymentMergeTagsController extends MergeTagsController {
 						return '';
 					}
 
-					return $lines->get_name();
+					$types = [
+						PaymentLineType::DIGITAL,
+						PaymentLineType::PHYSICAL,
+					];
+
+					return $lines->get_name( $types );
 				}
 			)
 		);

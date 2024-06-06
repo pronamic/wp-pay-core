@@ -60,17 +60,24 @@ class PaymentLines implements Countable, IteratorAggregate {
 
 	/**
 	 * Get name.
-	 * 
+	 *
 	 * @link https://github.com/pronamic/wp-pronamic-pay-woocommerce/issues/43
+	 * @param array|null $types Which payment line types to include.
 	 * @return string
 	 */
-	public function get_name() {
+	public function get_name( $types = null ) {
 		$names = \array_map(
-			function ( PaymentLine $line ) {
+			function ( PaymentLine $line ) use ( $types ) {
+				if ( null !== $types && ! \in_array( $line->get_type(), $types ) ) {
+					return;
+				}
+
 				return (string) $line->get_name();
 			},
 			$this->get_array()
 		);
+
+		$names = \array_filter( $names );
 
 		return \implode( ', ', $names );
 	}
