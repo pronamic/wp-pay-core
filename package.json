@@ -81,7 +81,6 @@
 		"build-slick-carousel": "npm-run-all copy-slick-carousel cssmin-slick-carousel js-minify-slick-carousel",
 		"copy-slick-carousel": "copyfiles -f -E node_modules/slick-carousel/slick/slick.js node_modules/slick-carousel/slick/slick.css assets/slick-carousel/",
 		"copy-images-cards": "rsync --recursive --delete --verbose ./node_modules/@wp-pay/logos/dist/cards/ ./images/dist/cards/",
-		"copy-images-methods": "rsync --recursive --delete --verbose --exclude='*.png' ./node_modules/@wp-pay/logos/dist/methods/ ./images/dist/methods/",
 		"cssmin-slick-carousel": "cleancss -o assets/slick-carousel/slick.min.css assets/slick-carousel/slick.css",
 		"eslint": "eslint . --ext .json --ext .js",
 		"lint": "npm-run-all --parallel eslint sass-lint",
