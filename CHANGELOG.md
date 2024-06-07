@@ -6,6 +6,37 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.19.0] - 2024-06-07
+
+### Fixed
+
+- The end date of subscriptions that end after a certain period was not set correctly once the payment date was aligned, this has been corrected.
+
+### Changed
+
+- Aligning the payment date of a subscription will now always result in an additional alignment phase/period.
+- The priority of the actions for handling returning visitors from payment providers and the associated redirects on the `wp_loaded` action has been increased from `10` to `100`. This resolves a conflict with the [WPNotif](https://wpnotif.unitedover.com /) plugin.
+- Renamed "Mandate Selection URL" to "Change payment method URL".
+
+### Commits
+
+- Use new image service class from https://github.com/pronamic/wp-pay-logos library. ([871b300](https://github.com/pronamic/wp-pay-core/commit/871b30001f17d9002597890238e8a94cba4672b8))
+- composer require pronamic/wp-pay-logos ([06459f4](https://github.com/pronamic/wp-pay-core/commit/06459f4fdaa6cf3325c558ae26249131ccd9ca48))
+- Merge pull request #183 from pronamic/182-subscription-phase-alignment-issue-for-subscriptions-with-end-date ([dc45e1a](https://github.com/pronamic/wp-pay-core/commit/dc45e1a5241205af4de0eca6a84f79a655c50411))
+- No longer use `$phase->set_total_periods()` for test payment subscription. ([7d647a6](https://github.com/pronamic/wp-pay-core/commit/7d647a6b7a5ff51acd53bc4ee800ec2dd26fc9ef))
+- No longer use total periods in subscription alignment. ([799d690](https://github.com/pronamic/wp-pay-core/commit/799d690751351584d12f7faa3826b4cb25f099bf))
+- Allow partial periods in subscription phase period creation. ([28d7ed5](https://github.com/pronamic/wp-pay-core/commit/28d7ed5dd5b68cf64118fe7b5bb17bc21d8f822f))
+- Merge pull request #181 from knit-pay/redirection-priority-fix ([b0a6a19](https://github.com/pronamic/wp-pay-core/commit/b0a6a19963b5615996ef11cadcfc50b7e8a1b494))
+- Change "Mandate Selection URL" to "Change payment method URL". ([72aa7f6](https://github.com/pronamic/wp-pay-core/commit/72aa7f686fb253407bb32418548b2351b88a2826))
+
+### Composer
+
+- Added `pronamic/wp-pay-logos` `^2.2`.
+
+Full set of changes: [`4.18.0...4.19.0`][4.19.0]
+
+[4.19.0]: https://github.com/pronamic/wp-pay-core/compare/v4.18.0...v4.19.0
+
 ## [4.18.0] - 2024-05-27
 
 ### Commits
