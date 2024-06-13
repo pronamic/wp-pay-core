@@ -211,7 +211,7 @@ $payment_methods = $gateway->get_payment_methods(
 				<?php
 
 				\wp_add_inline_script(
-					'pronamic-pay-admin-js',
+					'pronamic-pay-admin',
 					"
 					jQuery( document ).ready( function( $ ) {
 						$( '#pronamic-pay-test-subscription' ).change( function() {
