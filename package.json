@@ -35,7 +35,6 @@
 		"@wp-pay/logos": "^2.0.0",
 		"accounting": "^0.4.1",
 		"Flot": "github:flot/flot#958e5fd43c6dff4bab3e1fd5cb6109df5c1e8003",
-		"icon-gen": "^2.1.0",
 		"jquery": "^3.6.0",
 		"slick-carousel": "^1.8.1",
 		"tippy.js": "^3.4"
@@ -77,7 +76,6 @@
 		"build-image-png-512-min": "pngquant images/src/wp-pay-512.png --output images/dist/wp-pay-512.pngquant-min.png --force",
 		"build-image-png-white-512": "rsvg-convert -w 512 -h 512 images/src/wp-pay-white.svg -o images/src/wp-pay-white-512.png",
 		"build-image-png-white-512-min": "pngquant images/src/wp-pay-white-512.png --output images/dist/wp-pay-white-512.pngquant-min.png --force",
-		"build-image-ico": "icon-gen --input images/src/wp-pay.svg --output images/dist --ico name=wp-pay --icns name=wp-pay -r",
 		"build-slick-carousel": "npm-run-all copy-slick-carousel cssmin-slick-carousel js-minify-slick-carousel",
 		"copy-slick-carousel": "copyfiles -f -E node_modules/slick-carousel/slick/slick.js node_modules/slick-carousel/slick/slick.css assets/slick-carousel/",
 		"copy-images-cards": "rsync --recursive --delete --verbose ./node_modules/@wp-pay/logos/dist/cards/ ./images/dist/cards/",
