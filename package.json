@@ -33,8 +33,6 @@
 	"homepage": "http://www.wp-pay.org/",
 	"dependencies": {
 		"@wp-pay/logos": "^2.0.0",
-		"accounting": "^0.4.1",
-		"Flot": "github:flot/flot#958e5fd43c6dff4bab3e1fd5cb6109df5c1e8003",
 		"jquery": "^3.6.0",
 		"slick-carousel": "^1.8.1",
 		"tippy.js": "^3.4"
@@ -87,7 +85,6 @@
 		"js-build-copy": "cp js/src/*.js js/dist",
 		"js-minify": "npm-run-all js-minify-*",
 		"js-minify-admin": "terser --compress --mangle --output js/dist/admin.min.js js/src/admin.js",
-		"js-minify-admin-reports": "terser --compress --mangle --output js/dist/admin-reports.min.js js/src/admin-reports.js",
 		"js-minify-admin-test": "terser --compress --mangle --output js/dist/admin-test.min.js js/src/admin-test.js",
 		"js-minify-admin-tour": "terser --compress --mangle --output js/dist/admin-tour.min.js js/src/admin-tour.js",
 		"js-minify-slick-carousel": "terser --compress --mangle --output assets/slick-carousel/slick.min.js assets/slick-carousel/slick.js",

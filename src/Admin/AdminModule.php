@@ -74,13 +74,6 @@ class AdminModule {
 	public $health;
 
 	/**
-	 * Admin reports page.
-	 *
-	 * @var AdminReports
-	 */
-	public $reports;
-
-	/**
 	 * Admin tour page.
 	 *
 	 * @var AdminTour
@@ -109,7 +102,6 @@ class AdminModule {
 		$this->settings  = new AdminSettings( $plugin );
 		$this->dashboard = new AdminDashboard();
 		$this->health    = new AdminHealth( $plugin );
-		$this->reports   = new AdminReports( $plugin );
 		$this->tour      = new AdminTour( $plugin );
 
 		// About page.
@@ -766,18 +758,6 @@ class AdminModule {
 				'menu_title' => __( 'Subscriptions', 'pronamic_ideal' ) . $badges['subscriptions']['html'],
 				'capability' => 'edit_payments',
 				'menu_slug'  => 'edit.php?post_type=pronamic_pay_subscr',
-			];
-		}
-
-		if ( \in_array( 'reports', $modules, true ) ) {
-			$submenu_pages[] = [
-				'page_title' => __( 'Reports', 'pronamic_ideal' ),
-				'menu_title' => __( 'Reports', 'pronamic_ideal' ),
-				'capability' => 'edit_payments',
-				'menu_slug'  => 'pronamic_pay_reports',
-				'function'   => function () {
-					$this->reports->page_reports();
-				},
 			];
 		}
 
