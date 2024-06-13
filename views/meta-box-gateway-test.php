@@ -208,13 +208,20 @@ $payment_methods = $gateway->get_payment_methods(
 					</label>
 				</fieldset>
 
-				<script type="text/javascript">
+				<?php
+
+				\wp_add_inline_script(
+					'pronamic-pay-admin-js',
+					"
 					jQuery( document ).ready( function( $ ) {
 						$( '#pronamic-pay-test-subscription' ).change( function() {
 							$( '.pronamic-pay-test-subscription' ).toggle( $( this ).prop( 'checked' ) );
 						} );
 					} );
-				</script>
+					"
+				);
+
+				?>
 			</td>
 		</tr>
 		<tr class="pronamic-pay-cloak pronamic-pay-test-subscription">
