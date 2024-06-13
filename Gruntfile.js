@@ -20,22 +20,6 @@ module.exports = function( grunt ) {
 			copy: {
 				assets: {
 					files: [
-						{ // Flot - http://www.flotcharts.org/.
-							expand: true,
-							cwd: 'node_modules/Flot/',
-							src: [
-								'jquery.flot.js',
-								'jquery.flot.time.js',
-								'jquery.flot.resize.js'
-							],
-							dest: 'assets/flot'
-						},
-						{ // accounting.js - http://openexchangerates.github.io/accounting.js/.
-							expand: true,
-							cwd: 'node_modules/accounting/',
-							src: 'accounting.js',
-							dest: 'assets/accounting'
-						},
 						{ // Tippy.js - https://atomiks.github.io/tippyjs/.
 							expand: true,
 							cwd: 'node_modules/tippy.js/dist/',
@@ -108,12 +92,6 @@ module.exports = function( grunt ) {
 			uglify: {
 				scripts: {
 					files: {
-						// Accounting.
-						'assets/accounting/accounting.min.js': 'assets/accounting/accounting.js',
-						// Flot.
-						'assets/flot/jquery.flot.min.js': 'assets/flot/jquery.flot.js',
-						'assets/flot/jquery.flot.resize.min.js': 'assets/flot/jquery.flot.resize.js',
-						'assets/flot/jquery.flot.time.min.js': 'assets/flot/jquery.flot.time.js',
 						// Tippy.js.
 						'assets/tippy.js/tippy.all.min.js': 'assets/tippy.js/tippy.all.js'
 					}
