@@ -469,6 +469,10 @@ body.post-type-pronamic_payment #post-body-content, body.post-type-pronamic_pay_
   color: #ffa500;
 }
 
+.pronamic-pay-text-negative {
+  color: #a00;
+}
+
 *:not(a).pronamic-pay-tip {
   color: #777;
   cursor: help;
