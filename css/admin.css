@@ -340,6 +340,10 @@ body.post-type-pronamic_payment #post-body-content, body.post-type-pronamic_pay_
   width: 20%;
 }
 
+.pronamic-pay-form-sub-table th, .pronamic-pay-form-sub-table td {
+  padding: 0;
+}
+
 .widefat .column-pronamic_payment_status,
 .widefat .column-pronamic_subscription_status,
 .widefat .column-pronamic_payment_subscription {

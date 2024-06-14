@@ -469,13 +469,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<?php esc_html_e( 'VAT Number Validity', 'pronamic_ideal' ); ?>
 					</th>
 					<td style="padding-top: 20px">
-						<style type="text/css">
-							.pronamic-pay-form-sub-table th,
-							.pronamic-pay-form-sub-table td {
-								padding: 0;
-							}
-						</style>
-
 						<table class="pronamic-pay-form-sub-table">
 							<tr>
 								<th scope="row">
