@@ -6,6 +6,25 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.20.0] - 2024-06-19
+
+### Removed
+
+- Removed the `images/dist/wp-pay.ico` file, no longer allowed in the WordPress.org plugin directory.
+- Removed the `images/dist/app.icns` file, no longer allowed in the WordPress.org plugin directory.
+- Removed the `images/dist/wp-pay.icns` file, no longer allowed in the WordPress.org plugin directory.
+- Removed the `images/dist/app.ico` file, no longer allowed in the WordPress.org plugin directory.
+- Removed the admin reports feature, has been moved to its own repository in https://github.com/pronamic/pronamic-pay-admin-reports.
+
+### Changed
+
+- Use the `wp_add_inline_script( … )` function for some inline `<script>` elements in the WordPress admin interface.
+- Moved some CSS definition in inline `<style>` elements to CSS files.
+
+Full set of changes: [`4.19.0...4.20.0`][4.20.0]
+
+[4.20.0]: https://github.com/pronamic/wp-pay-core/compare/v4.19.0...v4.20.0
+
 ## [4.19.0] - 2024-06-07
 
 ### Fixed
