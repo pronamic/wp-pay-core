@@ -11,6 +11,7 @@
 namespace Pronamic\WordPress\Pay\Core;
 
 use Pronamic\WordPress\Pay\Plugin;
+use Pronamic\WpPayLogos\ImageService;
 use WP_Post;
 use WP_Query;
 
@@ -553,11 +554,19 @@ class PaymentMethods {
 			$size = '640x360';
 		}
 
-		return \sprintf(
-			'https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.16.0/dist/methods/%1$s/method-%1$s-%2$s.svg',
-			\str_replace( '_', '-', $method ),
-			$size
-		);
+		$image_service = new ImageService();
+
+		$method_slug = \str_replace( '_', '-', $method );
+
+		$path = 'methods/' . $method_slug . '/method-' . $method_slug . '-' . $size . '.svg';
+
+		$path = $image_service->get_path( $path );
+
+		if ( ! \is_readable( $path ) ) {
+			return null;
+		}
+
+		return \plugins_url( \basename( $path ), $path );
 	}
 
 	/**
