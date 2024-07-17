@@ -153,8 +153,8 @@ function get_pronamic_payments_by_user_id( $user_id = null ) {
 /**
  * Get payments by the specified source and source ID.
  *
- * @param string      $source    The source to query for.
- * @param string|null $source_id The source ID to query for.
+ * @param string          $source    The source to query for.
+ * @param string|int|null $source_id The source ID to query for.
  * @return Payment[]
  */
 function get_pronamic_payments_by_source( $source, $source_id = null ) {
@@ -280,8 +280,8 @@ function get_pronamic_subscriptions_by_user_id( $user_id = null ) {
 /**
  * Get subscriptions by the specified source and source ID.
  *
- * @param string      $source    The source to query for.
- * @param string|null $source_id The source ID to query for.
+ * @param string          $source    The source to query for.
+ * @param string|int|null $source_id The source ID to query for.
  * @return Subscription[]
  */
 function get_pronamic_subscriptions_by_source( $source, $source_id = null ) {
