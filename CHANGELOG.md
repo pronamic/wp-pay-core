@@ -6,6 +6,17 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.21.0] - 2024-07-24
+
+### Commits
+
+- Accept integer source IDs when getting payments/subscriptions. ([268e7c6](https://github.com/pronamic/wp-pay-core/commit/268e7c6b736397b76f05e1f9281885c717b34a92))
+- Use included images instead of https://cdn.wp-pay.org/. ([5d9bed0](https://github.com/pronamic/wp-pay-core/commit/5d9bed040df3dcae9eea819ace6acb4ce2b31ee7))
+
+Full set of changes: [`4.20.0...4.21.0`][4.21.0]
+
+[4.21.0]: https://github.com/pronamic/wp-pay-core/compare/v4.20.0...v4.21.0
+
 ## [4.20.0] - 2024-06-19
 
 ### Removed
