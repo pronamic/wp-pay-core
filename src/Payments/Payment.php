@@ -3,7 +3,7 @@
  * Payment
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2023 Pronamic
+ * @copyright 2005-2024 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -136,7 +136,7 @@ class Payment extends PaymentInfo {
 
 	/**
 	 * Slug.
-	 * 
+	 *
 	 * @link https://github.com/pronamic/wp-pay-core/issues/146
 	 * @var string
 	 */
@@ -712,7 +712,7 @@ class Payment extends PaymentInfo {
 
 	/**
 	 * Get slug.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_slug() {
@@ -721,7 +721,7 @@ class Payment extends PaymentInfo {
 
 	/**
 	 * Set slug.
-	 * 
+	 *
 	 * @param string $slug Slug.
 	 * @return void
 	 */

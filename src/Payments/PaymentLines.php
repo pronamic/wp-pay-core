@@ -3,7 +3,7 @@
  * Payment lines
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2023 Pronamic
+ * @copyright 2005-2024 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -60,7 +60,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 
 	/**
 	 * Get name.
-	 * 
+	 *
 	 * @link https://github.com/pronamic/wp-pronamic-pay-woocommerce/issues/43
 	 * @return string
 	 */

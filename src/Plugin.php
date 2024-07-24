@@ -3,7 +3,7 @@
  * Plugin
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2023 Pronamic
+ * @copyright 2005-2024 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -296,14 +296,14 @@ class Plugin {
 
 		/**
 		 * Pronamic Pay logos.
-		 * 
+		 *
 		 * @link https://github.com/pronamic/wp-pay-logos
 		 */
 		$image_service = new ImageService();
 
 		/**
 		 * Get Buy Now, Pay Later disclaimer.
-		 * 
+		 *
 		 * @link https://github.com/pronamic/pronamic-pay/issues/70
 		 * @param string $provider Provider.
 		 * @return string
@@ -319,7 +319,7 @@ class Plugin {
 		// AfterPay.nl.
 		$payment_method_afterpay_nl = new PaymentMethod( PaymentMethods::AFTERPAY_NL );
 
-		$payment_method_afterpay_nl->descriptions = [           
+		$payment_method_afterpay_nl->descriptions = [
 			/**
 			 * AfterPay method description.
 			 *
@@ -1085,7 +1085,7 @@ class Plugin {
 			$this->admin = new Admin\AdminModule( $this );
 		}
 
-		new Admin\Install( $this ); 
+		new Admin\Install( $this );
 
 		$controllers = [
 			new PagesController(),
@@ -1491,7 +1491,7 @@ class Plugin {
 
 		/**
 		 * Merge tags.
-		 * 
+		 *
 		 * @link https://github.com/pronamic/wp-pronamic-pay/issues/358
 		 * @link https://github.com/pronamic/wp-pronamic-pay-woocommerce/issues/43
 		 */

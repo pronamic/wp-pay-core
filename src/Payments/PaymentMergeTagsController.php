@@ -3,7 +3,7 @@
  * Payment Merge Tags Controller
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2023 Pronamic
+ * @copyright 2005-2024 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Gateways
  */
@@ -19,7 +19,7 @@ use Pronamic\WordPress\Pay\MergeTags\MergeTag;
 class PaymentMergeTagsController extends MergeTagsController {
 	/**
 	 * Construct payment merge tags controllers.
-	 * 
+	 *
 	 * @param Payment $payment Payment.
 	 */
 	public function __construct( Payment $payment ) {

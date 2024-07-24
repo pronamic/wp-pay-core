@@ -3,7 +3,7 @@
  * Subscription Post Type
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2023 Pronamic
+ * @copyright 2005-2024 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Admin
  */
@@ -769,7 +769,7 @@ class AdminSubscriptionPostType {
 
 	/**
 	 * Admin init.
-	 * 
+	 *
 	 * @return void
 	 */
 	public function admin_init() {
@@ -778,7 +778,7 @@ class AdminSubscriptionPostType {
 
 	/**
 	 * Maybe update subscription.
-	 * 
+	 *
 	 * @return void
 	 */
 	private function maybe_update_subscription() {
