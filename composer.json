@@ -47,7 +47,8 @@
 			"composer/installers": true,
 			"phpstan/extension-installer": true,
 			"automattic/jetpack-autoloader": true
-		}
+		},
+		"wp-slug": "pronamic-pay-core"
 	},
 	"repositories": [
 		{
