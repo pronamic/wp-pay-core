@@ -296,16 +296,22 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return int
 	 */
 	public function get_periods_created() {
-		$next_date = $this->subscription->get_next_payment_date();
+		$next_payment_date = $this->subscription->get_next_payment_date();
 
-		if ( null === $next_date ) {
+		$end_date = $next_payment_date ?? $this->end_date;
+
+		if ( null === $end_date ) {
 			return 0;
+		}
+
+		if ( null !== $this->end_date && $end_date > $this->end_date ) {
+			$end_date = $this->end_date;
 		}
 
 		$period = new \DatePeriod(
 			new \DateTimeImmutable( $this->start_date->format( 'Y-m-d 00:00:00' ) ),
 			$this->interval,
-			new \DateTimeImmutable( $next_date->format( 'Y-m-d 00:00:00' ) )
+			new \DateTimeImmutable( $end_date->format( 'Y-m-d 00:00:00' ) )
 		);
 
 		return \iterator_count( $period );
