@@ -6,6 +6,16 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.21.1] - 2024-08-01
+
+### Fixed
+
+- Fixed calculated number of periods created falling outside optional phase end date. ([0364e4f](https://github.com/pronamic/wp-pay-core/commit/0364e4f31d38c53b09e5a4505d7a7e1a2778beac))
+
+Full set of changes: [`4.21.0...4.21.1`][4.21.1]
+
+[4.21.1]: https://github.com/pronamic/wp-pay-core/compare/v4.21.0...v4.21.1
+
 ## [4.21.0] - 2024-07-24
 
 ### Commits
