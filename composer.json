@@ -95,6 +95,7 @@
 		"yoast/phpunit-polyfills": "^2.0"
 	},
 	"scripts": {
+		"build": "vendor/bin/pronamic wp-build",
 		"ci": [
 			"@phplint",
 			"@phpcs",
@@ -113,6 +114,10 @@
 		"phpstan": "XDEBUG_MODE=off vendor/bin/phpstan analyse --memory-limit=-1",
 		"phpunit": "vendor/bin/phpunit --colors=always",
 		"psalm": "vendor/bin/psalm",
+		"release": [
+			"@build",
+			"vendor/bin/pronamic release-to-github"
+		],
 		"xmllint-phpcs": "xmllint --noout --schema vendor/squizlabs/php_codesniffer/phpcs.xsd phpcs.xml.dist",
 		"xmllint": [
 			"@xmllint-phpcs"
