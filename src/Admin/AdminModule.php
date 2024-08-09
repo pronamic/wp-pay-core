@@ -411,7 +411,11 @@ class AdminModule {
 
 		$payment->order_id = $order_id;
 
-		$payment->set_config_id( \filter_input( \INPUT_POST, 'post_ID', \FILTER_SANITIZE_NUMBER_INT ) );
+		$config_id = \filter_input( \INPUT_POST, 'post_ID', \FILTER_SANITIZE_NUMBER_INT );
+
+		if ( false !== $config_id ) {
+			$payment->set_config_id( (int) $config_id );
+		}
 
 		if ( \array_key_exists( 'pronamic_pay_test_payment_method', $_POST ) ) {
 			$payment_method = \sanitize_text_field( \wp_unslash( $_POST['pronamic_pay_test_payment_method'] ) );

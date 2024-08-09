@@ -158,7 +158,11 @@ class AdminSubscriptionPostType {
 
 		$post_id = \filter_input( \INPUT_GET, 'post', \FILTER_SANITIZE_NUMBER_INT );
 
-		$subscription = \get_pronamic_subscription( $post_id );
+		if ( false === $post_id || null === $post_id ) {
+			return;
+		}
+
+		$subscription = \get_pronamic_subscription( (int) $post_id );
 
 		if ( null === $subscription ) {
 			return;
@@ -168,6 +172,10 @@ class AdminSubscriptionPostType {
 		if ( \filter_input( \INPUT_GET, 'period_payment', \FILTER_VALIDATE_BOOLEAN ) && \check_admin_referer( 'pronamic_period_payment_' . $post_id ) ) {
 			try {
 				$sequence_number = \filter_input( INPUT_GET, 'sequence_number', \FILTER_VALIDATE_INT );
+
+				if ( false === $sequence_number || null === $sequence_number ) {
+					return;
+				}
 
 				$phase = $subscription->get_phase_by_sequence_number( $sequence_number );
 
@@ -196,7 +204,7 @@ class AdminSubscriptionPostType {
 				$url = \add_query_arg(
 					'pronamic_payment_created',
 					$payment->get_id(),
-					\get_edit_post_link( $post_id, 'raw' )
+					\get_edit_post_link( (int) $post_id, 'raw' )
 				);
 
 				\wp_safe_redirect( $url );

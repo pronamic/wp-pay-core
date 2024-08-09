@@ -178,7 +178,7 @@ class AdminPaymentPostType {
 
 		$post_id = filter_input( INPUT_GET, 'post', FILTER_SANITIZE_NUMBER_INT );
 
-		$payment = new Payment( $post_id );
+		$payment = new Payment( (int) $post_id );
 
 		if ( ! $payment->is_anonymized() ) {
 			return;
