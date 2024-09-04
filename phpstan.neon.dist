@@ -2,6 +2,7 @@ parameters:
 	level: 8
 	scanDirectories:
 		- vendor/woocommerce/action-scheduler
+		- vendor/wp-cli
 	paths:
 		- src/
 		- views/

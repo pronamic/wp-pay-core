@@ -3,7 +3,7 @@
  * Meta Box Payment Lines
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2023 Pronamic
+ * @copyright 2005-2024 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -26,14 +26,6 @@ if ( empty( $lines ) ) : ?>
 	</p>
 
 <?php else : ?>
-
-	<style>
-		.pronamic-pay-refunded {
-			display: block;
-			color: #a00;
-			white-space: nowrap;
-		}
-	</style>
 
 	<div class="pronamic-pay-table-responsive">
 		<table class="pronamic-pay-table widefat">
@@ -144,7 +136,7 @@ if ( empty( $lines ) ) : ?>
 						echo \esc_html( $quantity_total->format_i18n() );
 
 						if ( ! $refunded_quantity_total->is_zero() ) {
-							\printf( '<small class="pronamic-pay-refunded">%s</small>', \esc_html( $refunded_quantity_total->negative()->format_i18n() ) );
+							\printf( '<br><small class="pronamic-pay-text-negative">%s</small>', \esc_html( $refunded_quantity_total->negative()->format_i18n() ) );
 						}
 
 						?>
@@ -173,7 +165,7 @@ if ( empty( $lines ) ) : ?>
 						echo \esc_html( $lines->get_amount()->format_i18n() );
 
 						if ( ! $refunded_amount_total->get_number()->is_zero() ) {
-							\printf( '<small class="pronamic-pay-refunded">%s</small>', \esc_html( $refunded_amount_total->negative()->format_i18n() ) );
+							\printf( '<br><small class="pronamic-pay-text-negative">%s</small>', \esc_html( $refunded_amount_total->negative()->format_i18n() ) );
 						}
 
 						?>
@@ -184,7 +176,7 @@ if ( empty( $lines ) ) : ?>
 						echo \esc_html( $tax_amount_total->format_i18n() );
 
 						if ( ! $refunded_tax_total->get_number()->is_zero() ) {
-							\printf( '<small class="pronamic-pay-refunded">%s</small>', \esc_html( $refunded_tax_total->negative()->format_i18n() ) );
+							\printf( '<br><small class="pronamic-pay-text-negative">%s</small>', \esc_html( $refunded_tax_total->negative()->format_i18n() ) );
 						}
 
 						?>
@@ -322,7 +314,7 @@ if ( empty( $lines ) ) : ?>
 							echo \esc_html( $line->get_quantity() );
 
 							if ( ! $refunded_quantity->is_zero() ) {
-								\printf( '<small class="pronamic-pay-refunded">%s</small>', \esc_html( $refunded_quantity->negative()->format_i18n() ) );
+								\printf( '<br><small class="pronamic-pay-text-negative">%s</small>', \esc_html( $refunded_quantity->negative()->format_i18n() ) );
 							}
 
 							?>
@@ -369,7 +361,7 @@ if ( empty( $lines ) ) : ?>
 							);
 
 							if ( ! $refunded_amount->get_number()->is_zero() ) {
-								\printf( '<small class="pronamic-pay-refunded">%s</small>', \esc_html( $refunded_amount->negative()->format_i18n() ) );
+								\printf( '<br><small class="pronamic-pay-text-negative">%s</small>', \esc_html( $refunded_amount->negative()->format_i18n() ) );
 							}
 
 							?>
@@ -399,7 +391,7 @@ if ( empty( $lines ) ) : ?>
 							}
 
 							if ( ! $refunded_tax->get_number()->is_zero() ) {
-								\printf( '<small class="pronamic-pay-refunded">%s</small>', \esc_html( $refunded_tax->negative()->format_i18n() ) );
+								\printf( '<br><small class="pronamic-pay-text-negative">%s</small>', \esc_html( $refunded_tax->negative()->format_i18n() ) );
 							}
 
 							?>

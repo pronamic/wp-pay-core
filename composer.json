@@ -47,7 +47,8 @@
 			"composer/installers": true,
 			"phpstan/extension-installer": true,
 			"automattic/jetpack-autoloader": true
-		}
+		},
+		"wp-slug": "pronamic-pay-core"
 	},
 	"repositories": [
 		{
@@ -70,6 +71,7 @@
 		"pronamic/wp-http": "^1.2",
 		"pronamic/wp-money": "^2.3",
 		"pronamic/wp-number": "^1.3",
+		"pronamic/wp-pay-logos": "^2.2",
 		"viison/address-splitter": "^0.3.4",
 		"woocommerce/action-scheduler": "^3.8"
 	},
@@ -93,6 +95,7 @@
 		"yoast/phpunit-polyfills": "^2.0"
 	},
 	"scripts": {
+		"build": "vendor/bin/pronamic wp-build",
 		"ci": [
 			"@phplint",
 			"@phpcs",
@@ -111,6 +114,10 @@
 		"phpstan": "XDEBUG_MODE=off vendor/bin/phpstan analyse --memory-limit=-1",
 		"phpunit": "vendor/bin/phpunit --colors=always",
 		"psalm": "vendor/bin/psalm",
+		"release": [
+			"@build",
+			"vendor/bin/pronamic release-to-github"
+		],
 		"xmllint-phpcs": "xmllint --noout --schema vendor/squizlabs/php_codesniffer/phpcs.xsd phpcs.xml.dist",
 		"xmllint": [
 			"@xmllint-phpcs"

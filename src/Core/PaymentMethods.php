@@ -3,7 +3,7 @@
  * Payment methods
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2023 Pronamic
+ * @copyright 2005-2024 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Core
  */
@@ -11,13 +11,14 @@
 namespace Pronamic\WordPress\Pay\Core;
 
 use Pronamic\WordPress\Pay\Plugin;
+use Pronamic\WpPayLogos\ImageService;
 use WP_Post;
 use WP_Query;
 
 /**
  * Title: WordPress pay payment methods
  * Description:
- * Copyright: 2005-2023 Pronamic
+ * Copyright: 2005-2024 Pronamic
  * Company: Pronamic
  *
  * @author  Remco Tolsma
@@ -332,7 +333,7 @@ class PaymentMethods {
 
 	/**
 	 * MyBank.
-	 * 
+	 *
 	 * @link https://github.com/mollie/mollie-api-php/blob/ed5b2ba1dc8f30a4674f10ca78ad547c2df91008/src/Types/PaymentMethod.php#L114-L117
 	 * @link https://github.com/mollie/WooCommerce/blob/bda9155ac19e1c576f19f436d74fe3f7fe845298/src/PaymentMethods/Mybank.php#L7
 	 * @link https://mybank.eu/
@@ -553,11 +554,19 @@ class PaymentMethods {
 			$size = '640x360';
 		}
 
-		return \sprintf(
-			'https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.16.0/dist/methods/%1$s/method-%1$s-%2$s.svg',
-			\str_replace( '_', '-', $method ),
-			$size
-		);
+		$image_service = new ImageService();
+
+		$method_slug = \str_replace( '_', '-', $method );
+
+		$path = 'methods/' . $method_slug . '/method-' . $method_slug . '-' . $size . '.svg';
+
+		$path = $image_service->get_path( $path );
+
+		if ( ! \is_readable( $path ) ) {
+			return null;
+		}
+
+		return \plugins_url( \basename( $path ), $path );
 	}
 
 	/**

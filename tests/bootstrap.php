@@ -3,14 +3,14 @@
  * Bootstrap tests
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2023 Pronamic
+ * @copyright 2005-2024 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Core
  */
 
 /**
  * Give access to tests_add_filter() function.
- * 
+ *
  * @link https://github.com/wp-phpunit/example-plugin/blob/master/tests/bootstrap.php
  */
 require_once getenv( 'WP_PHPUNIT__DIR' ) . '/includes/functions.php';
@@ -24,7 +24,7 @@ if ( defined( 'PSALM_VERSION' ) ) {
 
 /**
  * SQLite integration.
- * 
+ *
  * @link https://github.com/WordPress/sqlite-database-integration/issues/7#issuecomment-1646660980
  * @link https://github.com/wp-phpunit/example-plugin/blob/master/tests/bootstrap.php
  * @link https://github.com/WordPress/wordpress-playground/blob/23c0fc6aae5d090a14d352160c34d39988167406/packages/playground/wordpress/build/Dockerfile#L25-L42
@@ -63,12 +63,12 @@ tests_add_filter(
 		require __DIR__ . '/../vendor/wordpress/sqlite-database-integration/load.php';
 
 		require __DIR__ . '/../pronamic-pay-core.php';
-	} 
+	}
 );
 
 /**
  * Start up the WP testing environment.
- * 
+ *
  * @link https://github.com/wp-phpunit/example-plugin/blob/master/tests/bootstrap.php
  */
 require getenv( 'WP_PHPUNIT__DIR' ) . '/includes/bootstrap.php';

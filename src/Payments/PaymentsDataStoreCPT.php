@@ -3,7 +3,7 @@
  * Payments Data Store Custom Post Type
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2023 Pronamic
+ * @copyright 2005-2024 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -20,7 +20,7 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPeriod;
 /**
  * Title: Payments data store CPT
  * Description:
- * Copyright: 2005-2023 Pronamic
+ * Copyright: 2005-2024 Pronamic
  * Company: Pronamic
  *
  * @see     https://woocommerce.com/2017/04/woocommerce-3-0-release/
@@ -68,10 +68,10 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 	/**
 	 * Preserves the initial JSON post_content passed to save into the post.
-	 * 
+	 *
 	 * This is needed to prevent KSES and other {@see 'content_save_pre'} filters
 	 * from corrupting JSON data.
-	 * 
+	 *
 	 * @link https://github.com/pronamic/wp-pay-core/issues/160
 	 * @link https://developer.wordpress.org/reference/hooks/wp_insert_post_data/
 	 * @param array $data                An array of slashed and processed post data.
@@ -151,7 +151,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 
 	/**
 	 * Get post data.
-	 * 
+	 *
 	 * @param Payment $payment Payment.
 	 * @param array   $data    Post data.
 	 * @return array

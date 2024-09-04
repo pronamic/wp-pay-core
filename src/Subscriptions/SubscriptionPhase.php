@@ -3,7 +3,7 @@
  * Subscription Phase
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2023 Pronamic
+ * @copyright 2005-2024 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Subscriptions
  */
@@ -296,16 +296,22 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return int
 	 */
 	public function get_periods_created() {
-		$next_date = $this->subscription->get_next_payment_date();
+		$next_payment_date = $this->subscription->get_next_payment_date();
 
-		if ( null === $next_date ) {
+		$end_date = $next_payment_date ?? $this->end_date;
+
+		if ( null === $end_date ) {
 			return 0;
+		}
+
+		if ( null !== $this->end_date && $end_date > $this->end_date ) {
+			$end_date = $this->end_date;
 		}
 
 		$period = new \DatePeriod(
 			new \DateTimeImmutable( $this->start_date->format( 'Y-m-d 00:00:00' ) ),
 			$this->interval,
-			new \DateTimeImmutable( $next_date->format( 'Y-m-d 00:00:00' ) )
+			new \DateTimeImmutable( $end_date->format( 'Y-m-d 00:00:00' ) )
 		);
 
 		return \iterator_count( $period );
@@ -474,6 +480,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 *
 	 * @param DateTimeImmutable $start_date Start date.
 	 * @return SubscriptionPeriod|null
+	 * @throws \Exception Throws exception on invalid date period.
 	 */
 	public function get_period( DateTimeImmutable $start_date = null ) {
 		if ( null === $start_date ) {
@@ -487,7 +494,11 @@ class SubscriptionPhase implements \JsonSerializable {
 		$end_date = $this->add_interval( $start_date );
 
 		if ( null !== $this->end_date && $end_date > $this->end_date ) {
-			return null;
+			$end_date = $this->end_date;
+
+			if ( $start_date > $end_date ) {
+				throw new \Exception( 'The start date of a subscription period cannot be later than the end date.' );
+			}
 		}
 
 		$period = new SubscriptionPeriod( $this, $start_date, $end_date, $this->get_amount() );
@@ -675,23 +686,18 @@ class SubscriptionPhase implements \JsonSerializable {
 
 		$alignment_phase = new self( $phase->get_subscription(), $start_date, $alignment_interval, $phase->get_amount() );
 
-		$alignment_phase->set_total_periods( 1 );
+		$alignment_end_date = $start_date->add( $alignment_interval );
+
+		$alignment_phase->set_end_date( $alignment_end_date );
 		$alignment_phase->set_alignment_rate( $alignment_difference->days / $regular_difference->days );
 
-		// Remove one period from regular phase.
-		$total_periods = $phase->get_total_periods();
-
-		if ( null !== $total_periods ) {
-			$phase->set_total_periods( $total_periods - 1 );
-		}
-
-		$alignment_end_date = $alignment_phase->get_end_date();
-
-		if ( null === $alignment_end_date ) {
-			throw new \Exception( 'The align phase should always end because this phase exists for one period.' );
-		}
-
 		$phase->set_start_date( $alignment_end_date );
+
+		if ( null !== $phase->end_date ) {
+			$end_date = $phase->end_date->add( $alignment_interval );
+
+			$phase->set_end_date( $end_date );
+		}
 
 		return $alignment_phase;
 	}

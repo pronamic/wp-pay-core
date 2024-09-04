@@ -3,7 +3,7 @@
  * Plugin
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2023 Pronamic
+ * @copyright 2005-2024 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -29,6 +29,7 @@ use Pronamic\WordPress\Pay\Refunds\Refund;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionsDataStoreCPT;
 use Pronamic\WordPress\Pay\Webhooks\WebhookLogger;
+use Pronamic\WpPayLogos\ImageService;
 use WP_Error;
 use WP_Query;
 
@@ -269,8 +270,8 @@ class Plugin {
 		add_action( 'init', [ $this, 'register_styles' ], 9 );
 
 		// If WordPress is loaded check on returns and maybe redirect requests.
-		add_action( 'wp_loaded', [ $this, 'handle_returns' ], 10 );
-		add_action( 'wp_loaded', [ $this, 'maybe_redirect' ], 10 );
+		add_action( 'wp_loaded', [ $this, 'handle_returns' ], 100 );
+		add_action( 'wp_loaded', [ $this, 'maybe_redirect' ], 100 );
 
 		// Default date time format.
 		add_filter( 'pronamic_datetime_default_format', [ $this, 'datetime_format' ], 10, 1 );
@@ -294,8 +295,15 @@ class Plugin {
 		require_once $args['action_scheduler'];
 
 		/**
+		 * Pronamic Pay logos.
+		 *
+		 * @link https://github.com/pronamic/wp-pay-logos
+		 */
+		$image_service = new ImageService();
+
+		/**
 		 * Get Buy Now, Pay Later disclaimer.
-		 * 
+		 *
 		 * @link https://github.com/pronamic/pronamic-pay/issues/70
 		 * @param string $provider Provider.
 		 * @return string
@@ -311,7 +319,7 @@ class Plugin {
 		// AfterPay.nl.
 		$payment_method_afterpay_nl = new PaymentMethod( PaymentMethods::AFTERPAY_NL );
 
-		$payment_method_afterpay_nl->descriptions = [           
+		$payment_method_afterpay_nl->descriptions = [
 			/**
 			 * AfterPay method description.
 			 *
@@ -321,7 +329,7 @@ class Plugin {
 		];
 
 		$payment_method_afterpay_nl->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/afterpay-nl/method-afterpay-nl-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/afterpay-nl/method-afterpay-nl-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_afterpay_nl );
@@ -340,7 +348,7 @@ class Plugin {
 		];
 
 		$payment_method_afterpay_com->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/afterpay-com/method-afterpay-com-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/afterpay-com/method-afterpay-com-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_afterpay_com );
@@ -349,7 +357,7 @@ class Plugin {
 		$payment_method_alipay = new PaymentMethod( PaymentMethods::ALIPAY );
 
 		$payment_method_alipay->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/alipay/method-alipay-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/alipay/method-alipay-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_alipay );
@@ -358,7 +366,7 @@ class Plugin {
 		$payment_method_american_express = new PaymentMethod( PaymentMethods::AMERICAN_EXPRESS );
 
 		$payment_method_american_express->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/american-express/method-american-express-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/american-express/method-american-express-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_american_express );
@@ -367,7 +375,7 @@ class Plugin {
 		$payment_method_apple_pay = new PaymentMethod( PaymentMethods::APPLE_PAY );
 
 		$payment_method_apple_pay->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/apple-pay/method-apple-pay-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/apple-pay/method-apple-pay-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_apple_pay );
@@ -376,7 +384,7 @@ class Plugin {
 		$payment_method_bancontact = new PaymentMethod( PaymentMethods::BANCONTACT );
 
 		$payment_method_bancontact->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/bancontact/method-bancontact-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/bancontact/method-bancontact-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_bancontact );
@@ -385,7 +393,7 @@ class Plugin {
 		$payment_method_bank_transfer = new PaymentMethod( PaymentMethods::BANK_TRANSFER );
 
 		$payment_method_bank_transfer->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/bank-transfer/method-bank-transfer-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/bank-transfer/method-bank-transfer-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_bank_transfer );
@@ -394,7 +402,7 @@ class Plugin {
 		$payment_method_belfius = new PaymentMethod( PaymentMethods::BELFIUS );
 
 		$payment_method_belfius->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/belfius/method-belfius-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/belfius/method-belfius-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_belfius );
@@ -403,7 +411,7 @@ class Plugin {
 		$payment_method_billie = new PaymentMethod( PaymentMethods::BILLIE );
 
 		$payment_method_billie->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/billie/method-billie-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/billie/method-billie-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_billie );
@@ -412,7 +420,7 @@ class Plugin {
 		$payment_method_billink = new PaymentMethod( PaymentMethods::BILLINK );
 
 		$payment_method_billie->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/billink/method-billink-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/billink/method-billink-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_billink );
@@ -421,7 +429,7 @@ class Plugin {
 		$payment_method_bitcoin = new PaymentMethod( PaymentMethods::BITCOIN );
 
 		$payment_method_bitcoin->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/bitcoin/method-bitcoin-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/bitcoin/method-bitcoin-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_bitcoin );
@@ -430,7 +438,7 @@ class Plugin {
 		$payment_method_blik = new PaymentMethod( PaymentMethods::BLIK );
 
 		$payment_method_blik->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/blik/method-blik-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/blik/method-blik-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_blik );
@@ -439,7 +447,7 @@ class Plugin {
 		$payment_method_bunq = new PaymentMethod( PaymentMethods::BUNQ );
 
 		$payment_method_bunq->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/bunq/method-bunq-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/bunq/method-bunq-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_bunq );
@@ -452,7 +460,7 @@ class Plugin {
 		];
 
 		$payment_method_in3->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/in3/method-in3-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/in3/method-in3-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_in3 );
@@ -472,7 +480,7 @@ class Plugin {
 		];
 
 		$payment_method_card->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/credit-card/method-credit-card-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/credit-card/method-credit-card-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_card );
@@ -485,7 +493,7 @@ class Plugin {
 		];
 
 		$payment_method_credit_card->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/credit-card/method-credit-card-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/credit-card/method-credit-card-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_credit_card );
@@ -494,7 +502,7 @@ class Plugin {
 		$payment_method_direct_debit = new PaymentMethod( PaymentMethods::DIRECT_DEBIT );
 
 		$payment_method_direct_debit->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/direct-debit/method-direct-debit-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/direct-debit/method-direct-debit-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_direct_debit );
@@ -510,7 +518,7 @@ class Plugin {
 		];
 
 		$payment_method_direct_debit_bancontact->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/direct-debit-bancontact/method-direct-debit-bancontact-wc-107x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/direct-debit-bancontact/method-direct-debit-bancontact-wc-107x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_direct_debit_bancontact );
@@ -523,7 +531,7 @@ class Plugin {
 		];
 
 		$payment_method_direct_debit_ideal->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/direct-debit-ideal/method-direct-debit-ideal-wc-107x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/direct-debit-ideal/method-direct-debit-ideal-wc-107x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_direct_debit_ideal );
@@ -536,7 +544,7 @@ class Plugin {
 		];
 
 		$payment_method_direct_debit_sofort->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/direct-debit-sofort/method-direct-debit-sofort-wc-107x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/direct-debit-sofort/method-direct-debit-sofort-wc-107x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_direct_debit_sofort );
@@ -545,7 +553,7 @@ class Plugin {
 		$payment_method_eps = new PaymentMethod( PaymentMethods::EPS );
 
 		$payment_method_eps->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/eps/method-eps-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/eps/method-eps-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_eps );
@@ -554,7 +562,7 @@ class Plugin {
 		$payment_method_focum = new PaymentMethod( PaymentMethods::FOCUM );
 
 		$payment_method_eps->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/focum/method-focum-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/focum/method-focum-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_focum );
@@ -567,7 +575,7 @@ class Plugin {
 		];
 
 		$payment_method_ideal->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/ideal/method-ideal-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/ideal/method-ideal-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_ideal );
@@ -576,7 +584,7 @@ class Plugin {
 		$payment_method_ideal_qr = new PaymentMethod( PaymentMethods::IDEALQR );
 
 		$payment_method_ideal_qr->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/ideal-qr/method-ideal-qr-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/ideal-qr/method-ideal-qr-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_ideal_qr );
@@ -585,7 +593,7 @@ class Plugin {
 		$payment_method_giropay = new PaymentMethod( PaymentMethods::GIROPAY );
 
 		$payment_method_giropay->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/giropay/method-giropay-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/giropay/method-giropay-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_giropay );
@@ -594,7 +602,7 @@ class Plugin {
 		$payment_method_google_pay = new PaymentMethod( PaymentMethods::GOOGLE_PAY );
 
 		$payment_method_google_pay->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/google-pay/method-google-pay-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/google-pay/method-google-pay-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_google_pay );
@@ -603,7 +611,7 @@ class Plugin {
 		$payment_method_kbc = new PaymentMethod( PaymentMethods::KBC );
 
 		$payment_method_kbc->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/kbc/method-kbc-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/kbc/method-kbc-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_kbc );
@@ -612,7 +620,7 @@ class Plugin {
 		$payment_method_klarna_pay_later = new PaymentMethod( PaymentMethods::KLARNA_PAY_LATER );
 
 		$payment_method_klarna_pay_later->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/klarna-pay-later/method-klarna-pay-later-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/klarna-pay-later/method-klarna-pay-later-wc-51x32.svg' ),
 		];
 
 		$payment_method_klarna_pay_later->descriptions = [
@@ -625,7 +633,7 @@ class Plugin {
 		$payment_method_klarna_pay_now = new PaymentMethod( PaymentMethods::KLARNA_PAY_NOW );
 
 		$payment_method_klarna_pay_now->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/klarna-pay-now/method-klarna-pay-now-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/klarna-pay-now/method-klarna-pay-now-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_klarna_pay_now );
@@ -634,7 +642,7 @@ class Plugin {
 		$payment_method_klarna_pay_over_time = new PaymentMethod( PaymentMethods::KLARNA_PAY_OVER_TIME );
 
 		$payment_method_klarna_pay_over_time->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/klarna-pay-over-time/method-klarna-pay-over-time-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/klarna-pay-over-time/method-klarna-pay-over-time-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_klarna_pay_over_time );
@@ -643,7 +651,7 @@ class Plugin {
 		$payment_method_maestro = new PaymentMethod( PaymentMethods::MAESTRO );
 
 		$payment_method_maestro->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/maestro/method-maestro-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/maestro/method-maestro-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_maestro );
@@ -652,7 +660,7 @@ class Plugin {
 		$payment_method_mastercard = new PaymentMethod( PaymentMethods::MASTERCARD );
 
 		$payment_method_mastercard->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/mastercard/method-mastercard-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/mastercard/method-mastercard-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_mastercard );
@@ -661,7 +669,7 @@ class Plugin {
 		$payment_method_mb_way = new PaymentMethod( PaymentMethods::MB_WAY );
 
 		$payment_method_mb_way->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/mb-way/method-mb-way-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/mb-way/method-mb-way-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_mb_way );
@@ -675,7 +683,7 @@ class Plugin {
 		$payment_method_payconiq = new PaymentMethod( PaymentMethods::PAYCONIQ );
 
 		$payment_method_payconiq->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/payconiq/method-payconiq-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/payconiq/method-payconiq-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_payconiq );
@@ -684,7 +692,7 @@ class Plugin {
 		$payment_method_paypal = new PaymentMethod( PaymentMethods::PAYPAL );
 
 		$payment_method_paypal->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/paypal/method-paypal-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/paypal/method-paypal-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_paypal );
@@ -693,7 +701,7 @@ class Plugin {
 		$payment_method_przelewy24 = new PaymentMethod( PaymentMethods::PRZELEWY24 );
 
 		$payment_method_przelewy24->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/przelewy24/method-przelewy24-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/przelewy24/method-przelewy24-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_przelewy24 );
@@ -707,7 +715,7 @@ class Plugin {
 		];
 
 		$payment_method_riverty->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/riverty/method-riverty-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/riverty/method-riverty-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_riverty );
@@ -716,7 +724,7 @@ class Plugin {
 		$payment_method_santander = new PaymentMethod( PaymentMethods::SANTANDER );
 
 		$payment_method_santander->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/santander/method-santander-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/santander/method-santander-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_santander );
@@ -725,7 +733,7 @@ class Plugin {
 		$payment_method_sofort = new PaymentMethod( PaymentMethods::SOFORT );
 
 		$payment_method_sofort->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/sofort/method-sofort-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/sofort/method-sofort-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_sofort );
@@ -734,7 +742,7 @@ class Plugin {
 		$payment_method_spraypay = new PaymentMethod( PaymentMethods::SPRAYPAY );
 
 		$payment_method_spraypay->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/spraypay/method-spraypay-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/spraypay/method-spraypay-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_spraypay );
@@ -743,7 +751,7 @@ class Plugin {
 		$payment_method_swish = new PaymentMethod( PaymentMethods::SWISH );
 
 		$payment_method_swish->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/swish/method-swish-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/swish/method-swish-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_swish );
@@ -752,7 +760,7 @@ class Plugin {
 		$payment_method_twint = new PaymentMethod( PaymentMethods::TWINT );
 
 		$payment_method_twint->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/twint/method-twint-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/twint/method-twint-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_twint );
@@ -761,7 +769,7 @@ class Plugin {
 		$payment_method_v_pay = new PaymentMethod( PaymentMethods::V_PAY );
 
 		$payment_method_v_pay->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/v-pay/method-v-pay-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/v-pay/method-v-pay-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_v_pay );
@@ -770,7 +778,7 @@ class Plugin {
 		$payment_method_vipps = new PaymentMethod( PaymentMethods::VIPPS );
 
 		$payment_method_vipps->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/vipps/method-vipps-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/vipps/method-vipps-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_vipps );
@@ -779,7 +787,7 @@ class Plugin {
 		$payment_method_visa = new PaymentMethod( PaymentMethods::VISA );
 
 		$payment_method_visa->images = [
-			'woocommerce' => __DIR__ . '/../images/dist/methods/visa/method-visa-wc-51x32.svg',
+			'woocommerce' => $image_service->get_path( 'methods/visa/method-visa-wc-51x32.svg' ),
 		];
 
 		$this->payment_methods->add( $payment_method_visa );
@@ -1077,7 +1085,7 @@ class Plugin {
 			$this->admin = new Admin\AdminModule( $this );
 		}
 
-		new Admin\Install( $this ); 
+		new Admin\Install( $this );
 
 		$controllers = [
 			new PagesController(),
@@ -1483,7 +1491,7 @@ class Plugin {
 
 		/**
 		 * Merge tags.
-		 * 
+		 *
 		 * @link https://github.com/pronamic/wp-pronamic-pay/issues/358
 		 * @link https://github.com/pronamic/wp-pronamic-pay-woocommerce/issues/43
 		 */

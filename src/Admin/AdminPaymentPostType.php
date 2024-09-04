@@ -3,7 +3,7 @@
  * Payment Post Type
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2023 Pronamic
+ * @copyright 2005-2024 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Admin
  */
@@ -178,7 +178,7 @@ class AdminPaymentPostType {
 
 		$post_id = filter_input( INPUT_GET, 'post', FILTER_SANITIZE_NUMBER_INT );
 
-		$payment = new Payment( $post_id );
+		$payment = new Payment( (int) $post_id );
 
 		if ( ! $payment->is_anonymized() ) {
 			return;
@@ -764,7 +764,7 @@ class AdminPaymentPostType {
 
 	/**
 	 * Admin init.
-	 * 
+	 *
 	 * @return void
 	 */
 	public function admin_init() {
@@ -773,7 +773,7 @@ class AdminPaymentPostType {
 
 	/**
 	 * Maybe update payment status.
-	 * 
+	 *
 	 * @return void
 	 */
 	private function maybe_update_payment() {

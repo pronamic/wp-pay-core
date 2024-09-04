@@ -3,12 +3,14 @@
  * Cards
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2023 Pronamic
+ * @copyright 2005-2024 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
 
 namespace Pronamic\WordPress\Pay;
+
+use Pronamic\WpPayLogos\ImageService;
 
 /**
  * Cards
@@ -201,9 +203,16 @@ class Cards {
 	 * @return string|null
 	 */
 	public function get_card_logo_url( $brand ) {
-		return sprintf(
-			'https://cdn.wp-pay.org/jsdelivr.net/npm/@wp-pay/logos@1.16.0/dist/cards/%1$s/card-%1$s-logo-_x80.svg',
-			$brand
-		);
+		$image_service = new ImageService();
+
+		$path = 'cards/' . $brand . '/card-' . $brand . '-logo-_x80.svg';
+
+		$path = $image_service->get_path( $path );
+
+		if ( ! \is_readable( $path ) ) {
+			return null;
+		}
+
+		return \plugins_url( \basename( $path ), $path );
 	}
 }

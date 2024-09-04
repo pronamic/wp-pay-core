@@ -3,7 +3,7 @@
  * Merge Tags Controller
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2023 Pronamic
+ * @copyright 2005-2024 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Gateways
  */
@@ -23,7 +23,7 @@ class MergeTagsController {
 
 	/**
 	 * Add merge tag.
-	 * 
+	 *
 	 * @param MergeTag $merge_tag Merge tag.
 	 * @return void
 	 */
@@ -33,7 +33,7 @@ class MergeTagsController {
 
 	/**
 	 * Get merge tags.
-	 * 
+	 *
 	 * @return MergeTag[]
 	 */
 	private function get_merge_tags() {
@@ -57,7 +57,7 @@ class MergeTagsController {
 
 	/**
 	 * Format string.
-	 * 
+	 *
 	 * @param string $value Value.
 	 * @return string
 	 */

@@ -4,7 +4,7 @@
  * Plugin URI: https://www.pronamic.eu/plugins/pronamic-pay-core/
  * Description: Core components for the WordPress payment processing library.
  *
- * Version: 4.18.0
+ * Version: 4.21.1
  * Requires at least: 5.9
  * Requires PHP: 8.0
  *
@@ -19,7 +19,7 @@
  * GitHub URI: https://github.com/pronamic/wp-pay-core
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2023 Pronamic
+ * @copyright 2005-2024 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */

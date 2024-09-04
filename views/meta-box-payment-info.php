@@ -3,7 +3,7 @@
  * Meta Box Payment Info
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2023 Pronamic
+ * @copyright 2005-2024 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  * @var \Pronamic\WordPress\Pay\Plugin $plugin Plugin.
@@ -469,13 +469,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<?php esc_html_e( 'VAT Number Validity', 'pronamic_ideal' ); ?>
 					</th>
 					<td style="padding-top: 20px">
-						<style type="text/css">
-							.pronamic-pay-form-sub-table th,
-							.pronamic-pay-form-sub-table td {
-								padding: 0;
-							}
-						</style>
-
 						<table class="pronamic-pay-form-sub-table">
 							<tr>
 								<th scope="row">

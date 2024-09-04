@@ -3,7 +3,7 @@
  * Redirect via HTML
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2023 Pronamic
+ * @copyright 2005-2024 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  * @var       \Pronamic\WordPress\Pay\Payments\Payment $payment Payment.
@@ -31,7 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		/**
 		 * Break out of iframe.
-		 * 
+		 *
 		 * @link https://github.com/pronamic/wp-pronamic-pay-give/issues/2
 		 * @link https://github.com/pronamic/wp-pronamic-pay/commit/6936ec048c6778e688386d3c15f6a6c1cbaa8eb9
 		 */

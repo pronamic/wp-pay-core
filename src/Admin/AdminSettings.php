@@ -3,7 +3,7 @@
  * Admin Settings
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2023 Pronamic
+ * @copyright 2005-2024 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Admin
  */
@@ -108,21 +108,19 @@ class AdminSettings {
 			$debug_mode_args
 		);
 
-		if ( $this->plugin->is_debug_mode() || $this->plugin->subscriptions_module->is_processing_disabled() ) {
-			\add_settings_field(
-				'pronamic_pay_subscriptions_processing_disabled',
-				\__( 'Disable Recurring Payments', 'pronamic_ideal' ),
-				[ $this, 'input_checkbox' ],
-				'pronamic_pay',
-				'pronamic_pay_general',
-				[
-					'legend'      => \__( 'Disable starting recurring payments at gateway', 'pronamic_ideal' ),
-					'description' => \__( 'Disable starting recurring payments at gateway', 'pronamic_ideal' ),
-					'label_for'   => 'pronamic_pay_subscriptions_processing_disabled',
-					'type'        => 'checkbox',
-				]
-			);
-		}
+		\add_settings_field(
+			'pronamic_pay_subscriptions_processing_disabled',
+			\__( 'Disable Recurring Payments', 'pronamic_ideal' ),
+			[ $this, 'input_checkbox' ],
+			'pronamic_pay',
+			'pronamic_pay_general',
+			[
+				'legend'      => \__( 'Disable starting recurring payments at gateway', 'pronamic_ideal' ),
+				'description' => \__( 'Disable starting recurring payments at gateway', 'pronamic_ideal' ),
+				'label_for'   => 'pronamic_pay_subscriptions_processing_disabled',
+				'type'        => 'checkbox',
+			]
+		);
 
 		if ( version_compare( $this->plugin->get_version(), '10', '>=' ) ) {
 			// Settings - Payment Methods.

@@ -3,7 +3,7 @@
  * Text field
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2023 Pronamic
+ * @copyright 2005-2024 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Core
  */
@@ -18,7 +18,7 @@ use Pronamic\WordPress\Html\Element;
 class TextField extends Field {
 	/**
 	 * Get element.
-	 * 
+	 *
 	 * @return Element|null
 	 */
 	protected function get_element() {

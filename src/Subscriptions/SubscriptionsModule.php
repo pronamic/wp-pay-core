@@ -3,7 +3,7 @@
  * Subscriptions Module
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2023 Pronamic
+ * @copyright 2005-2024 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Subscriptions
  */
@@ -21,7 +21,7 @@ use Pronamic\WordPress\Pay\Plugin;
 /**
  * Title: Subscriptions module
  * Description:
- * Copyright: 2005-2023 Pronamic
+ * Copyright: 2005-2024 Pronamic
  * Company: Pronamic
  *
  * @link https://woocommerce.com/2017/04/woocommerce-3-0-release/
@@ -258,7 +258,11 @@ class SubscriptionsModule {
 
 		$subscription_id = filter_input( INPUT_GET, 'subscription', \FILTER_SANITIZE_NUMBER_INT );
 
-		$subscription = get_pronamic_subscription( $subscription_id );
+		if ( false === $subscription_id || null === $subscription_id ) {
+			return;
+		}
+
+		$subscription = get_pronamic_subscription( (int) $subscription_id );
 
 		// Check if subscription and key are valid.
 		if ( ! $subscription || $_GET['key'] !== $subscription->get_key() ) {
@@ -301,7 +305,7 @@ class SubscriptionsModule {
 
 	/**
 	 * Maybe cancel subscription.
-	 * 
+	 *
 	 * @param Subscription $subscription Subscription.
 	 * @return void
 	 */
@@ -343,7 +347,7 @@ class SubscriptionsModule {
 
 	/**
 	 * Check if subscription should be renewed.
-	 * 
+	 *
 	 * @param Subscription $subscription Subscription.
 	 * @return bool
 	 */
