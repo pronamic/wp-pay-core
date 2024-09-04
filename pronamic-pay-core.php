@@ -36,6 +36,16 @@ require_once __DIR__ . '/vendor/autoload_packages.php';
 /**
  * Bootstrap.
  */
+add_filter(
+	'pronamic_pay_modules',
+	function ( $modules ) {
+		$modules[] = 'forms';
+		$modules[] = 'subscriptions';
+
+		return $modules;
+	}
+);
+
 \Pronamic\WordPress\Pay\Plugin::instance(
 	[
 		'file'             => __FILE__,

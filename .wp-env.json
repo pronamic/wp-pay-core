@@ -1,0 +1,14 @@
+{
+	"core": null,
+	"plugins": [
+		"pronamic/wp-env-quick-login",
+		"https://downloads.wordpress.org/plugin/pronamic-client.zip",
+		"https://downloads.wordpress.org/plugin/query-monitor.zip"
+	],
+	"mappings": {
+		"wp-content/plugins/pronamic-pay-core": "./"
+	},
+	"config": {
+		"PRONAMIC_PAY_DEBUG": true
+	}
+}
