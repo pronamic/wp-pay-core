@@ -6,6 +6,21 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.22.0] - 2024-09-09
+
+### Removed
+
+- Removed VAT number validation from core. ([#189](https://github.com/pronamic/wp-pay-core/issues/189))
+
+### Changed
+
+- Update subscription action links UI ([#180](https://github.com/pronamic/wp-pay-core/pull/180))
+- Always show 'Disable Recurring Payments' setting. ([#165](https://github.com/pronamic/wp-pay-core/issues/165))
+
+Full set of changes: [`4.21.1...4.22.0`][4.22.0]
+
+[4.22.0]: https://github.com/pronamic/wp-pay-core/compare/v4.21.1...v4.22.0
+
 ## [4.21.1] - 2024-08-01
 
 ### Fixed
