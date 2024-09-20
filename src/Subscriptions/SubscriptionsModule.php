@@ -165,7 +165,7 @@ class SubscriptionsModule {
 				case PaymentStatus::CANCELLED:
 				case PaymentStatus::EXPIRED:
 					// Set subscription status to 'On Hold' only if the subscription is not already active when processing the first payment.
-					if ( $subscription->is_first_payment( $payment ) && SubscriptionStatus::ACTIVE === $subscription->get_status() ) {
+					if ( ! ( $subscription->is_first_payment( $payment ) && SubscriptionStatus::ACTIVE === $subscription->get_status() ) ) {
 						$status_update = SubscriptionStatus::ON_HOLD;
 					}
 
