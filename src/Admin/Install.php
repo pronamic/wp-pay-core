@@ -96,6 +96,13 @@ class Install {
 		// Version.
 		$version = $this->plugin->get_version();
 
+		// Installation date.
+		$installation_date = (string) \get_option( 'pronamic_pay_installation_date', '' );
+
+		if ( '' === $installation_date ) {
+			\update_option( 'pronamic_pay_installation_date', \current_time( 'mysql', true ) );
+		}
+
 		// Action.
 		\do_action( 'pronamic_pay_install' );
 
