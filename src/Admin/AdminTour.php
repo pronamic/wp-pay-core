@@ -40,20 +40,39 @@ class AdminTour {
 		$this->plugin = $plugin;
 
 		// Actions.
-		add_action( 'admin_init', [ $this, 'admin_init' ] );
+		add_action( 'admin_init', [ $this, 'handle_ignore_tour_request' ] );
+		add_action( 'admin_init', [ $this, 'maybe_show_admin_tour' ] );
 	}
 
 	/**
-	 * Admin initialize.
+	 * Maybe show admin tour.
 	 *
 	 * @return void
 	 */
-	public function admin_init() {
-		$this->handle_ignore_tour_request();
-
-		if ( ! get_user_meta( get_current_user_id(), 'pronamic_pay_ignore_tour', true ) ) {
-			add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ] );
+	public function maybe_show_admin_tour() {
+		// Ignore tour.
+		if ( \get_user_meta( \get_current_user_id(), 'pronamic_pay_ignore_tour', true ) ) {
+			return;
 		}
+
+		// Installation date.
+		$installation_date = (string) \get_option( 'pronamic_pay_installation_date', '' );
+
+		if ( '' !== $installation_date ) {
+			try {
+				$installation_date = new \DateTimeImmutable( $installation_date );
+
+				$day_ago = new \DateTimeImmutable( '-1 day' );
+
+				if ( $installation_date < $day_ago ) {
+					return;
+				}
+			} catch ( \Exception $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+				// Nothing to do, ignore invalid installation date.
+			}
+		}
+
+		\add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ] );
 	}
 
 	/**
@@ -61,7 +80,7 @@ class AdminTour {
 	 *
 	 * @return void
 	 */
-	private function handle_ignore_tour_request() {
+	public function handle_ignore_tour_request() {
 		if ( ! \array_key_exists( 'pronamic_pay_ignore_tour', $_GET ) ) {
 			return;
 		}
