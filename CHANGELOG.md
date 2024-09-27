@@ -6,6 +6,17 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.22.1] - 2024-09-27
+
+### Fixed
+
+- Fix active subscription put 'On Hold' by expired first payment. ([#194](https://github.com/pronamic/wp-pay-core/issues/194))
+- Only show admin tour within first day after plugin installation. ([#186](https://github.com/pronamic/wp-pay-core/issues/186))
+
+Full set of changes: [`4.22.0...4.22.1`][4.22.1]
+
+[4.22.1]: https://github.com/pronamic/wp-pay-core/compare/v4.22.0...v4.22.1
+
 ## [4.22.0] - 2024-09-09
 
 ### Removed

@@ -1,6 +1,6 @@
 {
 	"name": "@wp-pay/core",
-	"version": "4.22.0",
+	"version": "4.22.1",
 	"description": "Core components for the WordPress payment processing library.",
 	"repository": {
 		"type": "git",
