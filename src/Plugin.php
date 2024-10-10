@@ -616,6 +616,15 @@ class Plugin {
 
 		$this->payment_methods->add( $payment_method_kbc );
 
+		// Klarna.
+		$payment_method_klarna = new PaymentMethod( PaymentMethods::KLARNA );
+
+		$payment_method_klarna->images = [
+			'woocommerce' => $image_service->get_path( 'methods/klarna/method-klarna-wc-51x32.svg' ),
+		];
+
+		$this->payment_methods->add( $payment_method_klarna );
+
 		// Klarna Pay Later.
 		$payment_method_klarna_pay_later = new PaymentMethod( PaymentMethods::KLARNA_PAY_LATER );
 
