@@ -76,7 +76,7 @@
 		"woocommerce/action-scheduler": "^3.8"
 	},
 	"require-dev": {
-		"overtrue/phplint": "^9.3",
+		"overtrue/phplint": "^9.4",
 		"php-coveralls/php-coveralls": "^2.4",
 		"php-stubs/wordpress-globals": "^0.2.0",
 		"php-stubs/wp-cli-stubs": "^2.4",
