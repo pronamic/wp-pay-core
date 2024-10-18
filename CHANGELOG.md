@@ -6,6 +6,17 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.23.0] - 2024-10-18
+
+### Commits
+
+- Updated composer.json ([219a74f](https://github.com/pronamic/wp-pay-core/commit/219a74f0299fe0ca419d4a26901a075e988dac4c))
+- Added Klarna payment method for https://github.com/pronamic/wp-pronamic-pay-mollie/issues/57. ([962ad77](https://github.com/pronamic/wp-pay-core/commit/962ad772ec6adfe5ca0c33716ffb87752d80317e))
+
+Full set of changes: [`4.22.1...4.23.0`][4.23.0]
+
+[4.23.0]: https://github.com/pronamic/wp-pay-core/compare/v4.22.1...v4.23.0
+
 ## [4.22.1] - 2024-09-27
 
 ### Fixed
