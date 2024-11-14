@@ -138,6 +138,11 @@ class SubscriptionsModule {
 	 * @return void
 	 */
 	public function payment_status_update( $payment ) {
+		// Payment method changes do not affect the subscription status.
+		if ( 'subscription_payment_method_change' === $payment->get_source() ) {
+			return;
+		}
+
 		foreach ( $payment->get_subscriptions() as $subscription ) {
 			// Status.
 			$status_before = $subscription->get_status();
