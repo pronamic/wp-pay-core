@@ -52,3 +52,5 @@ add_filter(
 		'action_scheduler' => __DIR__ . '/vendor/woocommerce/action-scheduler/action-scheduler.php',
 	]
 );
+
+\Pronamic\WordPress\Pay\LicenseManager::instance();

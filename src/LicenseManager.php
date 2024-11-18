@@ -146,6 +146,30 @@ class LicenseManager {
 	}
 
 	/**
+	 * Should display license notice.
+	 * 
+	 * @link https://github.com/pronamic/pronamic-pay/issues/104#issuecomment-2478346476
+	 * @return bool
+	 */
+	private function should_display_license_notice() {
+		$screen = \get_current_screen();
+
+		if ( null === $screen ) {
+			return false;
+		}
+
+		if ( 'dashboard' === $screen->id ) {
+			return true;
+		}
+
+		if ( 'pronamic_ideal' === $screen->parent_base ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Admin notices.
 	 *
 	 * @link https://github.com/WordPress/WordPress/blob/4.2.4/wp-admin/options.php#L205-L218
@@ -153,6 +177,10 @@ class LicenseManager {
 	 * @return void
 	 */
 	public function admin_notices() {
+		if ( ! $this->should_display_license_notice() ) {
+			return;
+		}
+
 		// Show notices only to options managers (administrators).
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
