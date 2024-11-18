@@ -167,7 +167,6 @@ class LicenseManager {
 		}
 
 		return false;
-
 	}
 
 	/**
