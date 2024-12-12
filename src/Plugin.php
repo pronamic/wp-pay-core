@@ -264,9 +264,11 @@ class Plugin {
 		// Integrations.
 		$this->integrations = [];
 
-		add_action( 'plugins_loaded', [ $this, 'plugins_loaded' ], 0 );
+		$this->payment_methods = new PaymentMethodsCollection();
 
-		// Register styles.
+		add_action( 'plugins_loaded', [ $this, 'plugins_loaded' ], 0 );
+		add_action( 'init', [ $this, 'register_payment_methods' ], 0 );
+		add_action( 'init', [ $this, 'register_integrations' ], 0 );
 		add_action( 'init', [ $this, 'register_styles' ], 9 );
 
 		// If WordPress is loaded check on returns and maybe redirect requests.
@@ -293,513 +295,6 @@ class Plugin {
 		}
 
 		require_once $args['action_scheduler'];
-
-		/**
-		 * Pronamic Pay logos.
-		 *
-		 * @link https://github.com/pronamic/wp-pay-logos
-		 */
-		$image_service = new ImageService();
-
-		/**
-		 * Get Buy Now, Pay Later disclaimer.
-		 *
-		 * @link https://github.com/pronamic/pronamic-pay/issues/70
-		 * @param string $provider Provider.
-		 * @return string
-		 */
-		/* translators: %s: provider */
-		$bnpl_disclaimer_template = \__( 'You must be at least 18+ to use this service. If you pay on time, you will avoid additional costs and ensure that you can use %s services again in the future. By continuing, you accept the Terms and Conditions and confirm that you have read the Privacy Statement and Cookie Statement.', 'pronamic_ideal' );
-
-		/**
-		 * Payment methods.
-		 */
-		$this->payment_methods = new PaymentMethodsCollection();
-
-		// AfterPay.nl.
-		$payment_method_afterpay_nl = new PaymentMethod( PaymentMethods::AFTERPAY_NL );
-
-		$payment_method_afterpay_nl->descriptions = [
-			/**
-			 * AfterPay method description.
-			 *
-			 * @link https://www.afterpay.nl/en/customers/where-can-i-pay-with-afterpay
-			 */
-			'default' => \__( 'AfterPay is one of the largest and most popular post-payment system in the Benelux. Millions of Dutch and Belgians use AfterPay to pay for products.', 'pronamic_ideal' ),
-		];
-
-		$payment_method_afterpay_nl->images = [
-			'woocommerce' => $image_service->get_path( 'methods/afterpay-nl/method-afterpay-nl-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_afterpay_nl );
-
-		// AfterPay.com.
-		$payment_method_afterpay_com = new PaymentMethod( PaymentMethods::AFTERPAY_COM );
-
-		$payment_method_afterpay_com->descriptions = [
-			/**
-			 * Afterpay method description.
-			 *
-			 * @link https://en.wikipedia.org/wiki/Afterpay
-			 * @link https://docs.adyen.com/payment-methods/afterpaytouch
-			 */
-			'default' => \__( 'Afterpay is a popular buy now, pay later service in Australia, New Zealand, the United States, and Canada.', 'pronamic_ideal' ),
-		];
-
-		$payment_method_afterpay_com->images = [
-			'woocommerce' => $image_service->get_path( 'methods/afterpay-com/method-afterpay-com-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_afterpay_com );
-
-		// Alipay.
-		$payment_method_alipay = new PaymentMethod( PaymentMethods::ALIPAY );
-
-		$payment_method_alipay->images = [
-			'woocommerce' => $image_service->get_path( 'methods/alipay/method-alipay-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_alipay );
-
-		// American Express.
-		$payment_method_american_express = new PaymentMethod( PaymentMethods::AMERICAN_EXPRESS );
-
-		$payment_method_american_express->images = [
-			'woocommerce' => $image_service->get_path( 'methods/american-express/method-american-express-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_american_express );
-
-		// Apple Pay.
-		$payment_method_apple_pay = new PaymentMethod( PaymentMethods::APPLE_PAY );
-
-		$payment_method_apple_pay->images = [
-			'woocommerce' => $image_service->get_path( 'methods/apple-pay/method-apple-pay-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_apple_pay );
-
-		// Bancontact.
-		$payment_method_bancontact = new PaymentMethod( PaymentMethods::BANCONTACT );
-
-		$payment_method_bancontact->images = [
-			'woocommerce' => $image_service->get_path( 'methods/bancontact/method-bancontact-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_bancontact );
-
-		// Bank Transfer.
-		$payment_method_bank_transfer = new PaymentMethod( PaymentMethods::BANK_TRANSFER );
-
-		$payment_method_bank_transfer->images = [
-			'woocommerce' => $image_service->get_path( 'methods/bank-transfer/method-bank-transfer-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_bank_transfer );
-
-		// Belfius Direct Net.
-		$payment_method_belfius = new PaymentMethod( PaymentMethods::BELFIUS );
-
-		$payment_method_belfius->images = [
-			'woocommerce' => $image_service->get_path( 'methods/belfius/method-belfius-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_belfius );
-
-		// Billie.
-		$payment_method_billie = new PaymentMethod( PaymentMethods::BILLIE );
-
-		$payment_method_billie->images = [
-			'woocommerce' => $image_service->get_path( 'methods/billie/method-billie-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_billie );
-
-		// Billink.
-		$payment_method_billink = new PaymentMethod( PaymentMethods::BILLINK );
-
-		$payment_method_billie->images = [
-			'woocommerce' => $image_service->get_path( 'methods/billink/method-billink-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_billink );
-
-		// Bitcoin.
-		$payment_method_bitcoin = new PaymentMethod( PaymentMethods::BITCOIN );
-
-		$payment_method_bitcoin->images = [
-			'woocommerce' => $image_service->get_path( 'methods/bitcoin/method-bitcoin-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_bitcoin );
-
-		// BLIK.
-		$payment_method_blik = new PaymentMethod( PaymentMethods::BLIK );
-
-		$payment_method_blik->images = [
-			'woocommerce' => $image_service->get_path( 'methods/blik/method-blik-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_blik );
-
-		// Bunq.
-		$payment_method_bunq = new PaymentMethod( PaymentMethods::BUNQ );
-
-		$payment_method_bunq->images = [
-			'woocommerce' => $image_service->get_path( 'methods/bunq/method-bunq-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_bunq );
-
-		// In3.
-		$payment_method_in3 = new PaymentMethod( PaymentMethods::IN3 );
-
-		$payment_method_in3->descriptions = [
-			'customer' => \sprintf( $bnpl_disclaimer_template, $payment_method_in3->name ),
-		];
-
-		$payment_method_in3->images = [
-			'woocommerce' => $image_service->get_path( 'methods/in3/method-in3-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_in3 );
-
-		// Capayable.
-		$payment_method_capayable = new PaymentMethod( PaymentMethods::CAPAYABLE );
-
-		$payment_method_capayable->images = [];
-
-		$this->payment_methods->add( $payment_method_capayable );
-
-		// Card.
-		$payment_method_card = new PaymentMethod( PaymentMethods::CARD );
-
-		$payment_method_card->descriptions = [
-			'default' => \__( 'The most popular payment method in the world. Offers customers a safe and trusted way to pay online. Customers can pay for their order quickly and easily with their card, without having to worry about their security. It is possible to charge a payment surcharge for card costs.', 'pronamic_ideal' ),
-		];
-
-		$payment_method_card->images = [
-			'woocommerce' => $image_service->get_path( 'methods/credit-card/method-credit-card-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_card );
-
-		// Credit card.
-		$payment_method_credit_card = new PaymentMethod( PaymentMethods::CREDIT_CARD );
-
-		$payment_method_credit_card->descriptions = [
-			'default' => \__( 'The most popular payment method in the world. Offers customers a safe and trusted way to pay online. Customers can pay for their order quickly and easily with their credit card, without having to worry about their security. It is possible to charge a payment surcharge for credit card costs.', 'pronamic_ideal' ),
-		];
-
-		$payment_method_credit_card->images = [
-			'woocommerce' => $image_service->get_path( 'methods/credit-card/method-credit-card-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_credit_card );
-
-		// Direct debit.
-		$payment_method_direct_debit = new PaymentMethod( PaymentMethods::DIRECT_DEBIT );
-
-		$payment_method_direct_debit->images = [
-			'woocommerce' => $image_service->get_path( 'methods/direct-debit/method-direct-debit-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_direct_debit );
-
-		/* translators: %s: payment method */
-		$description_template = \__( 'By using this payment method you authorize us via %s to debit payments from your bank account.', 'pronamic_ideal' );
-
-		// Direct debit (mandate via Bancontact).
-		$payment_method_direct_debit_bancontact = new PaymentMethod( PaymentMethods::DIRECT_DEBIT_BANCONTACT );
-
-		$payment_method_direct_debit_bancontact->descriptions = [
-			'customer' => \sprintf( $description_template, $payment_method_direct_debit_bancontact->name ),
-		];
-
-		$payment_method_direct_debit_bancontact->images = [
-			'woocommerce' => $image_service->get_path( 'methods/direct-debit-bancontact/method-direct-debit-bancontact-wc-107x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_direct_debit_bancontact );
-
-		// Direct debit (mandate via Bancontact).
-		$payment_method_direct_debit_ideal = new PaymentMethod( PaymentMethods::DIRECT_DEBIT_IDEAL );
-
-		$payment_method_direct_debit_ideal->descriptions = [
-			'customer' => \sprintf( $description_template, $payment_method_direct_debit_ideal->name ),
-		];
-
-		$payment_method_direct_debit_ideal->images = [
-			'woocommerce' => $image_service->get_path( 'methods/direct-debit-ideal/method-direct-debit-ideal-wc-107x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_direct_debit_ideal );
-
-		// Direct debit (mandate via SOFORT).
-		$payment_method_direct_debit_sofort = new PaymentMethod( PaymentMethods::DIRECT_DEBIT_SOFORT );
-
-		$payment_method_direct_debit_sofort->descriptions = [
-			'customer' => \sprintf( $description_template, $payment_method_direct_debit_sofort->name ),
-		];
-
-		$payment_method_direct_debit_sofort->images = [
-			'woocommerce' => $image_service->get_path( 'methods/direct-debit-sofort/method-direct-debit-sofort-wc-107x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_direct_debit_sofort );
-
-		// EPS.
-		$payment_method_eps = new PaymentMethod( PaymentMethods::EPS );
-
-		$payment_method_eps->images = [
-			'woocommerce' => $image_service->get_path( 'methods/eps/method-eps-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_eps );
-
-		// Focum.
-		$payment_method_focum = new PaymentMethod( PaymentMethods::FOCUM );
-
-		$payment_method_eps->images = [
-			'woocommerce' => $image_service->get_path( 'methods/focum/method-focum-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_focum );
-
-		// IDEAL.
-		$payment_method_ideal = new PaymentMethod( PaymentMethods::IDEAL );
-
-		$payment_method_ideal->descriptions = [
-			'customer' => \__( 'With iDEAL you can easily pay online in the secure environment of your own bank.', 'pronamic_ideal' ),
-		];
-
-		$payment_method_ideal->images = [
-			'woocommerce' => $image_service->get_path( 'methods/ideal/method-ideal-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_ideal );
-
-		// IDEAL QR.
-		$payment_method_ideal_qr = new PaymentMethod( PaymentMethods::IDEALQR );
-
-		$payment_method_ideal_qr->images = [
-			'woocommerce' => $image_service->get_path( 'methods/ideal-qr/method-ideal-qr-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_ideal_qr );
-
-		// Giropay.
-		$payment_method_giropay = new PaymentMethod( PaymentMethods::GIROPAY );
-
-		$payment_method_giropay->images = [
-			'woocommerce' => $image_service->get_path( 'methods/giropay/method-giropay-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_giropay );
-
-		// Google Pay.
-		$payment_method_google_pay = new PaymentMethod( PaymentMethods::GOOGLE_PAY );
-
-		$payment_method_google_pay->images = [
-			'woocommerce' => $image_service->get_path( 'methods/google-pay/method-google-pay-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_google_pay );
-
-		// KBC/CBC Payment Button.
-		$payment_method_kbc = new PaymentMethod( PaymentMethods::KBC );
-
-		$payment_method_kbc->images = [
-			'woocommerce' => $image_service->get_path( 'methods/kbc/method-kbc-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_kbc );
-
-		// Klarna.
-		$payment_method_klarna = new PaymentMethod( PaymentMethods::KLARNA );
-
-		$payment_method_klarna->images = [
-			'woocommerce' => $image_service->get_path( 'methods/klarna/method-klarna-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_klarna );
-
-		// Klarna Pay Later.
-		$payment_method_klarna_pay_later = new PaymentMethod( PaymentMethods::KLARNA_PAY_LATER );
-
-		$payment_method_klarna_pay_later->images = [
-			'woocommerce' => $image_service->get_path( 'methods/klarna-pay-later/method-klarna-pay-later-wc-51x32.svg' ),
-		];
-
-		$payment_method_klarna_pay_later->descriptions = [
-			'customer' => \sprintf( $bnpl_disclaimer_template, $payment_method_klarna_pay_later->name ),
-		];
-
-		$this->payment_methods->add( $payment_method_klarna_pay_later );
-
-		// Klarna Pay Now.
-		$payment_method_klarna_pay_now = new PaymentMethod( PaymentMethods::KLARNA_PAY_NOW );
-
-		$payment_method_klarna_pay_now->images = [
-			'woocommerce' => $image_service->get_path( 'methods/klarna-pay-now/method-klarna-pay-now-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_klarna_pay_now );
-
-		// Klarna Pay Over Time.
-		$payment_method_klarna_pay_over_time = new PaymentMethod( PaymentMethods::KLARNA_PAY_OVER_TIME );
-
-		$payment_method_klarna_pay_over_time->images = [
-			'woocommerce' => $image_service->get_path( 'methods/klarna-pay-over-time/method-klarna-pay-over-time-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_klarna_pay_over_time );
-
-		// Maestro.
-		$payment_method_maestro = new PaymentMethod( PaymentMethods::MAESTRO );
-
-		$payment_method_maestro->images = [
-			'woocommerce' => $image_service->get_path( 'methods/maestro/method-maestro-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_maestro );
-
-		// Mastercard.
-		$payment_method_mastercard = new PaymentMethod( PaymentMethods::MASTERCARD );
-
-		$payment_method_mastercard->images = [
-			'woocommerce' => $image_service->get_path( 'methods/mastercard/method-mastercard-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_mastercard );
-
-		// MB WAY.
-		$payment_method_mb_way = new PaymentMethod( PaymentMethods::MB_WAY );
-
-		$payment_method_mb_way->images = [
-			'woocommerce' => $image_service->get_path( 'methods/mb-way/method-mb-way-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_mb_way );
-
-		// MyBank.
-		$payment_method_mybank = new PaymentMethod( PaymentMethods::MYBANK );
-
-		$this->payment_methods->add( $payment_method_mybank );
-
-		// Payconiq.
-		$payment_method_payconiq = new PaymentMethod( PaymentMethods::PAYCONIQ );
-
-		$payment_method_payconiq->images = [
-			'woocommerce' => $image_service->get_path( 'methods/payconiq/method-payconiq-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_payconiq );
-
-		// PayPal.
-		$payment_method_paypal = new PaymentMethod( PaymentMethods::PAYPAL );
-
-		$payment_method_paypal->images = [
-			'woocommerce' => $image_service->get_path( 'methods/paypal/method-paypal-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_paypal );
-
-		// Przelewy24.
-		$payment_method_przelewy24 = new PaymentMethod( PaymentMethods::PRZELEWY24 );
-
-		$payment_method_przelewy24->images = [
-			'woocommerce' => $image_service->get_path( 'methods/przelewy24/method-przelewy24-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_przelewy24 );
-
-		// Riverty.
-		$payment_method_riverty = new PaymentMethod( PaymentMethods::RIVERTY );
-
-		$payment_method_riverty->descriptions = [
-			'default'  => \__( 'Riverty (formerly AfterPay) is a payment service that allows customers to pay after receiving the product.', 'pronamic_ideal' ),
-			'customer' => \sprintf( $bnpl_disclaimer_template, $payment_method_riverty->name ),
-		];
-
-		$payment_method_riverty->images = [
-			'woocommerce' => $image_service->get_path( 'methods/riverty/method-riverty-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_riverty );
-
-		// Santander.
-		$payment_method_santander = new PaymentMethod( PaymentMethods::SANTANDER );
-
-		$payment_method_santander->images = [
-			'woocommerce' => $image_service->get_path( 'methods/santander/method-santander-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_santander );
-
-		// SOFORT Banking.
-		$payment_method_sofort = new PaymentMethod( PaymentMethods::SOFORT );
-
-		$payment_method_sofort->images = [
-			'woocommerce' => $image_service->get_path( 'methods/sofort/method-sofort-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_sofort );
-
-		// SprayPay.
-		$payment_method_spraypay = new PaymentMethod( PaymentMethods::SPRAYPAY );
-
-		$payment_method_spraypay->images = [
-			'woocommerce' => $image_service->get_path( 'methods/spraypay/method-spraypay-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_spraypay );
-
-		// Swish.
-		$payment_method_swish = new PaymentMethod( PaymentMethods::SWISH );
-
-		$payment_method_swish->images = [
-			'woocommerce' => $image_service->get_path( 'methods/swish/method-swish-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_swish );
-
-		// TWINT.
-		$payment_method_twint = new PaymentMethod( PaymentMethods::TWINT );
-
-		$payment_method_twint->images = [
-			'woocommerce' => $image_service->get_path( 'methods/twint/method-twint-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_twint );
-
-		// V PAY.
-		$payment_method_v_pay = new PaymentMethod( PaymentMethods::V_PAY );
-
-		$payment_method_v_pay->images = [
-			'woocommerce' => $image_service->get_path( 'methods/v-pay/method-v-pay-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_v_pay );
-
-		// Vipps.
-		$payment_method_vipps = new PaymentMethod( PaymentMethods::VIPPS );
-
-		$payment_method_vipps->images = [
-			'woocommerce' => $image_service->get_path( 'methods/vipps/method-vipps-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_vipps );
-
-		// Visa.
-		$payment_method_visa = new PaymentMethod( PaymentMethods::VISA );
-
-		$payment_method_visa->images = [
-			'woocommerce' => $image_service->get_path( 'methods/visa/method-visa-wc-51x32.svg' ),
-		];
-
-		$this->payment_methods->add( $payment_method_visa );
 	}
 
 	/**
@@ -1105,42 +600,6 @@ class Plugin {
 		foreach ( $controllers as $controller ) {
 			$controller->setup();
 		}
-
-		$gateways = [];
-
-		/**
-		 * Filters the gateway integrations.
-		 *
-		 * @param AbstractGatewayIntegration[] $gateways Gateway integrations.
-		 */
-		$gateways = apply_filters( 'pronamic_pay_gateways', $gateways );
-
-		$this->gateway_integrations = new GatewayIntegrations( $gateways );
-
-		foreach ( $this->gateway_integrations as $integration ) {
-			$integration->setup();
-		}
-
-		$plugin_integrations = [];
-
-		/**
-		 * Filters the plugin integrations.
-		 *
-		 * @param AbstractPluginIntegration[] $plugin_integrations Plugin integrations.
-		 */
-		$this->plugin_integrations = apply_filters( 'pronamic_pay_plugin_integrations', $plugin_integrations );
-
-		foreach ( $this->plugin_integrations as $integration ) {
-			$integration->setup();
-		}
-
-		// Integrations.
-		$gateway_integrations = \iterator_to_array( $this->gateway_integrations );
-
-		$this->integrations = array_merge( $gateway_integrations, $this->plugin_integrations );
-
-		// Maybes.
-		PaymentMethods::maybe_update_active_payment_methods();
 
 		// Filters.
 		\add_filter( 'pronamic_payment_redirect_url', [ $this, 'payment_redirect_url' ], 10, 2 );
@@ -1712,5 +1171,557 @@ class Plugin {
 		}
 
 		return (bool) $value;
+	}
+
+	/**
+	 * Register integrations.
+	 *
+	 * @return void
+	 */
+	public function register_integrations(): void {
+		$gateways = [];
+
+		/**
+		 * Filters the gateway integrations.
+		 *
+		 * @param AbstractGatewayIntegration[] $gateways Gateway integrations.
+		 */
+		$gateways = apply_filters( 'pronamic_pay_gateways', $gateways );
+
+		$this->gateway_integrations = new GatewayIntegrations( $gateways );
+
+		foreach ( $this->gateway_integrations as $integration ) {
+			$integration->setup();
+		}
+
+		$plugin_integrations = [];
+
+		/**
+		 * Filters the plugin integrations.
+		 *
+		 * @param AbstractPluginIntegration[] $plugin_integrations Plugin integrations.
+		 */
+		$this->plugin_integrations = apply_filters( 'pronamic_pay_plugin_integrations', $plugin_integrations );
+
+		foreach ( $this->plugin_integrations as $integration ) {
+			$integration->setup();
+		}
+
+		// Integrations.
+		$gateway_integrations = \iterator_to_array( $this->gateway_integrations );
+
+		$this->integrations = array_merge( $gateway_integrations, $this->plugin_integrations );
+
+		// Maybes.
+		PaymentMethods::maybe_update_active_payment_methods();
+	}
+
+	/**
+	 * Register payment methods.
+	 *
+	 * @return void
+	 */
+	public function register_payment_methods(): void {
+		/**
+		 * Pronamic Pay logos.
+		 *
+		 * @link https://github.com/pronamic/wp-pay-logos
+		 */
+		$image_service = new ImageService();
+
+		/**
+		 * Get Buy Now, Pay Later disclaimer.
+		 *
+		 * @link https://github.com/pronamic/pronamic-pay/issues/70
+		 * @param string $provider Provider.
+		 * @return string
+		 */
+		/* translators: %s: provider */
+		$bnpl_disclaimer_template = \__( 'You must be at least 18+ to use this service. If you pay on time, you will avoid additional costs and ensure that you can use %s services again in the future. By continuing, you accept the Terms and Conditions and confirm that you have read the Privacy Statement and Cookie Statement.', 'pronamic-ideal' );
+
+		// AfterPay.nl.
+		$payment_method_afterpay_nl = new PaymentMethod(PaymentMethods::AFTERPAY_NL);
+
+		$payment_method_afterpay_nl->descriptions = [
+			/**
+			 * AfterPay method description.
+			 *
+			 * @link https://www.afterpay.nl/en/customers/where-can-i-pay-with-afterpay
+			 */
+			'default' => \__('AfterPay is one of the largest and most popular post-payment system in the Benelux. Millions of Dutch and Belgians use AfterPay to pay for products.', 'pronamic_ideal'),
+		];
+
+		$payment_method_afterpay_nl->images = [
+			'woocommerce' => $image_service->get_path('methods/afterpay-nl/method-afterpay-nl-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_afterpay_nl);
+
+		// AfterPay.com.
+		$payment_method_afterpay_com = new PaymentMethod(PaymentMethods::AFTERPAY_COM);
+
+		$payment_method_afterpay_com->descriptions = [
+			/**
+			 * Afterpay method description.
+			 *
+			 * @link https://en.wikipedia.org/wiki/Afterpay
+			 * @link https://docs.adyen.com/payment-methods/afterpaytouch
+			 */
+			'default' => \__('Afterpay is a popular buy now, pay later service in Australia, New Zealand, the United States, and Canada.', 'pronamic_ideal'),
+		];
+
+		$payment_method_afterpay_com->images = [
+			'woocommerce' => $image_service->get_path('methods/afterpay-com/method-afterpay-com-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_afterpay_com);
+
+		// Alipay.
+		$payment_method_alipay = new PaymentMethod(PaymentMethods::ALIPAY);
+
+		$payment_method_alipay->images = [
+			'woocommerce' => $image_service->get_path('methods/alipay/method-alipay-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_alipay);
+
+		// American Express.
+		$payment_method_american_express = new PaymentMethod(PaymentMethods::AMERICAN_EXPRESS);
+
+		$payment_method_american_express->images = [
+			'woocommerce' => $image_service->get_path('methods/american-express/method-american-express-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_american_express);
+
+		// Apple Pay.
+		$payment_method_apple_pay = new PaymentMethod(PaymentMethods::APPLE_PAY);
+
+		$payment_method_apple_pay->images = [
+			'woocommerce' => $image_service->get_path('methods/apple-pay/method-apple-pay-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_apple_pay);
+
+		// Bancontact.
+		$payment_method_bancontact = new PaymentMethod(PaymentMethods::BANCONTACT);
+
+		$payment_method_bancontact->images = [
+			'woocommerce' => $image_service->get_path('methods/bancontact/method-bancontact-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_bancontact);
+
+		// Bank Transfer.
+		$payment_method_bank_transfer = new PaymentMethod(PaymentMethods::BANK_TRANSFER);
+
+		$payment_method_bank_transfer->images = [
+			'woocommerce' => $image_service->get_path('methods/bank-transfer/method-bank-transfer-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_bank_transfer);
+
+		// Belfius Direct Net.
+		$payment_method_belfius = new PaymentMethod(PaymentMethods::BELFIUS);
+
+		$payment_method_belfius->images = [
+			'woocommerce' => $image_service->get_path('methods/belfius/method-belfius-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_belfius);
+
+		// Billie.
+		$payment_method_billie = new PaymentMethod(PaymentMethods::BILLIE);
+
+		$payment_method_billie->images = [
+			'woocommerce' => $image_service->get_path('methods/billie/method-billie-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_billie);
+
+		// Billink.
+		$payment_method_billink = new PaymentMethod(PaymentMethods::BILLINK);
+
+		$payment_method_billie->images = [
+			'woocommerce' => $image_service->get_path('methods/billink/method-billink-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_billink);
+
+		// Bitcoin.
+		$payment_method_bitcoin = new PaymentMethod(PaymentMethods::BITCOIN);
+
+		$payment_method_bitcoin->images = [
+			'woocommerce' => $image_service->get_path('methods/bitcoin/method-bitcoin-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_bitcoin);
+
+		// BLIK.
+		$payment_method_blik = new PaymentMethod(PaymentMethods::BLIK);
+
+		$payment_method_blik->images = [
+			'woocommerce' => $image_service->get_path('methods/blik/method-blik-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_blik);
+
+		// Bunq.
+		$payment_method_bunq = new PaymentMethod(PaymentMethods::BUNQ);
+
+		$payment_method_bunq->images = [
+			'woocommerce' => $image_service->get_path('methods/bunq/method-bunq-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_bunq);
+
+		// In3.
+		$payment_method_in3 = new PaymentMethod(PaymentMethods::IN3);
+
+		$payment_method_in3->descriptions = [
+			'customer' => \sprintf($bnpl_disclaimer_template, $payment_method_in3->name),
+		];
+
+		$payment_method_in3->images = [
+			'woocommerce' => $image_service->get_path('methods/in3/method-in3-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_in3);
+
+		// Capayable.
+		$payment_method_capayable = new PaymentMethod(PaymentMethods::CAPAYABLE);
+
+		$payment_method_capayable->images = [];
+
+		$this->payment_methods->add($payment_method_capayable);
+
+		// Card.
+		$payment_method_card = new PaymentMethod(PaymentMethods::CARD);
+
+		$payment_method_card->descriptions = [
+			'default' => \__('The most popular payment method in the world. Offers customers a safe and trusted way to pay online. Customers can pay for their order quickly and easily with their card, without having to worry about their security. It is possible to charge a payment surcharge for card costs.', 'pronamic_ideal'),
+		];
+
+		$payment_method_card->images = [
+			'woocommerce' => $image_service->get_path('methods/credit-card/method-credit-card-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_card);
+
+		// Credit card.
+		$payment_method_credit_card = new PaymentMethod(PaymentMethods::CREDIT_CARD);
+
+		$payment_method_credit_card->descriptions = [
+			'default' => \__('The most popular payment method in the world. Offers customers a safe and trusted way to pay online. Customers can pay for their order quickly and easily with their credit card, without having to worry about their security. It is possible to charge a payment surcharge for credit card costs.', 'pronamic_ideal'),
+		];
+
+		$payment_method_credit_card->images = [
+			'woocommerce' => $image_service->get_path('methods/credit-card/method-credit-card-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_credit_card);
+
+		// Direct debit.
+		$payment_method_direct_debit = new PaymentMethod(PaymentMethods::DIRECT_DEBIT);
+
+		$payment_method_direct_debit->images = [
+			'woocommerce' => $image_service->get_path('methods/direct-debit/method-direct-debit-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_direct_debit);
+
+		/* translators: %s: payment method */
+		$description_template = \__('By using this payment method you authorize us via %s to debit payments from your bank account.', 'pronamic_ideal');
+
+		// Direct debit (mandate via Bancontact).
+		$payment_method_direct_debit_bancontact = new PaymentMethod(PaymentMethods::DIRECT_DEBIT_BANCONTACT);
+
+		$payment_method_direct_debit_bancontact->descriptions = [
+			'customer' => \sprintf($description_template, $payment_method_direct_debit_bancontact->name),
+		];
+
+		$payment_method_direct_debit_bancontact->images = [
+			'woocommerce' => $image_service->get_path('methods/direct-debit-bancontact/method-direct-debit-bancontact-wc-107x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_direct_debit_bancontact);
+
+		// Direct debit (mandate via Bancontact).
+		$payment_method_direct_debit_ideal = new PaymentMethod(PaymentMethods::DIRECT_DEBIT_IDEAL);
+
+		$payment_method_direct_debit_ideal->descriptions = [
+			'customer' => \sprintf($description_template, $payment_method_direct_debit_ideal->name),
+		];
+
+		$payment_method_direct_debit_ideal->images = [
+			'woocommerce' => $image_service->get_path('methods/direct-debit-ideal/method-direct-debit-ideal-wc-107x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_direct_debit_ideal);
+
+		// Direct debit (mandate via SOFORT).
+		$payment_method_direct_debit_sofort = new PaymentMethod(PaymentMethods::DIRECT_DEBIT_SOFORT);
+
+		$payment_method_direct_debit_sofort->descriptions = [
+			'customer' => \sprintf($description_template, $payment_method_direct_debit_sofort->name),
+		];
+
+		$payment_method_direct_debit_sofort->images = [
+			'woocommerce' => $image_service->get_path('methods/direct-debit-sofort/method-direct-debit-sofort-wc-107x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_direct_debit_sofort);
+
+		// EPS.
+		$payment_method_eps = new PaymentMethod(PaymentMethods::EPS);
+
+		$payment_method_eps->images = [
+			'woocommerce' => $image_service->get_path('methods/eps/method-eps-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_eps);
+
+		// Focum.
+		$payment_method_focum = new PaymentMethod(PaymentMethods::FOCUM);
+
+		$payment_method_eps->images = [
+			'woocommerce' => $image_service->get_path('methods/focum/method-focum-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_focum);
+
+		// IDEAL.
+		$payment_method_ideal = new PaymentMethod(PaymentMethods::IDEAL);
+
+		$payment_method_ideal->descriptions = [
+			'customer' => \__('With iDEAL you can easily pay online in the secure environment of your own bank.', 'pronamic_ideal'),
+		];
+
+		$payment_method_ideal->images = [
+			'woocommerce' => $image_service->get_path('methods/ideal/method-ideal-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_ideal);
+
+		// IDEAL QR.
+		$payment_method_ideal_qr = new PaymentMethod(PaymentMethods::IDEALQR);
+
+		$payment_method_ideal_qr->images = [
+			'woocommerce' => $image_service->get_path('methods/ideal-qr/method-ideal-qr-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_ideal_qr);
+
+		// Giropay.
+		$payment_method_giropay = new PaymentMethod(PaymentMethods::GIROPAY);
+
+		$payment_method_giropay->images = [
+			'woocommerce' => $image_service->get_path('methods/giropay/method-giropay-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_giropay);
+
+		// Google Pay.
+		$payment_method_google_pay = new PaymentMethod(PaymentMethods::GOOGLE_PAY);
+
+		$payment_method_google_pay->images = [
+			'woocommerce' => $image_service->get_path('methods/google-pay/method-google-pay-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_google_pay);
+
+		// KBC/CBC Payment Button.
+		$payment_method_kbc = new PaymentMethod(PaymentMethods::KBC);
+
+		$payment_method_kbc->images = [
+			'woocommerce' => $image_service->get_path('methods/kbc/method-kbc-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_kbc);
+
+		// Klarna.
+		$payment_method_klarna = new PaymentMethod(PaymentMethods::KLARNA);
+
+		$payment_method_klarna->images = [
+			'woocommerce' => $image_service->get_path('methods/klarna/method-klarna-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_klarna);
+
+		// Klarna Pay Later.
+		$payment_method_klarna_pay_later = new PaymentMethod(PaymentMethods::KLARNA_PAY_LATER);
+
+		$payment_method_klarna_pay_later->images = [
+			'woocommerce' => $image_service->get_path('methods/klarna-pay-later/method-klarna-pay-later-wc-51x32.svg'),
+		];
+
+		$payment_method_klarna_pay_later->descriptions = [
+			'customer' => \sprintf($bnpl_disclaimer_template, $payment_method_klarna_pay_later->name),
+		];
+
+		$this->payment_methods->add($payment_method_klarna_pay_later);
+
+		// Klarna Pay Now.
+		$payment_method_klarna_pay_now = new PaymentMethod(PaymentMethods::KLARNA_PAY_NOW);
+
+		$payment_method_klarna_pay_now->images = [
+			'woocommerce' => $image_service->get_path('methods/klarna-pay-now/method-klarna-pay-now-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_klarna_pay_now);
+
+		// Klarna Pay Over Time.
+		$payment_method_klarna_pay_over_time = new PaymentMethod(PaymentMethods::KLARNA_PAY_OVER_TIME);
+
+		$payment_method_klarna_pay_over_time->images = [
+			'woocommerce' => $image_service->get_path('methods/klarna-pay-over-time/method-klarna-pay-over-time-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_klarna_pay_over_time);
+
+		// Maestro.
+		$payment_method_maestro = new PaymentMethod(PaymentMethods::MAESTRO);
+
+		$payment_method_maestro->images = [
+			'woocommerce' => $image_service->get_path('methods/maestro/method-maestro-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_maestro);
+
+		// Mastercard.
+		$payment_method_mastercard = new PaymentMethod(PaymentMethods::MASTERCARD);
+
+		$payment_method_mastercard->images = [
+			'woocommerce' => $image_service->get_path('methods/mastercard/method-mastercard-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_mastercard);
+
+		// MB WAY.
+		$payment_method_mb_way = new PaymentMethod(PaymentMethods::MB_WAY);
+
+		$payment_method_mb_way->images = [
+			'woocommerce' => $image_service->get_path('methods/mb-way/method-mb-way-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_mb_way);
+
+		// MyBank.
+		$payment_method_mybank = new PaymentMethod(PaymentMethods::MYBANK);
+
+		$this->payment_methods->add($payment_method_mybank);
+
+		// Payconiq.
+		$payment_method_payconiq = new PaymentMethod(PaymentMethods::PAYCONIQ);
+
+		$payment_method_payconiq->images = [
+			'woocommerce' => $image_service->get_path('methods/payconiq/method-payconiq-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_payconiq);
+
+		// PayPal.
+		$payment_method_paypal = new PaymentMethod(PaymentMethods::PAYPAL);
+
+		$payment_method_paypal->images = [
+			'woocommerce' => $image_service->get_path('methods/paypal/method-paypal-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_paypal);
+
+		// Przelewy24.
+		$payment_method_przelewy24 = new PaymentMethod(PaymentMethods::PRZELEWY24);
+
+		$payment_method_przelewy24->images = [
+			'woocommerce' => $image_service->get_path('methods/przelewy24/method-przelewy24-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_przelewy24);
+
+		// Riverty.
+		$payment_method_riverty = new PaymentMethod(PaymentMethods::RIVERTY);
+
+		$payment_method_riverty->descriptions = [
+			'default' => \__('Riverty (formerly AfterPay) is a payment service that allows customers to pay after receiving the product.', 'pronamic_ideal'),
+			'customer' => \sprintf($bnpl_disclaimer_template, $payment_method_riverty->name),
+		];
+
+		$payment_method_riverty->images = [
+			'woocommerce' => $image_service->get_path('methods/riverty/method-riverty-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_riverty);
+
+		// Santander.
+		$payment_method_santander = new PaymentMethod(PaymentMethods::SANTANDER);
+
+		$payment_method_santander->images = [
+			'woocommerce' => $image_service->get_path('methods/santander/method-santander-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_santander);
+
+		// SOFORT Banking.
+		$payment_method_sofort = new PaymentMethod(PaymentMethods::SOFORT);
+
+		$payment_method_sofort->images = [
+			'woocommerce' => $image_service->get_path('methods/sofort/method-sofort-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_sofort);
+
+		// SprayPay.
+		$payment_method_spraypay = new PaymentMethod(PaymentMethods::SPRAYPAY);
+
+		$payment_method_spraypay->images = [
+			'woocommerce' => $image_service->get_path('methods/spraypay/method-spraypay-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_spraypay);
+
+		// Swish.
+		$payment_method_swish = new PaymentMethod(PaymentMethods::SWISH);
+
+		$payment_method_swish->images = [
+			'woocommerce' => $image_service->get_path('methods/swish/method-swish-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_swish);
+
+		// TWINT.
+		$payment_method_twint = new PaymentMethod(PaymentMethods::TWINT);
+
+		$payment_method_twint->images = [
+			'woocommerce' => $image_service->get_path('methods/twint/method-twint-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_twint);
+
+		// V PAY.
+		$payment_method_v_pay = new PaymentMethod(PaymentMethods::V_PAY);
+
+		$payment_method_v_pay->images = [
+			'woocommerce' => $image_service->get_path('methods/v-pay/method-v-pay-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_v_pay);
+
+		// Vipps.
+		$payment_method_vipps = new PaymentMethod(PaymentMethods::VIPPS);
+
+		$payment_method_vipps->images = [
+			'woocommerce' => $image_service->get_path('methods/vipps/method-vipps-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_vipps);
+
+		// Visa.
+		$payment_method_visa = new PaymentMethod(PaymentMethods::VISA);
+
+		$payment_method_visa->images = [
+			'woocommerce' => $image_service->get_path('methods/visa/method-visa-wc-51x32.svg'),
+		];
+
+		$this->payment_methods->add($payment_method_visa);
 	}
 }
