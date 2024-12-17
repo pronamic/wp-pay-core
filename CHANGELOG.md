@@ -6,6 +6,18 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.24.0] - 2024-12-17
+
+### Commits
+
+- Also allow `CachedCallbackOptions` as select field options. ([f14c2ec](https://github.com/pronamic/wp-pay-core/commit/f14c2ecad4542f788f5683d01b9bba1b8d463da7))
+- Show license admin notice only on dashboard and Pronamic Pay pages. ([eff26a4](https://github.com/pronamic/wp-pay-core/commit/eff26a47e6c5a1e6759ff8fbf7db652d0d45dde4))
+- Prevent payments for subscription payment method changes from updating subscription status. ([cfccc0b](https://github.com/pronamic/wp-pay-core/commit/cfccc0b893f7a1fdaa2ea7cfeccd6637b90171d1))
+
+Full set of changes: [`4.23.0...4.24.0`][4.24.0]
+
+[4.24.0]: https://github.com/pronamic/wp-pay-core/compare/v4.23.0...v4.24.0
+
 ## [4.23.0] - 2024-10-18
 
 ### Commits
