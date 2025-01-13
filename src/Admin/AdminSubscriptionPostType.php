@@ -512,13 +512,11 @@ class AdminSubscriptionPostType {
 			case 'pronamic_subscription_next_payment':
 				$next_payment_date = $subscription->get_next_payment_date();
 
-				if ( SubscriptionStatus::ACTIVE === $subscription->get_status() ) {
-					echo empty( $next_payment_date ) ? '—' : esc_html( $next_payment_date->format_i18n( \__( 'D j M Y', 'pronamic_ideal' ) ) );
+				if ( SubscriptionStatus::ACTIVE !== $subscription->get_status() ) {
+					$next_payment_date = null;
 				}
 
-				if ( SubscriptionStatus::ACTIVE !== $subscription->get_status() ) {
-					echo '—';
-				}
+				echo empty( $next_payment_date ) ? '—' : esc_html( $next_payment_date->format_i18n( \__( 'D j M Y', 'pronamic_ideal' ) ) );
 
 				break;
 			case 'pronamic_subscription_date':
