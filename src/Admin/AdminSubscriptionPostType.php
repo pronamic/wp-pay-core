@@ -15,6 +15,7 @@ use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPeriod;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
+use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
 use Pronamic\WordPress\Pay\Util;
 use WP_Post;
 use WP_Query;
@@ -511,7 +512,13 @@ class AdminSubscriptionPostType {
 			case 'pronamic_subscription_next_payment':
 				$next_payment_date = $subscription->get_next_payment_date();
 
-				echo empty( $next_payment_date ) ? '—' : esc_html( $next_payment_date->format_i18n( \__( 'D j M Y', 'pronamic_ideal' ) ) );
+				if ( SubscriptionStatus::ACTIVE === $subscription->get_status() ) {
+					echo empty( $next_payment_date ) ? '—' : esc_html( $next_payment_date->format_i18n( \__( 'D j M Y', 'pronamic_ideal' ) ) );
+				}
+
+				if ( SubscriptionStatus::ACTIVE !== $subscription->get_status() ) {
+					echo '—';
+				}
 
 				break;
 			case 'pronamic_subscription_date':
