@@ -264,7 +264,10 @@ class Plugin {
 		// Integrations.
 		$this->integrations = [];
 
+		$this->payment_methods = new PaymentMethodsCollection();
+
 		add_action( 'plugins_loaded', [ $this, 'plugins_loaded' ], 0 );
+		add_action( 'init', [ $this, 'register_payment_methods' ], 0 );
 
 		// Register styles.
 		add_action( 'init', [ $this, 'register_styles' ], 9 );
@@ -293,7 +296,358 @@ class Plugin {
 		}
 
 		require_once $args['action_scheduler'];
+	}
 
+	/**
+	 * Get payment methods.
+	 *
+	 * @param array $args Query arguments.
+	 * @return PaymentMethodsCollection
+	 */
+	public function get_payment_methods( $args = [] ) {
+		return $this->payment_methods->query( $args );
+	}
+
+	/**
+	 * Get the version number of this plugin.
+	 *
+	 * @return string The version number of this plugin.
+	 */
+	public function get_version() {
+		return $this->version;
+	}
+
+	/**
+	 * Get plugin file path.
+	 *
+	 * @return string
+	 */
+	public function get_file() {
+		return self::$file;
+	}
+
+	/**
+	 * Get option.
+	 *
+	 * @param string $option Name of option to retrieve.
+	 * @return string|null
+	 */
+	public function get_option( $option ) {
+		if ( array_key_exists( $option, $this->options ) ) {
+			return $this->options[ $option ];
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get the plugin dir path.
+	 *
+	 * @return string
+	 */
+	public function get_plugin_dir_path() {
+		return plugin_dir_path( $this->get_file() );
+	}
+
+	/**
+	 * Update payment.
+	 *
+	 * @param Payment $payment      The payment to update.
+	 * @param bool    $can_redirect Flag to indicate if redirect is allowed after the payment update.
+	 * @return void
+	 */
+	public static function update_payment( $payment = null, $can_redirect = true ) {
+		if ( empty( $payment ) ) {
+			return;
+		}
+
+		// Gateway.
+		$gateway = $payment->get_gateway();
+
+		if ( null === $gateway ) {
+			return;
+		}
+
+		// Update status.
+		try {
+			$gateway->update_status( $payment );
+
+			// Update payment in data store.
+			$payment->save();
+		} catch ( \Exception $error ) {
+			$message = $error->getMessage();
+
+			// Maybe include error code in message.
+			$code = $error->getCode();
+
+			if ( $code > 0 ) {
+				$message = \sprintf( '%s: %s', $code, $message );
+			}
+
+			// Add note.
+			$payment->add_note( $message );
+		}
+
+		// Maybe redirect.
+		if ( ! $can_redirect ) {
+			return;
+		}
+
+		/*
+		 * If WordPress is doing cron we can't redirect.
+		 *
+		 * @link https://github.com/pronamic/wp-pronamic-ideal/commit/bb967a3e7804ecfbd83dea110eb8810cbad097d7
+		 * @link https://github.com/pronamic/wp-pronamic-ideal/commit/3ab4a7c1fc2cef0b6f565f8205da42aa1203c3c5
+		 */
+		if ( \wp_doing_cron() ) {
+			return;
+		}
+
+		/*
+		 * If WordPress CLI is running we can't redirect.
+		 *
+		 * @link https://basecamp.com/1810084/projects/10966871/todos/346407847
+		 * @link https://github.com/woocommerce/woocommerce/blob/3.5.3/includes/class-woocommerce.php#L381-L383
+		 */
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			return;
+		}
+
+		// Redirect.
+		$url = $payment->get_return_redirect_url();
+
+		wp_redirect( $url );
+
+		exit;
+	}
+
+	/**
+	 * Handle returns.
+	 *
+	 * @return void
+	 */
+	public function handle_returns() {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		if (
+			! \array_key_exists( 'payment', $_GET )
+				||
+			! \array_key_exists( 'key', $_GET )
+		) {
+			return;
+		}
+
+		$payment_id = (int) $_GET['payment'];
+
+		$payment = get_pronamic_payment( $payment_id );
+
+		if ( null === $payment ) {
+			return;
+		}
+
+		// Check if payment key is valid.
+		$key = \sanitize_text_field( \wp_unslash( $_GET['key'] ) );
+
+		if ( $key !== $payment->key ) {
+			wp_safe_redirect( home_url() );
+
+			exit;
+		}
+
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+		// Check if we should redirect.
+		$should_redirect = true;
+
+		/**
+		 * Filter whether or not to allow redirects on payment return.
+		 *
+		 * @param bool    $should_redirect Flag to indicate if redirect is allowed on handling payment return.
+		 * @param Payment $payment         Payment.
+		 */
+		$should_redirect = apply_filters( 'pronamic_pay_return_should_redirect', $should_redirect, $payment );
+
+		try {
+			self::update_payment( $payment, $should_redirect );
+		} catch ( \Exception $e ) {
+			self::render_exception( $e );
+
+			exit;
+		}
+	}
+
+	/**
+	 * Maybe redirect.
+	 *
+	 * @return void
+	 */
+	public function maybe_redirect() {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		if ( ! \array_key_exists( 'payment_redirect', $_GET ) || ! \array_key_exists( 'key', $_GET ) ) {
+			return;
+		}
+
+		// Get payment.
+		$payment_id = (int) $_GET['payment_redirect'];
+
+		$payment = get_pronamic_payment( $payment_id );
+
+		if ( null === $payment ) {
+			return;
+		}
+
+		// Validate key.
+		$key = \sanitize_text_field( \wp_unslash( $_GET['key'] ) );
+
+		if ( $key !== $payment->key || empty( $payment->key ) ) {
+			return;
+		}
+
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+		Core_Util::no_cache();
+
+		$gateway = $payment->get_gateway();
+
+		if ( null !== $gateway ) {
+			// Give gateway a chance to handle redirect.
+			$gateway->payment_redirect( $payment );
+
+			// Handle HTML form redirect.
+			if ( $gateway->is_html_form() ) {
+				$gateway->redirect( $payment );
+			}
+		}
+
+		// Redirect to payment action URL.
+		$action_url = $payment->get_action_url();
+
+		if ( ! empty( $action_url ) ) {
+			wp_redirect( $action_url );
+
+			exit;
+		}
+	}
+
+	/**
+	 * Get number payments.
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/wp_count_posts/
+	 *
+	 * @return int|false
+	 */
+	public static function get_number_payments() {
+		$number = false;
+
+		$count = wp_count_posts( 'pronamic_payment' );
+
+		if ( isset( $count->payment_completed ) ) {
+			$number = intval( $count->payment_completed );
+		}
+
+		return $number;
+	}
+
+	/**
+	 * Plugins loaded.
+	 *
+	 * @link https://developer.wordpress.org/reference/hooks/plugins_loaded/
+	 * @return void
+	 */
+	public function plugins_loaded() {
+		// Settings.
+		$this->settings = new Settings( $this );
+
+		// Data Stores.
+		$this->gateways_data_store      = new GatewaysDataStoreCPT();
+		$this->payments_data_store      = new PaymentsDataStoreCPT();
+		$this->subscriptions_data_store = new SubscriptionsDataStoreCPT();
+
+		// Post Types.
+		$this->gateway_post_type      = new GatewayPostType();
+		$this->payment_post_type      = new PaymentPostType();
+		$this->subscription_post_type = new SubscriptionPostType();
+
+		// Privacy Manager.
+		$this->privacy_manager = new PrivacyManager();
+
+		// Webhook Logger.
+		$this->webhook_logger = new WebhookLogger();
+		$this->webhook_logger->setup();
+
+		// Modules.
+		$this->payments_module      = new Payments\PaymentsModule( $this );
+		$this->subscriptions_module = new Subscriptions\SubscriptionsModule( $this );
+		$this->tracking_module      = new TrackingModule();
+
+		// Blocks module.
+		if ( function_exists( 'register_block_type' ) ) {
+			$this->blocks_module = new Blocks\BlocksModule();
+			$this->blocks_module->setup();
+		}
+
+		// Admin.
+		if ( is_admin() ) {
+			$this->admin = new Admin\AdminModule( $this );
+		}
+
+		new Admin\Install( $this );
+
+		$controllers = [
+			new PagesController(),
+			new HomeUrlController(),
+			new ActionSchedulerController(),
+		];
+
+		foreach ( $controllers as $controller ) {
+			$controller->setup();
+		}
+
+		$gateways = [];
+
+		/**
+		 * Filters the gateway integrations.
+		 *
+		 * @param AbstractGatewayIntegration[] $gateways Gateway integrations.
+		 */
+		$gateways = apply_filters( 'pronamic_pay_gateways', $gateways );
+
+		$this->gateway_integrations = new GatewayIntegrations( $gateways );
+
+		foreach ( $this->gateway_integrations as $integration ) {
+			$integration->setup();
+		}
+
+		$plugin_integrations = [];
+
+		/**
+		 * Filters the plugin integrations.
+		 *
+		 * @param AbstractPluginIntegration[] $plugin_integrations Plugin integrations.
+		 */
+		$this->plugin_integrations = apply_filters( 'pronamic_pay_plugin_integrations', $plugin_integrations );
+
+		foreach ( $this->plugin_integrations as $integration ) {
+			$integration->setup();
+		}
+
+		// Integrations.
+		$gateway_integrations = \iterator_to_array( $this->gateway_integrations );
+
+		$this->integrations = array_merge( $gateway_integrations, $this->plugin_integrations );
+
+		// Filters.
+		\add_filter( 'pronamic_payment_redirect_url', [ $this, 'payment_redirect_url' ], 10, 2 );
+
+		// Actions.
+		\add_action( 'pronamic_pay_pre_create_payment', [ __CLASS__, 'complement_payment' ], 10, 1 );
+	}
+
+	/**
+	 * Register payment methods.
+	 *
+	 * @return void
+	 */
+	public function register_payment_methods(): void {
 		/**
 		 * Pronamic Pay logos.
 		 *
@@ -310,11 +664,6 @@ class Plugin {
 		 */
 		/* translators: %s: provider */
 		$bnpl_disclaimer_template = \__( 'You must be at least 18+ to use this service. If you pay on time, you will avoid additional costs and ensure that you can use %s services again in the future. By continuing, you accept the Terms and Conditions and confirm that you have read the Privacy Statement and Cookie Statement.', 'pronamic_ideal' );
-
-		/**
-		 * Payment methods.
-		 */
-		$this->payment_methods = new PaymentMethodsCollection();
 
 		// AfterPay.nl.
 		$payment_method_afterpay_nl = new PaymentMethod( PaymentMethods::AFTERPAY_NL );
@@ -800,353 +1149,8 @@ class Plugin {
 		];
 
 		$this->payment_methods->add( $payment_method_visa );
-	}
 
-	/**
-	 * Get payment methods.
-	 *
-	 * @param array $args Query arguments.
-	 * @return PaymentMethodsCollection
-	 */
-	public function get_payment_methods( $args = [] ) {
-		return $this->payment_methods->query( $args );
-	}
-
-	/**
-	 * Get the version number of this plugin.
-	 *
-	 * @return string The version number of this plugin.
-	 */
-	public function get_version() {
-		return $this->version;
-	}
-
-	/**
-	 * Get plugin file path.
-	 *
-	 * @return string
-	 */
-	public function get_file() {
-		return self::$file;
-	}
-
-	/**
-	 * Get option.
-	 *
-	 * @param string $option Name of option to retrieve.
-	 * @return string|null
-	 */
-	public function get_option( $option ) {
-		if ( array_key_exists( $option, $this->options ) ) {
-			return $this->options[ $option ];
-		}
-
-		return null;
-	}
-
-	/**
-	 * Get the plugin dir path.
-	 *
-	 * @return string
-	 */
-	public function get_plugin_dir_path() {
-		return plugin_dir_path( $this->get_file() );
-	}
-
-	/**
-	 * Update payment.
-	 *
-	 * @param Payment $payment      The payment to update.
-	 * @param bool    $can_redirect Flag to indicate if redirect is allowed after the payment update.
-	 * @return void
-	 */
-	public static function update_payment( $payment = null, $can_redirect = true ) {
-		if ( empty( $payment ) ) {
-			return;
-		}
-
-		// Gateway.
-		$gateway = $payment->get_gateway();
-
-		if ( null === $gateway ) {
-			return;
-		}
-
-		// Update status.
-		try {
-			$gateway->update_status( $payment );
-
-			// Update payment in data store.
-			$payment->save();
-		} catch ( \Exception $error ) {
-			$message = $error->getMessage();
-
-			// Maybe include error code in message.
-			$code = $error->getCode();
-
-			if ( $code > 0 ) {
-				$message = \sprintf( '%s: %s', $code, $message );
-			}
-
-			// Add note.
-			$payment->add_note( $message );
-		}
-
-		// Maybe redirect.
-		if ( ! $can_redirect ) {
-			return;
-		}
-
-		/*
-		 * If WordPress is doing cron we can't redirect.
-		 *
-		 * @link https://github.com/pronamic/wp-pronamic-ideal/commit/bb967a3e7804ecfbd83dea110eb8810cbad097d7
-		 * @link https://github.com/pronamic/wp-pronamic-ideal/commit/3ab4a7c1fc2cef0b6f565f8205da42aa1203c3c5
-		 */
-		if ( \wp_doing_cron() ) {
-			return;
-		}
-
-		/*
-		 * If WordPress CLI is running we can't redirect.
-		 *
-		 * @link https://basecamp.com/1810084/projects/10966871/todos/346407847
-		 * @link https://github.com/woocommerce/woocommerce/blob/3.5.3/includes/class-woocommerce.php#L381-L383
-		 */
-		if ( defined( 'WP_CLI' ) && WP_CLI ) {
-			return;
-		}
-
-		// Redirect.
-		$url = $payment->get_return_redirect_url();
-
-		wp_redirect( $url );
-
-		exit;
-	}
-
-	/**
-	 * Handle returns.
-	 *
-	 * @return void
-	 */
-	public function handle_returns() {
-		// phpcs:disable WordPress.Security.NonceVerification.Recommended
-		if (
-			! \array_key_exists( 'payment', $_GET )
-				||
-			! \array_key_exists( 'key', $_GET )
-		) {
-			return;
-		}
-
-		$payment_id = (int) $_GET['payment'];
-
-		$payment = get_pronamic_payment( $payment_id );
-
-		if ( null === $payment ) {
-			return;
-		}
-
-		// Check if payment key is valid.
-		$key = \sanitize_text_field( \wp_unslash( $_GET['key'] ) );
-
-		if ( $key !== $payment->key ) {
-			wp_safe_redirect( home_url() );
-
-			exit;
-		}
-
-		// phpcs:enable WordPress.Security.NonceVerification.Recommended
-
-		// Check if we should redirect.
-		$should_redirect = true;
-
-		/**
-		 * Filter whether or not to allow redirects on payment return.
-		 *
-		 * @param bool    $should_redirect Flag to indicate if redirect is allowed on handling payment return.
-		 * @param Payment $payment         Payment.
-		 */
-		$should_redirect = apply_filters( 'pronamic_pay_return_should_redirect', $should_redirect, $payment );
-
-		try {
-			self::update_payment( $payment, $should_redirect );
-		} catch ( \Exception $e ) {
-			self::render_exception( $e );
-
-			exit;
-		}
-	}
-
-	/**
-	 * Maybe redirect.
-	 *
-	 * @return void
-	 */
-	public function maybe_redirect() {
-		// phpcs:disable WordPress.Security.NonceVerification.Recommended
-		if ( ! \array_key_exists( 'payment_redirect', $_GET ) || ! \array_key_exists( 'key', $_GET ) ) {
-			return;
-		}
-
-		// Get payment.
-		$payment_id = (int) $_GET['payment_redirect'];
-
-		$payment = get_pronamic_payment( $payment_id );
-
-		if ( null === $payment ) {
-			return;
-		}
-
-		// Validate key.
-		$key = \sanitize_text_field( \wp_unslash( $_GET['key'] ) );
-
-		if ( $key !== $payment->key || empty( $payment->key ) ) {
-			return;
-		}
-
-		// phpcs:enable WordPress.Security.NonceVerification.Recommended
-
-		Core_Util::no_cache();
-
-		$gateway = $payment->get_gateway();
-
-		if ( null !== $gateway ) {
-			// Give gateway a chance to handle redirect.
-			$gateway->payment_redirect( $payment );
-
-			// Handle HTML form redirect.
-			if ( $gateway->is_html_form() ) {
-				$gateway->redirect( $payment );
-			}
-		}
-
-		// Redirect to payment action URL.
-		$action_url = $payment->get_action_url();
-
-		if ( ! empty( $action_url ) ) {
-			wp_redirect( $action_url );
-
-			exit;
-		}
-	}
-
-	/**
-	 * Get number payments.
-	 *
-	 * @link https://developer.wordpress.org/reference/functions/wp_count_posts/
-	 *
-	 * @return int|false
-	 */
-	public static function get_number_payments() {
-		$number = false;
-
-		$count = wp_count_posts( 'pronamic_payment' );
-
-		if ( isset( $count->payment_completed ) ) {
-			$number = intval( $count->payment_completed );
-		}
-
-		return $number;
-	}
-
-	/**
-	 * Plugins loaded.
-	 *
-	 * @link https://developer.wordpress.org/reference/hooks/plugins_loaded/
-	 * @return void
-	 */
-	public function plugins_loaded() {
-		// Settings.
-		$this->settings = new Settings( $this );
-
-		// Data Stores.
-		$this->gateways_data_store      = new GatewaysDataStoreCPT();
-		$this->payments_data_store      = new PaymentsDataStoreCPT();
-		$this->subscriptions_data_store = new SubscriptionsDataStoreCPT();
-
-		// Post Types.
-		$this->gateway_post_type      = new GatewayPostType();
-		$this->payment_post_type      = new PaymentPostType();
-		$this->subscription_post_type = new SubscriptionPostType();
-
-		// Privacy Manager.
-		$this->privacy_manager = new PrivacyManager();
-
-		// Webhook Logger.
-		$this->webhook_logger = new WebhookLogger();
-		$this->webhook_logger->setup();
-
-		// Modules.
-		$this->payments_module      = new Payments\PaymentsModule( $this );
-		$this->subscriptions_module = new Subscriptions\SubscriptionsModule( $this );
-		$this->tracking_module      = new TrackingModule();
-
-		// Blocks module.
-		if ( function_exists( 'register_block_type' ) ) {
-			$this->blocks_module = new Blocks\BlocksModule();
-			$this->blocks_module->setup();
-		}
-
-		// Admin.
-		if ( is_admin() ) {
-			$this->admin = new Admin\AdminModule( $this );
-		}
-
-		new Admin\Install( $this );
-
-		$controllers = [
-			new PagesController(),
-			new HomeUrlController(),
-			new ActionSchedulerController(),
-		];
-
-		foreach ( $controllers as $controller ) {
-			$controller->setup();
-		}
-
-		$gateways = [];
-
-		/**
-		 * Filters the gateway integrations.
-		 *
-		 * @param AbstractGatewayIntegration[] $gateways Gateway integrations.
-		 */
-		$gateways = apply_filters( 'pronamic_pay_gateways', $gateways );
-
-		$this->gateway_integrations = new GatewayIntegrations( $gateways );
-
-		foreach ( $this->gateway_integrations as $integration ) {
-			$integration->setup();
-		}
-
-		$plugin_integrations = [];
-
-		/**
-		 * Filters the plugin integrations.
-		 *
-		 * @param AbstractPluginIntegration[] $plugin_integrations Plugin integrations.
-		 */
-		$this->plugin_integrations = apply_filters( 'pronamic_pay_plugin_integrations', $plugin_integrations );
-
-		foreach ( $this->plugin_integrations as $integration ) {
-			$integration->setup();
-		}
-
-		// Integrations.
-		$gateway_integrations = \iterator_to_array( $this->gateway_integrations );
-
-		$this->integrations = array_merge( $gateway_integrations, $this->plugin_integrations );
-
-		// Maybes.
 		PaymentMethods::maybe_update_active_payment_methods();
-
-		// Filters.
-		\add_filter( 'pronamic_payment_redirect_url', [ $this, 'payment_redirect_url' ], 10, 2 );
-
-		// Actions.
-		\add_action( 'pronamic_pay_pre_create_payment', [ __CLASS__, 'complement_payment' ], 10, 1 );
 	}
 
 	/**
