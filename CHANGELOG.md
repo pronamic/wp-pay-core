@@ -6,6 +6,17 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.25.0] - 2025-02-14
+
+### Commits
+
+- Fixed early registration of payment methods for loading translations. ([75aed83](https://github.com/pronamic/wp-pay-core/commit/75aed831f46f32d1c5e01eced8b521fe8e331faf))
+- Only list next payment date for active subscriptions. ([e8f64eb](https://github.com/pronamic/wp-pay-core/commit/e8f64eb6ba75ce38c19328ffa74b5b99191920ca))
+
+Full set of changes: [`4.24.0...4.25.0`][4.25.0]
+
+[4.25.0]: https://github.com/pronamic/wp-pay-core/compare/v4.24.0...v4.25.0
+
 ## [4.24.0] - 2024-12-17
 
 ### Commits
