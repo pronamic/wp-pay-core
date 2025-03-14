@@ -6,6 +6,16 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.25.2] - 2025-03-14
+
+### Commits
+
+- Fixed #209 ([ffc7d85](https://github.com/pronamic/wp-pay-core/commit/ffc7d859c28382d04e9ce4d71167408a8c0426fb))
+
+Full set of changes: [`4.25.1...4.25.2`][4.25.2]
+
+[4.25.2]: https://github.com/pronamic/wp-pay-core/compare/v4.25.1...v4.25.2
+
 ## [4.25.1] - 2025-03-14
 
 ### Commits
