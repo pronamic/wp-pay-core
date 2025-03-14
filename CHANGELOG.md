@@ -6,6 +6,17 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.25.1] - 2025-03-14
+
+### Commits
+
+- Move clipboard script to JS files, see https://github.com/pronamic/wp-pay-core/issues/207 ([f1923ac](https://github.com/pronamic/wp-pay-core/commit/f1923acdb9169e2bf00928cf7bc66628e6cce6db))
+- Move actions links CSS to SASS file, inline is not allowed, see https://github.com/pronamic/wp-pay-core/issues/207 ([9995428](https://github.com/pronamic/wp-pay-core/commit/9995428f269798269e9e533c83575af7aa7afb0f))
+
+Full set of changes: [`4.25.0...4.25.1`][4.25.1]
+
+[4.25.1]: https://github.com/pronamic/wp-pay-core/compare/v4.25.0...v4.25.1
+
 ## [4.25.0] - 2025-02-14
 
 ### Commits
