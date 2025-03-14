@@ -10,6 +10,8 @@
  * @var       \Pronamic\WordPress\Pay\Core\Gateway     $this    Gateway.
  */
 
+use Pronamic\WordPress\Html\Element;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -35,13 +37,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 		 * @link https://github.com/pronamic/wp-pronamic-pay-give/issues/2
 		 * @link https://github.com/pronamic/wp-pronamic-pay/commit/6936ec048c6778e688386d3c15f6a6c1cbaa8eb9
 		 */
+		$element = new Element(
+			'script',
+			[
+				'type' => 'text/javascript',
+			]
+		);
+
+		$element->children[] = 'if ( window.top.location !== window.location ) { window.top.location = window.location; }';
+
+		$element->output();
 
 		?>
-		<script>
-			if ( window.top.location !== window.location ) {
-				window.top.location = window.location;
-			}
-		</script>
+
 	</head>
 
 	<body>
