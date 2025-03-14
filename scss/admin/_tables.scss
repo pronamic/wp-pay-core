@@ -27,6 +27,20 @@
 	}
 }
 
+/**
+ * If a `widefat` table is contained within a `form-table` the `form-table`
+ * padding is stronger than the `widefat` padding, the `` class can be used to
+ * solve this.
+ *
+ * @link https://github.com/pronamic/wp-pronamic-pay-mollie/issues/66
+ * @link https://github.com/WordPress/WordPress/blob/6.7/wp-admin/css/common.css#L481-L484
+ * @link https://github.com/WordPress/WordPress/blob/6.7/wp-admin/css/forms.css#L827-L870
+ */
+.form-table .pronamic-pay-widefat-padding th, 
+.form-table .pronamic-pay-widefat-padding td { 
+	padding: 8px 10px; 
+}
+
 // Table in postbox
 .postbox {
 	.pronamic-pay-table {
