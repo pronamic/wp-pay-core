@@ -374,8 +374,8 @@ class AdminModule {
 		 * @link https://translate.wordpress.org/projects/wp/dev/nl/default/?filters%5Bstatus%5D=either&filters%5Boriginal_id%5D=6831324&filters%5Btranslation_id%5D=58732256
 		 */
 		\wp_register_script(
-			'pronamic-pay-clipboard',
-			\plugins_url( '../../js/dist/admin-clipboard' . $min . '.js', __FILE__ ),
+			'pronamic-pay-admin-clipboard',
+			\plugins_url( '../../js/dist/admin-cb' . $min . '.js', __FILE__ ),
 			[ 'clipboard', 'jquery' ],
 			$this->plugin->get_version(),
 			true

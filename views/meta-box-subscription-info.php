@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-\wp_enqueue_script( 'pronamic-pay-clipboard' );
+\wp_enqueue_script( 'pronamic-pay-admin-clipboard' );
 
 $subscription_id = $subscription->get_id();
 
