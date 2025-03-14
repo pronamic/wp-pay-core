@@ -1,0 +1,25 @@
+.pronamic-pay-action-link {
+	align-items: center;
+
+	display: flex;
+
+	flex-direction: row;
+
+	gap: 5px;
+}
+
+.pronamic-pay-action-link-clipboard {
+	align-items: center;
+
+	display: flex;
+
+	flex-direction: row;
+
+	flex-wrap: no-wrap;
+
+	gap: 5px;
+
+	.success {
+		color: #007017;
+	}
+}

@@ -307,34 +307,6 @@ $phase = $subscription->get_display_phase();
 					pronamic_pay_action_links();
 				} );
 			</script>
-
-			<style>
-				.pronamic-pay-action-link {
-					align-items: center;
-
-					display: flex;
-
-					flex-direction: row;
-
-					gap: 5px;
-				}
-
-				.pronamic-pay-action-link-clipboard {
-					align-items: center;
-
-					display: flex;
-
-					flex-direction: row;
-
-					flex-wrap: no-wrap;
-
-					gap: 5px;
-				}
-
-				.pronamic-pay-action-link-clipboard .success {
-					color: #007017;
-				}
-			</style>
 		</th>
 		<td>
 			<div class="pronamic-pay-action-link">

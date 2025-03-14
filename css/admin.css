@@ -1,4 +1,22 @@
 /* Icons */
+.pronamic-pay-action-link {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.pronamic-pay-action-link-clipboard {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: no-wrap;
+  gap: 5px;
+}
+.pronamic-pay-action-link-clipboard .success {
+  color: #007017;
+}
+
 .pronamic-pay-btn-link {
   line-height: 26px;
   padding: 0 10px 1px;
