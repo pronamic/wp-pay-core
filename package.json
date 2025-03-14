@@ -86,6 +86,7 @@
 		"js-build-copy": "cp js/src/*.js js/dist",
 		"js-minify": "npm-run-all js-minify-*",
 		"js-minify-admin": "terser --compress --mangle --output js/dist/admin.min.js js/src/admin.js",
+		"js-minify-admin-clipboard": "terser --compress --mangle --output js/dist/admin-clipboard.min.js js/src/admin-clipboard.js",
 		"js-minify-admin-test": "terser --compress --mangle --output js/dist/admin-test.min.js js/src/admin-test.js",
 		"js-minify-admin-tour": "terser --compress --mangle --output js/dist/admin-tour.min.js js/src/admin-tour.js",
 		"js-minify-slick-carousel": "terser --compress --mangle --output assets/slick-carousel/slick.min.js assets/slick-carousel/slick.js",

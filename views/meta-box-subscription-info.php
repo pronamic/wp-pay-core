@@ -19,6 +19,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+\wp_enqueue_script( 'pronamic-pay-clipboard' );
+
 $subscription_id = $subscription->get_id();
 
 $customer = $subscription->get_customer();
@@ -264,49 +266,6 @@ $phase = $subscription->get_display_phase();
 			<?php esc_html_e( 'Customer action links', 'pronamic_ideal' ); ?>
 
 			<span class="dashicons dashicons-editor-help pronamic-pay-tip" title="<?php echo esc_attr__( 'These actions links can be shared with the customer.', 'pronamic_ideal' ); ?>" tabindex="0"></span>
-
-			<?php
-
-			/**
-			 * Clipboard feature.
-			 * 
-			 * @link https://github.com/WordPress/WordPress/blob/68e3310c024d7fceb84a5028e955ad163de6bd45/wp-includes/js/plupload/handlers.js#L364-L393
-			 * @link https://translate.wordpress.org/projects/wp/dev/nl/default/?filters%5Bstatus%5D=either&filters%5Boriginal_id%5D=10763746&filters%5Btranslation_id%5D=91929960
-			 * @link https://translate.wordpress.org/projects/wp/dev/nl/default/?filters%5Bstatus%5D=either&filters%5Boriginal_id%5D=6831324&filters%5Btranslation_id%5D=58732256
-			 */
-
-			wp_enqueue_script( 'clipboard' );
-
-			?>
-			<script>
-				function pronamic_pay_action_links() {
-					const elements = document.querySelectorAll( '.pronamic-pay-copy-url' );
-
-					elements.forEach( function ( element ) {
-						var clipboard = new ClipboardJS( element ),
-							successTimeout;
-
-						clipboard.on( 'success', function( event ) {
-							var triggerElement = jQuery( event.trigger ),
-								successElement = jQuery( '.success', triggerElement.closest( '.pronamic-pay-action-link-clipboard' ) );
-
-							event.clearSelection();
-
-							clearTimeout( successTimeout );
-
-							successElement.removeClass( 'hidden' );
-
-							successTimeout = setTimeout( function() {
-								successElement.addClass( 'hidden' );
-							}, 3000 );
-						} );
-					} );
-				}
-
-				addEventListener( 'DOMContentLoaded', function ( event ) {
-					pronamic_pay_action_links();
-				} );
-			</script>
 		</th>
 		<td>
 			<div class="pronamic-pay-action-link">
@@ -329,7 +288,7 @@ $phase = $subscription->get_display_phase();
 				</div>
 
 				<div class="pronamic-pay-action-link-clipboard">
-					<button type="button" class="button button-small pronamic-pay-copy-url" data-clipboard-text="<?php echo \esc_url( $url ); ?>"><?php \esc_html_e( 'Copy URL to clipboard', 'pronamic_ideal' ); ?></button>
+					<button type="button" class="button button-small pronamic-pay-clipboard" data-clipboard-text="<?php echo \esc_url( $url ); ?>"><?php \esc_html_e( 'Copy URL to clipboard', 'pronamic_ideal' ); ?></button>
 					<span class="success hidden" aria-hidden="true"><?php \esc_html_e( 'Copied!', 'pronamic_ideal' ); ?></span>
 				</div>
 			</div>
