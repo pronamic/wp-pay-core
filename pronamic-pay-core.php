@@ -5,7 +5,7 @@
  * Description: Core components for the WordPress payment processing library.
  *
  * Version: 4.25.2
- * Requires at least: 5.9
+ * Requires at least: 6.6
  * Requires PHP: 8.0
  *
  * Author: Pronamic
