@@ -69,8 +69,9 @@ class Settings {
 			'pronamic_pay',
 			'pronamic_pay_uninstall_clear_data',
 			[
-				'type'    => 'boolean',
-				'default' => false,
+				'type'              => 'boolean',
+				'default'           => false,
+				'sanitize_callback' => 'rest_sanitize_boolean',
 			]
 		);
 
@@ -78,9 +79,10 @@ class Settings {
 			'pronamic_pay',
 			'pronamic_pay_debug_mode',
 			[
-				'type'        => 'boolean',
-				'description' => 'Setting that can be used to trigger the “debug” mode throughout Pronamic Pay.',
-				'default'     => false,
+				'type'              => 'boolean',
+				'description'       => 'Setting that can be used to trigger the “debug” mode throughout Pronamic Pay.',
+				'default'           => false,
+				'sanitize_callback' => 'rest_sanitize_boolean',
 			]
 		);
 
@@ -88,9 +90,10 @@ class Settings {
 			'pronamic_pay',
 			'pronamic_pay_subscriptions_processing_disabled',
 			[
-				'type'        => 'boolean',
-				'description' => 'Setting that can be used to disable processing of recurring payments.',
-				'default'     => false,
+				'type'              => 'boolean',
+				'description'       => 'Setting that can be used to disable processing of recurring payments.',
+				'default'           => false,
+				'sanitize_callback' => 'rest_sanitize_boolean',
 			]
 		);
 
@@ -104,7 +107,8 @@ class Settings {
 				'pronamic_pay',
 				$id,
 				[
-					'type' => 'string',
+					'type'              => 'string',
+					'sanitize_callback' => 'sanitize_text_field',
 				]
 			);
 
