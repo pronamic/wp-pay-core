@@ -59,7 +59,7 @@ if ( ! is_file( $db_dropin_file ) ) {
  */
 tests_add_filter(
 	'muplugins_loaded',
-	function () {
+	function (): void {
 		require __DIR__ . '/../vendor/wordpress/sqlite-database-integration/load.php';
 
 		require __DIR__ . '/../pronamic-pay-core.php';

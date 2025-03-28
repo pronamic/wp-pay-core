@@ -75,7 +75,7 @@ class PaymentsModule {
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			WP_CLI::add_command(
 				'pay payment status',
-				function ( $args ) {
+				function ( $args ): void {
 					foreach ( $args as $id ) {
 						$payment = get_pronamic_payment( $id );
 

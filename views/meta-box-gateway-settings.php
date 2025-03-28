@@ -49,7 +49,7 @@ $sections = [
 				'section'  => 'payment_methods',
 				'title'    => __( 'Supported Payment Methods', 'pronamic_ideal' ),
 				'type'     => 'custom',
-				'callback' => function () use ( $gateway, $gateway_id ) {
+				'callback' => function () use ( $gateway, $gateway_id ): void {
 					AdminGatewayPostType::settings_payment_methods( $gateway, $gateway_id );
 				},
 			],
@@ -63,7 +63,7 @@ if ( $integration->supports( 'webhook' ) ) {
 		'section'  => 'feedback',
 		'title'    => __( 'Webhook Status', 'pronamic_ideal' ),
 		'type'     => 'custom',
-		'callback' => function () use ( $gateway, $gateway_id, $config_id ) {
+		'callback' => function () use ( $gateway, $gateway_id, $config_id ): void {
 			AdminGatewayPostType::settings_webhook_log( $gateway, $gateway_id, $config_id );
 		},
 	];
@@ -96,7 +96,7 @@ if ( $integration->supports( 'webhook' ) && ! $integration->supports( 'webhook_n
 			'section'  => 'general',
 			'title'    => __( 'Transaction feedback', 'pronamic_ideal' ),
 			'type'     => 'custom',
-			'callback' => function () {
+			'callback' => function (): void {
 				printf(
 					'⚠️ %s',
 					esc_html__(
