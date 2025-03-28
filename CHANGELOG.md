@@ -6,6 +6,16 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.25.4] - 2025-03-28
+
+### Commits
+
+- Sanitization for `register_setting()` #210 ([cd5bb34](https://github.com/pronamic/wp-pay-core/commit/cd5bb34d469ddc02936f41290c41fc044d4e07ac))
+
+Full set of changes: [`4.25.3...4.25.4`][4.25.4]
+
+[4.25.4]: https://github.com/pronamic/wp-pay-core/compare/v4.25.3...v4.25.4
+
 ## [4.25.3] - 2025-03-27
 
 ### Commits
