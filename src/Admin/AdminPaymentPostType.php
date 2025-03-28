@@ -116,12 +116,10 @@ class AdminPaymentPostType {
 	 * @return void
 	 */
 	public function maybe_process_payment_action() {
-		// Current user.
 		if ( ! current_user_can( 'edit_payments' ) ) {
 			return;
 		}
 
-		// Screen.
 		$screen = get_current_screen();
 
 		if ( null === $screen ) {
@@ -140,7 +138,6 @@ class AdminPaymentPostType {
 			return;
 		}
 
-		// Status check action.
 		if ( filter_has_var( INPUT_GET, 'pronamic_pay_check_status' ) && check_admin_referer( 'pronamic_payment_check_status_' . $post_id ) ) {
 			try {
 				Plugin::update_payment( $payment, false );
