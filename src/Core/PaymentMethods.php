@@ -503,6 +503,7 @@ class PaymentMethods {
 			self::MASTERCARD              => __( 'Mastercard', 'pronamic_ideal' ),
 			self::MB_WAY                  => __( 'MB WAY', 'pronamic_ideal' ),
 			self::MOBILEPAY               => __( 'MobilePay', 'pronamic_ideal' ),
+			self::PAY_BY_BANK             => __( 'Pay by Bank', 'pronamic_ideal' ),
 			self::PAYCONIQ                => __( 'Payconiq', 'pronamic_ideal' ),
 			self::PAYPAL                  => __( 'PayPal', 'pronamic_ideal' ),
 			self::PRZELEWY24              => __( 'Przelewy24', 'pronamic_ideal' ),
