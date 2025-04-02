@@ -349,6 +349,14 @@ class PaymentMethods {
 	const MYBANK = 'mybank';
 
 	/**
+	 * Constant for the Pay by Bank method.
+	 *
+	 * @since 4.26.0
+	 * @var string
+	 */
+	const PAY_BY_BANK = 'paybybank';
+
+	/**
 	 * Constant for the Payconiq method.
 	 *
 	 * @since 2.0.0
