@@ -349,6 +349,14 @@ class PaymentMethods {
 	const MYBANK = 'mybank';
 
 	/**
+	 * Constant for the Pay by Bank method.
+	 *
+	 * @since 4.26.0
+	 * @var string
+	 */
+	const PAY_BY_BANK = 'paybybank';
+
+	/**
 	 * Constant for the Payconiq method.
 	 *
 	 * @since 2.0.0
@@ -505,6 +513,7 @@ class PaymentMethods {
 			self::MOBILEPAY               => __( 'MobilePay', 'pronamic_ideal' ),
 			self::PAYCONIQ                => __( 'Payconiq', 'pronamic_ideal' ),
 			self::PAYPAL                  => __( 'PayPal', 'pronamic_ideal' ),
+			self::PAY_BY_BANK             => __( 'Pay by Bank', 'pronamic_ideal' ),
 			self::PRZELEWY24              => __( 'Przelewy24', 'pronamic_ideal' ),
 			self::RIVERTY                 => __( 'Riverty', 'pronamic_ideal' ),
 			self::SANTANDER               => __( 'Santander', 'pronamic_ideal' ),
