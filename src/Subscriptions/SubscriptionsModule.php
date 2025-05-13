@@ -139,7 +139,11 @@ class SubscriptionsModule {
 	 */
 	public function payment_status_update( $payment ) {
 		// Payment method changes do not affect the subscription status.
-		if ( 'subscription_payment_method_change' === $payment->get_source() ) {
+		if (
+			'subscription_payment_method_change' === $payment->get_source()
+				||
+			true === $payment->get_meta( 'woocommerce_subscription_change_payment_method' )
+		) {
 			return;
 		}
 
