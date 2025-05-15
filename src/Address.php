@@ -413,7 +413,7 @@ class Address {
 	 * @param Country|null $country Country.
 	 * @return void
 	 */
-	public function set_country( $country ) {
+	public function set_country( ?Country $country ) {
 		$this->country = $country;
 	}
 
