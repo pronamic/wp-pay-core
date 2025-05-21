@@ -45,6 +45,8 @@ class SubscriptionStatus {
 	/**
 	 * Status indicator for expired
 	 *
+	 * @deprecated Official deprecated since version 4.26, hardly in use since 2021.
+	 * @link https://github.com/pronamic/wp-pay-core/issues/98#issuecomment-2891358022
 	 * @var string
 	 */
 	const EXPIRED = 'Expired';
