@@ -242,7 +242,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @param DateTimeImmutable|null $canceled_at Canceled date.
 	 * @return void
 	 */
-	public function set_canceled_at( DateTimeImmutable $canceled_at = null ) {
+	public function set_canceled_at( ?DateTimeImmutable $canceled_at = null ) {
 		$this->canceled_at = $canceled_at;
 	}
 
@@ -435,7 +435,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @param DateTimeInterface|null $date Date.
 	 * @return bool True if phase is completed to date, false otherwise.
 	 */
-	public function is_completed_to_date( DateTimeInterface $date = null ) {
+	public function is_completed_to_date( ?DateTimeInterface $date = null ) {
 		if ( null === $date ) {
 			return true;
 		}
@@ -482,7 +482,7 @@ class SubscriptionPhase implements \JsonSerializable {
 	 * @return SubscriptionPeriod|null
 	 * @throws \Exception Throws exception on invalid date period.
 	 */
-	public function get_period( DateTimeImmutable $start_date = null ) {
+	public function get_period( ?DateTimeImmutable $start_date = null ) {
 		if ( null === $start_date ) {
 			return null;
 		}
