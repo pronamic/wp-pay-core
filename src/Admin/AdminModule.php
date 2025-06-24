@@ -368,7 +368,7 @@ class AdminModule {
 
 		/**
 		 * Clipboard feature.
-		 * 
+		 *
 		 * @link https://github.com/WordPress/WordPress/blob/68e3310c024d7fceb84a5028e955ad163de6bd45/wp-includes/js/plupload/handlers.js#L364-L393
 		 * @link https://translate.wordpress.org/projects/wp/dev/nl/default/?filters%5Bstatus%5D=either&filters%5Boriginal_id%5D=10763746&filters%5Btranslation_id%5D=91929960
 		 * @link https://translate.wordpress.org/projects/wp/dev/nl/default/?filters%5Bstatus%5D=either&filters%5Boriginal_id%5D=6831324&filters%5Btranslation_id%5D=58732256
@@ -493,33 +493,42 @@ class AdminModule {
 		$payment->set_customer( $customer );
 
 		// Billing address.
-		$address = AddressHelper::from_array(
-			[
-				'name'         => $name,
-				'email'        => $user->user_email,
-				'phone'        => null === $customer ? null : $customer->get_phone(),
-				'line_1'       => 'Billing Line 1',
-				'postal_code'  => '1234 AB',
-				'city'         => 'Billing City',
-				'country_code' => 'NL',
-			]
-		);
+		$billing_data = \array_map( 'sanitize_text_field', \wp_unslash( $_POST['billing'] ?? [] ) );
 
-		$payment->set_billing_address( $address );
+		$name = new ContactName();
+		$name->set_first_name( $billing_data['first_name'] ?? '' );
+		$name->set_last_name( $billing_data['last_name'] ?? '' );
 
-		$address = AddressHelper::from_array(
-			[
-				'name'         => $name,
-				'email'        => $user->user_email,
-				'phone'        => null === $customer ? null : $customer->get_phone(),
-				'line_1'       => 'Shipping Line 1',
-				'postal_code'  => '5678 XY',
-				'city'         => 'Shipping City',
-				'country_code' => 'NL',
-			]
-		);
+		$billing_address = new Address();
+		$billing_address->set_name( $name );
+		$billing_address->set_company_name( $billing_data['company'] ?? '' );
+		$billing_address->set_line_1( $billing_data['line_1'] ?? '' );
+		$billing_address->set_line_2( $billing_data['line_2'] ?? '' );
+		$billing_address->set_city( $billing_data['city'] ?? '' );
+		$billing_address->set_postal_code( $billing_data['postal_code'] ?? '' );
+		$billing_address->set_country_code( $billing_data['country_code'] ?? '' );
+		$billing_address->set_region( $billing_data['state'] ?? '' );
+		$billing_address->set_email( $billing_data['email'] ?? '' );
+		$billing_address->set_phone( $billing_data['phone'] ?? '' );
 
-		$payment->set_shipping_address( $address );
+		// Shipping address.
+		$shipping_data = \array_map( 'sanitize_text_field', \wp_unslash( $_POST['shipping'] ?? [] ) );
+
+		$name = new ContactName();
+		$name->set_first_name( $shipping_data['first_name'] ?? '' );
+		$name->set_last_name( $shipping_data['last_name'] ?? '' );
+
+		$shipping_address = new Address();
+		$shipping_address->set_name( $name );
+		$shipping_address->set_company_name( $shipping_data['company'] ?? '' );
+		$shipping_address->set_line_1( $shipping_data['line_1'] ?? '' );
+		$shipping_address->set_line_2( $shipping_data['line_2'] ?? '' );
+		$shipping_address->set_city( $shipping_data['city'] ?? '' );
+		$shipping_address->set_postal_code( $shipping_data['postal_code'] ?? '' );
+		$shipping_address->set_country_code( $shipping_data['country_code'] ?? '' );
+		$shipping_address->set_region( $shipping_data['state'] ?? '' );
+		$shipping_address->set_email( $shipping_data['email'] ?? '' );
+		$shipping_address->set_phone( $shipping_data['phone'] ?? '' );
 
 		// Lines.
 		$payment->lines = new PaymentLines();

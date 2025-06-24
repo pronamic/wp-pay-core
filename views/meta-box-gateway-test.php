@@ -186,9 +186,11 @@ $payment_methods = $gateway->get_payment_methods(
 	/**
 	 * Print address fields.
 	 *
-	 * @param string $type Type of the address fields group (e.g., 'billing', 'shipping').
+	 * @param string $name_format Input name format.
+	 * @param array  $values      Values to prefill the fields.
+	 * @return void
 	 */
-	function print_adress_fields( $type, $values = [] ) {
+	function print_adress_fields( $name_format, $values = [] ) {
 		$fields = [
 			'first_name'   => __( 'First name', 'pronamic_ideal' ),
 			'last_name'    => __( 'Last name', 'pronamic_ideal' ),
@@ -209,7 +211,7 @@ $payment_methods = $gateway->get_payment_methods(
 
 			foreach ( $fields as $key => $label ) {
 				$id    = 'pronamic_pay_test_' . $type . '_' . $key;
-				$name  = 'pronamic_pay_payment[' . $type . '][' . $key . ']';
+				$name  = \sprintf( $name_format, $key );
 				$value = \array_key_exists( $key, $values ) ? $values[ $key ] : '';
 
 				?>
@@ -242,7 +244,7 @@ $payment_methods = $gateway->get_payment_methods(
 			<?php
 
 			print_adress_fields(
-				'billing',
+				'billing[%s]',
 				[
 					'first_name'   => ( '' === $user->first_name ) ? 'John' : $user->first_name,
 					'last_name'    => ( '' === $user->last_name ) ? 'Doe' : $user->last_name,
@@ -266,7 +268,7 @@ $payment_methods = $gateway->get_payment_methods(
 			<?php
 
 			print_adress_fields(
-				'shipping',
+				'shipping[%s]',
 				[
 					'first_name'   => ( '' === $user->first_name ) ? 'Jane' : $user->first_name,
 					'last_name'    => ( '' === $user->last_name ) ? 'Doe' : $user->last_name,
