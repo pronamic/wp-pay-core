@@ -244,8 +244,8 @@ $payment_methods = $gateway->get_payment_methods(
 			print_adress_fields(
 				'billing',
 				[
-					'first_name'   => $user->first_name ?? 'John',
-					'last_name'    => $user->last_name ?? 'Doe',
+					'first_name'   => ( '' === $user->first_name ) ? 'John' : $user->first_name,
+					'last_name'    => ( '' === $user->last_name ) ? 'Doe' : $user->last_name,
 					'company'      => 'Pronamic',
 					'line_1'       => 'Billing Line 1',
 					'city'         => 'Billing City',
@@ -268,8 +268,8 @@ $payment_methods = $gateway->get_payment_methods(
 			print_adress_fields(
 				'shipping',
 				[
-					'first_name'   => $user->first_name ?? 'Jane',
-					'last_name'    => $user->last_name ?? 'Doe',
+					'first_name'   => ( '' === $user->first_name ) ? 'Jane' : $user->first_name,
+					'last_name'    => ( '' === $user->last_name ) ? 'Doe' : $user->last_name,
 					'company'      => 'Pronamic',
 					'line_1'       => 'Shipping Line 1',
 					'city'         => 'Shipping City',
