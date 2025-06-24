@@ -186,9 +186,9 @@ $payment_methods = $gateway->get_payment_methods(
 	/**
 	 * Print address fields.
 	 *
-	 * @param string $name Name of the address fields group (e.g., 'billing', 'shipping').
+	 * @param string $type Type of the address fields group (e.g., 'billing', 'shipping').
 	 */
-	function print_adress_fields( $name, $values = [] ) {
+	function print_adress_fields( $type, $values = [] ) {
 		$fields = [
 			'first_name'   => __( 'First name', 'pronamic_ideal' ),
 			'last_name'    => __( 'Last name', 'pronamic_ideal' ),
@@ -208,8 +208,8 @@ $payment_methods = $gateway->get_payment_methods(
 			<?php
 
 			foreach ( $fields as $key => $label ) {
-				$id    = 'pronamic_pay_test_' . $name . '_' . $key;
-				$name  = 'pronamic_pay_payment[' . $name . '][' . $key . ']';
+				$id    = 'pronamic_pay_test_' . $type . '_' . $key;
+				$name  = 'pronamic_pay_payment[' . $type . '][' . $key . ']';
 				$value = \array_key_exists( $key, $values ) ? $values[ $key ] : '';
 
 				?>
