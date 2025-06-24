@@ -188,19 +188,19 @@ $payment_methods = $gateway->get_payment_methods(
 	 *
 	 * @param string $name Name of the address fields group (e.g., 'billing', 'shipping').
 	 */
-	function print_adress_fields( $name ) {
+	function print_adress_fields( $name, $values = [] ) {
 		$fields = [
-			'first_name' => __( 'First name', 'pronamic_ideal' ),
-			'last_name'  => __( 'Last name', 'pronamic_ideal' ),
-			'company'    => __( 'Company', 'pronamic_ideal' ),
-			'address_1'  => __( 'Address line 1', 'pronamic_ideal' ),
-			'address_2'  => __( 'Address line 2', 'pronamic_ideal' ),
-			'city'       => __( 'City', 'pronamic_ideal' ),
-			'postcode'   => __( 'Postcode / ZIP', 'pronamic_ideal' ),
-			'country'    => __( 'Country / Region', 'pronamic_ideal' ),
-			'state'      => __( 'State / County', 'pronamic_ideal' ),
-			'email'      => __( 'Email address', 'pronamic_ideal' ),
-			'phone'      => __( 'Phone', 'pronamic_ideal' ),
+			'first_name'   => __( 'First name', 'pronamic_ideal' ),
+			'last_name'    => __( 'Last name', 'pronamic_ideal' ),
+			'company'      => __( 'Company', 'pronamic_ideal' ),
+			'line_1'       => __( 'Address line 1', 'pronamic_ideal' ),
+			'line_2'       => __( 'Address line 2', 'pronamic_ideal' ),
+			'city'         => __( 'City', 'pronamic_ideal' ),
+			'postal_code'  => __( 'Postcode / ZIP', 'pronamic_ideal' ),
+			'country_code' => __( 'Country / Region', 'pronamic_ideal' ),
+			'state'        => __( 'State / County', 'pronamic_ideal' ),
+			'email'        => __( 'Email address', 'pronamic_ideal' ),
+			'phone'        => __( 'Phone', 'pronamic_ideal' ),
 		];
 
 		?>
@@ -208,8 +208,9 @@ $payment_methods = $gateway->get_payment_methods(
 			<?php
 
 			foreach ( $fields as $key => $label ) {
-				$id   = 'pronamic_pay_test_' . $name . '_' . $key;
-				$name = 'pronamic_pay_payment[' . $name . '][' . $key . ']';
+				$id    = 'pronamic_pay_test_' . $name . '_' . $key;
+				$name  = 'pronamic_pay_payment[' . $name . '][' . $key . ']';
+				$value = \array_key_exists( $key, $values ) ? $values[ $key ] : '';
 
 				?>
 				<tr>
@@ -217,7 +218,7 @@ $payment_methods = $gateway->get_payment_methods(
 						<label for="<?php echo \esc_attr( $id ); ?>"><?php echo \esc_html( $label ); ?></label>
 					</th>
 					<td>
-						<input id="<?php echo \esc_attr( $id ); ?>"  name="<?php echo \esc_attr( $name ); ?>" type="text" class="regular-text code pronamic-pay-form-control">
+						<input id="<?php echo \esc_attr( $id ); ?>" name="<?php echo \esc_attr( $name ); ?>" value="<?php echo \esc_attr( $value ); ?>"  type="text" class="regular-text code pronamic-pay-form-control">
 					</td>
 				</tr>
 				<?php
@@ -229,6 +230,8 @@ $payment_methods = $gateway->get_payment_methods(
 		<?php
 	}
 
+	$user = \wp_get_current_user();
+
 	?>
 
 	<tr>
@@ -236,7 +239,22 @@ $payment_methods = $gateway->get_payment_methods(
 			<?php esc_html_e( 'Billing', 'pronamic_ideal' ); ?>
 		</th>
 		<td style="padding: 0;">
-			<?php print_adress_fields( 'billing' ); ?>
+			<?php
+
+			print_adress_fields(
+				'billing',
+				[
+					'first_name'   => $user->first_name ?? 'John',
+					'last_name'    => $user->last_name ?? 'Doe',
+					'company'      => 'Pronamic',
+					'line_1'       => 'Billing Line 1',
+					'city'         => 'Billing City',
+					'country_code' => 'NL',
+					'email'        => $user->user_email,
+				]
+			);
+
+			?>
 		</td>
 	</tr>
 
@@ -245,7 +263,22 @@ $payment_methods = $gateway->get_payment_methods(
 			<?php esc_html_e( 'Shipping', 'pronamic_ideal' ); ?>
 		</th>
 		<td style="padding: 0;">
-			<?php print_adress_fields( 'shipping' ); ?>
+			<?php
+
+			print_adress_fields(
+				'shipping',
+				[
+					'first_name'   => $user->first_name ?? 'Jane',
+					'last_name'    => $user->last_name ?? 'Doe',
+					'company'      => 'Pronamic',
+					'line_1'       => 'Shipping Line 1',
+					'city'         => 'Shipping City',
+					'country_code' => 'NL',
+					'email'        => $user->user_email,
+				]
+			);
+
+			?>
 		</td>
 	</tr>
 
