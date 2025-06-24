@@ -496,20 +496,20 @@ class AdminModule {
 		$billing_data = \array_map( 'sanitize_text_field', \wp_unslash( $_POST['billing'] ?? [] ) );
 
 		$name = new ContactName();
-		$name->set_first_name( $billing_data['first_name'] ?? '' );
-		$name->set_last_name( $billing_data['last_name'] ?? '' );
+		$name->set_first_name( $this->get_optional_value( $billing_data, 'first_name' ) );
+		$name->set_last_name( $this->get_optional_value( $billing_data, 'last_name' ) );
 
 		$billing_address = new Address();
 		$billing_address->set_name( $name );
-		$billing_address->set_company_name( $billing_data['company'] ?? '' );
-		$billing_address->set_line_1( $billing_data['line_1'] ?? '' );
-		$billing_address->set_line_2( $billing_data['line_2'] ?? '' );
-		$billing_address->set_city( $billing_data['city'] ?? '' );
-		$billing_address->set_postal_code( $billing_data['postal_code'] ?? '' );
-		$billing_address->set_country_code( $billing_data['country_code'] ?? '' );
-		$billing_address->set_region( $billing_data['state'] ?? '' );
-		$billing_address->set_email( $billing_data['email'] ?? '' );
-		$billing_address->set_phone( $billing_data['phone'] ?? '' );
+		$billing_address->set_company_name( $this->get_optional_value( $billing_data, 'company' ) );
+		$billing_address->set_line_1( $this->get_optional_value( $billing_data, 'line_1' ) );
+		$billing_address->set_line_2( $this->get_optional_value( $billing_data, 'line_2' ) );
+		$billing_address->set_city( $this->get_optional_value( $billing_data, 'city' ) );
+		$billing_address->set_postal_code( $this->get_optional_value( $billing_data, 'postal_code' ) );
+		$billing_address->set_country_code( $this->get_optional_value( $billing_data, 'country_code' ) );
+		$billing_address->set_region( $this->get_optional_value( $billing_data, 'state' ) );
+		$billing_address->set_email( $this->get_optional_value( $billing_data, 'email' ) );
+		$billing_address->set_phone( $this->get_optional_value( $billing_data, 'phone' ) );
 
 		$payment->set_billing_address( $billing_address );
 
@@ -517,20 +517,20 @@ class AdminModule {
 		$shipping_data = \array_map( 'sanitize_text_field', \wp_unslash( $_POST['shipping'] ?? [] ) );
 
 		$name = new ContactName();
-		$name->set_first_name( $shipping_data['first_name'] ?? '' );
-		$name->set_last_name( $shipping_data['last_name'] ?? '' );
+		$name->set_first_name( $this->get_optional_value( $shipping_data, 'first_name' ) );
+		$name->set_last_name( $this->get_optional_value( $shipping_data, 'last_name' ) );
 
 		$shipping_address = new Address();
 		$shipping_address->set_name( $name );
-		$shipping_address->set_company_name( $shipping_data['company'] ?? '' );
-		$shipping_address->set_line_1( $shipping_data['line_1'] ?? '' );
-		$shipping_address->set_line_2( $shipping_data['line_2'] ?? '' );
-		$shipping_address->set_city( $shipping_data['city'] ?? '' );
-		$shipping_address->set_postal_code( $shipping_data['postal_code'] ?? '' );
-		$shipping_address->set_country_code( $shipping_data['country_code'] ?? '' );
-		$shipping_address->set_region( $shipping_data['state'] ?? '' );
-		$shipping_address->set_email( $shipping_data['email'] ?? '' );
-		$shipping_address->set_phone( $shipping_data['phone'] ?? '' );
+		$shipping_address->set_company_name( $this->get_optional_value( $shipping_data, 'company' ) );
+		$shipping_address->set_line_1( $this->get_optional_value( $shipping_data, 'line_1' ) );
+		$shipping_address->set_line_2( $this->get_optional_value( $shipping_data, 'line_2' ) );
+		$shipping_address->set_city( $this->get_optional_value( $shipping_data, 'city' ) );
+		$shipping_address->set_postal_code( $this->get_optional_value( $shipping_data, 'postal_code' ) );
+		$shipping_address->set_country_code( $this->get_optional_value( $shipping_data, 'country_code' ) );
+		$shipping_address->set_region( $this->get_optional_value( $shipping_data, 'state' ) );
+		$shipping_address->set_email( $this->get_optional_value( $shipping_data, 'email' ) );
+		$shipping_address->set_phone( $this->get_optional_value( $shipping_data, 'phone' ) );
 
 		$payment->set_shipping_address( $shipping_address );
 
@@ -624,6 +624,27 @@ class AdminModule {
 
 			exit;
 		}
+	}
+
+	/**
+	 * Get an optional value from the data array.
+	 *
+	 * @param array<string, string> $data Data array.
+	 * @param string                $key  Key to retrieve the value for.
+	 * @return string|null
+	 */
+	private function get_optional_value( array $data, string $key ) {
+		if ( ! array_key_exists( $key, $data ) ) {
+			return null;
+		}
+
+		$value = $data[ $key ];
+
+		if ( '' === $value ) {
+			return null;
+		}
+
+		return $value;
 	}
 
 	/**
