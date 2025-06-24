@@ -511,6 +511,8 @@ class AdminModule {
 		$billing_address->set_email( $billing_data['email'] ?? '' );
 		$billing_address->set_phone( $billing_data['phone'] ?? '' );
 
+		$payment->set_billing_address( $billing_address );
+
 		// Shipping address.
 		$shipping_data = \array_map( 'sanitize_text_field', \wp_unslash( $_POST['shipping'] ?? [] ) );
 
@@ -529,6 +531,8 @@ class AdminModule {
 		$shipping_address->set_region( $shipping_data['state'] ?? '' );
 		$shipping_address->set_email( $shipping_data['email'] ?? '' );
 		$shipping_address->set_phone( $shipping_data['phone'] ?? '' );
+
+		$payment->set_shipping_address( $shipping_address );
 
 		// Lines.
 		$payment->lines = new PaymentLines();
