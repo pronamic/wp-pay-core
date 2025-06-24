@@ -172,6 +172,83 @@ $payment_methods = $gateway->get_payment_methods(
 		</td>
 	</tr>
 
+	<tr>
+		<td>
+
+		</td>
+		<td>
+			<?php submit_button( __( 'Test', 'pronamic_ideal' ), 'secondary', 'test_pay_gateway', false ); ?>
+		</td>
+	</tr>
+
+	<?php
+
+	/**
+	 * Print address fields.
+	 *
+	 * @param string $name Name of the address fields group (e.g., 'billing', 'shipping').
+	 */
+	function print_adress_fields( $name ) {
+		$fields = [
+			'first_name' => __( 'First name', 'pronamic_ideal' ),
+			'last_name'  => __( 'Last name', 'pronamic_ideal' ),
+			'company'    => __( 'Company', 'pronamic_ideal' ),
+			'address_1'  => __( 'Address line 1', 'pronamic_ideal' ),
+			'address_2'  => __( 'Address line 2', 'pronamic_ideal' ),
+			'city'       => __( 'City', 'pronamic_ideal' ),
+			'postcode'   => __( 'Postcode / ZIP', 'pronamic_ideal' ),
+			'country'    => __( 'Country / Region', 'pronamic_ideal' ),
+			'state'      => __( 'State / County', 'pronamic_ideal' ),
+			'email'      => __( 'Email address', 'pronamic_ideal' ),
+			'phone'      => __( 'Phone', 'pronamic_ideal' ),
+		];
+
+		?>
+		<table class="form-table" style="margin-top: 0;">
+			<?php
+
+			foreach ( $fields as $key => $label ) {
+				$id   = 'pronamic_pay_test_' . $name . '_' . $key;
+				$name = 'pronamic_pay_payment[' . $name . '][' . $key . ']';
+
+				?>
+				<tr>
+					<th scope="row">
+						<label for="<?php echo \esc_attr( $id ); ?>"><?php echo \esc_html( $label ); ?></label>
+					</th>
+					<td>
+						<input id="<?php echo \esc_attr( $id ); ?>"  name="<?php echo \esc_attr( $name ); ?>" type="text" class="regular-text code pronamic-pay-form-control">
+					</td>
+				</tr>
+				<?php
+			}
+
+			?>
+		</table>
+
+		<?php
+	}
+
+	?>
+
+	<tr>
+		<th scope="row">
+			<?php esc_html_e( 'Billing', 'pronamic_ideal' ); ?>
+		</th>
+		<td style="padding: 0;">
+			<?php print_adress_fields( 'billing' ); ?>
+		</td>
+	</tr>
+
+	<tr>
+		<th scope="row">
+			<?php esc_html_e( 'Shipping', 'pronamic_ideal' ); ?>
+		</th>
+		<td style="padding: 0;">
+			<?php print_adress_fields( 'shipping' ); ?>
+		</td>
+	</tr>
+
 	<?php if ( $gateway->supports( 'recurring' ) ) : ?>
 
 		<?php
