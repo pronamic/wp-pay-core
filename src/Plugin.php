@@ -1085,6 +1085,11 @@ class Plugin {
 
 		$this->payment_methods->add( $payment_method_paysafecard );
 
+		// Postepay.
+		$payment_method_postepay = new PaymentMethod( PaymentMethods::POSTEPAY );
+
+		$this->payment_methods->add( $payment_method_postepay );
+
 		// Przelewy24.
 		$payment_method_przelewy24 = new PaymentMethod( PaymentMethods::PRZELEWY24 );
 

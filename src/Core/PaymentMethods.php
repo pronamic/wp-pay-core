@@ -413,6 +413,13 @@ class PaymentMethods {
 	const PAYSAFECARD = 'paysafecard';
 
 	/**
+	 * Postepay.
+	 *
+	 * @var string
+	 */
+	const POSTEPAY = 'postepay';
+
+	/**
 	 * Przelewy24
 	 *
 	 * @since 2.5.0
