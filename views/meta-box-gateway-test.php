@@ -42,6 +42,16 @@ $payment_methods = $gateway->get_payment_methods(
 );
 
 ?>
+<style>
+	.pronamic-pay-lines {
+
+	}
+
+	.pronamic-pay-lines th {
+		padding: 15px 10px;
+	}
+</style>
+
 <table class="form-table">
 	<tr>
 		<th scope="row">
@@ -142,7 +152,7 @@ $payment_methods = $gateway->get_payment_methods(
 
 	<tr>
 		<th scope="row">
-			<?php esc_html_e( 'Amount', 'pronamic_ideal' ); ?>
+			<?php esc_html_e( 'Currency', 'pronamic_ideal' ); ?>
 		</th>
 		<td>
 			<select name="test_currency_code">
@@ -167,8 +177,183 @@ $payment_methods = $gateway->get_payment_methods(
 
 				?>
 			</select>
+		</td>
+	</tr>
 
-			<input name="test_amount" id="test_amount" class="regular-text code pronamic-pay-form-control" value="" type="number" step="any" size="6" autocomplete="off" />
+	<tr>
+		<th scope="row">
+			<?php esc_html_e( 'Lines', 'pronamic_ideal' ); ?>
+		</th>
+		<td style="padding: 0;">
+			<table class="pronamic-pay-lines widefat striped">
+				<thead>
+					<tr>
+						<th><?php esc_html_e( 'Name', 'pronamic_ideal' ); ?></th>
+						<th><?php esc_html_e( 'Quantity', 'pronamic_ideal' ); ?></th>
+						<th><?php esc_html_e( 'Unit price', 'pronamic_ideal' ); ?></th>
+					</tr>
+				</thead>
+
+				<tbody>
+
+					<?php
+
+					$lines = [
+						[
+							'name'     => __( 'Test Product 1', 'pronamic_ideal' ),
+							'quantity' => 1,
+							'price'    => '60.00',
+						],
+						[
+							'name'     => __( 'Test Product 2', 'pronamic_ideal' ),
+							'quantity' => 2,
+							'price'    => '30.00',
+						],
+						[
+							'name'     => __( 'Test Product 3', 'pronamic_ideal' ),
+							'quantity' => 3,
+							'price'    => '20.00',
+						],
+					];
+
+					foreach ( $lines as $key => $line ) :
+						?>
+
+						<tr>
+							<?php
+
+							$name = sprintf( 'lines[%s][%s]', $key, '%s' );
+
+							?>
+							<td>
+								<input type="text" name="<?php echo \esc_attr( \sprintf( $name, 'name' ) ); ?>" value="<?php echo \esc_attr( $line['name'] ); ?>" class="pronamic-pay-form-control" />
+							</td>
+							<td>
+								<input type="number" name="<?php echo \esc_attr( \sprintf( $name, 'quantity' ) ); ?>" value="<?php echo \esc_attr( $line['quantity'] ); ?>" min="1" class="pronamic-pay-form-control" />
+							</td>
+							<td>
+								<input type="number" name="<?php echo \esc_attr( \sprintf( $name, 'price' ) ); ?>" value="<?php echo \esc_attr( $line['price'] ); ?>" step="any" class="pronamic-pay-form-control" />
+							</td>
+						</tr>
+
+					<?php endforeach; ?>
+
+				</tbody>
+			</table>
+		</td>
+	</tr>
+
+	<tr>
+		<td>
+
+		</td>
+		<td>
+			<?php submit_button( __( 'Test', 'pronamic_ideal' ), 'secondary', 'test_pay_gateway', false ); ?>
+		</td>
+	</tr>
+
+	<?php
+
+	/**
+	 * Print address fields.
+	 *
+	 * @param string $name_format Input name format.
+	 * @param array  $values      Values to prefill the fields.
+	 * @return void
+	 */
+	function print_adress_fields( $name_format, $values = [] ) {
+		$fields = [
+			'first_name'   => __( 'First name', 'pronamic_ideal' ),
+			'last_name'    => __( 'Last name', 'pronamic_ideal' ),
+			'company'      => __( 'Company', 'pronamic_ideal' ),
+			'line_1'       => __( 'Address line 1', 'pronamic_ideal' ),
+			'line_2'       => __( 'Address line 2', 'pronamic_ideal' ),
+			'city'         => __( 'City', 'pronamic_ideal' ),
+			'postal_code'  => __( 'Postcode / ZIP', 'pronamic_ideal' ),
+			'country_code' => __( 'Country / Region', 'pronamic_ideal' ),
+			'state'        => __( 'State / County', 'pronamic_ideal' ),
+			'email'        => __( 'Email address', 'pronamic_ideal' ),
+			'phone'        => __( 'Phone', 'pronamic_ideal' ),
+		];
+
+		?>
+		<table class="form-table" style="margin-top: 0;">
+			<?php
+
+			foreach ( $fields as $key => $label ) {
+				$id    = 'pronamic_pay_test_' . $type . '_' . $key;
+				$name  = \sprintf( $name_format, $key );
+				$value = \array_key_exists( $key, $values ) ? $values[ $key ] : '';
+
+				?>
+				<tr>
+					<th scope="row">
+						<label for="<?php echo \esc_attr( $id ); ?>"><?php echo \esc_html( $label ); ?></label>
+					</th>
+					<td>
+						<input id="<?php echo \esc_attr( $id ); ?>" name="<?php echo \esc_attr( $name ); ?>" value="<?php echo \esc_attr( $value ); ?>"  type="text" class="regular-text code pronamic-pay-form-control">
+					</td>
+				</tr>
+				<?php
+			}
+
+			?>
+		</table>
+
+		<?php
+	}
+
+	$user = \wp_get_current_user();
+
+	?>
+
+	<tr>
+		<th scope="row">
+			<?php esc_html_e( 'Billing', 'pronamic_ideal' ); ?>
+		</th>
+		<td style="padding: 0;">
+			<?php
+
+			print_adress_fields(
+				'billing[%s]',
+				[
+					'first_name'   => ( '' === $user->first_name ) ? 'John' : $user->first_name,
+					'last_name'    => ( '' === $user->last_name ) ? 'Doe' : $user->last_name,
+					'company'      => 'Pronamic',
+					'line_1'       => 'Billing Line 1',
+					'postal_code'  => '1234 AB',
+					'city'         => 'Billing City',
+					'country_code' => 'NL',
+					'email'        => $user->user_email,
+				]
+			);
+
+			?>
+		</td>
+	</tr>
+
+	<tr>
+		<th scope="row">
+			<?php esc_html_e( 'Shipping', 'pronamic_ideal' ); ?>
+		</th>
+		<td style="padding: 0;">
+			<?php
+
+			print_adress_fields(
+				'shipping[%s]',
+				[
+					'first_name'   => ( '' === $user->first_name ) ? 'Jane' : $user->first_name,
+					'last_name'    => ( '' === $user->last_name ) ? 'Doe' : $user->last_name,
+					'company'      => 'Pronamic',
+					'line_1'       => 'Shipping Line 1',
+					'postal_code'  => '5678 XY',
+					'city'         => 'Shipping City',
+					'country_code' => 'NL',
+					'email'        => $user->user_email,
+				]
+			);
+
+			?>
 		</td>
 	</tr>
 

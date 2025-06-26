@@ -368,7 +368,7 @@ class AdminModule {
 
 		/**
 		 * Clipboard feature.
-		 * 
+		 *
 		 * @link https://github.com/WordPress/WordPress/blob/68e3310c024d7fceb84a5028e955ad163de6bd45/wp-includes/js/plupload/handlers.js#L364-L393
 		 * @link https://translate.wordpress.org/projects/wp/dev/nl/default/?filters%5Bstatus%5D=either&filters%5Boriginal_id%5D=10763746&filters%5Btranslation_id%5D=91929960
 		 * @link https://translate.wordpress.org/projects/wp/dev/nl/default/?filters%5Bstatus%5D=either&filters%5Boriginal_id%5D=6831324&filters%5Btranslation_id%5D=58732256
@@ -406,16 +406,6 @@ class AdminModule {
 		if ( \array_key_exists( 'test_currency_code', $_POST ) ) {
 			$currency_code = \sanitize_text_field( \wp_unslash( $_POST['test_currency_code'] ) );
 		}
-
-		$value = array_key_exists( 'test_amount', $_POST ) ? \sanitize_text_field( \wp_unslash( $_POST['test_amount'] ) ) : '';
-
-		try {
-			$amount = Number::from_string( $value );
-		} catch ( \Exception $e ) {
-			\wp_die( \esc_html( $e->getMessage() ) );
-		}
-
-		$price = new TaxedMoney( $amount, $currency_code, 0, 0 );
 
 		/*
 		 * Payment.
@@ -492,46 +482,86 @@ class AdminModule {
 
 		$payment->set_customer( $customer );
 
-		// Billing address.
-		$address = AddressHelper::from_array(
-			[
-				'name'         => $name,
-				'email'        => $user->user_email,
-				'phone'        => null === $customer ? null : $customer->get_phone(),
-				'line_1'       => 'Billing Line 1',
-				'postal_code'  => '1234 AB',
-				'city'         => 'Billing City',
-				'country_code' => 'NL',
-			]
-		);
-
-		$payment->set_billing_address( $address );
-
-		$address = AddressHelper::from_array(
-			[
-				'name'         => $name,
-				'email'        => $user->user_email,
-				'phone'        => null === $customer ? null : $customer->get_phone(),
-				'line_1'       => 'Shipping Line 1',
-				'postal_code'  => '5678 XY',
-				'city'         => 'Shipping City',
-				'country_code' => 'NL',
-			]
-		);
-
-		$payment->set_shipping_address( $address );
-
 		// Lines.
+		$lines_data = \array_map(
+			function ( $item ) {
+				if ( ! \is_array( $item ) ) {
+					return [];
+				}
+
+				return \array_map( 'sanitize_text_field', $item );
+			},
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Input is sanitized, see code above.
+			\wp_unslash( $_POST['lines'] ?? [] )
+		);
+
 		$payment->lines = new PaymentLines();
 
-		$line = $payment->lines->new_line();
+		foreach ( $lines_data as $item ) {
+			$line = $payment->lines->new_line();
 
-		$line->set_name( __( 'Test', 'pronamic_ideal' ) );
-		$line->set_unit_price( $price );
-		$line->set_quantity( 1 );
-		$line->set_total_amount( $price );
+			try {
+				$value = $this->get_optional_value( $item, 'price' );
+
+				$amount = Number::from_string( $value );
+			} catch ( \Exception $e ) {
+				\wp_die( \esc_html( $e->getMessage() ) );
+			}
+
+			$quantity = $this->get_optional_value( $item, 'quantity' ) ?? 1;
+
+			$unit_price   = new Money( $amount, $currency_code );
+			$total_amount = $unit_price->multiply( $quantity );
+
+			$line->set_name( $this->get_optional_value( $item, 'name' ) );
+			$line->set_unit_price( $unit_price );
+			$line->set_quantity( $quantity );
+			$line->set_total_amount( $total_amount );
+		}
 
 		$payment->set_total_amount( $payment->lines->get_amount() );
+
+		// Billing address.
+		$billing_data = \array_map( 'sanitize_text_field', \wp_unslash( $_POST['billing'] ?? [] ) );
+
+		$name = new ContactName();
+		$name->set_first_name( $this->get_optional_value( $billing_data, 'first_name' ) );
+		$name->set_last_name( $this->get_optional_value( $billing_data, 'last_name' ) );
+
+		$billing_address = new Address();
+		$billing_address->set_name( $name );
+		$billing_address->set_company_name( $this->get_optional_value( $billing_data, 'company' ) );
+		$billing_address->set_line_1( $this->get_optional_value( $billing_data, 'line_1' ) );
+		$billing_address->set_line_2( $this->get_optional_value( $billing_data, 'line_2' ) );
+		$billing_address->set_city( $this->get_optional_value( $billing_data, 'city' ) );
+		$billing_address->set_postal_code( $this->get_optional_value( $billing_data, 'postal_code' ) );
+		$billing_address->set_country_code( $this->get_optional_value( $billing_data, 'country_code' ) );
+		$billing_address->set_region( $this->get_optional_value( $billing_data, 'state' ) );
+		$billing_address->set_email( $this->get_optional_value( $billing_data, 'email' ) );
+		$billing_address->set_phone( $this->get_optional_value( $billing_data, 'phone' ) );
+
+		$payment->set_billing_address( $billing_address );
+
+		// Shipping address.
+		$shipping_data = \array_map( 'sanitize_text_field', \wp_unslash( $_POST['shipping'] ?? [] ) );
+
+		$name = new ContactName();
+		$name->set_first_name( $this->get_optional_value( $shipping_data, 'first_name' ) );
+		$name->set_last_name( $this->get_optional_value( $shipping_data, 'last_name' ) );
+
+		$shipping_address = new Address();
+		$shipping_address->set_name( $name );
+		$shipping_address->set_company_name( $this->get_optional_value( $shipping_data, 'company' ) );
+		$shipping_address->set_line_1( $this->get_optional_value( $shipping_data, 'line_1' ) );
+		$shipping_address->set_line_2( $this->get_optional_value( $shipping_data, 'line_2' ) );
+		$shipping_address->set_city( $this->get_optional_value( $shipping_data, 'city' ) );
+		$shipping_address->set_postal_code( $this->get_optional_value( $shipping_data, 'postal_code' ) );
+		$shipping_address->set_country_code( $this->get_optional_value( $shipping_data, 'country_code' ) );
+		$shipping_address->set_region( $this->get_optional_value( $shipping_data, 'state' ) );
+		$shipping_address->set_email( $this->get_optional_value( $shipping_data, 'email' ) );
+		$shipping_address->set_phone( $this->get_optional_value( $shipping_data, 'phone' ) );
+
+		$payment->set_shipping_address( $shipping_address );
 
 		// Subscription.
 		$test_subscription = \filter_input( \INPUT_POST, 'pronamic_pay_test_subscription', \FILTER_VALIDATE_BOOLEAN );
@@ -611,6 +641,27 @@ class AdminModule {
 
 			exit;
 		}
+	}
+
+	/**
+	 * Get an optional value from the data array.
+	 *
+	 * @param array<string, string> $data Data array.
+	 * @param string                $key  Key to retrieve the value for.
+	 * @return string|null
+	 */
+	private function get_optional_value( array $data, string $key ) {
+		if ( ! array_key_exists( $key, $data ) ) {
+			return null;
+		}
+
+		$value = $data[ $key ];
+
+		if ( '' === $value ) {
+			return null;
+		}
+
+		return $value;
 	}
 
 	/**
