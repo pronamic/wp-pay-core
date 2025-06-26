@@ -93,7 +93,20 @@ $phase = $subscription->get_current_phase();
 							</p>
 
 							<form id="pronamic_ideal_form" name="pronamic_ideal_form" method="post">
-								<?php wp_nonce_field( 'pronamic_pay_renew_subscription_' . $subscription->get_id(), 'pronamic_pay_renew_subscription_nonce' ); ?>
+								<?php
+
+								$start_date = $next_period->get_start_date()->format( \DATE_ATOM );
+
+								$end_date = $next_period->get_end_date()->format( \DATE_ATOM );
+
+								$nonce_action = \sprintf( 'pronamic_pay_renew_subscription_%s_%s_%s', $subscription->get_id(), $start_date, $end_date );
+
+								\wp_nonce_field( $nonce_action, 'pronamic_pay_renew_subscription_nonce' );
+
+								?>
+
+								<input type="hidden" name="pronamic_pay_renew_subscription_start_date" value="<?php echo esc_attr( $start_date ); ?>"/>
+								<input type="hidden" name="pronamic_pay_renew_subscription_end_date" value="<?php echo esc_attr( $end_date ); ?>"/>
 
 								<input type="submit" value="<?php esc_attr_e( 'Pay', 'pronamic_ideal' ); ?>"/>
 							</form>
