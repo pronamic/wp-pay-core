@@ -213,10 +213,11 @@ $payment_methods = $gateway->get_payment_methods(
 							'name'     => __( 'Test Product 3', 'pronamic_ideal' ),
 							'quantity' => 3,
 							'price'    => '20.00',
-						]
+						],
 					];
 
-					foreach ( $lines as $key => $line ) : ?>
+					foreach ( $lines as $key => $line ) :
+						?>
 
 						<tr>
 							<?php

@@ -496,7 +496,7 @@ class AdminModule {
 
 		$payment->lines = new PaymentLines();
 
-		foreach( $lines_data as $item ) {
+		foreach ( $lines_data as $item ) {
 			$line = $payment->lines->new_line();
 
 			try {
