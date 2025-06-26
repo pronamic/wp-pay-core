@@ -407,16 +407,6 @@ class AdminModule {
 			$currency_code = \sanitize_text_field( \wp_unslash( $_POST['test_currency_code'] ) );
 		}
 
-		$value = array_key_exists( 'test_amount', $_POST ) ? \sanitize_text_field( \wp_unslash( $_POST['test_amount'] ) ) : '';
-
-		try {
-			$amount = Number::from_string( $value );
-		} catch ( \Exception $e ) {
-			\wp_die( \esc_html( $e->getMessage() ) );
-		}
-
-		$price = new TaxedMoney( $amount, $currency_code, 0, 0 );
-
 		/*
 		 * Payment.
 		 */
@@ -492,6 +482,44 @@ class AdminModule {
 
 		$payment->set_customer( $customer );
 
+		// Lines.
+		$lines_data = \array_map(
+			function ( $item ) {
+				if ( ! \is_array( $item ) ) {
+					return [];
+				}
+
+				return \array_map( 'sanitize_text_field', $item );
+			},
+			\wp_unslash( $_POST['lines'] ?? [] )
+		);
+
+		$payment->lines = new PaymentLines();
+
+		foreach( $lines_data as $item ) {
+			$line = $payment->lines->new_line();
+
+			try {
+				$value = $this->get_optional_value( $item, 'price' );
+
+				$amount = Number::from_string( $value );
+			} catch ( \Exception $e ) {
+				\wp_die( \esc_html( $e->getMessage() ) );
+			}
+
+			$quantity = $this->get_optional_value( $item, 'quantity' ) ?? 1;
+
+			$unit_price   = new Money( $amount, $currency_code );
+			$total_amount = $unit_price->multiply( $quantity );
+
+			$line->set_name( $this->get_optional_value( $item, 'name' ) );
+			$line->set_unit_price( $unit_price );
+			$line->set_quantity( $quantity );
+			$line->set_total_amount( $total_amount );
+		}
+
+		$payment->set_total_amount( $payment->lines->get_amount() );
+
 		// Billing address.
 		$billing_data = \array_map( 'sanitize_text_field', \wp_unslash( $_POST['billing'] ?? [] ) );
 
@@ -533,35 +561,6 @@ class AdminModule {
 		$shipping_address->set_phone( $this->get_optional_value( $shipping_data, 'phone' ) );
 
 		$payment->set_shipping_address( $shipping_address );
-
-		// Lines.
-		$lines_data = \array_map( 'sanitize_text_field', \wp_unslash( $_POST['lines'] ?? [] ) );
-
-		$payment->lines = new PaymentLines();
-
-		foreach( $lines_data as $item ) {
-			$line = $payment->lines->new_line();
-
-			try {
-				$value = $this->get_optional_value( $item, 'price' );
-
-				$amount = Number::from_string( $value );
-			} catch ( \Exception $e ) {
-				\wp_die( \esc_html( $e->getMessage() ) );
-			}
-
-			$quantity = $this->get_optional_value( $item, 'quantity' ) ?? 1;
-
-			$unit_price   = new Money( $amount, $currency_code );
-			$total_amount = $unit_price->multiply( $quantity );
-
-			$line->set_name( $this->get_optional_value( $item, 'name' ) );
-			$line->set_unit_price( $unit_price );
-			$line->set_quantity( $quantity );
-			$line->set_total_amount( $total_amount );
-		}
-
-		$payment->set_total_amount( $payment->lines->get_amount() );
 
 		// Subscription.
 		$test_subscription = \filter_input( \INPUT_POST, 'pronamic_pay_test_subscription', \FILTER_VALIDATE_BOOLEAN );
