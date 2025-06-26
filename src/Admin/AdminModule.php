@@ -491,6 +491,7 @@ class AdminModule {
 
 				return \array_map( 'sanitize_text_field', $item );
 			},
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Input is sanitized, see code above.
 			\wp_unslash( $_POST['lines'] ?? [] )
 		);
 
