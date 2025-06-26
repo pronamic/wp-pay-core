@@ -355,26 +355,6 @@ class SubscriptionsModule {
 	}
 
 	/**
-	 * Check if subscription should be renewed.
-	 *
-	 * @param Subscription $subscription Subscription.
-	 * @return bool
-	 */
-	private function should_renew( Subscription $subscription ) {
-		if ( ! \array_key_exists( 'pronamic_pay_renew_subscription_nonce', $_POST ) ) {
-			return false;
-		}
-
-		$nonce = \sanitize_key( $_POST['pronamic_pay_renew_subscription_nonce'] );
-
-		if ( ! wp_verify_nonce( $nonce, 'pronamic_pay_renew_subscription_' . $subscription->get_id() ) ) {
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
 	 * Handle renew subscription action request.
 	 *
 	 * @param Subscription $subscription Subscription to renew.
@@ -400,7 +380,27 @@ class SubscriptionsModule {
 			exit;
 		}
 
-		if ( $this->should_renew( $subscription ) ) {
+		if ( \array_key_exists( 'pronamic_pay_renew_subscription_nonce', $_POST ) ) {
+			$nonce      = \sanitize_key( $_POST['pronamic_pay_renew_subscription_nonce'] );
+			$start_date = '';
+			$end_date   = '';
+
+			if ( \array_key_exists( 'pronamic_pay_renew_subscription_start_date', $_POST ) ) {
+				$start_date = \sanitize_text_field( \wp_unslash( $_POST['pronamic_pay_renew_subscription_start_date'] ) );
+			}
+
+			if ( \array_key_exists( 'pronamic_pay_renew_subscription_end_date', $_POST ) ) {
+				$end_date = \sanitize_text_field( \wp_unslash( $_POST['pronamic_pay_renew_subscription_end_date'] ) );
+			}
+
+			$action = \sprintf( 'pronamic_pay_renew_subscription_%s_%s_%s', $subscription->get_id(), $start_date, $end_date );
+
+			if ( ! \wp_verify_nonce( $nonce, $action ) ) {
+				require __DIR__ . '/../../views/subscription-renew-failed.php';
+
+				exit;
+			}
+
 			try {
 				// Create payment.
 				$payment = $subscription->new_payment();
@@ -435,13 +435,11 @@ class SubscriptionsModule {
 				}
 
 				// Set payment period.
-				$renewal_period = $subscription->get_renewal_period();
+				$renewal_period = new SubscriptionPeriod( $current_phase, new \DateTime( $start_date ), new \DateTime( $end_date ), $current_phase->get_amount() );
 
-				if ( null !== $renewal_period ) {
-					$payment->set_total_amount( $renewal_period->get_amount() );
+				$payment->set_total_amount( $renewal_period->get_amount() );
 
-					$payment->add_period( $renewal_period );
-				}
+				$payment->add_period( $renewal_period );
 
 				// Start payment.
 				$payment = Plugin::start_payment( $payment );
