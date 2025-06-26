@@ -281,8 +281,8 @@ $payment_methods = $gateway->get_payment_methods(
 			<?php
 
 			foreach ( $fields as $key => $label ) {
-				$id    = 'pronamic_pay_test_' . $type . '_' . $key;
 				$name  = \sprintf( $name_format, $key );
+				$id    = \sanitize_key( $name );
 				$value = \array_key_exists( $key, $values ) ? $values[ $key ] : '';
 
 				?>
