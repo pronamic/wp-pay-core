@@ -711,6 +711,11 @@ class Plugin {
 
 		$this->payment_methods->add( $payment_method_alipay );
 
+		// Alma.
+		$payment_method_alma = new PaymentMethod( PaymentMethods::ALMA );
+
+		$this->payment_methods->add( $payment_method_alma );
+
 		// American Express.
 		$payment_method_american_express = new PaymentMethod( PaymentMethods::AMERICAN_EXPRESS );
 
@@ -728,6 +733,11 @@ class Plugin {
 		];
 
 		$this->payment_methods->add( $payment_method_apple_pay );
+
+		// BANCOMAT Pay.
+		$payment_method_bancomat_pay = new PaymentMethod( PaymentMethods::BANCOMAT_PAY );
+
+		$this->payment_methods->add( $payment_method_bancomat_pay );
 
 		// Bancontact.
 		$payment_method_bancontact = new PaymentMethod( PaymentMethods::BANCONTACT );
@@ -916,6 +926,11 @@ class Plugin {
 
 		$this->payment_methods->add( $payment_method_focum );
 
+		// Gift Card.
+		$payment_method_gift_card = new PaymentMethod( PaymentMethods::GIFT_CARD );
+
+		$this->payment_methods->add( $payment_method_gift_card );
+
 		// IDEAL.
 		$payment_method_ideal = new PaymentMethod( PaymentMethods::IDEAL );
 
@@ -1032,10 +1047,20 @@ class Plugin {
 
 		$this->payment_methods->add( $payment_method_mb_way );
 
+		// Multibanco.
+		$payment_method_multibanco = new PaymentMethod( PaymentMethods::MULTIBANCO );
+
+		$this->payment_methods->add( $payment_method_multibanco );
+
 		// MyBank.
 		$payment_method_mybank = new PaymentMethod( PaymentMethods::MYBANK );
 
 		$this->payment_methods->add( $payment_method_mybank );
+
+		// Pay by Bank.
+		$payment_method_pay_by_bank = new PaymentMethod( PaymentMethods::PAY_BY_BANK );
+
+		$this->payment_methods->add( $payment_method_pay_by_bank );
 
 		// Payconiq.
 		$payment_method_payconiq = new PaymentMethod( PaymentMethods::PAYCONIQ );
@@ -1054,6 +1079,11 @@ class Plugin {
 		];
 
 		$this->payment_methods->add( $payment_method_paypal );
+
+		// Paysafecard.
+		$payment_method_paysafecard = new PaymentMethod( PaymentMethods::PAYSAFECARD );
+
+		$this->payment_methods->add( $payment_method_paysafecard );
 
 		// Przelewy24.
 		$payment_method_przelewy24 = new PaymentMethod( PaymentMethods::PRZELEWY24 );
@@ -1087,6 +1117,11 @@ class Plugin {
 
 		$this->payment_methods->add( $payment_method_santander );
 
+		// Satispay.
+		$payment_method_satispay = new PaymentMethod( PaymentMethods::SATISPAY );
+
+		$this->payment_methods->add( $payment_method_satispay );
+
 		// SOFORT Banking.
 		$payment_method_sofort = new PaymentMethod( PaymentMethods::SOFORT );
 
@@ -1113,6 +1148,11 @@ class Plugin {
 		];
 
 		$this->payment_methods->add( $payment_method_swish );
+
+		// Trustly.
+		$payment_method_trustly = new PaymentMethod( PaymentMethods::TRUSTLY );
+
+		$this->payment_methods->add( $payment_method_trustly );
 
 		// TWINT.
 		$payment_method_twint = new PaymentMethod( PaymentMethods::TWINT );
@@ -1149,6 +1189,11 @@ class Plugin {
 		];
 
 		$this->payment_methods->add( $payment_method_visa );
+
+		// Vouchers.
+		$payment_method_vouchers = new PaymentMethod( PaymentMethods::VOUCHERS );
+
+		$this->payment_methods->add( $payment_method_vouchers );
 
 		PaymentMethods::maybe_update_active_payment_methods();
 	}

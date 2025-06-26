@@ -27,6 +27,14 @@ use WP_Query;
  */
 class PaymentMethods {
 	/**
+	 * Alma.
+	 *
+	 * @var string
+	 * @since 4.26
+	 */
+	const ALMA = 'alma';
+
+	/**
 	 * AfterPay (afterpay.nl).
 	 *
 	 * @deprecated Use `AFTERPAY_NL` or `AFTERPAY_COM` instead.
@@ -84,6 +92,14 @@ class PaymentMethods {
 	 * @since 1.3.7
 	 */
 	const BANCONTACT = 'bancontact';
+
+	/**
+	 * BANCOMAT Pay.
+	 *
+	 * @var string
+	 * @since 4.26
+	 */
+	const BANCOMAT_PAY = 'bancomat_pay';
 
 	/**
 	 * Bank transfer
@@ -220,6 +236,14 @@ class PaymentMethods {
 	const FOCUM = 'focum';
 
 	/**
+	 * Gift card.
+	 *
+	 * @var string
+	 * @since 4.26
+	 */
+	const GIFT_CARD = 'gift_card';
+
+	/**
 	 * Constant for the iDEAL payment method.
 	 *
 	 * @var string
@@ -339,6 +363,14 @@ class PaymentMethods {
 	const MOBILEPAY = 'mobilepay';
 
 	/**
+	 * Multibanco.
+	 *
+	 * @var string
+	 * @since 4.26
+	 */
+	const MULTIBANCO = 'multibanco';
+
+	/**
 	 * MyBank.
 	 *
 	 * @link https://github.com/mollie/mollie-api-php/blob/ed5b2ba1dc8f30a4674f10ca78ad547c2df91008/src/Types/PaymentMethod.php#L114-L117
@@ -373,6 +405,14 @@ class PaymentMethods {
 	const PAYPAL = 'paypal';
 
 	/**
+	 * Paysafecard.
+	 *
+	 * @var string
+	 * @since 4.26
+	 */
+	const PAYSAFECARD = 'paysafecard';
+
+	/**
 	 * Przelewy24
 	 *
 	 * @since 2.5.0
@@ -398,6 +438,14 @@ class PaymentMethods {
 	const SANTANDER = 'santander';
 
 	/**
+	 * Satispay.
+	 *
+	 * @var string
+	 * @since 4.26
+	 */
+	const SATISPAY = 'satispay';
+
+	/**
 	 * SOFORT Banking
 	 *
 	 * @var string
@@ -420,6 +468,14 @@ class PaymentMethods {
 	 * @since 2.6.3
 	 */
 	const SWISH = 'swish';
+
+	/**
+	 * Trustly.
+	 *
+	 * @var string
+	 * @since 4.26
+	 */
+	const TRUSTLY = 'trustly';
 
 	/**
 	 * TWINT
@@ -456,6 +512,14 @@ class PaymentMethods {
 	const VISA = 'visa';
 
 	/**
+	 * Vouchers.
+	 *
+	 * @var string
+	 * @since 4.26
+	 */
+	const VOUCHERS = 'vouchers';
+
+	/**
 	 * Get payment methods
 	 *
 	 * @since 1.3.0
@@ -463,12 +527,14 @@ class PaymentMethods {
 	 */
 	public static function get_payment_methods() {
 		$payment_methods = [
+			self::ALMA                    => __( 'Alma', 'pronamic_ideal' ),
 			self::AFTERPAY_NL             => _x( 'AfterPay', 'afterpay.nl', 'pronamic_ideal' ),
 			self::AFTERPAY_COM            => _x( 'Afterpay', 'afterpay.com', 'pronamic_ideal' ),
 			self::ALIPAY                  => __( 'Alipay', 'pronamic_ideal' ),
 			self::AMERICAN_EXPRESS        => __( 'American Express', 'pronamic_ideal' ),
 			self::APPLE_PAY               => __( 'Apple Pay', 'pronamic_ideal' ),
 			self::BANCONTACT              => __( 'Bancontact', 'pronamic_ideal' ),
+			self::BANCOMAT_PAY            => __( 'BANCOMAT Pay', 'pronamic_ideal' ),
 			self::BANK_TRANSFER           => __( 'Bank Transfer', 'pronamic_ideal' ),
 			self::BELFIUS                 => __( 'Belfius Direct Net', 'pronamic_ideal' ),
 			self::BILLIE                  => __( 'Billie', 'pronamic_ideal' ),
@@ -498,6 +564,7 @@ class PaymentMethods {
 			),
 			self::EPS                     => __( 'EPS', 'pronamic_ideal' ),
 			self::FOCUM                   => __( 'Focum', 'pronamic_ideal' ),
+			self::GIFT_CARD               => __( 'Gift Card', 'pronamic_ideal' ),
 			self::GIROPAY                 => __( 'Giropay', 'pronamic_ideal' ),
 			self::GOOGLE_PAY              => __( 'Google Pay', 'pronamic_ideal' ),
 			self::IDEAL                   => __( 'iDEAL', 'pronamic_ideal' ),
@@ -511,19 +578,25 @@ class PaymentMethods {
 			self::MASTERCARD              => __( 'Mastercard', 'pronamic_ideal' ),
 			self::MB_WAY                  => __( 'MB WAY', 'pronamic_ideal' ),
 			self::MOBILEPAY               => __( 'MobilePay', 'pronamic_ideal' ),
+			self::MULTIBANCO              => __( 'Multibanco', 'pronamic_ideal' ),
+			self::MYBANK                  => __( 'MyBank', 'pronamic_ideal' ),
 			self::PAYCONIQ                => __( 'Payconiq', 'pronamic_ideal' ),
 			self::PAYPAL                  => __( 'PayPal', 'pronamic_ideal' ),
+			self::PAYSAFECARD             => __( 'Paysafecard', 'pronamic_ideal' ),
 			self::PAY_BY_BANK             => __( 'Pay by Bank', 'pronamic_ideal' ),
 			self::PRZELEWY24              => __( 'Przelewy24', 'pronamic_ideal' ),
 			self::RIVERTY                 => __( 'Riverty', 'pronamic_ideal' ),
 			self::SANTANDER               => __( 'Santander', 'pronamic_ideal' ),
+			self::SATISPAY                => __( 'Satispay', 'pronamic_ideal' ),
 			self::SOFORT                  => __( 'SOFORT Banking', 'pronamic_ideal' ),
 			self::SPRAYPAY                => __( 'SprayPay', 'pronamic_ideal' ),
 			self::SWISH                   => __( 'Swish', 'pronamic_ideal' ),
+			self::TRUSTLY                 => __( 'Trustly', 'pronamic_ideal' ),
 			self::TWINT                   => __( 'TWINT', 'pronamic_ideal' ),
 			self::V_PAY                   => __( 'V PAY', 'pronamic_ideal' ),
 			self::VIPPS                   => __( 'Vipps', 'pronamic_ideal' ),
 			self::VISA                    => __( 'Visa', 'pronamic_ideal' ),
+			self::VOUCHERS                => __( 'Vouchers', 'pronamic_ideal' ),
 		];
 
 		return $payment_methods;
