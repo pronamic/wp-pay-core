@@ -535,14 +535,31 @@ class AdminModule {
 		$payment->set_shipping_address( $shipping_address );
 
 		// Lines.
+		$lines_data = \array_map( 'sanitize_text_field', \wp_unslash( $_POST['lines'] ?? [] ) );
+
 		$payment->lines = new PaymentLines();
 
-		$line = $payment->lines->new_line();
+		foreach( $lines_data as $item ) {
+			$line = $payment->lines->new_line();
 
-		$line->set_name( __( 'Test', 'pronamic_ideal' ) );
-		$line->set_unit_price( $price );
-		$line->set_quantity( 1 );
-		$line->set_total_amount( $price );
+			try {
+				$value = $this->get_optional_value( $item, 'price' );
+
+				$amount = Number::from_string( $value );
+			} catch ( \Exception $e ) {
+				\wp_die( \esc_html( $e->getMessage() ) );
+			}
+
+			$quantity = $this->get_optional_value( $item, 'quantity' ) ?? 1;
+
+			$unit_price   = new Money( $amount, $currency_code );
+			$total_amount = $unit_price->multiply( $quantity );
+
+			$line->set_name( $this->get_optional_value( $item, 'name' ) );
+			$line->set_unit_price( $unit_price );
+			$line->set_quantity( $quantity );
+			$line->set_total_amount( $total_amount );
+		}
 
 		$payment->set_total_amount( $payment->lines->get_amount() );
 

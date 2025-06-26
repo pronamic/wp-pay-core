@@ -42,6 +42,16 @@ $payment_methods = $gateway->get_payment_methods(
 );
 
 ?>
+<style>
+	.pronamic-pay-lines {
+
+	}
+
+	.pronamic-pay-lines th {
+		padding: 15px 10px;
+	}
+</style>
+
 <table class="form-table">
 	<tr>
 		<th scope="row">
@@ -283,6 +293,68 @@ $payment_methods = $gateway->get_payment_methods(
 			);
 
 			?>
+		</td>
+	</tr>
+
+	<tr>
+		<th scope="row">
+			<?php esc_html_e( 'Lines', 'pronamic_ideal' ); ?>
+		</th>
+		<td style="padding: 0;">
+			<table class="pronamic-pay-lines widefat striped">
+				<thead>
+					<tr>
+						<th><?php esc_html_e( 'Name', 'pronamic_ideal' ); ?></th>
+						<th><?php esc_html_e( 'Quantity', 'pronamic_ideal' ); ?></th>
+						<th><?php esc_html_e( 'Unit price', 'pronamic_ideal' ); ?></th>
+					</tr>
+				</thead>
+
+				<tbody>
+
+					<?php
+
+					$lines = [
+						[
+							'name'     => __( 'Test Product 1', 'pronamic_ideal' ),
+							'quantity' => 1,
+							'price'    => '6.00',
+						],
+						[
+							'name'     => __( 'Test Product 2', 'pronamic_ideal' ),
+							'quantity' => 2,
+							'price'    => '3.00',
+						],
+						[
+							'name'     => __( 'Test Product 3', 'pronamic_ideal' ),
+							'quantity' => 3,
+							'price'    => '2.00',
+						]
+					];
+
+					foreach ( $lines as $key => $line ) : ?>
+
+						<tr>
+							<?php
+
+							$name = sprintf( 'lines[%s][%s]', $key, '%s' );
+
+							?>
+							<td>
+								<input type="text" name="<?php echo \esc_attr( \sprintf( $name, 'name' ) ); ?>" value="<?php echo \esc_attr( $line['name'] ); ?>" class="pronamic-pay-form-control" />
+							</td>
+							<td>
+								<input type="number" name="<?php echo \esc_attr( \sprintf( $name, 'quantity' ) ); ?>" value="<?php echo \esc_attr( $line['quantity'] ); ?>" min="1" class="pronamic-pay-form-control" />
+							</td>
+							<td>
+								<input type="number" name="<?php echo \esc_attr( \sprintf( $name, 'price' ) ); ?>" value="<?php echo \esc_attr( $line['price'] ); ?>" step="any" class="pronamic-pay-form-control" />
+							</td>
+						</tr>
+
+					<?php endforeach; ?>
+
+				</tbody>
+			</table>
 		</td>
 	</tr>
 
