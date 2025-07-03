@@ -36,8 +36,6 @@ abstract class PaymentInfo {
 
 	use \Pronamic\WordPress\Pay\Core\ModeTrait;
 
-	use \Pronamic\WordPress\Pay\Privacy\AnonymizedTrait;
-
 	use \Pronamic\WordPress\Pay\Payments\PaymentInfoTrait;
 
 	use \Pronamic\WordPress\Pay\Payments\SourceTrait;

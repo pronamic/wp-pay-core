@@ -119,10 +119,6 @@ class PaymentInfoHelper {
 			$object->mode = $mode;
 		}
 
-		if ( $payment_info->is_anonymized() ) {
-			$object->anonymized = $payment_info->is_anonymized();
-		}
-
 		$version = $payment_info->get_version();
 
 		if ( null !== $version ) {
@@ -227,10 +223,6 @@ class PaymentInfoHelper {
 
 		if ( isset( $json->mode ) ) {
 			$payment_info->set_mode( $json->mode );
-		}
-
-		if ( isset( $json->anonymized ) ) {
-			$payment_info->set_anonymized( $json->anonymized );
 		}
 
 		if ( isset( $json->version ) ) {

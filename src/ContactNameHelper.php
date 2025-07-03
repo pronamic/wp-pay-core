@@ -99,19 +99,6 @@ class ContactNameHelper {
 	}
 
 	/**
-	 * Anonymize customer.
-	 *
-	 * @param ContactName $name Contact name to anonymize.
-	 * @return void
-	 */
-	public static function anonymize_name( ContactName $name ) {
-		$name->set_full_name( PrivacyManager::anonymize_data( 'text', $name->get_full_name() ) );
-		$name->set_first_name( PrivacyManager::anonymize_data( 'text', $name->get_first_name() ) );
-		$name->set_middle_name( PrivacyManager::anonymize_data( 'text', $name->get_middle_name() ) );
-		$name->set_last_name( PrivacyManager::anonymize_data( 'text', $name->get_last_name() ) );
-	}
-
-	/**
 	 * Create a contact name from an array.
 	 *
 	 * @param array $data Data.

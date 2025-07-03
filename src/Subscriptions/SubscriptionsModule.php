@@ -39,22 +39,12 @@ class SubscriptionsModule {
 	public $plugin;
 
 	/**
-	 * Privacy.
-	 *
-	 * @var SubscriptionsPrivacy
-	 */
-	public $privacy;
-
-	/**
 	 * Construct and initialize a subscriptions module object.
 	 *
 	 * @param Plugin $plugin The plugin.
 	 */
 	public function __construct( Plugin $plugin ) {
 		$this->plugin = $plugin;
-
-		// Subscriptions privacy exporters and erasers.
-		$this->privacy = new SubscriptionsPrivacy();
 
 		// Actions.
 		\add_action( 'wp_loaded', [ $this, 'maybe_handle_subscription_action' ] );
