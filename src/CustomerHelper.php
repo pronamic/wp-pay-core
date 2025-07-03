@@ -179,27 +179,6 @@ class CustomerHelper {
 	}
 
 	/**
-	 * Anonymize customer.
-	 *
-	 * @param Customer $customer Customer to anonymize.
-	 * @return void
-	 */
-	public static function anonymize_customer( Customer $customer ) {
-		$customer->set_gender( PrivacyManager::anonymize_data( 'text', $customer->get_gender() ) );
-		$customer->set_birth_date( null );
-		$customer->set_email( PrivacyManager::anonymize_data( 'email_mask', $customer->get_email() ) );
-		$customer->set_phone( PrivacyManager::anonymize_data( 'phone', $customer->get_phone() ) );
-		$customer->set_ip_address( PrivacyManager::anonymize_ip( $customer->get_ip_address() ) );
-		$customer->set_user_agent( PrivacyManager::anonymize_data( 'text', $customer->get_user_agent() ) );
-
-		$name = $customer->get_name();
-
-		if ( null !== $name ) {
-			ContactNameHelper::anonymize_name( $name );
-		}
-	}
-
-	/**
 	 * Create a customer from an array.
 	 *
 	 * @param array $data Data.

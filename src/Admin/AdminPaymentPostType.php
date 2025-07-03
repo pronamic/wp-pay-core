@@ -62,7 +62,6 @@ class AdminPaymentPostType {
 		add_action( 'manage_' . self::POST_TYPE . '_posts_custom_column', [ $this, 'custom_columns' ], 10, 2 );
 
 		add_action( 'load-post.php', [ $this, 'maybe_process_payment_action' ] );
-		add_action( 'load-post.php', [ $this, 'maybe_display_anonymized_notice' ] );
 
 		add_action( 'admin_notices', [ $this, 'admin_notices' ] );
 
@@ -152,43 +151,6 @@ class AdminPaymentPostType {
 				'message' => __( 'Payment status updated.', 'pronamic_ideal' ),
 			];
 		}
-	}
-
-	/**
-	 * Maybe display anonymized notice.
-	 *
-	 * @link https://developer.wordpress.org/reference/functions/get_current_screen/
-	 * @return void
-	 */
-	public function maybe_display_anonymized_notice() {
-		if ( ! \current_user_can( 'edit_payments' ) ) {
-			return;
-		}
-
-		$screen = \get_current_screen();
-
-		if ( null === $screen || 'post' !== $screen->base || 'pronamic_payment' !== $screen->post_type ) {
-			return;
-		}
-
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- This check is for display purposes only, no data modification occurs.
-		if ( ! \array_key_exists( 'post', $_GET ) ) {
-			return;
-		}
-
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- This check is for display purposes only, no data modification occurs.
-		$post_id = \absint( \wp_unslash( $_GET['post'] ) );
-
-		$payment = new Payment( $post_id );
-
-		if ( ! $payment->is_anonymized() ) {
-			return;
-		}
-
-		$this->admin_notices[] = [
-			'type'    => 'info',
-			'message' => \__( 'This payment has been anonymized. Personal details are not available anymore.', 'pronamic_ideal' ),
-		];
 	}
 
 	/**

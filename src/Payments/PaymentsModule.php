@@ -32,13 +32,6 @@ class PaymentsModule {
 	public $plugin;
 
 	/**
-	 * Privacy.
-	 *
-	 * @var PaymentsPrivacy
-	 */
-	public $privacy;
-
-	/**
 	 * Status checker.
 	 *
 	 * @var StatusChecker
@@ -52,9 +45,6 @@ class PaymentsModule {
 	 */
 	public function __construct( Plugin $plugin ) {
 		$this->plugin = $plugin;
-
-		// Payments privacy exporters and erasers.
-		$this->privacy = new PaymentsPrivacy();
 
 		// Exclude payment notes.
 		add_filter( 'comments_clauses', [ $this, 'exclude_payment_comment_notes' ], 10, 2 );

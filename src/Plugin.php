@@ -141,13 +141,6 @@ class Plugin {
 	public $subscription_post_type;
 
 	/**
-	 * Privacy manager.
-	 *
-	 * @var PrivacyManager
-	 */
-	public $privacy_manager;
-
-	/**
 	 * Admin module.
 	 *
 	 * @var AdminModule
@@ -566,9 +559,6 @@ class Plugin {
 		$this->gateway_post_type      = new GatewayPostType();
 		$this->payment_post_type      = new PaymentPostType();
 		$this->subscription_post_type = new SubscriptionPostType();
-
-		// Privacy Manager.
-		$this->privacy_manager = new PrivacyManager();
 
 		// Webhook Logger.
 		$this->webhook_logger = new WebhookLogger();
