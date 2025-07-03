@@ -25,39 +25,11 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
  */
 abstract class AbstractDataStoreCPT {
 	/**
-	 * Registered meta keys.
-	 *
-	 * @var array
-	 */
-	protected $meta = [];
-
-	/**
 	 * Meta key prefix.
 	 *
 	 * @var string
 	 */
 	public $meta_key_prefix = '';
-
-	/**
-	 * Register meta keys.
-	 *
-	 * @param string $meta_key Meta key to register.
-	 * @param array  $args     Settings for meta key.
-	 *
-	 * @return void
-	 */
-	protected function register_meta_key( $meta_key, $args ) {
-		$this->meta[ $meta_key ] = $args;
-	}
-
-	/**
-	 * Get registered meta.
-	 *
-	 * @return array
-	 */
-	public function get_registered_meta() {
-		return $this->meta;
-	}
 
 	/**
 	 * Get a prefixed meta key for the specified key.
