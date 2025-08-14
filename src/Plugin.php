@@ -519,6 +519,15 @@ class Plugin {
 
 			exit;
 		}
+
+		// Redirect to payment return redirect URL.
+		$return_redirect_url = $payment->get_return_redirect_url();
+
+		if ( ! empty( $return_redirect_url ) ) {
+			\wp_redirect( $return_redirect_url );
+
+			exit;
+		}
 	}
 
 	/**
