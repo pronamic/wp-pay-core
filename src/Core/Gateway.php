@@ -288,7 +288,7 @@ abstract class Gateway {
 		$action_url = $payment->get_action_url();
 
 		if ( empty( $action_url ) ) {
-			throw new \Exception( 'Action URL is empty, can not redirect.' );
+			$action_url = $payment->get_return_redirect_url();
 		}
 
 		// Redirect, See Other.
