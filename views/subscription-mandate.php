@@ -66,8 +66,6 @@ try {
 	 */
 }
 
-$subscription_mandate_id = $subscription->get_meta( 'mollie_mandate_id' );
-
 ?>
 <!DOCTYPE html>
 
