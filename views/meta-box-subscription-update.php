@@ -103,7 +103,7 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 					<a href="#pronamic-pay-post-status" class="cancel-pronamic-pay-post-status hide-if-no-js button-cancel"><?php esc_html_e( 'Cancel', 'pronamic_ideal' ); ?></a>
 				</div>
 
-				<?php if ( null !== $subscription && in_array( $subscription->get_status(), [ SubscriptionStatus::FAILURE, SubscriptionStatus::ON_HOLD ], true ) ) : ?>
+				<?php if ( \in_array( $subscription->get_status(), [ SubscriptionStatus::FAILURE, SubscriptionStatus::ON_HOLD ], true ) ) : ?>
 
 					<div id="pronamic-pay-post-status-notice" class="notice inline">
 						<p>
