@@ -292,7 +292,7 @@ class SubscriptionsModule {
 	 * Handle cancel subscription action request.
 	 *
 	 * @param Subscription $subscription Subscription to cancel.
-	 * @return void
+	 * @return never
 	 */
 	private function handle_subscription_cancel( Subscription $subscription ): never {
 		$this->maybe_cancel_subscription( $subscription );
