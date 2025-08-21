@@ -9,7 +9,6 @@
  */
 
 use Pronamic\WordPress\Pay\Cards;
-use Pronamic\WordPress\Pay\Core\PaymentMethods;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
