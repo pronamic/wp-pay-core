@@ -229,7 +229,7 @@ $payment_methods = $gateway->get_payment_methods(
 								<input type="text" name="<?php echo \esc_attr( \sprintf( $name, 'name' ) ); ?>" value="<?php echo \esc_attr( $line['name'] ); ?>" class="pronamic-pay-form-control" />
 							</td>
 							<td>
-								<input type="number" name="<?php echo \esc_attr( \sprintf( $name, 'quantity' ) ); ?>" value="<?php echo \esc_attr( $line['quantity'] ); ?>" min="1" class="pronamic-pay-form-control" />
+								<input type="number" name="<?php echo \esc_attr( \sprintf( $name, 'quantity' ) ); ?>" value="<?php echo \esc_attr( (string) $line['quantity'] ); ?>" min="1" class="pronamic-pay-form-control" />
 							</td>
 							<td>
 								<input type="number" name="<?php echo \esc_attr( \sprintf( $name, 'price' ) ); ?>" value="<?php echo \esc_attr( $line['price'] ); ?>" step="any" class="pronamic-pay-form-control" />
