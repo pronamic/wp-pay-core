@@ -72,15 +72,6 @@ try {
 
 $subscription_mandate_id = $subscription->get_meta( 'mollie_mandate_id' );
 
-// Set current subscription mandate as first item.
-$current_mandate = wp_list_filter( $mollie_customer_mandates, [ 'id' => $subscription_mandate_id ] );
-
-if ( is_array( $current_mandate ) ) {
-	unset( $mollie_customer_mandates[ key( $current_mandate ) ] );
-
-	$mollie_customer_mandates = array_merge( $current_mandate, $mollie_customer_mandates );
-}
-
 ?>
 <!DOCTYPE html>
 
