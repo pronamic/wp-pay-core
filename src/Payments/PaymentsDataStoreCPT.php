@@ -508,7 +508,7 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 		// Subscriptions.
 		$meta_key = $this->get_meta_key( 'subscription_id' );
 
-		$subscriptions_ids = \get_post_meta( $id, $meta_key );
+		$subscriptions_ids = \get_post_meta( $id, $meta_key, false );
 
 		foreach ( $payment->get_subscriptions() as $subscription ) {
 			$subscription_id = $subscription->get_id();

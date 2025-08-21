@@ -177,7 +177,7 @@ abstract class AbstractDataStoreCPT {
 	public function get_meta_bool( $id, $key ) {
 		$meta_key = $this->get_meta_key( $key );
 
-		$value = get_post_meta( $id, $meta_key );
+		$value = get_post_meta( $id, $meta_key, false );
 
 		if ( empty( $value ) ) {
 			return null;
