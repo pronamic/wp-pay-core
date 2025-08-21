@@ -24,3 +24,6 @@
 # PHPUnit
 /.phpunit.cache/
 /.phpunit.result.cache
+
+# PHPLint
+/.phplint.cache/
