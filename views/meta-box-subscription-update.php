@@ -11,9 +11,7 @@
 use Pronamic\WordPress\Html\Element;
 use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
-use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPostType;
 use Pronamic\WordPress\Pay\Subscriptions\SubscriptionStatus;
-use Pronamic\WordPress\Pay\Util;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
