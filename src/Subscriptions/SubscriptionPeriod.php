@@ -142,7 +142,7 @@ class SubscriptionPeriod {
 	/**
 	 * From JSON.
 	 *
-	 * @param object $json Subscription period JSON.
+	 * @param mixed $json Subscription period JSON.
 	 * @return SubscriptionPeriod
 	 * @throws \InvalidArgumentException Throws exception on invalid JSON.
 	 * @throws \Exception                Throws exception on problem.
