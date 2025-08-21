@@ -349,7 +349,6 @@ class SubscriptionsFollowUpPaymentsController {
 	 * Get query start date for subscriptions that require a follow-up payment.
 	 *
 	 * @return \DateTimeImmutable
-	 * @throws \Exception Throws exception in case of error.
 	 */
 	private function get_follow_up_payment_query_start_date() {
 		return new \DateTimeImmutable( '-1 day', new \DateTimeZone( 'GMT' ) );
@@ -359,7 +358,6 @@ class SubscriptionsFollowUpPaymentsController {
 	 * Get query end date for subscriptions that require a follow-up payment.
 	 *
 	 * @return \DateTimeImmutable
-	 * @throws \Exception Throws exception in case of error.
 	 */
 	private function get_follow_up_payment_query_end_date() {
 		return new \DateTimeImmutable( 'now', new \DateTimeZone( 'GMT' ) );
