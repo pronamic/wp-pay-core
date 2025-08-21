@@ -80,17 +80,8 @@ $details[] = [
 <dl>
 	<?php foreach ( $details as $detail ) : ?>
 
-		<?php if ( array_key_exists( 'term', $detail ) ) : ?>
-
-			<dt><?php echo esc_html( $detail['term'] ); ?></dt>
-
-		<?php endif; ?>
-
-		<?php if ( array_key_exists( 'description', $detail ) ) : ?>
-
-			<dd><?php echo esc_html( $detail['description'] ); ?></dd>
-
-		<?php endif; ?>
+		<dt><?php echo esc_html( $detail['term'] ); ?></dt>
+		<dd><?php echo esc_html( $detail['description'] ); ?></dd>
 
 	<?php endforeach; ?>
 </dl>
