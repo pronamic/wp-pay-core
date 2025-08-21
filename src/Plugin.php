@@ -501,24 +501,15 @@ class Plugin {
 
 		$gateway = $payment->get_gateway();
 
-		if ( null !== $gateway ) {
-			// Give gateway a chance to handle redirect.
-			$gateway->payment_redirect( $payment );
-
-			// Handle HTML form redirect.
-			if ( $gateway->is_html_form() ) {
-				$gateway->redirect( $payment );
-			}
+		if ( null === $gateway ) {
+			return;
 		}
 
-		// Redirect to payment action URL.
-		$action_url = $payment->get_action_url();
+		// Give gateway a chance to handle redirect.
+		$gateway->payment_redirect( $payment );
 
-		if ( ! empty( $action_url ) ) {
-			wp_redirect( $action_url );
-
-			exit;
-		}
+		// Redirect with gateway method (HTTP or form).
+		$gateway->redirect( $payment );
 	}
 
 	/**
