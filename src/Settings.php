@@ -33,7 +33,7 @@ class Settings {
 		$this->plugin = $plugin;
 
 		// Actions.
-		add_action( 'init', [ $this, 'init' ] );
+		add_action( 'init', $this->init( ... ) );
 	}
 
 	/**

@@ -48,7 +48,7 @@ class Refund implements JsonSerializable {
 	 *
 	 * @var Payment Payment.
 	 */
-	private Payment $payment;
+	private readonly Payment $payment;
 
 	/**
 	 * Amount to refund.

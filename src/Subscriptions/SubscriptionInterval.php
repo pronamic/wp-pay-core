@@ -20,7 +20,7 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
  * @link    https://github.com/frak/s3bk/blob/master/src/S3Bk/Type/StringableInterval.php
  * @link    https://github.com/stylers-llc/laratask/blob/master/src/Support/DateInterval.php
  */
-class SubscriptionInterval extends \DateInterval implements \JsonSerializable {
+class SubscriptionInterval extends \DateInterval implements \JsonSerializable, \Stringable {
 	/**
 	 * Specification.
 	 *
@@ -124,7 +124,7 @@ class SubscriptionInterval extends \DateInterval implements \JsonSerializable {
 	 * @link https://www.php.net/manual/en/language.oop5.magic.php#object.tostring
 	 * @return string
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		return $this->specification;
 	}
 }

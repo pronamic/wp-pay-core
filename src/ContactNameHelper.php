@@ -64,9 +64,7 @@ class ContactNameHelper {
 
 			if ( \count( $names ) > 0 ) {
 				$initials = array_map(
-					function ( $name ) {
-						return self::string_to_uppercase( \mb_substr( $name, 0, 1 ) ) . '.';
-					},
+					fn( $name ) => self::string_to_uppercase( \mb_substr( (string) $name, 0, 1 ) ) . '.',
 					$names
 				);
 
@@ -107,9 +105,7 @@ class ContactNameHelper {
 	public static function from_array( $data ) {
 		$data = \array_filter(
 			$data,
-			function ( $value ) {
-				return ( null !== $value ) && ( '' !== $value );
-			}
+			fn( $value ) => ( null !== $value ) && ( '' !== $value )
 		);
 
 		if ( empty( $data ) ) {

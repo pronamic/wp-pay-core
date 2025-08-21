@@ -25,7 +25,7 @@ use Pronamic\WordPress\Money\TaxedMoney;
  * @since      2.1.0
  * @implements \IteratorAggregate<int, PaymentLine>
  */
-class PaymentLines implements Countable, IteratorAggregate {
+class PaymentLines implements Countable, IteratorAggregate, \Stringable {
 	/**
 	 * The lines.
 	 *
@@ -66,9 +66,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 	 */
 	public function get_name() {
 		$names = \array_map(
-			function ( PaymentLine $line ) {
-				return (string) $line->get_name();
-			},
+			fn( PaymentLine $line ) => (string) $line->get_name(),
 			$this->get_array()
 		);
 
@@ -160,9 +158,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 	public function first( $id ) {
 		$lines = \array_filter(
 			$this->lines,
-			function ( PaymentLine $line ) use ( $id ) {
-				return ( $id === $line->get_id() );
-			}
+			fn( PaymentLine $line ) => $id === $line->get_id()
 		);
 
 		$line = \reset( $lines );
@@ -187,9 +183,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 			 * @param PaymentLine $line Payment line.
 			 * @return object
 			 */
-			function ( PaymentLine $line ) {
-				return $line->get_json();
-			},
+			fn( PaymentLine $line ) => $line->get_json(),
 			$this->lines
 		);
 
@@ -219,9 +213,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 			 * @param object $value Object.
 			 * @return PaymentLine
 			 */
-			function ( $value ) {
-				return PaymentLine::from_json( $value );
-			},
+			fn( $value ) => PaymentLine::from_json( $value ),
 			$json
 		);
 
@@ -242,7 +234,7 @@ class PaymentLines implements Countable, IteratorAggregate {
 	 *
 	 * @return string
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		$pieces = array_map( 'strval', $this->lines );
 
 		$string = implode( PHP_EOL, $pieces );

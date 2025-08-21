@@ -65,7 +65,7 @@ class AddressHelper {
 					$address->set_house_number_addition( $house_number_parts['extension'] );
 				}
 			}
-		} catch ( Exception $e ) {
+		} catch ( Exception ) {
 			// On exceptions the address will not be complemented, no problem.
 			return;
 		}
@@ -80,9 +80,7 @@ class AddressHelper {
 	public static function from_array( $data ) {
 		$data = \array_filter(
 			$data,
-			function ( $value ) {
-				return ( null !== $value ) && ( '' !== $value );
-			}
+			fn( $value ) => ( null !== $value ) && ( '' !== $value )
 		);
 
 		if ( empty( $data ) ) {

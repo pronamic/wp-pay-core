@@ -126,9 +126,7 @@ foreach ( $fields as $field_id => $field ) {
 
 $sections = array_filter(
 	$sections,
-	function ( $section ) {
-		return ! empty( $section->fields );
-	}
+	fn( $section ) => ! empty( $section->fields )
 );
 
 ?>

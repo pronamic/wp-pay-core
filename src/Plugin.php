@@ -249,7 +249,7 @@ class Plugin {
 
 		// Backward compatibility.
 		self::$file    = $args['file'];
-		self::$dirname = dirname( self::$file );
+		self::$dirname = dirname( (string) self::$file );
 
 		// Options.
 		$this->options = $args['options'];
@@ -259,18 +259,18 @@ class Plugin {
 
 		$this->payment_methods = new PaymentMethodsCollection();
 
-		add_action( 'plugins_loaded', [ $this, 'plugins_loaded' ], 0 );
-		add_action( 'init', [ $this, 'register_payment_methods' ], 0 );
+		add_action( 'plugins_loaded', $this->plugins_loaded( ... ), 0 );
+		add_action( 'init', $this->register_payment_methods( ... ), 0 );
 
 		// Register styles.
-		add_action( 'init', [ $this, 'register_styles' ], 9 );
+		add_action( 'init', $this->register_styles( ... ), 9 );
 
 		// If WordPress is loaded check on returns and maybe redirect requests.
-		add_action( 'wp_loaded', [ $this, 'handle_returns' ], 100 );
-		add_action( 'wp_loaded', [ $this, 'maybe_redirect' ], 100 );
+		add_action( 'wp_loaded', $this->handle_returns( ... ), 100 );
+		add_action( 'wp_loaded', $this->maybe_redirect( ... ), 100 );
 
 		// Default date time format.
-		add_filter( 'pronamic_datetime_default_format', [ $this, 'datetime_format' ], 10, 1 );
+		add_filter( 'pronamic_datetime_default_format', $this->datetime_format( ... ), 10, 1 );
 
 		/**
 		 * Pronamic service URL.
@@ -617,10 +617,10 @@ class Plugin {
 		$this->integrations = array_merge( $gateway_integrations, $this->plugin_integrations );
 
 		// Filters.
-		\add_filter( 'pronamic_payment_redirect_url', [ $this, 'payment_redirect_url' ], 10, 2 );
+		\add_filter( 'pronamic_payment_redirect_url', $this->payment_redirect_url( ... ), 10, 2 );
 
 		// Actions.
-		\add_action( 'pronamic_pay_pre_create_payment', [ __CLASS__, 'complement_payment' ], 10, 1 );
+		\add_action( 'pronamic_pay_pre_create_payment', self::complement_payment( ... ), 10, 1 );
 	}
 
 	/**
@@ -1670,7 +1670,7 @@ class Plugin {
 			if ( \property_exists( $data, 'risk_score' ) ) {
 				$payment->set_meta( 'pronamic_pay_risk_score', $data->risk_score );
 			}
-		} catch ( \Exception $e ) {
+		} catch ( \Exception ) {
 			return;
 		}
 	}

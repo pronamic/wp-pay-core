@@ -18,7 +18,7 @@ namespace Pronamic\WordPress\Pay\VatNumbers;
  * @version 2.4.0
  * @since   1.4.0
  */
-class VatNumber {
+class VatNumber implements \Stringable {
 	/**
 	 * Value.
 	 *
@@ -182,7 +182,7 @@ class VatNumber {
 	 *
 	 * @return string
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		return $this->value;
 	}
 

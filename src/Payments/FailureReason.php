@@ -17,7 +17,7 @@ namespace Pronamic\WordPress\Pay\Payments;
  * @since   2.2.8
  * @version 2.2.8
  */
-class FailureReason {
+class FailureReason implements \Stringable {
 	/**
 	 * Code.
 	 *
@@ -120,7 +120,7 @@ class FailureReason {
 	 *
 	 * @return string
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		$code    = $this->get_code();
 		$message = $this->get_message();
 

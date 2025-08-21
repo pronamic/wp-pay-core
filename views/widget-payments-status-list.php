@@ -44,7 +44,7 @@ $url = \add_query_arg(
 				<a href="<?php echo \esc_url( \add_query_arg( 'post_status', $payment_status, $url ) ); ?>">
 					<?php
 
-					$count = isset( $counts->$payment_status ) ? $counts->$payment_status : 0;
+					$count = $counts->$payment_status ?? 0;
 
 					echo \wp_kses(
 						\sprintf(

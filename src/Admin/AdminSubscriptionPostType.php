@@ -50,28 +50,28 @@ class AdminSubscriptionPostType {
 	public function __construct( $plugin ) {
 		$this->plugin = $plugin;
 
-		add_filter( 'request', [ $this, 'request' ] );
+		add_filter( 'request', $this->request( ... ) );
 
-		add_filter( 'manage_edit-' . self::POST_TYPE . '_columns', [ $this, 'columns' ] );
-		add_filter( 'manage_edit-' . self::POST_TYPE . '_sortable_columns', [ $this, 'sortable_columns' ] );
-		add_filter( 'bulk_actions-edit-' . self::POST_TYPE, [ $this, 'bulk_actions' ] );
-		add_filter( 'list_table_primary_column', [ $this, 'primary_column' ], 10, 2 );
+		add_filter( 'manage_edit-' . self::POST_TYPE . '_columns', $this->columns( ... ) );
+		add_filter( 'manage_edit-' . self::POST_TYPE . '_sortable_columns', $this->sortable_columns( ... ) );
+		add_filter( 'bulk_actions-edit-' . self::POST_TYPE, $this->bulk_actions( ... ) );
+		add_filter( 'list_table_primary_column', $this->primary_column( ... ), 10, 2 );
 
-		add_action( 'manage_' . self::POST_TYPE . '_posts_custom_column', [ $this, 'custom_columns' ], 10, 2 );
+		add_action( 'manage_' . self::POST_TYPE . '_posts_custom_column', $this->custom_columns( ... ), 10, 2 );
 
-		add_action( 'load-post.php', [ $this, 'maybe_process_subscription_action' ] );
+		add_action( 'load-post.php', $this->maybe_process_subscription_action( ... ) );
 
-		add_action( 'admin_notices', [ $this, 'admin_notices' ] );
+		add_action( 'admin_notices', $this->admin_notices( ... ) );
 
-		add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ] );
+		add_action( 'add_meta_boxes', $this->add_meta_boxes( ... ) );
 
-		add_filter( 'post_row_actions', [ $this, 'post_row_actions' ], 10, 2 );
+		add_filter( 'post_row_actions', $this->post_row_actions( ... ), 10, 2 );
 
-		add_action( 'pre_get_posts', [ $this, 'pre_get_posts' ] );
+		add_action( 'pre_get_posts', $this->pre_get_posts( ... ) );
 
-		add_filter( 'removable_query_args', [ $this, 'removable_query_args' ] );
+		add_filter( 'removable_query_args', $this->removable_query_args( ... ) );
 
-		add_filter( 'post_updated_messages', [ $this, 'post_updated_messages' ] );
+		add_filter( 'post_updated_messages', $this->post_updated_messages( ... ) );
 	}
 
 	/**
@@ -562,7 +562,7 @@ class AdminSubscriptionPostType {
 		add_meta_box(
 			'pronamic_subscription',
 			__( 'Subscription', 'pronamic_ideal' ),
-			[ $this, 'meta_box_info' ],
+			$this->meta_box_info( ... ),
 			$post_type,
 			'normal',
 			'high'
@@ -571,7 +571,7 @@ class AdminSubscriptionPostType {
 		add_meta_box(
 			'pronamic_payment_lines',
 			__( 'Payment Lines', 'pronamic_ideal' ),
-			[ $this, 'meta_box_lines' ],
+			$this->meta_box_lines( ... ),
 			$post_type,
 			'normal',
 			'high'
@@ -580,7 +580,7 @@ class AdminSubscriptionPostType {
 		add_meta_box(
 			'pronamic_subscription_phases',
 			__( 'Phases', 'pronamic_ideal' ),
-			[ $this, 'meta_box_phases' ],
+			$this->meta_box_phases( ... ),
 			$post_type,
 			'normal',
 			'high'
@@ -589,7 +589,7 @@ class AdminSubscriptionPostType {
 		add_meta_box(
 			'pronamic_subscription_payments',
 			__( 'Payments', 'pronamic_ideal' ),
-			[ $this, 'meta_box_payments' ],
+			$this->meta_box_payments( ... ),
 			$post_type,
 			'normal',
 			'high'
@@ -598,7 +598,7 @@ class AdminSubscriptionPostType {
 		add_meta_box(
 			'pronamic_subscription_notes',
 			__( 'Notes', 'pronamic_ideal' ),
-			[ $this, 'meta_box_notes' ],
+			$this->meta_box_notes( ... ),
 			$post_type,
 			'normal',
 			'high'
@@ -607,7 +607,7 @@ class AdminSubscriptionPostType {
 		add_meta_box(
 			'pronamic_subscription_update',
 			__( 'Update', 'pronamic_ideal' ),
-			[ $this, 'meta_box_update' ],
+			$this->meta_box_update( ... ),
 			$post_type,
 			'side',
 			'high'
@@ -734,7 +734,7 @@ class AdminSubscriptionPostType {
 		global $post;
 
 		// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352797&filters[translation_id]=37948900
-		$scheduled_date = date_i18n( __( 'M j, Y @ H:i', 'pronamic_ideal' ), strtotime( $post->post_date ) );
+		$scheduled_date = date_i18n( __( 'M j, Y @ H:i', 'pronamic_ideal' ), strtotime( (string) $post->post_date ) );
 
 		$messages[ self::POST_TYPE ] = [
 			0  => '', // Unused. Messages start at index 1.

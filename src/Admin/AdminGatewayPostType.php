@@ -46,21 +46,21 @@ class AdminGatewayPostType {
 	public function __construct( Plugin $plugin ) {
 		$this->plugin = $plugin;
 
-		add_filter( 'manage_edit-' . self::POST_TYPE . '_columns', [ $this, 'edit_columns' ] );
+		add_filter( 'manage_edit-' . self::POST_TYPE . '_columns', $this->edit_columns( ... ) );
 
-		add_action( 'manage_' . self::POST_TYPE . '_posts_custom_column', [ $this, 'custom_columns' ], 10, 2 );
+		add_action( 'manage_' . self::POST_TYPE . '_posts_custom_column', $this->custom_columns( ... ), 10, 2 );
 
-		add_action( 'post_edit_form_tag', [ $this, 'post_edit_form_tag' ] );
+		add_action( 'post_edit_form_tag', $this->post_edit_form_tag( ... ) );
 
-		add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ] );
+		add_action( 'add_meta_boxes', $this->add_meta_boxes( ... ) );
 
-		add_action( 'save_post_' . self::POST_TYPE, [ $this, 'save_post' ] );
+		add_action( 'save_post_' . self::POST_TYPE, $this->save_post( ... ) );
 
-		add_action( 'after_delete_post', [ $this, 'after_delete_post' ], 10, 2 );
+		add_action( 'after_delete_post', $this->after_delete_post( ... ), 10, 2 );
 
-		add_filter( 'display_post_states', [ $this, 'display_post_states' ], 10, 2 );
+		add_filter( 'display_post_states', $this->display_post_states( ... ), 10, 2 );
 
-		add_filter( 'post_updated_messages', [ $this, 'post_updated_messages' ] );
+		add_filter( 'post_updated_messages', $this->post_updated_messages( ... ) );
 	}
 
 	/**
@@ -234,7 +234,7 @@ class AdminGatewayPostType {
 		add_meta_box(
 			'pronamic_gateway_config',
 			__( 'Configuration', 'pronamic_ideal' ),
-			[ $this, 'meta_box_config' ],
+			$this->meta_box_config( ... ),
 			$post_type,
 			'normal',
 			'high'
@@ -243,7 +243,7 @@ class AdminGatewayPostType {
 		add_meta_box(
 			'pronamic_gateway_test',
 			__( 'Test', 'pronamic_ideal' ),
-			[ $this, 'meta_box_test' ],
+			$this->meta_box_test( ... ),
 			$post_type,
 			'normal',
 			'high'
@@ -294,9 +294,7 @@ class AdminGatewayPostType {
 		$payment_methods = $gateway->get_payment_methods()->getIterator();
 
 		$payment_methods->uasort(
-			function ( $a, $b ) {
-				return strnatcasecmp( $a->get_name(), $b->get_name() );
-			}
+			fn( $a, $b ) => strnatcasecmp( (string) $a->get_name(), (string) $b->get_name() )
 		);
 
 		require __DIR__ . '/../../views/meta-box-gateway-payment-methods.php';
@@ -513,7 +511,7 @@ class AdminGatewayPostType {
 		global $post;
 
 		// @link https://translate.wordpress.org/projects/wp/4.4.x/admin/nl/default?filters[status]=either&filters[original_id]=2352797&filters[translation_id]=37948900
-		$scheduled_date = date_i18n( __( 'M j, Y @ H:i', 'pronamic_ideal' ), strtotime( $post->post_date ) );
+		$scheduled_date = date_i18n( __( 'M j, Y @ H:i', 'pronamic_ideal' ), strtotime( (string) $post->post_date ) );
 
 		$messages[ self::POST_TYPE ] = [
 			0  => '', // Unused. Messages start at index 1.

@@ -25,7 +25,7 @@ use Pronamic\WordPress\Pay\Payments\PaymentLine;
  * @version 2.2.6
  * @since   2.1.0
  */
-class RefundLine implements JsonSerializable {
+class RefundLine implements JsonSerializable, \Stringable {
 	/**
 	 * The ID.
 	 *
@@ -316,7 +316,7 @@ class RefundLine implements JsonSerializable {
 	 *
 	 * @return string
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		$parts = [
 			$this->get_id(),
 			$this->get_quantity(),

@@ -140,11 +140,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			return null;
 		}
 
-		if ( isset( $this->status_map[ $meta_status ] ) ) {
-			return $this->status_map[ $meta_status ];
-		}
-
-		return null;
+		return $this->status_map[ $meta_status ] ?? null;
 	}
 
 	/**
@@ -205,7 +201,7 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 						'Subscription %s',
 						$subscription->get_key()
 					),
-					'post_author'   => null === $customer_user_id ? 0 : $customer_user_id,
+					'post_author'   => $customer_user_id ?? 0,
 				]
 			),
 			true
@@ -289,11 +285,11 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 	public function save( $subscription ) {
 		$id = $subscription->get_id();
 
-		\add_filter( 'wp_insert_post_data', [ $this, 'preserve_post_content' ], 5, 3 );
+		\add_filter( 'wp_insert_post_data', $this->preserve_post_content( ... ), 5, 3 );
 
 		$result = empty( $id ) ? $this->create( $subscription ) : $this->update( $subscription );
 
-		\remove_filter( 'wp_insert_post_data', [ $this, 'preserve_post_content' ], 5 );
+		\remove_filter( 'wp_insert_post_data', $this->preserve_post_content( ... ), 5 );
 
 		$this->update_post_meta( $subscription );
 

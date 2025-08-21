@@ -20,7 +20,7 @@ use stdClass;
  * @version 2.1.6
  * @since   2.1.6
  */
-class Region {
+class Region implements \Stringable {
 	/**
 	 * Value.
 	 *
@@ -167,7 +167,7 @@ class Region {
 	 *
 	 * @return string
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		if ( is_string( $this->value ) ) {
 			return $this->value;
 		}

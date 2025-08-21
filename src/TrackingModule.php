@@ -65,7 +65,7 @@ class TrackingModule {
 
 		foreach ( $plugins as $slug => $plugin ) {
 			foreach ( $extensions as $extension ) {
-				if ( false === \stristr( $slug, $extension ) ) {
+				if ( false === \stristr( $slug, (string) $extension ) ) {
 					continue;
 				}
 

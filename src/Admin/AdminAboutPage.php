@@ -49,10 +49,10 @@ class AdminAboutPage {
 		$this->file   = $file;
 
 		// Actions.
-		add_action( 'admin_menu', [ $this, 'admin_menu' ] );
-		add_action( 'admin_head', [ $this, 'admin_head' ] );
+		add_action( 'admin_menu', $this->admin_menu( ... ) );
+		add_action( 'admin_head', $this->admin_head( ... ) );
 
-		add_action( 'pronamic_pay_install', [ $this, 'install' ] );
+		add_action( 'pronamic_pay_install', $this->install( ... ) );
 	}
 
 	/**
@@ -71,14 +71,14 @@ class AdminAboutPage {
 			__( 'Welcome to Pronamic Pay', 'pronamic_ideal' ),
 			'manage_options',
 			'pronamic-pay-about',
-			[ $this, 'render_page' ]
+			$this->render_page( ... )
 		);
 
 		if ( false === $hook_suffix ) {
 			return;
 		}
 
-		add_action( 'admin_print_styles-' . $hook_suffix, [ $this, 'admin_css' ] );
+		add_action( 'admin_print_styles-' . $hook_suffix, $this->admin_css( ... ) );
 	}
 
 	/**
@@ -174,7 +174,7 @@ class AdminAboutPage {
 
 		try {
 			$about_page_version = $this->get_version();
-		} catch ( \Exception $e ) {
+		} catch ( \Exception ) {
 			$about_page_version = '';
 		}
 

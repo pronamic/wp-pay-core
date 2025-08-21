@@ -20,7 +20,7 @@ use stdClass;
  * @version 2.2.6
  * @since   2.1.6
  */
-class Country {
+class Country implements \Stringable {
 	/**
 	 * Code.
 	 *
@@ -134,7 +134,7 @@ class Country {
 	 *
 	 * @return string
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		$values = [
 			$this->code,
 			$this->name,

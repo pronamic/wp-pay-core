@@ -187,9 +187,7 @@ class CustomerHelper {
 	public static function from_array( $data ) {
 		$data = \array_filter(
 			$data,
-			function ( $value ) {
-				return ( null !== $value ) && ( '' !== $value );
-			}
+			fn( $value ) => ( null !== $value ) && ( '' !== $value )
 		);
 
 		if ( empty( $data ) ) {

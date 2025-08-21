@@ -93,7 +93,7 @@ abstract class AbstractDataStoreCPT {
 
 		try {
 			$date = new DateTime( $value, new DateTimeZone( 'UTC' ) );
-		} catch ( Exception $e ) {
+		} catch ( Exception ) {
 			$date = null;
 		}
 

@@ -24,13 +24,13 @@ class SubscriptionsNotificationsController {
 	 * @return void
 	 */
 	public function setup() {
-		\add_action( 'init', [ $this, 'maybe_schedule_actions' ] );
+		\add_action( 'init', $this->maybe_schedule_actions( ... ) );
 
-		\add_action( 'pronamic_pay_schedule_subscriptions_notification', [ $this, 'schedule_all' ] );
+		\add_action( 'pronamic_pay_schedule_subscriptions_notification', $this->schedule_all( ... ) );
 
-		\add_action( 'pronamic_pay_schedule_paged_subscriptions_notification', [ $this, 'schedule_paged' ] );
+		\add_action( 'pronamic_pay_schedule_paged_subscriptions_notification', $this->schedule_paged( ... ) );
 
-		\add_action( 'pronamic_pay_send_subscription_renewal_notification', [ $this, 'action_send_subscription_renewal_notification' ] );
+		\add_action( 'pronamic_pay_send_subscription_renewal_notification', $this->action_send_subscription_renewal_notification( ... ) );
 	}
 
 	/**
@@ -99,9 +99,7 @@ class SubscriptionsNotificationsController {
 
 		$posts = \array_filter(
 			$query->posts,
-			function ( $post ) {
-				return ( $post instanceof WP_Post );
-			}
+			fn( $post ) => $post instanceof WP_Post
 		);
 
 		$subscriptions = [];

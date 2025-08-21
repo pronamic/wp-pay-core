@@ -38,9 +38,7 @@ foreach ( $payments as $payment ) {
 	 */
 	$periods = \array_filter(
 		$periods,
-		function ( $period ) use ( $subscription ) {
-			return ( $subscription->get_id() === $period->get_phase()->get_subscription()->get_id() );
-		}
+		fn( $period ) => $subscription->get_id() === $period->get_phase()->get_subscription()->get_id()
 	);
 
 	if ( 0 === count( $periods ) ) {
@@ -71,9 +69,7 @@ foreach ( $payments as $payment ) {
 foreach ( $data as $item ) {
 	usort(
 		$item->payments,
-		function ( $a, $b ) {
-			return $a->get_date() <=> $b->get_date();
-		}
+		fn( $a, $b ) => $a->get_date() <=> $b->get_date()
 	);
 
 	$item->first = reset( $item->payments );
@@ -83,9 +79,7 @@ foreach ( $data as $item ) {
 	}
 
 	$statuses = array_map(
-		function ( $payment ) {
-			return $payment->get_status();
-		},
+		fn( $payment ) => $payment->get_status(),
 		$item->payments
 	);
 
@@ -94,9 +88,7 @@ foreach ( $data as $item ) {
 
 usort(
 	$data,
-	function ( $a, $b ) {
-		return $b->date <=> $a->date;
-	}
+	fn( $a, $b ) => $b->date <=> $a->date
 );
 
 if ( 0 === count( $payments ) ) : ?>

@@ -33,8 +33,8 @@ class PaymentPostType {
 		 *
 		 * @link https://github.com/WordPress/WordPress/blob/4.0/wp-includes/post.php#L167
 		 */
-		add_action( 'init', [ $this, 'register_payment_post_type' ], 0 ); // Highest priority.
-		add_action( 'init', [ $this, 'register_post_status' ], 9 );
+		add_action( 'init', $this->register_payment_post_type( ... ), 0 ); // Highest priority.
+		add_action( 'init', $this->register_post_status( ... ), 9 );
 	}
 
 	/**

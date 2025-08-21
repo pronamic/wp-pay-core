@@ -38,8 +38,8 @@ class AdminHealth {
 		$this->plugin = $plugin;
 
 		// Filters.
-		add_filter( 'debug_information', [ $this, 'debug_information' ] );
-		add_filter( 'site_status_tests', [ $this, 'status_tests' ] );
+		add_filter( 'debug_information', $this->debug_information( ... ) );
+		add_filter( 'site_status_tests', $this->status_tests( ... ) );
 	}
 
 	/**
@@ -170,31 +170,31 @@ class AdminHealth {
 		// Test minimum required WordPress version.
 		$status_tests['direct']['pronamic_pay_wordpress_version'] = [
 			'label' => __( 'Pronamic Pay WordPress version test', 'pronamic_ideal' ),
-			'test'  => [ $this, 'test_wordpress_version' ],
+			'test'  => $this->test_wordpress_version( ... ),
 		];
 
 		// Test memory limit.
 		$status_tests['direct']['pronamic_pay_memory_limit'] = [
 			'label' => __( 'Pronamic Pay memory limit test', 'pronamic_ideal' ),
-			'test'  => [ $this, 'test_memory_limit' ],
+			'test'  => $this->test_memory_limit( ... ),
 		];
 
 		// Test character set.
 		$status_tests['direct']['pronamic_pay_character_set'] = [
 			'label' => __( 'Pronamic Pay UTF-8 character set test', 'pronamic_ideal' ),
-			'test'  => [ $this, 'test_character_set' ],
+			'test'  => $this->test_character_set( ... ),
 		];
 
 		// Test hashing algorithms.
 		$status_tests['direct']['pronamic_pay_hashing_algorithms'] = [
 			'label' => __( 'Pronamic Pay hashing algorithms test', 'pronamic_ideal' ),
-			'test'  => [ $this, 'test_hashing_algorithms' ],
+			'test'  => $this->test_hashing_algorithms( ... ),
 		];
 
 		// Test supported extensions.
 		$status_tests['direct']['pronamic_pay_extensions_support'] = [
 			'label' => __( 'Pronamic Pay extensions support test', 'pronamic_ideal' ),
-			'test'  => [ $this, 'test_extensions_support' ],
+			'test'  => $this->test_extensions_support( ... ),
 		];
 
 		return $status_tests;
@@ -384,7 +384,7 @@ class AdminHealth {
 					$tested_up_to = $extension->tested_up_to;
 				}
 
-				if ( 0 === \strcasecmp( \dirname( $file ), $extension->slug ) ) {
+				if ( 0 === \strcasecmp( \dirname( $file ), (string) $extension->slug ) ) {
 					$is_below_tested_version   = \version_compare( $plugin['Version'], $tested_up_to, '<=' );
 					$is_above_required_version = \version_compare( $plugin['Version'], $requires_at_least, '>=' );
 
@@ -418,7 +418,7 @@ class AdminHealth {
 
 					// Ignore patch version if plugin and tested versions are equal.
 					if ( ! $is_below_tested_version ) {
-						$plugin_parts = explode( '.', $plugin['Version'] );
+						$plugin_parts = explode( '.', (string) $plugin['Version'] );
 						$tested_parts = explode( '.', $tested_up_to );
 
 						$num_parts = count( $tested_parts );

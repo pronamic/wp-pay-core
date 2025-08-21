@@ -40,8 +40,8 @@ class AdminTour {
 		$this->plugin = $plugin;
 
 		// Actions.
-		add_action( 'admin_init', [ $this, 'handle_ignore_tour_request' ] );
-		add_action( 'admin_init', [ $this, 'maybe_show_admin_tour' ] );
+		add_action( 'admin_init', $this->handle_ignore_tour_request( ... ) );
+		add_action( 'admin_init', $this->maybe_show_admin_tour( ... ) );
 	}
 
 	/**
@@ -67,12 +67,12 @@ class AdminTour {
 				if ( $installation_date < $day_ago ) {
 					return;
 				}
-			} catch ( \Exception $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+			} catch ( \Exception ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
 				// Nothing to do, ignore invalid installation date.
 			}
 		}
 
-		\add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ] );
+		\add_action( 'admin_enqueue_scripts', $this->admin_enqueue_scripts( ... ) );
 	}
 
 	/**

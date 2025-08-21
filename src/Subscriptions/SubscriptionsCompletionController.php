@@ -24,13 +24,13 @@ class SubscriptionsCompletionController {
 	 * @return void
 	 */
 	public function setup() {
-		\add_action( 'init', [ $this, 'maybe_schedule_actions' ] );
+		\add_action( 'init', $this->maybe_schedule_actions( ... ) );
 
-		\add_action( 'pronamic_pay_schedule_subscriptions_completion', [ $this, 'schedule_all' ] );
+		\add_action( 'pronamic_pay_schedule_subscriptions_completion', $this->schedule_all( ... ) );
 
-		\add_action( 'pronamic_pay_schedule_paged_subscriptions_completion', [ $this, 'schedule_paged' ] );
+		\add_action( 'pronamic_pay_schedule_paged_subscriptions_completion', $this->schedule_paged( ... ) );
 
-		\add_action( 'pronamic_pay_complete_subscription', [ $this, 'action_complete_subscription' ] );
+		\add_action( 'pronamic_pay_complete_subscription', $this->action_complete_subscription( ... ) );
 	}
 
 	/**
@@ -99,9 +99,7 @@ class SubscriptionsCompletionController {
 
 		$posts = \array_filter(
 			$query->posts,
-			function ( $post ) {
-				return ( $post instanceof WP_Post );
-			}
+			fn( $post ) => $post instanceof WP_Post
 		);
 
 		$subscriptions = [];

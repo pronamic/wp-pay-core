@@ -20,7 +20,7 @@ class ActionSchedulerController {
 	 * @return void
 	 */
 	public function setup() {
-		\add_action( 'action_scheduler_begin_execute', [ $this, 'begin_execute' ], 10, 2 );
+		\add_action( 'action_scheduler_begin_execute', $this->begin_execute( ... ), 10, 2 );
 	}
 
 	/**

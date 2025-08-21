@@ -20,11 +20,11 @@ class HomeUrlController {
 	 * @return void
 	 */
 	public function setup() {
-		\add_action( 'init', [ $this, 'init' ] );
+		\add_action( 'init', $this->init( ... ) );
 
-		\add_action( 'admin_init', [ $this, 'admin_init' ] );
+		\add_action( 'admin_init', $this->admin_init( ... ) );
 
-		\add_action( 'admin_notices', [ $this, 'admin_notices' ] );
+		\add_action( 'admin_notices', $this->admin_notices( ... ) );
 	}
 
 	/**

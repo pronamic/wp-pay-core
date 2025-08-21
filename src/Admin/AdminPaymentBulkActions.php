@@ -26,7 +26,7 @@ class AdminPaymentBulkActions {
 	 * Constructs and initializes an admin payment bulk actions object.
 	 */
 	public function __construct() {
-		add_action( 'load-edit.php', [ $this, 'load' ] );
+		add_action( 'load-edit.php', $this->load( ... ) );
 	}
 
 	/**
@@ -52,12 +52,12 @@ class AdminPaymentBulkActions {
 		}
 
 		// Bulk actions.
-		add_filter( 'bulk_actions-' . $screen->id, [ $this, 'bulk_actions' ] );
+		add_filter( 'bulk_actions-' . $screen->id, $this->bulk_actions( ... ) );
 
-		add_filter( 'handle_bulk_actions-' . $screen->id, [ $this, 'handle_bulk_action' ], 10, 3 );
+		add_filter( 'handle_bulk_actions-' . $screen->id, $this->handle_bulk_action( ... ), 10, 3 );
 
 		// Admin notices.
-		add_action( 'admin_notices', [ $this, 'admin_notices' ] );
+		add_action( 'admin_notices', $this->admin_notices( ... ) );
 	}
 
 	/**

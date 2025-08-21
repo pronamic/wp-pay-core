@@ -21,7 +21,7 @@ use stdClass;
  * @version 2.2.6
  * @since   1.4.0
  */
-class ContactName {
+class ContactName implements \Stringable {
 	/**
 	 * Full Name.
 	 *
@@ -295,7 +295,7 @@ class ContactName {
 	 *
 	 * @return string
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		$pieces = [
 			$this->get_prefix(),
 			$this->get_first_name(),

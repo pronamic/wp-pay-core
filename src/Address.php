@@ -33,7 +33,7 @@ use stdClass;
  * @version 2.2.6
  * @since   2.1.0
  */
-class Address {
+class Address implements \Stringable {
 	/**
 	 * Contact name.
 	 *
@@ -621,7 +621,7 @@ class Address {
 	 *
 	 * @return string
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		$parts = [
 			$this->get_company_name(),
 			$this->get_name(),

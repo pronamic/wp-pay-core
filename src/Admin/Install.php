@@ -40,7 +40,7 @@ class Install {
 		$this->plugin = $plugin;
 
 		// Actions.
-		add_action( 'init', [ $this, 'init' ], 5 );
+		add_action( 'init', $this->init( ... ), 5 );
 	}
 
 	/**

@@ -48,7 +48,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 				$status_label = $payment->get_status_label();
 
-				echo \esc_html( ( null === $status_label ) ? '—' : $status_label );
+				echo \esc_html( $status_label ?? '—' );
 
 				printf(
 					' — %s',
@@ -192,8 +192,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 			$payment_method = $payment->get_payment_method();
 
 			// Name.
-			$name = PaymentMethods::get_name( $payment_method );
-			$name = ( null === $name ) ? $payment_method : $name;
+			$name   = PaymentMethods::get_name( $payment_method );
+			$name ??= $payment_method;
 
 			$gateway = Plugin::get_gateway( (int) $payment->get_config_id() );
 

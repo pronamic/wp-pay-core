@@ -58,7 +58,7 @@ $post_author = empty( $post_author ) ? '-' : $post_author;
 
 			$status_label = $payment->get_status_label();
 
-			$status_label = ( null === $status_label ) ? '—' : $status_label;
+			$status_label ??= '—';
 
 			?>
 			<span id="pronamic-pay-post-status-display"><?php echo esc_html( $status_label ); ?></span>

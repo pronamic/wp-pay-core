@@ -102,19 +102,19 @@ class Util {
 	 * @return string
 	 */
 	public static function to_period( $period ) {
-		if ( false !== strpos( $period, 'day' ) || false !== strpos( $period, 'daily' ) ) {
+		if ( str_contains( $period, 'day' ) || str_contains( $period, 'daily' ) ) {
 			return 'D';
 		}
 
-		if ( false !== strpos( $period, 'week' ) ) {
+		if ( str_contains( $period, 'week' ) ) {
 			return 'W';
 		}
 
-		if ( false !== strpos( $period, 'month' ) ) {
+		if ( str_contains( $period, 'month' ) ) {
 			return 'M';
 		}
 
-		if ( false !== strpos( $period, 'year' ) ) {
+		if ( str_contains( $period, 'year' ) ) {
 			return 'Y';
 		}
 

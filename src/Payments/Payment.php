@@ -780,7 +780,7 @@ class Payment extends PaymentInfo {
 			foreach ( $json->periods as $json_period ) {
 				try {
 					$payment->add_period( SubscriptionPeriod::from_json( $json_period ) );
-				} catch ( \Exception $exception ) {
+				} catch ( \Exception ) {
 					// For now we temporarily ignore subscription period exception due to changes in the JSON schema.
 					continue;
 				}

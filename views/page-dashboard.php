@@ -63,9 +63,7 @@ $container_index = 1;
 
 								$payment_posts = \array_filter(
 									$query->posts,
-									function ( $post ) {
-										return ( $post instanceof WP_Post );
-									}
+									fn( $post ) => $post instanceof WP_Post
 								);
 
 								if ( count( $payment_posts ) > 0 ) :
@@ -196,9 +194,7 @@ $container_index = 1;
 
 					$subscriptions_posts = \array_filter(
 						$query->posts,
-						function ( $post ) {
-							return ( $post instanceof WP_Post );
-						}
+						fn( $post ) => $post instanceof WP_Post
 					);
 
 					if ( count( $subscriptions_posts ) > 0 ) :

@@ -134,30 +134,17 @@ class Util {
 	 * @return string|null
 	 */
 	public static function format_interval( $interval, $period ) {
-		switch ( $period ) {
-			case 'D':
-			case 'day':
-			case 'days':
-				/* translators: %s: interval */
-				return sprintf( _n( 'Every %s day', 'Every %s days', $interval, 'pronamic_ideal' ), $interval );
-			case 'W':
-			case 'week':
-			case 'weeks':
-				/* translators: %s: interval */
-				return sprintf( _n( 'Every %s week', 'Every %s weeks', $interval, 'pronamic_ideal' ), $interval );
-			case 'M':
-			case 'month':
-			case 'months':
-				/* translators: %s: interval */
-				return sprintf( _n( 'Every %s month', 'Every %s months', $interval, 'pronamic_ideal' ), $interval );
-			case 'Y':
-			case 'year':
-			case 'years':
-				/* translators: %s: interval */
-				return sprintf( _n( 'Every %s year', 'Every %s years', $interval, 'pronamic_ideal' ), $interval );
-		}
-
-		return null;
+		return match ( $period ) {
+			/* translators: %s: interval */
+			'D', 'day', 'days' => sprintf( _n( 'Every %s day', 'Every %s days', $interval, 'pronamic_ideal' ), $interval ),
+			/* translators: %s: interval */
+			'W', 'week', 'weeks' => sprintf( _n( 'Every %s week', 'Every %s weeks', $interval, 'pronamic_ideal' ), $interval ),
+			/* translators: %s: interval */
+			'M', 'month', 'months' => sprintf( _n( 'Every %s month', 'Every %s months', $interval, 'pronamic_ideal' ), $interval ),
+			/* translators: %s: interval */
+			'Y', 'year', 'years' => sprintf( _n( 'Every %s year', 'Every %s years', $interval, 'pronamic_ideal' ), $interval ),
+			default => null,
+		};
 	}
 
 	/**
@@ -168,18 +155,13 @@ class Util {
 	 * @return string
 	 */
 	public static function to_interval_name( $interval_period ) {
-		switch ( $interval_period ) {
-			case 'D':
-				return 'days';
-			case 'W':
-				return 'weeks';
-			case 'M':
-				return 'months';
-			case 'Y':
-				return 'years';
-		}
-
-		return $interval_period;
+		return match ( $interval_period ) {
+			'D' => 'days',
+			'W' => 'weeks',
+			'M' => 'months',
+			'Y' => 'years',
+			default => $interval_period,
+		};
 	}
 
 	/**

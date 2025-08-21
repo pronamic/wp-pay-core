@@ -89,14 +89,14 @@ class AdminModule {
 		$this->plugin = $plugin;
 
 		// Actions.
-		add_action( 'admin_init', [ $this, 'admin_init' ] );
-		add_action( 'admin_menu', [ $this, 'admin_menu' ] );
+		add_action( 'admin_init', $this->admin_init( ... ) );
+		add_action( 'admin_menu', $this->admin_menu( ... ) );
 
-		add_action( 'load-post.php', [ $this, 'maybe_test_payment' ] );
+		add_action( 'load-post.php', $this->maybe_test_payment( ... ) );
 
-		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+		add_action( 'admin_enqueue_scripts', $this->enqueue_scripts( ... ) );
 
-		add_filter( 'parent_file', [ $this, 'admin_menu_parent_file' ] );
+		add_filter( 'parent_file', $this->admin_menu_parent_file( ... ) );
 
 		// Modules.
 		$this->settings  = new AdminSettings( $plugin );
@@ -276,12 +276,12 @@ class AdminModule {
 	 */
 	private function should_enqueue_scripts( $hook ) {
 		// Check if the hook contains the value 'pronamic_pay'.
-		if ( false !== strpos( $hook, 'pronamic_pay' ) ) {
+		if ( str_contains( $hook, 'pronamic_pay' ) ) {
 			return true;
 		}
 
 		// Check if the hook contains the value 'pronamic_ideal'.
-		if ( false !== strpos( $hook, 'pronamic_ideal' ) ) {
+		if ( str_contains( $hook, 'pronamic_ideal' ) ) {
 			return true;
 		}
 
@@ -676,15 +676,10 @@ class AdminModule {
 		if ( null === $screen ) {
 			return $parent_file;
 		}
-
-		switch ( $screen->id ) {
-			case AdminGatewayPostType::POST_TYPE:
-			case AdminPaymentPostType::POST_TYPE:
-			case AdminSubscriptionPostType::POST_TYPE:
-				return 'pronamic_ideal';
-		}
-
-		return $parent_file;
+		return match ( $screen->id ) {
+			AdminGatewayPostType::POST_TYPE, AdminPaymentPostType::POST_TYPE, AdminSubscriptionPostType::POST_TYPE => 'pronamic_ideal',
+			default => $parent_file,
+		};
 	}
 
 	/**
@@ -852,7 +847,7 @@ class AdminModule {
 
 		try {
 			$menu_icon_url = $this->get_menu_icon_url();
-		} catch ( \Exception $e ) {
+		} catch ( \Exception ) {
 			// @todo Log.
 
 			/**
@@ -958,37 +953,14 @@ class AdminModule {
 	 * @return string
 	 */
 	public static function get_post_status_icon_class( $post_status ) {
-		switch ( $post_status ) {
-			case 'payment_pending':
-			case 'subscr_pending':
-				return 'pronamic-pay-icon-pending';
-
-			case 'payment_cancelled':
-			case 'subscr_cancelled':
-				return 'pronamic-pay-icon-cancelled';
-
-			case 'payment_completed':
-			case 'subscr_completed':
-				return 'pronamic-pay-icon-completed';
-
-			case 'payment_refunded':
-				return 'pronamic-pay-icon-refunded';
-
-			case 'payment_failed':
-			case 'subscr_failed':
-				return 'pronamic-pay-icon-failed';
-
-			case 'payment_on_hold':
-			case 'payment_expired':
-			case 'subscr_expired':
-			case 'subscr_on_hold':
-				return 'pronamic-pay-icon-on-hold';
-
-			case 'payment_authorized':
-			case 'payment_reserved':
-			case 'subscr_active':
-			default:
-				return 'pronamic-pay-icon-processing';
-		}
+		return match ( $post_status ) {
+			'payment_pending', 'subscr_pending' => 'pronamic-pay-icon-pending',
+			'payment_cancelled', 'subscr_cancelled' => 'pronamic-pay-icon-cancelled',
+			'payment_completed', 'subscr_completed' => 'pronamic-pay-icon-completed',
+			'payment_refunded' => 'pronamic-pay-icon-refunded',
+			'payment_failed', 'subscr_failed' => 'pronamic-pay-icon-failed',
+			'payment_on_hold', 'payment_expired', 'subscr_expired', 'subscr_on_hold' => 'pronamic-pay-icon-on-hold',
+			default => 'pronamic-pay-icon-processing',
+		};
 	}
 }

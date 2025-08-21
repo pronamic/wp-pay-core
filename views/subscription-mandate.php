@@ -58,7 +58,7 @@ try {
 	) {
 		$mollie_customer_mandates = $response->_embedded->mandates;
 	}
-} catch ( \Exception $exception ) {
+} catch ( \Exception ) {
 	/**
 	 * Nothing to do.
 	 *
@@ -135,7 +135,7 @@ if ( is_array( $current_mandate ) ) {
 										switch ( $mandate->method ) {
 											case 'creditcard':
 												$card_name      = $mandate->details->cardHolder;
-												$account_number = str_pad( $mandate->details->cardNumber, 16, '*', \STR_PAD_LEFT );
+												$account_number = str_pad( (string) $mandate->details->cardNumber, 16, '*', \STR_PAD_LEFT );
 												$account_label  = _x( 'Card Number', 'Card selector', 'pronamic_ideal' );
 
 												$bic_or_brand = $mandate->details->cardLabel;
@@ -146,7 +146,7 @@ if ( is_array( $current_mandate ) ) {
 												$account_number = $mandate->details->consumerAccount;
 												$account_label  = _x( 'Account Number', 'Card selector', 'pronamic_ideal' );
 
-												$bic_or_brand = substr( $mandate->details->consumerAccount, 4, 4 );
+												$bic_or_brand = substr( (string) $mandate->details->consumerAccount, 4, 4 );
 
 												break;
 										}
@@ -257,9 +257,7 @@ if ( is_array( $current_mandate ) ) {
 										function ( $payment_method ) {
 											$required_fields = array_filter(
 												$payment_method->get_fields(),
-												function ( $field ) {
-													return $field->is_required();
-												}
+												fn( $field ) => $field->is_required()
 											);
 
 											return 0 === count( $required_fields );

@@ -47,16 +47,16 @@ class PaymentsModule {
 		$this->plugin = $plugin;
 
 		// Exclude payment notes.
-		add_filter( 'comments_clauses', [ $this, 'exclude_payment_comment_notes' ], 10, 2 );
+		add_filter( 'comments_clauses', $this->exclude_payment_comment_notes( ... ), 10, 2 );
 
 		// Payment redirect URL.
-		add_filter( 'pronamic_payment_redirect_url', [ $this, 'payment_redirect_url' ], 5, 2 );
+		add_filter( 'pronamic_payment_redirect_url', $this->payment_redirect_url( ... ), 5, 2 );
 
 		// Listen to payment status changes so we can log these in a note.
-		add_action( 'pronamic_payment_status_update', [ $this, 'log_payment_status_update' ], 10, 4 );
+		add_action( 'pronamic_payment_status_update', $this->log_payment_status_update( ... ), 10, 4 );
 
 		// REST API.
-		add_action( 'rest_api_init', [ $this, 'rest_api_init' ] );
+		add_action( 'rest_api_init', $this->rest_api_init( ... ) );
 
 		// Payment Status Checker.
 		$this->status_checker = new StatusChecker();
@@ -131,32 +131,14 @@ class PaymentsModule {
 	public function payment_redirect_url( $url, $payment ) {
 		$page_id = null;
 
-		switch ( $payment->status ) {
-			case PaymentStatus::CANCELLED:
-				$page_id = pronamic_pay_get_page_id( 'cancel' );
-
-				break;
-			case PaymentStatus::EXPIRED:
-				$page_id = pronamic_pay_get_page_id( 'expired' );
-
-				break;
-			case PaymentStatus::FAILURE:
-				$page_id = pronamic_pay_get_page_id( 'error' );
-
-				break;
-			case PaymentStatus::OPEN:
-				$page_id = pronamic_pay_get_page_id( 'unknown' );
-
-				break;
-			case PaymentStatus::SUCCESS:
-				$page_id = pronamic_pay_get_page_id( 'completed' );
-
-				break;
-			default:
-				$page_id = pronamic_pay_get_page_id( 'unknown' );
-
-				break;
-		}
+		$page_id = match ( $payment->status ) {
+			PaymentStatus::CANCELLED => pronamic_pay_get_page_id( 'cancel' ),
+			PaymentStatus::EXPIRED => pronamic_pay_get_page_id( 'expired' ),
+			PaymentStatus::FAILURE => pronamic_pay_get_page_id( 'error' ),
+			PaymentStatus::OPEN => pronamic_pay_get_page_id( 'unknown' ),
+			PaymentStatus::SUCCESS => pronamic_pay_get_page_id( 'completed' ),
+			default => pronamic_pay_get_page_id( 'unknown' ),
+		};
 
 		if ( ! empty( $page_id ) ) {
 			$page_url = get_permalink( $page_id );
@@ -226,10 +208,8 @@ class PaymentsModule {
 			'/payments/(?P<payment_id>\d+)',
 			[
 				'methods'             => 'GET',
-				'callback'            => [ $this, 'rest_api_payment' ],
-				'permission_callback' => function () {
-					return \current_user_can( 'edit_payments' );
-				},
+				'callback'            => $this->rest_api_payment( ... ),
+				'permission_callback' => fn() => \current_user_can( 'edit_payments' ),
 				'args'                => [
 					'payment_id' => [
 						'description' => __( 'Payment ID.', 'pronamic_ideal' ),

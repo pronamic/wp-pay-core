@@ -26,12 +26,12 @@ class StatusChecker {
 	 */
 	public function __construct() {
 		// Payment status check events are scheduled when payments are started.
-		add_action( 'pronamic_pay_payment_status_check', [ $this, 'check_status' ], 10, 2 );
+		add_action( 'pronamic_pay_payment_status_check', $this->check_status( ... ), 10, 2 );
 
 		// Clear scheduled status checks.
-		add_action( 'pronamic_payment_status_update', [ $this, 'maybe_clear_scheduled_status_check' ], 10, 1 );
-		add_action( 'trashed_post', [ $this, 'clear_scheduled_status_check' ], 10, 1 );
-		add_action( 'delete_post', [ $this, 'clear_scheduled_status_check' ], 10, 1 );
+		add_action( 'pronamic_payment_status_update', $this->maybe_clear_scheduled_status_check( ... ), 10, 1 );
+		add_action( 'trashed_post', $this->clear_scheduled_status_check( ... ), 10, 1 );
+		add_action( 'delete_post', $this->clear_scheduled_status_check( ... ), 10, 1 );
 	}
 
 	/**
@@ -94,37 +94,21 @@ class StatusChecker {
 			],
 			true
 		) ) {
-			switch ( $attempt ) {
-				case 1:
-					return 15 * MINUTE_IN_SECONDS;
-
-				case 2:
-					return 5 * DAY_IN_SECONDS;
-
-				case 3:
-					return 10 * DAY_IN_SECONDS;
-
-				case 4:
-				default:
-					return 14 * DAY_IN_SECONDS;
-			}
+			return match ( $attempt ) {
+				1 => 15 * MINUTE_IN_SECONDS,
+				2 => 5 * DAY_IN_SECONDS,
+				3 => 10 * DAY_IN_SECONDS,
+				default => 14 * DAY_IN_SECONDS,
+			};
 		}
 
 		// Delays for regular payments.
-		switch ( $attempt ) {
-			case 1:
-				return 15 * MINUTE_IN_SECONDS;
-
-			case 2:
-				return 30 * MINUTE_IN_SECONDS;
-
-			case 3:
-				return HOUR_IN_SECONDS;
-
-			case 4:
-			default:
-				return DAY_IN_SECONDS;
-		}
+		return match ( $attempt ) {
+			1 => 15 * MINUTE_IN_SECONDS,
+			2 => 30 * MINUTE_IN_SECONDS,
+			3 => HOUR_IN_SECONDS,
+			default => DAY_IN_SECONDS,
+		};
 	}
 
 	/**

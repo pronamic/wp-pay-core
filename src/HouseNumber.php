@@ -20,7 +20,7 @@ use stdClass;
  * @version 2.2.6
  * @since   2.1.6
  */
-class HouseNumber {
+class HouseNumber implements \Stringable {
 	/**
 	 * Value.
 	 *
@@ -167,7 +167,7 @@ class HouseNumber {
 	 *
 	 * @return string
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		return strval( $this->value );
 	}
 }

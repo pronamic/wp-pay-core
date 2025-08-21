@@ -296,9 +296,7 @@ class PaymentTest extends TestCase {
 			function ( $merge_tags ) {
 				$merge_tags[] = new MergeTag(
 					'zero',
-					function () {
-						return '0';
-					}
+					fn() => '0'
 				);
 
 				return $merge_tags;

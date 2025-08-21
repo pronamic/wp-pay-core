@@ -25,13 +25,13 @@ class SubscriptionsFollowUpPaymentsController {
 	 * @return void
 	 */
 	public function setup() {
-		\add_action( 'init', [ $this, 'maybe_schedule_actions' ] );
+		\add_action( 'init', $this->maybe_schedule_actions( ... ) );
 
-		\add_action( 'pronamic_pay_schedule_follow_up_payments', [ $this, 'schedule_all' ] );
+		\add_action( 'pronamic_pay_schedule_follow_up_payments', $this->schedule_all( ... ) );
 
-		\add_action( 'pronamic_pay_schedule_subscriptions_follow_up_payment', [ $this, 'schedule_paged' ] );
+		\add_action( 'pronamic_pay_schedule_subscriptions_follow_up_payment', $this->schedule_paged( ... ) );
 
-		\add_action( 'pronamic_pay_create_subscription_follow_up_payment', [ $this, 'action_create_subscription_follow_up_payment' ] );
+		\add_action( 'pronamic_pay_create_subscription_follow_up_payment', $this->action_create_subscription_follow_up_payment( ... ) );
 
 		$this->cli();
 	}
@@ -190,9 +190,7 @@ class SubscriptionsFollowUpPaymentsController {
 
 		$posts = \array_filter(
 			$query->posts,
-			function ( $post ) {
-				return ( $post instanceof WP_Post );
-			}
+			fn( $post ) => $post instanceof WP_Post
 		);
 
 		$subscriptions = [];

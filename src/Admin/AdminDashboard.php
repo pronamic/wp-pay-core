@@ -29,7 +29,7 @@ class AdminDashboard {
 	 */
 	public function __construct() {
 		// Actions.
-		add_action( 'wp_dashboard_setup', [ $this, 'setup' ] );
+		add_action( 'wp_dashboard_setup', $this->setup( ... ) );
 	}
 
 	/**
@@ -62,7 +62,7 @@ class AdminDashboard {
 		wp_add_dashboard_widget(
 			'pronamic_pay_dashboard_status',
 			__( 'Pronamic Pay Status', 'pronamic_ideal' ),
-			[ $this, 'status_widget' ]
+			$this->status_widget( ... )
 		);
 	}
 
