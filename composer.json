@@ -90,7 +90,7 @@
 		"pronamic/wp-coding-standards": "^2.4",
 		"pronamic/wp-documentor": "^1.4",
 		"rector/rector": "^2.1",
-		"roots/wordpress-no-content": "^6.7",
+		"roots/wordpress": "^6.8",
 		"szepeviktor/phpstan-wordpress": "^2.0",
 		"vimeo/psalm": "^5.24",
 		"wordpress/sqlite-database-integration": "^2.1",
