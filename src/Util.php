@@ -246,36 +246,4 @@ class Util {
 
 		return $html;
 	}
-
-	/**
-	 * Select options grouped.
-	 *
-	 * @param array  $groups         The grouped select options.
-	 * @param string $selected_value The selected value.
-	 *
-	 * @return string
-	 */
-	public static function select_options_grouped( $groups, $selected_value = null ) {
-		$html = '';
-
-		if ( is_array( $groups ) ) {
-			foreach ( $groups as $group ) {
-				$optgroup = isset( $group['name'] ) && ! empty( $group['name'] );
-
-				if ( $optgroup ) {
-					$html .= '<optgroup label="' . $group['name'] . '">';
-				}
-
-				foreach ( $group['options'] as $value => $label ) {
-					$html .= '<option value="' . $value . '" ' . selected( $selected_value, $value, false ) . '>' . $label . '</option>';
-				}
-
-				if ( $optgroup ) {
-					$html .= '</optgroup>';
-				}
-			}
-		}
-
-		return $html;
-	}
 }
