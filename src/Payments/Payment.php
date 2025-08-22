@@ -845,11 +845,7 @@ class Payment extends PaymentInfo {
 		}
 
 		// Total amount.
-		$total_amount = $this->get_total_amount();
-
-		if ( null !== $total_amount ) {
-			$properties['total_amount'] = $total_amount->jsonSerialize();
-		}
+		$properties['total_amount'] = $this->get_total_amount();
 
 		// Refunded amount.
 		if ( ! $this->refunded_amount->is_zero() ) {
