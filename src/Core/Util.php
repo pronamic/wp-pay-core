@@ -54,7 +54,7 @@ class Util {
 	 * String to interval period (user input string).
 	 *
 	 * @since 2.0.3
-	 * @param string $interval Interval user input string.
+	 * @param mixed $interval Interval user input string.
 	 * @return string|null
 	 */
 	public static function string_to_interval_period( $interval ) {
