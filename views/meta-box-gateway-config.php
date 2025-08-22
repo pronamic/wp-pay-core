@@ -10,8 +10,6 @@
  * @var \WP_Post                       $post   Post.
  */
 
-use Pronamic\WordPress\Pay\Util;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
