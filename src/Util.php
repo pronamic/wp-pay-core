@@ -218,32 +218,4 @@ class Util {
 
 		return $html;
 	}
-
-	/**
-	 * Array to HTML attributes.
-	 *
-	 * @param array $attributes The key and value pairs to convert to HTML attributes.
-	 *
-	 * @return string
-	 */
-	public static function array_to_html_attributes( array $attributes ) {
-		$html = '';
-
-		foreach ( $attributes as $key => $value ) {
-			// Check boolean attribute.
-			if ( \is_bool( $value ) ) {
-				if ( $value ) {
-					$html .= sprintf( '%s ', $key );
-				}
-
-				continue;
-			}
-
-			$html .= sprintf( '%s="%s" ', $key, esc_attr( $value ) );
-		}
-
-		$html = trim( $html );
-
-		return $html;
-	}
 }
