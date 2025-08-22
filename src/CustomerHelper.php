@@ -106,9 +106,7 @@ class CustomerHelper {
 		if ( null === $customer->get_user_agent() && isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
 			$user_agent = \sanitize_text_field( \wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) );
 
-			if ( false !== $user_agent ) {
-				$customer->set_user_agent( $user_agent );
-			}
+			$customer->set_user_agent( $user_agent );
 		}
 
 		// User IP.
