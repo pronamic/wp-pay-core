@@ -499,7 +499,7 @@ class AdminModule {
 			try {
 				$value = $this->get_optional_value( $item, 'price' );
 
-				$amount = Number::from_string( $value );
+				$amount = Number::from_mixed( $value );
 			} catch ( \Exception $e ) {
 				\wp_die( \esc_html( $e->getMessage() ) );
 			}
