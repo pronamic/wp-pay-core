@@ -14,7 +14,6 @@
 
 use Pronamic\WordPress\Html\Element;
 use Pronamic\WordPress\Pay\Admin\AdminGatewayPostType;
-use Pronamic\WordPress\Pay\Util;
 use Pronamic\WordPress\Pay\Webhooks\WebhookRequestInfo;
 
 if ( ! defined( 'ABSPATH' ) ) {
