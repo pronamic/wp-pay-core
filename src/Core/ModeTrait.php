@@ -33,11 +33,7 @@ trait ModeTrait {
 	 * @return void
 	 * @throws \InvalidArgumentException Throws invalid argument exception when mode is not a string or not one of the mode constants.
 	 */
-	public function set_mode( $mode ) {
-		if ( ! is_string( $mode ) ) {
-			throw new \InvalidArgumentException( 'Mode must be a string.' );
-		}
-
+	public function set_mode( string $mode ) {
 		if ( ! in_array( $mode, [ Gateway::MODE_TEST, Gateway::MODE_LIVE ], true ) ) {
 			throw new \InvalidArgumentException( 'Invalid mode.' );
 		}
