@@ -11,7 +11,6 @@
 namespace Pronamic\WordPress\Pay\Admin;
 
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
-use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 use Pronamic\WordPress\Pay\Plugin;
 use WP_Post;

@@ -12,7 +12,6 @@ namespace Pronamic\WordPress\Pay\Admin;
 
 use Pronamic\WordPress\Html\Element;
 use Pronamic\WordPress\Pay\Plugin;
-use Pronamic\WordPress\Pay\Util;
 
 /**
  * WordPress iDEAL admin
