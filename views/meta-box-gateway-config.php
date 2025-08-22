@@ -32,9 +32,7 @@ $gateway_id = get_post_meta( $config_id, '_pronamic_gateway_id', true );
 if ( empty( $gateway_id ) && 1 === count( $integrations ) ) {
 	$integration = reset( $integrations );
 
-	if ( false !== $integration ) {
-		$gateway_id = $integration->get_id();
-	}
+	$gateway_id = $integration->get_id();
 }
 
 ?>
