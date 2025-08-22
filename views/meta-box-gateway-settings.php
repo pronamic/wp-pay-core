@@ -28,6 +28,12 @@ if ( null === $integration ) {
 
 $fields = $integration->get_settings_fields();
 
+/**
+ * @var array<string, object{
+ *     title: string,
+ *     fields: array<int, array<string, mixed>>
+ * }&\stdClass>
+ */
 $sections = [
 	'general'         => (object) [
 		'title'  => __( 'General', 'pronamic_ideal' ),
