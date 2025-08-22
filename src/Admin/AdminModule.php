@@ -783,7 +783,7 @@ class AdminModule {
 				continue;
 			}
 
-			$title = \array_key_exists( 'title', $badge ) && \is_string( $badge['title'] ) ? $badge['title'] : '';
+			$title = \is_string( $badge['title'] ) ? $badge['title'] : '';
 
 			$badge['html'] = \sprintf(
 				' <span class="awaiting-mod update-plugins count-%1$d" title="%2$s"><span class="processing-count">%1$d</span></span>',
