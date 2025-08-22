@@ -6,6 +6,39 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.27.0] - 2025-08-22
+
+### Changed
+
+- Extended test meta box form with extra fields. ([a0f43d2](https://github.com/pronamic/wp-pay-core/commit/a0f43d2d66566274eb10ada579d29578dc36b31f))
+- Set renewal period on subscription renewal page. (#217) ([1c83c88](https://github.com/pronamic/wp-pay-core/commit/1c83c8811cbbed66e44ca7ee10dcd5f8388b0e8a))
+- Set minimum amount to `0.00` for `PaymentMethods::CARD` payment method. ([9108b00](https://github.com/pronamic/wp-pay-core/commit/9108b004e36b7eb8c399c0930c3c62aa965f6c85))
+- Fallback redirect if action redirect URL is empty (#225) ([fddcec9](https://github.com/pronamic/wp-pay-core/commit/fddcec95472ec1ed986bef67b515664473710fbf))
+- Updated to Pronamic WordPress Coding Standards 2.4. ([45e9ae9](https://github.com/pronamic/wp-pay-core/commit/45e9ae9761fc1a455a82c74ca680d3ef78850827))
+- Updated to PHP 8.2. ([c14e188](https://github.com/pronamic/wp-pay-core/commit/c14e188034c95ace02f414289d3ec4796e71b480))
+- Apply Rector rules for PHP 8.2 migration.
+
+### Added
+
+- Added support for Postepay (#220) ([0721b8d](https://github.com/pronamic/wp-pay-core/commit/0721b8d52dc6cb9a6b1673ef5c4ef02cd6ab359e))
+- Added support for payment methods Alma, BANCOMAT Pay, Gift card, Multibanco, Paysafecard, Satispay, Trustly, Vouchers, mainly for payment provider Mollie (#218) ([f983870](https://github.com/pronamic/wp-pay-core/commit/f9838703e8eae590ffef34a15fa6ce2e68472e96))
+
+### Removed
+
+- Removed meta registration (#224) ([d572f0a](https://github.com/pronamic/wp-pay-core/commit/d572f0a61b3c4c6917ad90af01db705d76bb8309))
+- Removed privacy personal data export and eraser (#222) ([15fa3cd](https://github.com/pronamic/wp-pay-core/commit/15fa3cdcb709b4cdfeb4db0f595de813693ee781))
+- Removed unused function `Pronamic\WordPress\Pay\Util::array_to_html_attributes( array $attributes )` ([03d37d6](https://github.com/pronamic/wp-pay-core/commit/03d37d6bf90a8d0bb1fee6946db91fa0b5d088ed))
+- Removed unused function `Pronamic\WordPress\Pay\Util::select_options_grouped( $groups, $selected_value = null )` ([2c0e865](https://github.com/pronamic/wp-pay-core/commit/2c0e8653a54d15a3635e4f176424a3f8208ed1a8))
+- Removed unused IdTrait ([90242aa](https://github.com/pronamic/wp-pay-core/commit/90242aaa9dd4878d7f16c1b9e8c09142982cc563))
+
+### Composer
+
+- Changed `php` from `>=7.4` to `>=8.2`.
+
+Full set of changes: [`4.26.0...4.27.0`][4.27.0]
+
+[4.27.0]: https://github.com/pronamic/wp-pay-core/compare/v4.26.0...v4.27.0
+
 ## [4.26.0] - 2025-06-19
 
 ### Added
