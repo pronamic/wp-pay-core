@@ -10,15 +10,10 @@
 
 namespace Pronamic\WordPress\Pay\Core;
 
-use Pronamic\WordPress\Html\Element;
 use Pronamic\WordPress\Pay\Core\Util as Core_Util;
 use Pronamic\WordPress\Pay\Fields\Field;
 use Pronamic\WordPress\Pay\Payments\Payment;
-use Pronamic\WordPress\Pay\Plugin;
 use Pronamic\WordPress\Pay\Refunds\Refund;
-use Pronamic\WordPress\Pay\Subscriptions\Subscription;
-use Pronamic\WordPress\Pay\Util as PayUtil;
-use WP_Error;
 
 /**
  * Title: Gateway

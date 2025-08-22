@@ -10,13 +10,11 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
-use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Pay\Banks\BankAccountDetails;
 use Pronamic\WordPress\Pay\Banks\BankTransferDetails;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\Customer;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
-use Pronamic\WordPress\Pay\Plugin;
 
 /**
  * Payment info helper

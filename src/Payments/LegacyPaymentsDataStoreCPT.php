@@ -10,14 +10,12 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
-use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Pay\Banks\BankAccountDetails;
 use Pronamic\WordPress\Pay\AbstractDataStoreCPT;
 use Pronamic\WordPress\Pay\Address;
 use Pronamic\WordPress\Pay\ContactName;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Customer;
-use Pronamic\WordPress\Pay\Plugin;
 
 /**
  * Title: Payments data store CPT

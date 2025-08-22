@@ -11,7 +11,6 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 use Pronamic\WordPress\DateTime\DateTime;
-use Pronamic\WordPress\DateTime\DateTimeImmutable;
 use Pronamic\WordPress\DateTime\DateTimeZone;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\Customer;
