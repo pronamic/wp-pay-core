@@ -29,6 +29,11 @@ if ( null === $integration ) {
 $fields = $integration->get_settings_fields();
 
 /**
+ * PHPStan hint.
+ *
+ * @link https://phpstan.org/writing-php-code/phpdoc-types#array-shapes
+ * @link https://phpstan.org/writing-php-code/phpdoc-types#object-shapes
+ *
  * @var array<string, object{
  *     title: string,
  *     fields: array<int, array<string, mixed>>

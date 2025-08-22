@@ -275,6 +275,7 @@ class SubscriptionsModule {
 			// phpcs:enable WordPress.Security.NonceVerification.Recommended
 			case 'cancel':
 				$this->handle_subscription_cancel( $subscription );
+				// Handle subscription cancel will never return.
 			case 'renew':
 				$this->handle_subscription_renew( $subscription );
 
