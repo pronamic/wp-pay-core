@@ -575,7 +575,7 @@ class AdminModule {
 				$subscription,
 				new DateTimeImmutable(),
 				new SubscriptionInterval( 'P' . $interval . Util::to_period( $interval_period ) ),
-				$price
+				$payment->get_total_amount()
 			);
 
 			// Ends on.
