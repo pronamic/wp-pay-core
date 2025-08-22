@@ -32,8 +32,6 @@ class BlocksModule {
 	 * @return void
 	 */
 	public function setup() {
-		global $wp_version;
-
 		add_filter( 'block_categories_all', $this->block_categories( ... ), 10 );
 	}
 
