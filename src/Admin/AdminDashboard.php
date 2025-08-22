@@ -26,7 +26,7 @@ class AdminDashboard {
 	 * @link https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin-dashboard.php
 	 */
 	public function __construct() {
-		add_action( 'wp_dashboard_setup', $this->setup( ... ) );
+		\add_action( 'wp_dashboard_setup', $this->setup( ... ) );
 	}
 
 	/**
@@ -40,7 +40,7 @@ class AdminDashboard {
 		 * Currently we only add dashboard widgets if the
 		 * current user can manage options.
 		 */
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! \current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
@@ -49,16 +49,16 @@ class AdminDashboard {
 		 * this point. To make tools like Psalm happy we do check
 		 * if the function exists.
 		 */
-		if ( ! function_exists( 'wp_add_dashboard_widget' ) ) {
+		if ( ! \function_exists( 'wp_add_dashboard_widget' ) ) {
 			return;
 		}
 
 		/**
 		 * Ok, add the dashboard widget.
 		 */
-		wp_add_dashboard_widget(
+		\wp_add_dashboard_widget(
 			'pronamic_pay_dashboard_status',
-			__( 'Pronamic Pay Status', 'pronamic_ideal' ),
+			\__( 'Pronamic Pay Status', 'pronamic_ideal' ),
 			$this->status_widget( ... )
 		);
 	}
