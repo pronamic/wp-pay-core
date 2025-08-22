@@ -113,11 +113,7 @@ class PaymentInfoHelper {
 			$object->bank_transfer_recipient_details = $bank_transfer_recipient_details->get_json();
 		}
 
-		$mode = $payment_info->get_mode();
-
-		if ( null !== $mode ) {
-			$object->mode = $mode;
-		}
+		$object->mode = $payment_info->get_mode();
 
 		$version = $payment_info->get_version();
 
