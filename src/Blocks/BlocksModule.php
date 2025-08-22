@@ -32,7 +32,7 @@ class BlocksModule {
 	 * @return void
 	 */
 	public function setup() {
-		add_filter( 'block_categories_all', $this->block_categories( ... ), 10 );
+		\add_filter( 'block_categories_all', $this->block_categories( ... ), 10 );
 	}
 
 	/**
