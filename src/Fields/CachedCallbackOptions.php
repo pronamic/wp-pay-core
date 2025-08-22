@@ -30,7 +30,7 @@ class CachedCallbackOptions implements IteratorAggregate {
 	/**
 	 * Callback.
 	 *
-	 * @var callable: array<SelectFieldOption|SelectFieldOptionGroup>
+	 * @var callable(): array<SelectFieldOption|SelectFieldOptionGroup>
 	 */
 	private $callback;
 
