@@ -48,7 +48,6 @@ class AdminAboutPage {
 		$this->plugin = $plugin;
 		$this->file   = $file;
 
-		// Actions.
 		add_action( 'admin_menu', $this->admin_menu( ... ) );
 		add_action( 'admin_head', $this->admin_head( ... ) );
 
