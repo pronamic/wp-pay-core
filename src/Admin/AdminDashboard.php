@@ -26,7 +26,6 @@ class AdminDashboard {
 	 * @link https://github.com/woothemes/woocommerce/blob/2.3.13/includes/admin/class-wc-admin-dashboard.php
 	 */
 	public function __construct() {
-		// Actions.
 		add_action( 'wp_dashboard_setup', $this->setup( ... ) );
 	}
 
