@@ -35,10 +35,6 @@ class BlocksModule {
 		global $wp_version;
 
 		add_filter( 'block_categories_all', $this->block_categories( ... ), 10 );
-
-		if ( \version_compare( $wp_version, '5.8', '<' ) ) {
-			add_filter( 'block_categories', $this->block_categories( ... ), 10 );
-		}
 	}
 
 	/**
