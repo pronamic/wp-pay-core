@@ -11,10 +11,6 @@
 namespace Pronamic\WordPress\Pay;
 
 use DateInterval;
-use Pronamic\WordPress\Pay\Core\Util as Core_Util;
-use Pronamic\WordPress\Money\Money;
-use SimpleXMLElement;
-use WP_Error;
 
 /**
  * WordPress utility class
