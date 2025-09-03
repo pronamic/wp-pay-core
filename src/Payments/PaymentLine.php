@@ -527,7 +527,16 @@ class PaymentLine implements \Stringable {
 			'meta'             => $this->meta,
 		];
 
-		$properties = array_filter( $properties );
+		$properties = \array_filter(
+			$properties,
+			function ( $value ) {
+				if ( \is_array( $value ) ) {
+					return 0 !== \count( $value );
+				}
+
+				return null !== $value;
+			}
+		);
 
 		return (object) $properties;
 	}
