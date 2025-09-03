@@ -530,6 +530,10 @@ class PaymentLine implements \Stringable {
 		$properties = \array_filter(
 			$properties,
 			function ( $value ) {
+				if ( \is_array( $value ) ) {
+					return 0 !== \count( $value );
+				}
+
 				return null !== $value;
 			}
 		);
