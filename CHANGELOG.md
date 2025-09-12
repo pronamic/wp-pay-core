@@ -6,6 +6,16 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.27.1] - 2025-09-12
+
+### Changed
+
+- Improved processing of payment line names. ([#226](https://github.com/pronamic/wp-pay-core/issues/226))
+
+Full set of changes: [`4.27.0...4.27.1`][4.27.1]
+
+[4.27.1]: https://github.com/pronamic/wp-pay-core/compare/v4.27.0...v4.27.1
+
 ## [4.27.0] - 2025-08-22
 
 ### Changed
