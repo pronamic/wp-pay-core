@@ -117,8 +117,6 @@ if ( 0 === count( $payments ) ) : ?>
 
 			$next_payment_date = $subscription->get_next_payment_date();
 
-			$next_payment_delivery_date = $subscription->get_next_payment_delivery_date();
-
 			$next_period = $subscription->get_next_period();
 
 			$gateway = Plugin::get_gateway( (int) $subscription->get_config_id() );
@@ -135,17 +133,8 @@ if ( 0 === count( $payments ) ) : ?>
 					<td colspan="2">
 						<?php
 
-						if ( in_array( $subscription->get_source(), [ 'woocommerce' ], true ) && null !== $next_payment_date ) :
-
-							echo wp_kses_post(
-								sprintf(
-									/* translators: %s: next payment date */
-									__( 'Will be created on %s', 'pronamic_ideal' ),
-									\esc_html( $next_payment_date->format_i18n( __( 'D j M Y', 'pronamic_ideal' ) ) )
-								)
-							);
-
-						elseif ( null !== $next_payment_delivery_date ) :
+						if ( null !== $next_payment_date ) :
+							$formatted_next_payment_date = $next_payment_date->format_i18n( \__( 'D j M Y', 'pronamic_ideal' ) );
 
 							$create_next_payment_url = \wp_nonce_url(
 								\add_query_arg(
@@ -163,18 +152,26 @@ if ( 0 === count( $payments ) ) : ?>
 								'pronamic_period_payment_' . $subscription->get_id()
 							);
 
-							echo wp_kses_post(
-								sprintf(
-									/* translators: 1: next payment delivery date, 2: create next period payment anchor */
-									__( 'Will be created on %1$s or %2$s', 'pronamic_ideal' ),
-									\esc_html( $next_payment_delivery_date->format_i18n( __( 'D j M Y', 'pronamic_ideal' ) ) ),
-									\sprintf(
-										'<a href="%1$s">%2$s</a>',
-										\esc_url( $create_next_payment_url ),
-										\esc_html( \__( 'create now', 'pronamic_ideal' ) )
-									)
+							$next_payment_date_text = \sprintf(
+								/* translators: 1: next payment delivery date, 2: create next period payment anchor */
+								\__( 'Will be created on %1$s or %2$s', 'pronamic_ideal' ),
+								\esc_html( $formatted_next_payment_date ),
+								\sprintf(
+									'<a href="%1$s">%2$s</a>',
+									\esc_url( $create_next_payment_url ),
+									\esc_html( \__( 'create now', 'pronamic_ideal' ) )
 								)
 							);
+
+							if ( in_array( $subscription->get_source(), [ 'woocommerce' ], true ) ) {
+								$next_payment_date_text = sprintf(
+									/* translators: %s: next payment date */
+									\__( 'Will be created on %s', 'pronamic_ideal' ),
+									\esc_html( $formatted_next_payment_date )
+								);
+							}
+
+							echo wp_kses_post( $next_payment_date_text );
 
 						endif;
 

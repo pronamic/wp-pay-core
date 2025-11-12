@@ -225,21 +225,15 @@ class SubscriptionsFollowUpPaymentsController {
 			return false;
 		}
 
-		$next_payment_delivery_date = $subscription->get_next_payment_delivery_date();
-
-		if ( null === $next_payment_delivery_date ) {
-			return false;
-		}
-
 		$query_start_date = $this->get_follow_up_payment_query_start_date();
 
-		if ( $next_payment_date < $query_start_date && $next_payment_delivery_date < $query_start_date ) {
+		if ( $next_payment_date < $query_start_date ) {
 			return false;
 		}
 
 		$query_end_date = $this->get_follow_up_payment_query_end_date();
 
-		if ( $next_payment_date > $query_end_date && $next_payment_delivery_date > $query_end_date ) {
+		if ( $next_payment_date > $query_end_date ) {
 			return false;
 		}
 
@@ -386,25 +380,13 @@ class SubscriptionsFollowUpPaymentsController {
 			],
 			'meta_query'     => [
 				[
-					'relation' => 'OR',
-					[
-						'key'     => '_pronamic_subscription_next_payment',
-						'compare' => 'BETWEEN',
-						'value'   => [
-							$start_date->format( 'Y-m-d H:i:s' ),
-							$end_date->format( 'Y-m-d H:i:s' ),
-						],
-						'type'    => 'DATETIME',
+					'key'     => '_pronamic_subscription_next_payment',
+					'compare' => 'BETWEEN',
+					'value'   => [
+						$start_date->format( 'Y-m-d H:i:s' ),
+						$end_date->format( 'Y-m-d H:i:s' ),
 					],
-					[
-						'key'     => '_pronamic_subscription_next_payment_delivery_date',
-						'compare' => 'BETWEEN',
-						'value'   => [
-							$start_date->format( 'Y-m-d H:i:s' ),
-							$end_date->format( 'Y-m-d H:i:s' ),
-						],
-						'type'    => 'DATETIME',
-					],
+					'type'    => 'DATETIME',
 				],
 			],
 			'order'          => 'DESC',

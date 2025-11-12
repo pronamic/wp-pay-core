@@ -160,21 +160,6 @@ $phase = $subscription->get_display_phase();
 			</td>
 		</tr>
 
-		<tr>
-			<th scope="row">
-				<?php esc_html_e( 'Next Payment Delivery Date', 'pronamic_ideal' ); ?>
-			</th>
-			<td>
-				<?php
-
-				$next_payment_delivery_date = $subscription->get_next_payment_delivery_date();
-
-				echo empty( $next_payment_delivery_date ) ? '—' : esc_html( $next_payment_delivery_date->format_i18n( __( 'D j M Y', 'pronamic_ideal' ) ) );
-
-				?>
-			</td>
-		</tr>
-
 	<?php endif; ?>
 
 	<?php
