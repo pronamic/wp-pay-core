@@ -456,35 +456,6 @@ class Subscription extends PaymentInfo implements \JsonSerializable {
 	}
 
 	/**
-	 * Get the next payment delivery date of this subscription.
-	 *
-	 * @return DateTimeInterface|null
-	 */
-	public function get_next_payment_delivery_date() {
-		$next_payment_date = $this->get_next_payment_date();
-
-		// Check if there is next payment date.
-		if ( null === $next_payment_date ) {
-			return null;
-		}
-
-		$next_payment_delivery_date = clone $next_payment_date;
-
-		$subscription = $this;
-
-		/**
-		 * Filters the subscription next payment delivery date.
-		 *
-		 * @param DateTimeImmutable $next_payment_delivery_date Next payment delivery date.
-		 * @param Subscription      $subscription               Subscription.
-		 * @since unreleased
-		 */
-		$next_payment_delivery_date = \apply_filters( 'pronamic_pay_subscription_next_payment_delivery_date', $next_payment_delivery_date, $subscription );
-
-		return $next_payment_delivery_date;
-	}
-
-	/**
 	 * Create new subscription period.
 	 *
 	 * @return SubscriptionPeriod|null
