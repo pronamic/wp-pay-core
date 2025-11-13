@@ -518,9 +518,6 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			\delete_post_meta( $id, $this->meta_key_prefix . 'end_date' );
 		}
 
-		// Delete legacy next payment delivery date post meta.
-		\delete_post_meta( $id, $this->meta_key_prefix . 'next_payment_delivery_date' );
-
 		$this->update_meta_status( $subscription );
 	}
 
