@@ -305,7 +305,7 @@ class ContactName implements \Stringable {
 		];
 
 		$pieces = array_filter( $pieces );
-		$pieces = array_map( 'trim', $pieces );
+		$pieces = array_map( trim( ... ), $pieces );
 		$pieces = array_filter( $pieces );
 
 		$string = implode( ' ', $pieces );

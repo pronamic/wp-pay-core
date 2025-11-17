@@ -426,7 +426,7 @@ class Customer implements \Stringable {
 			$this->get_locale(),
 		];
 
-		$pieces = array_map( 'strval', $pieces );
+		$pieces = array_map( strval( ... ), $pieces );
 
 		$pieces = array_filter( $pieces );
 

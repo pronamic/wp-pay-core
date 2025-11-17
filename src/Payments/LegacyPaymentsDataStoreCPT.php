@@ -50,7 +50,7 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		];
 
 		$data = array_filter( $data );
-		$data = array_map( 'trim', $data );
+		$data = array_map( trim( ... ), $data );
 		$data = array_filter( $data );
 
 		if ( empty( $data ) ) {
@@ -101,7 +101,7 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		];
 
 		$data = array_filter( $data );
-		$data = array_map( 'trim', $data );
+		$data = array_map( trim( ... ), $data );
 		$data = array_filter( $data );
 
 		if ( empty( $data ) ) {
@@ -176,7 +176,7 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		];
 
 		$data = array_filter( $data );
-		$data = array_map( 'trim', $data );
+		$data = array_map( trim( ... ), $data );
 		$data = array_filter( $data );
 
 		if ( empty( $data ) ) {
@@ -246,7 +246,7 @@ class LegacyPaymentsDataStoreCPT extends AbstractDataStoreCPT {
 		];
 
 		$data = array_filter( $data );
-		$data = array_map( 'trim', $data );
+		$data = array_map( trim( ... ), $data );
 		$data = array_filter( $data );
 
 		if ( empty( $data ) ) {

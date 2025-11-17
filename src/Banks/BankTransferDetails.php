@@ -138,9 +138,9 @@ class BankTransferDetails implements \Stringable {
 			$this->get_reference(),
 		];
 
-		$pieces = array_map( 'strval', $pieces );
+		$pieces = array_map( strval( ... ), $pieces );
 
-		$pieces = array_map( 'trim', $pieces );
+		$pieces = array_map( trim( ... ), $pieces );
 
 		$pieces = array_filter( $pieces );
 

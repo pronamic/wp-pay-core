@@ -37,7 +37,7 @@ class CustomerHelper {
 				'last_name'  => $user->user_lastname,
 			];
 
-			$data = array_map( 'trim', $data );
+			$data = array_map( trim( ... ), $data );
 			$data = array_filter( $data );
 
 			if ( ! empty( $data ) ) {

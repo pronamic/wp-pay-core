@@ -58,7 +58,7 @@ class ContactNameHelper {
 				$names = \array_merge( $names, \explode( ' ', $middle_name ) );
 			}
 
-			$names = \array_map( 'trim', $names );
+			$names = \array_map( trim( ... ), $names );
 
 			$names = \array_filter( $names );
 

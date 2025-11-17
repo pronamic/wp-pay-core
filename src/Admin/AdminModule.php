@@ -485,7 +485,7 @@ class AdminModule {
 					return [];
 				}
 
-				return \array_map( 'sanitize_text_field', $item );
+				return \array_map( sanitize_text_field( ... ), $item );
 			},
 			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Input is sanitized, see code above.
 			\wp_unslash( $_POST['lines'] ?? [] )
@@ -518,7 +518,7 @@ class AdminModule {
 		$payment->set_total_amount( $payment->lines->get_amount() );
 
 		// Billing address.
-		$billing_data = \array_map( 'sanitize_text_field', \wp_unslash( $_POST['billing'] ?? [] ) );
+		$billing_data = \array_map( sanitize_text_field( ... ), \wp_unslash( $_POST['billing'] ?? [] ) );
 
 		$name = new ContactName();
 		$name->set_first_name( $this->get_optional_value( $billing_data, 'first_name' ) );
@@ -539,7 +539,7 @@ class AdminModule {
 		$payment->set_billing_address( $billing_address );
 
 		// Shipping address.
-		$shipping_data = \array_map( 'sanitize_text_field', \wp_unslash( $_POST['shipping'] ?? [] ) );
+		$shipping_data = \array_map( sanitize_text_field( ... ), \wp_unslash( $_POST['shipping'] ?? [] ) );
 
 		$name = new ContactName();
 		$name->set_first_name( $this->get_optional_value( $shipping_data, 'first_name' ) );

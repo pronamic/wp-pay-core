@@ -633,9 +633,9 @@ class Address implements \Stringable {
 			$this->get_email(),
 		];
 
-		$parts = array_map( 'strval', $parts );
+		$parts = array_map( strval( ... ), $parts );
 
-		$parts = array_map( 'trim', $parts );
+		$parts = array_map( trim( ... ), $parts );
 
 		$parts = array_filter( $parts );
 

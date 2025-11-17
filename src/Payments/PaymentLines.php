@@ -213,7 +213,7 @@ class PaymentLines implements Countable, IteratorAggregate, \Stringable {
 			 * @param object $value Object.
 			 * @return PaymentLine
 			 */
-			fn( $value ) => PaymentLine::from_json( $value ),
+			PaymentLine::from_json( ... ),
 			$json
 		);
 
@@ -235,7 +235,7 @@ class PaymentLines implements Countable, IteratorAggregate, \Stringable {
 	 * @return string
 	 */
 	public function __toString(): string {
-		$pieces = array_map( 'strval', $this->lines );
+		$pieces = array_map( strval( ... ), $this->lines );
 
 		$string = implode( PHP_EOL, $pieces );
 

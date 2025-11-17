@@ -185,7 +185,7 @@ class RefundLines implements Countable, IteratorAggregate, JsonSerializable, \St
 	 * @return string
 	 */
 	public function __toString(): string {
-		$pieces = array_map( 'strval', $this->lines );
+		$pieces = array_map( strval( ... ), $this->lines );
 
 		$string = implode( PHP_EOL, $pieces );
 
