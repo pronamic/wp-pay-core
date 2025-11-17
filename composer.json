@@ -89,7 +89,7 @@
 		"pronamic/pronamic-cli": "^1.1",
 		"pronamic/wp-coding-standards": "^2.4",
 		"pronamic/wp-documentor": "^1.4",
-		"rector/rector": "^2.1",
+		"rector/rector": "^2.2",
 		"roots/wordpress": "^6.8",
 		"szepeviktor/phpstan-wordpress": "^2.0",
 		"vimeo/psalm": "^5.24",
