@@ -6,6 +6,21 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.28.0] - 2025-11-17
+
+### Removed
+
+- Removed next payment delivery date (https://github.com/pronamic/wp-pronamic-pay-mollie/issues/91). ([9885328](https://github.com/pronamic/wp-pay-core/commit/9885328b8eb11676a72e2c8bbb8890ec5a9e2071))
+
+### Composer
+
+- Changed `woocommerce/action-scheduler` from `^3.8` to `3.9.3`.
+	Release notes: https://github.com/woocommerce/action-scheduler/releases/tag/3.9.3
+
+Full set of changes: [`4.27.1...4.28.0`][4.28.0]
+
+[4.28.0]: https://github.com/pronamic/wp-pay-core/compare/v4.27.1...v4.28.0
+
 ## [4.27.1] - 2025-09-12
 
 ### Changed
