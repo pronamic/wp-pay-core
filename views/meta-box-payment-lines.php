@@ -87,7 +87,7 @@ if ( empty( $lines ) ) : ?>
 				$quantity = $line->get_quantity();
 
 				if ( null !== $quantity ) {
-					$quantity_total = $quantity_total->add( Number::from_int( $quantity ) );
+					$quantity_total = $quantity_total->add( $quantity );
 				}
 
 				$total_amount = $line->get_total_amount();
@@ -133,7 +133,7 @@ if ( empty( $lines ) ) : ?>
 					<td>
 						<?php
 
-						echo \esc_html( $quantity_total->format_i18n() );
+						echo \esc_html( $quantity_total->format_i18n_non_trailing_zeros() );
 
 						if ( ! $refunded_quantity_total->is_zero() ) {
 							\printf( '<br><small class="pronamic-pay-text-negative">%s</small>', \esc_html( $refunded_quantity_total->negative()->format_i18n() ) );
@@ -311,7 +311,11 @@ if ( empty( $lines ) ) : ?>
 						<td>
 							<?php
 
-							echo \esc_html( $line->get_quantity() );
+							$quantity = $line->get_quantity();
+
+							if ( null !== $quantity ) {
+								echo \esc_html( $quantity->format_i18n_non_trailing_zeros() );
+							}
 
 							if ( ! $refunded_quantity->is_zero() ) {
 								\printf( '<br><small class="pronamic-pay-text-negative">%s</small>', \esc_html( $refunded_quantity->negative()->format_i18n() ) );
