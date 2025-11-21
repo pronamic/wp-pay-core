@@ -13,6 +13,7 @@ namespace Pronamic\WordPress\Pay\Payments;
 use Pronamic\WordPress\DateTime\DateTime;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
+use Pronamic\WordPress\Number\Number;
 use Pronamic\WordPress\Pay\Banks\BankAccountDetails;
 use Pronamic\WordPress\Pay\Banks\BankTransferDetails;
 use Pronamic\WordPress\Pay\Address;
@@ -213,13 +214,13 @@ class PaymentTest extends TestCase {
 		$line = $lines->new_line();
 		$line->set_id( '1234' );
 		$line->set_description( 'Lorem ipsum dolor sit amet.' );
-		$line->set_quantity( 50 );
+		$line->set_quantity( new Number( 50 ) );
 		$line->set_total_amount( new Money( 39.99, 'EUR' ) );
 
 		$line = $lines->new_line();
 		$line->set_id( 5678 );
 		$line->set_description( 'Lorem ipsum dolor sit amet.' );
-		$line->set_quantity( 10 );
+		$line->set_quantity( new Number( 10 ) );
 		$line->set_total_amount( new TaxedMoney( 25, 'EUR', 5.25, 21 ) );
 
 		$payment->set_customer( $customer );

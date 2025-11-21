@@ -13,6 +13,7 @@ namespace Pronamic\WordPress\Pay\Payments;
 use InvalidArgumentException;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
+use Pronamic\WordPress\Number\Number;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 
 /**
@@ -63,7 +64,7 @@ class PaymentLine implements \Stringable {
 	/**
 	 * The quantity.
 	 *
-	 * @var int|null
+	 * @var Number|null
 	 */
 	private $quantity;
 
@@ -230,19 +231,19 @@ class PaymentLine implements \Stringable {
 	/**
 	 * Get the quantity of this payment line.
 	 *
-	 * @return int|null
+	 * @return Number|null
 	 */
-	public function get_quantity() {
+	public function get_quantity(): ?Number {
 		return $this->quantity;
 	}
 
 	/**
 	 * Set the quantity of this payment line.
 	 *
-	 * @param int|null $quantity Quantity.
+	 * @param Number|null $quantity Quantity.
 	 * @return void
 	 */
-	public function set_quantity( $quantity ) {
+	public function set_quantity( ?Number $quantity ) {
 		$this->quantity = $quantity;
 	}
 
@@ -471,7 +472,7 @@ class PaymentLine implements \Stringable {
 		}
 
 		if ( property_exists( $json, 'quantity' ) ) {
-			$line->set_quantity( $json->quantity );
+			$line->set_quantity( Number::from_mixed( $json->quantity ) );
 		}
 
 		if ( isset( $json->unit_price ) ) {

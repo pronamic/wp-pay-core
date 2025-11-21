@@ -511,7 +511,7 @@ class AdminModule {
 
 			$line->set_name( $this->get_optional_value( $item, 'name' ) );
 			$line->set_unit_price( $unit_price );
-			$line->set_quantity( (int) $quantity );
+			$line->set_quantity( Number::from_mixed( $quantity ) );
 			$line->set_total_amount( $total_amount );
 		}
 
