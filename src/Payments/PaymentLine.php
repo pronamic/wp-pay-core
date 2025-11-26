@@ -240,10 +240,14 @@ class PaymentLine implements \Stringable {
 	/**
 	 * Set the quantity of this payment line.
 	 *
-	 * @param Number|null $quantity Quantity.
+	 * @param mixed $quantity Quantity.
 	 * @return void
 	 */
-	public function set_quantity( ?Number $quantity ) {
+	public function set_quantity( $quantity ) {
+		if ( null !== $quantity ) {
+			$quantity = Number::from_mixed( $quantity );
+		}
+
 		$this->quantity = $quantity;
 	}
 
