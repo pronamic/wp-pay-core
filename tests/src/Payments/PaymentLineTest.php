@@ -12,6 +12,7 @@ namespace Pronamic\WordPress\Pay\Payments;
 
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
+use Pronamic\WordPress\Number\Number;
 use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 /**
@@ -30,11 +31,11 @@ class PaymentLineTest extends TestCase {
 
 		$line->set_id( '1234' );
 		$line->set_description( 'Lorem ipsum dolor sit amet.' );
-		$line->set_quantity( 50 );
+		$line->set_quantity( new Number( 50 ) );
 
 		$this->assertEquals( '1234', $line->get_id() );
 		$this->assertEquals( 'Lorem ipsum dolor sit amet.', $line->get_description() );
-		$this->assertEquals( 50, $line->get_quantity() );
+		$this->assertEquals( 50, $line->get_quantity()?->to_int() );
 	}
 
 	/**
@@ -44,7 +45,7 @@ class PaymentLineTest extends TestCase {
 		// Line.
 		$line = new PaymentLine();
 
-		$line->set_quantity( 2 );
+		$line->set_quantity( new Number( 2 ) );
 		$line->set_unit_price( new TaxedMoney( 121, 'EUR', 21 ) );
 		$line->set_discount_amount( new Money( 21, 'EUR' ) );
 		$line->set_total_amount( new TaxedMoney( 242, 'EUR', null, 21 ) );
@@ -52,11 +53,11 @@ class PaymentLineTest extends TestCase {
 		// JSON.
 		$json_file = __DIR__ . '/../../json/payment-line.json';
 
-		$json_data = json_decode( file_get_contents( $json_file, true ) );
+		$json_data = \json_decode( file_get_contents( $json_file, true ) );
 
-		$json_string = wp_json_encode( $line->get_json(), JSON_PRETTY_PRINT );
+		$json_string = \wp_json_encode( $line->get_json(), JSON_PRETTY_PRINT );
 
-		$this->assertEquals( wp_json_encode( $json_data, JSON_PRETTY_PRINT ), $json_string );
+		$this->assertEquals( \wp_json_encode( $json_data, JSON_PRETTY_PRINT ), $json_string );
 
 		$this->assertJsonStringEqualsJsonFile( $json_file, $json_string );
 	}

@@ -500,18 +500,18 @@ class AdminModule {
 				$value = $this->get_optional_value( $item, 'price' );
 
 				$amount = Number::from_mixed( $value );
+
+				$quantity = Number::from_mixed( $this->get_optional_value( $item, 'quantity' ) ?? 1 );
 			} catch ( \Exception $e ) {
 				\wp_die( \esc_html( $e->getMessage() ) );
 			}
-
-			$quantity = $this->get_optional_value( $item, 'quantity' ) ?? 1;
 
 			$unit_price   = new Money( $amount, $currency_code );
 			$total_amount = $unit_price->multiply( $quantity );
 
 			$line->set_name( $this->get_optional_value( $item, 'name' ) );
 			$line->set_unit_price( $unit_price );
-			$line->set_quantity( (int) $quantity );
+			$line->set_quantity( $quantity );
 			$line->set_total_amount( $total_amount );
 		}
 

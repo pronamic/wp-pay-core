@@ -60,7 +60,7 @@
     {
       "id":"1234",
       "description":"Lorem ipsum dolor sit amet.",
-      "quantity":50,
+      "quantity":"50",
       "total_amount":{
         "value":"39.99",
         "currency":"EUR"
@@ -69,7 +69,7 @@
     {
       "id":5678,
       "description":"Lorem ipsum dolor sit amet.",
-      "quantity":10,
+      "quantity":"10",
       "total_amount":{
         "value":"25",
         "currency":"EUR",
