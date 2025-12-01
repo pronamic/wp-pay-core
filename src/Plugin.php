@@ -919,18 +919,22 @@ class Plugin {
 			'customer' => \__( 'With iDEAL you can easily pay online in the secure environment of your own bank.', 'pronamic_ideal' ),
 		];
 
-		$payment_method_ideal->name =
-			\time() >= \strtotime( '2026-01-29 00:00:00' )
-			? \__( 'iDEAL | Wero', 'pronamic_ideal' )
-			: \__( 'iDEAL', 'pronamic_ideal' );
+		$payment_method_ideal->name = \__( 'iDEAL | Wero', 'pronamic_ideal' );
 
 		$payment_method_ideal->images = [
-			'woocommerce' => $image_service->get_path(
-				\time() >= \strtotime( '2026-01-29 00:00:00' )
-				? 'other/ideal-wero/method-ideal-wero-wc-51x32.svg'
-				: 'methods/ideal/method-ideal-wc-51x32.svg'
-			),
+			'woocommerce' => $image_service->get_path( 'other/ideal-wero/method-ideal-wero-wc-51x32.svg' ),
 		];
+
+		/**
+		 * The iDEAL logo rebranding takes effect on January 29, 2026.
+		 *
+		 * @link https://ideal.nl/en/ideal-wero-branding
+		 */
+		if ( \time() < \strtotime( '2026-01-29 00:00:00' ) ) {
+			$payment_method_ideal->name = \__( 'iDEAL', 'pronamic_ideal' );
+
+			$payment_method_ideal->images['woocommerce'] = $image_service->get_path( 'methods/ideal/method-ideal-wc-51x32.svg' );
+		}
 
 		$this->payment_methods->add( $payment_method_ideal );
 
