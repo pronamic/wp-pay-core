@@ -695,7 +695,6 @@ class PaymentMethods {
 				'post_type' => 'pronamic_gateway',
 				'nopaging'  => true,
 				'fields'    => 'ids',
-				'post__not_in' => [ 4 ],
 			]
 		);
 
