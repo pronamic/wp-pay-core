@@ -591,6 +591,7 @@ class PaymentMethods {
 			self::PAYPAL                  => __( 'PayPal', 'pronamic_ideal' ),
 			self::PAYSAFECARD             => __( 'Paysafecard', 'pronamic_ideal' ),
 			self::PAY_BY_BANK             => __( 'Pay by Bank', 'pronamic_ideal' ),
+			self::POSTEPAY				  => __( 'PostePay', 'pronamic_ideal' ),
 			self::PRZELEWY24              => __( 'Przelewy24', 'pronamic_ideal' ),
 			self::RIVERTY                 => __( 'Riverty', 'pronamic_ideal' ),
 			self::SANTANDER               => __( 'Santander', 'pronamic_ideal' ),
@@ -694,6 +695,7 @@ class PaymentMethods {
 				'post_type' => 'pronamic_gateway',
 				'nopaging'  => true,
 				'fields'    => 'ids',
+				'post__not_in' => [ 4 ],
 			]
 		);
 
