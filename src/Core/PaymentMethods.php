@@ -621,7 +621,7 @@ class PaymentMethods {
 	 */
 	public static function get_name( $method = null, $fallback = null ) {
 		// Get name from registered payment method.
-		$payment_method = pronamic_pay_plugin()->get_payment_methods( [ 'id' => $method ] )->getIterator()->current();
+		$payment_method = pronamic_pay_plugin()->get_payment_methods()->get( $method );
 
 		if ( null !== $payment_method ) {
 			return $payment_method->get_name();
@@ -662,7 +662,7 @@ class PaymentMethods {
 		$paths = [];
 
 		// Get image from registered payment method.
-		$payment_method = pronamic_pay_plugin()->get_payment_methods( [ 'id' => $method ] )->getIterator()->current();
+		$payment_method = pronamic_pay_plugin()->get_payment_methods()->get( $method );
 
 		if ( null !== $payment_method && \array_key_exists( $size, $payment_method->images ) ) {
 			$paths[] = $payment_method->images[ $size ];
