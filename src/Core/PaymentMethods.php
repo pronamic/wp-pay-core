@@ -621,6 +621,14 @@ class PaymentMethods {
 	 * @return string|null
 	 */
 	public static function get_name( $method = null, $fallback = null ) {
+		// Get name from registered payment method.
+		$payment_method = pronamic_pay_plugin()->get_payment_methods()->get( $method );
+
+		if ( null !== $payment_method ) {
+			return $payment_method->get_name();
+		}
+
+		// Fallback to static name.
 		$payment_methods = self::get_payment_methods();
 
 		if ( null !== $method && array_key_exists( $method, $payment_methods ) ) {
@@ -652,19 +660,32 @@ class PaymentMethods {
 			$size = '640x360';
 		}
 
-		$image_service = new ImageService();
+		$paths = [];
 
+		// Get image from registered payment method.
+		$payment_method = pronamic_pay_plugin()->get_payment_methods()->get( $method );
+
+		if ( null !== $payment_method && \array_key_exists( $size, $payment_method->images ) ) {
+			$paths[] = $payment_method->images[ $size ];
+		}
+
+		// Default image path.
 		$method_slug = \str_replace( '_', '-', $method );
 
 		$path = 'methods/' . $method_slug . '/method-' . $method_slug . '-' . $size . '.svg';
 
-		$path = $image_service->get_path( $path );
+		$paths[] = ( new ImageService() )->get_path( $path );
 
-		if ( ! \is_readable( $path ) ) {
-			return null;
+		// Find first readable path.
+		foreach ( $paths as $path ) {
+			if ( ! \is_readable( $path ) ) {
+				continue;
+			}
+
+			return \plugins_url( \basename( $path ), $path );
 		}
 
-		return \plugins_url( \basename( $path ), $path );
+		return null;
 	}
 
 	/**
