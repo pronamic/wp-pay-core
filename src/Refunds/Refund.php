@@ -19,10 +19,7 @@ use Pronamic\WordPress\Pay\Payments\Payment;
 use WP_User;
 
 /**
- * Title: Refund
- * Description:
- * Copyright: 2005-2026 Pronamic
- * Company: Pronamic
+ * Refund class
  *
  * @version 4.9.0
  * @since   4.9.0

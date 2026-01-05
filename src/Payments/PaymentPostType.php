@@ -11,10 +11,7 @@
 namespace Pronamic\WordPress\Pay\Payments;
 
 /**
- * Title: WordPress iDEAL post types
- * Description:
- * Copyright: 2005-2026 Pronamic
- * Company: Pronamic
+ * Payment post type class
  *
  * @version 2.7.1
  * @since   3.7.0

@@ -11,10 +11,7 @@
 namespace Pronamic\WordPress\Pay\Core;
 
 /**
- * Title: WordPress utility class
- * Description:
- * Copyright: 2005-2026 Pronamic
- * Company: Pronamic
+ * Util class
  *
  * @version 2.2.6
  * @since 1.0.0

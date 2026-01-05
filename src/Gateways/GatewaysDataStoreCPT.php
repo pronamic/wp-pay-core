@@ -14,10 +14,7 @@ use Pronamic\WordPress\Pay\AbstractDataStoreCPT;
 use Pronamic\WordPress\Pay\Core\Gateway;
 
 /**
- * Title: Gateways data store CPT
- * Description:
- * Copyright: 2005-2026 Pronamic
- * Company: Pronamic
+ * Gateways data store CPT class
  *
  * @version 4.0.0
  * @since   4.0.0

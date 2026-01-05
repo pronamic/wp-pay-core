@@ -16,10 +16,7 @@ use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Refunds\Refund;
 
 /**
- * Title: Gateway
- * Description:
- * Copyright: 2005-2026 Pronamic
- * Company: Pronamic
+ * Gateway class
  *
  * @version 2.5.1
  * @since   1.0.0

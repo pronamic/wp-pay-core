@@ -16,10 +16,7 @@ use Pronamic\WordPress\Pay\Core\ModeTrait;
 use Pronamic\WordPress\Pay\Core\SupportsTrait;
 
 /**
- * Title: Abstract gateway integration
- * Description:
- * Copyright: 2005-2026 Pronamic
- * Company: Pronamic
+ * Abstract gateway integration class
  *
  * @version 2.5.1
  * @since   1.0.0

@@ -19,10 +19,7 @@ use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Plugin;
 
 /**
- * Title: Subscriptions module
- * Description:
- * Copyright: 2005-2026 Pronamic
- * Company: Pronamic
+ * Subscriptions module class
  *
  * @link https://woocommerce.com/2017/04/woocommerce-3-0-release/
  * @link https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/

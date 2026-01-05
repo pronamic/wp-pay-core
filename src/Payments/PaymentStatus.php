@@ -11,10 +11,7 @@
 namespace Pronamic\WordPress\Pay\Payments;
 
 /**
- * Title: WordPress pay payment statuses constants
- * Description:
- * Copyright: 2005-2026 Pronamic
- * Company: Pronamic
+ * Payment status class
  *
  * @version 2.7.1
  * @since   1.0.0

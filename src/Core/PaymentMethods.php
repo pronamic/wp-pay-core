@@ -16,10 +16,7 @@ use WP_Post;
 use WP_Query;
 
 /**
- * Title: WordPress pay payment methods
- * Description:
- * Copyright: 2005-2026 Pronamic
- * Company: Pronamic
+ * Payment methods class
  *
  * @version 2.7.1
  * @since   1.0.1

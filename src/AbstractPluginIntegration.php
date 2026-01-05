@@ -10,14 +10,8 @@
 
 namespace Pronamic\WordPress\Pay;
 
-use Pronamic\WordPress\Pay\Dependencies\Dependencies;
-use Pronamic\WordPress\Pay\Upgrades\Upgrades;
-
 /**
- * Title: Abstract plugin integration
- * Description:
- * Copyright: 2005-2026 Pronamic
- * Company: Pronamic
+ * Abstract plugin integration class
  *
  * @version 2.2.6
  * @since   1.0.0

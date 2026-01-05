@@ -18,10 +18,7 @@ use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Customer;
 
 /**
- * Title: Payments data store CPT
- * Description:
- * Copyright: 2005-2026 Pronamic
- * Company: Pronamic
+ * Legacy payments data store CPT class
  *
  * @see     https://woocommerce.com/2017/04/woocommerce-3-0-release/
  * @see     https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/

@@ -11,10 +11,7 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 /**
- * Title: WordPress pay subscription statuses constants
- * Description:
- * Copyright: 2005-2026 Pronamic
- * Company: Pronamic
+ * Subscription status class
  *
  * @version 2.2.4
  * @since   2.2.4

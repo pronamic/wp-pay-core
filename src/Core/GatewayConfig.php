@@ -11,10 +11,7 @@
 namespace Pronamic\WordPress\Pay\Core;
 
 /**
- * Title: Gateway config
- * Description:
- * Copyright: 2005-2026 Pronamic
- * Company: Pronamic
+ * Gateway config class
  *
  * @version 2.0.8
  * @since   1.0.0

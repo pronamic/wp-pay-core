@@ -15,10 +15,7 @@ use DOMNode;
 use DOMText;
 
 /**
- * Title: XML utility class
- * Description:
- * Copyright: 2005-2026 Pronamic
- * Company: Pronamic
+ * XML utility class
  *
  * @version 2.2.6
  * @since 1.2.1
