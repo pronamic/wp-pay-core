@@ -13,7 +13,6 @@ namespace Pronamic\WordPress\Pay;
 /**
  * Title: WordPress iDEAL admin
  *
- * @author  Remco Tolsma
  * @version 2.0.5
  */
 class Settings {

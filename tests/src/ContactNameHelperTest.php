@@ -15,7 +15,6 @@ use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 /**
  * Contact name helper test
  *
- * @author  Remco Tolsma
  * @version 2.2.8
  * @since   2.2.8
  */

@@ -13,7 +13,6 @@ namespace Pronamic\WordPress\Pay\Dependencies;
 /**
  * Dependencies
  *
- * @author  Remco Tolsma
  * @version 2.2.6
  * @since   2.2.6
  */

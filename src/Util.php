@@ -15,7 +15,6 @@ use DateInterval;
 /**
  * WordPress utility class
  *
- * @author  Remco Tolsma
  * @version 2.5.0
  * @since   2.0.1
  */

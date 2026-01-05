@@ -15,7 +15,6 @@ use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 /**
  * Tracking module test
  *
- * @author  Reüel van der Steege
  * @version 2.4.0
  */
 class TrackingModuleTest extends TestCase {

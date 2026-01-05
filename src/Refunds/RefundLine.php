@@ -21,7 +21,6 @@ use Pronamic\WordPress\Pay\Payments\PaymentLine;
 /**
  * Refund line.
  *
- * @author  Remco Tolsma
  * @version 2.2.6
  * @since   2.1.0
  */

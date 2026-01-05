@@ -15,7 +15,6 @@ use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 /**
  * JavaScript files test
  *
- * @author  Remco Tolsma
  * @version 2.1.6
  * @since   2.1.6
  */

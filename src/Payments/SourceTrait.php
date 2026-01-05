@@ -13,7 +13,6 @@ namespace Pronamic\WordPress\Pay\Payments;
 /**
  * Source Trait
  *
- * @author  Remco Tolsma
  * @version 2.5.0
  * @since   2.5.0
  */

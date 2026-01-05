@@ -15,7 +15,6 @@ use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 /**
  * Subscription Interval Test
  *
- * @author  Remco Tolsma
  * @version 2.5.0
  */
 class SubscriptionIntervalTest extends TestCase {

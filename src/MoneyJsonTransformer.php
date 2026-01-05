@@ -16,7 +16,6 @@ use Pronamic\WordPress\Money\TaxedMoney;
 /**
  * Money JSON transformer
  *
- * @author  Remco Tolsma
  * @version 2.1.0
  * @since   2.1.0
  */

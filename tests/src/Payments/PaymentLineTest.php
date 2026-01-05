@@ -18,7 +18,6 @@ use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 /**
  * Payment line test
  *
- * @author  Remco Tolsma
  * @version 2.1.0
  * @since   1.0.0
  */

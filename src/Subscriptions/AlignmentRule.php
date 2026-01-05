@@ -15,7 +15,6 @@ use DateTimeImmutable;
 /**
  * Alignment Rule
  *
- * @author  Remco Tolsma
  * @version 2.5.0
  * @since   2.5.0
  */

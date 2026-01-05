@@ -19,7 +19,6 @@ use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 /**
  * Payment info helper
  *
- * @author  Remco Tolsma
  * @version 2.5.0
  * @since   2.1.0
  */

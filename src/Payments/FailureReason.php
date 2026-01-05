@@ -13,7 +13,6 @@ namespace Pronamic\WordPress\Pay\Payments;
 /**
  * Failure reason.
  *
- * @author  Reüel van der Steege
  * @since   2.2.8
  * @version 2.2.8
  */

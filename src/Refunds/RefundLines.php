@@ -21,7 +21,6 @@ use Pronamic\WordPress\Money\TaxedMoney;
 /**
  * Refund lines
  *
- * @author     Remco Tolsma
  * @version    2.5.1
  * @since      2.1.0
  * @implements \IteratorAggregate<int, RefundLine>

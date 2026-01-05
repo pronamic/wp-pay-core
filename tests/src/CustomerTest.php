@@ -19,7 +19,6 @@ use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 /**
  * Customer test
  *
- * @author Remco Tolsma
  * @version 2.4.0
  */
 class CustomerTest extends TestCase {

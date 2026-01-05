@@ -23,7 +23,6 @@ use WP_Post;
 /**
  * Payment info
  *
- * @author  Remco Tolsma
  * @version 2.5.0
  * @since   1.0.0
  */

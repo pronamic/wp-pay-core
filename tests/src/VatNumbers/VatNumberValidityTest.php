@@ -15,7 +15,6 @@ use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 /**
  * VAT Number validity test
  *
- * @author  Remco Tolsma
  * @version 2.4.0
  * @since   2.1.6
  */

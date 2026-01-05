@@ -19,7 +19,6 @@ use Pronamic\WordPress\Pay\Core\Gateway;
  * Copyright: 2005-2026 Pronamic
  * Company: Pronamic
  *
- * @author  Reüel van der Steege
  * @version 4.0.0
  * @since   4.0.0
  */

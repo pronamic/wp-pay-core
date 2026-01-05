@@ -15,7 +15,6 @@ namespace Pronamic\WordPress\Pay;
  *
  * @link https://ec.europa.eu/taxation_customs/sites/taxation/files/resources/documents/taxation/vat/how_vat_works/rates/vat_rates_en.pdf
  * @link https://github.com/apilayer/euvatrates.com
- * @author  Remco Tolsma
  * @version 2.1.0
  * @since   2.1.0
  */

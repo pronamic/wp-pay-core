@@ -18,7 +18,6 @@ use WP_Error;
 /**
  * License Manager
  *
- * @author  Remco Tolsma
  * @version 2.4.0
  * @since   2.0.1
  */
@@ -147,7 +146,7 @@ class LicenseManager {
 
 	/**
 	 * Should display license notice.
-	 * 
+	 *
 	 * @link https://github.com/pronamic/pronamic-pay/issues/104#issuecomment-2478346476
 	 * @return bool
 	 */

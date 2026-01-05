@@ -15,7 +15,6 @@ use Pronamic\WordPress\Pay\Payments\PaymentPostType;
 /**
  * Title: WordPress iDEAL post types
  *
- * @author  Remco Tolsma
  * @version 2.2.6
  * @since   1.0.0
  */

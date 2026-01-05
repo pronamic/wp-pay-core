@@ -15,7 +15,6 @@ use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 /**
  * Customer helper test
  *
- * @author  Remco Tolsma
  * @version 2.6.0
  * @since   2.6.0
  */

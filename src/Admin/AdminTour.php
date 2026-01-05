@@ -15,7 +15,6 @@ use Pronamic\WordPress\Pay\Plugin;
 /**
  * WordPress admin tour
  *
- * @author  Remco Tolsma
  * @version 2.4.0
  * @since   1.0.0
  */

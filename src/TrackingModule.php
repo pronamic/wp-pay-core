@@ -13,7 +13,6 @@ namespace Pronamic\WordPress\Pay;
 /**
  * Tracking module
  *
- * @author  Reüel van der Steege
  * @since   2.2.6
  * @version 2.2.6
  */

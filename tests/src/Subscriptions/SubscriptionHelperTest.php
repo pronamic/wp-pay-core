@@ -17,7 +17,6 @@ use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 /**
  * Subscription Helper Test
  *
- * @author  Remco Tolsma
  * @version 2.5.0
  */
 class SubscriptionHelperTest extends TestCase {

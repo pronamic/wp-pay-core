@@ -15,7 +15,6 @@ use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 /**
  * Alignment Rule Test
  *
- * @author  Remco Tolsma
  * @version 2.5.0
  * @since   2.5.0
  */

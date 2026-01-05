@@ -21,7 +21,6 @@ use Pronamic\WordPress\Pay\Refunds\Refund;
  * Copyright: 2005-2026 Pronamic
  * Company: Pronamic
  *
- * @author  Remco Tolsma
  * @version 2.5.1
  * @since   1.0.0
  */

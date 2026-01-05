@@ -21,7 +21,6 @@ use WP_Error;
 /**
  * Blocks
  *
- * @author  Reüel van der Steege
  * @since   2.5.0
  * @version 2.1.7
  */

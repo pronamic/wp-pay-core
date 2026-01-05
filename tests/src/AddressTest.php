@@ -15,7 +15,6 @@ use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 /**
  * Address test
  *
- * @author Remco Tolsma
  * @version 2.1.0
  * @since   2.1.0
  */

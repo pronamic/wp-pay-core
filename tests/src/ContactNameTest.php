@@ -15,7 +15,6 @@ use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 /**
  * Personal Name test
  *
- * @author  Remco Tolsma
  * @version 1.0
  */
 class ContactNameTest extends TestCase {

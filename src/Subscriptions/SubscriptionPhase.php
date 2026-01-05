@@ -18,7 +18,6 @@ use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 /**
  * Subscription Phase
  *
- * @author  Remco Tolsma
  * @version 2.5.0
  * @since   2.5.0
  */

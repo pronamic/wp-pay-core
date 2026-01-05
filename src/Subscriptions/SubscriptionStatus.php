@@ -16,7 +16,6 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
  * Copyright: 2005-2026 Pronamic
  * Company: Pronamic
  *
- * @author  Reüel van der Steege
  * @version 2.2.4
  * @since   2.2.4
  */

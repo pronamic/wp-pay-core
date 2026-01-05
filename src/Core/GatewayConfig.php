@@ -16,7 +16,6 @@ namespace Pronamic\WordPress\Pay\Core;
  * Copyright: 2005-2026 Pronamic
  * Company: Pronamic
  *
- * @author  Remco Tolsma
  * @version 2.0.8
  * @since   1.0.0
  */

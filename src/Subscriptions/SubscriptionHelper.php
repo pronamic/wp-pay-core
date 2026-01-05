@@ -18,7 +18,6 @@ use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 /**
  * Subscription Helper
  *
- * @author  Remco Tolsma
  * @version 2.5.0
  * @since   2.4.0
  */

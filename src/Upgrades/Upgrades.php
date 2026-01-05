@@ -18,7 +18,6 @@ use Traversable;
 /**
  * Upgrades
  *
- * @author     Remco Tolsma
  * @version    2.2.6
  * @since      2.2.6
  * @implements \IteratorAggregate<int, Upgrade>

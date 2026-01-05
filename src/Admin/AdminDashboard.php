@@ -13,7 +13,6 @@ namespace Pronamic\WordPress\Pay\Admin;
 /**
  * WordPress admin dashboard
  *
- * @author Remco Tolsma
  * @version 2.2.6
  * @since 3.7.0
  */

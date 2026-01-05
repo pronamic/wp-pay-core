@@ -17,7 +17,6 @@ use WP_Query;
  * WordPress admin payment bulk actions
  *
  * @link https://www.skyverge.com/blog/add-custom-bulk-action/
- * @author Remco Tolsma
  * @version 2.2.6
  * @since 4.1.0
  */

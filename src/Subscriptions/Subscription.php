@@ -23,7 +23,6 @@ use Pronamic\WordPress\Pay\Payments\PaymentInfoHelper;
 /**
  * Subscription
  *
- * @author  Remco Tolsma
  * @version 2.7.1
  * @since   1.0.0
  */

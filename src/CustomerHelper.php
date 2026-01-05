@@ -16,7 +16,6 @@ use Pronamic\WordPress\Pay\Core\Util as Core_Util;
 /**
  * Customer helper
  *
- * @author  Remco Tolsma
  * @version 2.4.0
  * @since   2.1.0
  */

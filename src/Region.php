@@ -16,7 +16,6 @@ use stdClass;
 /**
  * Region
  *
- * @author  Remco Tolsma
  * @version 2.1.6
  * @since   2.1.6
  */

@@ -24,7 +24,6 @@ use WP_User;
  * Copyright: 2005-2026 Pronamic
  * Company: Pronamic
  *
- * @author  Reüel van der Steege
  * @version 4.9.0
  * @since   4.9.0
  */

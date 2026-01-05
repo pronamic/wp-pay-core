@@ -17,7 +17,6 @@ use Pronamic\WordPress\Pay\Plugin;
 /**
  * Webhook logger class
  *
- * @author  Reüel van der Steege
  * @version 2.1.6
  * @since   2.1.6
  */

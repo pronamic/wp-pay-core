@@ -15,7 +15,6 @@ use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 /**
  * Abstract gateway integration test
  *
- * @author  Remco Tolsma
  * @version 2.2.8
  * @since   2.2.8
  */

@@ -17,7 +17,6 @@ use Yoast\PHPUnitPolyfills\TestCases\TestCase;
  *
  * @link https://github.com/woocommerce/woocommerce/blob/3.5.5/i18n/states/US.php
  *
- * @author  Remco Tolsma
  * @version 2.1.6
  * @since   2.1.6
  */

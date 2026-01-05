@@ -16,7 +16,6 @@ use Pronamic\WordPress\Pay\Plugin;
 /**
  * WordPress iDEAL admin
  *
- * @author  Remco Tolsma
  * @version 2.2.6
  * @since   1.0.0
  */

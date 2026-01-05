@@ -13,7 +13,6 @@ namespace Pronamic\WordPress\Pay\Core;
 /**
  * Timestamps Trait
  *
- * @author  Remco Tolsma
  * @version 2.5.0
  * @since   2.5.0
  * @link    https://github.com/laravel/framework/blob/v7.27.0/src/Illuminate/Database/Eloquent/Concerns/HasTimestamps.php

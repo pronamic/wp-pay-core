@@ -29,7 +29,6 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 /**
  * WordPress Pay admin
  *
- * @author  Remco Tolsma
  * @version 2.5.0
  * @since   1.0.0
  */

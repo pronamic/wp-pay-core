@@ -18,7 +18,6 @@ use Pronamic\WordPress\Pay\Upgrades\Upgrade620;
 /**
  * WordPress admin install
  *
- * @author  Remco Tolsma
  * @version 2.3.2
  * @since   1.0.0
  */

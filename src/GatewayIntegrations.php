@@ -17,7 +17,6 @@ use Traversable;
 /**
  * Title: WordPress gateway integrations class.
  *
- * @author     Reüel van der Steege
  * @version    2.2.6
  * @since      1.0.0
  * @implements IteratorAggregate<string, AbstractGatewayIntegration>

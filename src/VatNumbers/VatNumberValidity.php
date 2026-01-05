@@ -14,7 +14,6 @@ namespace Pronamic\WordPress\Pay\VatNumbers;
  * VAT Number validity
  *
  * @link    https://ec.europa.eu/taxation_customs/vies/?locale=en
- * @author  Remco Tolsma
  * @version 2.4.0
  * @since   1.4.0
  */
