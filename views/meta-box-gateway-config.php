@@ -92,7 +92,7 @@ if ( empty( $gateway_id ) && 1 === count( $integrations ) ) {
 						if ( null !== $manual_url ) {
 							$links[] = sprintf(
 								'<a href="%s" target="_blank">%s</a>',
-								\esc_url( $plugin->tracking_module->get_tracking_url( $manual_url ) ),
+								\esc_url( $manual_url ),
 								\esc_html__( 'Manual', 'pronamic_ideal' )
 							);
 						}
