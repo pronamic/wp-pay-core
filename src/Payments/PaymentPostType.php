@@ -3,7 +3,7 @@
  * Payment Post Type
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -13,7 +13,7 @@ namespace Pronamic\WordPress\Pay\Payments;
 /**
  * Title: WordPress iDEAL post types
  * Description:
- * Copyright: 2005-2025 Pronamic
+ * Copyright: 2005-2026 Pronamic
  * Company: Pronamic
  *
  * @author  Remco Tolsma
