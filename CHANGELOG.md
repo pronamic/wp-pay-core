@@ -6,6 +6,17 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.30.0] - 2026-01-27
+
+### Commits
+
+- Removed extensions support test (#238) ([370ea4d](https://github.com/pronamic/wp-pay-core/commit/370ea4d0ec838cad8ca294b9fb46a865b4615c04))
+- Removed tracking module (#236) ([46fda16](https://github.com/pronamic/wp-pay-core/commit/46fda16ed115a2fb1e61fdea5ee475ff8d3e8d8f))
+
+Full set of changes: [`4.29.0...4.30.0`][4.30.0]
+
+[4.30.0]: https://github.com/pronamic/wp-pay-core/compare/v4.29.0...v4.30.0
+
 ## [4.29.0] - 2026-01-05
 
 ### Commits
