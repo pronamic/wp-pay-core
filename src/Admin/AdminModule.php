@@ -460,16 +460,14 @@ class AdminModule {
 		// Customer.
 		$customer_data = \array_map( sanitize_text_field( ... ), \wp_unslash( $_POST['customer'] ?? [] ) );
 
-		$name = ContactNameHelper::from_array(
-			[
-				'first_name' => $this->get_optional_value( $customer_data, 'first_name' ),
-				'last_name'  => $this->get_optional_value( $customer_data, 'last_name' ),
-			]
-		);
-
 		$customer = CustomerHelper::from_array(
 			[
-				'name'    => $name,
+				'name'    => ContactNameHelper::from_array(
+					[
+						'first_name' => $this->get_optional_value( $customer_data, 'first_name' ),
+						'last_name'  => $this->get_optional_value( $customer_data, 'last_name' ),
+					]
+				),
 				'email'   => $this->get_optional_value( $customer_data, 'email' ),
 				'phone'   => $this->get_optional_value( $customer_data, 'phone' ),
 				'user_id' => $user->ID,

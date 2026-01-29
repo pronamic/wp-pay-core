@@ -327,10 +327,12 @@ $payment_methods = $gateway->get_payment_methods(
 					'email'      => [
 						'label' => __( 'Email address', 'pronamic_ideal' ),
 						'value' => $user->user_email,
+						'type'  => 'email',
 					],
 					'phone'      => [
 						'label' => __( 'Phone', 'pronamic_ideal' ),
 						'value' => '',
+						'type'  => 'tel',
 					],
 				];
 
@@ -338,6 +340,7 @@ $payment_methods = $gateway->get_payment_methods(
 					$name  = \sprintf( 'customer[%s]', $key );
 					$id    = \sanitize_key( $name );
 					$value = $field['value'];
+					$type  = $field['type'] ?? 'text';
 
 					?>
 					<tr>
@@ -345,7 +348,7 @@ $payment_methods = $gateway->get_payment_methods(
 							<label for="<?php echo \esc_attr( $id ); ?>"><?php echo \esc_html( $field['label'] ); ?></label>
 						</th>
 						<td>
-							<input id="<?php echo \esc_attr( $id ); ?>" name="<?php echo \esc_attr( $name ); ?>" value="<?php echo \esc_attr( $value ); ?>"  type="text" class="regular-text code pronamic-pay-form-control">
+							<input id="<?php echo \esc_attr( $id ); ?>" name="<?php echo \esc_attr( $name ); ?>" value="<?php echo \esc_attr( $value ); ?>"  type="<?php echo \esc_attr( $type ); ?>" class="regular-text code pronamic-pay-form-control">
 						</td>
 					</tr>
 					<?php
