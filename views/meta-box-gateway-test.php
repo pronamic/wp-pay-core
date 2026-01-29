@@ -318,11 +318,11 @@ $payment_methods = $gateway->get_payment_methods(
 				$customer_fields = [
 					'first_name' => [
 						'label' => __( 'First name', 'pronamic_ideal' ),
-						'value' => $user->first_name,
+						'value' => ( '' === $user->first_name ) ? 'John' : $user->first_name,
 					],
 					'last_name'  => [
 						'label' => __( 'Last name', 'pronamic_ideal' ),
-						'value' => $user->last_name,
+						'value' => ( '' === $user->last_name ) ? 'Doe' : $user->last_name,
 					],
 					'email'      => [
 						'label' => __( 'Email address', 'pronamic_ideal' ),
