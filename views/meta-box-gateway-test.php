@@ -309,6 +309,58 @@ $payment_methods = $gateway->get_payment_methods(
 
 	<tr>
 		<th scope="row">
+			<?php esc_html_e( 'Customer', 'pronamic_ideal' ); ?>
+		</th>
+		<td style="padding: 0;">
+			<table class="form-table" style="margin-top: 0;">
+				<?php
+
+				$customer_fields = [
+					'first_name' => [
+						'label' => __( 'First name', 'pronamic_ideal' ),
+						'value' => $user->first_name,
+					],
+					'last_name'  => [
+						'label' => __( 'Last name', 'pronamic_ideal' ),
+						'value' => $user->last_name,
+					],
+					'email'      => [
+						'label' => __( 'Email address', 'pronamic_ideal' ),
+						'value' => $user->user_email,
+						'type'  => 'email',
+					],
+					'phone'      => [
+						'label' => __( 'Phone', 'pronamic_ideal' ),
+						'value' => '',
+						'type'  => 'tel',
+					],
+				];
+
+				foreach ( $customer_fields as $key => $field ) {
+					$name  = \sprintf( 'customer[%s]', $key );
+					$id    = \sanitize_key( $name );
+					$value = $field['value'];
+					$type  = $field['type'] ?? 'text';
+
+					?>
+					<tr>
+						<th scope="row">
+							<label for="<?php echo \esc_attr( $id ); ?>"><?php echo \esc_html( $field['label'] ); ?></label>
+						</th>
+						<td>
+							<input id="<?php echo \esc_attr( $id ); ?>" name="<?php echo \esc_attr( $name ); ?>" value="<?php echo \esc_attr( $value ); ?>"  type="<?php echo \esc_attr( $type ); ?>" class="regular-text code pronamic-pay-form-control">
+						</td>
+					</tr>
+					<?php
+				}
+
+				?>
+			</table>
+		</td>
+	</tr>
+
+	<tr>
+		<th scope="row">
 			<?php esc_html_e( 'Billing', 'pronamic_ideal' ); ?>
 		</th>
 		<td style="padding: 0;">
