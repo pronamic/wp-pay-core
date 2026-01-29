@@ -309,6 +309,27 @@ $payment_methods = $gateway->get_payment_methods(
 
 	<tr>
 		<th scope="row">
+			<?php esc_html_e( 'Customer', 'pronamic_ideal' ); ?>
+		</th>
+		<td style="padding: 0;">
+			<?php
+
+			print_adress_fields(
+				'customer[%s]',
+				[
+					'first_name' => $user->first_name,
+					'last_name'  => $user->last_name,
+					'email'      => $user->user_email,
+					'phone'      => '',
+				]
+			);
+
+			?>
+		</td>
+	</tr>
+
+	<tr>
+		<th scope="row">
 			<?php esc_html_e( 'Billing', 'pronamic_ideal' ); ?>
 		</th>
 		<td style="padding: 0;">

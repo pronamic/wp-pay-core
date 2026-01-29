@@ -457,20 +457,21 @@ class AdminModule {
 		// Data.
 		$user = \wp_get_current_user();
 
-		// Name.
+		// Customer.
+		$customer_data = \array_map( sanitize_text_field( ... ), \wp_unslash( $_POST['customer'] ?? [] ) );
+
 		$name = ContactNameHelper::from_array(
 			[
-				'first_name' => $user->first_name,
-				'last_name'  => $user->last_name,
+				'first_name' => $this->get_optional_value( $customer_data, 'first_name' ),
+				'last_name'  => $this->get_optional_value( $customer_data, 'last_name' ),
 			]
 		);
 
-		// Customer.
 		$customer = CustomerHelper::from_array(
 			[
 				'name'    => $name,
-				'email'   => $user->user_email,
-				'phone'   => \array_key_exists( 'test_phone', $_POST ) ? \sanitize_text_field( \wp_unslash( $_POST['test_phone'] ) ) : '',
+				'email'   => $this->get_optional_value( $customer_data, 'email' ),
+				'phone'   => $this->get_optional_value( $customer_data, 'phone' ),
 				'user_id' => $user->ID,
 			]
 		);
