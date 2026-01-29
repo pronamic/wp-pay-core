@@ -6,8 +6,8 @@ WordPress Pay Core is a WordPress payment processing library that makes payments
 
 ## Tech Stack
 
-- **PHP**: 8.2+ (Platform requirement)
-- **WordPress**: 6.8+
+- **PHP**: 8.0+ (Runtime requirement), 8.2+ (Development/platform requirement)
+- **WordPress**: 6.6+
 - **JavaScript/Node.js**: For build tools and frontend assets
 - **Testing**: PHPUnit with WordPress test suite (wp-phpunit)
 - **Build Tools**: Grunt, Composer, npm
@@ -33,7 +33,7 @@ WordPress Pay Core is a WordPress payment processing library that makes payments
 - **ALWAYS** use early returns to reduce nesting and improve readability
 - **NEVER** add unnecessary comments or explain obvious code
 - **ONLY** add comments to explain intent, non-obvious decisions, or workarounds
-- Text domain for translations: `pronamic_ideal`
+- Text domain for translations: `pronamic_ideal` (legacy) or `pronamic-pay-core` (new code)
 
 ### Code Organization
 
@@ -72,7 +72,7 @@ composer phpmd                # Run PHP Mess Detector
 ### Build
 ```bash
 composer build                # Build production-ready plugin
-npm run lint                  # Lint JS and SASS
+npm run lint                  # Lint JS (ESLint) and SASS (sass-lint) in parallel
 npm run js-build              # Build JavaScript files
 npm run sass                  # Compile SASS to CSS
 ```
