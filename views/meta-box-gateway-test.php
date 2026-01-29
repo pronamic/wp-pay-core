@@ -312,19 +312,47 @@ $payment_methods = $gateway->get_payment_methods(
 			<?php esc_html_e( 'Customer', 'pronamic_ideal' ); ?>
 		</th>
 		<td style="padding: 0;">
-			<?php
+			<table class="form-table" style="margin-top: 0;">
+				<?php
 
-			print_adress_fields(
-				'customer[%s]',
-				[
-					'first_name' => $user->first_name,
-					'last_name'  => $user->last_name,
-					'email'      => $user->user_email,
-					'phone'      => '',
-				]
-			);
+				$customer_fields = [
+					'first_name' => [
+						'label' => __( 'First name', 'pronamic_ideal' ),
+						'value' => $user->first_name,
+					],
+					'last_name'  => [
+						'label' => __( 'Last name', 'pronamic_ideal' ),
+						'value' => $user->last_name,
+					],
+					'email'      => [
+						'label' => __( 'Email address', 'pronamic_ideal' ),
+						'value' => $user->user_email,
+					],
+					'phone'      => [
+						'label' => __( 'Phone', 'pronamic_ideal' ),
+						'value' => '',
+					],
+				];
 
-			?>
+				foreach ( $customer_fields as $key => $field ) {
+					$name  = \sprintf( 'customer[%s]', $key );
+					$id    = \sanitize_key( $name );
+					$value = $field['value'];
+
+					?>
+					<tr>
+						<th scope="row">
+							<label for="<?php echo \esc_attr( $id ); ?>"><?php echo \esc_html( $field['label'] ); ?></label>
+						</th>
+						<td>
+							<input id="<?php echo \esc_attr( $id ); ?>" name="<?php echo \esc_attr( $name ); ?>" value="<?php echo \esc_attr( $value ); ?>"  type="text" class="regular-text code pronamic-pay-form-control">
+						</td>
+					</tr>
+					<?php
+				}
+
+				?>
+			</table>
 		</td>
 	</tr>
 
