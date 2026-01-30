@@ -6,6 +6,16 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.31.0] - 2026-01-30
+
+### Commits
+
+- Added customer fields to gateway test meta box (#240) ([7739fef](https://github.com/pronamic/wp-pay-core/commit/7739fefa6439b88688581e10d3bf982088b22203))
+
+Full set of changes: [`4.30.0...4.31.0`][4.31.0]
+
+[4.31.0]: https://github.com/pronamic/wp-pay-core/compare/v4.30.0...v4.31.0
+
 ## [4.30.0] - 2026-01-27
 
 ### Commits
