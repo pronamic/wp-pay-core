@@ -337,18 +337,18 @@ $payment_methods = $gateway->get_payment_methods(
 				];
 
 				foreach ( $customer_fields as $key => $field ) {
-					$name  = \sprintf( 'customer[%s]', $key );
-					$id    = \sanitize_key( $name );
-					$value = $field['value'];
-					$type  = $field['type'] ?? 'text';
+					$field_name  = \sprintf( 'customer[%s]', $key );
+					$field_id    = \sanitize_key( $name );
+					$field_value = $field['value'];
+					$field_type  = $field['type'] ?? 'text';
 
 					?>
 					<tr>
 						<th scope="row">
-							<label for="<?php echo \esc_attr( $id ); ?>"><?php echo \esc_html( $field['label'] ); ?></label>
+							<label for="<?php echo \esc_attr( $field_id ); ?>"><?php echo \esc_html( $field['label'] ); ?></label>
 						</th>
 						<td>
-							<input id="<?php echo \esc_attr( $id ); ?>" name="<?php echo \esc_attr( $name ); ?>" value="<?php echo \esc_attr( $value ); ?>"  type="<?php echo \esc_attr( $type ); ?>" class="regular-text code pronamic-pay-form-control">
+							<input id="<?php echo \esc_attr( $field_id ); ?>" name="<?php echo \esc_attr( $field_name ); ?>" value="<?php echo \esc_attr( $field_value ); ?>"  type="<?php echo \esc_attr( $field_type ); ?>" class="regular-text code pronamic-pay-form-control">
 						</td>
 					</tr>
 					<?php
