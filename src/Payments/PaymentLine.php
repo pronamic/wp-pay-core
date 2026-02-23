@@ -261,7 +261,7 @@ class PaymentLine implements \Stringable {
 	 * @param Money|null $price Unit price.
 	 * @return void
 	 */
-	public function set_unit_price( Money $price = null ) {
+	public function set_unit_price( ?Money $price = null ) {
 		$this->unit_price = ( $price ?? null );
 	}
 
@@ -280,7 +280,7 @@ class PaymentLine implements \Stringable {
 	 * @param Money $discount_amount Discount amount.
 	 * @return void
 	 */
-	public function set_discount_amount( Money $discount_amount = null ) {
+	public function set_discount_amount( ?Money $discount_amount = null ) {
 		$this->discount_amount = $discount_amount;
 	}
 
