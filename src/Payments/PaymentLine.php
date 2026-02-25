@@ -3,7 +3,7 @@
  * Payment line
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -13,12 +13,12 @@ namespace Pronamic\WordPress\Pay\Payments;
 use InvalidArgumentException;
 use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Money\TaxedMoney;
+use Pronamic\WordPress\Number\Number;
 use Pronamic\WordPress\Pay\MoneyJsonTransformer;
 
 /**
  * Payment line.
  *
- * @author  Remco Tolsma
  * @version 2.2.6
  * @since   2.1.0
  */
@@ -63,7 +63,7 @@ class PaymentLine implements \Stringable {
 	/**
 	 * The quantity.
 	 *
-	 * @var int|null
+	 * @var Number|null
 	 */
 	private $quantity;
 
@@ -230,19 +230,23 @@ class PaymentLine implements \Stringable {
 	/**
 	 * Get the quantity of this payment line.
 	 *
-	 * @return int|null
+	 * @return Number|null
 	 */
-	public function get_quantity() {
+	public function get_quantity(): ?Number {
 		return $this->quantity;
 	}
 
 	/**
 	 * Set the quantity of this payment line.
 	 *
-	 * @param int|null $quantity Quantity.
+	 * @param mixed $quantity Quantity.
 	 * @return void
 	 */
 	public function set_quantity( $quantity ) {
+		if ( null !== $quantity ) {
+			$quantity = Number::from_mixed( $quantity );
+		}
+
 		$this->quantity = $quantity;
 	}
 
@@ -471,7 +475,7 @@ class PaymentLine implements \Stringable {
 		}
 
 		if ( property_exists( $json, 'quantity' ) ) {
-			$line->set_quantity( $json->quantity );
+			$line->set_quantity( Number::from_mixed( $json->quantity ) );
 		}
 
 		if ( isset( $json->unit_price ) ) {

@@ -3,7 +3,7 @@
  * Money JSON transformer test.
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -18,7 +18,6 @@ use stdClass;
 /**
  * Money JSON transformer test.
  *
- * @author  Reüel van der Steege
  * @version 2.1.6
  * @since   2.1.6
  */

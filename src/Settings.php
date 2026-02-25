@@ -3,7 +3,7 @@
  * Settings
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -13,7 +13,6 @@ namespace Pronamic\WordPress\Pay;
 /**
  * Title: WordPress iDEAL admin
  *
- * @author  Remco Tolsma
  * @version 2.0.5
  */
 class Settings {

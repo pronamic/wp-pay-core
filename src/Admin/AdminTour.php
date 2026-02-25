@@ -3,7 +3,7 @@
  * Admin Tour
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Admin
  */
@@ -15,7 +15,6 @@ use Pronamic\WordPress\Pay\Plugin;
 /**
  * WordPress admin tour
  *
- * @author  Remco Tolsma
  * @version 2.4.0
  * @since   1.0.0
  */

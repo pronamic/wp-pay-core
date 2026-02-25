@@ -3,7 +3,7 @@
  * Subscription Interval
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Subscriptions
  */
@@ -13,7 +13,6 @@ namespace Pronamic\WordPress\Pay\Subscriptions;
 /**
  * Subscription Interval
  *
- * @author  Remco Tolsma
  * @version 2.5.0
  * @since   2.4.0
  * @link    https://github.com/briannesbitt/Carbon/blob/2.40.0/src/Carbon/CarbonInterval.php

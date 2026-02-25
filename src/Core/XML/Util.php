@@ -3,7 +3,7 @@
  * XML Util
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Core\XML
  */
@@ -15,12 +15,8 @@ use DOMNode;
 use DOMText;
 
 /**
- * Title: XML utility class
- * Description:
- * Copyright: 2005-2025 Pronamic
- * Company: Pronamic
+ * XML utility class
  *
- * @author Remco Tolsma
  * @version 2.2.6
  * @since 1.2.1
  */

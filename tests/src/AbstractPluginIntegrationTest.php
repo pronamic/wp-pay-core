@@ -3,7 +3,7 @@
  * Abstract plugin integration test
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -15,7 +15,6 @@ use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 /**
  * Abstract plugin integration test
  *
- * @author  Remco Tolsma
  * @version 2.2.6
  * @since   1.0.0
  */

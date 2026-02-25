@@ -3,7 +3,7 @@
  * Meta Box Gateway Config
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  * @var \Pronamic\WordPress\Pay\Plugin $plugin Plugin.
@@ -92,7 +92,7 @@ if ( empty( $gateway_id ) && 1 === count( $integrations ) ) {
 						if ( null !== $manual_url ) {
 							$links[] = sprintf(
 								'<a href="%s" target="_blank">%s</a>',
-								\esc_url( $plugin->tracking_module->get_tracking_url( $manual_url ) ),
+								\esc_url( $manual_url ),
 								\esc_html__( 'Manual', 'pronamic_ideal' )
 							);
 						}

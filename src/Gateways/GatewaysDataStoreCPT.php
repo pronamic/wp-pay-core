@@ -3,7 +3,7 @@
  * Gateways Data Store Custom Post Type
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Gateways
  */
@@ -14,12 +14,8 @@ use Pronamic\WordPress\Pay\AbstractDataStoreCPT;
 use Pronamic\WordPress\Pay\Core\Gateway;
 
 /**
- * Title: Gateways data store CPT
- * Description:
- * Copyright: 2005-2025 Pronamic
- * Company: Pronamic
+ * Gateways data store CPT class
  *
- * @author  Reüel van der Steege
  * @version 4.0.0
  * @since   4.0.0
  */

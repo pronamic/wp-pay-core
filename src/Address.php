@@ -3,7 +3,7 @@
  * Address.
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -29,7 +29,6 @@ use stdClass;
  * @link   https://docs.mollie.com/reference/v2/payments-api/create-payment
  * @link   https://epayments-api.developer-ingenico.com/s2sapi/v1/en_US/java/payments/create.html#payments-create-payload
  *
- * @author  Remco Tolsma
  * @version 2.2.6
  * @since   2.1.0
  */

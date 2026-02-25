@@ -3,7 +3,7 @@
  * Mode Trait
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Core
  */
@@ -13,7 +13,6 @@ namespace Pronamic\WordPress\Pay\Core;
 /**
  * Mode Trait
  *
- * @author  Remco Tolsma
  * @version 2.5.0
  * @since   2.5.0
  * @link    https://github.com/search?q=%22trait+VersionTrait%22+language%3APHP&type=Code

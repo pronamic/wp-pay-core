@@ -3,7 +3,7 @@
  * Plugin
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -36,7 +36,6 @@ use WP_Query;
 /**
  * Plugin
  *
- * @author  Remco Tolsma
  * @version 2.5.1
  * @since   2.0.1
  */
@@ -153,13 +152,6 @@ class Plugin {
 	 * @var Blocks\BlocksModule
 	 */
 	public $blocks_module;
-
-	/**
-	 * Tracking module.
-	 *
-	 * @var TrackingModule
-	 */
-	public $tracking_module;
 
 	/**
 	 * Payments module.
@@ -558,7 +550,6 @@ class Plugin {
 		// Modules.
 		$this->payments_module      = new Payments\PaymentsModule( $this );
 		$this->subscriptions_module = new Subscriptions\SubscriptionsModule( $this );
-		$this->tracking_module      = new TrackingModule();
 
 		// Blocks module.
 		if ( function_exists( 'register_block_type' ) ) {
@@ -919,9 +910,26 @@ class Plugin {
 			'customer' => \__( 'With iDEAL you can easily pay online in the secure environment of your own bank.', 'pronamic_ideal' ),
 		];
 
+		$payment_method_ideal->name = \__( 'iDEAL | Wero', 'pronamic_ideal' );
+
 		$payment_method_ideal->images = [
-			'woocommerce' => $image_service->get_path( 'methods/ideal/method-ideal-wc-51x32.svg' ),
+			'640x360'     => $image_service->get_path( 'other/ideal-wero/ideal-wero-640x360.svg' ),
+			'woocommerce' => $image_service->get_path( 'other/ideal-wero/method-ideal-wero-wc-51x32.svg' ),
 		];
+
+		/**
+		 * The iDEAL logo rebranding takes effect on January 29, 2026.
+		 *
+		 * @link https://ideal.nl/en/ideal-wero-branding
+		 */
+		if ( \time() < \strtotime( '2026-01-29 00:00:00' ) ) {
+			$payment_method_ideal->name = \__( 'iDEAL', 'pronamic_ideal' );
+
+			$payment_method_ideal->images = [
+				'640x360'     => $image_service->get_path( 'methods/ideal/method-ideal-640x360.svg' ),
+				'woocommerce' => $image_service->get_path( 'methods/ideal/method-ideal-wc-51x32.svg' ),
+			];
+		}
 
 		$this->payment_methods->add( $payment_method_ideal );
 

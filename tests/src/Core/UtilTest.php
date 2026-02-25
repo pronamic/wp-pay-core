@@ -3,7 +3,7 @@
  * Util test
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -13,12 +13,8 @@ namespace Pronamic\WordPress\Pay\Core;
 use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 /**
- * Title: WordPress pay util test
- * Description:
- * Copyright: 2005-2025 Pronamic
- * Company: Pronamic
+ * Util test class
  *
- * @author Remco Tolsma
  * @version 2.0.0
  * @since 1.1.0
  */

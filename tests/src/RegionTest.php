@@ -3,7 +3,7 @@
  * Region test
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -17,7 +17,6 @@ use Yoast\PHPUnitPolyfills\TestCases\TestCase;
  *
  * @link https://github.com/woocommerce/woocommerce/blob/3.5.5/i18n/states/US.php
  *
- * @author  Remco Tolsma
  * @version 2.1.6
  * @since   2.1.6
  */

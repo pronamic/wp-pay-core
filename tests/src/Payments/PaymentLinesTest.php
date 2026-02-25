@@ -3,7 +3,7 @@
  * Payment lines test
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -11,12 +11,12 @@
 namespace Pronamic\WordPress\Pay\Payments;
 
 use Pronamic\WordPress\Money\TaxedMoney;
+use Pronamic\WordPress\Number\Number;
 use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 /**
  * Payment lines test
  *
- * @author  Remco Tolsma
  * @version 2.1.0
  * @since   1.0.0
  */
@@ -40,7 +40,7 @@ class PaymentLinesTest extends TestCase {
 
 		$line_a->set_id( '1234' );
 		$line_a->set_description( 'Lorem ipsum dolor sit amet.' );
-		$line_a->set_quantity( 50 );
+		$line_a->set_quantity( new Number( 50 ) );
 		$line_a->set_total_amount( new TaxedMoney( 39.99, 'EUR' ) );
 
 		$this->lines->add_line( $line_a );
@@ -49,7 +49,7 @@ class PaymentLinesTest extends TestCase {
 
 		$line_b->set_id( '5678' );
 		$line_b->set_description( 'Lorem ipsum dolor sit amet.' );
-		$line_b->set_quantity( 10 );
+		$line_b->set_quantity( new Number( 10 ) );
 		$line_b->set_total_amount( new TaxedMoney( 25, 'EUR' ) );
 
 		$this->lines->add_line( $line_b );

@@ -3,7 +3,7 @@
  * VAT number validation service
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -13,7 +13,6 @@ namespace Pronamic\WordPress\Pay\VatNumbers;
 /**
  * VAT number validation service
  *
- * @author  Remco Tolsma
  * @version 2.4.0
  * @since   2.1.0
  */

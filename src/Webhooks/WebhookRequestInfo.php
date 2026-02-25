@@ -3,7 +3,7 @@
  * Webhook request info class
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -17,7 +17,6 @@ use Pronamic\WordPress\Pay\Payments\Payment;
 /**
  * Webhook request info class
  *
- * @author  Reüel van der Steege
  * @version 2.2.6
  * @since   2.1.6
  */

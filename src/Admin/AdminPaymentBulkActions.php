@@ -3,7 +3,7 @@
  * Payment Bulk Actions
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Admin
  */
@@ -17,7 +17,6 @@ use WP_Query;
  * WordPress admin payment bulk actions
  *
  * @link https://www.skyverge.com/blog/add-custom-bulk-action/
- * @author Remco Tolsma
  * @version 2.2.6
  * @since 4.1.0
  */

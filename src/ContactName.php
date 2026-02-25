@@ -3,7 +3,7 @@
  * Personal Name
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -17,7 +17,6 @@ use stdClass;
  * Personal Name
  *
  * @link    https://en.wikipedia.org/wiki/Personal_name
- * @author  Remco Tolsma
  * @version 2.2.6
  * @since   1.4.0
  */

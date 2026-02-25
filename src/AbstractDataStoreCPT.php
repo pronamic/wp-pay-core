@@ -3,7 +3,7 @@
  * Abstract Data Store Custom Post Type
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -19,7 +19,6 @@ use Pronamic\WordPress\DateTime\DateTimeZone;
  *
  * @link https://woocommerce.com/2017/04/woocommerce-3-0-release/
  * @link https://woocommerce.wordpress.com/2016/10/27/the-new-crud-classes-in-woocommerce-2-7/
- * @author  Remco Tolsma
  * @version 2.5.0
  * @since   1.0.0
  */

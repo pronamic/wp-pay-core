@@ -3,7 +3,7 @@
  * Subscription statuses
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Core
  */
@@ -11,12 +11,8 @@
 namespace Pronamic\WordPress\Pay\Subscriptions;
 
 /**
- * Title: WordPress pay subscription statuses constants
- * Description:
- * Copyright: 2005-2025 Pronamic
- * Company: Pronamic
+ * Subscription status class
  *
- * @author  Reüel van der Steege
  * @version 2.2.4
  * @since   2.2.4
  */

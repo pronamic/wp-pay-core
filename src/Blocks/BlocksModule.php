@@ -3,7 +3,7 @@
  * Editor Blocks.
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -21,7 +21,6 @@ use WP_Error;
 /**
  * Blocks
  *
- * @author  Reüel van der Steege
  * @since   2.5.0
  * @version 2.1.7
  */

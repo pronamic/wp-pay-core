@@ -3,7 +3,7 @@
  * Timestamps Trait
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Core
  */
@@ -13,7 +13,6 @@ namespace Pronamic\WordPress\Pay\Core;
 /**
  * Timestamps Trait
  *
- * @author  Remco Tolsma
  * @version 2.5.0
  * @since   2.5.0
  * @link    https://github.com/laravel/framework/blob/v7.27.0/src/Illuminate/Database/Eloquent/Concerns/HasTimestamps.php

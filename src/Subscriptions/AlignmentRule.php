@@ -3,7 +3,7 @@
  * Alignment Rule
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Subscriptions
  */
@@ -15,7 +15,6 @@ use DateTimeImmutable;
 /**
  * Alignment Rule
  *
- * @author  Remco Tolsma
  * @version 2.5.0
  * @since   2.5.0
  */

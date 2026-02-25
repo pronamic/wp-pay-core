@@ -3,7 +3,7 @@
  * Meta Box Gateway Test
  *
  * @author Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license GPL-3.0-or-later
  * @package Pronamic\WordPress\Pay
  * @var \WP_Post $post WordPress post.
@@ -229,7 +229,7 @@ $payment_methods = $gateway->get_payment_methods(
 								<input type="text" name="<?php echo \esc_attr( \sprintf( $name, 'name' ) ); ?>" value="<?php echo \esc_attr( $line['name'] ); ?>" class="pronamic-pay-form-control" />
 							</td>
 							<td>
-								<input type="number" name="<?php echo \esc_attr( \sprintf( $name, 'quantity' ) ); ?>" value="<?php echo \esc_attr( (string) $line['quantity'] ); ?>" min="1" class="pronamic-pay-form-control" />
+								<input type="number" step="any" name="<?php echo \esc_attr( \sprintf( $name, 'quantity' ) ); ?>" value="<?php echo \esc_attr( (string) $line['quantity'] ); ?>" min="0" class="pronamic-pay-form-control" />
 							</td>
 							<td>
 								<input type="number" name="<?php echo \esc_attr( \sprintf( $name, 'price' ) ); ?>" value="<?php echo \esc_attr( $line['price'] ); ?>" step="any" class="pronamic-pay-form-control" />
@@ -306,6 +306,58 @@ $payment_methods = $gateway->get_payment_methods(
 	$user = \wp_get_current_user();
 
 	?>
+
+	<tr>
+		<th scope="row">
+			<?php esc_html_e( 'Customer', 'pronamic_ideal' ); ?>
+		</th>
+		<td style="padding: 0;">
+			<table class="form-table" style="margin-top: 0;">
+				<?php
+
+				$customer_fields = [
+					'first_name' => [
+						'label' => __( 'First name', 'pronamic_ideal' ),
+						'value' => ( '' === $user->first_name ) ? 'John' : $user->first_name,
+					],
+					'last_name'  => [
+						'label' => __( 'Last name', 'pronamic_ideal' ),
+						'value' => ( '' === $user->last_name ) ? 'Doe' : $user->last_name,
+					],
+					'email'      => [
+						'label' => __( 'Email address', 'pronamic_ideal' ),
+						'value' => $user->user_email,
+						'type'  => 'email',
+					],
+					'phone'      => [
+						'label' => __( 'Phone', 'pronamic_ideal' ),
+						'value' => '',
+						'type'  => 'tel',
+					],
+				];
+
+				foreach ( $customer_fields as $key => $field ) {
+					$field_name  = \sprintf( 'customer[%s]', $key );
+					$field_id    = \sanitize_key( $name );
+					$field_value = $field['value'];
+					$field_type  = $field['type'] ?? 'text';
+
+					?>
+					<tr>
+						<th scope="row">
+							<label for="<?php echo \esc_attr( $field_id ); ?>"><?php echo \esc_html( $field['label'] ); ?></label>
+						</th>
+						<td>
+							<input id="<?php echo \esc_attr( $field_id ); ?>" name="<?php echo \esc_attr( $field_name ); ?>" value="<?php echo \esc_attr( $field_value ); ?>"  type="<?php echo \esc_attr( $field_type ); ?>" class="regular-text code pronamic-pay-form-control">
+						</td>
+					</tr>
+					<?php
+				}
+
+				?>
+			</table>
+		</td>
+	</tr>
 
 	<tr>
 		<th scope="row">

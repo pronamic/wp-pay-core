@@ -3,7 +3,7 @@
  * Payment lines
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Payments
  */
@@ -20,7 +20,6 @@ use Pronamic\WordPress\Money\TaxedMoney;
 /**
  * Payment lines
  *
- * @author     Remco Tolsma
  * @version    2.5.1
  * @since      2.1.0
  * @implements \IteratorAggregate<int, PaymentLine>

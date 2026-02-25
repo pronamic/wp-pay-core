@@ -3,7 +3,7 @@
  * Upgrade
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Upgrades
  */
@@ -13,7 +13,6 @@ namespace Pronamic\WordPress\Pay\Upgrades;
 /**
  * Upgrade
  *
- * @author  Remco Tolsma
  * @version 2.2.6
  * @since   2.2.6
  */

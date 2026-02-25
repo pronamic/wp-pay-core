@@ -3,7 +3,7 @@
  * Cards
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay
  */
@@ -15,7 +15,6 @@ use Pronamic\WpPayLogos\ImageService;
 /**
  * Cards
  *
- * @author  Reüel van der Steege
  * @version 2.7.1
  * @since   2.4.0
  */

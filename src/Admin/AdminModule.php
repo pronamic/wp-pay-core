@@ -3,7 +3,7 @@
  * Admin Module
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2025 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Admin
  */
@@ -29,7 +29,6 @@ use Pronamic\WordPress\Pay\Subscriptions\SubscriptionPhase;
 /**
  * WordPress Pay admin
  *
- * @author  Remco Tolsma
  * @version 2.5.0
  * @since   1.0.0
  */
@@ -458,20 +457,19 @@ class AdminModule {
 		// Data.
 		$user = \wp_get_current_user();
 
-		// Name.
-		$name = ContactNameHelper::from_array(
-			[
-				'first_name' => $user->first_name,
-				'last_name'  => $user->last_name,
-			]
-		);
-
 		// Customer.
+		$customer_data = \array_map( sanitize_text_field( ... ), \wp_unslash( $_POST['customer'] ?? [] ) );
+
 		$customer = CustomerHelper::from_array(
 			[
-				'name'    => $name,
-				'email'   => $user->user_email,
-				'phone'   => \array_key_exists( 'test_phone', $_POST ) ? \sanitize_text_field( \wp_unslash( $_POST['test_phone'] ) ) : '',
+				'name'    => ContactNameHelper::from_array(
+					[
+						'first_name' => $this->get_optional_value( $customer_data, 'first_name' ),
+						'last_name'  => $this->get_optional_value( $customer_data, 'last_name' ),
+					]
+				),
+				'email'   => $this->get_optional_value( $customer_data, 'email' ),
+				'phone'   => $this->get_optional_value( $customer_data, 'phone' ),
 				'user_id' => $user->ID,
 			]
 		);
@@ -500,18 +498,18 @@ class AdminModule {
 				$value = $this->get_optional_value( $item, 'price' );
 
 				$amount = Number::from_mixed( $value );
+
+				$quantity = Number::from_mixed( $this->get_optional_value( $item, 'quantity' ) ?? 1 );
 			} catch ( \Exception $e ) {
 				\wp_die( \esc_html( $e->getMessage() ) );
 			}
-
-			$quantity = $this->get_optional_value( $item, 'quantity' ) ?? 1;
 
 			$unit_price   = new Money( $amount, $currency_code );
 			$total_amount = $unit_price->multiply( $quantity );
 
 			$line->set_name( $this->get_optional_value( $item, 'name' ) );
 			$line->set_unit_price( $unit_price );
-			$line->set_quantity( (int) $quantity );
+			$line->set_quantity( $quantity );
 			$line->set_total_amount( $total_amount );
 		}
 
