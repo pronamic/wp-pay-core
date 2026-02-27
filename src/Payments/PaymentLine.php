@@ -281,7 +281,7 @@ class PaymentLine implements \Stringable {
 	/**
 	 * Set discount amount, should not contain any tax.
 	 *
-	 * @param Money $discount_amount Discount amount.
+	 * @param Money|null $discount_amount Discount amount.
 	 * @return void
 	 */
 	public function set_discount_amount( ?Money $discount_amount = null ) {
