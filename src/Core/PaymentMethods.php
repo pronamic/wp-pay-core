@@ -618,10 +618,12 @@ class PaymentMethods {
 	 */
 	public static function get_name( $method = null, $fallback = null ) {
 		// Get name from registered payment method.
-		$payment_method = pronamic_pay_plugin()->get_payment_methods()->get( $method );
+		if ( null !== $method ) {
+			$payment_method = pronamic_pay_plugin()->get_payment_methods()->get( $method );
 
-		if ( null !== $payment_method ) {
-			return $payment_method->get_name();
+			if ( null !== $payment_method ) {
+				return $payment_method->get_name();
+			}
 		}
 
 		// Fallback to static name.
