@@ -47,7 +47,7 @@ class PaymentMethodsCollection implements IteratorAggregate, Countable {
 	 * @return PaymentMethod|null
 	 */
 	public function get( $id ) {
-		if ( null !== $id && array_key_exists( $id, $this->items ) ) {
+		if ( array_key_exists( $id, $this->items ) ) {
 			return $this->items[ $id ];
 		}
 
