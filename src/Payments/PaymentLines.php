@@ -198,7 +198,7 @@ class PaymentLines implements Countable, IteratorAggregate, \Stringable {
 	 * @return PaymentLines
 	 * @throws \InvalidArgumentException Throws invalid argument exception when JSON is not an array.
 	 */
-	public static function from_json( $json, PaymentInfo $payment_info = null ) {
+	public static function from_json( $json, ?PaymentInfo $payment_info = null ) {
 		if ( ! is_array( $json ) ) {
 			throw new \InvalidArgumentException( 'JSON value must be an array.' );
 		}

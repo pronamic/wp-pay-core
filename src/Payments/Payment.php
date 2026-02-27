@@ -341,7 +341,7 @@ class Payment extends PaymentInfo {
 	 * @param FailureReason|null $failure_reason Failure reason.
 	 * @return void
 	 */
-	public function set_failure_reason( FailureReason $failure_reason = null ) {
+	public function set_failure_reason( ?FailureReason $failure_reason = null ) {
 		$this->failure_reason = $failure_reason;
 	}
 

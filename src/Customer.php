@@ -119,7 +119,7 @@ class Customer implements \Stringable {
 	 * @param ContactName|null $name Contact name.
 	 * @return void
 	 */
-	public function set_name( ContactName $name = null ) {
+	public function set_name( ?ContactName $name = null ) {
 		$this->name = $name;
 	}
 
