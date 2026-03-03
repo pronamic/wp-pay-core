@@ -10,7 +10,7 @@ WordPress Pay Core is a WordPress payment processing library that makes payments
 - **WordPress**: 6.6+
 - **JavaScript/Node.js**: For build tools and frontend assets
 - **Testing**: PHPUnit with WordPress test suite (wp-phpunit)
-- **Build Tools**: Grunt, Composer, npm
+- **Build Tools**: Composer, npm
 - **CI/CD**: GitHub Actions
 
 ## Key Dependencies
