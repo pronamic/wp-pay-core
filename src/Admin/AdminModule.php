@@ -458,6 +458,7 @@ class AdminModule {
 		$user = \wp_get_current_user();
 
 		// Customer.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Input is sanitized, see code.
 		$customer_data = \array_map( sanitize_text_field( ... ), \wp_unslash( $_POST['customer'] ?? [] ) );
 
 		$customer = CustomerHelper::from_array(
@@ -516,6 +517,7 @@ class AdminModule {
 		$payment->set_total_amount( $payment->lines->get_amount() );
 
 		// Billing address.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Input is sanitized, see code.
 		$billing_data = \array_map( sanitize_text_field( ... ), \wp_unslash( $_POST['billing'] ?? [] ) );
 
 		$name = new ContactName();
@@ -537,6 +539,7 @@ class AdminModule {
 		$payment->set_billing_address( $billing_address );
 
 		// Shipping address.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Input is sanitized, see code.
 		$shipping_data = \array_map( sanitize_text_field( ... ), \wp_unslash( $_POST['shipping'] ?? [] ) );
 
 		$name = new ContactName();
