@@ -96,22 +96,59 @@ class Settings {
 			]
 		);
 
-		// Payment Methods.
-		$payment_methods = $this->plugin->get_payment_methods();
+		/**
+		 * Payment methods.
+		 *
+		 * @link https://developer.wordpress.org/reference/functions/register_setting/
+		 * @link https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#objects
+		 */
+		\register_setting(
+			'pronamic_pay',
+			'pronamic_pay_payment_methods',
+			[
+				'type'         => 'object',
+				'show_in_rest' => [
+					'schema' => [
+						'type'                 => 'object',
+						'additionalProperties' => [
+							'type'       => 'object',
+							'properties' => [
+								'status' => [
+									'type' => 'string',
+									'enum' => [
+										'',
+										'active',
+										'inactive',
+									],
+								],
+							],
+						],
+					],
+				],
+			]
+		);
 
-		foreach ( $payment_methods as $payment_method ) {
-			$id = 'pronamic_pay_payment_method_' . $payment_method->get_id() . '_status';
+		$this->update_payment_method_statuses_from_option();
+	}
 
-			\register_setting(
-				'pronamic_pay',
-				$id,
-				[
-					'type'              => 'string',
-					'sanitize_callback' => 'sanitize_text_field',
-				]
-			);
+	/**
+	 * Update payment method statuses from option.
+	 *
+	 * @return void
+	 */
+	private function update_payment_method_statuses_from_option() {
+		$payment_methods_option = \get_option( 'pronamic_pay_payment_methods', [] );
 
-			$payment_method->set_status( (string) \get_option( $id ) );
+		if ( ! \is_array( $payment_methods_option ) ) {
+			return;
+		}
+
+		foreach ( $this->plugin->get_payment_methods() as $payment_method ) {
+			$payment_method_id = $payment_method->get_id();
+
+			if ( isset( $payment_methods_option[ $payment_method_id ]['status'] ) ) {
+				$payment_method->set_status( (string) $payment_methods_option[ $payment_method_id ]['status'] );
+			}
 		}
 	}
 
