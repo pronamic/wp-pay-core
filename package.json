@@ -48,7 +48,7 @@
 		"sass-lint": "^1.13.1",
 		"stylelint": "^13.13.1",
 		"stylelint-config-sass-guidelines": "^8.0.0",
-		"terser": "^5.9.0"
+		"terser": "^5.46.0"
 	},
 	"scripts": {
 		"build-image": "npm-run-all build-image-*",
