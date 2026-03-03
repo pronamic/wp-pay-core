@@ -59,44 +59,50 @@ class PaymentsModule {
 		// Payment Status Checker.
 		$this->status_checker = new StatusChecker();
 
-		// CLI.
-		if ( defined( 'WP_CLI' ) && WP_CLI ) {
-			WP_CLI::add_command(
-				'pay payment status',
-				function ( $args ): void {
-					foreach ( $args as $id ) {
-						$payment = get_pronamic_payment( $id );
+		\add_action( 'cli_init', $this->cli_init( ... ) );
+	}
 
-						if ( null === $payment ) {
-							WP_CLI::error(
-								\sprintf(
-									'Cannot find payment based on ID %s.',
-									$id
-								)
-							);
-						}
+	/**
+	 * CLI init.
+	 *
+	 * @return void
+	 */
+	private function cli_init() {
+		WP_CLI::add_command(
+			'pay payment status',
+			function ( $args ): void {
+				foreach ( $args as $id ) {
+					$payment = get_pronamic_payment( $id );
 
-						WP_CLI::log(
+					if ( null === $payment ) {
+						WP_CLI::error(
 							\sprintf(
-								'Check the status (current: %s) of payment with ID %s…',
-								$payment->get_status(),
-								$id
-							)
-						);
-
-						Plugin::update_payment( $payment, false );
-
-						WP_CLI::log(
-							\sprintf(
-								'Checked the status (current: %s) of payment with ID %s.',
-								$payment->get_status(),
+								'Cannot find payment based on ID %s.',
 								$id
 							)
 						);
 					}
+
+					WP_CLI::log(
+						\sprintf(
+							'Check the status (current: %s) of payment with ID %s…',
+							$payment->get_status(),
+							$id
+						)
+					);
+
+					Plugin::update_payment( $payment, false );
+
+					WP_CLI::log(
+						\sprintf(
+							'Checked the status (current: %s) of payment with ID %s.',
+							$payment->get_status(),
+							$id
+						)
+					);
 				}
-			);
-		}
+			}
+		);
 	}
 
 	/**
