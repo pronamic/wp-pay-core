@@ -33,7 +33,7 @@ class SubscriptionsFollowUpPaymentsController {
 
 		\add_action( 'pronamic_pay_create_subscription_follow_up_payment', $this->action_create_subscription_follow_up_payment( ... ) );
 
-		$this->cli();
+		\add_action( 'cli_init', $this->cli_init( ... ) );
 	}
 
 	/**
@@ -44,11 +44,7 @@ class SubscriptionsFollowUpPaymentsController {
 	 * @link https://make.wordpress.org/cli/handbook/commands-cookbook/
 	 * @return void
 	 */
-	private function cli() {
-		if ( ! ( defined( 'WP_CLI' ) && WP_CLI ) ) {
-			return;
-		}
-
+	private function cli_init() {
 		WP_CLI::add_command(
 			'pay subscription list',
 			function (): void {
