@@ -52,7 +52,6 @@ $states_options = [
 $post_author = get_post_field( 'post_author' );
 $post_author = empty( $post_author ) ? '-' : $post_author;
 
-
 ?>
 <input type="hidden" name="post_author_override" value="<?php echo esc_attr( $post_author ); ?>" />
 
