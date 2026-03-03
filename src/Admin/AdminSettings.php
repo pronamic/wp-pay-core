@@ -120,30 +120,28 @@ class AdminSettings {
 			]
 		);
 
-		if ( version_compare( $this->plugin->get_version(), '10', '>=' ) ) {
-			// Settings - Payment Methods.
-			\add_settings_section(
+		// Settings - Payment Methods.
+		\add_settings_section(
+			'pronamic_pay_payment_methods',
+			\__( 'Payment Methods', 'pronamic_ideal' ),
+			function (): void {},
+			'pronamic_pay'
+		);
+
+		foreach ( $this->plugin->get_payment_methods() as $payment_method ) {
+			$id = 'pronamic_pay_payment_methods[' . $payment_method->get_id() . '][status]';
+
+			add_settings_field(
+				$id,
+				$payment_method->get_name(),
+				$this->select_payment_method_status( ... ),
+				'pronamic_pay',
 				'pronamic_pay_payment_methods',
-				\__( 'Payment Methods', 'pronamic_ideal' ),
-				function (): void {
-				},
-				'pronamic_pay'
+				[
+					'label_for'      => $id,
+					'payment_method' => $payment_method,
+				]
 			);
-
-			foreach ( $this->plugin->get_payment_methods() as $payment_method ) {
-				$id = 'pronamic_pay_payment_method_' . $payment_method->get_id() . '_status';
-
-				add_settings_field(
-					$id,
-					$payment_method->get_name(),
-					$this->select_payment_method_status( ... ),
-					'pronamic_pay',
-					'pronamic_pay_payment_methods',
-					[
-						'label_for' => $id,
-					]
-				);
-			}
 		}
 	}
 
@@ -271,9 +269,10 @@ class AdminSettings {
 	 * @return void
 	 */
 	public function select_payment_method_status( $args ) {
-		$name = $args['label_for'];
+		$name           = $args['label_for'];
+		$payment_method = $args['payment_method'];
 
-		$selected = get_option( $name, '' );
+		$selected = $payment_method->get_status();
 
 		$statuses = [
 			''         => '',
