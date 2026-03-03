@@ -1,7 +1,7 @@
 .pronamic-pay-badge {
   background-color: #ffb200;
   background-image: url("../images/dist/wp-pay-white-512.pngquant-min.png");
-  color: #fff0cc;
+  color: rgb(255, 239.6, 204);
 }
 
 .svg .pronamic-pay-badge {
