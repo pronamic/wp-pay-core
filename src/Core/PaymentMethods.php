@@ -558,7 +558,7 @@ class PaymentMethods {
 			self::DIRECT_DEBIT_IDEAL      => sprintf(
 				/* translators: %s: payment method */
 				__( 'Direct Debit (mandate via %s)', 'pronamic_ideal' ),
-				__( 'iDEAL', 'pronamic_ideal' )
+				__( 'iDEAL | Wero', 'pronamic_ideal' )
 			),
 			self::DIRECT_DEBIT_SOFORT     => sprintf(
 				/* translators: %s: payment method */
@@ -570,7 +570,7 @@ class PaymentMethods {
 			self::GIFT_CARD               => __( 'Gift Card', 'pronamic_ideal' ),
 			self::GIROPAY                 => __( 'Giropay', 'pronamic_ideal' ),
 			self::GOOGLE_PAY              => __( 'Google Pay', 'pronamic_ideal' ),
-			self::IDEAL                   => __( 'iDEAL', 'pronamic_ideal' ),
+			self::IDEAL                   => __( 'iDEAL | Wero', 'pronamic_ideal' ),
 			self::IDEALQR                 => __( 'iDEAL QR', 'pronamic_ideal' ),
 			self::KBC                     => __( 'KBC/CBC Payment Button', 'pronamic_ideal' ),
 			self::KLARNA                  => __( 'Klarna', 'pronamic_ideal' ),
