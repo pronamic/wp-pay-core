@@ -6,6 +6,32 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.32.0] - 2026-03-23
+
+### Added
+
+- Registered the Pronamic Pay WP-CLI payment command during `cli_init` so it becomes available at the correct CLI bootstrap moment.
+
+### Changed
+
+- Updated payment method naming from `iDEAL` to `iDEAL | Wero`.
+- Registered payment methods as an object setting.
+- Removed the Grunt build system.
+- Updated JavaScript tooling: switched minification to the latest Terser and bumped `@wordpress/env` to `^11.0.0`.
+- Removed unused npm development dependencies.
+- Added PHPCS ignores for sanitized `$_POST` inputs where appropriate.
+- Added the `testsEnvironment` flag to `.wp-env.json`.
+
+### Fixed
+
+- Fixed compatibility issues with PHP 8.5 deprecations.
+- Fixed passing `null` to `PaymentMethodsCollection::get()`.
+- Removed an extra blank line in the subscription view.
+
+Full set of changes: [`4.31.0...4.32.0`][4.32.0]
+
+[4.32.0]: https://github.com/pronamic/wp-pay-core/compare/v4.31.0...v4.32.0
+
 ## [4.31.0] - 2026-01-30
 
 ### Commits
@@ -1276,7 +1302,7 @@ Full set of changes: [`4.5.0...4.6.0`][4.6.0]
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/pronamic/wp-pay-core/compare/4.5.0...HEAD
+[unreleased]: https://github.com/pronamic/wp-pay-core/compare/v4.32.0...HEAD
 [4.5.0]: https://github.com/pronamic/wp-pay-core/compare/4.4.1...4.5.0
 [4.4.1]: https://github.com/pronamic/wp-pay-core/compare/4.4.0...4.4.1
 [4.4.0]: https://github.com/pronamic/wp-pay-core/compare/4.3.1...4.4.0
