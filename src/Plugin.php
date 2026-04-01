@@ -829,6 +829,20 @@ class Plugin {
 
 		$this->payment_methods->add( $payment_method_credit_card );
 
+		// Payment method iDEAL | Wero.
+		$payment_method_ideal = new PaymentMethod( PaymentMethods::IDEAL );
+
+		$payment_method_ideal->descriptions = [
+			'customer' => \__( 'With iDEAL you can easily pay online in the secure environment of your own bank.', 'pronamic_ideal' ),
+		];
+
+		$payment_method_ideal->name = \__( 'iDEAL | Wero', 'pronamic_ideal' );
+
+		$payment_method_ideal->images = [
+			'640x360'     => $image_service->get_path( 'other/ideal-wero/ideal-wero-640x360.svg' ),
+			'woocommerce' => $image_service->get_path( 'other/ideal-wero/method-ideal-wero-wc-51x32.svg' ),
+		];
+
 		// Direct debit.
 		$payment_method_direct_debit = new PaymentMethod( PaymentMethods::DIRECT_DEBIT );
 
@@ -861,9 +875,7 @@ class Plugin {
 			'customer' => \sprintf( $description_template, $payment_method_direct_debit_ideal->name ),
 		];
 
-		$payment_method_direct_debit_ideal->images = [
-			'woocommerce' => $image_service->get_path( 'methods/direct-debit-ideal/method-direct-debit-ideal-wc-107x32.svg' ),
-		];
+		$payment_method_direct_debit_ideal->images = $payment_method_ideal->images;
 
 		$this->payment_methods->add( $payment_method_direct_debit_ideal );
 
@@ -902,20 +914,6 @@ class Plugin {
 		$payment_method_gift_card = new PaymentMethod( PaymentMethods::GIFT_CARD );
 
 		$this->payment_methods->add( $payment_method_gift_card );
-
-		// IDEAL.
-		$payment_method_ideal = new PaymentMethod( PaymentMethods::IDEAL );
-
-		$payment_method_ideal->descriptions = [
-			'customer' => \__( 'With iDEAL you can easily pay online in the secure environment of your own bank.', 'pronamic_ideal' ),
-		];
-
-		$payment_method_ideal->name = \__( 'iDEAL | Wero', 'pronamic_ideal' );
-
-		$payment_method_ideal->images = [
-			'640x360'     => $image_service->get_path( 'other/ideal-wero/ideal-wero-640x360.svg' ),
-			'woocommerce' => $image_service->get_path( 'other/ideal-wero/method-ideal-wero-wc-51x32.svg' ),
-		];
 
 		/**
 		 * The iDEAL logo rebranding takes effect on January 29, 2026.
