@@ -854,7 +854,7 @@ class Plugin {
 
 		$this->payment_methods->add( $payment_method_direct_debit_bancontact );
 
-		// Direct debit (mandate via Bancontact).
+		// Direct debit (mandate via iDEAL | Wero).
 		$payment_method_direct_debit_ideal = new PaymentMethod( PaymentMethods::DIRECT_DEBIT_IDEAL );
 
 		$payment_method_direct_debit_ideal->descriptions = [
