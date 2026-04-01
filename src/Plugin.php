@@ -843,20 +843,6 @@ class Plugin {
 			'woocommerce' => $image_service->get_path( 'other/ideal-wero/method-ideal-wero-wc-51x32.svg' ),
 		];
 
-		/**
-		 * The iDEAL logo rebranding takes effect on January 29, 2026.
-		 *
-		 * @link https://ideal.nl/en/ideal-wero-branding
-		 */
-		if ( \time() < \strtotime( '2026-01-29 00:00:00' ) ) {
-			$payment_method_ideal->name = \__( 'iDEAL', 'pronamic_ideal' );
-
-			$payment_method_ideal->images = [
-				'640x360'     => $image_service->get_path( 'methods/ideal/method-ideal-640x360.svg' ),
-				'woocommerce' => $image_service->get_path( 'methods/ideal/method-ideal-wc-51x32.svg' ),
-			];
-		}
-
 		$this->payment_methods->add( $payment_method_ideal );
 
 		// Direct debit.
