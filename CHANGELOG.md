@@ -6,6 +6,8 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.33.0] - 2026-04-15
+
 ### Added
 
 - Added the `pronamic_pay_register_payment_methods` action to register payment methods in plugin space.
@@ -15,9 +17,17 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 - Updated payment method registration flow so payment methods are registered via the `pronamic_pay_register_payment_methods` action.
 - Moved Pronamic default payment method registration out of core and into the [`pronamic/pronamic-pay-default-payment-methods`](https://github.com/pronamic/pronamic-pay-default-payment-methods) package.
 
+### Removed
+
+- Removed the temporary iDEAL rebranding override (no longer needed since 2026-01-29 has passed).
+
 ### Fixed
 
 - Fixed image assignment for Billink and Focum in default payment method registration (now in [`pronamic/pronamic-pay-default-payment-methods`](https://github.com/pronamic/pronamic-pay-default-payment-methods)).
+
+Full set of changes: [`4.32.0...4.33.0`][4.33.0]
+
+[4.33.0]: https://github.com/pronamic/wp-pay-core/compare/v4.32.0...v4.33.0
 
 ## [4.32.0] - 2026-03-23
 
