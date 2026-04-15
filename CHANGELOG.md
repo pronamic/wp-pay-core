@@ -6,6 +6,19 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+### Added
+
+- Added the `pronamic_pay_register_payment_methods` action to register payment methods in plugin space.
+
+### Changed
+
+- Updated payment method registration flow so payment methods are registered via the `pronamic_pay_register_payment_methods` action.
+- Moved Pronamic default payment method registration out of core and into the [`pronamic/pronamic-pay-default-payment-methods`](https://github.com/pronamic/pronamic-pay-default-payment-methods) package.
+
+### Fixed
+
+- Fixed image assignment for Billink and Focum in default payment method registration (now in [`pronamic/pronamic-pay-default-payment-methods`](https://github.com/pronamic/pronamic-pay-default-payment-methods)).
+
 ## [4.32.0] - 2026-03-23
 
 ### Added
