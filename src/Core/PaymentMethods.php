@@ -359,6 +359,20 @@ class PaymentMethods {
 	const MOBILEPAY = 'mobilepay';
 
 	/**
+	 * Online Banking Czech Republic.
+	 *
+	 * @var string
+	 */
+	const ONLINE_BANKING_CZ = 'online_banking_cz';
+
+	/**
+	 * Online Banking Slovakia.
+	 *
+	 * @var string
+	 */
+	const ONLINE_BANKING_SK = 'online_banking_sk';
+
+	/**
 	 * Multibanco.
 	 *
 	 * @var string
@@ -581,6 +595,8 @@ class PaymentMethods {
 			self::MASTERCARD              => __( 'Mastercard', 'pronamic_ideal' ),
 			self::MB_WAY                  => __( 'MB WAY', 'pronamic_ideal' ),
 			self::MOBILEPAY               => __( 'MobilePay', 'pronamic_ideal' ),
+			self::ONLINE_BANKING_CZ       => __( 'Online Banking Czech Republic', 'pronamic_ideal' ),
+			self::ONLINE_BANKING_SK       => __( 'Online Banking Slovakia', 'pronamic_ideal' ),
 			self::MULTIBANCO              => __( 'Multibanco', 'pronamic_ideal' ),
 			self::MYBANK                  => __( 'MyBank', 'pronamic_ideal' ),
 			self::PAYCONIQ                => __( 'Payconiq', 'pronamic_ideal' ),
