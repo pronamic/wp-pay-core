@@ -1148,6 +1148,9 @@ class Plugin {
 
 			$refunded_amount = $payment->get_refunded_amount();
 
+			// Prevent the default Money currency (EUR) from leaking into the refunded amount for non-EUR payments.
+			$refunded_amount->set_currency( $payment->get_total_amount()->get_currency() );
+
 			$refunded_amount = $refunded_amount->add( $refund->get_amount() );
 
 			$payment->set_refunded_amount( $refunded_amount );
