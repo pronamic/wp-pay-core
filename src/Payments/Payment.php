@@ -265,10 +265,6 @@ class Payment extends PaymentInfo {
 	 * @return Money
 	 */
 	public function get_refunded_amount() {
-		if ( $this->refunded_amount->get_currency() !== $this->get_total_amount()->get_currency() ) {
-			$this->refunded_amount->set_currency( $this->get_total_amount()->get_currency() );
-		}
-
 		return $this->refunded_amount;
 	}
 

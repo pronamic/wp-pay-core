@@ -203,12 +203,20 @@ if ( empty( $lines ) ) : ?>
 
 										$line_total = $refund_line->get_total_amount();
 
+										if ( $refunded_amount->is_zero() && $refunded_amount->get_currency() !== $line_total->get_currency() ) {
+											$refunded_amount->set_currency( $line_total->get_currency() );
+										}
+
 										$refunded_amount = $refunded_amount->add( $line_total );
 
 										if ( $line_total instanceof TaxedMoney ) {
 											$tax_amount = $line_total->get_tax_amount();
 
 											if ( null !== $tax_amount ) {
+												if ( $refunded_tax->is_zero() && $refunded_tax->get_currency() !== $tax_amount->get_currency() ) {
+													$refunded_tax->set_currency( $tax_amount->get_currency() );
+												}
+
 												$refunded_tax = $refunded_tax->add( $tax_amount );
 											}
 										}
