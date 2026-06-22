@@ -1147,6 +1147,9 @@ class Plugin {
 			$payment->refunds[] = $refund;
 
 			$refunded_amount = $payment->get_refunded_amount();
+			if ( $refunded_amount->is_zero() && $refunded_amount->get_currency() !== $refund->get_amount()->get_currency() ) {
+				$refunded_amount->set_currency( $refund->get_amount()->get_currency() );
+			}
 
 			$refunded_amount = $refunded_amount->add( $refund->get_amount() );
 
