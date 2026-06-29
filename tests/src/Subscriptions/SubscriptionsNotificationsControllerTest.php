@@ -92,13 +92,13 @@ class SubscriptionsNotificationsControllerTest extends TestCase {
 
 		$phase = new SubscriptionPhase(
 			$subscription,
-			new \DateTime( '-1 week midnight', new \DateTimeZone( 'GMT' ) ),
+			new \DateTime( '-3 weeks midnight', new \DateTimeZone( 'GMT' ) ),
 			new SubscriptionInterval( 'P1M' ),
 			new Money( '10', 'EUR' )
 		);
 
 		$subscription->add_phase( $phase );
-		$subscription->set_meta( 'notification_date_1_week', \gmdate( DATE_ATOM, \strtotime( '-8 days' ) ) );
+		$subscription->set_meta( 'notification_date_renewal', \gmdate( DATE_ATOM, \strtotime( '-8 days' ) ) );
 		$subscription->save();
 
 		$notifications_controller->send_subscription_renewal_notification( $subscription );

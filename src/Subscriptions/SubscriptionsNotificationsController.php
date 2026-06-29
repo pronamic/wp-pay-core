@@ -148,7 +148,11 @@ class SubscriptionsNotificationsController {
 		 * If a notification has already been sent in the past 2 weeks, it no longer
 		 * makes sense to send a notification.
 		 */
-		$notification_date_string = $subscription->get_meta( 'notification_date_1_week' );
+		$notification_date_string = $subscription->get_meta( 'notification_date_renewal' );
+
+		if ( empty( $notification_date_string ) ) {
+			$notification_date_string = $subscription->get_meta( 'notification_date_1_week' );
+		}
 
 		if ( $notification_date_string ) {
 			$notification_date = new DateTime( $notification_date_string );
@@ -251,7 +255,10 @@ class SubscriptionsNotificationsController {
 		 */
 		\do_action( 'pronamic_subscription_renewal_notice_' . $source, $subscription );
 
-		$subscription->set_meta( 'notification_date_1_week', \gmdate( DATE_ATOM ) );
+		$notification_date = \gmdate( DATE_ATOM );
+
+		$subscription->set_meta( 'notification_date_renewal', $notification_date );
+		$subscription->set_meta( 'notification_date_1_week', $notification_date );
 	}
 
 	/**
