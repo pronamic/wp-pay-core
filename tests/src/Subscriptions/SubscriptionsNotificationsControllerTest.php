@@ -98,7 +98,7 @@ class SubscriptionsNotificationsControllerTest extends TestCase {
 		);
 
 		$subscription->add_phase( $phase );
-		$subscription->set_meta( 'notification_date_renewal', \gmdate( DATE_ATOM, \strtotime( '-13 days' ) ) );
+		$subscription->set_meta( 'notification_date_renewal', \gmdate( DATE_ATOM, \strtotime( '-10 days' ) ) );
 		$subscription->save();
 
 		$notifications_controller->send_subscription_renewal_notification( $subscription );
