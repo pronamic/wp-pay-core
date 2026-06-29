@@ -258,7 +258,6 @@ class SubscriptionsNotificationsController {
 		$notification_date = \gmdate( DATE_ATOM );
 
 		$subscription->set_meta( 'notification_date_renewal', $notification_date );
-		$subscription->set_meta( 'notification_date_1_week', $notification_date );
 	}
 
 	/**
