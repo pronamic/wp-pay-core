@@ -80,6 +80,8 @@ class SubscriptionsNotificationsControllerTest extends TestCase {
 	/**
 	 * Test no notification in 2-week period.
 	 *
+	 * @param string $source   Source identifier.
+	 * @param string $meta_key Notification meta key to check.
 	 * @dataProvider data_no_notification
 	 */
 	public function test_no_notification( $source, $meta_key ) {
@@ -116,8 +118,8 @@ class SubscriptionsNotificationsControllerTest extends TestCase {
 	 */
 	public static function data_no_notification() {
 		return [
-			[ 'test-within-2-weeks',        'notification_date_2_weeks' ],
-			[ 'test-within-2-weeks-legacy', 'notification_date_1_week', ],
+			[ 'test-within-2-weeks', 'notification_date_2_weeks' ],
+			[ 'test-within-2-weeks-legacy', 'notification_date_1_week' ],
 		];
 	}
 }
