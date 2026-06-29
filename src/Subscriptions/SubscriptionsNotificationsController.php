@@ -145,15 +145,15 @@ class SubscriptionsNotificationsController {
 		}
 
 		/**
-		 * If a notification has already been sent in the past week, it no longer makes
-		 * sense to send a notification.
+		 * If a notification has already been sent in the past 2 weeks, it no longer
+		 * makes sense to send a notification.
 		 */
 		$notification_date_string = $subscription->get_meta( 'notification_date_1_week' );
 
 		if ( $notification_date_string ) {
 			$notification_date = new DateTime( $notification_date_string );
 
-			$threshold_date = new DateTime( 'midnight -1 week' );
+			$threshold_date = new DateTime( 'midnight -2 weeks' );
 
 			if ( $notification_date > $threshold_date ) {
 				return false;
@@ -261,8 +261,8 @@ class SubscriptionsNotificationsController {
 	 * @return WP_Query
 	 */
 	private function get_subscriptions_wp_query_that_require_notification( $args = [] ) {
-		$start_date = new \DateTimeImmutable( 'midnight +1 week', new \DateTimeZone( 'GMT' ) );
-		$end_date   = new \DateTimeImmutable( 'tomorrow +1 week', new \DateTimeZone( 'GMT' ) );
+		$start_date = new \DateTimeImmutable( 'midnight +2 weeks', new \DateTimeZone( 'GMT' ) );
+		$end_date   = new \DateTimeImmutable( 'tomorrow +2 weeks', new \DateTimeZone( 'GMT' ) );
 
 		$query_args = [
 			'post_type'      => 'pronamic_pay_subscr',

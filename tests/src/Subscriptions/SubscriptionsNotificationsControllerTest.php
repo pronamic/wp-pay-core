@@ -76,4 +76,33 @@ class SubscriptionsNotificationsControllerTest extends TestCase {
 
 		$this->assertSame( 1, \did_action( 'pronamic_subscription_renewal_notice_' . $source ) );
 	}
+
+	/**
+	 * Test no notification in 2-week period.
+	 */
+	public function test_no_notification_within_2_weeks() {
+		$notifications_controller = new SubscriptionsNotificationsController();
+
+		$source = 'test-within-2-weeks';
+
+		$subscription = new Subscription();
+
+		$subscription->set_source( $source );
+		$subscription->set_mode( 'test' );
+
+		$phase = new SubscriptionPhase(
+			$subscription,
+			new \DateTime( '-1 week midnight', new \DateTimeZone( 'GMT' ) ),
+			new SubscriptionInterval( 'P1M' ),
+			new Money( '10', 'EUR' )
+		);
+
+		$subscription->add_phase( $phase );
+		$subscription->set_meta( 'notification_date_1_week', \gmdate( DATE_ATOM, \strtotime( '-8 days' ) ) );
+		$subscription->save();
+
+		$notifications_controller->send_subscription_renewal_notification( $subscription );
+
+		$this->assertSame( 0, \did_action( 'pronamic_subscription_renewal_notice_' . $source ) );
+	}
 }
