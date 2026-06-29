@@ -46,10 +46,10 @@ if ( ! is_file( $db_dropin_file ) ) {
 				'{SQLITE_PLUGIN}',
 			],
 			[
-				__DIR__ . '/../vendor/wordpress/sqlite-database-integration',
-				'sqlite-database-integration/load.php',
+				__DIR__ . '/../vendor/wordpress/sqlite-database-integration/packages/plugin-sqlite-database-integration',
+				__DIR__ . '/../vendor/wordpress/sqlite-database-integration/packages/plugin-sqlite-database-integration/load.php',
 			],
-			file_get_contents( __DIR__ . '/../vendor/wordpress/sqlite-database-integration/db.copy' )
+			file_get_contents( __DIR__ . '/../vendor/wordpress/sqlite-database-integration/packages/plugin-sqlite-database-integration/db.copy' )
 		)
 	);
 }
@@ -60,7 +60,7 @@ if ( ! is_file( $db_dropin_file ) ) {
 tests_add_filter(
 	'muplugins_loaded',
 	function (): void {
-		require __DIR__ . '/../vendor/wordpress/sqlite-database-integration/load.php';
+		require __DIR__ . '/../vendor/wordpress/sqlite-database-integration/packages/plugin-sqlite-database-integration/load.php';
 
 		require __DIR__ . '/../pronamic-pay-core.php';
 	}

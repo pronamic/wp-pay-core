@@ -6,6 +6,10 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+### Changed
+
+- Changed the default subscription renewal pre-notification period from 1 week to 14 days.
+
 ## [4.33.0] - 2026-04-15
 
 ### Added
