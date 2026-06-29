@@ -151,10 +151,6 @@ class SubscriptionsNotificationsController {
 		$notification_date_string = $subscription->get_meta( 'notification_date_2_weeks' );
 
 		if ( null === $notification_date_string || '' === $notification_date_string ) {
-			$notification_date_string = $subscription->get_meta( 'notification_date_renewal' );
-		}
-
-		if ( null === $notification_date_string || '' === $notification_date_string ) {
 			$notification_date_string = $subscription->get_meta( 'notification_date_1_week' );
 		}
 
@@ -259,9 +255,7 @@ class SubscriptionsNotificationsController {
 		 */
 		\do_action( 'pronamic_subscription_renewal_notice_' . $source, $subscription );
 
-		$notification_date = \gmdate( DATE_ATOM );
-
-		$subscription->set_meta( 'notification_date_2_weeks', $notification_date );
+		$subscription->set_meta( 'notification_date_2_weeks', \gmdate( DATE_ATOM ) );
 	}
 
 	/**
