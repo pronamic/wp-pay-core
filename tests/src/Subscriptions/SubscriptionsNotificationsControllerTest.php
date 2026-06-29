@@ -142,12 +142,12 @@ class SubscriptionsNotificationsControllerTest extends TestCase {
 	}
 
 	/**
-	 * Test no notification within 2 weeks for migration meta key.
+	 * Test no notification within 2 weeks for legacy renewal meta key.
 	 */
-	public function test_no_notification_within_2_weeks_migration_meta_key() {
+	public function test_no_notification_with_legacy_renewal_key() {
 		$notifications_controller = new SubscriptionsNotificationsController();
 
-		$source = 'test-within-2-weeks-migration';
+		$source = 'test-legacy-renewal-key';
 
 		$subscription = new Subscription();
 
