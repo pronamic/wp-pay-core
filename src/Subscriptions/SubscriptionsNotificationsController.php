@@ -150,7 +150,7 @@ class SubscriptionsNotificationsController {
 		 */
 		$notification_date_string = $subscription->get_meta( 'notification_date_renewal' );
 
-		if ( empty( $notification_date_string ) ) {
+		if ( null === $notification_date_string || '' === $notification_date_string ) {
 			$notification_date_string = $subscription->get_meta( 'notification_date_1_week' );
 		}
 
