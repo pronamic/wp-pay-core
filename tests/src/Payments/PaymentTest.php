@@ -43,7 +43,7 @@ class PaymentTest extends TestCase {
 	/**
 	 * Test construct payment object with total amount.
 	 */
-	public function test_construct_with_total_amount_sets_refunded_currency() {
+	public function test_construct_with_total_amount_initializes_refunded_currency() {
 		$total_amount = new Money( 10, 'USD' );
 		$payment      = new Payment( null, $total_amount );
 
@@ -310,7 +310,7 @@ class PaymentTest extends TestCase {
 	/**
 	 * Test from object with non-default currency amount.
 	 */
-	public function test_from_json_preserves_refunded_amount_currency() {
+	public function test_from_json_initializes_refunded_amount_with_total_amount_currency() {
 		$json_data = (object) [
 			'total_amount' => (object) [
 				'value'    => '25',
