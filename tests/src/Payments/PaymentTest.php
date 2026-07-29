@@ -301,7 +301,7 @@ class PaymentTest extends TestCase {
 	/**
 	 * Test from object with non-default currency amount.
 	 */
-	public function test_from_object_with_total_amount_currency() {
+	public function test_from_json_with_total_amount_currency() {
 		$json_data = (object) [
 			'total_amount' => (object) [
 				'value'    => '25',
