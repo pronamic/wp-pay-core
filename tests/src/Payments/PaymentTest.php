@@ -41,6 +41,17 @@ class PaymentTest extends TestCase {
 	}
 
 	/**
+	 * Test construct payment object with total amount.
+	 */
+	public function test_construct_with_total_amount() {
+		$total_amount = new Money( 10, 'USD' );
+		$payment      = new Payment( null, $total_amount );
+
+		$this->assertEquals( $total_amount, $payment->get_total_amount() );
+		$this->assertEquals( $total_amount->get_currency(), $payment->get_refunded_amount()->get_currency() );
+	}
+
+	/**
 	 * Test set and get.
 	 *
 	 * @dataProvider get_and_set_provider
@@ -285,6 +296,22 @@ class PaymentTest extends TestCase {
 		$this->assertEquals( wp_json_encode( $json_data, JSON_PRETTY_PRINT ), $json_string );
 
 		$this->assertJsonStringEqualsJsonFile( $json_file, $json_string );
+	}
+
+	/**
+	 * Test from object with non default currency amount.
+	 */
+	public function test_from_object_with_total_amount_currency() {
+		$json_data = (object) [
+			'total_amount' => (object) [
+				'value'    => '25',
+				'currency' => 'USD',
+			],
+		];
+
+		$payment = Payment::from_json( $json_data );
+
+		$this->assertEquals( $payment->get_total_amount()->get_currency(), $payment->get_refunded_amount()->get_currency() );
 	}
 
 	/**

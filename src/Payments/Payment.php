@@ -144,9 +144,10 @@ class Payment extends PaymentInfo {
 	/**
 	 * Construct and initialize payment object.
 	 *
-	 * @param integer $post_id A payment post ID or null.
+	 * @param integer    $post_id      A payment post ID or null.
+	 * @param Money|null $total_amount Optional total amount.
 	 */
-	public function __construct( $post_id = null ) {
+	public function __construct( $post_id = null, ?Money $total_amount = null ) {
 		parent::__construct( $post_id );
 
 		$this->meta_key_prefix = '_pronamic_payment_';
@@ -154,9 +155,13 @@ class Payment extends PaymentInfo {
 
 		$this->set_status( PaymentStatus::OPEN );
 
-		$this->set_total_amount( new Money() );
+		if ( null === $total_amount ) {
+			$total_amount = new Money();
+		}
 
-		$this->refunded_amount = new Money();
+		$this->set_total_amount( $total_amount );
+
+		$this->refunded_amount = new Money( 0, $total_amount->get_currency() );
 
 		if ( null !== $post_id ) {
 			pronamic_pay_plugin()->payments_data_store->read( $this );
@@ -741,8 +746,14 @@ class Payment extends PaymentInfo {
 			throw new InvalidArgumentException( 'JSON value must be an object.' );
 		}
 
+		$total_amount = null;
+
+		if ( isset( $json->total_amount ) ) {
+			$total_amount = MoneyJsonTransformer::from_json( $json->total_amount );
+		}
+
 		if ( null === $payment ) {
-			$payment = new self();
+			$payment = new self( null, $total_amount );
 		}
 
 		PaymentInfoHelper::from_json( $json, $payment );
@@ -755,8 +766,8 @@ class Payment extends PaymentInfo {
 			$payment->set_action_url( $json->action_url );
 		}
 
-		if ( isset( $json->total_amount ) ) {
-			$payment->set_total_amount( MoneyJsonTransformer::from_json( $json->total_amount ) );
+		if ( null !== $total_amount ) {
+			$payment->set_total_amount( $total_amount );
 		}
 
 		if ( isset( $json->refunded_amount ) ) {

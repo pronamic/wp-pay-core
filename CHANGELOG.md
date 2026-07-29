@@ -6,6 +6,10 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+### Fixed
+
+- Added optional `total_amount` support to `Payment::__construct(...)` and updated JSON hydration to preserve amount currency for initialized refunded amounts.
+
 ## [4.33.0] - 2026-04-15
 
 ### Added
