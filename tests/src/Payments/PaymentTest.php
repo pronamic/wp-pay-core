@@ -48,7 +48,17 @@ class PaymentTest extends TestCase {
 		$payment      = new Payment( null, $total_amount );
 
 		$this->assertEquals( $total_amount, $payment->get_total_amount() );
+		$this->assertEquals( new Money( 0, 'USD' ), $payment->get_refunded_amount() );
 		$this->assertEquals( $total_amount->get_currency(), $payment->get_refunded_amount()->get_currency() );
+	}
+
+	/**
+	 * Test construct payment object fallback currency initialization.
+	 */
+	public function test_construct_without_total_amount_uses_default_currency() {
+		$payment = new Payment( null, null );
+
+		$this->assertEquals( $payment->get_total_amount()->get_currency(), $payment->get_refunded_amount()->get_currency() );
 	}
 
 	/**
@@ -311,6 +321,7 @@ class PaymentTest extends TestCase {
 
 		$payment = Payment::from_json( $json_data );
 
+		$this->assertEquals( new Money( 0, 'USD' ), $payment->get_refunded_amount() );
 		$this->assertEquals( $payment->get_total_amount()->get_currency(), $payment->get_refunded_amount()->get_currency() );
 	}
 
