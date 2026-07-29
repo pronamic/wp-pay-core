@@ -144,7 +144,7 @@ class Payment extends PaymentInfo {
 	/**
 	 * Construct and initialize payment object.
 	 *
-	 * @param integer    $post_id      A payment post ID or null.
+	 * @param int|null   $post_id      A payment post ID or null.
 	 * @param Money|null $total_amount Optional total amount.
 	 */
 	public function __construct( $post_id = null, ?Money $total_amount = null ) {
