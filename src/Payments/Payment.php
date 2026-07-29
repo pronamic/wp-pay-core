@@ -752,6 +752,8 @@ class Payment extends PaymentInfo {
 
 		if ( null === $payment ) {
 			$payment = new self( null, $total_amount );
+		} elseif ( null !== $total_amount ) {
+			$payment->set_total_amount( $total_amount );
 		}
 
 		PaymentInfoHelper::from_json( $json, $payment );
@@ -762,10 +764,6 @@ class Payment extends PaymentInfo {
 
 		if ( isset( $json->action_url ) ) {
 			$payment->set_action_url( $json->action_url );
-		}
-
-		if ( null !== $total_amount ) {
-			$payment->set_total_amount( $total_amount );
 		}
 
 		if ( isset( $json->refunded_amount ) ) {
