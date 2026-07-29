@@ -155,9 +155,11 @@ class Payment extends PaymentInfo {
 
 		$this->set_status( PaymentStatus::OPEN );
 
-		$this->set_total_amount( $total_amount ?? new Money() );
+		$constructor_total_amount = $total_amount ?? new Money();
 
-		$this->refunded_amount = new Money( 0, $this->get_total_amount()->get_currency() );
+		$this->set_total_amount( $constructor_total_amount );
+
+		$this->refunded_amount = new Money( 0, $constructor_total_amount->get_currency() );
 
 		if ( null !== $post_id ) {
 			pronamic_pay_plugin()->payments_data_store->read( $this );

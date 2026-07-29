@@ -55,7 +55,7 @@ class PaymentTest extends TestCase {
 	 * Test construct payment object fallback currency initialization.
 	 */
 	public function test_construct_without_total_amount_uses_default_currency() {
-		$payment = new Payment( null, null );
+		$payment = new Payment();
 
 		$this->assertEquals( new Money( 0, 'EUR' ), $payment->get_refunded_amount() );
 	}
