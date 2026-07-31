@@ -6,6 +6,28 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.34.0] - 2026-07-31
+
+### Added
+
+- Added online banking payment methods for the Czech Republic (`online_banking_cz`) and Slovakia (`online_banking_sk`). ([pronamic/wp-pronamic-pay-adyen#44](https://github.com/pronamic/wp-pronamic-pay-adyen/pull/44))
+
+### Changed
+
+- Allowed `woocommerce/action-scheduler` `^4.0` in addition to `^3.9`. ([#256](https://github.com/pronamic/wp-pay-core/pull/256))
+
+### Fixed
+
+- Fixed the refunded amount currency so it stays in sync with the total amount currency when the refunded amount is zero. ([#262](https://github.com/pronamic/wp-pay-core/pull/262))
+
+### Composer
+
+- `woocommerce/action-scheduler` updated to `4.0.0`. This major release takes action arguments into account when scheduling unique actions, automatically purges failed actions after 3 months (via the new `action_scheduler_retention_period_for_failed` filter), moves cleanup to a dedicated daily task, and bumps the minimum WordPress version to 6.8. ([Release notes](https://github.com/woocommerce/action-scheduler/releases/tag/4.0.0))
+
+Full set of changes: [`4.33.0...4.34.0`][4.34.0]
+
+[4.34.0]: https://github.com/pronamic/wp-pay-core/compare/v4.33.0...v4.34.0
+
 ## [4.33.0] - 2026-04-15
 
 ### Added
