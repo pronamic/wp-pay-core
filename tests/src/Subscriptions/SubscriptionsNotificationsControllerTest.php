@@ -41,7 +41,7 @@ class SubscriptionsNotificationsControllerTest extends TestCase {
 
 		$phase = new SubscriptionPhase(
 			$subscription,
-			new \DateTime( '-1 week midnight', new \DateTimeZone( 'GMT' ) ),
+			new \DateTime( '-2 weeks midnight', new \DateTimeZone( 'GMT' ) ),
 			new SubscriptionInterval( 'P1M' ),
 			new Money( '10', 'EUR' )
 		);
@@ -75,5 +75,51 @@ class SubscriptionsNotificationsControllerTest extends TestCase {
 		$notifications_controller->send_subscription_renewal_notification( $subscription );
 
 		$this->assertSame( 1, \did_action( 'pronamic_subscription_renewal_notice_' . $source ) );
+	}
+
+	/**
+	 * Test no notification in 2-week period.
+	 *
+	 * @param string $source   Source identifier.
+	 * @param string $meta_key Notification meta key to check.
+	 * @dataProvider data_no_notification
+	 */
+	public function test_no_notification( $source, $meta_key ) {
+		$notifications_controller = new SubscriptionsNotificationsController();
+
+		$subscription = new Subscription();
+
+		$subscription->set_source( $source );
+		$subscription->set_mode( 'test' );
+
+		$phase = new SubscriptionPhase(
+			$subscription,
+			new \DateTime( '-3 weeks midnight', new \DateTimeZone( 'GMT' ) ),
+			new SubscriptionInterval( 'P1M' ),
+			new Money( '10', 'EUR' )
+		);
+
+		$subscription->add_phase( $phase );
+
+		$subscription->set_meta(
+			$meta_key,
+			( new \DateTime( '-10 days', new \DateTimeZone( 'GMT' ) ) )->format( DATE_ATOM )
+		);
+
+		$subscription->save();
+
+		$notifications_controller->send_subscription_renewal_notification( $subscription );
+
+		$this->assertSame( 0, \did_action( 'pronamic_subscription_renewal_notice_' . $source ) );
+	}
+
+	/**
+	 * Data provider for no-notification scenarios within 2 weeks.
+	 */
+	public static function data_no_notification() {
+		return [
+			[ 'test-within-2-weeks', 'notification_date_2_weeks' ],
+			[ 'test-within-2-weeks-legacy', 'notification_date_1_week' ],
+		];
 	}
 }
