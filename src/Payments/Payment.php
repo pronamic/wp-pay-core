@@ -257,6 +257,10 @@ class Payment extends PaymentInfo {
 	 */
 	public function set_total_amount( Money $total_amount ) {
 		$this->total_amount = $total_amount;
+
+		if ( isset( $this->refunded_amount ) && $this->refunded_amount->is_zero() ) {
+			$this->refunded_amount = new Money( '0', $total_amount->get_currency() );
+		}
 	}
 
 	/**

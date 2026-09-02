@@ -135,6 +135,29 @@ class PaymentTest extends TestCase {
 	}
 
 	/**
+	 * Test that setting total amount updates the refunded amount currency when refunded amount is zero.
+	 */
+	public function test_set_total_amount_updates_refunded_currency_when_zero() {
+		$payment = new Payment();
+
+		$payment->set_total_amount( new Money( '10.00', 'USD' ) );
+
+		$this->assertSame( 'USD', $payment->get_refunded_amount()->get_currency()->get_alphabetic_code() );
+	}
+
+	/**
+	 * Test that setting total amount does not change the refunded amount currency when refunded amount is non-zero.
+	 */
+	public function test_set_total_amount_does_not_update_refunded_currency_when_non_zero() {
+		$payment = new Payment();
+
+		$payment->set_refunded_amount( new Money( '5.00', 'GBP' ) );
+		$payment->set_total_amount( new Money( '10.00', 'USD' ) );
+
+		$this->assertSame( 'GBP', $payment->get_refunded_amount()->get_currency()->get_alphabetic_code() );
+	}
+
+	/**
 	 * Test getting no payment.
 	 *
 	 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/blob/2.8.18/tests/tests-payment-class.php#L70-L79
