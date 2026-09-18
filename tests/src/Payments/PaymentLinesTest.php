@@ -75,6 +75,32 @@ class PaymentLinesTest extends TestCase {
 	}
 
 	/**
+	 * Test amount with a non-default currency and a zero amount.
+	 */
+	public function test_amount_with_non_default_currency_and_zero_amount() {
+		$lines = new PaymentLines();
+
+		// Non-default currency.
+		$line = new PaymentLine();
+
+		$line->set_total_amount( new TaxedMoney( 10, 'USD' ) );
+
+		$lines->add_line( $line );
+
+		// Zero line.
+		$zero_line = new PaymentLine();
+
+		$zero_line->set_total_amount( new TaxedMoney( 0, 'USD' ) );
+
+		$lines->add_line( $zero_line );
+
+		$amount = $lines->get_amount();
+
+		$this->assertSame( '10', $amount->get_value() );
+		$this->assertSame( 'USD', $amount->get_currency()->get_alphabetic_code() );
+	}
+
+	/**
 	 * Test to string.
 	 */
 	public function test_to_string() {
