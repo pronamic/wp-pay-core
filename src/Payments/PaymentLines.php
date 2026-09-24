@@ -110,8 +110,8 @@ class PaymentLines implements Countable, IteratorAggregate, \Stringable {
 	 * @return TaxedMoney
 	 */
 	public function get_amount() {
-		$total    = null;
-		$tax      = null;
+		$total = null;
+		$tax   = null;
 
 		foreach ( $this->lines as $line ) {
 			// Total.
