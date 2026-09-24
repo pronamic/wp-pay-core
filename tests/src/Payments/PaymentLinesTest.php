@@ -10,6 +10,7 @@
 
 namespace Pronamic\WordPress\Pay\Payments;
 
+use Pronamic\WordPress\Money\CurrencyMismatchException;
 use Pronamic\WordPress\Money\TaxedMoney;
 use Pronamic\WordPress\Number\Number;
 use Yoast\PHPUnitPolyfills\TestCases\TestCase;
@@ -72,6 +73,61 @@ class PaymentLinesTest extends TestCase {
 	 */
 	public function test_count() {
 		$this->assertCount( 4, $this->lines );
+	}
+
+	/**
+	 * Test amount with a non-default currency and tax.
+	 */
+	public function test_amount_with_non_default_currency_and_tax() {
+		$lines = new PaymentLines();
+
+		// Non-default currency.
+		$line = new PaymentLine();
+
+		$line->set_total_amount( new TaxedMoney( 10, 'USD', 2 ) );
+
+		$lines->add_line( $line );
+
+		// Second line with tax.
+		$taxed_line = new PaymentLine();
+
+		$taxed_line->set_total_amount( new TaxedMoney( 5, 'USD', 1 ) );
+
+		$lines->add_line( $taxed_line );
+
+		// Zero line without tax.
+		$zero_line = new PaymentLine();
+
+		$zero_line->set_total_amount( new TaxedMoney( 0, 'USD' ) );
+
+		$lines->add_line( $zero_line );
+
+		$amount = $lines->get_amount();
+
+		$this->assertSame( '15', $amount->get_value() );
+		$this->assertSame( '3', $amount->get_tax_value() );
+		$this->assertSame( 'USD', $amount->get_currency()->get_alphabetic_code() );
+	}
+
+	/**
+	 * Test amount with different currencies.
+	 */
+	public function test_amount_with_different_currencies() {
+		$lines = new PaymentLines();
+
+		$eur_line = new PaymentLine();
+		$eur_line->set_total_amount( new TaxedMoney( 10, 'EUR' ) );
+
+		$lines->add_line( $eur_line );
+
+		$usd_line = new PaymentLine();
+		$usd_line->set_total_amount( new TaxedMoney( 10, 'USD' ) );
+
+		$lines->add_line( $usd_line );
+
+		$this->expectException( CurrencyMismatchException::class );
+
+		$lines->get_amount();
 	}
 
 	/**
