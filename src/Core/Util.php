@@ -172,6 +172,10 @@ class Util {
 	 * @return boolean
 	 */
 	public static function class_method_exists( $class_name, $method_name ) {
+		if ( ! is_string( $class_name ) || ! is_string( $method_name ) ) {
+			return false;
+		}
+
 		return class_exists( $class_name ) && method_exists( $class_name, $method_name );
 	}
 }
