@@ -114,7 +114,7 @@ class AlignmentRule {
 	 * @return DateTimeImmutable
 	 * @throws \Exception Throws exception on date error.
 	 */
-	public function get_date( DateTimeImmutable $date = null ) {
+	public function get_date( ?DateTimeImmutable $date = null ) {
 		if ( null === $date ) {
 			$date = new DateTimeImmutable();
 		}

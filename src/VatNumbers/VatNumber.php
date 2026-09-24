@@ -102,7 +102,7 @@ class VatNumber implements \Stringable {
 	 * @param VatNumberValidity|null $validity Validity.
 	 * @return void
 	 */
-	public function set_validity( VatNumberValidity $validity = null ) {
+	public function set_validity( ?VatNumberValidity $validity = null ) {
 		$this->validity = $validity;
 	}
 
