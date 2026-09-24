@@ -138,7 +138,7 @@ class PaymentLines implements Countable, IteratorAggregate, \Stringable {
 
 		// Return zero amount without any lines.
 		if ( null === $total ) {
-			return new TaxedMoney( 0, 'EUR' );
+			return new TaxedMoney( 0, 'EUR', 0 );
 		}
 
 		// Return payment lines amount.
