@@ -110,13 +110,19 @@ class PaymentLines implements Countable, IteratorAggregate, \Stringable {
 	 * @return TaxedMoney
 	 */
 	public function get_amount() {
-		$total    = new Money();
-		$tax      = new Money();
-		$currency = null;
+		$total = null;
+		$tax   = null;
 
 		foreach ( $this->lines as $line ) {
 			// Total.
 			$line_total = $line->get_total_amount();
+
+			if ( null === $total ) {
+				$currency = $line_total->get_currency();
+
+				$total = new Money( 0, $currency );
+				$tax   = new Money( 0, $currency );
+			}
 
 			$total = $total->add( $line_total );
 
@@ -128,22 +134,17 @@ class PaymentLines implements Countable, IteratorAggregate, \Stringable {
 					$tax = $tax->add( $line_tax );
 				}
 			}
-
-			// Currency.
-			if ( null === $currency ) {
-				$currency = $line_total->get_currency();
-			}
 		}
 
-		// Currency.
-		if ( null === $currency ) {
-			$currency = 'EUR';
+		// Return zero amount without any lines.
+		if ( null === $total ) {
+			return new TaxedMoney( 0, 'EUR', 0 );
 		}
 
 		// Return payment lines amount.
 		return new TaxedMoney(
 			$total->get_value(),
-			$currency,
+			$total->get_currency(),
 			$tax->get_value()
 		);
 	}
