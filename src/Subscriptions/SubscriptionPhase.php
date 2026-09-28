@@ -659,27 +659,7 @@ class SubscriptionPhase implements \JsonSerializable {
 
 		$regular_difference = $start_date->diff( $next_date, true );
 
-		/**
-		 * PHPStan fix.
-		 *
-		 * If the DateInterval object was created by DateTime::diff(), then this is the total
-		 * number of days between the start and end dates. Otherwise, days will be FALSE.
-		 */
-		if ( false === $regular_difference->days ) {
-			throw new \Exception( 'Could not calculate the total number of days between the phase start date and the next period start date.' );
-		}
-
 		$alignment_difference = $start_date->diff( $align_date, true );
-
-		/**
-		 * PHPStan fix.
-		 *
-		 * If the DateInterval object was created by DateTime::diff(), then this is the total
-		 * number of days between the start and end dates. Otherwise, days will be FALSE.
-		 */
-		if ( false === $alignment_difference->days ) {
-			throw new \Exception( 'Could not calculate the total number of days between the phase start date and the next alignment date.' );
-		}
 
 		$alignment_interval = new SubscriptionInterval( 'P' . $alignment_difference->days . 'D' );
 
