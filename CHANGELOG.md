@@ -6,9 +6,36 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 
 ## [Unreleased][unreleased]
 
+## [4.35.0] - 2026-09-28
+
 ### Changed
 
-- Changed the default subscription renewal pre-notification period from 1 week to 14 days.
+- Changed the default subscription renewal pre-notification period from 1 week to 14 days. The last notification date is now stored in the `notification_date_2_weeks` meta key, with a fallback to the existing `notification_date_1_week` meta key to prevent duplicate notifications. ([#259](https://github.com/pronamic/wp-pay-core/pull/259))
+- The next payment date is no longer shown in the subscription update meta box for cancelled subscriptions. ([#264](https://github.com/pronamic/wp-pay-core/pull/264))
+- The WP-CLI payments import and subscription follow-up payment commands now exit with a non-zero status code on failure.
+- Allowed `automattic/jetpack-autoloader` `^6.0` in addition to `^3.0`, `^4.0` and `^5.0`.
+
+### Removed
+
+- Removed support for the unused legacy subscription meta key `notification_date_renewal`.
+
+### Fixed
+
+- Fixed a currency mismatch exception when calculating payment line totals in a currency other than EUR; the currency of the first payment line is now used. ([#266](https://github.com/pronamic/wp-pay-core/pull/266))
+- Fixed the refunded amount being initialized after the total amount, which could cause the currencies to get out of sync.
+- Fixed errors when loading payments or subscriptions whose post no longer exists, and when rendering payment/subscription meta boxes without a valid post.
+- Fixed PHP deprecation notices about implicitly nullable parameters and passing `null` to `class_exists()`.
+
+### Composer
+
+- `automattic/jetpack-autoloader` updated to `v6.0.1`. Version 6 raises the minimum supported PHP version to 7.4; 6.0.1 reads the current plugin's manifests before cached ones so a retired plugin directory cannot win a version tie. ([Changelog](https://github.com/Automattic/jetpack-autoloader/blob/v6.0.1/CHANGELOG.md))
+- `pronamic/wp-datetime` updated to `v2.2.0`. Fixes PHP 8.5 deprecation notices in `create_from_format` by using an explicit nullable timezone parameter. ([Release notes](https://github.com/pronamic/wp-datetime/releases/tag/v2.2.0))
+- `pronamic/wp-money` updated to `2.5.0`. Adds an optional currency argument to `Parser::parse()` so amounts can be parsed in currencies other than EUR. ([Release notes](https://github.com/pronamic/wp-money/releases/tag/v2.5.0))
+- `pronamic/wp-number` updated to `v1.4.1`. Adds Composer `wp-slug` metadata; builds on 1.4.0, which added `Number::is_whole_number()` and `Number::format_i18n_non_trailing_zeros()`. ([Release notes](https://github.com/pronamic/wp-number/releases/tag/v1.4.1))
+
+Full set of changes: [`4.34.0...4.35.0`][4.35.0]
+
+[4.35.0]: https://github.com/pronamic/wp-pay-core/compare/v4.34.0...v4.35.0
 
 ## [4.34.0] - 2026-07-31
 
@@ -1351,7 +1378,7 @@ Full set of changes: [`4.5.0...4.6.0`][4.6.0]
 ## 1.0.0
 - First release.
 
-[unreleased]: https://github.com/pronamic/wp-pay-core/compare/v4.32.0...HEAD
+[unreleased]: https://github.com/pronamic/wp-pay-core/compare/v4.35.0...HEAD
 [4.5.0]: https://github.com/pronamic/wp-pay-core/compare/4.4.1...4.5.0
 [4.4.1]: https://github.com/pronamic/wp-pay-core/compare/4.4.0...4.4.1
 [4.4.0]: https://github.com/pronamic/wp-pay-core/compare/4.3.1...4.4.0
