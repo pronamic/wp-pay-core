@@ -104,6 +104,8 @@ class SubscriptionsFollowUpPaymentsController {
 
 					if ( null === $subscription ) {
 						WP_CLI::error( \sprintf( 'Could not find a subscription with ID: %s', $id ) );
+
+						exit( 1 );
 					}
 
 					WP_CLI::line( \sprintf( 'Schedule subscription %s follow-up payment…', $id ) );
