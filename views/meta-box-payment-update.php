@@ -18,6 +18,10 @@ if ( ! isset( $post ) ) {
 	return;
 }
 
+if ( ! ( $post instanceof WP_Post ) ) {
+	return;
+}
+
 $states = [
 	PaymentStatus::OPEN       => _x( 'Pending', 'Payment status', 'pronamic_ideal' ),
 	PaymentStatus::ON_HOLD    => _x( 'On Hold', 'Payment status', 'pronamic_ideal' ),
@@ -39,8 +43,7 @@ ksort( $states );
 
 // WordPress by default doesn't allow `post_author` values of `0`, that's why we use a dash (`-`).
 // @link https://github.com/WordPress/WordPress/blob/4.9.5/wp-admin/includes/post.php#L56-L64.
-$post_author = get_post_field( 'post_author' );
-$post_author = empty( $post_author ) ? '-' : $post_author;
+$post_author = empty( $post->post_author ) ? '-' : $post->post_author;
 
 ?>
 <input type="hidden" name="post_author_override" value="<?php echo esc_attr( $post_author ); ?>" />
