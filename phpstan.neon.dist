@@ -1,5 +1,7 @@
 parameters:
 	level: 8
+	dynamicConstantNames:
+		- WP_CLI
 	scanDirectories:
 		- vendor/woocommerce/action-scheduler
 		- vendor/wp-cli
