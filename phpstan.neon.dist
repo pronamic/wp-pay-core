@@ -10,6 +10,4 @@ parameters:
 		- views/
 	ignoreErrors:
 		-
-			identifier: missingType.generics
-		-
 			identifier: missingType.iterableValue
