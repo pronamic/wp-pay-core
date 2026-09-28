@@ -82,6 +82,7 @@ function get_pronamic_payments_by_meta( $meta_key, $meta_value, $args = [] ) {
 	$defaults = [
 		'post_type'      => 'pronamic_payment',
 		'post_status'    => 'any',
+		// phpcs:ignore WordPressVIPMinimum.Performance.NoPaging.posts_per_page_posts_per_page -- The default shouldn't be -1, but it remains here for backward compatibility.
 		'posts_per_page' => -1,
 		'no_found_rows'  => true,
 		'meta_query'     => [],
@@ -232,6 +233,7 @@ function get_pronamic_subscriptions_by_meta( $meta_key, $meta_value, $args = [] 
 	$defaults = [
 		'post_type'      => 'pronamic_pay_subscr',
 		'post_status'    => 'any',
+		// phpcs:ignore WordPressVIPMinimum.Performance.NoPaging.posts_per_page_posts_per_page -- The default shouldn't be -1, but it remains here for backward compatibility.
 		'posts_per_page' => -1,
 		'no_found_rows'  => true,
 		'meta_query'     => [],
