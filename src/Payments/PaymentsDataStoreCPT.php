@@ -309,22 +309,26 @@ class PaymentsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			return;
 		}
 
-		$payment->post  = get_post( $id );
-		$payment->title = get_the_title( $id );
+		$post = \get_post( $id );
+
+		if ( null === $post ) {
+			return;
+		}
+
+		$payment->post  = $post;
+		$payment->title = \get_the_title( $post );
 		$payment->date  = new DateTime(
-			get_post_field( 'post_date_gmt', $id, 'raw' ),
+			$post->post_date_gmt,
 			new DateTimeZone( 'UTC' )
 		);
 
-		$content = get_post_field( 'post_content', $id, 'raw' );
-
-		$json = json_decode( $content );
+		$json = \json_decode( $post->post_content );
 
 		if ( is_object( $json ) ) {
 			Payment::from_json( $json, $payment );
 		}
 
-		$payment->set_slug( get_post_field( 'post_name', $id, 'raw' ) );
+		$payment->set_slug( $post->post_name );
 
 		// Set user ID from `post_author` field if not set from payment JSON.
 		$customer = $payment->get_customer();

@@ -313,13 +313,17 @@ class SubscriptionsDataStoreCPT extends LegacyPaymentsDataStoreCPT {
 			return;
 		}
 
-		$subscription->post  = get_post( $id );
-		$subscription->title = get_the_title( $id );
-		$subscription->date  = new DateTime( get_post_field( 'post_date_gmt', $id, 'raw' ), new DateTimeZone( 'UTC' ) );
+		$post = \get_post( $id );
 
-		$content = get_post_field( 'post_content', $id, 'raw' );
+		if ( null === $post ) {
+			return;
+		}
 
-		$json = json_decode( $content );
+		$subscription->post  = $post;
+		$subscription->title = \get_the_title( $post );
+		$subscription->date  = new DateTime( $post->post_date_gmt, new DateTimeZone( 'UTC' ) );
+
+		$json = \json_decode( $post->post_content );
 
 		if ( is_object( $json ) ) {
 			Subscription::from_json( $json, $subscription );
