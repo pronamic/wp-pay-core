@@ -959,7 +959,7 @@ class Plugin {
 	 *
 	 * @param Payment $payment The payment to start at the specified gateway.
 	 * @return Payment
-	 * @throws \Exception Throws exception if gateway payment start fails.
+	 * @throws \Throwable Throws throwable if gateway payment start fails.
 	 */
 	public static function start_payment( Payment $payment ) {
 		// Set default or filtered config ID.
