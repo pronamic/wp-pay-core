@@ -1040,7 +1040,7 @@ class Plugin {
 			self::pronamic_service( $payment );
 
 			$gateway->start( $payment );
-		} catch ( \Exception $exception ) {
+		} catch ( \Throwable $exception ) {
 			$message = $exception->getMessage();
 
 			// Maybe include error code in message.
